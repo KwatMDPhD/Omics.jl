@@ -1,0 +1,20 @@
+name = "Kwat"
+uuid = "fb31f113-4a63-4a8e-817a-4bdffc7e605a"
+authors = ["KwatME <kwat.me@icloud.com>"]
+version = "0.1.0"
+
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+CodecZlib = "944b1d66-785c-5afd-91f1-9de20f533193"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+KernelDensity = "5ab0869b-81aa-558d-bb23-cbf5423bbe9b"
+Mmap = "a63ad114-7e13-5084-954f-fe012c677804"
+OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
+Plotly = "58dd65bb-95f3-509e-9936-c39a10fdeae7"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
