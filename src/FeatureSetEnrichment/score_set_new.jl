@@ -12,23 +12,24 @@ function compute_ks(v1::Vector{Float64}, v2::Vector{Float64})::Vector{Float64}
 end
 
 function score_set_new(
-    element_::Vector{String},
-    score_::Vector{Float64},
-    set_element_::Vector{String};
-    sort::Bool = true,
-    plot_process::Bool = true,
-    plot::Bool = true,
+    el_::Vector{String},
+    sc_::Vector{Float64},
+    el1_::Vector{String};
+    so::Bool = true,
+    plp::Bool = false,
+    pl::Bool = true,
+    ke...,
 )::OrderedDict{String,Float64}
 
-    if sort
+    if so
 
-        score_, element_ = sort_like(score_, element_)
+        sc_, el_ = sort_like(sc_, el_)
 
     end
 
-    a = abs.(score_)
+    a = abs.(sc_)
 
-    is_h = check_is(element_, set_element_)
+    is_h = check_is(el_, el1_)
 
     is_m = 1.0 .- is_h
 
@@ -70,20 +71,18 @@ function score_set_new(
 
     a_m_p_cl = cumulate_sum_reverse(a_m_p) .+ e
 
-    if plot_process
+    if plp
 
         layout = Layout(xaxis_title = "Element")
 
-        if length(element_) < 100
+        if length(el_) < 100
 
-            layout = merge(
-                layout,
-                Layout(xaxis_tickvals = 1:length(element_), xaxis_ticktext = element_),
-            )
+            layout =
+                merge(layout, Layout(xaxis_tickvals = 1:length(el_), xaxis_ticktext = el_))
 
         end
 
-        display(plot_x_y([score_]; layout = merge(layout, Layout(yaxis_title = "Score"))))
+        display(plot_x_y([sc_]; layout = merge(layout, Layout(yaxis_title = "Score"))))
 
         display(
             plot_x_y(
@@ -181,19 +180,9 @@ function score_set_new(
 
                     d[k] = s
 
-                    if plot
+                    if pl
 
-                        display(
-                            _plot(
-                                element_,
-                                score_,
-                                set_element_,
-                                is_h,
-                                v,
-                                s;
-                                title_text = k,
-                            ),
-                        )
+                        display(_plot(el_, sc_, el1_, is_h, v, s; title = k))
 
                     end
 
@@ -210,30 +199,24 @@ function score_set_new(
 end
 
 function score_set_new(
-    element_::Vector{String},
-    score_::Vector{Float64},
-    set_to_element_::Dict{String,Vector{String}};
-    sort::Bool = true,
+    el_::Vector{String},
+    sc_::Vector{Float64},
+    se_el1_::Dict{String,Vector{String}};
+    so::Bool = true,
 )::Dict{String,OrderedDict{String,Float64}}
 
-    if sort
+    if so
 
-        score_, element_ = sort_like(score_, element_)
+        sc_, el_ = sort_like(sc_, el_)
 
     end
 
     set_to_method_to_result = Dict{String,OrderedDict{String,Float64}}()
 
-    for (set, set_element_) in set_to_element_
+    for (set, el1_) in se_el1_
 
-        set_to_method_to_result[set] = score_set_new(
-            element_,
-            score_,
-            set_element_;
-            sort = false,
-            plot_process = false,
-            plot = false,
-        )
+        set_to_method_to_result[set] =
+            score_set_new(el_, sc_, el1_; so = false, plp = false, pl = false)
 
     end
 

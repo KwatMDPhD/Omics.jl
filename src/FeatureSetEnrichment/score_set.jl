@@ -6,183 +6,175 @@ using Kwat.Support: check_is, sort_like
 include("_plot.jl")
 
 function score_set(
-    element_::Vector{String},
-    score_::Vector{Float64},
-    set_element_::Vector{String},
-    is_::Vector{Float64};
-    plot::Bool = true,
-    plot_kwargs...,
+    el_::Vector{String},
+    sc_::Vector{Float64},
+    el1_::Vector{String},
+    bo_::Vector{Float64};
+    pl::Bool = true,
+    ke...,
 )::Tuple{Vector{Float64},Float64,Float64}
 
-    n_element = length(element_)
+    n_el = length(el_)
 
-    set_score = 0.0
+    en = 0.0
 
-    set_score_ = Vector{Float64}(undef, n_element)
+    en_ = Vector{Float64}(undef, n_el)
 
-    extreme = 0.0
+    ex = 0.0
 
-    extreme_abs = 0.0
+    exab = 0.0
 
-    area = 0.0
+    ar = 0.0
 
-    h_sum, m_sum = sum_h_absolute_and_n_m(score_, is_)
+    su1, su0 = sum_h_absolute_and_n_m(sc_, bo_)
 
-    d = 1.0 / m_sum
+    d0 = 1.0 / su0
 
-    @inbounds @fastmath @simd for i = n_element:-1:1
+    @inbounds @fastmath @simd for ie = n_el:-1:1
 
-        if is_[i] == 1.0
+        if bo_[ie] == 1.0
 
-            f = score_[i]
+            sc = sc_[ie]
 
-            if f < 0.0
+            if sc < 0.0
 
-                f = -f
+                sc = -sc
 
             end
 
-            set_score += f / h_sum
+            en += sc / su1
 
         else
 
-            set_score -= d
+            en -= d0
 
         end
 
-        if plot
+        if pl
 
-            set_score_[i] = set_score
+            en_[ie] = en
 
         end
 
-        if set_score < 0.0
+        if en < 0.0
 
-            set_score_abs = -set_score
+            enab = -en
 
         else
 
-            set_score_abs = set_score
+            enab = en
 
         end
 
-        if extreme_abs < set_score_abs
+        if exab < enab
 
-            extreme = set_score
+            ex = en
 
-            extreme_abs = set_score_abs
+            exab = enab
 
         end
 
-        area += set_score
+        ar += en
 
     end
 
-    if plot
+    if pl
 
-        display(
-            _plot(element_, score_, set_element_, is_, set_score_, area; plot_kwargs...),
-        )
+        _plot(el_, sc_, el1_, bo_, en_, ar; ke...)
 
     end
 
-    return (set_score_, extreme, area / convert(Float64, n_element))
+    return en_, ex, ar / convert(Float64, n_el)
 
 end
 
 function score_set(
-    element_::Vector{String},
-    score_::Vector{Float64},
-    set_element_::Vector{String};
-    sort::Bool = true,
-    plot::Bool = true,
-    plot_kwargs...,
+    el_::Vector{String},
+    sc_::Vector{Float64},
+    el1_::Vector{String};
+    so::Bool = true,
+    pl::Bool = true,
+    ke...,
 )::Tuple{Vector{Float64},Float64,Float64}
 
-    if sort
+    if so
 
-        score_, element_ = sort_like(score_, element_)
+        sc_, el_ = sort_like(sc_, el_)
 
     end
 
-    return score_set(
-        element_,
-        score_,
-        set_element_,
-        check_is(element_, set_element_);
-        plot = plot,
-        plot_kwargs...,
-    )
+    return score_set(el_, sc_, el1_, check_is(el_, el1_); pl = pl, ke...)
 
 end
 
 function score_set(
-    element_::Vector{String},
-    score_::Vector{Float64},
-    set_to_element_::Dict{String,Vector{String}};
-    sort::Bool = true,
+    el_::Vector{String},
+    sc_::Vector{Float64},
+    se_el1_::Dict{String,Vector{String}};
+    so::Bool = true,
 )::Dict{String,Tuple{Vector{Float64},Float64,Float64}}
 
-    if sort
+    if so
 
-        score_, element_ = sort_like(score_, element_)
+        sc_, el_ = sort_like(sc_, el_)
 
     end
 
-    if 10 < length(set_to_element_)
+    if 10 < length(se_el1_)
 
-        check = Dict(e => i for (e, i) in zip(element_, 1:length(element_)))
+        ch = Dict(el => ie for (el, ie) in zip(el_, 1:length(el_)))
 
     else
 
-        check = element_
+        ch = el_
 
     end
 
-    set_to_d = Dict{String,Tuple{Vector{Float64},Float64,Float64}}()
+    se_di = Dict{String,Tuple{Vector{Float64},Float64,Float64}}()
 
-    for (set, set_element_) in set_to_element_
+    for (set, el1_) in se_el1_
 
-        set_to_d[set] = score_set(
-            element_,
-            score_,
-            set_element_,
-            check_is(check, set_element_);
-            plot = false,
-        )
+        se_di[set] = score_set(el_, sc_, el1_, check_is(ch, el1_); pl = false)
 
     end
 
-    return set_to_d
+    return se_di
 
 end
 
 function score_set(
-    element_x_sample::DataFrame,
-    set_to_element_::Dict{String,Vector{String}};
+    sc_el_sa::DataFrame,
+    se_el1_::Dict{String,Vector{String}};
+    me::String = "classic",
     n_jo::Int64 = 1,
 )::DataFrame
 
-    element_ = element_x_sample[!, 1]
+    el_ = sc_el_sa[!, 1]
 
-    set_x_sample = DataFrame(:Set => sort(collect(keys(set_to_element_))))
+    en_se_sa = DataFrame(:Set => sort(collect(keys(se_el1_))))
 
-    for sample in names(element_x_sample)[2:end]
+    for sa in names(sc_el_sa)[2:end]
 
-        is_good_ = findall(!ismissing, element_x_sample[!, sample])
+        bo_ = findall(!ismissing, sc_el_sa[!, sa])
 
-        set_to_d = score_set(
-            element_[is_good_],
-            element_x_sample[is_good_, sample],
-            set_to_element_;
-            sort = true,
-        )
+        if me == "classic"
 
-        set_x_sample[!, sample] =
-            collect(set_to_d[set][end] for set in set_x_sample[!, :Set])
+            fu = score_set
+
+        elseif me == "new"
+
+            fu = score_set_new
+
+        end
+
+        se_di = fu(el_[bo_], sc_el_sa[bo_, sa], se_el1_)
+
+        en_se_sa[!, sa] = collect(se_di[set][end] for set in en_se_sa[!, :Set])
 
     end
 
-    return set_x_sample
+    return en_se_sa
 
 end
+
+export score_set
