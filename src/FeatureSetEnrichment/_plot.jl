@@ -139,7 +139,7 @@ function _plot(
         hoverinfo = "x+y+text",
     )
 
-    return plot([score_trace, set_element_trace, set_score_trace], layout)
+    return display(plot([score_trace, set_element_trace, set_score_trace], layout))
 
 end
 

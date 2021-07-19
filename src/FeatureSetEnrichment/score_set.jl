@@ -3,16 +3,18 @@ using DataFrames: DataFrame, names
 
 using Kwat.Support: check_is, sort_like
 
-include("_plot.jl")
 
+# TODO: weigh
 function score_set(
     el_::Vector{String},
     sc_::Vector{Float64},
     el1_::Vector{String},
     bo_::Vector{Float64};
+    we::Float64=1.0,
+    me::String="ks",
     pl::Bool = true,
     ke...,
-)::Tuple{Vector{Float64},Float64,Float64}
+)::Float64
 
     n_el = length(el_)
 
@@ -22,7 +24,7 @@ function score_set(
 
     ex = 0.0
 
-    exab = 0.0
+    exa = 0.0
 
     ar = 0.0
 
@@ -58,19 +60,19 @@ function score_set(
 
         if en < 0.0
 
-            enab = -en
+            ena = -en
 
         else
 
-            enab = en
+            ena = en
 
         end
 
-        if exab < enab
+        if exa < ena
+
+            exa = ena
 
             ex = en
-
-            exab = enab
 
         end
 
@@ -80,11 +82,21 @@ function score_set(
 
     if pl
 
-        _plot(el_, sc_, el1_, bo_, en_, ar; ke...)
+        _plot(el_, sc_, el1_, bo_, en_, ex; ke...)
 
     end
 
-    return en_, ex, ar / convert(Float64, n_el)
+    if me == "ks"
+
+        en = ex
+
+    elseif me == "auc"
+
+        en = ar / convert(Float64, n_el)
+
+    end
+
+    return en
 
 end
 
@@ -92,18 +104,13 @@ function score_set(
     el_::Vector{String},
     sc_::Vector{Float64},
     el1_::Vector{String};
-    so::Bool = true,
+    we::Float64=1.0,
+    me::String="ks",
     pl::Bool = true,
     ke...,
-)::Tuple{Vector{Float64},Float64,Float64}
+)::Float64
 
-    if so
-
-        sc_, el_ = sort_like(sc_, el_)
-
-    end
-
-    return score_set(el_, sc_, el1_, check_is(el_, el1_); pl = pl, ke...)
+    return score_set(el_, sc_, el1_, check_is(el_, el1_); we = we, me = me, pl = pl, ke...)
 
 end
 
@@ -111,65 +118,62 @@ function score_set(
     el_::Vector{String},
     sc_::Vector{Float64},
     se_el1_::Dict{String,Vector{String}};
-    so::Bool = true,
-)::Dict{String,Tuple{Vector{Float64},Float64,Float64}}
+    we::Float64=1.0,
+    me::String="ks",
+)::Dict{String,Float64}
 
-    if so
-
-        sc_, el_ = sort_like(sc_, el_)
-
-    end
-
-    if 10 < length(se_el1_)
-
-        ch = Dict(el => ie for (el, ie) in zip(el_, 1:length(el_)))
-
-    else
+    if length(se_el1_) < 10
 
         ch = el_
 
-    end
+    else
 
-    se_di = Dict{String,Tuple{Vector{Float64},Float64,Float64}}()
-
-    for (set, el1_) in se_el1_
-
-        se_di[set] = score_set(el_, sc_, el1_, check_is(ch, el1_); pl = false)
+        ch = Dict(el => ie for (el, ie) in zip(el_, 1:length(el_)))
 
     end
 
-    return se_di
+    se_en = Dict{String,Float64}()
+
+    for (se, el1_) in se_el1_
+
+        se_en[se] = score_set(el_, sc_, el1_, check_is(ch, el1_); we = we, me = me, pl = false)
+
+    end
+
+    return se_en
 
 end
 
+# TODO: parallelize
 function score_set(
     sc_el_sa::DataFrame,
     se_el1_::Dict{String,Vector{String}};
-    me::String = "classic",
+    we::Float64 = 1.0,
+    me::String = "ks",
     n_jo::Int64 = 1,
 )::DataFrame
 
     el_ = sc_el_sa[!, 1]
 
-    en_se_sa = DataFrame(:Set => sort(collect(keys(se_el1_))))
+    en_se_sa = DataFrame(:Set => collect(keys(se_el1_)))
 
     for sa in names(sc_el_sa)[2:end]
 
         bo_ = findall(!ismissing, sc_el_sa[!, sa])
 
-        if me == "classic"
+        sc_, el_ = sort_like(sc_el_sa[bo_, sa], el_[bo_])
 
-            fu = score_set
+        if in(me, ["ks", "auc"])
 
-        elseif me == "new"
+            se_en = score_set(el_, sc_, se_el1_; we=we, me=me)
 
-            fu = score_set_new
+        elseif me == "js"
+
+            se_en = score_set_new(el_, sc_, se_el1_)
 
         end
 
-        se_di = fu(el_[bo_], sc_el_sa[bo_, sa], se_el1_)
-
-        en_se_sa[!, sa] = collect(se_di[set][end] for set in en_se_sa[!, :Set])
+        en_se_sa[!, sa] = collect(se_en[set] for set in en_se_sa[!, :Set])
 
     end
 
