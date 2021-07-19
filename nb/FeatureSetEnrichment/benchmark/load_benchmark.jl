@@ -1,5 +1,6 @@
-using DataIO: read_data
-using Support: read_json
+using Kwat.DataIO: read_data
+using Kwat.GCTGMT: read_gmt
+using Kwat.Support: read_json
 
 function load_benchmark(benchmark_directory_path)
 
@@ -7,8 +8,6 @@ function load_benchmark(benchmark_directory_path)
         eachcol(read_data(joinpath(benchmark_directory_path, "gene_x_score.tsv")))
 
     json_dict = read_json(joinpath(benchmark_directory_path, "gene_sets.json"))
-
-
 
     return element_,
     score_,

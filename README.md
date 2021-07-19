@@ -7,13 +7,13 @@ julia
 ```julia
 using Pkg: add
 
-add(; url="https://github.com/KwatME/Kwat")
+add(; url="https://github.com/KwatME/Kwat.jl")
 ```
 
 ## Use
 
-See [examples](nb/).
+See [examples](nb).
 
 ---
 
-Check out the [python version](https://github.com/KwatME/kwat).
+Check out the [python version](https://github.com/KwatME/kwat.py).

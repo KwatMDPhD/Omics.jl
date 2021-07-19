@@ -1,8 +1,94 @@
 using CSV
 using DataFrames: DataFrame, names
 
-include("../Support/check_is.jl")
-include("../Support/sort_like.jl")
+using Kwat.Support: check_is, sort_like
+
+include("_plot.jl")
+
+function score_set(
+    element_::Vector{String},
+    score_::Vector{Float64},
+    set_element_::Vector{String},
+    is_::Vector{Float64};
+    plot::Bool = true,
+    plot_kwargs...,
+)::Tuple{Vector{Float64},Float64,Float64}
+
+    n_element = length(element_)
+
+    set_score = 0.0
+
+    set_score_ = Vector{Float64}(undef, n_element)
+
+    extreme = 0.0
+
+    extreme_abs = 0.0
+
+    area = 0.0
+
+    h_sum, m_sum = sum_h_absolute_and_n_m(score_, is_)
+
+    d = 1.0 / m_sum
+
+    @inbounds @fastmath @simd for i = n_element:-1:1
+
+        if is_[i] == 1.0
+
+            f = score_[i]
+
+            if f < 0.0
+
+                f = -f
+
+            end
+
+            set_score += f / h_sum
+
+        else
+
+            set_score -= d
+
+        end
+
+        if plot
+
+            set_score_[i] = set_score
+
+        end
+
+        if set_score < 0.0
+
+            set_score_abs = -set_score
+
+        else
+
+            set_score_abs = set_score
+
+        end
+
+        if extreme_abs < set_score_abs
+
+            extreme = set_score
+
+            extreme_abs = set_score_abs
+
+        end
+
+        area += set_score
+
+    end
+
+    if plot
+
+        display(
+            _plot(element_, score_, set_element_, is_, set_score_, area; plot_kwargs...),
+        )
+
+    end
+
+    return (set_score_, extreme, area / convert(Float64, n_element))
+
+end
 
 function score_set(
     element_::Vector{String},
@@ -19,7 +105,7 @@ function score_set(
 
     end
 
-    return _score_set(
+    return score_set(
         element_,
         score_,
         set_element_,
@@ -57,7 +143,7 @@ function score_set(
 
     for (set, set_element_) in set_to_element_
 
-        set_to_d[set] = _score_set(
+        set_to_d[set] = score_set(
             element_,
             score_,
             set_element_,
@@ -100,21 +186,3 @@ function score_set(
     return set_x_sample
 
 end
-
-
-
-function score_set(
-    element_x_sample_path::String,
-    gmt_path_::Vector{String},
-    directory_path::String,
-)::DataFrame
-
-    element_set_x_sample = DataFrame()
-
-    # write element_set_x_sample directory_path
-
-    return element_set_x_sample
-
-end
-
-export score_set

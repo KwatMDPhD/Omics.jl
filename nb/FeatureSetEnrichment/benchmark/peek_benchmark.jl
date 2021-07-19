@@ -1,5 +1,4 @@
-using GCTGMT
-using FeatureSetEnrichment
+using Kwat.FeatureSetEnrichment: score_set_new
 
 include("load_benchmark.jl")
 

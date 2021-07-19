@@ -2,8 +2,8 @@ using CSV: read
 using DataFrames: DataFrame
 using StatsBase: sample
 
-include("../GCTGMT/read_gmt.jl")
-include("../Support/list_card.jl")
+using Kwat.GCTGMT: read_gmt
+using Kwat.Support: list_card
 
 function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector{String}}
 
@@ -31,7 +31,7 @@ function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector
 
     elseif split_[1] == "myc"
 
-        data_directory_path = "../notebook/data/"
+        data_directory_path = "../../nb/FeatureSetEnrichment/data/"
 
         df = read(joinpath(data_directory_path, "gene_score.tsv"), DataFrame)
 

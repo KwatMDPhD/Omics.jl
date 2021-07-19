@@ -1,7 +1,7 @@
-using Printf: @sprintf
 using Plotly: Layout, attr, plot, scatter
+using Printf: @sprintf
 
-include("../Support/get_center.jl")
+using Kwat.Support: get_center
 
 function _plot(
     element_::Vector{String},

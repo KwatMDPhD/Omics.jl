@@ -1,18 +1,9 @@
 using OrderedCollections: OrderedDict
 using Plotly: Layout
 
-include("../Information/compute_kld.jl")
-include("../Information/compute_idrs.jl")
-include("../Information/compute_idrd.jl")
-include("../Information/compute_ides.jl")
-include("../Information/compute_ided.jl")
-
-include("../Plot/plot_x_y.jl")
-
-include("../Support/cumulate_sum_reverse.jl")
-include("../Support/get_area.jl")
-include("../Support/get_extreme.jl")
-include("../Support/sort_like.jl")
+using Kwat.Information: compute_ided, compute_ides, compute_idrd, compute_idrs, compute_kld
+using Kwat.Plot: plot_x_y
+using Kwat.Support: cumulate_sum_reverse, get_area, get_extreme, sort_like
 
 function compute_ks(v1::Vector{Float64}, v2::Vector{Float64})::Vector{Float64}
 
@@ -154,13 +145,13 @@ function score_set_new(
     )
 
         for (k2, f1, args) in (
-                                  ("ks", compute_ks, ()),
-                                  ("idrs", compute_idrs, ()),
-                                  ("idrsw", compute_idrs, (a_p_cl,)),
-                                  ("idrd", compute_idrd, ()),
-                                  ("idrdw", compute_idrd, (a_p_cl,)),
-                                  ("ides", compute_ides, ()),
-                                  ("ided", compute_ided, ()),
+            ("ks", compute_ks, ()),
+            ("idrs", compute_idrs, ()),
+            ("idrsw", compute_idrs, (a_p_cl,)),
+            ("idrd", compute_idrd, ()),
+            ("idrdw", compute_idrd, (a_p_cl,)),
+            ("ides", compute_ides, ()),
+            ("ided", compute_ided, ()),
         )
 
             l = f1(hl, ml, args...)
@@ -235,8 +226,14 @@ function score_set_new(
 
     for (set, set_element_) in set_to_element_
 
-        set_to_method_to_result[set] =
-            score_set_new(element_, score_, set_element_; sort = false, plot = false)
+        set_to_method_to_result[set] = score_set_new(
+            element_,
+            score_,
+            set_element_;
+            sort = false,
+            plot_process = false,
+            plot = false,
+        )
 
     end
 
