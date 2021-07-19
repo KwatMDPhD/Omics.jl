@@ -160,7 +160,7 @@ end
 function score_set(
     element_x_sample::DataFrame,
     set_to_element_::Dict{String,Vector{String}};
-    n_job::Int64 = 1,
+    n_jo::Int64 = 1,
 )::DataFrame
 
     element_ = element_x_sample[!, 1]

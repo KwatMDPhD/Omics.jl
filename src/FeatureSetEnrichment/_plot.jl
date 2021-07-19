@@ -13,7 +13,7 @@ function _plot(
     width::Real = 800,
     height::Real = 500,
     line_width::Real = 2.0,
-    title_text::String = "Set Enrichment",
+    title::String = "Score Set",
     title_font_size::Real = 24,
     axis_title_font_size::Real = 12,
     element_score_name::String = "Element Score",
@@ -62,7 +62,7 @@ function _plot(
         annotations = [
             merge(
                 x_annotation_template,
-                attr(y = 1.24, text = "<b>$title_text</b>", font_size = title_font_size),
+                attr(y = 1.24, text = "<b>$title</b>", font_size = title_font_size),
             ),
             merge(
                 x_annotation_template,
