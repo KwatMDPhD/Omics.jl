@@ -1,17 +1,14 @@
 using CSV
 using DataFrames: DataFrame, names
 
-using Kwat.Support: check_is, sort_like
-
-
 # TODO: weigh
 function score_set(
     el_::Vector{String},
     sc_::Vector{Float64},
     el1_::Vector{String},
     bo_::Vector{Float64};
-    we::Float64=1.0,
-    me::String="ks",
+    we::Float64 = 1.0,
+    me::String = "ks",
     pl::Bool = true,
     ke...,
 )::Float64
@@ -104,8 +101,8 @@ function score_set(
     el_::Vector{String},
     sc_::Vector{Float64},
     el1_::Vector{String};
-    we::Float64=1.0,
-    me::String="ks",
+    we::Float64 = 1.0,
+    me::String = "ks",
     pl::Bool = true,
     ke...,
 )::Float64
@@ -118,8 +115,8 @@ function score_set(
     el_::Vector{String},
     sc_::Vector{Float64},
     se_el1_::Dict{String,Vector{String}};
-    we::Float64=1.0,
-    me::String="ks",
+    we::Float64 = 1.0,
+    me::String = "ks",
 )::Dict{String,Float64}
 
     if length(se_el1_) < 10
@@ -136,7 +133,8 @@ function score_set(
 
     for (se, el1_) in se_el1_
 
-        se_en[se] = score_set(el_, sc_, el1_, check_is(ch, el1_); we = we, me = me, pl = false)
+        se_en[se] =
+            score_set(el_, sc_, el1_, check_is(ch, el1_); we = we, me = me, pl = false)
 
     end
 
@@ -165,7 +163,7 @@ function score_set(
 
         if in(me, ["ks", "auc"])
 
-            se_en = score_set(el_, sc_, se_el1_; we=we, me=me)
+            se_en = score_set(el_, sc_, se_el1_; we = we, me = me)
 
         elseif me == "js"
 

@@ -2,8 +2,7 @@ using CSV: read
 using DataFrames: DataFrame
 using StatsBase: sample
 
-using Kwat.GCTGMT: read_gmt
-using Kwat.Support: list_card
+using ..Support: list_card  
 
 function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector{String}}
 

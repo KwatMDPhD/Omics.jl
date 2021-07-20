@@ -1,9 +1,5 @@
 using Plotly: Layout
 
-using Kwat.Information: compute_ided, compute_ides, compute_idrd, compute_idrs, compute_kld
-using Kwat.Plot: plot_x_y
-using Kwat.Support: cumulate_sum_reverse, get_area, get_extreme, sort_like
-
 function compute_ks(v1::Vector{Float64}, v2::Vector{Float64})::Vector{Float64}
 
     return v1 - v2

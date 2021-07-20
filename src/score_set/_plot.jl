@@ -1,8 +1,6 @@
 using Plotly: Layout, attr, plot, scatter
 using Printf: @sprintf
 
-using Kwat.Support: get_center
-
 function _plot(
     element_::Vector{String},
     score_::Vector{Float64},
