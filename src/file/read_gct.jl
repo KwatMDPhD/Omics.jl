@@ -1,7 +1,7 @@
 using CSV: File
 using DataFrames: DataFrame, Not, rename!, select!
 
-function read_gct(pa::String; na::String = "Axis-0 name")::DataFrame
+function read_gct(pa::String; na::String = "Name")::DataFrame
 
     da = DataFrame(File(pa; header = 3, delim = '\t'))
 

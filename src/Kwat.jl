@@ -48,9 +48,9 @@ include("math/get_center.jl")
 
 end
 
-module matrix
+module matrix_number
 
-include("matrix/convert_vector_of_vector_to_matrix.jl")
+include("matrix_number/convert.jl")
 
 end
 
@@ -74,11 +74,11 @@ include("plot/use_style!.jl")
 
 end
 
-module string
+module stringg
 
-include("string/replace.jl")
+include("stringg/replace.jl")
 
-include("string/title.jl")
+include("stringg/title.jl")
 
 end
 

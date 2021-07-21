@@ -1,9 +1,9 @@
 using DataFrames: DataFrame
 using XLSX: readtable
 
-function read_xlsx(pa::String; s::String = "")::DataFrame
+function read_xlsx(pa::String; sh::String = "")::DataFrame
 
-    return DataFrame(readtable(pa, s)...)
+    return DataFrame(readtable(pa, sh)...)
 
 end
 

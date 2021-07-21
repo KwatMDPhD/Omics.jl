@@ -1,11 +1,11 @@
-using CSV: read
+using CSV: read, File
 using DataFrames: DataFrame
 using Mmap: mmap
 
 
-function read_table(pa::String; s::String = "")::DataFrame
+function read_table(pa::String)::DataFrame
 
-    return DataFrame(read(mmap(pa)))
+    return DataFrame(File(pa))
 
 end
 
