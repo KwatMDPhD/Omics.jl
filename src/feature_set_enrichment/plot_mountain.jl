@@ -1,13 +1,12 @@
 using Plotly: Layout, attr, plot, scatter
 using Printf: @sprintf
 
-function _plot(
-    element_::Vector{String},
-    score_::Vector{Float64},
-    set_element_::Vector{String},
-    is_::Vector{Float64},
-    set_score_::Vector{Float64},
-    statistic::Float64;
+function _plot_mountain(
+    el_::Vector{String},
+    sc_::Vector{Float64},
+    bo_::Vector{Float64},
+    en_::Vector{Float64},
+    en::Float64;
     width::Real = 800,
     height::Real = 500,
     line_width::Real = 2.0,
@@ -17,7 +16,7 @@ function _plot(
     element_score_name::String = "Element Score",
 )::Any
 
-    n_element = length(element_)
+    n_el = length(el_)
 
     yaxis1_domain = (0.0, 0.24)
 
@@ -25,15 +24,11 @@ function _plot(
 
     yaxis3_domain = (0.32, 1.0)
 
-    annotation_template =
-        attr(xref = "paper", yref = "paper", yanchor = "middle", showarrow = false)
+    an = attr(xref = "paper", yref = "paper", yanchor = "middle", showarrow = false)
 
-    x_annotation_template = merge(annotation_template, attr(xanchor = "center", x = 0.5))
+    xa = merge(an, attr(xanchor = "center", x = 0.5))
 
-    y_annotation_template = merge(
-        annotation_template,
-        attr(xanchor = "right", x = -0.08, font_size = axis_title_font_size),
-    )
+    ya = merge(an, attr(xanchor = "right", x = -0.08, font_size = axis_title_font_size))
 
     layout = Layout(
         width = width,
@@ -58,51 +53,39 @@ function _plot(
         yaxis3_domain = yaxis3_domain,
         yaxis3_showline = true,
         annotations = [
+            merge(xa, attr(y = 1.24, text = "<b>$title</b>", font_size = title_font_size)),
+            merge(xa, attr(y = -0.088, text = "<b>Element Rank (n=$n_el)</b>")),
             merge(
-                x_annotation_template,
-                attr(y = 1.24, text = "<b>$title</b>", font_size = title_font_size),
-            ),
-            merge(
-                x_annotation_template,
-                attr(y = -0.088, text = "<b>Element Rank (n=$n_element)</b>"),
-            ),
-            merge(
-                y_annotation_template,
+                ya,
                 attr(y = get_center(yaxis1_domain...), text = "<b>$element_score_name</b>"),
             ),
-            merge(
-                y_annotation_template,
-                attr(y = get_center(yaxis2_domain...), text = "<b>Set</b>"),
-            ),
-            merge(
-                y_annotation_template,
-                attr(y = get_center(yaxis3_domain...), text = "<b>Set Score</b>"),
-            ),
+            merge(ya, attr(y = get_center(yaxis2_domain...), text = "<b>Set</b>")),
+            merge(ya, attr(y = get_center(yaxis3_domain...), text = "<b>Set Score</b>")),
         ],
     )
 
-    x = 1:n_element
+    x = 1:n_el
 
-    score_trace = scatter(
+    tre = scatter(
         name = "Element Score",
         x = x,
-        y = score_,
-        text = element_,
+        y = sc_,
+        text = el_,
         line_width = line_width,
         line_color = "#4e40d8",
         fill = "tozeroy",
         hoverinfo = "x+y+text",
     )
 
-    isbit_ = BitVector(is_)
+    bo_ = BitVector(bo_)
 
-    set_element_trace = scatter(
+    tr1 = scatter(
         name = "Set",
         yaxis = "y2",
         mode = "markers",
-        x = x[isbit_],
-        y = zeros(Int64(sum(is_))),
-        text = element_[isbit_],
+        x = x[bo_],
+        y = zeros(Int64(sum(bo_))),
+        text = el_[bo_],
         marker_symbol = "line-ns-open",
         marker_size = height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.64,
         marker_line_width = line_width,
@@ -110,35 +93,35 @@ function _plot(
         hoverinfo = "x+text",
     )
 
-    statistic = @sprintf "%.3f" statistic
+    en = @sprintf "%.3f" en
 
     push!(
         layout["annotations"],
         merge(
-            x_annotation_template,
+            xa,
             attr(
                 y = 1.16,
-                text = "<b>Statistic = $statistic</b>",
+                text = "<b>en = $en</b>",
                 font_size = title_font_size * 0.64,
                 font_color = "#2a603b",
             ),
         ),
     )
 
-    set_score_trace = scatter(
+    trs = scatter(
         name = "Set Score",
         yaxis = "y3",
         x = x,
-        y = set_score_,
-        text = element_,
+        y = en_,
+        text = el_,
         line_width = line_width,
         line_color = "#20d9ba",
         fill = "tozeroy",
         hoverinfo = "x+y+text",
     )
 
-    return display(plot([score_trace, set_element_trace, set_score_trace], layout))
+    return display(plot([tre, tr1, trs], layout))
 
 end
 
-export _plot
+export _plot_mountain

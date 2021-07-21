@@ -1,8 +1,8 @@
 using JSON: parse
 
-function read_json(p::String)::Dict
+function read_json(pa::String)::Dict
 
-    return parse(open(p))
+    return parse(open(pa))
 
 end
 

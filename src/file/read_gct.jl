@@ -1,15 +1,15 @@
 using CSV: File
 using DataFrames: DataFrame, Not, rename!, select!
 
-function read_gct(p::String; n::String = "Axis 0 Name")::DataFrame
+function read_gct(pa::String; na::String = "Axis-0 name")::DataFrame
 
-    df = DataFrame(File(p; header = 3, delim = '\t'))
+    da = DataFrame(File(pa; header = 3, delim = '\t'))
 
-    select!(df, Not(Symbol("Description")))
+    select!(da, Not(Symbol("Description")))
 
-    rename!(df, Symbol("Name") => Symbol(n))
+    rename!(da, Symbol("Name") => Symbol(na))
 
-    return df
+    return da
 
 end
 

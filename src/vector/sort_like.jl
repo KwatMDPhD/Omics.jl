@@ -1,8 +1,8 @@
-function sort_like(v_::Vector...; r::Bool = false)::Vector{Vector}
+function sort_like(ve_::Vector...; re::Bool = false)::Vector{Vector}
 
-    i_ = sortperm(v_[1]; rev = r)
+    ie_ = sortperm(ve_[1]; rev = re)
 
-    return [v[i_] for v in v_]
+    return [ve[ie_] for ve in ve_]
 
 end
 

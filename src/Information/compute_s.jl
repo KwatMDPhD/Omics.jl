@@ -1,4 +1,4 @@
-function compute_s(v::Vector{Float64})::Float64
+function compute_s(ve::Vector{Float64})::Float64
 
     return
 

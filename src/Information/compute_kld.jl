@@ -1,6 +1,6 @@
-function compute_kld(v1::Vector{Float64}, v2::Vector{Float64})::Vector{Float64}
+function compute_kld(ve1::Vector{Float64}, ve2::Vector{Float64})::Vector{Float64}
 
-    return v1 .* log.(v1 ./ v2)
+    return ve1 .* log.(ve1 ./ ve2)
 
 end
 

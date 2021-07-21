@@ -1,4 +1,4 @@
-function compute_ic(v1::Vector{Float64}, v2::Vector{Float64})::Float64
+function compute_ic(ve1::Vector{Float64}, ve2::Vector{Float64})::Float64
 
     return
 

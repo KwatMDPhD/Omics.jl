@@ -1,6 +1,6 @@
-function compute_ides(v1::Vector{Float64}, v2::Vector{Float64})::Vector{Float64}
+function compute_ides(ve1::Vector{Float64}, ve2::Vector{Float64})::Vector{Float64}
 
-    return compute_kld(v1, v2) .+ compute_kld(v2, v1)
+    return compute_kld(ve1, ve2) .+ compute_kld(ve2, ve1)
 
 end
 

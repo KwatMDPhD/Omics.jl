@@ -1,20 +1,20 @@
-function get_extreme(v::Vector{Float64})::Float64
+function get_extreme(ve::Vector{Float64})::Float64
 
-    mi = minimum(v)
+    mi = minimum(ve)
 
-    ma = maximum(v)
+    ma = maximum(ve)
 
-    mi_a = abs(mi)
+    mia = abs(mi)
 
-    ma_a = abs(ma)
+    maa = abs(ma)
 
-    if mi_a < ma_a
+    if mia < maa
 
         return ma
 
     else
 
-        if mi_a == ma_a
+        if mia == maa
 
             println(
                 "The minimum and the maximum have the same absolute value; returning the minimum.",

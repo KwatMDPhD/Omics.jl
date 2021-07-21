@@ -1,4 +1,5 @@
-using Plotly: Layout, plot, scatter
+using Plotly: Layout, scatter
+using Plotly
 
 function plot_x_y(
     x_::Vector{Vector{Float64}},
@@ -9,15 +10,15 @@ function plot_x_y(
     layout::Union{Nothing,Layout} = nothing,
 )::Any
 
-    n = length(x_)
+    n_tr = length(x_)
 
-    trace_ = [Dict{String,Any}() for i = 1:n]
+    tr_ = [Dict{String,Any}() for ie = 1:n_tr]
 
-    for i = 1:n
+    for ie = 1:n_tr
 
-        trace_[i]["x"] = x_[i]
+        tr_[ie]["x"] = x_[ie]
 
-        trace_[i]["y"] = y_[i]
+        tr_[ie]["y"] = y_[ie]
 
         if text_ == nothing
 
@@ -25,27 +26,27 @@ function plot_x_y(
 
         else
 
-            text = text_[i]
+            text = text_[ie]
 
         end
 
-        trace_[i]["text"] = text
+        tr_[ie]["text"] = text
 
         if name_ == nothing
 
-            name = string(i)
+            name = string(ie)
 
         else
 
-            name = name_[i]
+            name = name_[ie]
 
         end
 
-        trace_[i]["name"] = name
+        tr_[ie]["name"] = name
 
         if mode_ == nothing
 
-            if length(x_[i]) < 1000
+            if length(x_[ie]) < 1000
 
                 mode = "markers"
 
@@ -57,17 +58,17 @@ function plot_x_y(
 
         else
 
-            mode = mode_[i]
+            mode = mode_[ie]
 
         end
 
-        trace_[i]["mode"] = mode
+        tr_[ie]["mode"] = mode
 
-        trace_[i]["opacity"] = 0.8
+        tr_[ie]["opacity"] = 0.8
 
     end
 
-    trace_ = [scatter(trace) for trace in trace_]
+    tr_ = [scatter(tr) for tr in tr_]
 
     if layout == nothing
 
@@ -75,13 +76,13 @@ function plot_x_y(
 
     end
 
-    return plot(trace_, layout)
+    return Plotly.plot(tr_, layout)
 
 end
 
-function plot_x_y(y_::Vector{Vector{Float64}}; kwargs...)::Any
+function plot_x_y(y_::Vector{Vector{Float64}}; ke...)::Any
 
-    return plot_x_y([Float64.(1:length(y)) for y in y_], y_; kwargs...)
+    return plot_x_y([Float64.(1:length(y)) for y in y_], y_; ke...)
 
 end
 

@@ -1,19 +1,19 @@
-function convert_vector_of_vector_to_matrix(vv::Vector{Vector{Float64}})::Matrix{Float64}
+function convert(ve::Vector{Vector{Float64}})::Matrix{Float64}
 
-    d1 = length(vv)
+    di1 = length(ve)
 
-    d2 = length(vv[1])
+    di2 = length(ve[1])
 
-    m = Matrix{Float64}(undef, d1, d2)
+    ma = Matrix{Float64}(undef, di1, di2)
 
-    @inbounds @fastmath for i = 1:d1, j = 1:d2
+    @inbounds @fastmath for ie1 = 1:di1, ie2 = 1:di2
 
-        m[i, j] = vv[i][j]
+        ma[ie1, ie2] = ve[ie1][ie2]
 
     end
 
-    return m
+    return ma
 
 end
 
-export convert_vector_of_vector_to_matrix
+export convert

@@ -1,16 +1,16 @@
 function compute_idrs(
-    v1::Vector{Float64},
-    v2::Vector{Float64},
-    v::Vector{Float64},
+    ve1::Vector{Float64},
+    ve2::Vector{Float64},
+    ver::Vector{Float64},
 )::Vector{Float64}
 
-    return compute_kld(v1, v) .+ compute_kld(v2, v)
+    return compute_kld(ve1, ver) .+ compute_kld(ve2, ver)
 
 end
 
-function compute_idrs(v1::Vector{Float64}, v2::Vector{Float64})::Vector{Float64}
+function compute_idrs(ve1::Vector{Float64}, ve2::Vector{Float64})::Vector{Float64}
 
-    return compute_idrs(v1, v2, (v1 .+ v2) ./ 2)
+    return compute_idrs(ve1, ve2, (ve1 .+ ve2) ./ 2)
 
 end
 

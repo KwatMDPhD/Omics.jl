@@ -1,36 +1,38 @@
-function read_gmt(p::String)::Dict{String,Vector{String}}
+function read_gmt(pa::String)::Dict{String,Vector{String}}
 
-    d = Dict{String,Vector{String}}()
+    se_el_ = Dict{String,Vector{String}}()
 
-    for l in readlines(p)
+    for li in readlines(pa)
 
-        s_ = split(l, '\t')
+        sp_ = split(li, '\t')
 
-        g_ = s_[3:end]
+        el_ = sp_[3:end]
 
-        if unique(g_) != [""]
+        if unique(el_) == [""]
 
-            d[s_[1]] = g_
+            error(li)
 
         end
 
+        se_el_[sp_[1]] = el_
+
     end
 
-    return d
+    return se_el_
 
 end
 
-function read_gmt(p_::Vector{String})::Dict{String,Vector{String}}
+function read_gmt(pa_::Vector{String})::Dict{String,Vector{String}}
 
-    d = Dict{String,Vector{String}}()
+    se_el_ = Dict{String,Vector{String}}()
 
-    for p in p_
+    for pa in pa_
 
-        merge!(d, read_gmt(p))
+        merge!(se_el_, read_gmt(pa))
 
     end
 
-    return d
+    return se_el_
 
 end
 

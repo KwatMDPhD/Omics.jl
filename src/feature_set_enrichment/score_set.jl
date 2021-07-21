@@ -1,6 +1,8 @@
 using CSV
 using DataFrames: DataFrame, names
 
+using ..vector: check_in, sort_like
+
 # TODO: weigh
 function score_set(
     el_::Vector{String},
@@ -27,7 +29,7 @@ function score_set(
 
     su1, su0 = sum_h_absolute_and_n_m(sc_, bo_)
 
-    d0 = 1.0 / su0
+    de = 1.0 / su0
 
     @inbounds @fastmath @simd for ie = n_el:-1:1
 
@@ -45,7 +47,7 @@ function score_set(
 
         else
 
-            en -= d0
+            en -= de
 
         end
 
@@ -54,6 +56,8 @@ function score_set(
             en_[ie] = en
 
         end
+
+        ar += en
 
         if en < 0.0
 
@@ -73,13 +77,11 @@ function score_set(
 
         end
 
-        ar += en
-
     end
 
     if pl
 
-        _plot(el_, sc_, el1_, bo_, en_, ex; ke...)
+        plot_mountain(el_, sc_, el1_, bo_, en_, ex; ke...)
 
     end
 
@@ -107,7 +109,7 @@ function score_set(
     ke...,
 )::Float64
 
-    return score_set(el_, sc_, el1_, check_is(el_, el1_); we = we, me = me, pl = pl, ke...)
+    return score_set(el_, sc_, el1_, check_in(el_, el1_); we = we, me = me, pl = pl, ke...)
 
 end
 
@@ -134,7 +136,7 @@ function score_set(
     for (se, el1_) in se_el1_
 
         se_en[se] =
-            score_set(el_, sc_, el1_, check_is(ch, el1_); we = we, me = me, pl = false)
+            score_set(el_, sc_, el1_, check_in(ch, el1_); we = we, me = me, pl = false)
 
     end
 
@@ -171,7 +173,7 @@ function score_set(
 
         end
 
-        en_se_sa[!, sa] = collect(se_en[set] for set in en_se_sa[!, :Set])
+        en_se_sa[!, sa] = collect(se_en[se] for se in en_se_sa[!, :Set])
 
     end
 

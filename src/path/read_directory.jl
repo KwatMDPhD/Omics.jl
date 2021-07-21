@@ -1,8 +1,7 @@
-function read_directory(p::String; sort = true, join = true)::Vector{String}
+function read_directory(pa::String; so = true, jo = true)::Vector{String}
 
     return [
-        s for
-        s in readdir(p; sort = sort, join = join) if !startswith(splitpath(s)[end], '.')
+        st for st in readdir(pa; sort = so, join = jo) if !startswith(splitdir(st)[2], '.')
     ]
 
 end
