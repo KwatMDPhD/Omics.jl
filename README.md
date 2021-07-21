@@ -7,7 +7,7 @@ julia
 ```julia
 using Pkg: add
 
-add(; url="https://github.com/KwatME/Kwat.jl")
+add(url="https://github.com/KwatME/Kwat.jl")
 ```
 
 ## Use

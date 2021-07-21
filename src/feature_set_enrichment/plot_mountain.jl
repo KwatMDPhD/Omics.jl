@@ -1,7 +1,7 @@
 using Plotly: Layout, attr, plot, scatter
 using Printf: @sprintf
 
-function _plot_mountain(
+function plot_mountain(
     el_::Vector{String},
     sc_::Vector{Float64},
     bo_::Vector{Float64},
@@ -124,4 +124,4 @@ function _plot_mountain(
 
 end
 
-export _plot_mountain
+export plot_mountain

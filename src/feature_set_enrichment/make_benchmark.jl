@@ -2,6 +2,7 @@ using CSV: read
 using DataFrames: DataFrame
 using StatsBase: sample
 
+using ..file: read_gmt
 using ..vector: list_card
 
 function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector{String}}
@@ -30,7 +31,7 @@ function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector
 
     elseif sp_[1] == "myc"
 
-        di = "../../nb/data/"
+        di = "../nb/data/"
 
         da = read(joinpath(di, "gene_score.tsv"), DataFrame)
 

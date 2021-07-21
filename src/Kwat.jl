@@ -74,11 +74,11 @@ include("plot/use_style!.jl")
 
 end
 
-module stringg
+module string
 
-include("stringg/replace.jl")
+include("string/replace.jl")
 
-include("stringg/title.jl")
+include("string/title.jl")
 
 end
 
@@ -93,6 +93,8 @@ include("vector/sort_like.jl")
 end
 
 module vector_number
+
+include("vector_number/convert.jl")
 
 include("vector_number/cumulate_sum_reverse.jl")
 

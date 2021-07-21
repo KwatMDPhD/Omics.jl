@@ -1,4 +1,6 @@
 using ..vector: check_in
+using ..vector_number: cumulate_sum_reverse, get_area
+using ..information: compute_idrd
 
 function score_set_new(
     el_::Vector{String},
@@ -48,7 +50,7 @@ function score_set_new(
 
     if pl
 
-        _plot(el_, sc_, el1_, bo1_, en_, ar; ke...)
+        plot_mountain(el_, sc_, bo1_, en_, ar; ke...)
 
     end
 
@@ -59,7 +61,7 @@ end
 function score_set_new(
     el_::Vector{String},
     sc_::Vector{Float64},
-    se_el1_::Dict{String,Vector{String}};,
+    se_el1_::Dict{String,Vector{String}};
 )::Dict{String,Float64}
 
     se_en = Dict{String,Float64}()

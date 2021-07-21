@@ -1,4 +1,4 @@
-using CSV: read, File
+using CSV: File, read
 using DataFrames: DataFrame
 using Mmap: mmap
 

@@ -1,6 +1,7 @@
 using CSV
 using DataFrames: DataFrame, names
 
+using ..math: get_center
 using ..vector: check_in, sort_like
 
 # TODO: weigh
@@ -27,7 +28,7 @@ function score_set(
 
     ar = 0.0
 
-    su1, su0 = sum_h_absolute_and_n_m(sc_, bo_)
+    su1, su0 = sum_1_absolute_and_n_0(sc_, bo_)
 
     de = 1.0 / su0
 
@@ -81,7 +82,7 @@ function score_set(
 
     if pl
 
-        plot_mountain(el_, sc_, el1_, bo_, en_, ex; ke...)
+        plot_mountain(el_, sc_, bo_, en_, ex; ke...)
 
     end
 
