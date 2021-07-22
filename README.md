@@ -1,13 +1,11 @@
 ## Install
 
 ```sh
-julia
-```
-
-```julia
+julia --eval '
 using Pkg: add
 
 add(url="https://github.com/KwatME/Kwat.jl")
+'
 ```
 
 ## Use
