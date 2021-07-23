@@ -1,4 +1,4 @@
-function sum_1_absolute_and_n_0(
+function sum_1_absolute_n_0(
     ve::Vector{Float64},
     bo_::Vector{Float64},
 )::Tuple{Float64,Float64}
@@ -33,4 +33,4 @@ function sum_1_absolute_and_n_0(
 
 end
 
-export sum_1_absolute_and_n_0
+export sum_1_absolute_n_0

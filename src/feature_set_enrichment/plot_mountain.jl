@@ -101,7 +101,7 @@ function plot_mountain(
             xa,
             attr(
                 y = 1.16,
-                text = "<b>en = $en</b>",
+                text = "<b>Enrichment = $en</b>",
                 font_size = title_font_size * 0.64,
                 font_color = "#2a603b",
             ),

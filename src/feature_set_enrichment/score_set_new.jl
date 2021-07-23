@@ -1,6 +1,6 @@
 using ..vector: check_in
 using ..vector_number: cumulate_sum_reverse, get_area
-using ..information: compute_idrd
+using ..information: get_idrd
 
 function score_set_new(
     el_::Vector{String},
@@ -40,9 +40,9 @@ function score_set_new(
 
     ab0pl_ = cumulate_sum_reverse(ab0p_) .+ ep
 
-    ri = compute_idrd(ab1pr_, ab0pr_, abpr_)
+    ri = get_idrd(ab1pr_, ab0pr_, abpr_)
 
-    le = compute_idrd(ab1pl_, ab0pl_, abpl_)
+    le = get_idrd(ab1pl_, ab0pl_, abpl_)
 
     en_ = le - ri
 
