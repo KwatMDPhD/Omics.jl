@@ -2,7 +2,7 @@ using Plotly: Layout, Style
 
 function use_style!()::Style
 
-    return use_style!(
+    return Plotly.use_style!(
         Style(
             layout = Layout(
                 autosize = false,
