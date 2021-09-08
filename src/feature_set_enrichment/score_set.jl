@@ -4,11 +4,10 @@ using DataFrames: DataFrame, names
 using ..math: get_center
 using ..vector: check_in, sort_like
 
-# TODO: weigh
 function score_set(
-    el_::Vector{String},
+    fe_::Vector{String},
     sc_::Vector{Float64},
-    el1_::Vector{String},
+    fe1_::Vector{String},
     bo_::Vector{Float64};
     we::Float64 = 1.0,
     al::String = "ks",
@@ -16,11 +15,11 @@ function score_set(
     ke...,
 )::Float64
 
-    n_el = length(el_)
+    n_fe = length(fe_)
 
     en = 0.0
 
-    en_ = Vector{Float64}(undef, n_el)
+    en_ = Vector{Float64}(undef, n_fe)
 
     ex = 0.0
 
@@ -32,7 +31,7 @@ function score_set(
 
     de = 1.0 / su0
 
-    @inbounds @fastmath @simd for ie = n_el:-1:1
+    @inbounds @fastmath @simd for ie = n_fe:-1:1
 
         if bo_[ie] == 1.0
 
@@ -86,13 +85,13 @@ function score_set(
 
     elseif al == "auc"
 
-        en = ar / convert(Float64, n_el)
+        en = ar / convert(Float64, n_fe)
 
     end
 
     if pl
 
-        plot_mountain(el_, sc_, bo_, en_, en; ke...)
+        plot_mountain(fe_, sc_, bo_, en_, en; ke...)
 
     end
 
@@ -101,43 +100,43 @@ function score_set(
 end
 
 function score_set(
-    el_::Vector{String},
+    fe_::Vector{String},
     sc_::Vector{Float64},
-    el1_::Vector{String};
+    fe1_::Vector{String};
     we::Float64 = 1.0,
     al::String = "ks",
     pl::Bool = true,
     ke...,
 )::Float64
 
-    return score_set(el_, sc_, el1_, check_in(el_, el1_); we = we, al = al, pl = pl, ke...)
+    return score_set(fe_, sc_, fe1_, check_in(fe_, fe1_); we = we, al = al, pl = pl, ke...)
 
 end
 
 function score_set(
-    el_::Vector{String},
+    fe_::Vector{String},
     sc_::Vector{Float64},
-    se_el_::Dict{String,Vector{String}};
+    se_fe_::Dict{String,Vector{String}};
     we::Float64 = 1.0,
     al::String = "ks",
 )::Dict{String,Float64}
 
-    if length(se_el_) < 10
+    if length(se_fe_) < 10
 
-        ch = el_
+        ch = fe_
 
     else
 
-        ch = Dict(el => ie for (el, ie) in zip(el_, 1:length(el_)))
+        ch = Dict(fe => ie for (fe, ie) in zip(fe_, 1:length(fe_)))
 
     end
 
     se_en = Dict{String,Float64}()
 
-    for (se, el1_) in se_el_
+    for (se, fe1_) in se_fe_
 
         se_en[se] =
-            score_set(el_, sc_, el1_, check_in(ch, el1_); we = we, al = al, pl = false)
+            score_set(fe_, sc_, fe1_, check_in(ch, fe1_); we = we, al = al, pl = false)
 
     end
 
@@ -145,32 +144,31 @@ function score_set(
 
 end
 
-# TODO: parallelize
 function score_set(
-    sc_el_sa::DataFrame,
-    se_el_::Dict{String,Vector{String}};
+    sc_fe_sa::DataFrame,
+    se_fe_::Dict{String,Vector{String}};
     we::Float64 = 1.0,
     al::String = "ks",
     n_jo::Int64 = 1,
 )::DataFrame
 
-    el_ = sc_el_sa[!, 1]
+    fe_ = sc_fe_sa[!, 1]
 
-    en_se_sa = DataFrame(:Set => collect(keys(se_el_)))
+    en_se_sa = DataFrame(:Set => collect(keys(se_fe_)))
 
-    for sa in names(sc_el_sa)[2:end]
+    for sa in names(sc_fe_sa)[2:end]
 
-        bo_ = findall(!ismissing, sc_el_sa[!, sa])
+        bo_ = findall(!ismissing, sc_fe_sa[!, sa])
 
-        sc_, el_ = sort_like(sc_el_sa[bo_, sa], el_[bo_])
+        sc_, fe_ = sort_like(sc_fe_sa[bo_, sa], fe_[bo_])
 
         if in(al, ["ks", "auc"])
 
-            se_en = score_set(el_, sc_, se_el_; we = we, al = al)
+            se_en = score_set(fe_, sc_, se_fe_; we = we, al = al)
 
         elseif al == "js"
 
-            se_en = score_set_new(el_, sc_, se_el_)
+            se_en = score_set_new(fe_, sc_, se_fe_)
 
         end
 

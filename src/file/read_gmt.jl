@@ -10,7 +10,7 @@ function read_gmt(pa::String)::Dict{String,Vector{String}}
 
         if unique(el_) == [""]
 
-            error(li)
+            #error("Empty set $(sp_[1])")
 
         end
 

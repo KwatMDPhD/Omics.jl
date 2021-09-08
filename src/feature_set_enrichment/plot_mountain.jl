@@ -2,9 +2,9 @@ using Plotly: Layout, attr, plot, scatter
 using Printf: @sprintf
 
 function plot_mountain(
-    el_::Vector{String},
+    fe_::Vector{String},
     sc_::Vector{Float64},
-    bo_::Vector{Float64},
+    in1_::Vector{Float64},
     en_::Vector{Float64},
     en::Float64;
     width::Real = 800,
@@ -16,13 +16,13 @@ function plot_mountain(
     element_score_name::String = "Element Score",
 )::Any
 
-    n_el = length(el_)
+    n_fe = length(fe_)
 
-    yaxis1_domain = (0.0, 0.24)
+    yaxis1_domain = [0.0, 0.24]
 
-    yaxis2_domain = (0.24, 0.32)
+    yaxis2_domain = [0.24, 0.32]
 
-    yaxis3_domain = (0.32, 1.0)
+    yaxis3_domain = [0.32, 1.0]
 
     an = attr(xref = "paper", yref = "paper", yanchor = "middle", showarrow = false)
 
@@ -54,7 +54,7 @@ function plot_mountain(
         yaxis3_showline = true,
         annotations = [
             merge(xa, attr(y = 1.24, text = "<b>$title</b>", font_size = title_font_size)),
-            merge(xa, attr(y = -0.088, text = "<b>Element Rank (n=$n_el)</b>")),
+            merge(xa, attr(y = -0.088, text = "<b>Element Rank (n=$n_fe)</b>")),
             merge(
                 ya,
                 attr(y = get_center(yaxis1_domain...), text = "<b>$element_score_name</b>"),
@@ -64,28 +64,28 @@ function plot_mountain(
         ],
     )
 
-    x = 1:n_el
+    x = 1:n_fe
 
     tre = scatter(
         name = "Element Score",
         x = x,
         y = sc_,
-        text = el_,
+        text = fe_,
         line_width = line_width,
         line_color = "#4e40d8",
         fill = "tozeroy",
         hoverinfo = "x+y+text",
     )
 
-    bo_ = BitVector(bo_)
+    in1_ = BitVector(in1_)
 
     tr1 = scatter(
         name = "Set",
         yaxis = "y2",
         mode = "markers",
-        x = x[bo_],
-        y = zeros(Int64(sum(bo_))),
-        text = el_[bo_],
+        x = x[in1_],
+        y = zeros(Int64(sum(in1_))),
+        text = fe_[in1_],
         marker_symbol = "line-ns-open",
         marker_size = height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.64,
         marker_line_width = line_width,
@@ -113,7 +113,7 @@ function plot_mountain(
         yaxis = "y3",
         x = x,
         y = en_,
-        text = el_,
+        text = fe_,
         line_width = line_width,
         line_color = "#20d9ba",
         fill = "tozeroy",
