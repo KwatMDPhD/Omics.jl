@@ -144,38 +144,25 @@ function compare_algorithms(
         ("ab", a_h_p_cl, a_m_p_cl, a_h_p_cr, a_m_p_cr),
     )
 
-        for (k2, f1, args) in (
-            ("ks", get_ks, ()),
-            ("idrs", get_idrs, ()),
-            ("idrsw", get_idrs, (a_p_cl,)),
-            ("idrd", get_idrd, ()),
-            ("idrdw", get_idrd, (a_p_cl,)),
-            ("ides", get_ides, ()),
-            ("ided", get_ided, ()),
+        for (k2, f1, arl_, arr_) in (
+         ("ks", get_ks, [], []),
+         ("ides", get_ides, [], []),
+         ("ided", get_ided, [], []),
+         ("idrs", get_idrs, [], []),
+         ("idrd", get_idrd, [], []),
+         ("idrsw", get_idrs, [a_p_cl], [a_p_cr]),
+         ("idrdw", get_idrd, [a_p_cl], [a_p_cr]),
         )
 
-            l = f1(hl, ml, args...)
+            l = f1(hl, ml, arl_...)
 
-            r = f1(hr, mr, args...)
+            r = f1(hr, mr, arr_...)
 
             for (k3, v) in (("<", l), (">", r), ("<>", l - r))
 
                 for (k4, f2) in (("area", get_area), ("extreme", get_extreme))
 
                     k = join((k1, k3, k2, k4), " ")
-
-                    if !(
-                        k in (
-                            "is < ks area",
-                            "is <> idrd area",
-                            "ab <> idrd area",
-                            "ab <> idrdw area",
-                        )
-                    )
-
-                        continue
-
-                    end
 
                     s = f2(v)
 
