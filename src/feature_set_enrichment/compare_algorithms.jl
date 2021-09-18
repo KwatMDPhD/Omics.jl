@@ -145,13 +145,13 @@ function compare_algorithms(
     )
 
         for (k2, f1, arl_, arr_) in (
-         ("ks", get_ks, [], []),
-         ("ides", get_ides, [], []),
-         ("ided", get_ided, [], []),
-         ("idrs", get_idrs, [], []),
-         ("idrd", get_idrd, [], []),
-         ("idrsw", get_idrs, [a_p_cl], [a_p_cr]),
-         ("idrdw", get_idrd, [a_p_cl], [a_p_cr]),
+            ("ks", get_ks, [], []),
+            ("ides", get_ides, [], []),
+            ("ided", get_ided, [], []),
+            ("idrs", get_idrs, [], []),
+            ("idrd", get_idrd, [], []),
+            ("idrsw", get_idrs, [a_p_cl], [a_p_cr]),
+            ("idrdw", get_idrd, [a_p_cl], [a_p_cr]),
         )
 
             l = f1(hl, ml, arl_...)
