@@ -1,14 +1,16 @@
-function convert(ve::Vector{Vector{Float64}})::Matrix{Float64}
+Ty = Matrix{Float64}
 
-    di1 = length(ve)
+function convert(ve_::Vector{Vector{Float64}})::Ty
 
-    di2 = length(ve[1])
+    si1 = length(ve_)
 
-    ma = Matrix{Float64}(undef, di1, di2)
+    si2 = length(ve_[1])
 
-    @inbounds @fastmath for ie1 = 1:di1, ie2 = 1:di2
+    ma = Ty(undef, si1, si2)
 
-        ma[ie1, ie2] = ve[ie1][ie2]
+    @inbounds @fastmath for ie1 = 1:si1, ie2 = 1:si2
+
+        ma[ie1, ie2] = ve_[ie1][ie2]
 
     end
 
