@@ -8,7 +8,7 @@ end
 
 module fastq
 
-include("fastq/check.jl")
+include("fastq/check_read.jl")
 
 include("fastq/call_variant.jl")
 

@@ -1,6 +1,6 @@
 using Dates: now, CompoundPeriod
 
-function check(fq_::Array, pa::String, n_jo::Int)
+function check_read(fq_::Array, pa::String, n_jo::Int)
 
     st = now()
     
@@ -34,4 +34,4 @@ function check(fq_::Array, pa::String, n_jo::Int)
 
 end
 
-export check
+export check_read
