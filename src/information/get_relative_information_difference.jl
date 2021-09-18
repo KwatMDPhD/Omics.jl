@@ -1,4 +1,4 @@
-function get_idrd(
+function get_relative_information_difference(
     ve1::Vector{Float64},
     ve2::Vector{Float64},
     ver::Vector{Float64},
@@ -8,10 +8,10 @@ function get_idrd(
 
 end
 
-function get_idrd(ve1::Vector{Float64}, ve2::Vector{Float64})::Vector{Float64}
+function get_relative_information_difference(ve1::Vector{Float64}, ve2::Vector{Float64})::Vector{Float64}
 
     return get_idrd(ve1, ve2, (ve1 .+ ve2) ./ 2)
 
 end
 
-export get_idrd
+export get_relative_information_difference

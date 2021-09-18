@@ -6,32 +6,6 @@ include("dictionary/merge.jl")
 
 end
 
-module fastq
-
-include("fastq/check_read.jl")
-
-include("fastq/call_variant.jl")
-
-include("fastq/check.jl")
-
-include("fastq/concatenate.jl")
-
-include("fastq/count_transcript.jl")
-
-include("fastq/find.jl")
-
-include("fastq/process_dna.jl")
-
-include("fastq/process_soma_dna.jl")
-
-include("fastq/run_command.jl")
-
-include("fastq/test.jl")
-
-include("fastq/trim.jl")
-
-end
-
 module file
 
 include("file/read_gct.jl")

@@ -1,38 +1,42 @@
-function read_gmt(pa::String)::Dict{String,Vector{String}}
+using Kwat.dictionary: merge
 
-    se_el_ = Dict{String,Vector{String}}()
+Ty = Dict{String,Vector{String}}
+
+function read_gmt(pa::String)::Ty
+
+    se_ge_ = Ty()
 
     for li in readlines(pa)
 
         sp_ = split(li, '\t')
 
-        el_ = sp_[3:end]
+        ge_ = sp_[3:end]
 
-        if unique(el_) == [""]
+        if unique(ge_) == [""]
 
-            #error("Empty set $(sp_[1])")
+            println("$(sp_[1]) is empty.")
 
         end
 
-        se_el_[sp_[1]] = el_
+        se_ge_[sp_[1]] = ge_
 
     end
 
-    return se_el_
+    return se_ge_
 
 end
 
-function read_gmt(pa_::Vector{String})::Dict{String,Vector{String}}
+function read_gmt(pa_::Vector{String})::Ty
 
-    se_el_ = Dict{String,Vector{String}}()
+    se_ge_ = Ty()
 
     for pa in pa_
 
-        merge!(se_el_, read_gmt(pa))
+        se_ge_ = merge(se_ge_, read_gmt(pa))
 
     end
 
-    return se_el_
+    return se_ge_
 
 end
 
