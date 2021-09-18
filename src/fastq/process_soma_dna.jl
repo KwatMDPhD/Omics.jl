@@ -39,7 +39,7 @@ function process_soma_dna(
 
     so2tr::String = "$pasotr-trimmed-pair2.fastq.gz"
 
-    check_sequence((ge1tr, ge2tr, so1tr, so2tr), joinpath(paou, "check_sequence"), n_jo)
+    check_read((ge1tr, ge2tr, so1tr, so2tr), joinpath(paou, "check_raw"), n_jo)
 
     pageal::String = joinpath(paou, "align_sequence", "germ.bam")
 
