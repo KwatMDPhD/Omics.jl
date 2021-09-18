@@ -8,11 +8,8 @@ BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CodecZlib = "944b1d66-785c-5afd-91f1-9de20f533193"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
-<<<<<<< HEAD
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
-=======
->>>>>>> 25b6ace (Decluttering)
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 KernelDensity = "5ab0869b-81aa-558d-bb23-cbf5423bbe9b"
 Mmap = "a63ad114-7e13-5084-954f-fe012c677804"
