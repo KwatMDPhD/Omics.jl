@@ -16,7 +16,7 @@ function merge(di1::Dict, di2::Dict)::Dict
 
             else
 
-                println("$ke => ($va1) $va2")
+                println("$ke => ($va1) $va2.")
 
                 di[ke] = va2
 
