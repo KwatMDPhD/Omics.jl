@@ -8,7 +8,7 @@ end
 
 function check_in(st_ie::Dict{String,Int64}, st1_::Vector{String})::Vector{Float64}
 
-    bo_ = fill(0, length(st_ie))
+    in_ = fill(0, length(st_ie))
 
     @inbounds @fastmath @simd for st1 in st1_
 
@@ -16,13 +16,13 @@ function check_in(st_ie::Dict{String,Int64}, st1_::Vector{String})::Vector{Float
 
         if ie !== nothing
 
-            bo_[ie] = 1.0
+            in_[ie] = 1.0
 
         end
 
     end
 
-    return bo_
+    return in_
 
 end
 

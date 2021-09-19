@@ -2,10 +2,10 @@ using Plotly: Layout, attr, plot, scatter
 using Printf: @sprintf
 
 function plot_mountain(
-    fe_::Vector{String},
-    sc_::Vector{Float64},
-    in1_::Vector{Float64},
-    en_::Vector{Float64},
+    fe_::VS,
+    sc_::VF,
+    in_::VF,
+    en_::VF,
     en::Float64;
     width::Real = 800,
     height::Real = 500,
@@ -77,15 +77,15 @@ function plot_mountain(
         hoverinfo = "x+y+text",
     )
 
-    in1_ = BitVector(in1_)
+    in_ = BitVector(in_)
 
     tr1 = scatter(
         name = "Set",
         yaxis = "y2",
         mode = "markers",
-        x = x[in1_],
-        y = zeros(Int64(sum(in1_))),
-        text = fe_[in1_],
+        x = x[in_],
+        y = zeros(Int64(sum(in_))),
+        text = fe_[in_],
         marker_symbol = "line-ns-open",
         marker_size = height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.64,
         marker_line_width = line_width,

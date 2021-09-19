@@ -6,6 +6,32 @@ include("dictionary/merge.jl")
 
 end
 
+module fastq
+
+include("fastq/align.jl")
+
+include("fastq/call_variant.jl")
+
+include("fastq/check_read.jl")
+
+include("fastq/concatenate.jl")
+
+include("fastq/count_transcript.jl")
+
+include("fastq/find.jl")
+
+include("fastq/process_dna.jl")
+
+include("fastq/process_soma_dna.jl")
+
+include("fastq/run_command.jl")
+
+include("fastq/test.jl")
+
+include("fastq/trim.jl")
+
+end
+
 module file
 
 include("file/read_gct.jl")
@@ -24,21 +50,21 @@ end
 
 module information
 
-include("information/get_ic.jl")
+include("information/get_entropy.jl")
 
-include("information/get_ided.jl")
+include("information/get_information_coefficient.jl")
 
-include("information/get_ides.jl")
+include("information/get_kullback_leibler_divergence.jl")
 
-include("information/get_idrd.jl")
+include("information/get_mutual_information.jl")
 
-include("information/get_idrs.jl")
+include("information/get_relative_information_difference.jl")
 
-include("information/get_kld.jl")
+include("information/get_relative_information_sum.jl")
 
-include("information/get_mi.jl")
+include("information/get_symmetric_information_difference.jl")
 
-include("information/get_s.jl")
+include("information/get_symmetric_information_sum.jl")
 
 end
 
@@ -56,7 +82,7 @@ end
 
 module network
 
-include("network/plot_network.jl")
+include("network/plot.jl")
 
 end
 
@@ -114,6 +140,12 @@ end
 
 module feature_set_enrichment
 
+include("feature_set_enrichment/_.jl")
+
+include("feature_set_enrichment/_get_probability_and_cumulative_probability.jl")
+
+include("feature_set_enrichment/compare_algorithm.jl")
+
 include("feature_set_enrichment/make_benchmark.jl")
 
 include("feature_set_enrichment/plot_mountain.jl")
@@ -121,10 +153,6 @@ include("feature_set_enrichment/plot_mountain.jl")
 include("feature_set_enrichment/score_set.jl")
 
 include("feature_set_enrichment/score_set_new.jl")
-
-include("feature_set_enrichment/sum_1_absolute_and_n_0.jl")
-
-include("feature_set_enrichment/compare_algorithms.jl")
 
 end
 

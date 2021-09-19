@@ -3,11 +3,11 @@ using StatsBase
 
 function normalize!(ve::Vector{Float64}, me::String)::Nothing
 
-    bo_ = .!isnan.(ve)
+    go_ = .!isnan.(ve)
 
-    if any(bo_)
+    if any(go_)
 
-        ve[bo_] .= normalize(ve[bo_], me)
+        ve[go_] .= normalize(ve[go_], me)
 
     end
 

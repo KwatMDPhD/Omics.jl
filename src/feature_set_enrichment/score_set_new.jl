@@ -1,70 +1,44 @@
 using ..vector: check_in
 using ..vector_number: cumulate_sum_reverse, get_area
-using ..information: get_idrd
+using ..information: get_relative_information_difference
 
-function score_set_new(
-    fe_::Vector{String},
-    sc_::Vector{Float64},
-    fe1_::Vector{String};
-    pl::Bool = true,
-    ke...,
-)::Float64
+function score_set_new(fe_::VS, sc_::VF, fe1_::VS; pl::Bool = true, ke_ar...)::Float64
+
+    in_ = check_in(fe_, fe1_)
 
     ab_ = abs.(sc_)
 
-    in1_ = check_in(fe_, fe1_)
+    ina_ = in_ .* ab_
 
-    in0_ = 1.0 .- in1_
+    ou_ = 1.0 .- in_
 
-    ab1_ = ab_ .* in1_
+    abp_, abpr_, abpl_ = _get_probability_and_cumulative_probability(ab_)
 
-    ab0_ = ab_ .* in0_
+    inap_, inapr_, inapl_ = _get_probability_and_cumulative_probability(ina_)
 
-    abp_ = ab_ / sum(ab_)
+    oup_, oupr_, oupl_ = _get_probability_and_cumulative_probability(ou_)
 
-    ab1p_ = ab1_ / sum(ab1_)
+    fl_ = get_relative_information_difference(inapl_, oupl_, abpl_)
 
-    ab0p_ = ab0_ / sum(ab0_)
+    fr_ = get_relative_information_difference(inapr_, oupr_, abpr_)
 
-    ep = eps()
+    en_ = fl_ - fr_
 
-    abpr_ = cumsum(abp_) .+ ep
-
-    ab1pr_ = cumsum(ab1p_) .+ ep
-
-    ab0pr_ = cumsum(ab0p_) .+ ep
-
-    abpl_ = cumulate_sum_reverse(abp_) .+ ep
-
-    ab1pl_ = cumulate_sum_reverse(ab1p_) .+ ep
-
-    ab0pl_ = cumulate_sum_reverse(ab0p_) .+ ep
-
-    ri = get_idrd(ab1pr_, ab0pr_, abpr_)
-
-    le = get_idrd(ab1pl_, ab0pl_, abpl_)
-
-    en_ = le - ri
-
-    ar = get_area(en_)
+    en = get_area(en_)
 
     if pl
 
-        plot_mountain(fe_, sc_, in1_, en_, ar; ke...)
+        plot_mountain(fe_, sc_, in_, en_, en; ke_ar...)
 
     end
 
-    return ar
+    return en
 
 end
 
-function score_set_new(
-    fe_::Vector{String},
-    sc_::Vector{Float64},
-    se_fe1_::Dict{String,Vector{String}},
-)::Dict{String,Float64}
+function score_set_new(fe_::VS, sc_::VF, se_fe1_::DSVS)::DSF
 
-    se_en = Dict{String,Float64}()
+    se_en = DSF()
 
     for (se, fe1_) in se_fe1_
 

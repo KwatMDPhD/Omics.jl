@@ -1,4 +1,4 @@
-using Kwat.dictionary: merge
+using ..dictionary: merge
 
 Ty = Dict{String,Vector{String}}
 

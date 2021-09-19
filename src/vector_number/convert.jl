@@ -1,6 +1,6 @@
-function convert(it::Any)::Vector{Float64}
+function convert(an::Any)::Vector{Float64}
 
-    return Base.convert(Vector{Float64}, it)
+    return Base.convert(Vector{Float64}, an)
 
 end
 

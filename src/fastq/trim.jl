@@ -1,12 +1,6 @@
 using Dates: now, CompoundPeriod
 
-function trim(
-    fq1::String, 
-    fq2::String, 
-    pa::String, 
-    n_jo::Int,
-    ad::String="AGATCGGAAGAGC"
-    )
+function trim(fq1::String, fq2::String, pa::String, n_jo::Int, ad::String = "AGATCGGAAGAGC")
 
     st = now()
 
@@ -24,7 +18,7 @@ function trim(
         println("($st) Trimming sequence ...")
 
         mkpath(pa)
-        
+
         println("Made path for trimmed files: $pa")
 
         run_command(

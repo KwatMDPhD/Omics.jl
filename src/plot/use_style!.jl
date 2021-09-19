@@ -1,8 +1,8 @@
-using Plotly: Layout, Style
+using Plotly: Layout, Style, use_style! as Plotlyuse_style!
 
 function use_style!()::Style
 
-    return Plotly.use_style!(
+    return Plotlyuse_style!(
         Style(
             layout = Layout(
                 autosize = false,

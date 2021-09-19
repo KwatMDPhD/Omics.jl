@@ -24,7 +24,7 @@ function process_dna(
     end
 
     pat::String = joinpath(pao, "trim/")
-    
+
     trim(fq1, fq2, pat, n_jo, ad)
 
     fq1t::String = "$pat/trimmed-pair1.fastq.gz"
@@ -52,7 +52,7 @@ function process_dna(
     end
 
     pav::String = joinpath(pao, "call_variant")
-    
+
     call_variant(mo, paa, nothing, ta, fag, chi, chn, pav, n_jo, met, pas)
 
 end
