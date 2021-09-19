@@ -36,11 +36,11 @@ function score_set_new(fe_::VS, sc_::VF, fe1_::VS; pl::Bool = true, ke_ar...)::F
 
 end
 
-function score_set_new(fe_::VS, sc_::VF, se_fe1_::DSVS)::DSF
+function score_set_new(fe_::VS, sc_::VF, se_fe_::DSVS)::DSF
 
     se_en = DSF()
 
-    for (se, fe1_) in se_fe1_
+    for (se, fe1_) in se_fe_
 
         se_en[se] = score_set_new(fe_, sc_, fe1_; pl = false)
 

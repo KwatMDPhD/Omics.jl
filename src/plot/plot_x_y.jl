@@ -1,4 +1,4 @@
-using Plotly: Layout, scatter, plot as Plotlyplot
+using Plotly: Layout, plot as Plotlyplot, scatter
 
 function plot_x_y(
     x_::Vector{Vector{Float64}},
@@ -15,33 +15,22 @@ function plot_x_y(
 
     for ie = 1:n_tr
 
+        if name_ !== nothing
+
+            tr_[ie]["name"] = name_[ie]
+
+        end
+
         tr_[ie]["x"] = x_[ie]
 
         tr_[ie]["y"] = y_[ie]
 
-        if text_ == nothing
+        if text_ !== nothing
 
-            text = nothing
-
-        else
-
-            text = text_[ie]
+            tr_[ie]["text"] = text_[ie]
 
         end
 
-        tr_[ie]["text"] = text
-
-        if name_ == nothing
-
-            name = string(ie)
-
-        else
-
-            name = name_[ie]
-
-        end
-
-        tr_[ie]["name"] = name
 
         if mode_ == nothing
 

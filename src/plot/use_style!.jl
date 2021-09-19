@@ -8,6 +8,8 @@ function use_style!()::Style
                 autosize = false,
                 template = "plotly_white",
                 hovermode = "closest",
+                xaxis_automargin = true,
+                yaxis_automargin = true,
             ),
         ),
     )

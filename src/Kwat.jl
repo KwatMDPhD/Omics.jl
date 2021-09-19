@@ -96,6 +96,8 @@ module plot
 
 include("plot/plot_x_y.jl")
 
+include("plot/plot_bar.jl")
+
 include("plot/use_style!.jl")
 
 end

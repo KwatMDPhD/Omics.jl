@@ -60,44 +60,34 @@ function try_method(
 
         end
 
-        display(
-            plot_x_y(
-                [sc_, in_];
-                name_ = ["Score", "In"],
-                layout = merge(layout, Layout(title = "Input")),
-            ),
+        plot_x_y(
+            [sc_, in_];
+            name_ = ["Score", "In"],
+            layout = merge(layout, Layout(title = "Input")),
         )
 
-        display(
-            plot_x_y(
-                [ab_, abp_, abpr_, abpl_];
-                name_ = ["v", "P", "Cr", "Cl"],
-                layout = merge(layout, Layout(title = "Absolute")),
-            ),
+        plot_x_y(
+            [ab_, abp_, abpr_, abpl_];
+            name_ = ["v", "P", "Cr", "Cl"],
+            layout = merge(layout, Layout(title = "Absolute")),
         )
 
-        display(
-            plot_x_y(
-                [ina_, inap_, inapr_, inapl_];
-                name_ = ["v", "P", "Cr", "Cl"],
-                layout = merge(layout, Layout(title = "In * Absolute")),
-            ),
+        plot_x_y(
+            [ina_, inap_, inapr_, inapl_];
+            name_ = ["v", "P", "Cr", "Cl"],
+            layout = merge(layout, Layout(title = "In * Absolute")),
         )
 
-        display(
-            plot_x_y(
-                [ou_, oup_, oupr_, oupl_];
-                name_ = ["v", "P", "Cr", "Cl"],
-                layout = merge(layout, Layout(title = "Out")),
-            ),
+        plot_x_y(
+            [ou_, oup_, oupr_, oupl_];
+            name_ = ["v", "P", "Cr", "Cl"],
+            layout = merge(layout, Layout(title = "Out")),
         )
 
-        display(
-            plot_x_y(
-                [oua_, ouap_, ouapr_, ouapl_];
-                name_ = ["v", "P", "Cr", "Cl"],
-                layout = merge(layout, Layout(title = "Out * Absolute")),
-            ),
+        plot_x_y(
+            [oua_, ouap_, ouapr_, ouapl_];
+            name_ = ["v", "P", "Cr", "Cl"],
+            layout = merge(layout, Layout(title = "Out * Absolute")),
         )
 
     end
@@ -144,6 +134,17 @@ function try_method(
 
                     me_en[me] = en
 
+                    if plp
+
+
+                        plot_x_y(
+                            [fl_, fr_, en_];
+                            name_ = ["Fl", "Fr", "Enrichment"],
+                            layout = merge(layout, Layout(title = "Enrichment")),
+                        )
+
+                    end
+
                     if pl
 
                         plot_mountain(fe_, sc_, in_, en_, en; title = me)
@@ -163,7 +164,7 @@ function try_method(
 end
 
 
-function try_method(fe_::VS, sc_::VF, se_fe1_::DSVS; so::Bool = true)::DSODSF
+function try_method(fe_::VS, sc_::VF, se_fe_::DSVS; so::Bool = true)::DSODSF
 
     if so
 
@@ -173,7 +174,7 @@ function try_method(fe_::VS, sc_::VF, se_fe1_::DSVS; so::Bool = true)::DSODSF
 
     se_me_en = DSODSF()
 
-    for (se, fe1_) in se_fe1_
+    for (se, fe1_) in se_fe_
 
         se_me_en[se] = try_method(fe_, sc_, fe1_; so = false, plp = false, pl = false)
 
