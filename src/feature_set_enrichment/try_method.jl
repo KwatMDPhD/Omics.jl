@@ -16,7 +16,7 @@ function get_kolmogorov_smirnov(ve1::VF, ve2::VF)::VF
 
 end
 
-function compare_algorithm(
+function try_method(
     fe_::VS,
     sc_::VF,
     fe1_::VS;
@@ -102,11 +102,11 @@ function compare_algorithm(
 
     end
 
-    al_en = ODSF()
+    me_en = ODSF()
 
-    for (al1, our_, oul_) in [["ou", oupr_, oupl_], ["oua", ouapr_, ouapl_]]
+    for (me1, our_, oul_) in [["ou", oupr_, oupl_], ["oua", ouapr_, ouapl_]]
 
-        for (al2, fu1) in [
+        for (me2, fu1) in [
             ["ks", get_kolmogorov_smirnov],
             ["sisum", get_symmetric_information_sum],
             ["sid", get_symmetric_information_difference],
@@ -116,7 +116,7 @@ function compare_algorithm(
             ["ridw", get_relative_information_difference],
         ]
 
-            if endswith(al2, 'w')
+            if endswith(me2, 'w')
 
                 arl = [abpl_]
 
@@ -134,19 +134,19 @@ function compare_algorithm(
 
             fr_ = fu1(inapr_, our_, arr...)
 
-            for (al3, en_) in [["<", fl_], [">", fr_], ["<>", fl_ - fr_]]
+            for (me3, en_) in [["<", fl_], [">", fr_], ["<>", fl_ - fr_]]
 
-                for (al4, fu2) in [["area", get_area], ["extreme", get_extreme]]
+                for (me4, fu2) in [["area", get_area], ["extreme", get_extreme]]
 
-                    al = join([al1, al3, al2, al4], " ")
+                    me = join([me1, me3, me2, me4], " ")
 
                     en = fu2(en_)
 
-                    al_en[al] = en
+                    me_en[me] = en
 
                     if pl
 
-                        plot_mountain(fe_, sc_, in_, en_, en; title = al)
+                        plot_mountain(fe_, sc_, in_, en_, en; title = me)
 
                     end
 
@@ -158,12 +158,12 @@ function compare_algorithm(
 
     end
 
-    return al_en
+    return me_en
 
 end
 
 
-function compare_algorithms(fe_::VS, sc_::VF, se_fe1_::DSVS; so::Bool = true)::DSODSF
+function try_method(fe_::VS, sc_::VF, se_fe1_::DSVS; so::Bool = true)::DSODSF
 
     if so
 
@@ -171,17 +171,16 @@ function compare_algorithms(fe_::VS, sc_::VF, se_fe1_::DSVS; so::Bool = true)::D
 
     end
 
-    se_al_en = DSODSF()
+    se_me_en = DSODSF()
 
     for (se, fe1_) in se_fe1_
 
-        se_al_en[se] =
-            compare_algorithms(fe_, sc_, fe1_; so = false, plp = false, pl = false)
+        se_me_en[se] = try_method(fe_, sc_, fe1_; so = false, plp = false, pl = false)
 
     end
 
-    return se_al_en
+    return se_me_en
 
 end
 
-export compare_algorithm
+export try_method

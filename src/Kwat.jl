@@ -144,7 +144,7 @@ include("feature_set_enrichment/_.jl")
 
 include("feature_set_enrichment/_get_probability_and_cumulative_probability.jl")
 
-include("feature_set_enrichment/compare_algorithm.jl")
+include("feature_set_enrichment/try_method.jl")
 
 include("feature_set_enrichment/make_benchmark.jl")
 
