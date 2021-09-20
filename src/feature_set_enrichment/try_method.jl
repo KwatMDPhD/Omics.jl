@@ -120,13 +120,21 @@ function try_method(
 
             end
 
-            fl_ = fu1(inapl_, oul_, arl...)
-
             fr_ = fu1(inapr_, our_, arr...)
 
-            for (me3, en_) in [["<", fl_], [">", fr_], ["<>", fl_ - fr_]]
+            fl_ = fu1(inapl_, oul_, arl...)
 
-                for (me4, fu2) in [["area", get_area], ["extreme", get_extreme]]
+            for (me3, en_) in [
+                [">", fr_],
+                ["<", fl_],
+                ["<>", fl_ - fr_],
+                ["><", fr_ - fl_],
+            ]
+
+                for (me4, fu2) in [
+                    ["area", get_area],
+                    ["extreme", get_extreme],
+                ]
 
                     me = join([me1, me3, me2, me4], " ")
 
