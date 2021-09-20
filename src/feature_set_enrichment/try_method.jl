@@ -98,12 +98,12 @@ function try_method(
 
         for (me2, fu1) in [
             ["ks", get_kolmogorov_smirnov],
-            ["sisum", get_symmetric_information_sum],
-            ["sid", get_symmetric_information_difference],
             ["ris", get_relative_information_sum],
-            ["rid", get_relative_information_difference],
             ["risw", get_relative_information_sum],
+            ["rid", get_relative_information_difference],
             ["ridw", get_relative_information_difference],
+            ["sis", get_symmetric_information_sum],
+            ["sid", get_symmetric_information_difference],
         ]
 
             if endswith(me2, 'w')
@@ -124,17 +124,9 @@ function try_method(
 
             fl_ = fu1(inapl_, oul_, arl...)
 
-            for (me3, en_) in [
-                [">", fr_],
-                ["<", fl_],
-                ["<>", fl_ - fr_],
-                ["><", fr_ - fl_],
-            ]
+            for (me3, en_) in [[">", fr_], ["<", fl_], ["<>", fl_ - fr_]]
 
-                for (me4, fu2) in [
-                    ["area", get_area],
-                    ["extreme", get_extreme],
-                ]
+                for (me4, fu2) in [["area", get_area], ["extreme", get_extreme]]
 
                     me = join([me1, me3, me2, me4], " ")
 
