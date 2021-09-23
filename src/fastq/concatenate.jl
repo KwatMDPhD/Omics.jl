@@ -15,6 +15,7 @@ function concatenate(fq_, sa::String, pa::String)
     for fi in fq_
 
         for na in naf_
+
             if occursin(na, fi)
 
                 push!(fo_, fi)
@@ -24,6 +25,7 @@ function concatenate(fq_, sa::String, pa::String)
         end
 
         for na in nar_
+
             if occursin(na, fi)
 
                 push!(re_, fi)
@@ -72,7 +74,9 @@ function concatenate(fq_, sa::String, pa::String)
 
     en = now()
 
-    println("Done at $en in $(canonicalize(Dates.CompoundPeriod(en - st))).\n")
+    ti = canonicalize(Dates.CompoundPeriod(en - st))
+
+    println("Done at $en in $ti.\n")
 
 end
 

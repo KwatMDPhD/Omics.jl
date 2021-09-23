@@ -14,30 +14,33 @@ function process_dna(
     mej::Int,
 )
 
-    for pa::String in (fq1, fq2, fa, chi, chn, pas)
+    for pa in [fq1, fq2, fa, chi, chn, pas]
+
         if !isfile(pa)
 
-            error("$pa doesn't exist.")
+            error("$pa does not exist.")
 
         end
 
     end
 
-    pat::String = joinpath(pao, "trim/")
+    pat = joinpath(pao, "trim/")
 
     trim(fq1, fq2, pat, n_jo, ad)
 
-    fq1t::String = "$pat/trimmed-pair1.fastq.gz"
+    fq1t = joinpath(pat, "trimmed-pair1.fastq.gz")
 
-    fq2t::String = "$pat/trimmed-pair2.fastq.gz"
+    fq2t = joinpath(pat, "trimmed-pair2.fastq.gz")
 
     check([fq1t, fq2t], joinpath(pao, "check_trim"), n_jo)
 
-    paa::String = joinpath(pao, "align", "germ.bam")
+    paa = joinpath(pao, "align", "germ.bam")
 
     align(mo, fq1t, fq2t, "Germ", fa, paa, n_jo, mej)
 
-    fag::String = "$(splitext(fa)[1]).bgz"
+    sp = splitext(fa)[1]
+
+    fag = "$sp.bgz"
 
     if !isfile(fag)
 
@@ -51,7 +54,7 @@ function process_dna(
 
     end
 
-    pav::String = joinpath(pao, "call_variant")
+    pav = joinpath(pao, "call_variant")
 
     call_variant(mo, paa, nothing, ta, fag, chi, chn, pav, n_jo, met, pas)
 

@@ -1,8 +1,10 @@
 using Dates
 
-function find(pa::String)
+function find(pa::String)::Vector{String}
 
     st = now()
+
+    println(st)
 
     n_fq = 0
 
@@ -14,14 +16,13 @@ function find(pa::String)
 
     nag_ = ["fastq.gz", "fq.gz"]
 
-    for (ro, di, th_) in walkdir("$pa")
+    for (ro, di_, xx_) in walkdir(pa)
 
-        println("Walking sample directory: $ro\n")
-
-        for th in th_
+        for xx in xx_
 
             for na in naf_
-                if endswith(th, na) && !occursin(".md5", th)
+
+                if endswith(xx, na) && !occursin(".md5", xx)
 
                     n_fq += 1
 
@@ -30,11 +31,12 @@ function find(pa::String)
             end
 
             for na in nag_
-                if endswith(th, na) && !occursin(".md5", th)
+
+                if endswith(xx, na) && !occursin(".md5", xx)
 
                     n_gz += 1
 
-                    push!(fi_, joinpath(ro, th))
+                    push!(fi_, joinpath(ro, xx))
 
                 end
 
@@ -50,7 +52,9 @@ function find(pa::String)
 
     en = now()
 
-    println("Done at $en in $(canonicalize(Dates.CompoundPeriod(en - st))).\n")
+    println(en)
+
+    println(canonicalize(Dates.CompoundPeriod(en - st)))
 
     return fi_
 

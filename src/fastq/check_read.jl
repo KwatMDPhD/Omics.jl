@@ -10,7 +10,7 @@ function check_read(fq_::Array, pa::String, n_jo::Int)
 
     else
 
-        println("($st) Checking sequence ...")
+        println("($st) Checking sequence")
 
         mkpath(pa)
 
@@ -24,7 +24,9 @@ function check_read(fq_::Array, pa::String, n_jo::Int)
 
     en = now()
 
-    println("Done at $en in $(canonicalize(Dates.CompoundPeriod(en - st))).\n")
+    ti = canonicalize(Dates.CompoundPeriod(en - st))
+
+    println("Done at $en in $ti.\n")
 
 end
 

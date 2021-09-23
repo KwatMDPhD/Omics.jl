@@ -12,9 +12,9 @@ function count_transcript(
 
     sa = now()
 
-    println("Counting transcript ...\n")
+    println("Counting transcript\n")
 
-    id::String = "$fa.kallisto_index"
+    id = "$fa.kallisto_index"
 
     if !ispath(id)
 
@@ -50,7 +50,9 @@ function count_transcript(
 
     en = now()
 
-    println("Done at $en in $(canonicalize(Dates.CompoundPeriod(en - sa))).\n")
+    ti = canonicalize(Dates.CompoundPeriod(en - sa))
+
+    println("Done at $en in $ti.\n")
 
 end
 

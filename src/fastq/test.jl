@@ -1,8 +1,8 @@
-function test()
+function test()::Nothing
 
-    println("Testing environment...\n")
+    println("Testing")
 
-    for pr::String in (
+    for pr in [
         "skewer",
         "fastqc",
         "bgzip",
@@ -11,19 +11,23 @@ function test()
         "samtools",
         "bcftools",
         "kallisto",
-    )
+    ]
+
         run(`which $pr`)
 
     end
 
-    for pr::String in (
+    for pr in [
         "configManta.py",
         "configureStrelkaGermlineWorkflow.py",
         "configureStrelkaSomaticWorkflow.py",
-    )
+    ]
+
         run(`bash -c "source activate py2 && which $pr"`)
 
     end
+
+    return nothing
 
 end
 

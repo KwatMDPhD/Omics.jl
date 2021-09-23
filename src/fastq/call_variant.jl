@@ -26,10 +26,9 @@ function call_variant(
 
     end
 
-
     # Set config parameters
 
-    co::String = "--referenceFasta $fa --callRegions $chs"
+    co = "--referenceFasta $fa --callRegions $chs"
 
     if ta
 
@@ -54,53 +53,52 @@ function call_variant(
     else
 
         error(
-            "Specify germ and soma .bam for processing soma or germ .bam for processing germ.",
+            "specify germ and soma .bam (for processing soma) or germ .bam (for processing germ).",
         )
 
     end
-
 
     # Set run parameters
 
-    ru::String = "--mode local --jobs $n_jo --memGb $me --quiet"
+    ruString = "--mode local --jobs $n_jo --memGb $me --quiet"
 
-    pav::String = joinpath("results", "variants")
+    pav = joinpath("results", "variants")
 
     if mo == "dna"
 
-        pam::String = joinpath(pao, "manta")
+        pam = joinpath(pao, "manta")
+
+        pamr = joinpath(pam, "runWorkflow.py")
 
         run_command(
-            `bash -c "source activate py2 && configManta.py $co --outputContig --runDir $pam && $(joinpath(pam, "runWorkflow.py")) $ru"`,
+            `bash -c "source activate py2 && configManta.py $co --outputContig --runDir $pam && $pamr $ru"`,
         )
 
     end
 
-    past::String = joinpath(pao, "strelka")
+    pas = joinpath(pao, "strelka")
 
 
     # Configure strelka
 
-    local st::String
-
     if ge != nothing && so != nothing
 
-        st = "configureStrelkaSomaticWorkflow.py $co --indelCandidates $(joinpath(pam, pav, "candidateSmallIndels.vcf.gz")) --runDir $past"
+        st = "configureStrelkaSomaticWorkflow.py $co --indelCandidates $(joinpath(pam, pav, "candidateSmallIndels.vcf.gz")) --runDir $pas"
 
     else
 
         println("this is co right before strelka is configured: $co\n")
 
-        st = "configureStrelkaGermlineWorkflow.py $co --runDir $past"
+        st = "configureStrelkaGermlineWorkflow.py $co --runDir $pas"
 
     end
 
 
     # Run strelka
 
-    run_command(
-        `bash -c "source activate py2 && $st && $(joinpath(past, "runWorkflow.py")) $ru"`,
-    )
+    pasr = joinpath(pas, "runWorkflow.py")
+
+    run_command(`bash -c "source activate py2 && $st && $pasr $ru"`)
 
 
     if ge != nothing && so != nothing
@@ -111,7 +109,7 @@ function call_variant(
 
         open(io -> write(io, "Germ\nSoma"), sa; write = true)
 
-        pain = joinpath(past, pav, "somatic.indels.vcf.gz")
+        pain = joinpath(pas, pav, "somatic.indels.vcf.gz")
 
         run_command(
             pipeline(`bcftools reheader --threads $n_jo --samples $sa $pain`, "$pain.tmp"),
@@ -121,7 +119,7 @@ function call_variant(
 
         run_command(`tabix --force $pain`)
 
-        pasv::String = joinpath(past, pav, "somatic.snvs.vcf.gz")
+        pasv = joinpath(pas, pav, "somatic.snvs.vcf.gz")
 
         run_command(
             pipeline(`bcftools reheader --threads $n_jo --samples $sa $pasv`, "pasv.tmp"),
@@ -135,19 +133,18 @@ function call_variant(
 
     elseif mo == "cdna"
 
-        vc_ = [joinpath(past, pav, "variants.vcf.gz")]
+        vc_ = [joinpath(pas, pav, "variants.vcf.gz")]
 
         println("this is vc_: $vc_")
-
 
     else
 
         vc_ =
-            [joinpath(pam, pav, "diploidSV.vcf.gz"), joinpath(past, pav, "variants.vcf.gz")]
+            [joinpath(pam, pav, "diploidSV.vcf.gz"), joinpath(pas, pav, "variants.vcf.gz")]
 
     end
 
-    paco::String = joinpath(pao, "concat.vcf.gz")
+    paco = joinpath(pao, "concat.vcf.gz")
 
     run_command(
         pipeline(
@@ -160,11 +157,11 @@ function call_variant(
 
     run_command(`tabix $paco`)
 
-    sn::String = joinpath(pao, "snpeff")
+    sn = joinpath(pao, "snpeff")
 
     mkpath(sn)
 
-    snvc::String = joinpath(sn, "snpeff.vcf.gz")
+    snvc = joinpath(sn, "snpeff.vcf.gz")
 
     run_command(
         pipeline(
@@ -176,7 +173,7 @@ function call_variant(
 
     run_command(`tabix $snvc`)
 
-    ps::String = joinpath(pao, "pass.vcf.gz")
+    ps = joinpath(pao, "pass.vcf.gz")
 
     run_command(
         pipeline(

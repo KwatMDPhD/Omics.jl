@@ -1,34 +1,14 @@
 module Kwat
 
-module dictionary
+module bash
 
-include("dictionary/merge.jl")
+include("bash/run.jl")
 
 end
 
-module fastq
+module dictionary
 
-include("fastq/align.jl")
-
-include("fastq/call_variant.jl")
-
-include("fastq/check_read.jl")
-
-include("fastq/concatenate.jl")
-
-include("fastq/count_transcript.jl")
-
-include("fastq/find.jl")
-
-include("fastq/process_dna.jl")
-
-include("fastq/process_soma_dna.jl")
-
-include("fastq/run_command.jl")
-
-include("fastq/test.jl")
-
-include("fastq/trim.jl")
+include("dictionary/merge.jl")
 
 end
 
