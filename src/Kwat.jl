@@ -18,13 +18,19 @@ include("file/read_gct.jl")
 
 include("file/read_gmt.jl")
 
-include("file/read_json.jl")
-
 include("file/read_table.jl")
 
 include("file/read_table_gz.jl")
 
 include("file/read_xlsx.jl")
+
+end
+
+module json
+
+include("json/read.jl")
+
+include("json/write.jl")
 
 end
 
