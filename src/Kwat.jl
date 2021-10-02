@@ -72,7 +72,17 @@ include("network/plot.jl")
 
 end
 
+module pandas
+
+include("pandas/make_dataframe.jl")
+
+include("pandas/make_series.jl")
+
+end
+
 module path
+
+include("path/clean.jl")
 
 include("path/read_directory.jl")
 
