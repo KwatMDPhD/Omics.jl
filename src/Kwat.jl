@@ -12,6 +12,30 @@ include("dictionary/merge.jl")
 
 end
 
+module fastq
+
+include("fastq/align.jl")
+
+include("fastq/call_variant.jl")
+
+include("fastq/check_read.jl")
+
+include("fastq/concatenate.jl")
+
+include("fastq/count_transcript.jl")
+
+include("fastq/find.jl")
+
+include("fastq/process_dna.jl")
+
+include("fastq/process_soma_dna.jl")
+
+include("fastq/test.jl")
+
+include("fastq/trim.jl")
+
+end
+
 module file
 
 include("file/read_gct.jl")
@@ -24,13 +48,7 @@ include("file/read_table_gz.jl")
 
 include("file/read_xlsx.jl")
 
-end
-
-module json
-
-include("json/read.jl")
-
-include("json/write.jl")
+include("file/write_table.jl")
 
 end
 
@@ -51,6 +69,14 @@ include("information/get_relative_information_sum.jl")
 include("information/get_symmetric_information_difference.jl")
 
 include("information/get_symmetric_information_sum.jl")
+
+end
+
+module json
+
+include("json/read.jl")
+
+include("json/write.jl")
 
 end
 
@@ -90,9 +116,9 @@ end
 
 module plot
 
-include("plot/plot_x_y.jl")
-
 include("plot/plot_bar.jl")
+
+include("plot/plot_x_y.jl")
 
 include("plot/use_style!.jl")
 
@@ -142,8 +168,6 @@ include("feature_set_enrichment/_.jl")
 
 include("feature_set_enrichment/_get_probability_and_cumulative_probability.jl")
 
-include("feature_set_enrichment/try_method.jl")
-
 include("feature_set_enrichment/make_benchmark.jl")
 
 include("feature_set_enrichment/plot_mountain.jl")
@@ -151,6 +175,8 @@ include("feature_set_enrichment/plot_mountain.jl")
 include("feature_set_enrichment/score_set.jl")
 
 include("feature_set_enrichment/score_set_new.jl")
+
+include("feature_set_enrichment/try_method.jl")
 
 end
 
