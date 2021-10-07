@@ -1,10 +1,10 @@
-function clean(st::String)::String
+function clean(na::String)::String
 
-    st2 = replace(lowercase(st), r"[^\w.]" => '_')
+    na2 = replace(lowercase(na), r"[^\w.]" => '_')
 
-    println("$st ==> $st2")
+    println("$na ==> $na2")
 
-    return st2
+    return na2
 
 end
 

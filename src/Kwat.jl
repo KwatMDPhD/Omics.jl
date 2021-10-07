@@ -12,30 +12,6 @@ include("dictionary/merge.jl")
 
 end
 
-module fastq
-
-include("fastq/align.jl")
-
-include("fastq/call_variant.jl")
-
-include("fastq/check_read.jl")
-
-include("fastq/concatenate.jl")
-
-include("fastq/count_transcript.jl")
-
-include("fastq/find.jl")
-
-include("fastq/process_dna.jl")
-
-include("fastq/process_soma_dna.jl")
-
-include("fastq/test.jl")
-
-include("fastq/trim.jl")
-
-end
-
 module file
 
 include("file/read_gct.jl")
@@ -110,6 +86,8 @@ module path
 
 include("path/clean.jl")
 
+include("path/get_absolute.jl")
+
 include("path/read_directory.jl")
 
 end
@@ -159,6 +137,12 @@ include("vector_number/normalize.jl")
 include("vector_number/shift_minimum.jl")
 
 include("vector_number/sum_where.jl")
+
+end
+
+module workflow
+
+include("workflow/get_path.jl")
 
 end
 
