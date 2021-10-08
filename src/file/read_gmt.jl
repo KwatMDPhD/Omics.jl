@@ -14,11 +14,14 @@ function read_gmt(pa::String)::Ty
 
         if unique(ge_) == [""]
 
-            println("$(sp_[1]) is empty.")
+            #println("$(sp_[1]) is empty.")
+
+        else
+
+            se_ge_[sp_[1]] = ge_
 
         end
 
-        se_ge_[sp_[1]] = ge_
 
     end
 

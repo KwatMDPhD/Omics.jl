@@ -88,7 +88,7 @@ include("path/clean.jl")
 
 include("path/get_absolute.jl")
 
-include("path/read_directory.jl")
+include("path/select.jl")
 
 end
 
