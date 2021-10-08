@@ -1,6 +1,6 @@
 using ..dictionary: merge
 
-Ty = Dict{String,Vector{String}}
+Ty = Dict{String, Vector{String}}
 
 function read_gmt(pa::String)::Ty
 

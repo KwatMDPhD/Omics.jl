@@ -5,7 +5,7 @@ using StatsBase: sample
 using ..file: read_gmt, read_table
 using ..vector: list_card
 
-function make_benchmark(id::String)::Tuple{VS,VF,VS}
+function make_benchmark(id::String)::Tuple{VS, VF, VS}
 
     sp_ = split(id)
 
@@ -21,7 +21,7 @@ function make_benchmark(id::String)::Tuple{VS,VF,VS}
 
     elseif sp_[1] == "random"
 
-        fe_ = ["Feature $ie" for ie = 1:parse(Int64, sp_[2])]
+        fe_ = ["Feature $ie" for ie in 1:parse(Int64, sp_[2])]
 
         ve = randn(Int64(length(fe_) / 2))
 
@@ -39,7 +39,8 @@ function make_benchmark(id::String)::Tuple{VS,VF,VS}
 
         sc_ = da[!, Symbol("Score")]
 
-        fe1_ = read_gmt(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+        fe1_ =
+            read_gmt(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
     end
 

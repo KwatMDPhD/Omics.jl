@@ -8,7 +8,7 @@ function write(pa::String, an::Any)::Int64
 
     open(pa, "w") do io
 
-        Basewrite(io, JSONjson(an, 2))
+        return Basewrite(io, JSONjson(an, 2))
 
     end
 

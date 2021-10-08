@@ -3,17 +3,17 @@ using Plotly: Layout, plot as Plotlyplot, scatter
 function plot_x_y(
     x_::Vector{Vector{Float64}},
     y_::Vector{Vector{Float64}};
-    text_::Union{Nothing,Vector{Vector{String}}} = nothing,
-    name_::Union{Nothing,Vector{String}} = nothing,
-    mode_::Union{Nothing,Vector{String}} = nothing,
-    layout::Union{Nothing,Layout} = nothing,
+    text_::Union{Nothing, Vector{Vector{String}}} = nothing,
+    name_::Union{Nothing, Vector{String}} = nothing,
+    mode_::Union{Nothing, Vector{String}} = nothing,
+    layout::Union{Nothing, Layout} = nothing,
 )::Any
 
     n_tr = length(x_)
 
-    tr_ = [Dict{String,Any}() for ie = 1:n_tr]
+    tr_ = [Dict{String, Any}() for ie in 1:n_tr]
 
-    for ie = 1:n_tr
+    for ie in 1:n_tr
 
         if name_ !== nothing
 

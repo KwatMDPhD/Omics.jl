@@ -14,7 +14,9 @@ function normalize(ve::Vector{Float64}, me::String)::Vector{Float64}
 
         if any(ve .< 0.0)
 
-            error("method sum can not normalize a vector containing any negative number.")
+            error(
+                "method sum can not normalize a vector containing any negative number.",
+            )
 
         else
 

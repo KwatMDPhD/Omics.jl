@@ -55,8 +55,10 @@ function try_method(
 
         if length(fe_) < 100
 
-            layout =
-                merge(layout, Layout(xaxis_tickvals = 1:length(fe_), xaxis_ticktext = fe_))
+            layout = merge(
+                layout,
+                Layout(xaxis_tickvals = 1:length(fe_), xaxis_ticktext = fe_),
+            )
 
         end
 
@@ -140,7 +142,10 @@ function try_method(
                         plot_x_y(
                             [fl_, fr_, en_];
                             name_ = ["Fl", "Fr", "Enrichment"],
-                            layout = merge(layout, Layout(title = "Enrichment")),
+                            layout = merge(
+                                layout,
+                                Layout(title = "Enrichment"),
+                            ),
                         )
 
                     end
@@ -176,7 +181,8 @@ function try_method(fe_::VS, sc_::VF, se_fe_::DSVS; so::Bool = true)::DSODSF
 
     for (se, fe1_) in se_fe_
 
-        se_me_en[se] = try_method(fe_, sc_, fe1_; so = false, plp = false, pl = false)
+        se_me_en[se] =
+            try_method(fe_, sc_, fe1_; so = false, plp = false, pl = false)
 
     end
 

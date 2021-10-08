@@ -48,7 +48,9 @@ function concatenate(fq_, sa::String, pa::String)
 
     if ispath(paca)
 
-        println("Skipping concatenation because directory already exists:\n $paca\n")
+        println(
+            "Skipping concatenation because directory already exists:\n $paca\n",
+        )
 
     elseif n_fo <= 1 && n_re <= 1
 
@@ -62,11 +64,21 @@ function concatenate(fq_, sa::String, pa::String)
 
         println("Combining forward reads...\n")
 
-        run(pipeline(`cat $fo_`, stdout = joinpath(paca, string(sa, "_R1.fastq.gz"))))
+        run(
+            pipeline(
+                `cat $fo_`,
+                stdout = joinpath(paca, string(sa, "_R1.fastq.gz")),
+            ),
+        )
 
         println("Combining reverse reads...\n")
 
-        run(pipeline(`cat $re_`, stdout = joinpath(paca, string(sa, "_R2.fastq.gz"))))
+        run(
+            pipeline(
+                `cat $re_`,
+                stdout = joinpath(paca, string(sa, "_R2.fastq.gz")),
+            ),
+        )
 
         println("Concatenated files saved at $paca\n")
 
@@ -76,7 +88,7 @@ function concatenate(fq_, sa::String, pa::String)
 
     ti = canonicalize(Dates.CompoundPeriod(en - st))
 
-    println("Done at $en in $ti.\n")
+    return println("Done at $en in $ti.\n")
 
 end
 

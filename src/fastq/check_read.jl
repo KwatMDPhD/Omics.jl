@@ -6,7 +6,9 @@ function check_read(fq_::Array, pa::String, n_jo::Int)
 
     if ispath(pa)
 
-        println("Skipping check sequence because directory already exists:\n $pa\n")
+        println(
+            "Skipping check sequence because directory already exists:\n $pa\n",
+        )
 
     else
 
@@ -14,7 +16,9 @@ function check_read(fq_::Array, pa::String, n_jo::Int)
 
         mkpath(pa)
 
-        run_command(`fastqc --threads $(minimum((length(fq_), n_jo))) --outdir $pa $fq_`)
+        run_command(
+            `fastqc --threads $(minimum((length(fq_), n_jo))) --outdir $pa $fq_`,
+        )
 
         println("Checking sequence bias ...")
 
@@ -26,7 +30,7 @@ function check_read(fq_::Array, pa::String, n_jo::Int)
 
     ti = canonicalize(Dates.CompoundPeriod(en - st))
 
-    println("Done at $en in $ti.\n")
+    return println("Done at $en in $ti.\n")
 
 end
 

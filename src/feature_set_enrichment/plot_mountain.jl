@@ -24,11 +24,19 @@ function plot_mountain(
 
     yaxis3_domain = [0.32, 1.0]
 
-    an = attr(xref = "paper", yref = "paper", yanchor = "middle", showarrow = false)
+    an = attr(
+        xref = "paper",
+        yref = "paper",
+        yanchor = "middle",
+        showarrow = false,
+    )
 
     xa = merge(an, attr(xanchor = "center", x = 0.5))
 
-    ya = merge(an, attr(xanchor = "right", x = -0.08, font_size = axis_title_font_size))
+    ya = merge(
+        an,
+        attr(xanchor = "right", x = -0.08, font_size = axis_title_font_size),
+    )
 
     layout = Layout(
         width = width,
@@ -53,14 +61,33 @@ function plot_mountain(
         yaxis3_domain = yaxis3_domain,
         yaxis3_showline = true,
         annotations = [
-            merge(xa, attr(y = 1.24, text = "<b>$title</b>", font_size = title_font_size)),
+            merge(
+                xa,
+                attr(
+                    y = 1.24,
+                    text = "<b>$title</b>",
+                    font_size = title_font_size,
+                ),
+            ),
             merge(xa, attr(y = -0.088, text = "<b>Element Rank (n=$n_fe)</b>")),
             merge(
                 ya,
-                attr(y = get_center(yaxis1_domain...), text = "<b>$element_score_name</b>"),
+                attr(
+                    y = get_center(yaxis1_domain...),
+                    text = "<b>$element_score_name</b>",
+                ),
             ),
-            merge(ya, attr(y = get_center(yaxis2_domain...), text = "<b>Set</b>")),
-            merge(ya, attr(y = get_center(yaxis3_domain...), text = "<b>Set Score</b>")),
+            merge(
+                ya,
+                attr(y = get_center(yaxis2_domain...), text = "<b>Set</b>"),
+            ),
+            merge(
+                ya,
+                attr(
+                    y = get_center(yaxis3_domain...),
+                    text = "<b>Set Score</b>",
+                ),
+            ),
         ],
     )
 

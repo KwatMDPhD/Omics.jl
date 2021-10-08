@@ -68,7 +68,18 @@ function process_soma_dna(
 
     pava = joinpath(paou, "find_variant")
 
-    find_variant(pageal, pasoal, ta, fagz, chsi, chna, pava, n_jo, meto, snpeff)
+    return find_variant(
+        pageal,
+        pasoal,
+        ta,
+        fagz,
+        chsi,
+        chna,
+        pava,
+        n_jo,
+        meto,
+        snpeff,
+    )
 
 end
 

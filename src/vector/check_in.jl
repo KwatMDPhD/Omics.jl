@@ -6,7 +6,10 @@ function check_in(st_::Vector{String}, st1_::Vector{String})::Vector{Float64}
 
 end
 
-function check_in(st_ie::Dict{String,Int64}, st1_::Vector{String})::Vector{Float64}
+function check_in(
+    st_ie::Dict{String, Int64},
+    st1_::Vector{String},
+)::Vector{Float64}
 
     in_ = fill(0, length(st_ie))
 

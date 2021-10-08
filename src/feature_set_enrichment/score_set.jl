@@ -4,13 +4,13 @@ using DataFrames: DataFrame, names
 using ..math: get_center
 using ..vector: check_in, sort_like
 
-function _sum_1_absolute_and_0_count(sc_::VF, in_::VF)::Tuple{Float64,Float64}
+function _sum_1_absolute_and_0_count(sc_::VF, in_::VF)::Tuple{Float64, Float64}
 
     su1 = 0.0
 
     su0 = 0.0
 
-    for ie = 1:length(sc_)
+    for ie in 1:length(sc_)
 
         if in_[ie] == 1.0
 
@@ -63,7 +63,7 @@ function score_set(
 
     de = 1.0 / su0
 
-    @inbounds @fastmath @simd for ie = n_fe:-1:1
+    @inbounds @fastmath @simd for ie in n_fe:-1:1
 
         if in_[ie] == 1.0
 
@@ -176,8 +176,15 @@ function score_set(
 
     for (se, fe1_) in se_fe_
 
-        se_en[se] =
-            score_set(fe_, sc_, fe1_, check_in(ch, fe1_); we = we, al = al, pl = false)
+        se_en[se] = score_set(
+            fe_,
+            sc_,
+            fe1_,
+            check_in(ch, fe1_);
+            we = we,
+            al = al,
+            pl = false,
+        )
 
     end
 

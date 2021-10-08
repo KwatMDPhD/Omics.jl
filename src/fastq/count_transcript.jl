@@ -36,7 +36,9 @@ function count_transcript(
 
     if fq2 !== nothing
 
-        run_command(`kallisto quant --threads $n_jo --index $id --output-dir $pa $fq1 $fq2`)
+        run_command(
+            `kallisto quant --threads $n_jo --index $id --output-dir $pa $fq1 $fq2`,
+        )
 
     elseif fq2 === nothing
 
@@ -52,7 +54,7 @@ function count_transcript(
 
     ti = canonicalize(Dates.CompoundPeriod(en - sa))
 
-    println("Done at $en in $ti.\n")
+    return println("Done at $en in $ti.\n")
 
 end
 

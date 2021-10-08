@@ -3,16 +3,16 @@ using Plotly: Layout, attr, bar, plot as Plotlyplot
 function plot_bar(
     x_::Vector{Vector{String}},
     y_::Vector{Vector{Float64}};
-    name_::Union{Nothing,Vector{String}} = nothing,
-    marker_color_::Union{Nothing,Vector{String}} = nothing,
-    layout::Union{Nothing,Layout} = nothing,
+    name_::Union{Nothing, Vector{String}} = nothing,
+    marker_color_::Union{Nothing, Vector{String}} = nothing,
+    layout::Union{Nothing, Layout} = nothing,
 )::Any
 
     n_tr = length(x_)
 
-    tr_ = [Dict{String,Any}() for ie = 1:n_tr]
+    tr_ = [Dict{String, Any}() for ie in 1:n_tr]
 
-    for ie = 1:n_tr
+    for ie in 1:n_tr
 
         if name_ !== nothing
 

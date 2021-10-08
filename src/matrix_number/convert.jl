@@ -8,7 +8,7 @@ function convert(ve_::Vector{Vector{Float64}})::Ty
 
     ma = Ty(undef, si1, si2)
 
-    @inbounds @fastmath for ie1 = 1:si1, ie2 = 1:si2
+    @inbounds @fastmath for ie1 in 1:si1, ie2 in 1:si2
 
         ma[ie1, ie2] = ve_[ie1][ie2]
 

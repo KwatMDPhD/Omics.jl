@@ -56,7 +56,19 @@ function process_dna(
 
     pav = joinpath(pao, "call_variant")
 
-    call_variant(mo, paa, nothing, ta, fag, chi, chn, pav, n_jo, met, pas)
+    return call_variant(
+        mo,
+        paa,
+        nothing,
+        ta,
+        fag,
+        chi,
+        chn,
+        pav,
+        n_jo,
+        met,
+        pas,
+    )
 
 end
 

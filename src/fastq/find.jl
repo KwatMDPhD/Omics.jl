@@ -46,9 +46,13 @@ function find(pa::String)::Vector{String}
 
     end
 
-    println("Number of .fastq or .fq files found in directories walked: $n_fq\n")
+    println(
+        "Number of .fastq or .fq files found in directories walked: $n_fq\n",
+    )
 
-    println("Number of fastq.gz or fq.gz files found in directories walked: $n_gz\n")
+    println(
+        "Number of fastq.gz or fq.gz files found in directories walked: $n_gz\n",
+    )
 
     en = now()
 

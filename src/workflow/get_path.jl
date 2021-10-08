@@ -1,7 +1,7 @@
 using ..path: get_absolute
 
 
-function get_path(se::String)::Tuple{String,String,String,String}
+function get_path(se::String)::Tuple{String, String, String, String}
 
     se = get_absolute(se)
 

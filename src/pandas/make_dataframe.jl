@@ -12,7 +12,11 @@ function make_dataframe(da::DataFrame)::PyObject
 
     na_ = names(da)
 
-    da = py"DataFrame"(data = Matrix(da[!, ie_]), index = da[!, 1], columns = na_[ie_])
+    da = py"DataFrame"(
+        data = Matrix(da[!, ie_]),
+        index = da[!, 1],
+        columns = na_[ie_],
+    )
 
     da.index.name = na_[1]
 

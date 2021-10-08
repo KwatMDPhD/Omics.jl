@@ -62,7 +62,9 @@ function align(
 
     run_command(`samtools index -@ $n_jo $pa`)
 
-    run_command(pipeline(`samtools flagstat --threads $n_jo $pa`, "$pa.flagstat"))
+    run_command(
+        pipeline(`samtools flagstat --threads $n_jo $pa`, "$pa.flagstat"),
+    )
 
     en = now()
 

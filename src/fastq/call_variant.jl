@@ -2,8 +2,8 @@ using Dates
 
 function call_variant(
     mo::String,
-    ge::Union{String,Nothing},
-    so::Union{String,Nothing},
+    ge::Union{String, Nothing},
+    so::Union{String, Nothing},
     ta::Bool,
     fa::String,
     chs::String,
@@ -112,7 +112,10 @@ function call_variant(
         pain = joinpath(pas, pav, "somatic.indels.vcf.gz")
 
         run_command(
-            pipeline(`bcftools reheader --threads $n_jo --samples $sa $pain`, "$pain.tmp"),
+            pipeline(
+                `bcftools reheader --threads $n_jo --samples $sa $pain`,
+                "$pain.tmp",
+            ),
         )
 
         mv("$pain.tmp", pain; force = true)
@@ -122,7 +125,10 @@ function call_variant(
         pasv = joinpath(pas, pav, "somatic.snvs.vcf.gz")
 
         run_command(
-            pipeline(`bcftools reheader --threads $n_jo --samples $sa $pasv`, "pasv.tmp"),
+            pipeline(
+                `bcftools reheader --threads $n_jo --samples $sa $pasv`,
+                "pasv.tmp",
+            ),
         )
 
         mv("$pasv.tmp", pasv; force = true)
@@ -139,8 +145,10 @@ function call_variant(
 
     else
 
-        vc_ =
-            [joinpath(pam, pav, "diploidSV.vcf.gz"), joinpath(pas, pav, "variants.vcf.gz")]
+        vc_ = [
+            joinpath(pam, pav, "diploidSV.vcf.gz"),
+            joinpath(pas, pav, "variants.vcf.gz"),
+        ]
 
     end
 
@@ -183,7 +191,7 @@ function call_variant(
         ),
     )
 
-    run_command(`tabix $ps`)
+    return run_command(`tabix $ps`)
 
 end
 

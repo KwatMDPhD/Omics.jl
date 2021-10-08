@@ -4,10 +4,10 @@ VF = Vector{Float64}
 
 VS = Vector{String}
 
-DSF = Dict{String,Float64}
+DSF = Dict{String, Float64}
 
-DSVS = Dict{String,VS}
+DSVS = Dict{String, VS}
 
-ODSF = OrderedDict{String,Float64}
+ODSF = OrderedDict{String, Float64}
 
-DSODSF = Dict{String,ODSF}
+DSODSF = Dict{String, ODSF}

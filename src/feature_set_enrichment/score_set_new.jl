@@ -2,7 +2,13 @@ using ..vector: check_in
 using ..vector_number: cumulate_sum_reverse, get_area
 using ..information: get_relative_information_difference
 
-function score_set_new(fe_::VS, sc_::VF, fe1_::VS; pl::Bool = true, ke_ar...)::Float64
+function score_set_new(
+    fe_::VS,
+    sc_::VF,
+    fe1_::VS;
+    pl::Bool = true,
+    ke_ar...,
+)::Float64
 
     in_ = check_in(fe_, fe1_)
 
