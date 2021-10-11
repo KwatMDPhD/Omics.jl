@@ -123,6 +123,8 @@ function score_set(
 
     if pl
 
+        println("Plotting")
+
         plot_mountain(fe_, sc_, in_, en_, en; ke_ar...)
 
     end

@@ -147,6 +147,7 @@ function plot_mountain(
         hoverinfo = "x+y+text",
     )
 
+    print("Displaying")
     return display(plot([tre, tr1, trs], layout))
 
 end
