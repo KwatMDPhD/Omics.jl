@@ -11,14 +11,16 @@ function plot_mountain(
     en_::VF,
     en::Float64;
     height::Real = 480,
-    line_width::Real = 2.0,
-    title::String = "Score Set",
+    title::String = "Mountain Plot",
     title_font_size::Real = 24,
-    axis_title_font_size::Real = 12,
-    feature_score_name::String = "Feature Score",
+    axis_title_font_size::Real = 12.6,
+    names::String = "Score",
+    line_width::Real = 2.0,
+    si::Bool = true,
+    pa::String = "",
 )::Any
 
-    n_fe = length(fe_)
+    width = height * GOLDEN_RATIO
 
     yaxis1_domain = [0.0, 0.24]
 
@@ -26,39 +28,36 @@ function plot_mountain(
 
     yaxis3_domain = [0.32, 1.0]
 
-    an = attr(
+    annotation = attr(
         xref = "paper",
         yref = "paper",
         yanchor = "middle",
         showarrow = false,
     )
 
-    xa = merge(an, attr(xanchor = "center", x = 0.5))
-
-    ya = merge(
-        an,
-        attr(xanchor = "right", x = -0.08, font_size = axis_title_font_size),
+    annotationy = merge(
+        annotation,
+        attr(xanchor = "right", x = -0.064, font_size = axis_title_font_size),
     )
 
-    width = height * GOLDEN_RATIO
+    annotationx = merge(annotation, attr(xanchor = "center", x = 0.5))
+
+    namee = "Enrichment"
+
+    en = @sprintf "%.3f" en
+
+    n_fe = length(fe_)
 
     layout = Layout(
-        width = width,
         height = height,
-        margin_t = trunc(height * 0.16),
+        width = width,
+        margin = attr(t = trunc(height * 0.16), l = trunc(width * 0.16)),
         legend = attr(
             orientation = "h",
-            xanchor = "center",
             yanchor = "middle",
+            xanchor = "center",
+            y = -0.2,
             x = 0.5,
-            y = -0.24,
-        ),
-        xaxis = attr(
-            zeroline = false,
-            showspikes = true,
-            spikethickness = 0.8,
-            spikedash = "solid",
-            spikemode = "across",
         ),
         yaxis1 = attr(domain = yaxis1_domain, showline = true),
         yaxis2 = attr(
@@ -67,76 +66,129 @@ function plot_mountain(
             showgrid = false,
         ),
         yaxis3 = attr(domain = yaxis3_domain, showline = true),
+        xaxis = attr(
+            zeroline = false,
+            showspikes = true,
+            spikethickness = 0.8,
+            spikedash = "solid",
+            spikemode = "across",
+        ),
         annotations = [
             merge(
-                xa,
+                annotationx,
                 attr(
-                    y = 1.2,
+                    y = 1.16,
                     text = "<b>$title</b>",
                     font_size = title_font_size,
                 ),
             ),
-            merge(xa, attr(y = -0.088, text = "<b>Feature Rank (n=$n_fe)</b>")),
+            merge(
+                annotationx,
+                attr(
+                    y = 1.04,
+                    text = "<b>Statistic = $en</b>",
+                    font = attr(
+                        size = title_font_size * 0.64,
+                        color = "2a603b",
+                    ),
+                ),
+            ),
+            merge(
+                annotationy,
+                attr(y = get_center(yaxis1_domain...), text = "<b>$names</b>"),
+            ),
+            merge(
+                annotationy,
+                attr(y = get_center(yaxis2_domain...), text = "<b>Set</b>"),
+            ),
+            merge(
+                annotationy,
+                attr(y = get_center(yaxis3_domain...), text = "<b>$namee</b>"),
+            ),
+            merge(
+                annotationx,
+                attr(y = -0.088, text = "<b>Feature Rank (n=$n_fe)</b>"),
+            ),
         ],
     )
 
     x = 1:n_fe
 
-    tre = scatter(
-        name = feature_score_name,
-        x = x,
+    tracef = scatter(
+        name = names,
         y = sc_,
+        x = x,
         text = fe_,
-        line_width = line_width,
-        line_color = "#4e40d8",
+        mode = "lines",
+        line = attr(width = 0, color = "20d8ba"),
         fill = "tozeroy",
         hoverinfo = "x+y+text",
     )
 
     in_ = BitVector(in_)
 
-    tr1 = scatter(
+    traces = scatter(
         name = "Set",
         yaxis = "y2",
-        mode = "markers",
-        x = x[in_],
         y = zeros(Int64(sum(in_))),
+        x = x[in_],
         text = fe_[in_],
-        marker_symbol = "line-ns-open",
-        marker_size = height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.64,
-        marker_line_width = line_width,
-        marker_color = "#9017e6",
+        mode = "markers",
+        marker = attr(
+            symbol = "line-ns-open",
+            size = height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.64,
+            line_width = line_width,
+            color = "9017e6",
+        ),
         hoverinfo = "x+text",
     )
 
-    en = @sprintf "%.3f" en
+    trace_ = [tracef, traces]
 
-    push!(
-        layout["annotations"],
-        merge(
-            xa,
-            attr(
-                y = 1.08,
-                text = "<b>Enrichment = $en</b>",
-                font_size = title_font_size * 0.64,
-                font_color = "#2a603b",
+    if si
+
+        for (name, is_, color) in [
+            ["- Enrichment", en_ .< 0.0, "0088ff"],
+            ["+ Enrichment", 0.0 .< en_, "ff1968"],
+        ]
+
+            push!(
+                trace_,
+                scatter(
+                    name = name,
+                    yaxis = "y3",
+                    y = ifelse.(is_, en_, 0.0),
+                    x = x,
+                    text = fe_,
+                    mode = "lines",
+                    line = attr(width = 0.0, color = color),
+                    fill = "tozeroy",
+                    hoverinfo = "x+y+text",
+                ),
+            )
+
+        end
+
+    else
+
+        push!(
+            trace_,
+            scatter(
+                name = namee,
+                yaxis = "y3",
+                y = en_,
+                x = x,
+                text = fe_,
+                mode = "lines",
+                line = attr(width = 0.0, color = "#4e40d8"),
+                fill = "tozeroy",
+                hoverinfo = "x+y+text",
             ),
-        ),
-    )
+        )
 
-    trs = scatter(
-        name = "Set Score",
-        yaxis = "y3",
-        x = x,
-        y = en_,
-        text = fe_,
-        line_width = line_width,
-        line_color = "#20d9ba",
-        fill = "tozeroy",
-        hoverinfo = "x+y+text",
-    )
+    end
 
-    return plot([tre, tr1, trs], layout)
+    return plot(trace_, layout; pa = pa)
 
 end
 

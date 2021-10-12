@@ -27,7 +27,7 @@ function make_benchmark(id::String)::Tuple{VS, VF, VS}
 
         sc_ = sort([.-ve; ve])
 
-        fe1_ = sample(fe_, parse(Int64, sp_[3]))
+        fe1_ = sample(fe_, parse(Int64, sp_[3]); replace = false)
 
     elseif sp_[1] == "myc"
 
