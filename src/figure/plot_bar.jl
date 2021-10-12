@@ -1,4 +1,4 @@
-using Plotly: Layout, attr, bar, plot as Plotlyplot
+using PlotlyJS: Layout, attr, bar
 
 function plot_bar(
     x_::Vector{Vector{String}},
@@ -42,7 +42,7 @@ function plot_bar(
 
     end
 
-    return display(Plotlyplot(tr_, layout))
+    return plot(tr_, layout)
 
 end
 

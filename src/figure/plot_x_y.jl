@@ -1,4 +1,4 @@
-using Plotly: Layout, plot as Plotlyplot, scatter
+using PlotlyJS: Layout, scatter
 
 function plot_x_y(
     x_::Vector{Vector{Float64}},
@@ -64,7 +64,7 @@ function plot_x_y(
 
     end
 
-    return display(Plotlyplot(tr_, layout))
+    return plot(tr_, layout)
 
 end
 

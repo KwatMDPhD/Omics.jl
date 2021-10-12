@@ -1,5 +1,7 @@
-using Plotly: Layout, attr, plot, scatter
+using PlotlyJS: Layout, attr, scatter
 using Printf: @sprintf
+
+using ..figure: plot
 
 function plot_mountain(
     fe_::VS,
@@ -148,7 +150,7 @@ function plot_mountain(
     )
 
     print("Displaying")
-    return display(plot([tre, tr1, trs], layout))
+    return plot([tre, tr1, trs], layout)
 
 end
 

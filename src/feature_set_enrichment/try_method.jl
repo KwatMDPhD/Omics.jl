@@ -1,4 +1,4 @@
-using Plotly: Layout
+using PlotlyJS: Layout
 
 using ..information:
     get_kullback_leibler_divergence,
@@ -6,7 +6,7 @@ using ..information:
     get_relative_information_sum,
     get_symmetric_information_difference,
     get_symmetric_information_sum
-using ..plot: plot_x_y
+using ..figure: plot_x_y
 using ..vector: check_in, sort_like
 using ..vector_number: get_area, get_extreme
 

@@ -12,6 +12,18 @@ include("dictionary/merge.jl")
 
 end
 
+module figure
+
+include("figure/_.jl")
+
+include("figure/plot.jl")
+
+include("figure/plot_bar.jl")
+
+include("figure/plot_x_y.jl")
+
+end
+
 module file
 
 include("file/read_gct.jl")
@@ -89,16 +101,6 @@ include("path/clean.jl")
 include("path/get_absolute.jl")
 
 include("path/select.jl")
-
-end
-
-module plot
-
-include("plot/plot_bar.jl")
-
-include("plot/plot_x_y.jl")
-
-include("plot/use_style!.jl")
 
 end
 
