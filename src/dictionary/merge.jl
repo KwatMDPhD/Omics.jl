@@ -12,25 +12,27 @@ function merge(di1::Dict, di2::Dict)::Dict
 
             if isa(va1, Dict) && isa(va2, Dict)
 
-                di[ke] = merge(va1, va2)
+                va = merge(va1, va2)
 
             else
 
                 println("$ke => ($va1) $va2.")
 
-                di[ke] = va2
+                va = va2
 
             end
 
         elseif haskey(di1, ke)
 
-            di[ke] = di1[ke]
+            va = di1[ke]
 
         else
 
-            di[ke] = di2[ke]
+            va = di2[ke]
 
         end
+
+        di[ke] = va
 
     end
 

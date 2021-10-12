@@ -1,7 +1,4 @@
-using CSV: File, read
 using DataFrames: DataFrame
-using Mmap: mmap
-
 
 function read_table(pa::String)::DataFrame
 

@@ -1,10 +1,6 @@
-using ..dictionary: merge
+function read_gmt(pa::String)::Dict{String, Vector{String}}
 
-Ty = Dict{String, Vector{String}}
-
-function read_gmt(pa::String)::Ty
-
-    se_ge_ = Ty()
+    se_ge_ = Dict{String, Vector{String}}()
 
     for li in readlines(pa)
 
@@ -29,13 +25,13 @@ function read_gmt(pa::String)::Ty
 
 end
 
-function read_gmt(pa_::Vector{String})::Ty
+function read_gmt(pa_::Vector{String})::Dict{String, Vector{String}}
 
-    se_ge_ = Ty()
+    se_ge_ = Dict{String, Vector{String}}()
 
     for pa in pa_
 
-        se_ge_ = merge(se_ge_, read_gmt(pa))
+        merge!(se_ge_, read_gmt(pa))
 
     end
 

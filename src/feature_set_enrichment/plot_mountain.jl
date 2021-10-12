@@ -1,7 +1,7 @@
 using PlotlyJS: Layout, attr, scatter
 using Printf: @sprintf
 
-using ..constant: GOLDEN_RATIO
+using ..constant: get_golden_ratio
 using ..figure: plot
 
 function plot_mountain(
@@ -20,7 +20,7 @@ function plot_mountain(
     pa::String = "",
 )::Any
 
-    width = height * GOLDEN_RATIO
+    width = height * get_golden_ratio()
 
     yaxis1_domain = [0.0, 0.24]
 

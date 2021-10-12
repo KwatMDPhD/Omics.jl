@@ -1,16 +1,23 @@
-using PlotlyJS: GenericTrace, Layout, PlotConfig, attr, savefig
-import PlotlyJS: plot as plotlyjl_plot
+using PlotlyJS: GenericTrace, Layout, PlotConfig, SyncPlot, savefig
+import PlotlyJS: plot as plotlyjs_plot
 
-VGTDSA = Vector{GenericTrace{Dict{Symbol, Any}}}
-
-
-function plot(tr_::VGTDSA, la::Layout; sc::Float64 = 1.0, pa::String = "")::SP
+function plot(
+    tr_::Vector{GenericTrace},
+    la::Layout;
+    sc::Float64 = 1.0,
+    pa::String = "",
+)::SyncPlot
 
     la["template"] = "plotly_white"
 
-    la["autosize"] = false
-
-    pl = plotlyjl_plot(tr_, la; config = PlotConfig(; displaylogo = false))
+    pl = plotlyjs_plot(
+        tr_,
+        merge(Layout(autosize = false, hovermode = "closest"), la),
+        config = PlotConfig(
+            modeBarButtonsToRemove = ["select", "lasso", "resetScale"],
+            displaylogo = false,
+        ),
+    )
 
     if pa != ""
 
@@ -18,7 +25,7 @@ function plot(tr_::VGTDSA, la::Layout; sc::Float64 = 1.0, pa::String = "")::SP
 
             return savefig(
                 io,
-                pl;
+                pl,
                 format = splitext(pa)[end][2:end],
                 scale = sc,
             )
@@ -33,9 +40,9 @@ function plot(tr_::VGTDSA, la::Layout; sc::Float64 = 1.0, pa::String = "")::SP
 
 end
 
-function plot(tr_::VGTDSA; ke_ar...)::SP
+function plot(tr_::Vector{GenericTrace}; ke_ar...)::SyncPlot
 
-    return plot(tr_, Layout(); ke_ar...)
+    return plot(tr_, Layout(), ke_ar...)
 
 end
 

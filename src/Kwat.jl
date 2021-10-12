@@ -8,7 +8,7 @@ end
 
 module constant
 
-include("constant/GOLDEN_RATIO.jl")
+include("constant/get_golden_ratio.jl")
 
 end
 
@@ -18,9 +18,31 @@ include("dictionary/merge.jl")
 
 end
 
-module figure
+module fastq
 
-include("figure/_.jl")
+include("fastq/align.jl")
+
+include("fastq/call_variant.jl")
+
+include("fastq/check_read.jl")
+
+include("fastq/concatenate.jl")
+
+include("fastq/count_transcript.jl")
+
+include("fastq/find.jl")
+
+include("fastq/process_dna.jl")
+
+include("fastq/process_soma_dna.jl")
+
+include("fastq/test.jl")
+
+include("fastq/trim.jl")
+
+end
+
+module figure
 
 include("figure/plot.jl")
 
@@ -30,19 +52,11 @@ include("figure/plot_x_y.jl")
 
 end
 
-module file
+module gct_gmt
 
-include("file/read_gct.jl")
+include("gct_gmt/read_gct.jl")
 
-include("file/read_gmt.jl")
-
-include("file/read_table.jl")
-
-include("file/read_table_gz.jl")
-
-include("file/read_xlsx.jl")
-
-include("file/write_table.jl")
+include("gct_gmt/read_gmt.jl")
 
 end
 
@@ -118,6 +132,18 @@ include("string/title.jl")
 
 end
 
+module table
+
+include("table/read_table.jl")
+
+include("table/read_table_gz.jl")
+
+include("table/read_xlsx.jl")
+
+include("table/write_table.jl")
+
+end
+
 module vector
 
 include("vector/check_in.jl")
@@ -155,8 +181,6 @@ include("workflow/get_path.jl")
 end
 
 module feature_set_enrichment
-
-include("feature_set_enrichment/_.jl")
 
 include("feature_set_enrichment/_get_probability_and_cumulative_probability.jl")
 
