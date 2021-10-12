@@ -1,6 +1,7 @@
 using PlotlyJS: Layout, attr, scatter
 using Printf: @sprintf
 
+using ..constant: GOLDEN_RATIO
 using ..figure: plot
 
 function plot_mountain(
@@ -9,13 +10,12 @@ function plot_mountain(
     in_::VF,
     en_::VF,
     en::Float64;
-    width::Real = 800,
-    height::Real = 500,
+    height::Real = 480,
     line_width::Real = 2.0,
     title::String = "Score Set",
     title_font_size::Real = 24,
     axis_title_font_size::Real = 12,
-    element_score_name::String = "Element Score",
+    feature_score_name::String = "Feature Score",
 )::Any
 
     n_fe = length(fe_)
@@ -40,63 +40,50 @@ function plot_mountain(
         attr(xanchor = "right", x = -0.08, font_size = axis_title_font_size),
     )
 
+    width = height * GOLDEN_RATIO
+
     layout = Layout(
         width = width,
         height = height,
-        margin_l = width * 0.2,
-        margin_t = height * 0.2,
-        legend_orientation = "h",
-        legend_xanchor = "center",
-        legend_yanchor = "middle",
-        legend_x = 0.5,
-        legend_y = -0.24,
-        xaxis_zeroline = false,
-        xaxis_showspikes = true,
-        xaxis_spikethickness = 0.8,
-        xaxis_spikedash = "solid",
-        xaxis_spikemode = "across",
-        yaxis1_domain = yaxis1_domain,
-        yaxis1_showline = true,
-        yaxis2_domain = yaxis2_domain,
-        yaxis2_showticklabels = false,
-        yaxis2_showgrid = false,
-        yaxis3_domain = yaxis3_domain,
-        yaxis3_showline = true,
+        margin_t = trunc(height * 0.16),
+        legend = attr(
+            orientation = "h",
+            xanchor = "center",
+            yanchor = "middle",
+            x = 0.5,
+            y = -0.24,
+        ),
+        xaxis = attr(
+            zeroline = false,
+            showspikes = true,
+            spikethickness = 0.8,
+            spikedash = "solid",
+            spikemode = "across",
+        ),
+        yaxis1 = attr(domain = yaxis1_domain, showline = true),
+        yaxis2 = attr(
+            domain = yaxis2_domain,
+            showticklabels = false,
+            showgrid = false,
+        ),
+        yaxis3 = attr(domain = yaxis3_domain, showline = true),
         annotations = [
             merge(
                 xa,
                 attr(
-                    y = 1.24,
+                    y = 1.2,
                     text = "<b>$title</b>",
                     font_size = title_font_size,
                 ),
             ),
-            merge(xa, attr(y = -0.088, text = "<b>Element Rank (n=$n_fe)</b>")),
-            merge(
-                ya,
-                attr(
-                    y = get_center(yaxis1_domain...),
-                    text = "<b>$element_score_name</b>",
-                ),
-            ),
-            merge(
-                ya,
-                attr(y = get_center(yaxis2_domain...), text = "<b>Set</b>"),
-            ),
-            merge(
-                ya,
-                attr(
-                    y = get_center(yaxis3_domain...),
-                    text = "<b>Set Score</b>",
-                ),
-            ),
+            merge(xa, attr(y = -0.088, text = "<b>Feature Rank (n=$n_fe)</b>")),
         ],
     )
 
     x = 1:n_fe
 
     tre = scatter(
-        name = "Element Score",
+        name = feature_score_name,
         x = x,
         y = sc_,
         text = fe_,
@@ -129,7 +116,7 @@ function plot_mountain(
         merge(
             xa,
             attr(
-                y = 1.16,
+                y = 1.08,
                 text = "<b>Enrichment = $en</b>",
                 font_size = title_font_size * 0.64,
                 font_color = "#2a603b",
@@ -149,7 +136,6 @@ function plot_mountain(
         hoverinfo = "x+y+text",
     )
 
-    print("Displaying")
     return plot([tre, tr1, trs], layout)
 
 end

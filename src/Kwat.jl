@@ -6,6 +6,12 @@ include("bash/run.jl")
 
 end
 
+module constant
+
+include("constant/GOLDEN_RATIO.jl")
+
+end
+
 module dictionary
 
 include("dictionary/merge.jl")

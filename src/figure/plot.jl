@@ -6,26 +6,11 @@ VGTDSA = Vector{GenericTrace{Dict{Symbol, Any}}}
 
 function plot(tr_::VGTDSA, la::Layout; sc::Float64 = 1.0, pa::String = "")::SP
 
-    ax = attr(; automargin = true)
+    la["template"] = "plotly_white"
 
-    pl = plotlyjl_plot(
-        tr_,
-        merge(
-            la,
-            Layout(;
-                template = "plotly_white",
-                autosize = false,
-                xaxis = ax,
-                yaxis = ax,
-            ),
-        );
-        config = PlotConfig(;
-            scrollZoom = true,
-            editable = true,
-            staticPlot = false,
-            displaylogo = false,
-        ),
-    )
+    la["autosize"] = false
+
+    pl = plotlyjl_plot(tr_, la; config = PlotConfig(; displaylogo = false))
 
     if pa != ""
 
