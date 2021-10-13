@@ -1,4 +1,4 @@
-function sort_like(ve_::Vector...; re::Bool = false)::Vector{Vector}
+function sort_like(ve_::Vector{Vector}; re::Bool = false)::Vector{Vector}
 
     ie_ = sortperm(ve_[1]; rev = re)
 

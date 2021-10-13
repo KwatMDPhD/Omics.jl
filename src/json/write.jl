@@ -1,5 +1,4 @@
-using Base: write as base_write
-using JSON: json as json_json
+using JSON: json as JSON_json
 
 function write(pa::String, di::Dict)::Int64
 
@@ -9,7 +8,7 @@ function write(pa::String, di::Dict)::Int64
 
     open(pa, "w") do io
 
-        return base_write(io, json_json(di, 2))
+        return Base.write(io, JSON_json(di, 2))
 
     end
 

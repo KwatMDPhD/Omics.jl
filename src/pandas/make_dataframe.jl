@@ -1,5 +1,5 @@
 using DataFrames: DataFrame
-using Pandas: reset_index, DataFrame as Pandas_DataFrame
+using Pandas: DataFrame as Pandas_DataFrame, reset_index
 using PyCall: @py_str, PyObject
 
 function make_dataframe(da::DataFrame)::PyObject

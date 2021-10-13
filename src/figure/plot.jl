@@ -1,5 +1,5 @@
 using PlotlyJS: GenericTrace, Layout, PlotConfig, SyncPlot, savefig
-import PlotlyJS: plot as plotlyjs_plot
+import PlotlyJS: plot as PlotlyJS_plot
 
 function plot(
     tr_::Vector{GenericTrace},
@@ -10,7 +10,7 @@ function plot(
 
     la["template"] = "plotly_white"
 
-    pl = plotlyjs_plot(
+    pl = PlotlyJS_plot(
         tr_,
         merge(Layout(autosize = false, hovermode = "closest"), la),
         config = PlotConfig(

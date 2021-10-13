@@ -1,4 +1,4 @@
-using CSV: write as csv_write
+using CSV: write as CSV_write
 using DataFrames: DataFrame
 
 function write(pa::String, ta::DataFrame)::Int64
@@ -7,7 +7,7 @@ function write(pa::String, ta::DataFrame)::Int64
 
     @assert endswith(pa, ".tsv")
 
-    return csv_write(pa, ta; delim = '\t')
+    return CSV_write(pa, ta; delim = '\t')
 
 end
 

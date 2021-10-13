@@ -1,10 +1,10 @@
-function sum_where(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
+function sum_where_1(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
 
     su = 0.0
 
-    for ie in 1:length(ve)
+    for (ie, wh) in enumerate(wh_)
 
-        if wh_[ie] == 1.0
+        if wh == 1.0
 
             su += ve[ie]
 
@@ -13,6 +13,38 @@ function sum_where(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
     end
 
     return su
+
+end
+
+function sum_where_2(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
+
+    su = 0.0
+
+    for (fl, wh) in zip(ve, wh_)
+
+        if wh == 1.0
+
+            su += fl
+
+        end
+
+    end
+
+    return su
+
+end
+
+function sum_where(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
+
+    if length(ve) < 3000
+
+        return sum_where_1(ve, wh_)
+
+    else
+
+        return sum_where_2(ve, wh_)
+
+    end
 
 end
 

@@ -9,7 +9,7 @@ function shift_minimum(
 
     end
 
-    return mi - minimum(ve) .+ ve
+    return ve .+ (mi - minimum(ve))
 
 end
 

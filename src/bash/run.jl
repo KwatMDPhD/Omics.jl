@@ -1,10 +1,8 @@
-using Base: AbstractCmd, AbstractPipe, run as base_run
-
-function run(co::AbstractCmd)::AbstractPipe
+function run(co::Base.AbstractCmd)::Base.AbstractPipe
 
     println(co)
 
-    return base_run(co)
+    return Base.run(co)
 
 end
 

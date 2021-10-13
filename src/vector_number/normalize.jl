@@ -1,3 +1,6 @@
+using Statistics: std
+using StatsBase: competerank, denserank, ordinalrank, tiedrank
+
 function normalize(ve::Vector{Float64}, me::String)::Vector{Float64}
 
     if me == "-0-"

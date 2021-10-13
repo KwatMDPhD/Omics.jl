@@ -1,6 +1,3 @@
-using Statistics
-using StatsBase
-
 function normalize!(ve::Vector{Float64}, me::String)::Nothing
 
     go_ = .!isnan.(ve)

@@ -1,9 +1,4 @@
-using ..path: get_absolute
-
-
 function get_path(se::String)::Tuple{String, String, String, String}
-
-    se = get_absolute(se)
 
     if islink(se)
 
@@ -13,13 +8,10 @@ function get_path(se::String)::Tuple{String, String, String, String}
 
     par = dirname(dirname(se))
 
-    pai = joinpath(par, "input", "")
-
-    pac = joinpath(par, "code", "")
-
-    pao = joinpath(par, "output", "")
-
-    return par, pai, pac, pao
+    return par,
+    joinpath(par, "input", ""),
+    joinpath(par, "code", ""),
+    joinpath(par, "output", "")
 
 end
 
