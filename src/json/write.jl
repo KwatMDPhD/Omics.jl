@@ -4,7 +4,11 @@ function write(pa::String, di::Dict)::Int64
 
     println(pa)
 
-    @assert occursin(r"\.json$", pa)
+    if !occursin(r"\.json$", pa)
+
+        error("path does not end with \".json\"")
+
+    end
 
     open(pa, "w") do io
 

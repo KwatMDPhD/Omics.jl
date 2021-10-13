@@ -8,7 +8,17 @@ function make_dataframe(da::DataFrame)::PyObject
     from pandas import DataFrame
     """
 
-    ie_ = 2:size(da)[2]
+    si2 = size(da)[2]
+
+    if 1 < si2
+
+        ie_ = 2:si2
+
+    else
+
+        error("dataframe does not have at least 2 columns.")
+
+    end
 
     na_ = names(da)
 

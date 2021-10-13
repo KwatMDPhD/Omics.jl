@@ -1,6 +1,6 @@
 function title(st::String)::String
 
-    return titlecase(replace(st, "_" => " "))
+    return titlecase(Base.replace(st, "_" => " "))
 
 end
 

@@ -1,3 +1,4 @@
+using StatsBase: mean
 using Statistics: std
 using StatsBase: competerank, denserank, ordinalrank, tiedrank
 
