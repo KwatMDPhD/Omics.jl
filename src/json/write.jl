@@ -4,11 +4,11 @@ function write(pa::String, di::Dict)::Int64
 
     println(pa)
 
-    @assert endswith(pa, ".json")
+    @assert occursin(r"\.json$", pa)
 
     open(pa, "w") do io
 
-        return Base.write(io, JSON_json(di, 2))
+        return Base.write(io, JSON_json(di, 4))
 
     end
 

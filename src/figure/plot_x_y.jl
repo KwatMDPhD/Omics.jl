@@ -3,14 +3,14 @@ using PlotlyJS: Layout, SyncPlot, scatter
 function plot_x_y(
     y_::Vector{Vector{Float64}},
     x_::Vector{Vector{Float64}};
-    text_::Vector{Vector{String}} = Vector{String}(),
+    text_::Vector{Vector{String}} = Vector{Vector{String}}(),
     name_::Vector{String} = Vector{String}(),
     mode_::Vector{String} = Vector{String}(),
     la::Layout = Layout(),
     pa::String = "",
 )::SyncPlot
 
-    tr_ = [scatter() for ie in 1:length(y_)]
+    tr_ = [scatter(;) for ie in 1:length(y_)]
 
     for (ie, tr) in enumerate(tr_)
 
@@ -38,7 +38,7 @@ function plot_x_y(
 
             if length(x_[ie]) < 1000
 
-                mode = "markers"
+                mode = "markers+lines"
 
             else
 
@@ -55,7 +55,7 @@ function plot_x_y(
 
     end
 
-    return plot(tr_, la, pa = pa)
+    return plot(tr_, la; pa = pa)
 
 end
 
@@ -63,7 +63,7 @@ function plot_x_y(y_::Vector{Vector{Float64}}; ke_ar...)::SyncPlot
 
     return plot_x_y(
         y_,
-        [convert(Vector{Float64}, 1:length(y)) for y in y_],
+        [convert(Vector{Float64}, 1:length(y)) for y in y_];
         ke_ar...,
     )
 

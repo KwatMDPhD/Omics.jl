@@ -2,7 +2,7 @@ using PlotlyJS:
     GenericTrace, Layout, PlotConfig, SyncPlot, plot as PlotlyJS_plot, savefig
 
 function plot(
-    tr_::Vector{GenericTrace},
+    tr_::Vector{GenericTrace{Dict{Symbol, Any}}},
     la::Layout;
     sc::Float64 = 1.0,
     pa::String = "",
@@ -12,8 +12,8 @@ function plot(
 
     pl = PlotlyJS_plot(
         tr_,
-        merge(Layout(autosize = false, hovermode = "closest"), la),
-        config = PlotConfig(
+        merge(Layout(autosize = false, hovermode = "closest"), la);
+        config = PlotConfig(;
             modeBarButtonsToRemove = ["select", "lasso", "resetScale"],
             displaylogo = false,
         ),
@@ -25,7 +25,7 @@ function plot(
 
             return savefig(
                 io,
-                pl,
+                pl;
                 format = splitext(pa)[end][2:end],
                 scale = sc,
             )
@@ -40,9 +40,9 @@ function plot(
 
 end
 
-function plot(tr_::Vector{GenericTrace}; ke_ar...)::SyncPlot
+function plot(tr_::Vector{GenericTrace{Dict{Symbol, Any}}}; ke_ar...)::SyncPlot
 
-    return plot(tr_, Layout(), ke_ar...)
+    return plot(tr_, Layout(); ke_ar...)
 
 end
 

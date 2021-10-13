@@ -5,7 +5,7 @@ function write(pa::String, ta::DataFrame)::Int64
 
     println(pa)
 
-    @assert endswith(pa, ".tsv")
+    @assert occursin(r"\.tsv$", pa)
 
     return CSV_write(pa, ta; delim = '\t')
 

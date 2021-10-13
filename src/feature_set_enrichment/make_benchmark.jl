@@ -28,7 +28,7 @@ function make_benchmark(
 
         sc_ = sort([.-ve; ve])
 
-        fe1_ = sample(fe_, parse(Int64, sp_[3]), replace = false)
+        fe1_ = sample(fe_, parse(Int64, sp_[3]); replace = false)
 
     elseif sp_[1] == "myc"
 

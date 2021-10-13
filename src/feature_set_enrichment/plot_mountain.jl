@@ -114,7 +114,7 @@ function plot_mountain(
 
     x = 1:n_fe
 
-    tracef = scatter(
+    tracef = scatter(;
         name = names,
         y = sc_,
         x = x,
@@ -127,7 +127,7 @@ function plot_mountain(
 
     in_ = BitVector(in_)
 
-    traces = scatter(
+    traces = scatter(;
         name = "Set",
         yaxis = "y2",
         y = zeros(Int64(sum(in_))),
@@ -154,7 +154,7 @@ function plot_mountain(
 
             push!(
                 trace_,
-                scatter(
+                scatter(;
                     name = name,
                     yaxis = "y3",
                     y = ifelse.(is_, en_, 0.0),
@@ -173,7 +173,7 @@ function plot_mountain(
 
         push!(
             trace_,
-            scatter(
+            scatter(;
                 name = namee,
                 yaxis = "y3",
                 y = en_,
@@ -188,7 +188,7 @@ function plot_mountain(
 
     end
 
-    return plot(trace_, layout, pa = pa)
+    return plot(trace_, layout; pa = pa)
 
 end
 

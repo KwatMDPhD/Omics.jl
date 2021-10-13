@@ -47,12 +47,12 @@ function try_method(
 
     if plp
 
-        layout = Layout(xaxis_title = "Feature")
+        la = Layout(xaxis_title_text = "Feature")
 
         if length(fe_) < 100
 
-            layout = merge(
-                layout,
+            la = merge(
+                la,
                 Layout(xaxis_tickvals = 1:length(fe_), xaxis_ticktext = fe_),
             )
 
@@ -61,31 +61,31 @@ function try_method(
         plot_x_y(
             [sc_, in_];
             name_ = ["Score", "In"],
-            layout = merge(layout, Layout(title = "Input")),
+            la = merge(la, Layout(title_text = "Input")),
         )
 
         plot_x_y(
             [ab_, abp_, abpr_, abpl_];
             name_ = ["v", "P", "Cr", "Cl"],
-            layout = merge(layout, Layout(title = "Absolute")),
+            la = merge(la, Layout(title_text = "Absolute")),
         )
 
         plot_x_y(
             [ina_, inap_, inapr_, inapl_];
             name_ = ["v", "P", "Cr", "Cl"],
-            layout = merge(layout, Layout(title = "In * Absolute")),
+            la = merge(la, Layout(title_text = "In * Absolute")),
         )
 
         plot_x_y(
             [ou_, oup_, oupr_, oupl_];
             name_ = ["v", "P", "Cr", "Cl"],
-            layout = merge(layout, Layout(title = "Out")),
+            la = merge(la, Layout(title_text = "Out")),
         )
 
         plot_x_y(
             [oua_, ouap_, ouapr_, ouapl_];
             name_ = ["v", "P", "Cr", "Cl"],
-            layout = merge(layout, Layout(title = "Out * Absolute")),
+            la = merge(la, Layout(title_text = "Out * Absolute")),
         )
 
     end
@@ -138,17 +138,14 @@ function try_method(
                         plot_x_y(
                             [fl_, fr_, en_];
                             name_ = ["Fl", "Fr", "Enrichment"],
-                            layout = merge(
-                                layout,
-                                Layout(title = "Enrichment"),
-                            ),
+                            la = merge(la, Layout(title_text = "Enrichment")),
                         )
 
                     end
 
                     if pl
 
-                        plot_mountain(fe_, sc_, in_, en_, en; title = me)
+                        plot_mountain(fe_, sc_, in_, en_, en; title_text = me)
 
                     end
 
@@ -174,7 +171,7 @@ function try_method(
 
     if so
 
-        sc_, fe_ = sort_like(sc_, fe_)
+        sc_, fe_ = sort_like([sc_, fe_])
 
     end
 

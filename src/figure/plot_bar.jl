@@ -9,7 +9,7 @@ function plot_bar(
     pa::String = "",
 )::SyncPlot
 
-    tr_ = [bar() for ie in 1:length(y_)]
+    tr_ = [bar(;) for ie in 1:length(y_)]
 
     for (ie, tr) in enumerate(tr_)
 
@@ -33,13 +33,13 @@ function plot_bar(
 
     end
 
-    return plot(tr_, la, pa = pa)
+    return plot(tr_, la; pa = pa)
 
 end
 
 function plot_bar(y_::Vector{Vector{Float64}}; ke_ar...)::SyncPlot
 
-    return plot_bar(y_, [string.(1:length(y)) for y in y_], ke_ar...)
+    return plot_bar(y_, [string.(1:length(y)) for y in y_]; ke_ar...)
 
 end
 

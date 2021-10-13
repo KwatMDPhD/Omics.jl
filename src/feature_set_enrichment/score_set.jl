@@ -125,7 +125,7 @@ function score_set(
 
     if pl
 
-        plot_mountain(fe_, sc_, in_, en_, en, ke_ar...)
+        plot_mountain(fe_, sc_, in_, en_, en; ke_ar...)
 
     end
 
@@ -147,7 +147,7 @@ function score_set(
         fe_,
         sc_,
         fe1_,
-        check_in(fe_, fe1_),
+        check_in(fe_, fe1_);
         we = we,
         al = al,
         pl = pl,
@@ -182,7 +182,7 @@ function score_set(
             fe_,
             sc_,
             fe1_,
-            check_in(ch, fe1_),
+            check_in(ch, fe1_);
             we = we,
             al = al,
             pl = false,
@@ -204,7 +204,7 @@ function score_set(
 
     fe_ = sc_fe_sa[!, 1]
 
-    en_se_sa = DataFrame(:Set => collect(keys(se_fe_)))
+    en_se_sa = DataFrame("Set" => collect(keys(se_fe_)))
 
     for sa in names(sc_fe_sa)[2:end]
 
@@ -214,7 +214,7 @@ function score_set(
 
         if in(al, ["ks", "auc"])
 
-            se_en = score_set(fe_, sc_, se_fe_, we = we, al = al)
+            se_en = score_set(fe_, sc_, se_fe_; we = we, al = al)
 
         elseif al == "js"
 
@@ -222,7 +222,7 @@ function score_set(
 
         end
 
-        en_se_sa[!, sa] = collect(se_en[se] for se in en_se_sa[!, :Set])
+        en_se_sa[!, sa] = collect(se_en[se] for se in en_se_sa[!, "Set"])
 
     end
 
