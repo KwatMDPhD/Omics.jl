@@ -1,6 +1,7 @@
 using PlotlyJS: Layout
 
 using ..information:
+    get_kolmogorov_smirnov_statistic,
     get_kullback_leibler_divergence,
     get_relative_information_difference,
     get_relative_information_sum,
@@ -10,14 +11,6 @@ using ..figure: plot_x_y
 using ..vector: check_in, sort_like
 using ..vector_number: get_area, get_extreme
 
-function get_kolmogorov_smirnov(
-    ve1::Vector{Float64},
-    ve2::Vector{Float64},
-)::Vector{Float64}
-
-    return ve1 - ve2
-
-end
 
 function try_method(
     fe_::Vector{String},

@@ -70,6 +70,8 @@ include("information/get_entropy.jl")
 
 include("information/get_information_coefficient.jl")
 
+include("information/get_kolmogorov_smirnov_statistic.jl")
+
 include("information/get_kullback_leibler_divergence.jl")
 
 include("information/get_mutual_information.jl")
@@ -181,6 +183,22 @@ end
 module workflow
 
 include("workflow/get_path.jl")
+
+end
+
+module feature_set_enrichment
+
+include("feature_set_enrichment/_get_probability_and_cumulative_probability.jl")
+
+include("feature_set_enrichment/make_benchmark.jl")
+
+include("feature_set_enrichment/plot_mountain.jl")
+
+include("feature_set_enrichment/score_set.jl")
+
+include("feature_set_enrichment/score_set_new.jl")
+
+include("feature_set_enrichment/try_method.jl")
 
 end
 

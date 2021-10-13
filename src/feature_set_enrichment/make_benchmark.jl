@@ -1,7 +1,7 @@
 using StatsBase: sample
 
-using ..table: read as table_read
 using ..gmt: read as gmt_read
+using ..table: read as table_read
 using ..vector: list_card
 
 function make_benchmark(
@@ -32,7 +32,7 @@ function make_benchmark(
 
     elseif sp_[1] == "myc"
 
-        di = joinpath("..", "nb", "data""")
+        di = joinpath("..", "nb", "data", "")
 
         da = table_read(joinpath(di, "gene_score.tsv"))
 
