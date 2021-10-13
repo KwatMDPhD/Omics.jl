@@ -22,7 +22,7 @@ function make_benchmark(
 
     elseif sp_[1] == "random"
 
-        fe_ = ["Feature $ie" for ie in 1:parse(Int64, sp_[2])]
+        fe_ = [string("Feature ", ie) for ie in 1:parse(Int64, sp_[2])]
 
         ve = randn(convert(Int64, length(fe_) / 2))
 

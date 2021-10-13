@@ -78,7 +78,7 @@ function plot_mountain(
                 annotationx,
                 attr(
                     y = 1.16,
-                    text = "<b>$title</b>",
+                    text = string("<b>", title, "</b>"),
                     font_size = title_font_size,
                 ),
             ),
@@ -86,7 +86,7 @@ function plot_mountain(
                 annotationx,
                 attr(
                     y = 1.04,
-                    text = "<b>Statistic = $en</b>",
+                    text = string("<b>Statistic = ", en, "</b>"),
                     font = attr(
                         size = title_font_size * 0.64,
                         color = "2a603b",
@@ -95,7 +95,10 @@ function plot_mountain(
             ),
             merge(
                 annotationy,
-                attr(y = get_center(yaxis1_domain...), text = "<b>$names</b>"),
+                attr(
+                    y = get_center(yaxis1_domain...),
+                    text = string("<b>", names, "</b>"),
+                ),
             ),
             merge(
                 annotationy,
@@ -103,11 +106,17 @@ function plot_mountain(
             ),
             merge(
                 annotationy,
-                attr(y = get_center(yaxis3_domain...), text = "<b>$namee</b>"),
+                attr(
+                    y = get_center(yaxis3_domain...),
+                    text = string("<b>", namee, "</b>"),
+                ),
             ),
             merge(
                 annotationx,
-                attr(y = -0.088, text = "<b>Feature Rank (n=$n_fe)</b>"),
+                attr(
+                    y = -0.088,
+                    text = string("<b>Feature Rank (n=", n_fe, ")</b>"),
+                ),
             ),
         ],
     )

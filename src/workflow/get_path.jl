@@ -8,19 +8,18 @@ function get_path(se::String)::Tuple{String, String, String, String}
 
     pai = dirname(se)
 
-    ip = "input"
+    if splitdir(pai)[2] != "input"
 
-    if splitdir(pai)[2] != ip
-
-        error("setting is not in ",ip,".")
+        error("setting is not in input.")
 
     end
 
-    par = dirname(pai)
+    par = string(dirname(pai), "/")
 
-    par = "$par/"
-
-    return par, "$pai/", joinpath(par, "code", ""), joinpath(par, "output", "")
+    return par,
+    joinpath(par, "input", ""),
+    joinpath(par, "code", ""),
+    joinpath(par, "output", "")
 
 end
 
