@@ -1,11 +1,12 @@
-using CSV: read
-using DataFrames: DataFrame
 using StatsBase: sample
 
-using ..file: read_gmt, read_table
+using ..table: read as table_read
+using ..gmt: read as gmt_read
 using ..vector: list_card
 
-function make_benchmark(id::String)::Tuple{VS, VF, VS}
+function make_benchmark(
+    id::String,
+)::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
 
     sp_ = split(id)
 
@@ -15,7 +16,7 @@ function make_benchmark(id::String)::Tuple{VS, VF, VS}
 
         n_fe = length(fe_) / 2
 
-        sc_ = Float64.(ceil(-n_fe):floor(n_fe))
+        sc_ = convert(Vector{Float64}, ceil(-n_fe):floor(n_fe))
 
         fe1_ = string.(collect(sp_[2]))
 
@@ -23,24 +24,24 @@ function make_benchmark(id::String)::Tuple{VS, VF, VS}
 
         fe_ = ["Feature $ie" for ie in 1:parse(Int64, sp_[2])]
 
-        ve = randn(Int64(length(fe_) / 2))
+        ve = randn(convert(Int64, length(fe_) / 2))
 
         sc_ = sort([.-ve; ve])
 
-        fe1_ = sample(fe_, parse(Int64, sp_[3]); replace = false)
+        fe1_ = sample(fe_, parse(Int64, sp_[3]), replace = false)
 
     elseif sp_[1] == "myc"
 
-        di = "../nb/data/"
+        di = joinpath("..", "nb", "data""")
 
-        da = read_table(joinpath(di, "gene_score.tsv"))
+        da = table_read(joinpath(di, "gene_score.tsv"))
 
-        fe_ = da[!, Symbol("Gene")]
+        fe_ = da[!, "Gene"]
 
-        sc_ = da[!, Symbol("Score")]
+        sc_ = da[!, "Score"]
 
         fe1_ =
-            read_gmt(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+            gmt_read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
     end
 

@@ -1,5 +1,5 @@
-using PlotlyJS: GenericTrace, Layout, PlotConfig, SyncPlot, savefig
-import PlotlyJS: plot as PlotlyJS_plot
+using PlotlyJS:
+    GenericTrace, Layout, PlotConfig, SyncPlot, plot as PlotlyJS_plot, savefig
 
 function plot(
     tr_::Vector{GenericTrace},

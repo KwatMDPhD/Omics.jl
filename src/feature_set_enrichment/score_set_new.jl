@@ -1,11 +1,11 @@
 using ..vector: check_in
-using ..vector_number: cumulate_sum_reverse, get_area
+using ..vector_number: get_area
 using ..information: get_relative_information_difference
 
 function score_set_new(
-    fe_::VS,
-    sc_::VF,
-    fe1_::VS;
+    fe_::Vector{String},
+    sc_::Vector{Float64},
+    fe1_::Vector{String};
     pl::Bool = true,
     ke_ar...,
 )::Float64
@@ -34,7 +34,7 @@ function score_set_new(
 
     if pl
 
-        plot_mountain(fe_, sc_, in_, en_, en; ke_ar...)
+        plot_mountain(fe_, sc_, in_, en_, en, ke_ar...)
 
     end
 
@@ -42,13 +42,17 @@ function score_set_new(
 
 end
 
-function score_set_new(fe_::VS, sc_::VF, se_fe_::DSVS)::DSF
+function score_set_new(
+    fe_::Vector{String},
+    sc_::Vector{Float64},
+    se_fe_::Dict{String, Vector{String}},
+)::Dict{String, Float64}
 
-    se_en = DSF()
+    se_en = Dict{String, Float64}()
 
     for (se, fe1_) in se_fe_
 
-        se_en[se] = score_set_new(fe_, sc_, fe1_; pl = false)
+        se_en[se] = score_set_new(fe_, sc_, fe1_, pl = false)
 
     end
 

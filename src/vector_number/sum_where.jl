@@ -1,4 +1,4 @@
-function sum_where_1(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
+function _sum_where_1(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
 
     su = 0.0
 
@@ -16,7 +16,7 @@ function sum_where_1(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
 
 end
 
-function sum_where_2(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
+function _sum_where_2(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
 
     su = 0.0
 
@@ -38,11 +38,11 @@ function sum_where(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
 
     if length(ve) < 3000
 
-        return sum_where_1(ve, wh_)
+        return _sum_where_1(ve, wh_)
 
     else
 
-        return sum_where_2(ve, wh_)
+        return _sum_where_2(ve, wh_)
 
     end
 

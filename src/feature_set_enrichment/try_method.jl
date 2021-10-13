@@ -10,20 +10,23 @@ using ..figure: plot_x_y
 using ..vector: check_in, sort_like
 using ..vector_number: get_area, get_extreme
 
-function get_kolmogorov_smirnov(ve1::VF, ve2::VF)::VF
+function get_kolmogorov_smirnov(
+    ve1::Vector{Float64},
+    ve2::Vector{Float64},
+)::Vector{Float64}
 
     return ve1 - ve2
 
 end
 
 function try_method(
-    fe_::VS,
-    sc_::VF,
-    fe1_::VS;
+    fe_::Vector{String},
+    sc_::Vector{Float64},
+    fe1_::Vector{String};
     so::Bool = true,
     plp::Bool = true,
     pl::Bool = true,
-)::ODSF
+)::OrderedDict{String, Float64}
 
     if so
 
@@ -94,7 +97,7 @@ function try_method(
 
     end
 
-    me_en = ODSF()
+    me_en = OrderedDict{String, Float64}()
 
     for (me1, our_, oul_) in [["ou", oupr_, oupl_], ["oua", ouapr_, ouapl_]]
 
@@ -169,7 +172,12 @@ function try_method(
 end
 
 
-function try_method(fe_::VS, sc_::VF, se_fe_::DSVS; so::Bool = true)::DSODSF
+function try_method(
+    fe_::Vector{String},
+    sc_::Vector{Float64},
+    se_fe_::Dict{String, Vector{String}};
+    so::Bool = true,
+)::Dict{String, OrderedDict{String, Float64}}
 
     if so
 
@@ -177,7 +185,7 @@ function try_method(fe_::VS, sc_::VF, se_fe_::DSVS; so::Bool = true)::DSODSF
 
     end
 
-    se_me_en = DSODSF()
+    se_me_en = Dict{String, OrderedDict{String, Float64}}()
 
     for (se, fe1_) in se_fe_
 

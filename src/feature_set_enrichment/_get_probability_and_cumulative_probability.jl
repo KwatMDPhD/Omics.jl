@@ -1,10 +1,13 @@
 using ..vector_number: cumulate_sum_reverse
 
-function _get_probability_and_cumulative_probability(ve::VF)::Tuple{VF, VF, VF}
+function _get_probability_and_cumulative_probability(
+    ve::Vector{Float64},
+)::Tuple{Vector{Float64}, Vector{Float64}, Vector{Float64}}
 
-    ep = eps()
 
     pr_ = ve / sum(ve)
+
+    ep = eps()
 
     cur_ = cumsum(pr_) .+ ep
 

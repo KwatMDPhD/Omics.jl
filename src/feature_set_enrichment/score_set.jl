@@ -1,10 +1,12 @@
-using CSV
 using DataFrames: DataFrame, names
 
 using ..math: get_center
 using ..vector: check_in, sort_like
 
-function _sum_1_absolute_and_0_count(sc_::VF, in_::VF)::Tuple{Float64, Float64}
+function _sum_1_absolute_and_0_count(
+    sc_::Vector{Float64},
+    in_::Vector{Float64},
+)::Tuple{Float64, Float64}
 
     su1 = 0.0
 
@@ -37,10 +39,10 @@ function _sum_1_absolute_and_0_count(sc_::VF, in_::VF)::Tuple{Float64, Float64}
 end
 
 function score_set(
-    fe_::VS,
-    sc_::VF,
-    fe1_::VS,
-    in_::VF;
+    fe_::Vector{String},
+    sc_::Vector{Float64},
+    fe1_::Vector{String},
+    in_::Vector{Float64};
     we::Float64 = 1.0,
     al::String = "ks",
     pl::Bool = true,
@@ -51,7 +53,7 @@ function score_set(
 
     en = 0.0
 
-    en_ = VF(undef, n_fe)
+    en_ = Vector{Float64}(undef, n_fe)
 
     ex = 0.0
 
@@ -123,7 +125,7 @@ function score_set(
 
     if pl
 
-        plot_mountain(fe_, sc_, in_, en_, en; ke_ar...)
+        plot_mountain(fe_, sc_, in_, en_, en, ke_ar...)
 
     end
 
@@ -132,9 +134,9 @@ function score_set(
 end
 
 function score_set(
-    fe_::VS,
-    sc_::VF,
-    fe1_::VS;
+    fe_::Vector{String},
+    sc_::Vector{Float64},
+    fe1_::Vector{String};
     we::Float64 = 1.0,
     al::String = "ks",
     pl::Bool = true,
@@ -145,7 +147,7 @@ function score_set(
         fe_,
         sc_,
         fe1_,
-        check_in(fe_, fe1_);
+        check_in(fe_, fe1_),
         we = we,
         al = al,
         pl = pl,
@@ -155,12 +157,12 @@ function score_set(
 end
 
 function score_set(
-    fe_::VS,
-    sc_::VF,
-    se_fe_::DSVS;
+    fe_::Vector{String},
+    sc_::Vector{Float64},
+    se_fe_::Dict{String, Vector{String}};
     we::Float64 = 1.0,
     al::String = "ks",
-)::DSF
+)::Dict{String, Float64}
 
     if length(se_fe_) < 10
 
@@ -172,7 +174,7 @@ function score_set(
 
     end
 
-    se_en = DSF()
+    se_en = Dict{String, Float64}()
 
     for (se, fe1_) in se_fe_
 
@@ -180,7 +182,7 @@ function score_set(
             fe_,
             sc_,
             fe1_,
-            check_in(ch, fe1_);
+            check_in(ch, fe1_),
             we = we,
             al = al,
             pl = false,
@@ -194,7 +196,7 @@ end
 
 function score_set(
     sc_fe_sa::DataFrame,
-    se_fe_::DSVS;
+    se_fe_::Dict{String, Vector{String}};
     we::Float64 = 1.0,
     al::String = "ks",
     n_jo::Int64 = 1,
@@ -208,11 +210,11 @@ function score_set(
 
         go_ = findall(!ismissing, sc_fe_sa[!, sa])
 
-        sc_, fe_ = sort_like(sc_fe_sa[go_, sa], fe_[go_])
+        sc_, fe_ = sort_like([sc_fe_sa[go_, sa], fe_[go_]])
 
         if in(al, ["ks", "auc"])
 
-            se_en = score_set(fe_, sc_, se_fe_; we = we, al = al)
+            se_en = score_set(fe_, sc_, se_fe_, we = we, al = al)
 
         elseif al == "js"
 

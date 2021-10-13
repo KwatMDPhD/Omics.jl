@@ -1,24 +1,24 @@
-using PlotlyJS: Layout, attr, scatter
+using PlotlyJS: Layout, SyncPlot, attr, scatter
 using Printf: @sprintf
 
 using ..constant: get_golden_ratio
 using ..figure: plot
 
 function plot_mountain(
-    fe_::VS,
-    sc_::VF,
-    in_::VF,
-    en_::VF,
+    fe_::Vector{String},
+    sc_::Vector{Float64},
+    in_::Vector{Float64},
+    en_::Vector{Float64},
     en::Float64;
-    height::Real = 480,
+    height::Int64 = 480,
     title::String = "Mountain Plot",
-    title_font_size::Real = 24,
-    axis_title_font_size::Real = 12.6,
+    title_font_size::Int64 = 24,
+    axis_title_font_size::Int64 = 12,
     names::String = "Score",
-    line_width::Real = 2.0,
+    line_width::Int64 = 2.0,
     si::Bool = true,
     pa::String = "",
-)::Any
+)::SyncPlot
 
     width = height * get_golden_ratio()
 
@@ -188,7 +188,7 @@ function plot_mountain(
 
     end
 
-    return plot(trace_, layout; pa = pa)
+    return plot(trace_, layout, pa = pa)
 
 end
 
