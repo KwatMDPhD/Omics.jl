@@ -1,14 +1,15 @@
-using JSON: json as JSONjson
-using Base: write as Basewrite
+using Base: write as base_write
+using JSON: json as json_json
 
-function write(pa::String, an::Any)::Int64
+function write(pa::String, di::Dict)::Int64
 
     println(pa)
+
     @assert endswith(pa, ".json")
 
     open(pa, "w") do io
 
-        return Basewrite(io, JSONjson(an, 2))
+        return base_write(io, json_json(di, 2))
 
     end
 

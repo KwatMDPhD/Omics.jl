@@ -1,7 +1,7 @@
 using CSV: File
 using DataFrames: DataFrame, Not, rename, select
 
-function read_gct(pa::String; na::String = "Name")::DataFrame
+function read(pa::String; na::String = "Name")::DataFrame
 
     return rename(
         select(
@@ -13,4 +13,4 @@ function read_gct(pa::String; na::String = "Name")::DataFrame
 
 end
 
-export read_gct
+export read

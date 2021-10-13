@@ -1,6 +1,6 @@
 using DataFrames: DataFrame
-using PyCall: @py_str, PyObject
 using Pandas: reset_index, DataFrame as Pandas_DataFrame
+using PyCall: @py_str, PyObject
 
 function make_dataframe(da::DataFrame)::PyObject
 

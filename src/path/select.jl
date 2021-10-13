@@ -1,7 +1,7 @@
 function select(
     di::String;
     ig_::Vector{Regex} = [r"^\."],
-    ke_::Vector{Regex} = Vector{Regex}([]),
+    ke_::Vector{Regex} = Vector{Regex}(),
     jo::Bool = true,
 )::Vector{String}
 

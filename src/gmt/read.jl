@@ -1,4 +1,4 @@
-function read_gmt(pa::String)::Dict{String, Vector{String}}
+function read(pa::String)::Dict{String, Vector{String}}
 
     se_ge_ = Dict{String, Vector{String}}()
 
@@ -25,13 +25,13 @@ function read_gmt(pa::String)::Dict{String, Vector{String}}
 
 end
 
-function read_gmt(pa_::Vector{String})::Dict{String, Vector{String}}
+function read(pa_::Vector{String})::Dict{String, Vector{String}}
 
     se_ge_ = Dict{String, Vector{String}}()
 
     for pa in pa_
 
-        merge!(se_ge_, read_gmt(pa))
+        merge!(se_ge_, read(pa))
 
     end
 
@@ -39,4 +39,4 @@ function read_gmt(pa_::Vector{String})::Dict{String, Vector{String}}
 
 end
 
-export read_gmt
+export read

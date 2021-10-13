@@ -1,5 +1,6 @@
 using DataFrames: DataFrameRow
 using PyCall: @py_str, PyObject
+
 function make_series(ro::DataFrameRow)::PyObject
 
     py"""
