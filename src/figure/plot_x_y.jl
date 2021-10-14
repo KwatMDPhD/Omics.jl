@@ -10,33 +10,33 @@ function plot_x_y(
     pa::String = "",
 )::SyncPlot
 
-    tr_ = [scatter(;) for ie in 1:length(y_)]
+    tr_ = [scatter(;) for id in 1:length(y_)]
 
-    for (ie, tr) in enumerate(tr_)
+    for (id, tr) in enumerate(tr_)
 
         if 0 < length(name_)
 
-            tr["name"] = name_[ie]
+            tr["name"] = name_[id]
 
         end
 
-        tr["y"] = y_[ie]
+        tr["y"] = y_[id]
 
-        tr["x"] = x_[ie]
+        tr["x"] = x_[id]
 
         if 0 < length(text_)
 
-            tr["text"] = text_[ie]
+            tr["text"] = text_[id]
 
         end
 
         if 0 < length(mode_)
 
-            mode = mode_[ie]
+            mode = mode_[id]
 
         else
 
-            if length(x_[ie]) < 1000
+            if length(x_[id]) < 1000
 
                 mode = "markers+lines"
 

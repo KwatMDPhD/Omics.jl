@@ -9,23 +9,23 @@ function plot_bar(
     pa::String = "",
 )::SyncPlot
 
-    tr_ = [bar(;) for ie in 1:length(y_)]
+    tr_ = [bar(;) for id in 1:length(y_)]
 
-    for (ie, tr) in enumerate(tr_)
+    for (id, tr) in enumerate(tr_)
 
         if 0 < length(name_)
 
-            tr["name"] = name_[ie]
+            tr["name"] = name_[id]
 
         end
 
-        tr["y"] = y_[ie]
+        tr["y"] = y_[id]
 
-        tr["x"] = x_[ie]
+        tr["x"] = x_[id]
 
         if 0 < length(marker_color_)
 
-            tr["marker_color"] = marker_color_[ie]
+            tr["marker_color"] = marker_color_[id]
 
         end
 

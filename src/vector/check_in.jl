@@ -7,19 +7,19 @@ function check_in(st_::Vector{String}, st1_::Vector{String})::Vector{Float64}
 end
 
 function check_in(
-    st_ie::Dict{String, Int64},
+    st_id::Dict{String, Int64},
     st1_::Vector{String},
 )::Vector{Float64}
 
-    in_ = fill(0, length(st_ie))
+    in_ = fill(0, length(st_id))
 
     @inbounds @fastmath @simd for st1 in st1_
 
-        ie = get(st_ie, st1, nothing)
+        id = get(st_id, st1, nothing)
 
-        if ie !== nothing
+        if id !== nothing
 
-            in_[ie] = 1.0
+            in_[id] = 1.0
 
         end
 

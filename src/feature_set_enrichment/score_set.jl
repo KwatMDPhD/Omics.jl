@@ -12,11 +12,11 @@ function _sum_1_absolute_and_0_count(
 
     su0 = 0.0
 
-    for ie in 1:length(sc_)
+    for id in 1:length(sc_)
 
-        if in_[ie] == 1.0
+        if in_[id] == 1.0
 
-            nu = sc_[ie]
+            nu = sc_[id]
 
             if nu < 0.0
 
@@ -65,11 +65,11 @@ function score_set(
 
     de = 1.0 / su0
 
-    @inbounds @fastmath @simd for ie in n_fe:-1:1
+    @inbounds @fastmath @simd for id in n_fe:-1:1
 
-        if in_[ie] == 1.0
+        if in_[id] == 1.0
 
-            sc = sc_[ie]
+            sc = sc_[id]
 
             if sc < 0.0
 
@@ -87,7 +87,7 @@ function score_set(
 
         if pl
 
-            en_[ie] = en
+            en_[id] = en
 
         end
 
@@ -170,7 +170,7 @@ function score_set(
 
     else
 
-        ch = Dict(fe => ie for (fe, ie) in zip(fe_, 1:length(fe_)))
+        ch = Dict(fe => id for (fe, id) in zip(fe_, 1:length(fe_)))
 
     end
 

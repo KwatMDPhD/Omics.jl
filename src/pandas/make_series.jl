@@ -3,7 +3,7 @@ using PyCall: @py_str, PyObject
 
 function make_series(
     nai::String,
-    ie_::Vector,
+    id_::Vector,
     nad::String,
     da_::Vector,
 )::PyObject
@@ -12,7 +12,7 @@ function make_series(
     from pandas import Series
     """
 
-    se = py"Series"(data = da_, index = ie_, name = nad)
+    se = py"Series"(data = da_, index = id_, name = nad)
 
     se.index.name = nai
 

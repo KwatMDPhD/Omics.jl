@@ -2,11 +2,11 @@ function _sum_where_1(ve::Vector{Float64}, wh_::Vector{Float64})::Float64
 
     su = 0.0
 
-    for (ie, wh) in enumerate(wh_)
+    for (id, wh) in enumerate(wh_)
 
         if wh == 1.0
 
-            su += ve[ie]
+            su += ve[id]
 
         end
 

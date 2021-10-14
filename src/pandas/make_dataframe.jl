@@ -12,7 +12,7 @@ function make_dataframe(da::DataFrame)::PyObject
 
     if 1 < si2
 
-        ie_ = 2:si2
+        id_ = 2:si2
 
     else
 
@@ -23,9 +23,9 @@ function make_dataframe(da::DataFrame)::PyObject
     na_ = names(da)
 
     da = py"DataFrame"(
-        data = Matrix(da[!, ie_]),
+        data = Matrix(da[!, id_]),
         index = da[!, 1],
-        columns = na_[ie_],
+        columns = na_[id_],
     )
 
     da.index.name = na_[1]
