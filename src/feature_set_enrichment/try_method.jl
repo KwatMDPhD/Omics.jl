@@ -1,3 +1,4 @@
+using OrderedCollections: OrderedDict
 using PlotlyJS: Layout
 
 using ..information:
@@ -23,7 +24,7 @@ function try_method(
 
     if so
 
-        sc_, fe_ = sort_like(sc_, fe_)
+        sc_, fe_ = sort_like([sc_, fe_])
 
     end
 
@@ -95,7 +96,7 @@ function try_method(
     for (me1, our_, oul_) in [["ou", oupr_, oupl_], ["oua", ouapr_, ouapl_]]
 
         for (me2, fu1) in [
-            ["ks", get_kolmogorov_smirnov],
+            ["ks", get_kolmogorov_smirnov_statistic],
             ["ris", get_relative_information_sum],
             ["risw", get_relative_information_sum],
             ["rid", get_relative_information_difference],

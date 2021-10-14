@@ -11,11 +11,11 @@ function plot_mountain(
     en_::Vector{Float64},
     en::Float64;
     height::Int64 = 480,
-    title::String = "Mountain Plot",
+    title_text::String = "Mountain Plot",
     title_font_size::Int64 = 24,
     axis_title_font_size::Int64 = 12,
     names::String = "Score",
-    line_width::Int64 = 2.0,
+    line_width::Float64 = 2.0,
     si::Bool = true,
     pa::String = "",
 )::SyncPlot
@@ -78,7 +78,7 @@ function plot_mountain(
                 annotationx,
                 attr(
                     y = 1.16,
-                    text = string("<b>", title, "</b>"),
+                    text = string("<b>", title_text, "</b>"),
                     font_size = title_font_size,
                 ),
             ),

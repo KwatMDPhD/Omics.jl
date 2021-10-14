@@ -20,6 +20,12 @@ function make_benchmark(
 
         fe1_ = string.(collect(sp_[2]))
 
+        if !all(fe1 in fe_ for fe1 in fe1_)
+
+            error("not all cards are in the cards.")
+
+        end
+
     elseif sp_[1] == "random"
 
         fe_ = [string("Feature ", id) for id in 1:parse(Int64, sp_[2])]

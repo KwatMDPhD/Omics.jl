@@ -34,7 +34,7 @@ function score_set_new(
 
     if pl
 
-        plot_mountain(fe_, sc_, in_, en_, en, ke_ar...)
+        plot_mountain(fe_, sc_, in_, en_, en; ke_ar...)
 
     end
 
