@@ -1,5 +1,11 @@
 module Kwat
 
+module applying
+
+include("applying/apply.jl")
+
+end
+
 module bash
 
 include("bash/run.jl")
@@ -79,6 +85,8 @@ include("information/get_mutual_information.jl")
 include("information/get_relative_information_difference.jl")
 
 include("information/get_relative_information_sum.jl")
+
+include("information/get_signal_to_noise_ratio.jl")
 
 include("information/get_symmetric_information_difference.jl")
 
@@ -183,6 +191,12 @@ end
 module workflow
 
 include("workflow/get_path.jl")
+
+end
+
+module feature_by_sample
+
+include("feature_by_sample/compare_with_target.jl")
 
 end
 
