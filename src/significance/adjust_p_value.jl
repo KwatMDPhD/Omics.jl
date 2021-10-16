@@ -22,7 +22,7 @@ function adjust_p_value(
 
     else
 
-        error("method is unknown.")
+        error("method is invalid.")
 
     end
 

@@ -110,6 +110,10 @@ module math
 
 include("math/get_center.jl")
 
+include("math/get_confidence_interval.jl")
+
+include("math/get_z_score.jl")
+
 end
 
 module matrix_number
@@ -209,6 +213,8 @@ include("significance/get_family_wise_error_rate.jl")
 include("significance/get_margin_of_error.jl")
 
 include("significance/get_p_value.jl")
+
+include("significance/get_p_value_and_adjust.jl")
 
 end
 
