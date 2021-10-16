@@ -16,6 +16,8 @@ module constant
 
 include("constant/get_golden_ratio.jl")
 
+include("constant/list_card.jl")
+
 end
 
 module dictionary
@@ -53,6 +55,8 @@ module figure
 include("figure/plot.jl")
 
 include("figure/plot_bar.jl")
+
+include("figure/plot_heat_map.jl")
 
 include("figure/plot_x_y.jl")
 
@@ -161,8 +165,6 @@ end
 module vector
 
 include("vector/check_in.jl")
-
-include("vector/list_card.jl")
 
 include("vector/sort_like.jl")
 

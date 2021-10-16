@@ -2,7 +2,7 @@ using StatsBase: sample
 
 using ..gmt: read as gmt_read
 using ..table: read as table_read
-using ..vector: list_card
+using ..constant: list_card
 
 function make_benchmark(
     id::String,
