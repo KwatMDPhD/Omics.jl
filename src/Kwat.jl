@@ -178,6 +178,10 @@ include("vector_number/get_area.jl")
 
 include("vector_number/get_extreme.jl")
 
+include("vector_number/make_increasing_by_stepping_down!.jl")
+
+include("vector_number/make_increasing_by_stepping_up!.jl")
+
 include("vector_number/normalize!.jl")
 
 include("vector_number/normalize.jl")
@@ -191,6 +195,18 @@ end
 module workflow
 
 include("workflow/get_path.jl")
+
+end
+
+module significance
+
+include("significance/adjust_p_value.jl")
+
+include("significance/get_family_wise_error_rate.jl")
+
+include("significance/get_margin_of_error.jl")
+
+include("significance/get_p_value.jl")
 
 end
 
