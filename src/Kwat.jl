@@ -22,6 +22,8 @@ end
 
 module dictionary
 
+include("dictionary/make_keyword_argument.jl")
+
 include("dictionary/merge.jl")
 
 include("dictionary/summarize.jl")
@@ -143,6 +145,8 @@ module path
 include("path/clean.jl")
 
 include("path/get_absolute.jl")
+
+include("path/get_download_directory.jl")
 
 include("path/select.jl")
 

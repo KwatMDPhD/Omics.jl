@@ -9,9 +9,11 @@ function summarize(di::Dict; n_pr::Int64 = 4)::Nothing
 
     for (id, (ke, va)) in enumerate(di)
 
-        println(ke, " => ", va)
+        if id <= n_pr
 
-        if n_pr < id
+            println(ke, " => ", va)
+
+        else
 
             println("...")
 

@@ -202,7 +202,7 @@ function score_set(
     n_jo::Int64 = 1,
 )::DataFrame
 
-    fe_ = sc_fe_sa[!, 1]
+    fe_ = convert(Vector{String}, sc_fe_sa[!, 1])
 
     en_se_sa = DataFrame("Set" => collect(keys(se_fe_)))
 
