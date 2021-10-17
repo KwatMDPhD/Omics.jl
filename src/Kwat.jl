@@ -24,6 +24,8 @@ module dictionary
 
 include("dictionary/merge.jl")
 
+include("dictionary/summarize.jl")
+
 end
 
 module fastq
