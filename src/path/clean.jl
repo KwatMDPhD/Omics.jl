@@ -1,8 +1,12 @@
-function clean(na::String)::String
+function clean(na::String; pr::Bool = false)::String
 
-    na2 = replace(lowercase(na), r"[^\w.]" => '_')
+    na2 = replace(lowercase(na), r"[^_.0-9a-z]" => '_')
 
-    println(na, " ==> ", na2)
+    if pr
+
+        println(na, " ==> ", na2)
+
+    end
 
     return na2
 
