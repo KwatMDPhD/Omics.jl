@@ -76,6 +76,8 @@ module gmt
 
 include("gmt/read.jl")
 
+include("gmt/write_txt.jl")
+
 end
 
 module information
