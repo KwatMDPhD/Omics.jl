@@ -210,6 +210,8 @@ module workflow
 
 include("workflow/get_path.jl")
 
+include("workflow/read_setting.jl")
+
 end
 
 module significance
