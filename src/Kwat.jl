@@ -154,14 +154,6 @@ include("path/select.jl")
 
 end
 
-module string
-
-include("string/replace.jl")
-
-include("string/title.jl")
-
-end
-
 module table
 
 include("table/read.jl")
@@ -177,6 +169,8 @@ end
 module vector
 
 include("vector/check_in.jl")
+
+include("vector/get_longest_common_prefix.jl")
 
 include("vector/sort_like.jl")
 
@@ -225,6 +219,18 @@ include("significance/get_margin_of_error.jl")
 include("significance/get_p_value.jl")
 
 include("significance/get_p_value_and_adjust.jl")
+
+end
+
+module string
+
+include("string/get_longest_common_prefix.jl")
+
+include("string/remove_longest_common_prefix.jl")
+
+include("string/replace.jl")
+
+include("string/title.jl")
 
 end
 
