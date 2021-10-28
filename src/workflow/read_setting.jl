@@ -8,13 +8,17 @@ function read_setting(pa::String)::Dict
 
     for (ke, va) in se
 
-        va2 = replace(va, r"^\./" => string(di, "/"))
+        if isa(va, String)
 
-        if va != va2
+            va2 = replace(va, r"^\./" => string(di, "/"))
 
-            println(va, " ==> ", va2)
+            if va != va2
 
-            se[ke] = va2
+                println(va, " ==> ", va2)
+
+                se[ke] = va2
+
+            end
 
         end
 
