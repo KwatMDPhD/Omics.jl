@@ -142,18 +142,6 @@ include("pandas/make_series.jl")
 
 end
 
-module path
-
-include("path/clean.jl")
-
-include("path/get_absolute.jl")
-
-include("path/get_download_directory.jl")
-
-include("path/select.jl")
-
-end
-
 module table
 
 include("table/read.jl")
@@ -231,6 +219,22 @@ include("string/remove_longest_common_prefix.jl")
 include("string/replace.jl")
 
 include("string/title.jl")
+
+end
+
+module path
+
+include("path/clean.jl")
+
+include("path/get_absolute.jl")
+
+include("path/get_download_directory.jl")
+
+include("path/move.jl")
+
+include("path/select.jl")
+
+include("path/shorten_path.jl")
 
 end
 
