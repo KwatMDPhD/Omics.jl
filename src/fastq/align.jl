@@ -1,5 +1,3 @@
-using Dates: now, CompoundPeriod
-
 function align(
     mo::String,
     sa::String,
@@ -7,17 +5,12 @@ function align(
     fq2::String,
     fa::String,
     pa::String,
-    n_jo::Int,
-    me::Int,
+    n_jo::Int64,
+    me::Int64,
 )::Nothing
 
-    println("Aligning")
 
-    st = now()
-
-    println(st)
-
-    id = "$fa.mmi"
+    id = string(fa, ".mmi")
 
     if !ispath(id)
 
@@ -29,32 +22,26 @@ function align(
 
     mkpath(di)
 
-    pi_ = [
-        `samtools sort --threads $n_jo -n`,
-        `samtools fixmate --threads $n_jo -m - -`,
-        `samtools sort --threads $n_jo`,
-        "$pa.tmp",
-    ]
-
     if mo == "dna"
 
-        run_command(
-            pipeline(
-                `minimap2 -x sr -t $n_jo -K $(me)G -R "@RG\tID:$sa\tSM:$sa" -a $id $fq1 $fq2`,
-                pi_...,
-            ),
-        )
+        md = "-x sr"
+
 
     elseif mo == "cdna"
 
-        run_command(
-            pipeline(
-                `minimap2 -ax splice -uf -t $n_jo -K $(me)G -R "@RG\tID:$sa\tSM:$sa" -a $id $fq1 $fq2`,
-                pi_...,
-            ),
-        )
+        md = "-ax splice -uf"
 
     end
+
+    run_command(
+        pipeline(
+            `minimap2 $md -t $n_jo -K $(me)G -R "@RG\tID:$sa\tSM:$sa" -a $id $fq1 $fq2`,
+            `samtools sort --threads $n_jo -n`,
+            `samtools fixmate --threads $n_jo -m - -`,
+            `samtools sort --threads $n_jo`,
+            "$pa.tmp",
+        ),
+    )
 
     run_command(`samtools markdup --threads $n_jo -s $pa.tmp $pa`)
 
@@ -66,11 +53,6 @@ function align(
         pipeline(`samtools flagstat --threads $n_jo $pa`, "$pa.flagstat"),
     )
 
-    en = now()
-
-    println(en)
-
-    println(canonicalize(Dates.CompoundPeriod(en - st)))
 
     return nothing
 

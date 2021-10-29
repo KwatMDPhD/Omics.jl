@@ -1,5 +1,3 @@
-using Dates
-
 function call_variant(
     mo::String,
     ge::Union{String, Nothing},
