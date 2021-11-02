@@ -3,4 +3,5 @@ uuid = "fb31f113-4a63-4a8e-817a-4bdffc7e605a"
 authors = ["KwatMDPhD <kwat.me@icloud.com>"]
 version = "0.2.0"
 
-[deps]
+[compat]
+julia = "1.6"
