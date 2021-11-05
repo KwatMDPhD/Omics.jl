@@ -9,3 +9,7 @@ To report a bug, request a feature, or leave a comment (about anything related t
 ---
 
 Made by https://github.com/KwatMDPhD/PkgRepository.jl
+
+---
+
+Check out the [python version](https://github.com/KwatMDPhD/kwat.py).
