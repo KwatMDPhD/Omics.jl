@@ -1,12 +1,14 @@
-# Kwat.jl
+# OnePiece.jl
 
-Do more with less :japanese_castle:
+One for all :boat: :pirate_flag:
+
+(Oda is a genius.)
 
 ---
 
 ## Howdy :wave: :cowboy_hat_face:
 
-To report a bug, request a feature, or leave a comment, just [submit an issue](https://github.com/KwatMDPhD/Kwat.jl/issues/new/choose).
+To report a bug, request a feature, or leave a comment, just [submit an issue](https://github.com/KwatMDPhD/OnePiece.jl/issues/new/choose).
 
 ---
 
