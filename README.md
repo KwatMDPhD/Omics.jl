@@ -1,6 +1,6 @@
 # OnePiece.jl
 
-One for all :boat: :pirate_flag:
+One for all :badger: :eagle:
 
 (Oda is a genius.)
 
