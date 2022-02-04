@@ -1,6 +1,6 @@
 # OnePiece.jl
 
-One for all :badger: :eagle:
+One for all :eagle:
 
 (Oda is a genius.)
 
@@ -43,6 +43,8 @@ Produce figures for publication :newspaper:
 Work with human gene symbols :dna:
 
 ### information
+
+Compute information :satellite:
 
 ### moji
 

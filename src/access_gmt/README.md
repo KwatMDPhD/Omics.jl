@@ -1,3 +1,0 @@
-#
-
-Read `.gmt` files :vhs:
