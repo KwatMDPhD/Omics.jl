@@ -1,3 +1,5 @@
+using Printf: @sprintf
+
 function plot_mountain(
     fe_::Vector{String},
     sc_::Vector{Float64},

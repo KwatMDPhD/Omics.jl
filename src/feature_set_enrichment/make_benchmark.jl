@@ -1,10 +1,14 @@
+using ..more_constant: CARD 
+using ..io_gmt: read as io_gmt_read
+using ..io_table: read as io_table_read
+
 function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector{String}}
 
     sp_ = split(id)
 
     if sp_[1] == "card"
 
-        fe_ = string.(ConstantExtension.CARD)
+        fe_ = string.(CARD)
 
         n_fe = length(fe_) / 2
 
@@ -32,14 +36,13 @@ function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector
 
         di = joinpath("..", "test", "data", "")
 
-        da = TableAccess.read(joinpath(di, "gene_score.tsv"))
+        da = io_gmt_read(joinpath(di, "gene_score.tsv"))
 
         fe_ = da[!, "Gene"]
 
         sc_ = da[!, "Score"]
 
-        fe1_ =
-            GMTAccess.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+        fe1_ = io_gmt_read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
     end
 

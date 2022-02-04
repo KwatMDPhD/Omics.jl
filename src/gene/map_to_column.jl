@@ -1,3 +1,5 @@
+using DataFrames: DataFrame
+
 function map_to_column(da::DataFrame, na_::Vector{String})::Dict{String,String}
 
     da = da[.!ismissing.(da[!, na_[1]]), :]

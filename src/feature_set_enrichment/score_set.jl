@@ -1,3 +1,6 @@
+using DataFrames: DataFrame
+using ..more_vector: is_in, sort_like
+
 function sum_1_absolute_and_0_count(
     sc_::Vector{Float64},
     in_::Vector{Float64},
@@ -142,7 +145,7 @@ function score_set(
         fe_,
         sc_,
         fe1_,
-        VectorExtension.is_in(fe_, fe1_);
+        is_in(fe_, fe1_);
         we = we,
         al = al,
         pl = pl,
@@ -177,7 +180,7 @@ function score_set(
             fe_,
             sc_,
             fe1_,
-            VectorExtension.is_in(ch, fe1_);
+            is_in(ch, fe1_);
             we = we,
             al = al,
             pl = false,
@@ -205,7 +208,7 @@ function score_set(
 
         go_ = findall(!ismissing, sc_fe_sa[!, sa])
 
-        sc_, fe_ = VectorExtension.sort_like([sc_fe_sa[go_, sa], fe_[go_]])
+        sc_, fe_ = sort_like([sc_fe_sa[go_, sa], fe_[go_]])
 
         if in(al, ["ks", "auc"])
 

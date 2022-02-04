@@ -1,3 +1,6 @@
+using ..information: get_signal_to_noise_ratio
+using ..tensor_function: apply
+
 function compare_with_target(
     sa_::Union{Vector{Float64},BitVector},
     fl_fe_sa::Matrix{Float64},
@@ -6,7 +9,7 @@ function compare_with_target(
 
     if fu == "signal_to_noise_ratio"
 
-        fu = InformationMetric.get_signal_to_noise_ratio
+        fu = get_signal_to_noise_ratio
 
         sa_ = convert(BitVector, sa_)
 
@@ -16,6 +19,6 @@ function compare_with_target(
 
     end
 
-    return TensorFunction.apply(sa_, fl_fe_sa, fu)
+    return apply(sa_, fl_fe_sa, fu)
 
 end

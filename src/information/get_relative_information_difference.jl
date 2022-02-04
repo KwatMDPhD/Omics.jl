@@ -3,8 +3,8 @@ function get_relative_information_difference(
     ve1::Vector{Float64},
     ve2::Vector{Float64},
     ver::Vector{Float64};
-    we1::Real=0.5
-    we2::Read=0.5,
+    we1::Real=0.5,
+    we2::Real=0.5,
 )::Vector{Float64}
 
     return get_kullback_leibler_divergence(ve1, ver) .* we1 .-

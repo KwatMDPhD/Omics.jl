@@ -1,3 +1,5 @@
+using ..more_tensor: cumulate_sum_reverse
+
 function get_probability_and_cumulate(
     ve::Vector{Float64},
 )::Tuple{Vector{Float64},Vector{Float64},Vector{Float64}}
@@ -8,7 +10,7 @@ function get_probability_and_cumulate(
 
     cur_ = cumsum(pr_) .+ ep
 
-    cul_ = TensorExtension.cumulate_sum_reverse(pr_) .+ ep
+    cul_ = cumulate_sum_reverse(pr_) .+ ep
 
     return pr_, cur_, cul_
 
