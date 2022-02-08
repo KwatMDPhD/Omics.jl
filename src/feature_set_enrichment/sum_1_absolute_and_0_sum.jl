@@ -1,16 +1,16 @@
-function sum_1_absolute_and_0_count(ve, bi_)
+function sum_1_absolute_and_0_count(sc_::Vector{Float64}, in_::Vector{Bool})
 
-    su1 = 0
+    su1 = 0.0
 
-    su0 = 0
+    su0 = 0.0
 
-    for id in 1:length(ve)
+    @inbounds @fastmath @simd for id in 1:length(sc_)
 
-        if bi_[id] == 1
+        if in_[id]
 
-            nu = ve[id]
+            nu = sc_[id]
 
-            if nu < 0
+            if nu < 0.0
 
                 nu = -nu
 
@@ -20,7 +20,7 @@ function sum_1_absolute_and_0_count(ve, bi_)
 
         else
 
-            su0 += 1
+            su0 += 1.0
 
         end
 

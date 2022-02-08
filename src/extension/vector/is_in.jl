@@ -1,4 +1,4 @@
-function is_in(st_::AbstractArray, st1_)
+function is_in(st_, st1_)
 
     st1_no = Dict(st1 => nothing for st1 in st1_)
 
@@ -8,7 +8,7 @@ end
 
 function is_in(st_id::AbstractDict, st1_)
 
-    in_ = fill(0, length(st_id))
+    in_ = fill(false, length(st_id))
 
     @inbounds @fastmath @simd for st1 in st1_
 
@@ -16,7 +16,7 @@ function is_in(st_id::AbstractDict, st1_)
 
         if id !== nothing
 
-            in_[id] = 1
+            in_[id] = true
 
         end
 

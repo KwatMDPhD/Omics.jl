@@ -4,7 +4,7 @@ function score_set(fe_, sc_, fe1_, in_; we = 1.0, al = "ks", pl = true, ke_ar...
 
     en = 0.0
 
-    en_ = Vector(undef, n_fe)
+    en_ = Vector{Float64}(undef, n_fe)
 
     ex = 0.0
 
@@ -70,7 +70,7 @@ function score_set(fe_, sc_, fe1_, in_; we = 1.0, al = "ks", pl = true, ke_ar...
 
     elseif al == "auc"
 
-        en = ar / n_fe
+        en = ar / convert(Float64, n_fe)
 
     end
 
@@ -84,7 +84,7 @@ function score_set(fe_, sc_, fe1_, in_; we = 1.0, al = "ks", pl = true, ke_ar...
 
 end
 
-function score_set(fe_, sc_, fe1_::Vector; we = 1.0, al = "ks", pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_; we = 1.0, al = "ks", pl = true, ke_ar...)
 
     return score_set(fe_, sc_, fe1_, is_in(fe_, fe1_); we = we, al = al, pl = pl, ke_ar...)
 

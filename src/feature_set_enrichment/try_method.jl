@@ -1,22 +1,31 @@
-function try_method(fe_, sc_, fe1_; plp = true, pl = true)
+function plot_process(ve_, na_, title_text)
 
-    in_ = is_in(fe_, fe1_)
+    display(plot_x_y(ve_; name_ = na_, la = merge(la, Layout(title_text = title_text))))
 
-    ab_ = abs.(sc_)
+end
 
-    ina_ = in_ .* ab_
+function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
+
+    #
+    in_ = convert(Vector{Float64}, is_in(fe_, fe1_))
 
     ou_ = 1.0 .- in_
 
+    #
+    ab_ = abs.(sc_) .^ we
+
+    ina_ = in_ .* ab_
+
     oua_ = ou_ .* ab_
 
+    #
     abp_, abpr_, abpl_ = get_probability_and_cumulate(ab_)
 
     inap_, inapr_, inapl_ = get_probability_and_cumulate(ina_)
 
-    oup_, oupr_, oupl_ = get_probability_and_cumulate(ou_)
-
     ouap_, ouapr_, ouapl_ = get_probability_and_cumulate(oua_)
+
+    oup_, oupr_, oupl_ = get_probability_and_cumulate(ou_)
 
     if plp
 
@@ -28,49 +37,34 @@ function try_method(fe_, sc_, fe1_; plp = true, pl = true)
 
         end
 
-        plot_x_y([sc_, in_]; name_ = ["Score", "In"], la = merge(la, Layout(title_text = "Input")))
+        plot_process([sc_, in_], ["Score", "In"], "Input")
 
-        plot_x_y(
-            [ab_, abp_, abpr_, abpl_];
-            name_ = ["v", "P", "Cr", "Cl"],
-            la = merge(la, Layout(title_text = "Absolute")),
-        )
+        na_ = ["Value", "PDF", "Right CDF ", "Left CDF"],
+        plot_process([ab_, abp_, abpr_, abpl_], na_, "Absolute")
 
-        plot_x_y(
-            [ina_, inap_, inapr_, inapl_];
-            name_ = ["v", "P", "Cr", "Cl"],
-            la = merge(la, Layout(title_text = "In * Absolute")),
-        )
+        plot_process([ina_, inap_, inapr_, inapl_], na_, "In * Absolute")
 
-        plot_x_y(
-            [ou_, oup_, oupr_, oupl_];
-            name_ = ["v", "P", "Cr", "Cl"],
-            la = merge(la, Layout(title_text = "Out")),
-        )
+        plot_process([oua_, ouap_, ouapr_, ouapl_], na_, "Out * Absolute")
 
-        plot_x_y(
-            [oua_, ouap_, ouapr_, ouapl_];
-            name_ = ["v", "P", "Cr", "Cl"],
-            la = merge(la, Layout(title_text = "Out * Absolute")),
-        )
-
+        plot_process([ou_, oup_, oupr_, oupl_], na_, "Out")
     end
 
     me_en = OrderedDict()
 
-    for (me1, our_, oul_) in [["ou", oupr_, oupl_], ["oua", ouapr_, ouapl_]]
+    for (me1, our_, oul_) in [
+        ["OuA", ouapr_, ouapl_],
+        #["Ou", oupr_, oupl_],
+    ]
 
         for (me2, fu1) in [
-            ["ks", get_kolmogorov_smirnov_statistic],
-            ["ris", get_jensen_shannon_divergence],
-            ["risw", get_jensen_shannon_divergence],
-            ["rid", get_kwat_pablo_divergence],
-            ["ridw", get_kwat_pablo_divergence],
-            ["sis", get_thermodynamic_breadth],
-            ["sid", get_thermodynamic_depth],
+            ["KS", get_kolmogorov_smirnov_statistic],
+            ["JS", get_jensen_shannon_divergence],
+            ["KP", get_kwat_pablo_divergence],
+            #["SB", get_thermodynamic_breadth],
+            #["SD", get_thermodynamic_depth],
         ]
 
-            if endswith(me2, "w")
+            if me2 in ["JS", "KP"]
 
                 arl = [abpl_]
 
@@ -88,9 +82,16 @@ function try_method(fe_, sc_, fe1_; plp = true, pl = true)
 
             fl_ = fu1(inapl_, oul_, arl...)
 
-            for (me3, en_) in [[">", fr_], ["<", fl_], ["<>", fl_ - fr_]]
+            for (me3, en_) in [
+                #[">", fr_],
+                ["<", fl_],
+                ["<>", fl_ - fr_],
+            ]
 
-                for (me4, fu2) in [["area", get_area], ["extreme", get_extreme]]
+                for (me4, fu2) in [
+                    ["Area", get_area],
+                    #["Extreme", get_extreme],
+                ]
 
                     me = join([me1, me3, me2, me4], " ")
 
@@ -100,12 +101,7 @@ function try_method(fe_, sc_, fe1_; plp = true, pl = true)
 
                     if plp
 
-
-                        plot_x_y(
-                            [fl_, fr_, en_];
-                            name_ = ["Fl", "Fr", "Enrichment"],
-                            la = merge(la, Layout(title_text = "Enrichment")),
-                        )
+                        plot_process([fl_, fr_, en_], ["Left", "Right", "Enrichment"], me)
 
                     end
 
@@ -127,8 +123,10 @@ function try_method(fe_, sc_, fe1_; plp = true, pl = true)
 
 end
 
-function try_method(fe_, sc_, se_fe_::Dict)
+function try_method(fe_, sc_, se_fe_::Dict; we = 1.0)
 
-    return Dict(se => try_method(fe_, sc_, fe1_; plp = false, pl = false) for (se, fe1_) in se_fe_)
+    return Dict(
+        se => try_method(fe_, sc_, fe1_; we = we, plp = false, pl = false) for (se, fe1_) in se_fe_
+    )
 
 end

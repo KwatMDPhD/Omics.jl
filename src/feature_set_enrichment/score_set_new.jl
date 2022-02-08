@@ -1,20 +1,25 @@
-function score_set_new(fe_, sc_, fe1_::Vector; we = 1.0, pl = true, ke_ar...)
+function score_set_new(fe_, sc_, fe1_; we = 1.0, pl = true, ke_ar...)
 
-    ab_ = abs.(sc_) .^ we
-
-    in_ = is_in(fe_, fe1_)
-
-    ina_ = in_ .* ab_
+    #
+    in_ = convert(Vector{Float64}, is_in(fe_, fe1_))
 
     ou_ = 1.0 .- in_
 
+    #
+    ab_ = abs.(sc_) .^ we
+
+    ina_ = in_ .* ab_
+
     oua_ = ou_ .* ab_
 
+    #
     abp_, abpr_, abpl_ = get_probability_and_cumulate(ab_)
 
     inap_, inapr_, inapl_ = get_probability_and_cumulate(ina_)
 
     ouap_, ouapr_, ouapl_ = get_probability_and_cumulate(oua_)
+
+    #oup_, oupr_, oupl_ = get_probability_and_cumulate(ou_)
 
     fl_ = get_kwat_pablo_divergence(inapl_, ouapl_, abpl_)
 
