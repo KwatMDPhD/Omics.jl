@@ -1,7 +1,7 @@
-function get_replacement(ti)
+function plan_replacement(ti)
 
     gi_ = [
-        string(rstrip(read(`git config user.$ke`, String), "\n")) for
+        rstrip(read(`git config user.$ke`, String), '\n') for
         ke in ["name", "email"]
     ]
 

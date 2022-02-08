@@ -67,8 +67,8 @@ module OnePiece
   module templating
     include("templating/_.jl")
     include("templating/error_missing.jl")
-    include("templating/get_replacement.jl")
-    include("templating/get_transplant.jl")
+    include("templating/plan_replacement.jl")
+    include("templating/plan_transplant.jl")
     include("templating/transplant.jl")
   end
   module informatics

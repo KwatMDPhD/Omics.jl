@@ -1,11 +1,11 @@
 function error_missing(
-    di1,
-    di2;
-    ig_= Vector{String}(),
-    re_= Vector{Pair{String,String}}(),
+    dit,
+    di;
+    ig_= [],
+    re_= [],
 )
 
-    for (ro, di_, fi_) in walkdir(di1)
+    for (ro, di_, fi_) in walkdir(dit)
 
         for na in vcat(di_, fi_)
 
@@ -15,26 +15,22 @@ function error_missing(
 
             end
 
-            if 0 < length(re_)
+            if !isempty(re_)
 
-                na = more_string_replace(na, re_)
+                na = string_replace(na, re_)
 
             end
 
-            pa1 = joinpath(ro, na)
+            pa = replace(joinpath(ro, na), dit => di)
 
-            pa2 = replace(pa1, di1 => di2)
+            if !ispath(pa)
 
-            if !ispath(pa2)
-
-                error("Missing ", pa2)
+                error("missing ", pa)
 
             end
 
         end
 
     end
-
-    return
 
 end
