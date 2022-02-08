@@ -7,9 +7,9 @@ function score_set_new(
     ke_ar...,
 )::Float64
 
-    ab_ = abs.(sc_) ^ po
+    ab_ = abs.(sc_) .^ po
 
-    in_ = VectorExtension.is_in(fe_, fe1_)
+    in_ = is_in(fe_, fe1_)
 
     ina_ = in_ .* ab_
 
@@ -23,13 +23,13 @@ function score_set_new(
 
     ouap_, ouapr_, ouapl_ = get_probability_and_cumulate(oua_)
 
-    fl_ = InformationMetric.get_relative_information_difference(inapl_, ouapl_, abpl_)
+    fl_ = get_relative_information_difference(inapl_, ouapl_, abpl_)
 
-    fr_ = InformationMetric.get_relative_information_difference(inapr_, ouapr_, abpr_)
+    fr_ = get_relative_information_difference(inapr_, ouapr_, abpr_)
 
     en_ = fl_ - fr_
 
-    en = TensorExtension.get_area(en_)
+    en = get_area(en_)
 
     if pl
 

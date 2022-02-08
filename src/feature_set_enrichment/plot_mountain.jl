@@ -1,5 +1,3 @@
-using Printf: @sprintf
-
 function plot_mountain(
     fe_::Vector{String},
     sc_::Vector{Float64},
@@ -13,7 +11,7 @@ function plot_mountain(
     names::String = "Score",
     line_width::Float64 = 2.0,
     si::Bool = true,
-)::PlotlyJS.SyncPlot
+)::SyncPlot
 
     width = height * MathConstants.golden
 
@@ -79,21 +77,21 @@ function plot_mountain(
             merge(
                 annotationy,
                 attr(
-                    y = GeometryExtension.get_center(yaxis1_domain...),
+                    y = get_center(yaxis1_domain...),
                     text = string("<b>", names, "</b>"),
                 ),
             ),
             merge(
                 annotationy,
                 attr(
-                    y = GeometryExtension.get_center(yaxis2_domain...),
+                    y = get_center(yaxis2_domain...),
                     text = "<b>Set</b>",
                 ),
             ),
             merge(
                 annotationy,
                 attr(
-                    y = GeometryExtension.get_center(yaxis3_domain...),
+                    y = get_center(yaxis3_domain...),
                     text = string("<b>", namee, "</b>"),
                 ),
             ),
@@ -178,6 +176,6 @@ function plot_mountain(
 
     end
 
-    return FinalFigure.plot(trace_, layout)
+    return plot(trace_, layout)
 
 end

@@ -1,23 +1,29 @@
-function apply(bi_::BitVector, ve::Vector{Float64}, fu::Function)::Any
+function _process(an, ve)
 
-    return fu(ve[bi_], ve[.!bi_])
-
-end
-
-function apply(ve::Vector{Float64}, ma::Matrix{Float64}, fu::Function)::Vector{Any}
-
-    return [fu(ve, ro) for ro in eachrow(ma)]
+    return an, ve
 
 end
 
-function apply(bi_::BitVector, ma::Matrix{Float64}, fu::Function)::Vector{Any}
+function _process(bi_::AbstractVector{Bool}, ve)
 
-    return [apply(bi_, convert(Vector{Float64}, ro), fu) for ro in eachrow(ma)]
+    return ve[bi_], ve[.!bi_]
 
 end
 
-function apply(ma1::Matrix{Float64}, ma2::Matrix{Float64}, fu::Function)::Matrix{Any}
+function apply(an, ve, fu)
 
-    return [fu(ro1, ro2) for ro1 in eachrow(ma1), ro2 in eachrow(ma2)]
+    return fu(_process(an, ve)...)
+
+end
+
+function apply(an, ma::AbstractMatrix, fu)
+
+    return [fu(_process(an, ro)...) for ro in eachrow(ma)]
+
+end
+
+function apply(ma1::AbstractMatrix, ma2::AbstractMatrix, fu)
+
+    return [fu(_process(ro1, ro2)...) for ro1 in eachrow(ma1), ro2 in eachrow(ma2)]
 
 end

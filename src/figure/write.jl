@@ -1,6 +1,4 @@
-using PlotlyJS: SyncPlot, savefig
-
-function write(pa::String, pl::SyncPlot, he::Int, wi::Int, sc::Real)::Nothing
+function write(pa, pl, he, wi, sc)
 
     open(pa, "w") do io
 
@@ -14,7 +12,5 @@ function write(pa::String, pl::SyncPlot, he::Int, wi::Int, sc::Real)::Nothing
         )
 
     end
-
-    return nothing
 
 end

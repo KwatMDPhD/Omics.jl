@@ -1,33 +1,33 @@
 function rename(
-    st_::Vector{String};
-    mo::Bool = true,
-    en::Bool = true,
-    hg::Bool = true,
-)::Tuple{Vector{String},Vector{Int64}}
+    st_;
+    mo = true,
+    en = true,
+    hg = true,
+)
 
-    st_na = Dict{String,String}()
+    st_na = Dict()
 
     if mo
 
-        merge!(st_na, map_mouse())
+        merge!(st_na, map_with_mouse())
 
     end
 
     if en
 
-        merge!(st_na, make_string_to_ensembl_gene())
+        merge!(st_na, map_to_ensembl_gene())
 
     end
 
     if hg
 
-        merge!(st_na, make_string_to_hgnc_gene())
+        merge!(st_na, map_to_hgnc_gene())
 
     end
 
     na_ = Vector{String}()
 
-    ma_ = Vector{Int64}()
+    ma_ = Vector{Int}()
 
     for st in st_
 
@@ -35,11 +35,9 @@ function rename(
 
             na = st_na[st]
 
-            ma = 1 - convert(Int64, st == na)
-
             push!(na_, na)
 
-            push!(ma_, ma)
+            push!(ma_, 1 - (st == na))
 
         else
 

@@ -1,0 +1,1 @@
+const ALPHABET = collect("abcdefghijklmnopqrstuvwxyz")

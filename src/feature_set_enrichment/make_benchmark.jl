@@ -1,7 +1,3 @@
-using ..more_constant: CARD 
-using ..io_gmt: read as io_gmt_read
-using ..io_table: read as io_table_read
-
 function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector{String}}
 
     sp_ = split(id)
@@ -34,9 +30,9 @@ function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector
 
     elseif sp_[1] == "myc"
 
-        di = joinpath("..", "test", "data", "")
+        di = joinpath(@__DIR__, "..", "..", "test", "feature_set_enrichment.data")
 
-        da = io_gmt_read(joinpath(di, "gene_score.tsv"))
+        da = io_table_read(joinpath(di, "gene_score.tsv"))
 
         fe_ = da[!, "Gene"]
 

@@ -9,11 +9,11 @@ function try_method(
 
     if so
 
-        sc_, fe_ = VectorExtension.sort_like([sc_, fe_])
+        sc_, fe_ = sort_like([sc_, fe_])
 
     end
 
-    in_ = VectorExtension.is_in(fe_, fe1_)
+    in_ = is_in(fe_, fe1_)
 
     ab_ = abs.(sc_)
 
@@ -41,31 +41,31 @@ function try_method(
 
         end
 
-        FinalFigure.plot_x_y(
+        plot_x_y(
             [sc_, in_];
             name_ = ["Score", "In"],
             la = merge(la, Layout(title_text = "Input")),
         )
 
-        FinalFigure.plot_x_y(
+        plot_x_y(
             [ab_, abp_, abpr_, abpl_];
             name_ = ["v", "P", "Cr", "Cl"],
             la = merge(la, Layout(title_text = "Absolute")),
         )
 
-        FinalFigure.plot_x_y(
+        plot_x_y(
             [ina_, inap_, inapr_, inapl_];
             name_ = ["v", "P", "Cr", "Cl"],
             la = merge(la, Layout(title_text = "In * Absolute")),
         )
 
-        FinalFigure.plot_x_y(
+        plot_x_y(
             [ou_, oup_, oupr_, oupl_];
             name_ = ["v", "P", "Cr", "Cl"],
             la = merge(la, Layout(title_text = "Out")),
         )
 
-        FinalFigure.plot_x_y(
+        plot_x_y(
             [oua_, ouap_, ouapr_, ouapl_];
             name_ = ["v", "P", "Cr", "Cl"],
             la = merge(la, Layout(title_text = "Out * Absolute")),
@@ -78,16 +78,16 @@ function try_method(
     for (me1, our_, oul_) in [["ou", oupr_, oupl_], ["oua", ouapr_, ouapl_]]
 
         for (me2, fu1) in [
-            ["ks", InformationMetric.get_kolmogorov_smirnov_statistic],
-            ["ris", InformationMetric.get_relative_information_sum],
-            ["risw", InformationMetric.get_relative_information_sum],
-            ["rid", InformationMetric.get_relative_information_difference],
-            ["ridw", InformationMetric.get_relative_information_difference],
-            ["sis", InformationMetric.get_symmetric_information_sum],
-            ["sid", InformationMetric.get_symmetric_information_difference],
+            ["ks", get_kolmogorov_smirnov_statistic],
+            ["ris", get_relative_information_sum],
+            ["risw", get_relative_information_sum],
+            ["rid", get_relative_information_difference],
+            ["ridw", get_relative_information_difference],
+            ["sis", get_symmetric_information_sum],
+            ["sid", get_symmetric_information_difference],
         ]
 
-            if endswith(me2, 'w')
+            if endswith(me2, "w")
 
                 arl = [abpl_]
 
@@ -108,8 +108,8 @@ function try_method(
             for (me3, en_) in [[">", fr_], ["<", fl_], ["<>", fl_ - fr_]]
 
                 for (me4, fu2) in [
-                    ["area", TensorExtension.get_area],
-                    ["extreme", TensorExtension.get_extreme],
+                    ["area", get_area],
+                    ["extreme", get_extreme],
                 ]
 
                     me = join([me1, me3, me2, me4], " ")
@@ -121,7 +121,7 @@ function try_method(
                     if plp
 
 
-                        FinalFigure.plot_x_y(
+                        plot_x_y(
                             [fl_, fr_, en_];
                             name_ = ["Fl", "Fr", "Enrichment"],
                             la = merge(la, Layout(title_text = "Enrichment")),
@@ -157,7 +157,7 @@ function try_method(
 
     if so
 
-        sc_, fe_ = VectorExtension.sort_like([sc_, fe_])
+        sc_, fe_ = sort_like([sc_, fe_])
 
     end
 

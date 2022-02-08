@@ -1,18 +1,29 @@
-using DataFrames: DataFrame
+function map_to_column(da, co_)
 
-function map_to_column(da::DataFrame, na_::Vector{String})::Dict{String,String}
+    n_co = length(co_)
 
-    da = da[.!ismissing.(da[!, na_[1]]), :]
+    ta = co_[n_co]
 
-    ke_va = Dict{String,String}(va => va for va in da[!, na_[1]])
+    da2 = da[.!ismissing.(da[!, ta]), :]
+    println(size(da2))
+    da2 = dropmissing(da, ta)
+    println(size(da2))
 
-    for ro in eachrow(da[!, na_])
+    ke_va = Dict()
 
-        va = ro[1]
+    for va in da2[!, ta]
 
-        for ke_ in skipmissing(ro[2:end])
+        ke_va[va] = va
 
-            for ke in split(ke_, '|')
+    end
+
+    for ro in eachrow(da2[!, co_])
+
+        va = ro[n_co]
+
+        for ke_ in skipmissing(ro[1:n_co-1])
+
+            for ke in split(ke_, "|")
 
                 if !haskey(ke_va, ke)
 

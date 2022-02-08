@@ -1,5 +1,5 @@
-function read_hgnc()::DataFrame
+function read_hgnc()
 
-    return TableAccess.read(joinpath(DA, "hgnc_complete_set.tsv.gz"))
+    return read(joinpath(@__DIR__, "hgnc_complete_set.tsv.gz"))
 
 end

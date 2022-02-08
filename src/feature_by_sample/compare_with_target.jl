@@ -1,24 +1,35 @@
-using ..information: get_signal_to_noise_ratio
-using ..tensor_function: apply
-
 function compare_with_target(
-    sa_::Union{Vector{Float64},BitVector},
-    fl_fe_sa::Matrix{Float64},
-    fu::String,
-)::Vector{Float64}
+    sa_::BitVector,
+    an_fe_sa,
+    fu,
+)
 
     if fu == "signal_to_noise_ratio"
 
         fu = get_signal_to_noise_ratio
 
-        sa_ = convert(BitVector, sa_)
+    end
 
-    elseif fu == "pearson_correlation"
+    return apply(sa_, an_fe_sa, fu)
+
+end
+
+function compare_with_target(
+    sa_,
+    an_fe_sa,
+    fu,
+)
+
+    if fu == "pearson_correlation"
+
+        fu = fu
 
     elseif fu == "cosine_distance"
 
+        fu = fu
+
     end
 
-    return apply(sa_, fl_fe_sa, fu)
+    return apply(sa_, an_fe_sa, fu)
 
 end

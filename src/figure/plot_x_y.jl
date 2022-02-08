@@ -1,17 +1,17 @@
 function plot_x_y(
-    y_::Vector{Vector{Float64}},
-    x_::Vector{Vector{Float64}};
-    text_::Vector{Vector{String}} = Vector{Vector{String}}(),
-    name_::Vector{String} = Vector{String}(),
-    mode_::Vector{String} = Vector{String}(),
-    la::Layout = Layout(),
-)::PlotlyJS.SyncPlot
+    y_,
+    x_;
+    text_ = [],
+    name_ = [],
+    mode_ = [],
+    la = Layout(),
+)
 
-    tr_ = [scatter(;) for id = 1:length(y_)]
+    tr_ = fill(scatter(), length(y_))
 
     for (id, tr) in enumerate(tr_)
 
-        if 0 < length(name_)
+        if !isempty(name_)
 
             tr["name"] = name_[id]
 
@@ -21,17 +21,13 @@ function plot_x_y(
 
         tr["x"] = x_[id]
 
-        if 0 < length(text_)
+        if !isempty(text_)
 
             tr["text"] = text_[id]
 
         end
 
-        if 0 < length(mode_)
-
-            mode = mode_[id]
-
-        else
+        if isempty(mode_)
 
             if length(x_[id]) < 1000
 
@@ -43,6 +39,9 @@ function plot_x_y(
 
             end
 
+        else
+
+            mode = mode_[id]
 
         end
 
@@ -56,8 +55,8 @@ function plot_x_y(
 
 end
 
-function plot_x_y(y_::Vector{Vector{Float64}}; ke_ar...)::PlotlyJS.SyncPlot
+function plot_x_y(y_; ke_ar...)
 
-    return plot_x_y(y_, [convert(Vector{Float64}, 1:length(y)) for y in y_]; ke_ar...)
+    return plot_x_y(y_, [collect(1:length(y)) for y in y_]; ke_ar...)
 
 end

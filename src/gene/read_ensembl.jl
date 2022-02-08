@@ -1,5 +1,5 @@
-function read_ensembl(; or::String = "human")::DataFrame
+function read_ensembl(; or = "human")
 
-    return TableAccess.read(joinpath(DA, string("ensembl.", or, ".tsv.gz")))
+    return read(joinpath(@__DIR__, string("ensembl.", or, ".tsv.gz")))
 
 end

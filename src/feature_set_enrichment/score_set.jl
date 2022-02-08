@@ -1,6 +1,3 @@
-using DataFrames: DataFrame
-using ..more_vector: is_in, sort_like
-
 function sum_1_absolute_and_0_count(
     sc_::Vector{Float64},
     in_::Vector{Float64},

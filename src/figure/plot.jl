@@ -1,6 +1,4 @@
-using PlotlyJS: GenericTrace, Layout, PlotConfig, SyncPlot, plot as PlotlyJS_plot
-
-function plot(tr_::Vector{GenericTrace{Dict{Symbol,Any}}}, la::Layout)::SyncPlot
+function plot(tr_, la)
 
     la["template"] = "plotly_white"
 
@@ -13,14 +11,12 @@ function plot(tr_::Vector{GenericTrace{Dict{Symbol,Any}}}, la::Layout)::SyncPlot
         ),
     )
 
-    display(pl)
-
     return pl
 
 end
 
-function plot(tr_::Vector{GenericTrace{Dict{Symbol,Any}}}; ke_ar...)::SyncPlot
+function plot(tr_)
 
-    return plot(tr_, Layout(); ke_ar...)
+    return plot(tr_, Layout())
 
 end

@@ -1,4 +1,3 @@
-using ..more_tensor: cumulate_sum_reverse
 
 function get_probability_and_cumulate(
     ve::Vector{Float64},
