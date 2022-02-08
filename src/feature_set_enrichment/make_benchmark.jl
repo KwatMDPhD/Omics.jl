@@ -1,16 +1,18 @@
-function make_benchmark(id::String)::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
+function make_benchmark(ho)
 
-    sp_ = split(id)
+    sp_ = split(ho)
 
     if sp_[1] == "card"
 
-        fe_ = string.(CARD)
+        fe_ = CARD
 
-        n_fe = length(fe_) / 2
+        n_fe = length(fe_)
 
-        sc_ = Base.convert(Vector{Float64}, ceil(-n_fe):floor(n_fe))
+        mi = convert(Int, ceil(n_fe / 2))
 
-        fe1_ = string.(collect(sp_[2]))
+        sc_ = (mi - n_fe):(mi - 1)
+
+        fe1_ = collect(sp_[2])
 
         if !all(fe1 in fe_ for fe1 in fe1_)
 
@@ -20,25 +22,29 @@ function make_benchmark(id::String)::Tuple{Vector{String}, Vector{Float64}, Vect
 
     elseif sp_[1] == "random"
 
-        fe_ = [string("Feature ", id) for id in 1:parse(Int64, sp_[2])]
+        fe_ = [string("Feature ", id) for id in 1:parse(Int, sp_[2])]
 
-        ve = randn(Base.convert(Int64, length(fe_) / 2))
+        n_fe = length(fe_)
 
-        sc_ = sort([.-ve; ve])
+        mi = convert(Int, ceil(n_fe / 2))
 
-        fe1_ = sample(fe_, parse(Int64, sp_[3]); replace = false)
+        ha = randn(mi)
+
+        sc_ = sort([.-ha[1:(n_fe - mi)]; ha])
+
+        fe1_ = sample(fe_, parse(Int, sp_[3]); replace = false)
 
     elseif sp_[1] == "myc"
 
-        di = joinpath(@__DIR__, "..", "..", "test", "feature_set_enrichment.data")
+        di = joinpath(dirname(dirname(@__DIR__)), "test", "feature_set_enrichment.data")
 
-        da = io_table_read(joinpath(di, "gene_score.tsv"))
+        da = table_read(joinpath(di, "gene_score.tsv"))
 
         fe_ = da[!, "Gene"]
 
         sc_ = da[!, "Score"]
 
-        fe1_ = io_gmt_read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+        fe1_ = gmt_read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
     end
 

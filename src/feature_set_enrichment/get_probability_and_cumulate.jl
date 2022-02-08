@@ -1,7 +1,4 @@
-
-function get_probability_and_cumulate(
-    ve::Vector{Float64},
-)::Tuple{Vector{Float64}, Vector{Float64}, Vector{Float64}}
+function get_probability_and_cumulate(ve)
 
     pr_ = ve / sum(ve)
 

@@ -1,17 +1,17 @@
 function plot_mountain(
-    fe_::Vector{String},
-    sc_::Vector{Float64},
-    in_::Vector{Float64},
-    en_::Vector{Float64},
-    en::Float64;
-    height::Int64 = 480,
-    title_text::String = "Mountain Plot",
-    title_font_size::Int64 = 24,
-    axis_title_font_size::Int64 = 12,
-    names::String = "Score",
-    line_width::Float64 = 2.0,
-    si::Bool = true,
-)::SyncPlot
+    fe_,
+    sc_,
+    in_,
+    en_,
+    en;
+    height = 480,
+    title_text = "Mountain Plot",
+    title_font_size = 24,
+    axis_title_font_size = 12,
+    names = "Score",
+    line_width = 2.0,
+    si = true,
+)
 
     width = height * MathConstants.golden
 
@@ -101,12 +101,12 @@ function plot_mountain(
         hoverinfo = "x+y+text",
     )
 
-    in_ = BitVector(in_)
+    in_ = convert(BitVector, in_)
 
     traces = scatter(;
         name = "Set",
         yaxis = "y2",
-        y = zeros(Int64(sum(in_))),
+        y = zeros(sum(in_)),
         x = x[in_],
         text = fe_[in_],
         mode = "markers",
@@ -162,6 +162,6 @@ function plot_mountain(
 
     end
 
-    return plot(trace_, layout)
+    return display(plot(trace_, layout))
 
 end

@@ -143,4 +143,14 @@ module gene
     include("gene/read_hgnc.jl")
     include("gene/rename.jl")
 end
+module feature_set_enrichment
+    include("feature_set_enrichment/_.jl")
+    include("feature_set_enrichment/get_probability_and_cumulate.jl")
+    include("feature_set_enrichment/make_benchmark.jl")
+    include("feature_set_enrichment/plot_mountain.jl")
+    include("feature_set_enrichment/score_set.jl")
+    include("feature_set_enrichment/score_set_new.jl")
+    include("feature_set_enrichment/sum_1_absolute_and_0_sum.jl")
+    include("feature_set_enrichment/try_method.jl")
+end
 end

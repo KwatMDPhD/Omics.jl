@@ -1,13 +1,6 @@
-function score_set_new(
-    fe_::Vector{String},
-    sc_::Vector{Float64},
-    fe1_::Vector{String};
-    po::Float64 = 1.0,
-    pl::Bool = true,
-    ke_ar...,
-)::Float64
+function score_set_new(fe_, sc_, fe1_::Vector; we = 1.0, pl = true, ke_ar...)
 
-    ab_ = abs.(sc_) .^ po
+    ab_ = abs.(sc_) .^ we
 
     in_ = is_in(fe_, fe1_)
 
@@ -23,9 +16,9 @@ function score_set_new(
 
     ouap_, ouapr_, ouapl_ = get_probability_and_cumulate(oua_)
 
-    fl_ = get_relative_information_difference(inapl_, ouapl_, abpl_)
+    fl_ = get_kwat_pablo_divergence(inapl_, ouapl_, abpl_)
 
-    fr_ = get_relative_information_difference(inapr_, ouapr_, abpr_)
+    fr_ = get_kwat_pablo_divergence(inapr_, ouapr_, abpr_)
 
     en_ = fl_ - fr_
 
@@ -41,20 +34,8 @@ function score_set_new(
 
 end
 
-function score_set_new(
-    fe_::Vector{String},
-    sc_::Vector{Float64},
-    se_fe_::Dict{String, Vector{String}},
-)::Dict{String, Float64}
+function score_set_new(fe_, sc_, se_fe_::Dict; we = 1.0)
 
-    se_en = Dict{String, Float64}()
-
-    for (se, fe1_) in se_fe_
-
-        se_en[se] = score_set_new(fe_, sc_, fe1_; pl = false)
-
-    end
-
-    return se_en
+    return Dict(se => score_set_new(fe_, sc_, fe1_; we = we, pl = false) for (se, fe1_) in se_fe_)
 
 end

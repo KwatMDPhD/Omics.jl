@@ -1,17 +1,4 @@
-function try_method(
-    fe_::Vector{String},
-    sc_::Vector{Float64},
-    fe1_::Vector{String};
-    so::Bool = true,
-    plp::Bool = true,
-    pl::Bool = true,
-)::OrderedDict{String, Float64}
-
-    if so
-
-        sc_, fe_ = sort_like([sc_, fe_])
-
-    end
+function try_method(fe_, sc_, fe1_; plp = true, pl = true)
 
     in_ = is_in(fe_, fe1_)
 
@@ -69,18 +56,18 @@ function try_method(
 
     end
 
-    me_en = OrderedDict{String, Float64}()
+    me_en = OrderedDict()
 
     for (me1, our_, oul_) in [["ou", oupr_, oupl_], ["oua", ouapr_, ouapl_]]
 
         for (me2, fu1) in [
             ["ks", get_kolmogorov_smirnov_statistic],
-            ["ris", get_relative_information_sum],
-            ["risw", get_relative_information_sum],
-            ["rid", get_relative_information_difference],
-            ["ridw", get_relative_information_difference],
-            ["sis", get_symmetric_information_sum],
-            ["sid", get_symmetric_information_difference],
+            ["ris", get_jensen_shannon_divergence],
+            ["risw", get_jensen_shannon_divergence],
+            ["rid", get_kwat_pablo_divergence],
+            ["ridw", get_kwat_pablo_divergence],
+            ["sis", get_thermodynamic_breadth],
+            ["sid", get_thermodynamic_depth],
         ]
 
             if endswith(me2, "w")
@@ -140,28 +127,8 @@ function try_method(
 
 end
 
+function try_method(fe_, sc_, se_fe_::Dict)
 
-function try_method(
-    fe_::Vector{String},
-    sc_::Vector{Float64},
-    se_fe_::Dict{String, Vector{String}};
-    so::Bool = true,
-)::Dict{String, OrderedDict{String, Float64}}
-
-    if so
-
-        sc_, fe_ = sort_like([sc_, fe_])
-
-    end
-
-    se_me_en = Dict{String, OrderedDict{String, Float64}}()
-
-    for (se, fe1_) in se_fe_
-
-        se_me_en[se] = try_method(fe_, sc_, fe1_; so = false, plp = false, pl = false)
-
-    end
-
-    return se_me_en
+    return Dict(se => try_method(fe_, sc_, fe1_; plp = false, pl = false) for (se, fe1_) in se_fe_)
 
 end
