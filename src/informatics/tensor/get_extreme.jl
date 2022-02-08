@@ -16,9 +16,7 @@ function get_extreme(ve)
 
         if mia == maa
 
-            println(
-                "The minimum and the maximum have the same absolute value.",
-            )
+            println("The minimum and the maximum have the same absolute value.")
 
         end
 

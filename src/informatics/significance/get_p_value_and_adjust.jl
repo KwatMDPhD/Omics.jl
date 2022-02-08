@@ -1,8 +1,4 @@
-function get_p_value_and_adjust(
-    fl_,
-    ra_,
-    di,
-)
+function get_p_value_and_adjust(fl_, ra_, di)
 
     pv_ = [get_p_value(fl, ra_, di) for fl in fl_]
 
@@ -10,10 +6,7 @@ function get_p_value_and_adjust(
 
 end
 
-function get_p_value_and_adjust(
-    fl_,
-    ra_,
-)
+function get_p_value_and_adjust(fl_, ra_)
 
     lp_, lpa_ = get_p_value_and_adjust(fl_, ra_, "<")
 

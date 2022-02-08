@@ -1,8 +1,4 @@
-function adjust_p_value(
-    pv_,
-    n_te = length(pv_);
-    me = "benjamini_hochberg",
-)
+function adjust_p_value(pv_, n_te = length(pv_); me = "benjamini_hochberg")
 
     if me == "bonferroni"
 

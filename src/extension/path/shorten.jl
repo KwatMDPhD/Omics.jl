@@ -1,6 +1,6 @@
 function shorten(pa, n_ba::Real)
 
-    return joinpath(splitpath(pa)[(end-n_ba):end]...)
+    return joinpath(splitpath(pa)[(end - n_ba):end]...)
 
 end
 

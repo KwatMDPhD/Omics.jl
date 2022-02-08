@@ -1,13 +1,13 @@
 function sum_1_absolute_and_0_count(
     sc_::Vector{Float64},
     in_::Vector{Float64},
-)::Tuple{Float64,Float64}
+)::Tuple{Float64, Float64}
 
     su1 = 0.0
 
     su0 = 0.0
 
-    for id = 1:length(sc_)
+    for id in 1:length(sc_)
 
         if in_[id] == 1.0
 
@@ -60,7 +60,7 @@ function score_set(
 
     de = 1.0 / su0
 
-    @inbounds @fastmath @simd for id = n_fe:-1:1
+    @inbounds @fastmath @simd for id in n_fe:-1:1
 
         if in_[id] == 1.0
 
@@ -138,26 +138,17 @@ function score_set(
     ke_ar...,
 )::Float64
 
-    return score_set(
-        fe_,
-        sc_,
-        fe1_,
-        is_in(fe_, fe1_);
-        we = we,
-        al = al,
-        pl = pl,
-        ke_ar...,
-    )
+    return score_set(fe_, sc_, fe1_, is_in(fe_, fe1_); we = we, al = al, pl = pl, ke_ar...)
 
 end
 
 function score_set(
     fe_::Vector{String},
     sc_::Vector{Float64},
-    se_fe_::Dict{String,Vector{String}};
+    se_fe_::Dict{String, Vector{String}};
     we::Float64 = 1.0,
     al::String = "ks",
-)::Dict{String,Float64}
+)::Dict{String, Float64}
 
     if length(se_fe_) < 10
 
@@ -169,19 +160,11 @@ function score_set(
 
     end
 
-    se_en = Dict{String,Float64}()
+    se_en = Dict{String, Float64}()
 
     for (se, fe1_) in se_fe_
 
-        se_en[se] = score_set(
-            fe_,
-            sc_,
-            fe1_,
-            is_in(ch, fe1_);
-            we = we,
-            al = al,
-            pl = false,
-        )
+        se_en[se] = score_set(fe_, sc_, fe1_, is_in(ch, fe1_); we = we, al = al, pl = false)
 
     end
 
@@ -191,7 +174,7 @@ end
 
 function score_set(
     sc_fe_sa::DataFrame,
-    se_fe_::Dict{String,Vector{String}};
+    se_fe_::Dict{String, Vector{String}};
     we::Float64 = 1.0,
     al::String = "ks",
     n_jo::Int64 = 1,

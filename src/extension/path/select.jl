@@ -1,9 +1,4 @@
-function select(
-    di;
-    ig_ = [r"^\."],
-    ke_ = [],
-    jo = true,
-)
+function select(di; ig_ = [r"^\."], ke_ = [], jo = true)
 
     pa_ = Vector{AbstractString}()
 

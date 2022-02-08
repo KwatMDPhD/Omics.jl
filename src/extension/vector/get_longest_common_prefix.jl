@@ -28,7 +28,7 @@ function get_longest_common_prefix(ve_)
 
     else
 
-        pr_ = ve[1:(id-1)]
+        pr_ = ve[1:(id - 1)]
 
     end
 

@@ -1,8 +1,4 @@
-function compare_with_target(
-    sa_::BitVector,
-    an_fe_sa,
-    fu,
-)
+function compare_with_target(sa_::BitVector, an_fe_sa, fu)
 
     if fu == "signal_to_noise_ratio"
 
@@ -14,11 +10,7 @@ function compare_with_target(
 
 end
 
-function compare_with_target(
-    sa_,
-    an_fe_sa,
-    fu,
-)
+function compare_with_target(sa_, an_fe_sa, fu)
 
     if fu == "pearson_correlation"
 

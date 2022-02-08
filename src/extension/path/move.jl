@@ -1,9 +1,4 @@
-function move(
-    pa1,
-    pa2;
-    n_ba = 0,
-    fo = false,
-)
+function move(pa1, pa2; n_ba = 0, fo = false)
 
     sp1_ = splitpath(pa1)
 

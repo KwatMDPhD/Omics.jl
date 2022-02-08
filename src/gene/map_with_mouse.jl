@@ -1,4 +1,4 @@
-function map_with_mouse(; ho="mouse_to_human")
+function map_with_mouse(; ho = "mouse_to_human")
 
     if ho == "mouse_to_human"
 

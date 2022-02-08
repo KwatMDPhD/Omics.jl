@@ -1,4 +1,4 @@
-function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector{String}}
+function make_benchmark(id::String)::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
 
     sp_ = split(id)
 
@@ -20,7 +20,7 @@ function make_benchmark(id::String)::Tuple{Vector{String},Vector{Float64},Vector
 
     elseif sp_[1] == "random"
 
-        fe_ = [string("Feature ", id) for id = 1:parse(Int64, sp_[2])]
+        fe_ = [string("Feature ", id) for id in 1:parse(Int64, sp_[2])]
 
         ve = randn(Base.convert(Int64, length(fe_) / 2))
 

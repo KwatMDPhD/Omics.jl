@@ -21,7 +21,7 @@ function map_to_column(da, co_)
 
         va = ro[n_co]
 
-        for ke_ in skipmissing(ro[1:n_co-1])
+        for ke_ in skipmissing(ro[1:(n_co - 1)])
 
             for ke in split(ke_, "|")
 

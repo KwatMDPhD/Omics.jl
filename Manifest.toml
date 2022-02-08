@@ -54,6 +54,12 @@ git-tree-sha1 = "08d0b679fd7caa49e2bca9214b131289e19808c0"
 uuid = "ad839575-38b3-5650-b840-f874b8c74a25"
 version = "0.12.5"
 
+[[deps.CSTParser]]
+deps = ["Tokenize"]
+git-tree-sha1 = "6cc1759204bed5a4e2a5c2f00901fd5d90bc7a62"
+uuid = "00ebfdb7-1f24-5e51-bd34-a7502290713f"
+version = "3.3.1"
+
 [[deps.CSV]]
 deps = ["CodecZlib", "Dates", "FilePathsBase", "InlineStrings", "Mmap", "Parsers", "PooledArrays", "SentinelArrays", "Tables", "Unicode", "WeakRefStrings"]
 git-tree-sha1 = "9519274b50500b8029973d241d32cfbf0b127d97"
@@ -101,6 +107,12 @@ deps = ["ColorTypes", "FixedPointNumbers", "Reexport"]
 git-tree-sha1 = "417b0ed7b8b838aa6ca0a87aadf1bb9eb111ce40"
 uuid = "5ae59095-9a9b-59fe-a467-6f913c188581"
 version = "0.12.8"
+
+[[deps.CommonMark]]
+deps = ["Crayons", "JSON", "URIs"]
+git-tree-sha1 = "4aff51293dbdbd268df314827b7f409ea57f5b70"
+uuid = "a80b9123-70ca-4bc0-993e-6e3bcb318db6"
+version = "0.8.5"
 
 [[deps.Compat]]
 deps = ["Base64", "Dates", "DelimitedFiles", "Distributed", "InteractiveUtils", "LibGit2", "Libdl", "LinearAlgebra", "Markdown", "Mmap", "Pkg", "Printf", "REPL", "Random", "SHA", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "Test", "UUIDs", "Unicode"]
@@ -312,6 +324,12 @@ deps = ["Dates", "Mmap", "Parsers", "Unicode"]
 git-tree-sha1 = "8076680b162ada2a031f707ac7b4953e30667a37"
 uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 version = "0.21.2"
+
+[[deps.JuliaFormatter]]
+deps = ["CSTParser", "CommonMark", "DataStructures", "Pkg", "Tokenize"]
+git-tree-sha1 = "0d1eb5e5a6b8b9d324a9abfa5ee092156e59a6da"
+uuid = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
+version = "0.22.2"
 
 [[deps.JuliaInterpreter]]
 deps = ["CodeTracking", "InteractiveUtils", "Random", "UUIDs"]
@@ -683,6 +701,11 @@ uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
 [[deps.Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
 uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[[deps.Tokenize]]
+git-tree-sha1 = "817a23c19518762012da604da4a5f14397574056"
+uuid = "0796e94c-ce3b-5d07-9a54-7f471281c624"
+version = "0.5.22"
 
 [[deps.TranscodingStreams]]
 deps = ["Random", "Test"]

@@ -1,10 +1,4 @@
-function plot_bar(
-    y_,
-    x_;
-    name_ = [],
-    marker_color_ = [],
-    la = Layout(),
-)
+function plot_bar(y_, x_; name_ = [], marker_color_ = [], la = Layout())
 
     tr_ = fill(bar(), length(y_))
 

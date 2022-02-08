@@ -5,7 +5,7 @@ function try_method(
     so::Bool = true,
     plp::Bool = true,
     pl::Bool = true,
-)::OrderedDict{String,Float64}
+)::OrderedDict{String, Float64}
 
     if so
 
@@ -41,11 +41,7 @@ function try_method(
 
         end
 
-        plot_x_y(
-            [sc_, in_];
-            name_ = ["Score", "In"],
-            la = merge(la, Layout(title_text = "Input")),
-        )
+        plot_x_y([sc_, in_]; name_ = ["Score", "In"], la = merge(la, Layout(title_text = "Input")))
 
         plot_x_y(
             [ab_, abp_, abpr_, abpl_];
@@ -73,7 +69,7 @@ function try_method(
 
     end
 
-    me_en = OrderedDict{String,Float64}()
+    me_en = OrderedDict{String, Float64}()
 
     for (me1, our_, oul_) in [["ou", oupr_, oupl_], ["oua", ouapr_, ouapl_]]
 
@@ -107,10 +103,7 @@ function try_method(
 
             for (me3, en_) in [[">", fr_], ["<", fl_], ["<>", fl_ - fr_]]
 
-                for (me4, fu2) in [
-                    ["area", get_area],
-                    ["extreme", get_extreme],
-                ]
+                for (me4, fu2) in [["area", get_area], ["extreme", get_extreme]]
 
                     me = join([me1, me3, me2, me4], " ")
 
@@ -151,9 +144,9 @@ end
 function try_method(
     fe_::Vector{String},
     sc_::Vector{Float64},
-    se_fe_::Dict{String,Vector{String}};
+    se_fe_::Dict{String, Vector{String}};
     so::Bool = true,
-)::Dict{String,OrderedDict{String,Float64}}
+)::Dict{String, OrderedDict{String, Float64}}
 
     if so
 
@@ -161,7 +154,7 @@ function try_method(
 
     end
 
-    se_me_en = Dict{String,OrderedDict{String,Float64}}()
+    se_me_en = Dict{String, OrderedDict{String, Float64}}()
 
     for (se, fe1_) in se_fe_
 

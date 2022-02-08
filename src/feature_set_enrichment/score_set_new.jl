@@ -2,7 +2,7 @@ function score_set_new(
     fe_::Vector{String},
     sc_::Vector{Float64},
     fe1_::Vector{String};
-    po::Float64=1.0,
+    po::Float64 = 1.0,
     pl::Bool = true,
     ke_ar...,
 )::Float64
@@ -44,10 +44,10 @@ end
 function score_set_new(
     fe_::Vector{String},
     sc_::Vector{Float64},
-    se_fe_::Dict{String,Vector{String}},
-)::Dict{String,Float64}
+    se_fe_::Dict{String, Vector{String}},
+)::Dict{String, Float64}
 
-    se_en = Dict{String,Float64}()
+    se_en = Dict{String, Float64}()
 
     for (se, fe1_) in se_fe_
 

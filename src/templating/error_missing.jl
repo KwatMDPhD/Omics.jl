@@ -1,9 +1,4 @@
-function error_missing(
-    dit,
-    di;
-    ig_= [],
-    re_= [],
-)
+function error_missing(dit, di; ig_ = [], re_ = [])
 
     for (ro, di_, fi_) in walkdir(dit)
 

@@ -1,9 +1,4 @@
-function rename(
-    st_;
-    mo = true,
-    en = true,
-    hg = true,
-)
+function rename(st_; mo = true, en = true, hg = true)
 
     st_na = Dict()
 

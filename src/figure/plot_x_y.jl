@@ -1,11 +1,4 @@
-function plot_x_y(
-    y_,
-    x_;
-    text_ = [],
-    name_ = [],
-    mode_ = [],
-    la = Layout(),
-)
+function plot_x_y(y_, x_; text_ = [], name_ = [], mode_ = [], la = Layout())
 
     tr_ = fill(scatter(), length(y_))
 

@@ -23,10 +23,8 @@ function plot_mountain(
 
     annotation = attr(xref = "paper", yref = "paper", yanchor = "middle", showarrow = false)
 
-    annotationy = merge(
-        annotation,
-        attr(xanchor = "right", x = -0.064, font_size = axis_title_font_size),
-    )
+    annotationy =
+        merge(annotation, attr(xanchor = "right", x = -0.064, font_size = axis_title_font_size))
 
     annotationx = merge(annotation, attr(xanchor = "center", x = 0.5))
 
@@ -76,24 +74,12 @@ function plot_mountain(
             ),
             merge(
                 annotationy,
-                attr(
-                    y = get_center(yaxis1_domain...),
-                    text = string("<b>", names, "</b>"),
-                ),
+                attr(y = get_center(yaxis1_domain...), text = string("<b>", names, "</b>")),
             ),
+            merge(annotationy, attr(y = get_center(yaxis2_domain...), text = "<b>Set</b>")),
             merge(
                 annotationy,
-                attr(
-                    y = get_center(yaxis2_domain...),
-                    text = "<b>Set</b>",
-                ),
-            ),
-            merge(
-                annotationy,
-                attr(
-                    y = get_center(yaxis3_domain...),
-                    text = string("<b>", namee, "</b>"),
-                ),
+                attr(y = get_center(yaxis3_domain...), text = string("<b>", namee, "</b>")),
             ),
             merge(
                 annotationx,
