@@ -4,7 +4,7 @@ function error_missing(dit, di; ig_ = [], re_ = [])
 
         for na in vcat(di_, fi_)
 
-            if na in ig_
+            if any(occursin(ig, joinpath(ro, na)) for ig in ig_)
 
                 continue
 
