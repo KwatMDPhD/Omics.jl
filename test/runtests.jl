@@ -63,7 +63,6 @@ di_ = Set(vcat([wa[2] for wa in walkdir(pas)]...))
 
 symdiff(dis_, di_)
 
-using JSON
 using OrderedCollections
 
 tr = OrderedDict()
@@ -103,8 +102,6 @@ for su in su_
     end
 
 end
-
-JSON.print(tr, 2)
 
 function write_line(io, st)
 
