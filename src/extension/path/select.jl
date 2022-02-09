@@ -4,7 +4,7 @@ function select(di; ig_ = [r"^\."], ke_ = [], jo = true)
 
     for pa in readdir(di; join = jo)
 
-        na = splitdir(pa)[2]
+        na = basename(pa)
 
         if !any(occursin(ig, na) for ig in ig_) &&
            (0 == length(ke_) || any(occursin(ke, na) for ke in ke_))

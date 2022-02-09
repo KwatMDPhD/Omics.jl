@@ -12,7 +12,7 @@ function error_missing(dit, di; ig_ = [], re_ = [])
 
             if !isempty(re_)
 
-                na = replace(na, re_)
+                na = string_replace(na, re_)
 
             end
 
