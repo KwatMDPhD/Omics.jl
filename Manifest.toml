@@ -712,9 +712,9 @@ version = "0.8.18"
 
 [[deps.PlotlyJS]]
 deps = ["Base64", "Blink", "DelimitedFiles", "JSExpr", "JSON", "Kaleido_jll", "Markdown", "Pkg", "PlotlyBase", "REPL", "Reexport", "Requires", "WebIO"]
-git-tree-sha1 = "ce95bd49b73a645bddfcec1df96523bb392364d9"
+git-tree-sha1 = "830e0c46365f55ee613e6631814c6861be76f786"
 repo-rev = "master"
-repo-url = "https://github.com/KatharineME/PlotlyJS.jl"
+repo-url = "https://github.com/KwatMDPhD/PlotlyJS.jl"
 uuid = "f0f68f2c-4968-5e81-91da-67840de0976a"
 version = "0.18.8"
 
