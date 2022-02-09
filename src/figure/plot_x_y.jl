@@ -1,6 +1,6 @@
 function plot_x_y(y_, x_; text_ = [], name_ = [], mode_ = [], la = Layout())
 
-    tr_ = fill(scatter(), length(y_))
+    tr_ = [scatter() for id in 1:length(y_)]
 
     for (id, tr) in enumerate(tr_)
 

@@ -947,9 +947,7 @@ version = "1.4.1"
 
 [[deps.WebIO]]
 deps = ["AssetRegistry", "Base64", "Distributed", "FunctionalCollections", "JSON", "Logging", "Observables", "Pkg", "Random", "Requires", "Sockets", "UUIDs", "WebSockets", "Widgets"]
-git-tree-sha1 = "32a2192ad49572472534df9dd75c510fe271fb91"
-repo-rev = "master"
-repo-url = "https://github.com/JuliaGizmos/WebIO.jl"
+git-tree-sha1 = "5fe32e4086d49f7ab9b087296742859f3ae6d62a"
 uuid = "0f1e0344-ec1d-5b48-a673-e5cf874b6c29"
 version = "0.8.16"
 

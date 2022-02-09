@@ -1,6 +1,6 @@
 function plot_bar(y_, x_; name_ = [], marker_color_ = [], la = Layout())
 
-    tr_ = fill(bar(), length(y_))
+    tr_ = [bar() for id in 1:length(y_)]
 
     for (id, tr) in enumerate(tr_)
 
