@@ -1,13 +1,10 @@
-function map_to_column(da, co_)
+function map_to_column(da, co_; de = "|")
 
     n_co = length(co_)
 
     ta = co_[n_co]
 
-    da2 = da[.!ismissing.(da[!, ta]), :]
-    println(size(da2))
     da2 = dropmissing(da, ta)
-    println(size(da2))
 
     ke_va = Dict()
 
@@ -23,7 +20,7 @@ function map_to_column(da, co_)
 
         for ke_ in skipmissing(ro[1:(n_co - 1)])
 
-            for ke in split(ke_, "|")
+            for ke in split(ke_, de)
 
                 if !haskey(ke_va, ke)
 
@@ -37,6 +34,8 @@ function map_to_column(da, co_)
 
     end
 
-    return ke_va
+    summarize(ke_va)
+
+    ke_va
 
 end

@@ -57,6 +57,10 @@ module extension
         include("extension/path/select.jl")
         include("extension/path/shorten.jl")
     end
+    module dataframe
+        include("extension/dataframe/_.jl")
+        include("extension/dataframe/map_to_column.jl")
+    end
 end
 module templating
     include("templating/_.jl")
@@ -129,7 +133,6 @@ module feature_by_sample
 end
 module gene
     include("gene/_.jl")
-    include("gene/map_to_column.jl")
     include("gene/map_to_ensembl_gene.jl")
     include("gene/map_to_hgnc_gene.jl")
     include("gene/map_with_mouse.jl")
