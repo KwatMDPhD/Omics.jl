@@ -1,22 +1,22 @@
-function plot_x_y(y_, x_; text_ = [], name_ = [], mode_ = [], la = Layout())
+function plot_x_y(y_, x_; text_ = [], name_ = [], mode_ = [], la = Config())
 
-    tr_ = [scatter() for id in 1:length(y_)]
+    tr_ = make_empty_trace("scatter", length(y_))
 
     for (id, tr) in enumerate(tr_)
 
         if !isempty(name_)
 
-            tr["name"] = name_[id]
+            tr.name = name_[id]
 
         end
 
-        tr["y"] = y_[id]
+        tr.y = y_[id]
 
-        tr["x"] = x_[id]
+        tr.x = x_[id]
 
         if !isempty(text_)
 
-            tr["text"] = text_[id]
+            tr.text = text_[id]
 
         end
 
@@ -38,18 +38,18 @@ function plot_x_y(y_, x_; text_ = [], name_ = [], mode_ = [], la = Layout())
 
         end
 
-        tr["mode"] = mode
+        tr.mode = mode
 
-        tr["opacity"] = 0.8
+        tr.opacity = 0.8
 
     end
 
-    return plot(tr_, la)
+    plot(tr_, la)
 
 end
 
 function plot_x_y(y_; ke_ar...)
 
-    return plot_x_y(y_, [collect(1:length(y)) for y in y_]; ke_ar...)
+    plot_y(plot_x_y, y_; ke_ar...)
 
 end

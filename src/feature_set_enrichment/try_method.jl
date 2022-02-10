@@ -1,6 +1,6 @@
 function plot_process(ve_, na_, title_text)
 
-    display(plot_x_y(ve_; name_ = na_, la = merge(la, Layout(title_text = title_text))))
+    display(plot_x_y(ve_, name_ = na_, la = merge(la, Config(title_text = title_text))))
 
 end
 
@@ -29,11 +29,11 @@ function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
 
     if plp
 
-        la = Layout(xaxis_title_text = "Feature")
+        la = Config(xaxis_title_text = "Feature")
 
         if length(fe_) < 100
 
-            la = merge(la, Layout(xaxis_tickvals = 1:length(fe_), xaxis_ticktext = fe_))
+            la = merge(la, Config(xaxis_tickvals = 1:length(fe_), xaxis_ticktext = fe_))
 
         end
 
@@ -107,7 +107,7 @@ function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
 
                     if pl
 
-                        plot_mountain(fe_, sc_, in_, en_, en; title_text = me)
+                        display(plot_mountain(fe_, sc_, in_, en_, en, title_text = me))
 
                     end
 
@@ -126,7 +126,7 @@ end
 function try_method(fe_, sc_, se_fe_::Dict; we = 1.0)
 
     return Dict(
-        se => try_method(fe_, sc_, fe1_; we = we, plp = false, pl = false) for (se, fe1_) in se_fe_
+        se => try_method(fe_, sc_, fe1_, we = we, plp = false, pl = false) for (se, fe1_) in se_fe_
     )
 
 end

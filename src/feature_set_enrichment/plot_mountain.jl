@@ -21,12 +21,12 @@ function plot_mountain(
 
     yaxis3_domain = [0.32, 1.0]
 
-    annotation = attr(xref = "paper", yref = "paper", yanchor = "middle", showarrow = false)
+    annotation = Config(xref = "paper", yref = "paper", yanchor = "middle", showarrow = false)
 
     annotationy =
-        merge(annotation, attr(xanchor = "right", x = -0.064, font_size = axis_title_font_size))
+        merge(annotation, Config(xanchor = "right", x = -0.064, font_size = axis_title_font_size))
 
-    annotationx = merge(annotation, attr(xanchor = "center", x = 0.5))
+    annotationx = merge(annotation, Config(xanchor = "center", x = 0.5))
 
     namee = "Enrichment"
 
@@ -34,21 +34,21 @@ function plot_mountain(
 
     n_fe = length(fe_)
 
-    layout = Layout(
+    layout = Config(
         height = height,
         width = width,
-        margin = attr(t = trunc(height * 0.16), l = trunc(width * 0.16)),
-        legend = attr(
+        margin = Config(t = trunc(height * 0.16), l = trunc(width * 0.16)),
+        legend = Config(
             orientation = "h",
             yanchor = "middle",
             xanchor = "center",
             y = -0.2,
             x = 0.5,
         ),
-        yaxis1 = attr(domain = yaxis1_domain, showline = true),
-        yaxis2 = attr(domain = yaxis2_domain, showticklabels = false, showgrid = false),
-        yaxis3 = attr(domain = yaxis3_domain, showline = true),
-        xaxis = attr(
+        yaxis1 = Config(domain = yaxis1_domain, showline = true),
+        yaxis2 = Config(domain = yaxis2_domain, showticklabels = false, showgrid = false),
+        yaxis3 = Config(domain = yaxis3_domain, showline = true),
+        xaxis = Config(
             zeroline = false,
             showspikes = true,
             spikethickness = 0.8,
@@ -58,7 +58,7 @@ function plot_mountain(
         annotations = [
             merge(
                 annotationx,
-                attr(
+                Config(
                     y = 1.16,
                     text = string("<b>", title_text, "</b>"),
                     font_size = title_font_size,
@@ -66,51 +66,53 @@ function plot_mountain(
             ),
             merge(
                 annotationx,
-                attr(
+                Config(
                     y = 1.04,
                     text = string("<b>Statistic = ", en, "</b>"),
-                    font = attr(size = title_font_size * 0.64, color = "2a603b"),
+                    font = Config(size = title_font_size * 0.64, color = "2a603b"),
                 ),
             ),
             merge(
                 annotationy,
-                attr(y = get_center(yaxis1_domain...), text = string("<b>", names, "</b>")),
+                Config(y = get_center(yaxis1_domain...), text = string("<b>", names, "</b>")),
             ),
-            merge(annotationy, attr(y = get_center(yaxis2_domain...), text = "<b>Set</b>")),
+            merge(annotationy, Config(y = get_center(yaxis2_domain...), text = "<b>Set</b>")),
             merge(
                 annotationy,
-                attr(y = get_center(yaxis3_domain...), text = string("<b>", namee, "</b>")),
+                Config(y = get_center(yaxis3_domain...), text = string("<b>", namee, "</b>")),
             ),
             merge(
                 annotationx,
-                attr(y = -0.088, text = string("<b>Feature Rank (n=", n_fe, ")</b>")),
+                Config(y = -0.088, text = string("<b>Feature Rank (n=", n_fe, ")</b>")),
             ),
         ],
     )
 
     x = 1:n_fe
 
-    tracef = scatter(;
+    tracef = Config(
+                    type="scatte",
         name = names,
         y = sc_,
         x = x,
         text = fe_,
         mode = "lines",
-        line = attr(width = 0, color = "20d8ba"),
+        line = Config(width = 0, color = "20d8ba"),
         fill = "tozeroy",
         hoverinfo = "x+y+text",
     )
 
     in_ = convert(BitVector, in_)
 
-    traces = scatter(;
+    traces = Config(
+                    type="scatte",
         name = "Set",
         yaxis = "y2",
         y = zeros(sum(in_)),
         x = x[in_],
         text = fe_[in_],
         mode = "markers",
-        marker = attr(
+        marker = Config(
             symbol = "line-ns-open",
             size = height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.64,
             line_width = line_width,
@@ -128,14 +130,15 @@ function plot_mountain(
 
             push!(
                 trace_,
-                scatter(;
+                Config(
+                    type="scatte",
                     name = name,
                     yaxis = "y3",
                     y = ifelse.(is_, en_, 0.0),
                     x = x,
                     text = fe_,
                     mode = "lines",
-                    line = attr(width = 0.0, color = color),
+                    line = Config(width = 0.0, color = color),
                     fill = "tozeroy",
                     hoverinfo = "x+y+text",
                 ),
@@ -147,14 +150,14 @@ function plot_mountain(
 
         push!(
             trace_,
-            scatter(;
+            Config(
                 name = namee,
                 yaxis = "y3",
                 y = en_,
                 x = x,
                 text = fe_,
                 mode = "lines",
-                line = attr(width = 0.0, color = "#4e40d8"),
+                line = Config(width = 0.0, color = "#4e40d8"),
                 fill = "tozeroy",
                 hoverinfo = "x+y+text",
             ),
@@ -162,6 +165,6 @@ function plot_mountain(
 
     end
 
-    display(plot(trace_, layout))
+    plot(trace_, layout)
 
 end

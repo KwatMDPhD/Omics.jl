@@ -1,22 +1,18 @@
-function plot(tr_, la)
+LA = Config(template = "plotly_white", autosize = false, hovermode = "closest")
 
-    la["template"] = "plotly_white"
+CO = Config(
+    modeBarButtonsToRemove=["select", "lasso", "resetScale"],
+    displaylogo=false,
+)
 
-    pl = PlotlyJS_plot(
-        tr_,
-        merge(Layout(autosize = false, hovermode = "closest"), la);
-        config = PlotConfig(;
-            modeBarButtonsToRemove = ["select", "lasso", "resetScale"],
-            displaylogo = false,
-        ),
-    )
+function plot(tr_, la, co=CO)
 
-    return pl
+    Plot(tr_, merge(LA, la), co)
 
 end
 
 function plot(tr_)
 
-    return plot(tr_, Layout())
+    plot(tr_, Config())
 
 end
