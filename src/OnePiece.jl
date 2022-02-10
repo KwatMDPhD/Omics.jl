@@ -116,14 +116,14 @@ end
 module emoji
     include("emoji/print.jl")
 end
-module figure
-    include("figure/_.jl")
-    include("figure/plot.jl")
-    include("figure/plot_bar.jl")
-    include("figure/plot_heat_map.jl")
-    include("figure/plot_x_y.jl")
-    include("figure/write.jl")
-end
+#module figure
+#    include("figure/_.jl")
+#    include("figure/plot.jl")
+#    include("figure/plot_bar.jl")
+#    include("figure/plot_heat_map.jl")
+#    include("figure/plot_x_y.jl")
+#    include("figure/write.jl")
+#end
 module tensor_function
     include("tensor_function/apply.jl")
 end

@@ -162,6 +162,6 @@ function plot_mountain(
 
     end
 
-    return display(plot(trace_, layout))
+    display(plot(trace_, layout))
 
 end

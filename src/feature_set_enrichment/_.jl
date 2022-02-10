@@ -1,12 +1,12 @@
 using DataFrames: DataFrame
 using OrderedCollections: OrderedDict
-using PlotlyJS: Layout, attr, scatter
+#using PlotlyJS: Layout, attr, scatter
 using Printf: @sprintf
 using StatsBase: sample
 
 using ..extension.constant: CARD
 using ..extension.vector: is_in, sort_like
-using ..figure: plot, plot_x_y
+#using ..figure: plot, plot_x_y
 using ..informatics.geometry: get_center
 using ..informatics.information:
     get_kolmogorov_smirnov_statistic,
