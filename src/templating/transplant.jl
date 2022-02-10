@@ -1,4 +1,4 @@
-function transplant(pa1, pa2, de, id_, re_)
+function transplant(pa1, pa2, de, id_; re_=[])
 
     st1 = read(pa1, String)
 
