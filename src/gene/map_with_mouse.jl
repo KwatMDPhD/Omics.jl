@@ -22,7 +22,7 @@ function map_with_mouse(; ho = "mouse_to_human")
 
     dropmissing!(or, [ke, va])
 
-    or[!, hu] = rename(or[!, hu]; mo = false)[1]
+    or[!, hu] = rename(or[!, hu], mo = false)[1]
 
     ke_va = Dict(ro[ke] => ro[va] for ro in eachrow(or))
 

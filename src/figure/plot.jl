@@ -1,11 +1,8 @@
 LA = Config(template = "plotly_white", autosize = false, hovermode = "closest")
 
-CO = Config(
-    modeBarButtonsToRemove=["select", "lasso", "resetScale"],
-    displaylogo=false,
-)
+CO = Config(modeBarButtonsToRemove = ["select", "lasso", "resetScale"], displaylogo = false)
 
-function plot(tr_, la, co=CO)
+function plot(tr_, la, co = CO)
 
     Plot(tr_, merge(LA, la), co)
 

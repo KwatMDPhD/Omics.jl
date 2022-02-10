@@ -32,7 +32,7 @@ function make_benchmark(ho)
 
         sc_ = sort([.-ha[1:(n_fe - mi)]; ha])
 
-        fe1_ = sample(fe_, parse(Int, sp_[3]); replace = false)
+        fe1_ = sample(fe_, parse(Int, sp_[3]), replace = false)
 
     elseif sp_[1] == "myc"
 

@@ -41,6 +41,6 @@ end
 
 function score_set_new(fe_, sc_, se_fe_::Dict; we = 1.0)
 
-    return Dict(se => score_set_new(fe_, sc_, fe1_; we = we, pl = false) for (se, fe1_) in se_fe_)
+    return Dict(se => score_set_new(fe_, sc_, fe1_, we = we, pl = false) for (se, fe1_) in se_fe_)
 
 end

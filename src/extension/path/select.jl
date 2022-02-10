@@ -2,7 +2,7 @@ function select(di; ig_ = [r"^\."], ke_ = [], jo = true)
 
     pa_ = Vector{AbstractString}()
 
-    for pa in readdir(di; join = jo)
+    for pa in readdir(di, join = jo)
 
         na = basename(pa)
 

@@ -91,7 +91,7 @@ function plot_mountain(
     x = 1:n_fe
 
     tracef = Config(
-                    type="scatte",
+        type = "scatte",
         name = names,
         y = sc_,
         x = x,
@@ -105,7 +105,7 @@ function plot_mountain(
     in_ = convert(BitVector, in_)
 
     traces = Config(
-                    type="scatte",
+        type = "scatte",
         name = "Set",
         yaxis = "y2",
         y = zeros(sum(in_)),
@@ -131,7 +131,7 @@ function plot_mountain(
             push!(
                 trace_,
                 Config(
-                    type="scatte",
+                    type = "scatte",
                     name = name,
                     yaxis = "y3",
                     y = ifelse.(is_, en_, 0.0),

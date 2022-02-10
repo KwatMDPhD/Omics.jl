@@ -103,7 +103,7 @@ function score_set(fe_, sc_, se_fe_::Dict; we = 1.0, al = "ks")
     end
 
     return Dict(
-        se => score_set(fe_, sc_, fe1_, is_in(ch, fe1_); we = we, al = al, pl = false) for
+        se => score_set(fe_, sc_, fe1_, is_in(ch, fe1_), we = we, al = al, pl = false) for
         (se, fe1_) in se_fe_
     )
 
@@ -123,7 +123,7 @@ function score_set(sc_fe_sa, se_fe_; we = 1.0, al = "ks", n_jo = 1)
 
         if in(al, ["ks", "auc"])
 
-            se_en = score_set(fe_, sc_, se_fe_; we = we, al = al)
+            se_en = score_set(fe_, sc_, se_fe_, we = we, al = al)
 
         elseif al == "new"
 
