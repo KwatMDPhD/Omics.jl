@@ -1,4 +1,4 @@
-function plot_bar(y_, x_; name_ = [], marker_color_ = [], la = Config())
+function plot_bar(y_, x_; name_ = [], marker_color_ = [], la = Config(), ou = "")
 
     tr_ = make_empty_trace("bar", length(y_))
 
@@ -24,7 +24,7 @@ function plot_bar(y_, x_; name_ = [], marker_color_ = [], la = Config())
 
     end
 
-    plot(tr_, la)
+    plot(tr_, la, ou = ou)
 
 end
 

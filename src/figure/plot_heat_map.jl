@@ -1,4 +1,4 @@
-function plot_heat_map(ma, ro_, co_; la = Config())
+function plot_heat_map(ma, ro_, co_; la = Config(), ou = "")
 
     id_ = size(ma, 1):-1:1
 
@@ -12,7 +12,7 @@ function plot_heat_map(ma, ro_, co_; la = Config())
         ),
     ]
 
-    plot(tr_, la)
+    plot(tr_, la, ou = ou)
 
 end
 

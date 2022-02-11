@@ -2,14 +2,22 @@ LA = Config(template = "plotly_white", autosize = false, hovermode = "closest")
 
 CO = Config(modeBarButtonsToRemove = ["select", "lasso", "resetScale"], displaylogo = false)
 
-function plot(tr_, la, co = CO)
+function plot(tr_, la, co = CO; ou = "")
 
-    Plot(tr_, merge(LA, la), co)
+    pl = Plot(tr_, merge(LA, la), co)
+
+    if ou != ""
+
+        save(Page(pl), ou)
+
+    end
+
+    pl
 
 end
 
-function plot(tr_)
+function plot(tr_; ke_ar...)
 
-    plot(tr_, Config())
+    plot(tr_, Config(); ke_ar...)
 
 end

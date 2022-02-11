@@ -10,7 +10,7 @@ function plot_mountain(
     axis_title_font_size = 12,
     names = "Score",
     line_width = 2.0,
-    si = true,
+    ou = "",
 )
 
     width = height * MathConstants.golden
@@ -123,41 +123,20 @@ function plot_mountain(
 
     trace_ = [tracef, traces]
 
-    if si
-
-        for (name, is_, color) in
-            [["- Enrichment", en_ .< 0.0, "0088ff"], ["+ Enrichment", 0.0 .< en_, "ff1968"]]
-
-            push!(
-                trace_,
-                Config(
-                    type = "scatte",
-                    name = name,
-                    yaxis = "y3",
-                    y = ifelse.(is_, en_, 0.0),
-                    x = x,
-                    text = fe_,
-                    mode = "lines",
-                    line = Config(width = 0.0, color = color),
-                    fill = "tozeroy",
-                    hoverinfo = "x+y+text",
-                ),
-            )
-
-        end
-
-    else
+    for (name, is_, color) in
+        [["- Enrichment", en_ .< 0.0, "0088ff"], ["+ Enrichment", 0.0 .< en_, "ff1968"]]
 
         push!(
             trace_,
             Config(
-                name = namee,
+                type = "scatte",
+                name = name,
                 yaxis = "y3",
-                y = en_,
+                y = ifelse.(is_, en_, 0.0),
                 x = x,
                 text = fe_,
                 mode = "lines",
-                line = Config(width = 0.0, color = "#4e40d8"),
+                line = Config(width = 0.0, color = color),
                 fill = "tozeroy",
                 hoverinfo = "x+y+text",
             ),
@@ -165,6 +144,6 @@ function plot_mountain(
 
     end
 
-    plot(trace_, layout)
+    plot(trace_, layout, ou = ou)
 
 end

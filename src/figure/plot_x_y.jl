@@ -1,4 +1,4 @@
-function plot_x_y(y_, x_; text_ = [], name_ = [], mode_ = [], la = Config())
+function plot_x_y(y_, x_; text_ = [], name_ = [], mode_ = [], la = Config(), ou = "")
 
     tr_ = make_empty_trace("scatter", length(y_))
 
@@ -44,7 +44,7 @@ function plot_x_y(y_, x_; text_ = [], name_ = [], mode_ = [], la = Config())
 
     end
 
-    plot(tr_, la)
+    plot(tr_, la, ou = ou)
 
 end
 
