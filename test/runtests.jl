@@ -2,7 +2,7 @@ TE = joinpath(tempdir(), "OnePiece.test")
 
 if isdir(TE)
 
-    rm(TE; recursive = true)
+    rm(TE, recursive = true)
 
     println("Removed ", TE, ".")
 
@@ -146,7 +146,7 @@ using OnePiece
 
 de, id_ = "-"^3, [1, 2, 1]
 
-for (id, su) in enumerate(su_)
+for (id, su) in enumerate([su_..., "speed"])
 
     nb = joinpath(pat, string(su, ".ipynb"))
 
@@ -180,7 +180,7 @@ end
 
 if isdir(TE)
 
-    rm(TE; recursive = true)
+    rm(TE, recursive = true)
 
     println("Removed ", TE, ".")
 

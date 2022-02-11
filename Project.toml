@@ -4,7 +4,6 @@ authors = ["KwatMDPhD <kwat.me@icloud.com>"]
 version = "0.6.2"
 
 [deps]
-BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 Cobweb = "ec354790-cf28-43e8-bb59-b484409b7bad"
 CodecZlib = "944b1d66-785c-5afd-91f1-9de20f533193"
