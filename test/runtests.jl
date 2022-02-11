@@ -59,11 +59,7 @@ su_ = [
 
 ;
 
-dis_ = Set(vcat([splitpath(su) for su in su_]...))
-
-di_ = Set(vcat([wa[2] for wa in walkdir(pas)]...))
-
-symdiff(dis_, di_)
+symdiff(Set(vcat([splitpath(su) for su in su_]...)), Set(vcat([wa[2] for wa in walkdir(pas)]...)))
 
 using OrderedCollections
 
@@ -89,7 +85,7 @@ for su in su_
 
             end
 
-            cu = cu[di]
+            global cu = cu[di]
 
         else
 
@@ -97,7 +93,7 @@ for su in su_
 
             cu[di] = [joinpath(su, jl) for jl in jl_]
 
-            cu = tr[mo]
+            global cu = tr[mo]
 
         end
 
