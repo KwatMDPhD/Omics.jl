@@ -1,6 +1,16 @@
 TE = joinpath(tempdir(), "OnePiece.test")
 
-mkpath(TE)
+if isdir(TE)
+
+    rm(TE; recursive = true)
+
+    println("Removed ", TE, ".")
+
+end
+
+mkdir(TE)
+
+println("Made ", TE, ".")
 
 pam = dirname(@__DIR__)
 
@@ -172,4 +182,10 @@ for (id, su) in enumerate(su_)
 
 end
 
-rm(TE; recursive = true)
+if isdir(TE)
+
+    rm(TE; recursive = true)
+
+    println("Removed ", TE, ".")
+
+end
