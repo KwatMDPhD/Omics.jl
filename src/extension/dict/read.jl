@@ -10,6 +10,11 @@ function read(pa)
 
         return parsefile(pa)
 
+
+    else
+
+        error("extension is not .json, .ipynb, or .toml.")
+
     end
 
 end

@@ -90,7 +90,7 @@ function score_set(fe_, sc_, fe1_; we = 1.0, al = "ks", pl = true, ke_ar...)
 
 end
 
-function score_set(fe_, sc_, se_fe_::Dict; we = 1.0, al = "ks")
+function score_set(fe_, sc_, se_fe_::Dict; we = 1.0, al = "ks", n_jo = 1)
 
     if length(se_fe_) < 10
 
