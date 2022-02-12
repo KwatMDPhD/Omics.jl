@@ -2,7 +2,7 @@ function adjust_p_value(pv_, n_te = length(pv_); me = "benjamini_hochberg")
 
     if me == "bonferroni"
 
-        pv_ *= n_te
+        pv_ = pv_ * n_te
 
     elseif me == "benjamini_hochberg"
 
@@ -20,6 +20,6 @@ function adjust_p_value(pv_, n_te = length(pv_); me = "benjamini_hochberg")
 
     end
 
-    return clamp.(pv_, 0, 1)
+    clamp.(pv_, 0, 1)
 
 end

@@ -20,14 +20,12 @@ function get_p_value(fl, ra_, si)
 
     if n_si == 0
 
-        pv = 1 / n_ra
+        1 / n_ra
 
     else
 
-        pv = n_si / n_ra
+        n_si / n_ra
 
     end
-
-    return pv
 
 end
