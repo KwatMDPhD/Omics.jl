@@ -1,5 +1,11 @@
 function read(pa; xl = "")
 
+    if !ispath(pa)
+
+        error(pa, " does not exist.")
+
+    end
+
     ex = splitext(pa)[2]
 
     if ex == ".xlsx"
