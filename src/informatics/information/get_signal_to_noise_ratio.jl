@@ -4,9 +4,7 @@ function _update(me, st)
 
     lo = abs(me) * fa
 
-    if me == 0
-
-        me = 1
+    if me == 0.0
 
         st = fa
 
@@ -16,18 +14,18 @@ function _update(me, st)
 
     end
 
-    return me, st
+    me, st
 
 end
 
 function get_signal_to_noise_ratio(ve1, ve2)
 
-    co = false
+    co = true
 
     me1, st1 = _update(mean(ve1), std(ve1, corrected = co))
 
     me2, st2 = _update(mean(ve2), std(ve2, corrected = co))
 
-    return (me2 - me1) / (st1 + st2)
+    (me1 - me2) / (st1 + st2)
 
 end
