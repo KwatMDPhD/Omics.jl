@@ -1,4 +1,4 @@
-function read(pa; xl = "")
+function read(pa; xl = "", ke_ar...)
 
     if !ispath(pa)
 
@@ -22,7 +22,7 @@ function read(pa; xl = "")
 
         end
 
-        return CSV_read(it_, DataFrame)
+        return CSV_read(it_, DataFrame; ke_ar...)
 
     end
 

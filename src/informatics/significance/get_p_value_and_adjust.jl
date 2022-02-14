@@ -1,6 +1,6 @@
-function get_p_value_and_adjust(fl_, ra_, di)
+function get_p_value_and_adjust(fl_, ra_, si)
 
-    pv_ = [get_p_value(fl, ra_, di) for fl in fl_]
+    pv_ = [get_p_value(fl, ra_, si) for fl in fl_]
 
     pv_, adjust_p_value(pv_)
 
