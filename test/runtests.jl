@@ -4,15 +4,14 @@ if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed $TE.")
+    println("Removed ", TE, ".")
 
 end
 
 mkdir(TE)
 
-println("Made $TE.")
+println("Made ", TE, ".")
 
-# ----------------------------------------------------------------------------------------------- #
 pam = dirname(@__DIR__)
 
 pap = joinpath(pam, "Project.toml")
@@ -21,17 +20,16 @@ pas = joinpath(pam, "src")
 
 pat = joinpath(pam, "test")
 
-# ----------------------------------------------------------------------------------------------- #
+;
+
 using TOML
 
-# ----------------------------------------------------------------------------------------------- #
 to = TOML.parse(read(pap, String))
 
 mo = "OnePiece"
 
-@assert splitext(basename(pam))[1] == to["name"] == mo
+@assert to["name"] == splitext(basename(pam))[1] == mo
 
-# ----------------------------------------------------------------------------------------------- #
 su_ = [
     "io/table",
     "io/fcs",
@@ -59,14 +57,12 @@ su_ = [
     "feature_set_enrichment",
 ]
 
-n_sk = length(pas)
+;
 
-symdiff(Set(vcat([splitpath(su) for su in su_]...)), Set([wa[1][n_sk:end] for wa in walkdir(pas)]))
+symdiff(Set(vcat([splitpath(su) for su in su_]...)), Set(vcat([wa[2] for wa in walkdir(pas)]...)))
 
-# ----------------------------------------------------------------------------------------------- #
 using OrderedCollections
 
-# ----------------------------------------------------------------------------------------------- #
 tr = OrderedDict()
 
 tr[mo] = OrderedDict()
@@ -93,9 +89,9 @@ for su in su_
 
         else
 
-            cu[di] = [
-                fi for fi in readdir(joinpath(pas, su)) if occursin(r"\.jl$", fi) && fi != "$di.jl"
-            ]
+            jl_ = [fi for fi in readdir(joinpath(pas, su)) if occursin(r"\.jl$", fi)]
+
+            cu[di] = [joinpath(su, jl) for jl in jl_]
 
             global cu = tr[mo]
 
@@ -105,41 +101,25 @@ for su in su_
 
 end
 
-# ----------------------------------------------------------------------------------------------- #
-using JSON
-
-# ----------------------------------------------------------------------------------------------- #
-JSON.print(tr, 2)
-
-# ----------------------------------------------------------------------------------------------- #
 function write_line(io, st)
 
-    write(io, "$st\n\n")
+    write(io, string(st, "\n"))
 
 end
 
-# ----------------------------------------------------------------------------------------------- #
-function write_branch(jl, io, va)
+function write_branch(io, id, va)
+
+    sp = "    "^id
 
     if va isa OrderedDict
 
-        for (su, va2) in va
+        for (ke, va2) in va
 
-            re = joinpath(su, "$su.jl")
+            write_line(io, string(sp, "module ", ke))
 
-            write_line(io, "include(\"$re\")")
+            write_branch(io, id + 1, va2)
 
-            jl2 = joinpath(dirname(jl), re)
-
-            open(jl2, "w") do io2
-
-                write_line(io2, "module $su")
-
-                write_branch(jl2, io2, va2)
-
-                write_line(io2, "end")
-
-            end
+            write_line(io, string(sp, "end"))
 
         end
 
@@ -147,48 +127,40 @@ function write_branch(jl, io, va)
 
         for li in va
 
-            write_line(io, "include(\"$li\")")
+            write_line(io, string(sp, "include(\"", li, "\")"))
 
         end
 
     end
 
-end
-
-# ----------------------------------------------------------------------------------------------- #
-jl = joinpath(pas, "$mo.jl")
-
-open(jl, "w") do io
-
-    write_line(io, "module $mo")
-
-    write_branch(jl, io, tr[mo])
-
-    write_line(io, "end")
 
 end
 
-# ----------------------------------------------------------------------------------------------- #
+open(joinpath(pas, string(mo, ".jl")), "w") do io
+
+    write_branch(io, 0, tr)
+
+end
+
 using OnePiece
 
-# ----------------------------------------------------------------------------------------------- #
 de, id_ = "-"^3, [1, 2, 1]
 
 for (id, su) in enumerate([su_..., "speed"])
 
-    nb = joinpath(pat, "$su.ipynb")
+    nb = joinpath(pat, string(su, ".ipynb"))
 
-    println("Templating $nb ($id)")
+    println("Templating ", nb, " (", id, ")")
 
     run(`jupyter-nbconvert --clear-output --inplace --log-level 0 $nb`)
 
-    OnePiece.templating.transplant(joinpath(@__DIR__, "template.ipynb"), nb, de, id_)
+    OnePiece.templating.transplant("template.ipynb", nb, de, id_)
 
 end
 
 for (id, su) in enumerate(su_)
 
-    nb = joinpath(pat, "$su.ipynb")
+    nb = joinpath(pat, string(su, ".ipynb"))
 
     if id < 1
 
@@ -196,7 +168,9 @@ for (id, su) in enumerate(su_)
 
     end
 
-    println("Running $nb ($id)")
+    println(id)
+
+    println("Running ", nb, " (", id, ")")
 
     run(
         `jupyter-nbconvert --execute --ExecutePreprocessor.timeout=-1 --clear-output --inplace --log-level 0 $nb`,
@@ -204,11 +178,10 @@ for (id, su) in enumerate(su_)
 
 end
 
-# ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed $TE.")
+    println("Removed ", TE, ".")
 
 end
