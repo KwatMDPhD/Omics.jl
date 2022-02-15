@@ -6,6 +6,6 @@ function shift_minimum(ve, mi)
 
     end
 
-    return ve .+ (mi - minimum(ve))
+    ve .+ (mi - minimum(ve))
 
 end

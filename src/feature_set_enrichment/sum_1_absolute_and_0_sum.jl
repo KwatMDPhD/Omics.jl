@@ -26,6 +26,6 @@ function sum_1_absolute_and_0_count(sc_::Vector{Float64}, in_::Vector{Bool})
 
     end
 
-    return su1, su0
+    su1, su0
 
 end

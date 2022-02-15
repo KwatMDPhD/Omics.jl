@@ -22,6 +22,6 @@ function make_dataframe(da)
 
     py.index.name = na_[1]
 
-    return py
+    py
 
 end

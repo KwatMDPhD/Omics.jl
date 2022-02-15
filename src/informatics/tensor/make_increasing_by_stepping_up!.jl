@@ -4,6 +4,6 @@ function make_increasing_by_stepping_up!(ic_)
 
     reverse!(ic_)
 
-    return ic_
+    ic_
 
 end

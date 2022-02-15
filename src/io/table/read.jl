@@ -10,7 +10,7 @@ function read(pa; xl = "", ke_ar...)
 
     if ex == ".xlsx"
 
-        return DataFrame(readtable(pa, xl)...)
+        DataFrame(readtable(pa, xl)...)
 
     else
 
@@ -22,7 +22,7 @@ function read(pa; xl = "", ke_ar...)
 
         end
 
-        return CSV_read(it_, DataFrame; ke_ar...)
+        CSV_read(it_, DataFrame; ke_ar...)
 
     end
 

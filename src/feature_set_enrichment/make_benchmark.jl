@@ -48,6 +48,6 @@ function make_benchmark(ho)
 
     end
 
-    return fe_, sc_, fe1_
+    fe_, sc_, fe1_
 
 end

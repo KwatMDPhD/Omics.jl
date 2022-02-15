@@ -6,7 +6,7 @@ function remove_longest_common_prefix(st_)
 
         n_ch = length(pr)
 
-        return [st[(n_ch + 1):end] for st in st_]
+        [st[(n_ch + 1):end] for st in st_]
 
     end
 

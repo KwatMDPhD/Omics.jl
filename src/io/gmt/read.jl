@@ -10,7 +10,7 @@ function read(pa::AbstractString)
 
     end
 
-    return se_ge_
+    se_ge_
 
 end
 
@@ -24,6 +24,6 @@ function read(pa_::AbstractArray)
 
     end
 
-    return se_ge_
+    se_ge_
 
 end

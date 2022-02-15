@@ -10,11 +10,11 @@ function normalize(ve, me)
 
         mi = minimum(ve)
 
-        return (ve .- mi) / (maximum(ve) - mi)
+        (ve .- mi) / (maximum(ve) - mi)
 
     elseif me == "-0-"
 
-        return (ve .- mean(ve)) / std(ve)
+        (ve .- mean(ve)) / std(ve)
 
     elseif me == "sum"
 
@@ -24,23 +24,23 @@ function normalize(ve, me)
 
         end
 
-        return ve / sum(ve)
+        ve / sum(ve)
 
     elseif me == "1223"
 
-        return denserank(ve)
+        denserank(ve)
 
     elseif me == "1224"
 
-        return competerank(ve)
+        competerank(ve)
 
     elseif me == "1 2.5 2.5 4"
 
-        return tiedrank(ve)
+        tiedrank(ve)
 
     elseif me == "1234"
 
-        return ordinalrank(ve)
+        ordinalrank(ve)
 
     end
 

@@ -32,6 +32,6 @@ function get_longest_common_prefix(ve_)
 
     end
 
-    return pr_
+    pr_
 
 end

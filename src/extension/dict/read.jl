@@ -4,11 +4,11 @@ function read(pa)
 
     if ex in [".json", ".ipynb"]
 
-        return parse(open(pa))
+        parse(open(pa))
 
     elseif ex == ".toml"
 
-        return parsefile(pa)
+        parsefile(pa)
 
 
     else

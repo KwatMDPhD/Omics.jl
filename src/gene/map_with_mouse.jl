@@ -28,6 +28,6 @@ function map_with_mouse(; ho = "mouse_to_human")
 
     summarize(ke_va)
 
-    return ke_va
+    ke_va
 
 end

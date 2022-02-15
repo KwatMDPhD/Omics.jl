@@ -36,6 +36,6 @@ function merge(di1, di2)
 
     end
 
-    return di
+    di
 
 end

@@ -50,6 +50,6 @@ function rename(st_; mo = true, en = true, hg = true)
 
     println("Failed ", count(ma_ .== 2))
 
-    return na_, ma_
+    na_, ma_
 
 end

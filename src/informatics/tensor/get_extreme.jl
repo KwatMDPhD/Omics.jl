@@ -10,7 +10,7 @@ function get_extreme(ve)
 
     if maa < mia
 
-        return mi
+        mi
 
     else
 
@@ -20,7 +20,7 @@ function get_extreme(ve)
 
         end
 
-        return ma
+        ma
 
     end
 

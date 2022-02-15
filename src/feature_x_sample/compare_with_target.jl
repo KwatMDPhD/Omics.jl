@@ -6,7 +6,7 @@ function compare_with_target(sa_::BitVector, an_fe_sa, fu)
 
     end
 
-    return apply(sa_, an_fe_sa, fu)
+    apply(sa_, an_fe_sa, fu)
 
 end
 
@@ -22,6 +22,6 @@ function compare_with_target(sa_, an_fe_sa, fu)
 
     end
 
-    return apply(sa_, an_fe_sa, fu)
+    apply(sa_, an_fe_sa, fu)
 
 end

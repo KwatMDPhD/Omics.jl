@@ -1,5 +1,5 @@
 function read(pa)
 
-    return pa
+    pa
 
 end

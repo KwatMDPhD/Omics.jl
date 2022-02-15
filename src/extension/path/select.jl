@@ -15,6 +15,6 @@ function select(di; ig_ = [r"^\."], ke_ = [], jo = true)
 
     end
 
-    return pa_
+    pa_
 
 end

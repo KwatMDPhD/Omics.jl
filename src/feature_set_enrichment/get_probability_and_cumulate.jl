@@ -8,6 +8,6 @@ function get_probability_and_cumulate(ve)
 
     cul_ = cumulate_sum_reverse(pr_) .+ ep
 
-    return pr_, cur_, cul_
+    pr_, cur_, cul_
 
 end

@@ -2,7 +2,7 @@ function sort_recursively!(an)
 
     if an isa AbstractArray
 
-        return sort_recursively!.(an)
+        sort_recursively!.(an)
 
     elseif an isa AbstractDict
 
@@ -12,11 +12,11 @@ function sort_recursively!(an)
 
         end
 
-        return sort!(OrderedDict(an))
+        sort!(OrderedDict(an))
 
     else
 
-        return an
+        an
 
     end
 

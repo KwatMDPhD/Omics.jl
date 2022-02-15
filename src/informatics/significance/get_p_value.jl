@@ -6,11 +6,11 @@ function get_p_value(fl, ra_, si)
 
     end
 
-    if si == "<"
+    if si == -1.0
 
         si_ = ra_ .<= fl
 
-    elseif si == ">"
+    elseif si == 1.0
 
         si_ = fl .<= ra_
 

@@ -1,5 +1,5 @@
 function get_entropy(ve)
 
-    return ve
+    ve
 
 end

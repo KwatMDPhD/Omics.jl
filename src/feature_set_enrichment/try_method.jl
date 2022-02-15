@@ -119,13 +119,13 @@ function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
 
     end
 
-    return me_en
+    me_en
 
 end
 
 function try_method(fe_, sc_, se_fe_::Dict; we = 1.0)
 
-    return Dict(
+    Dict(
         se => try_method(fe_, sc_, fe1_, we = we, plp = false, pl = false) for (se, fe1_) in se_fe_
     )
 

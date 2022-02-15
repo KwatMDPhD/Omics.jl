@@ -80,13 +80,13 @@ function score_set(fe_, sc_, fe1_, in_; we = 1.0, al = "ks", pl = true, ke_ar...
 
     end
 
-    return en
+    en
 
 end
 
 function score_set(fe_, sc_, fe1_; we = 1.0, al = "ks", pl = true, ke_ar...)
 
-    return score_set(fe_, sc_, fe1_, is_in(fe_, fe1_); we = we, al = al, pl = pl, ke_ar...)
+    score_set(fe_, sc_, fe1_, is_in(fe_, fe1_); we = we, al = al, pl = pl, ke_ar...)
 
 end
 
@@ -102,7 +102,7 @@ function score_set(fe_, sc_, se_fe_::Dict; we = 1.0, al = "ks", n_jo = 1)
 
     end
 
-    return Dict(
+    Dict(
         se => score_set(fe_, sc_, fe1_, is_in(ch, fe1_), we = we, al = al, pl = false) for
         (se, fe1_) in se_fe_
     )
@@ -135,6 +135,6 @@ function score_set(sc_fe_sa, se_fe_; we = 1.0, al = "ks", n_jo = 1)
 
     end
 
-    return en_se_sa
+    en_se_sa
 
 end

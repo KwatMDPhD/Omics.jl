@@ -1,7 +1,7 @@
 name = "OnePiece"
 uuid = "1fe83854-81c0-42f7-afc9-71ba9af673ca"
 authors = ["KwatMDPhD <kwat.me@icloud.com>"]
-version = "0.6.2"
+version = "0.7.0-b"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -9,7 +9,6 @@ Cobweb = "ec354790-cf28-43e8-bb59-b484409b7bad"
 CodecZlib = "944b1d66-785c-5afd-91f1-9de20f533193"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
-IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 KernelDensity = "5ab0869b-81aa-558d-bb23-cbf5423bbe9b"
 Mmap = "a63ad114-7e13-5084-954f-fe012c677804"

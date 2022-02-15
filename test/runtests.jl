@@ -103,7 +103,7 @@ end
 
 function write_line(io, st)
 
-    return write(io, string(st, "\n"))
+    write(io, string(st, "\n"))
 
 end
 

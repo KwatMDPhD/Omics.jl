@@ -12,7 +12,7 @@ function _sum_where_1(ve, wh_)
 
     end
 
-    return su
+    su
 
 end
 
@@ -30,7 +30,7 @@ function _sum_where_2(ve, wh_)
 
     end
 
-    return su
+    su
 
 end
 
@@ -38,11 +38,11 @@ function sum_where(ve, wh_)
 
     if length(ve) < 3000
 
-        return _sum_where_1(ve, wh_)
+        _sum_where_1(ve, wh_)
 
     else
 
-        return _sum_where_2(ve, wh_)
+        _sum_where_2(ve, wh_)
 
     end
 

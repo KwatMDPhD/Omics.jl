@@ -8,6 +8,6 @@ function clean(na; pr = true)
 
     end
 
-    return cl
+    cl
 
 end
