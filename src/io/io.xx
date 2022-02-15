@@ -1,0 +1,2 @@
+module io.xx
+include("/Users/kwat/craft/OnePiece.jl/src/io/io.xx/table/table.xx")
