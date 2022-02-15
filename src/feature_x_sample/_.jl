@@ -1,2 +1,7 @@
-using ..informatics.information: get_signal_to_noise_ratio
-using ..tensor_function: apply
+module feature_x_sample
+
+using ..OnePiece
+
+include("compare_with_target.jl")
+
+end

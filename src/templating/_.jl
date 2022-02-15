@@ -1,3 +1,15 @@
-using UUIDs: uuid4
+module templating
 
-using ..extension.string: replace as string_replace, transplant as string_transplant
+using UUIDs
+
+using ..OnePiece
+
+include("error_missing.jl")
+
+include("plan_replacement.jl")
+
+include("plan_transplant.jl")
+
+include("transplant.jl")
+
+end

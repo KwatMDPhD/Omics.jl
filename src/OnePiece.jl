@@ -1,23 +1,54 @@
 module OnePiece
 
-include("io/io.jl")
+# ----------------------------------------------------------------------------------------------- #
+include("constant/_.jl")
 
-include("extension/extension.jl")
+# ----------------------------------------------------------------------------------------------- #
+include("dict/_.jl")
 
-include("templating/templating.jl")
+include("vector/_.jl")
 
-include("informatics/informatics.jl")
+include("string/_.jl")
 
-include("emoji/emoji.jl")
+# ----------------------------------------------------------------------------------------------- #
+include("table/_.jl")
 
-include("figure/figure.jl")
+include("gct/_.jl")
 
-include("tensor_function/tensor_function.jl")
+include("gmt/_.jl")
 
-include("feature_x_sample/feature_x_sample.jl")
+include("pandas/_.jl")
 
-include("gene/gene.jl")
+# ----------------------------------------------------------------------------------------------- #
+include("path/_.jl")
 
-include("feature_set_enrichment/feature_set_enrichment.jl")
+include("templating/_.jl")
+
+# ----------------------------------------------------------------------------------------------- #
+include("tensor/_.jl")
+
+include("normalization/_.jl")
+
+include("geometry/_.jl")
+
+include("information/_.jl")
+
+include("statistics/_.jl")
+
+include("significance/_.jl")
+
+include("tensor_function/_.jl")
+
+# ----------------------------------------------------------------------------------------------- #
+include("figure/_.jl")
+
+include("dataframe/_.jl")
+
+include("feature_x_sample/_.jl")
+
+# ----------------------------------------------------------------------------------------------- #
+include("feature_set_enrichment/_.jl")
+
+include("gene/_.jl")
 
 end
