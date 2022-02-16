@@ -4,7 +4,7 @@ function error_extension(pa, ex)
 
     if exp != ex
 
-        error(exp, " is not ", ex)
+        error()
 
     end
 

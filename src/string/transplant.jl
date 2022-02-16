@@ -4,8 +4,14 @@ function transplant(st1, st2, de, id_)
 
     sp2_ = split(st2, de)
 
-    @assert length(sp1_) == length(sp2_)
+    if length(sp1_) == length(sp2_)
 
-    join([[sp1, sp2][id] for (sp1, sp2, id) in zip(sp1_, sp2_, id_)], de)
+        join(((sp1, sp2)[id] for (sp1, sp2, id) in zip(sp1_, sp2_, id_)), de)
+
+    else
+
+        error()
+
+    end
 
 end

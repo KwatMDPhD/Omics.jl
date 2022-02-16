@@ -119,7 +119,7 @@ function score_set(sc_fe_sa, se_fe_; we = 1.0, al = "ks", n_jo = 1)
 
         go_ = findall(!ismissing, sc_fe_sa[!, sa])
 
-        sc_, fe_ = sort_like([sc_fe_sa[go_, sa], fe_[go_]])
+        sc_, fe_ = sort_like(sc_fe_sa[go_, sa], fe_[go_])
 
         if in(al, ["ks", "auc"])
 

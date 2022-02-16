@@ -2,7 +2,7 @@ function normalize(ve, me)
 
     if isempty(ve)
 
-        error("vector is empty.")
+        error()
 
     end
 
@@ -20,7 +20,7 @@ function normalize(ve, me)
 
         if any(ve .< 0)
 
-            error("\"sum\" can not normalize vectors containing any negative number.")
+            error()
 
         end
 

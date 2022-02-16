@@ -12,7 +12,7 @@ function make_dataframe(da)
 
     else
 
-        error("dataframe does not have at least 2 columns.")
+        error()
 
     end
 

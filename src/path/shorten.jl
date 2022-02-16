@@ -12,7 +12,7 @@ function shorten(pa, di::AbstractString)
 
     if isnothing(id)
 
-        error(di, " is not part of ", pa)
+        error()
 
     end
 

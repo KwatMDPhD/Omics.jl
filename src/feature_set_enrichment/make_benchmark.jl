@@ -16,7 +16,7 @@ function make_benchmark(ho)
 
         if !all(fe1 in fe_ for fe1 in fe1_)
 
-            error("not all cards are in the cards.")
+            error()
 
         end
 

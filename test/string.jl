@@ -19,15 +19,11 @@ using OnePiece
 # ----------------------------------------------------------------------------------------------- #
 for st in ["aa", "DNA", "Hello world!", "SARS-COVID-2"]
 
-    println(OnePiece.string.title(st))
+    println("$st ==> $(OnePiece.string.title(st))")
 
 end
 
-OnePiece.string.replace(
-    "Sanji, Zoro, and Nami.",
-    ["Sanji" => "Usoppu", "Zoro" => "Chopper", "Nami" => "Robin"],
-)
-
+# ----------------------------------------------------------------------------------------------- #
 for st_ in [
     ["", "", ""],
     ["kate"],
@@ -38,12 +34,11 @@ for st_ in [
     ["abc", "ab", "a"],
 ]
 
-    println("-"^99)
-
     println(OnePiece.string.remove_longest_common_prefix(st_))
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
 st1 = "A--BB--CCC"
 
 st2 = "a--bb--ccc"

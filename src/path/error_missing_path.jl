@@ -16,7 +16,7 @@ function error_missing_path(ro, pa_)
 
     if !isempty(mi_)
 
-        error("missing ", mi_)
+        error(mi_)
 
     end
 

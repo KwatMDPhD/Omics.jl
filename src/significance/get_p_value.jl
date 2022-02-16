@@ -2,7 +2,7 @@ function get_p_value(fl, ra_, si)
 
     if isempty(ra_)
 
-        error("randoms are empty and cannot be used to compute significance.")
+        error("there is not enough random values ($(length(ra_)) to compute significance.")
 
     end
 
@@ -16,7 +16,7 @@ function get_p_value(fl, ra_, si)
 
     else
 
-        error("side is invalid.")
+        error()
 
     end
 
