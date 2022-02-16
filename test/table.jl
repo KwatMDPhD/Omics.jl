@@ -19,16 +19,16 @@ using OnePiece
 # ----------------------------------------------------------------------------------------------- #
 da = joinpath(@__DIR__, "table.data")
 
-;
-
 OnePiece.io.table.read(joinpath(da, "titanic.tsv"))
 
 OnePiece.io.table.read(joinpath(da, "enst_gene.tsv.gz"))
 
-OnePiece.io.table.read(joinpath(da, "12859_2019_2886_MOESM2_ESM.xlsx"); xl = "HumanSpecific Genes")
+OnePiece.io.table.read(joinpath(da, "12859_2019_2886_MOESM2_ESM.xlsx"), xl = "HumanSpecific Genes")
 
+# ----------------------------------------------------------------------------------------------- #
 using DataFrames
 
+# ----------------------------------------------------------------------------------------------- #
 co1 = 1:4
 
 co2 = 1.0:4
@@ -40,9 +40,7 @@ da = DataFrame(
     "Column 4" => string.(co2),
 )
 
-ts = joinpath(tempdir(), "write.csv")
-
-;
+ts = joinpath(TE, "write.csv")
 
 try
 
@@ -50,7 +48,7 @@ try
 
 catch er
 
-    er
+    println(er)
 
 end
 

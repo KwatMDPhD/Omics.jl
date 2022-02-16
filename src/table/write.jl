@@ -1,7 +1,5 @@
 function write(pa, ta)
 
-    CSV_write(pa, ta, delim = "\t")
-
-    return
+    CSV.write(pa, ta, delim = "\t")
 
 end

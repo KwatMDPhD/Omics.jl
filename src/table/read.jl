@@ -22,7 +22,7 @@ function read(pa; xl = "", ke_ar...)
 
         end
 
-        CSV_read(it_, DataFrame; ke_ar...)
+        CSV.read(it_, DataFrame; ke_ar...)
 
     end
 
