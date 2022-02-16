@@ -17,10 +17,10 @@ println("Made $TE.")
 using OnePiece
 
 # ----------------------------------------------------------------------------------------------- #
-using DataFrames
+println(OnePiece.dataframe.simulate(3, 3))
 
 # ----------------------------------------------------------------------------------------------- #
-println(OnePiece.dataframe.simulate(3, 3))
+using DataFrames
 
 # ----------------------------------------------------------------------------------------------- #
 OnePiece.dataframe.view(DataFrame())

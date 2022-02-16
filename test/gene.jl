@@ -19,34 +19,36 @@ using OnePiece
 # ----------------------------------------------------------------------------------------------- #
 hg = OnePiece.gene.read_hgnc()
 
-size(hg)
+OnePiece.dataframe.view(hg)
 
+# ----------------------------------------------------------------------------------------------- #
 en = OnePiece.gene.read_ensembl()
 
-size(en)
+OnePiece.dataframe.view(en)
 
-en = OnePiece.gene.read_ensembl(; or = "mouse")
+OnePiece.dataframe.view(OnePiece.gene.read_ensembl(or = "mouse"))
 
-size(en)
+# ----------------------------------------------------------------------------------------------- #
+OnePiece.dict.view(OnePiece.gene.map_to_hgnc_gene(), n_pa = 3)
 
-st_hg = OnePiece.gene.map_to_hgnc_gene()
+# ----------------------------------------------------------------------------------------------- #
+OnePiece.dict.view(OnePiece.gene.map_to_ensembl_gene(), n_pa = 3)
 
-st_en = OnePiece.gene.map_to_ensembl_gene()
+# ----------------------------------------------------------------------------------------------- #
+OnePiece.dict.view(OnePiece.gene.map_with_mouse(), n_pa = 3)
 
-OnePiece.gene.map_with_mouse()
+OnePiece.dict.view(OnePiece.gene.map_with_mouse(ho = "human_to_mouse"), n_pa = 3)
 
-OnePiece.gene.map_with_mouse(; ho = "human_to_mouse")
-
+# ----------------------------------------------------------------------------------------------- #
 hg_ = string.(hg[!, "symbol"])
-
-;
 
 na_, ma_ = OnePiece.gene.rename(hg_)
 
 ge_ = unique(skipmissing(en[!, "Gene name"]))
 
-na_, ma_ = OnePiece.gene.rename(ge_; mo = false, en = false)
+na_, ma_ = OnePiece.gene.rename(ge_, mo = false, en = false)
 
+# ----------------------------------------------------------------------------------------------- #
 hg_gr = OnePiece.dataframe.map_to_column(coalesce.(hg, "?"), ["symbol", "gene_group"])
 
 println(join(unique([hg_gr[na] for na in na_[ma_ .== 1]]), "\n"))

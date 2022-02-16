@@ -4,17 +4,17 @@ function map_to_column(da, co_; de = "|")
 
     ta = co_[n_co]
 
-    da2 = dropmissing(da, ta)
+    dad = dropmissing(da, ta)
 
     ke_va = Dict()
 
-    for va in da2[!, ta]
+    for va in dad[!, ta]
 
         ke_va[va] = va
 
     end
 
-    for ro in eachrow(da2[!, co_])
+    for ro in eachrow(dad[!, co_])
 
         va = ro[n_co]
 

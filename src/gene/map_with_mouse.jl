@@ -18,7 +18,7 @@ function map_with_mouse(; ho = "mouse_to_human")
 
     end
 
-    or = read(joinpath(@__DIR__, string("ensembl.", ho, ".tsv.gz")))
+    or = OnePiece.table.read(joinpath(@__DIR__, "ensembl.$ho.tsv.gz"))
 
     dropmissing!(or, [ke, va])
 
@@ -26,7 +26,7 @@ function map_with_mouse(; ho = "mouse_to_human")
 
     ke_va = Dict(ro[ke] => ro[va] for ro in eachrow(or))
 
-    summarize(ke_va)
+    OnePiece.dict.summarize(ke_va)
 
     ke_va
 
