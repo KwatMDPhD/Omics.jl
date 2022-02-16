@@ -23,7 +23,7 @@ try
 
 catch er
 
-    er
+    println(er)
 
 end
 
@@ -33,19 +33,15 @@ try
 
 catch er
 
-    er
+    println(er)
 
 end
 
 for ve in [[0], [1], [0, 0, 0], [1, 1, 1], [0, 1, 2]]
 
-    println("="^99)
-
     println(ve)
 
     for me in ["0-1", "sum", "-0-"]
-
-        println("-"^99)
 
         println(me)
 
@@ -57,15 +53,9 @@ end
 
 for ve in [[0], [-1, 0, 0, 1, 1, 1, 2]]
 
-    println("="^99)
-
     println(ve)
 
-    println()
-
     for me in ["1223", "1224", "1 2.5 2.5 4", "1234"]
-
-        println("-"^99)
 
         println(me)
 
@@ -75,13 +65,14 @@ for ve in [[0], [-1, 0, 0, 1, 1, 1, 2]]
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
 ve = [NaN, -2, 0, NaN, 2, NaN]
 
-println(hash(ve))
+println(ve)
 
-OnePiece.normalization.normalize!(ve, "0-1")
+println(OnePiece.normalization.normalize!(ve, "0-1"))
 
-println(hash(ve))
+println(ve)
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
