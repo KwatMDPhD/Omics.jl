@@ -1,5 +1,5 @@
-function get_area(ve)
+function get_area(te)
 
-    sum(ve) / length(ve)
+    sum(te) / length(te)
 
 end

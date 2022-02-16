@@ -1,18 +1,18 @@
-function _process(an, ve)
+function _process(an, te)
 
-    an, ve
-
-end
-
-function _process(bi_::AbstractVector{Bool}, ve)
-
-    ve[.!bi_], ve[bi_]
+    an, te
 
 end
 
-function apply(an, ve, fu)
+function _process(bi_::AbstractVector{Bool}, te)
 
-    fu(_process(an, ve)...)
+    te[.!bi_], te[bi_]
+
+end
+
+function apply(an, te, fu)
+
+    fu(_process(an, te)...)
 
 end
 

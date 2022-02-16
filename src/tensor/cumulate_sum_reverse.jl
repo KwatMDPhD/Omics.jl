@@ -1,5 +1,5 @@
-function cumulate_sum_reverse(ve)
+function cumulate_sum_reverse(te)
 
-    reverse(cumsum(Iterators.reverse(ve)))
+    reverse(cumsum(Iterators.reverse(te)))
 
 end

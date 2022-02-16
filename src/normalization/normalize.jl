@@ -1,6 +1,6 @@
-function normalize(ve, me)
+function normalize(te, me)
 
-    if isempty(ve)
+    if isempty(te)
 
         error()
 
@@ -8,39 +8,39 @@ function normalize(ve, me)
 
     if me == "0-1"
 
-        mi = minimum(ve)
+        mi = minimum(te)
 
-        (ve .- mi) / (maximum(ve) - mi)
+        (te .- mi) / (maximum(te) - mi)
 
     elseif me == "-0-"
 
-        (ve .- mean(ve)) / std(ve)
+        (te .- mean(te)) / std(te)
 
     elseif me == "sum"
 
-        if any(ve .< 0)
+        if any(te .< 0)
 
             error()
 
         end
 
-        ve / sum(ve)
+        te / sum(te)
 
     elseif me == "1223"
 
-        denserank(ve)
+        denserank(te)
 
     elseif me == "1224"
 
-        competerank(ve)
+        competerank(te)
 
     elseif me == "1 2.5 2.5 4"
 
-        tiedrank(ve)
+        tiedrank(te)
 
     elseif me == "1234"
 
-        ordinalrank(ve)
+        ordinalrank(te)
 
     end
 

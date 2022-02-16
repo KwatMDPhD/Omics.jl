@@ -1,5 +1,5 @@
-function get_entropy(ve)
+function get_entropy(te)
 
-    ve
+    te
 
 end

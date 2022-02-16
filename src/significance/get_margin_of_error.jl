@@ -1,5 +1,5 @@
-function get_margin_of_error(ve; co = 0.95)
+function get_margin_of_error(te; co = 0.95)
 
-    get_confidence_interval(co)[2] * std(ve) / sqrt(length(ve))
+    OnePiece.statistics.get_confidence_interval(co)[2] * std(te) / sqrt(length(te))
 
 end

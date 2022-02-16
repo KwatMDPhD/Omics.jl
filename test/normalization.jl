@@ -37,42 +37,42 @@ catch er
 
 end
 
-for ve in [[0], [1], [0, 0, 0], [1, 1, 1], [0, 1, 2]]
+for te in [[0], [1], [0, 0, 0], [1, 1, 1], [0, 1, 2]]
 
-    println(ve)
+    println(te)
 
     for me in ["0-1", "sum", "-0-"]
 
         println(me)
 
-        println(OnePiece.normalization.normalize(ve, me))
+        println(OnePiece.normalization.normalize(te, me))
 
     end
 
 end
 
-for ve in [[0], [-1, 0, 0, 1, 1, 1, 2]]
+for te in [[0], [-1, 0, 0, 1, 1, 1, 2]]
 
-    println(ve)
+    println(te)
 
     for me in ["1223", "1224", "1 2.5 2.5 4", "1234"]
 
         println(me)
 
-        println(OnePiece.normalization.normalize(ve, me))
+        println(OnePiece.normalization.normalize(te, me))
 
     end
 
 end
 
 # ----------------------------------------------------------------------------------------------- #
-ve = [NaN, -2, 0, NaN, 2, NaN]
+te = [NaN, -2, 0, NaN, 2, NaN]
 
-println(ve)
+println(te)
 
-println(OnePiece.normalization.normalize!(ve, "0-1"))
+println(OnePiece.normalization.normalize!(te, "0-1"))
 
-println(ve)
+println(te)
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)

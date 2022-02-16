@@ -13,24 +13,33 @@ mkdir(TE)
 
 println("Made $TE.")
 
-
 # ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
 # ----------------------------------------------------------------------------------------------- #
-OnePiece.information.get_entropy
+OnePiece.information.get_entropy(zeros(10))
 
-ve1 = collect(1:3)
+OnePiece.information.get_entropy(ones(10))
 
-ve2 = collect(10:10:30)
+# ----------------------------------------------------------------------------------------------- #
+for (te1, te2) in [
+    (collect(1:3), collect(10:10:30)),
+    (zeros(3), zeros(3)),
+    (ones(3), [0.001, 0.001, 0.001]),
+    ([0.001, 0.001, 0.001], ones(3)),
+    ([0.001, 0.001, 0.001], [10, 10, 10]),
+]
 
-OnePiece.information.get_signal_to_noise_ratio(ve1, ve2)
+    println(OnePiece.information.get_signal_to_noise_ratio(te1, te2))
 
-function call_all(ve1, ve2, ve)
+end
+
+# ----------------------------------------------------------------------------------------------- #
+function call_all(te1, te2, te)
 
     vcat(
         [
-            fu(ve1, ve2) for fu in [
+            fu(te1, te2) for fu in [
                 OnePiece.information.get_kolmogorov_smirnov_statistic,
                 OnePiece.information.get_kullback_leibler_divergence,
                 OnePiece.information.get_thermodynamic_breadth,
@@ -38,7 +47,7 @@ function call_all(ve1, ve2, ve)
             ]
         ],
         [
-            fu(ve1, ve2, ve) for fu in [
+            fu(te1, te2, te) for fu in [
                 OnePiece.information.get_jensen_shannon_divergence,
                 OnePiece.information.get_kwat_pablo_divergence,
             ]
@@ -47,6 +56,7 @@ function call_all(ve1, ve2, ve)
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
 name_ = [
     "kolmogorov_smirnov_statistic",
     "kullback_leibler_divergence",
@@ -56,33 +66,34 @@ name_ = [
     "kwat_pablo_divergence",
 ]
 
-for (ve1, ve2) in [([1, 1, 1], [1, 1, 1]), ([1, 2, 3], [10, 20, 30])]
+for (te1, te2) in [([1, 1, 1], [1, 1, 1]), ([1, 2, 3], [10, 20, 30])]
 
-    ve = 0.2 * ve1 + 0.8 * ve2
+    te = 0.2 * te1 + 0.8 * te2
 
-    OnePiece.figure.plot_x_y([ve1, ve2])
+    display(OnePiece.figure.plot_x_y([te1, te2]))
 
-    OnePiece.figure.plot_x_y(call_all(ve1, ve2, ve); name_ = name_)
+    display(OnePiece.figure.plot_x_y(call_all(te1, te2, te); name_ = name_))
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
 n_po = 100
 
-ve1 = OnePiece.tensor.shift_minimum(randn(n_po), "0<")
+te1 = OnePiece.tensor.shift_minimum(randn(n_po), "0<")
 
-ve1s = ve1 .+ 1
+ve1s = te1 .+ 1
 
-ve2 = OnePiece.tensor.shift_minimum(randn(n_po), "0<")
+te2 = OnePiece.tensor.shift_minimum(randn(n_po), "0<")
 
-;
-
+# ----------------------------------------------------------------------------------------------- #
 using KernelDensity
 
-for (ve1, ve2) in [(ve1, ve1), (ve1, ve1s), (ve1, ve2)]
+# ----------------------------------------------------------------------------------------------- #
+for (te1, te2) in [(te1, te1), (te1, ve1s), (te1, te2)]
 
-    un1 = kde(ve1)
+    un1 = kde(te1)
 
-    un2 = kde(ve2)
+    un2 = kde(te2)
 
     de1 = un1.density
 
@@ -102,13 +113,12 @@ for (ve1, ve2) in [(ve1, ve1), (ve1, ve1s), (ve1, ve2)]
 
 end
 
-ve1 = collect(0:10)
+# ----------------------------------------------------------------------------------------------- #
+te1 = collect(0:10)
 
-ve2 = collect(0:10:100)
+te2 = collect(0:10:100)
 
-;
-
-bi = kde((ve1, ve2); npoints = (8, 8))
+bi = kde((te1, te2), npoints = (8, 8))
 
 y = collect(bi.y)
 
@@ -116,7 +126,7 @@ x = collect(bi.x)
 
 z = bi.density
 
-display(OnePiece.figure.plot_heat_map(z))
+display(OnePiece.figure.plot_heat_map(z, y, x))
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)

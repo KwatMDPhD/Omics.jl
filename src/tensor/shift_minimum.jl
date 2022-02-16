@@ -1,11 +1,11 @@
-function shift_minimum(ve, mi)
+function shift_minimum(te, mi)
 
     if isa(mi, String) && endswith(mi, "<")
 
-        mi = minimum(ve[parse(Float64, split(mi, "<")[1]) .< ve])
+        mi = minimum(te[parse(Float64, split(mi, "<")[1]) .< te])
 
     end
 
-    ve .+ (mi - minimum(ve))
+    te .+ (mi - minimum(te))
 
 end

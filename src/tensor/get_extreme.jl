@@ -1,8 +1,8 @@
-function get_extreme(ve)
+function get_extreme(te)
 
-    mi = minimum(ve)
+    mi = minimum(te)
 
-    ma = maximum(ve)
+    ma = maximum(te)
 
     mia = abs(mi)
 

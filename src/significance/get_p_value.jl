@@ -1,18 +1,18 @@
-function get_p_value(fl, ra_, si)
+function get_p_value(nu, ra_, si)
 
     if isempty(ra_)
 
-        error("there is not enough random values ($(length(ra_)) to compute significance.")
+        error("there is not enough randoms ($(length(ra_)) to compute significance.")
 
     end
 
     if si == -1.0
 
-        si_ = ra_ .<= fl
+        si_ = ra_ .<= nu
 
     elseif si == 1.0
 
-        si_ = fl .<= ra_
+        si_ = nu .<= ra_
 
     else
 

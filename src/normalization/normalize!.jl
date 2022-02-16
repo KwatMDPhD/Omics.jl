@@ -1,10 +1,10 @@
-function normalize!(ve, me)
+function normalize!(te, me)
 
-    go_ = .!isnan.(ve)
+    go_ = .!isnan.(te)
 
     if any(go_)
 
-        ve[go_] .= normalize(ve[go_], me)
+        te[go_] .= normalize(te[go_], me)
 
     end
 

@@ -27,15 +27,15 @@ n_on = n_co - n_ze
 
 bi_ = convert(BitVector, [zeros(n_ze); ones(n_on)])
 
-ve = [10^(id - 1) for id in 1:n_co]
+te = [10^(id - 1) for id in 1:n_co]
 
 ma = convert(Matrix, reshape(1:(n_ro * n_co), (n_ro, n_co)))
 
-OnePiece.tensor_function.apply(ve, ve, .-)
+OnePiece.tensor_function.apply(te, te, .-)
 
-OnePiece.tensor_function.apply(bi_, ve, .-)
+OnePiece.tensor_function.apply(bi_, te, .-)
 
-OnePiece.tensor_function.apply(ve, ma, .*)
+OnePiece.tensor_function.apply(te, ma, .*)
 
 OnePiece.tensor_function.apply(bi_, ma, .+)
 
