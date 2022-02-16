@@ -64,16 +64,16 @@ di = homedir()
 
 OnePiece.path.select(di)
 
-OnePiece.path.select(di; ig_ = [], ke_ = [r"^\."], jo = false)
+OnePiece.path.select(di, ig_ = [], ke_ = [r"^\."], jo = false)
 
 # ----------------------------------------------------------------------------------------------- #
 go = "test/path.jl"
 
-OnePiece.path.error_missing_path(dirname(@__DIR__), [go])
+OnePiece.path.error_missing(dirname(@__DIR__), [go])
 
 try
 
-    OnePiece.path.error_missing_path(dirname(@__DIR__), [go, "missing/file", "missing/directory/"])
+    OnePiece.path.error_missing(dirname(@__DIR__), [go, "missing/file", "missing/directory/"])
 
 catch er
 
@@ -133,7 +133,7 @@ catch er
 end
 
 # ----------------------------------------------------------------------------------------------- #
-println(OnePiece.path.move(di2, di3; fo = true))
+println(OnePiece.path.move(di2, di3, force = true))
 
 run(`tree $te`)
 

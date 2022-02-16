@@ -1,6 +1,12 @@
-function shorten(pa, n_ba::Real)
+function shorten(sp_::AbstractVector, n_ba)
 
-    joinpath(splitpath(pa)[(end - n_ba):end]...)
+    joinpath(sp_[(end - n_ba):end]...)
+
+end
+
+function shorten(pa, n_ba)
+
+    shorten(splitpath(pa), n_ba)
 
 end
 
@@ -8,14 +14,14 @@ function shorten(pa, di::AbstractString)
 
     sp_ = splitpath(pa)
 
-    id = findfirst(sp_ .== basename(di))
+    n_sk = findlast(sp_ .== basename(di))
 
-    if isnothing(id)
+    if isnothing(n_sk)
 
         error()
 
     end
 
-    shorten(pa, length(sp_) - id)
+    shorten(sp_, length(sp_) - n_sk)
 
 end

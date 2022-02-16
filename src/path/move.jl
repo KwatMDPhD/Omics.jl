@@ -1,13 +1,13 @@
-function move(pa1, pa2; n_ba = 0, fo = false)
+function move(pa1, pa2; n_ba = 0, ke_ar...)
 
     sp1_ = splitpath(pa1)
 
     sp2_ = splitpath(pa2)
 
-    n_sk = length(OnePiece.vector.get_longest_common_prefix([sp1_, sp2_])) - n_ba
+    n_sk = length(OnePiece.vector.get_longest_common_prefix(sp1_, sp2_)) - n_ba
 
-    println(joinpath(sp1_[n_sk:end]...), " ==> ", joinpath(sp2_[n_sk:end]...))
+    println("$(shorten(sp1_, length(sp1_) - n_sk)) ==> $(shorten(sp2_, length(sp2_) - n_sk))")
 
-    mv(pa1, pa2, force = fo)
+    mv(pa1, pa2; ke_ar...)
 
 end

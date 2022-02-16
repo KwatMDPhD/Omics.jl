@@ -1,8 +1,6 @@
 function error_extension(pa, ex)
 
-    exp = splitext(pa)[2]
-
-    if exp != ex
+    if splitext(pa)[2] != ex
 
         error()
 

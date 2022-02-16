@@ -26,11 +26,11 @@ for ve_ in [
     [[1, 2, 3], [1, 4, 5]],
 ]
 
-    println(OnePiece.vector.get_longest_common_prefix(ve_))
+    println(OnePiece.vector.get_longest_common_prefix(ve_...))
 
 end
 
-println(OnePiece.vector.get_longest_common_prefix(["abc", "abcd", "a"]))
+println(OnePiece.vector.get_longest_common_prefix("abc", "abcd", "a"))
 
 # ----------------------------------------------------------------------------------------------- #
 ca_ = collect("A23456789XJQK")

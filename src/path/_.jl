@@ -6,7 +6,7 @@ include("clean.jl")
 
 include("error_extension.jl")
 
-include("error_missing_path.jl")
+include("error_missing.jl")
 
 include("make_absolute.jl")
 

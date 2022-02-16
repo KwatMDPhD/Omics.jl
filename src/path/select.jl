@@ -6,8 +6,7 @@ function select(di; ig_ = [r"^\."], ke_ = [], jo = true)
 
         na = basename(pa)
 
-        if !any(occursin(ig, na) for ig in ig_) &&
-           (0 == length(ke_) || any(occursin(ke, na) for ke in ke_))
+        if !any(occursin.(ig_, na)) && (isempty(ke_) || any(occursin.(ke_, na)))
 
             push!(pa_, pa)
 
