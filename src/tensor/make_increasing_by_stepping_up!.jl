@@ -1,9 +1,7 @@
-function make_increasing_by_stepping_up!(ic_)
+function make_increasing_by_stepping_up!(in_)
 
-    accumulate!(min, ic_, reverse!(ic_))
+    accumulate!(min, in_, reverse!(in_))
 
-    reverse!(ic_)
-
-    ic_
+    reverse!(in_)
 
 end

@@ -19,21 +19,18 @@ using OnePiece
 # ----------------------------------------------------------------------------------------------- #
 ve = [-1, 0, 0, 1, 2]
 
-;
+# ----------------------------------------------------------------------------------------------- #
+println(OnePiece.tensor.get_extreme(ve))
 
-OnePiece.tensor.get_extreme(ve)
+println(OnePiece.tensor.get_extreme([-maximum(ve), ve...]))
 
-OnePiece.tensor.get_extreme([-maximum(ve), ve...])
+# ----------------------------------------------------------------------------------------------- #
+println(OnePiece.tensor.get_area([-1, 0, 1, 2]))
 
-OnePiece.tensor.get_area([-1, 0, 1, 2])
+println(OnePiece.tensor.get_area([-2, -1, 0, 0, 1, 2]))
 
-OnePiece.tensor.get_area([-2, -1, 0, 0, 1, 2])
-
-OnePiece.tensor.sum_where([0, 1, 2, 3], [0, 1, 0, 1])
-
+# ----------------------------------------------------------------------------------------------- #
 ve = collect(-3:3)
-
-;
 
 for nu in ve
 
@@ -41,10 +38,12 @@ for nu in ve
 
 end
 
-OnePiece.tensor.shift_minimum(ve, "0<")
+println(OnePiece.tensor.shift_minimum(ve, "0<"))
 
-OnePiece.tensor.cumulate_sum_reverse(1:10)
+# ----------------------------------------------------------------------------------------------- #
+println(OnePiece.tensor.cumulate_sum_reverse(1:10))
 
+# ----------------------------------------------------------------------------------------------- #
 for ic_ in [[0, 1, 2], [0, 1, 2, 0], [0, 1, 2, 2, 1, 0, 1, 2, 3]]
 
     println("-"^99)
