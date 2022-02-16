@@ -10,12 +10,12 @@ function transplant(pa1, pa2, de, id_; re_ = [])
 
     else
 
-        st = string_transplant(st1, st2, de, id_)
+        st = OnePiece.string.transplant(st1, st2, de, id_)
 
     end
 
     println("Transplanting ", pa2)
 
-    write(pa2, string_replace(st, re_))
+    write(pa2, replace(st, re_...))
 
 end

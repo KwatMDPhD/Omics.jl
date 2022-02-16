@@ -1,6 +1,6 @@
 function select(di; ig_ = [r"^\."], ke_ = [], jo = true)
 
-    pa_ = Vector{AbstractString}()
+    pa_ = []
 
     for pa in readdir(di, join = jo)
 

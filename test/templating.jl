@@ -19,48 +19,48 @@ using OnePiece
 # ----------------------------------------------------------------------------------------------- #
 di = dirname(@__DIR__)
 
-dit = joinpath(homedir(), "craft", "PkgRepository.jl", "TEMPLATE.jl")
+te = joinpath(homedir(), "craft", "PkgRepository.jl", "TEMPLATE.jl")
 
 try
 
-    OnePiece.templating.error_missing(dit, di)
+    OnePiece.templating.error_missing(te, di)
 
 catch er
 
-    er
+    println(er)
 
 end
 
-OnePiece.templating.error_missing(dit, di; re_ = ["TEMPLATE.jl" => "OnePiece.jl"])
+OnePiece.templating.error_missing(te, di, re_ = ["TEMPLATE.jl" => "OnePiece.jl"])
 
-dit = joinpath(homedir(), "craft", "PkgRepository.jl")
+te = joinpath(homedir(), "craft", "PkgRepository.jl")
 
 try
 
-    OnePiece.templating.error_missing(dit, di)
+    OnePiece.templating.error_missing(te, di, ig_ = [r"\.git"])
 
 catch er
 
-    er
+    println(er)
 
 end
 
 OnePiece.templating.error_missing(
-    dit,
-    di;
-    ig_ = [r"\.ipynb_checkpoints", r"\.git", r"src", r"TEMPLATE.jl", r"Comonicon.toml", r"deps"],
+    te,
+    di,
+    ig_ = [r"\.git", r"src", r"TEMPLATE.jl", r"Comonicon.toml", r"deps"],
 )
 
+# ----------------------------------------------------------------------------------------------- #
 OnePiece.templating.plan_transplant()
 
 OnePiece.templating.plan_replacement("Big Mom")
 
-te = tempdir()
-
-fit = joinpath(te, "fit")
+# ----------------------------------------------------------------------------------------------- #
+te = joinpath(TE, "template_file")
 
 write(
-    fit,
+    te,
     "# TEMPLATE
 --
 GIT_USER_NAME
@@ -72,9 +72,9 @@ GIT_USER_EMAIL
 ODA IS GENIUS.",
 )
 
-println(read(fit, String))
+println(read(te, String))
 
-fi = joinpath(te, "fi")
+fi = joinpath(TE, "file")
 
 write(
     fi,
@@ -90,7 +90,7 @@ GOOD STUFF
 println(read(fi, String))
 
 OnePiece.templating.transplant(
-    fit,
+    te,
     fi,
     "--",
     [1, 1, 2, 1],
@@ -98,14 +98,6 @@ OnePiece.templating.transplant(
 )
 
 println(read(fi, String))
-
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed ", TE, ".")
-
-end
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
