@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------------------------- #
-TE = joinpath(tempdir(), "OnePiece.test")
+TE = joinpath(tempdir(), "gene.test")
 
 if isdir(TE)
 

@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------------------------- #
-TE = joinpath(tempdir(), "dataframe.test")
+TE = joinpath(tempdir(), "path.test")
 
 if isdir(TE)
 
