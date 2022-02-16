@@ -1,19 +1,22 @@
+# ----------------------------------------------------------------------------------------------- #
 TE = joinpath(tempdir(), "OnePiece.test")
 
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end
 
 mkdir(TE)
 
-println("Made ", TE, ".")
+println("Made $TE.")
 
+# ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
+# ----------------------------------------------------------------------------------------------- #
 di = dirname(@__DIR__)
 
 dit = joinpath(homedir(), "craft", "PkgRepository.jl", "TEMPLATE.jl")
@@ -101,5 +104,14 @@ if isdir(TE)
     rm(TE, recursive = true)
 
     println("Removed ", TE, ".")
+
+end
+
+# ----------------------------------------------------------------------------------------------- #
+if isdir(TE)
+
+    rm(TE, recursive = true)
+
+    println("Removed $TE.")
 
 end

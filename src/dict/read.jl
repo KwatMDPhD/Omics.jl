@@ -4,16 +4,16 @@ function read(pa)
 
     if ex in [".json", ".ipynb"]
 
-        parse(open(pa))
+        JSON.parse(open(pa))
 
     elseif ex == ".toml"
 
-        parsefile(pa)
+        TOML.parsefile(pa)
 
 
     else
 
-        error("extension is not .json, .ipynb, or .toml.")
+        error()
 
     end
 

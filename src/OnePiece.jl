@@ -17,7 +17,7 @@ include("gct/_.jl")
 
 include("gmt/_.jl")
 
-include("pandas/_.jl")
+#include("pandas/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
 include("path/_.jl")

@@ -1,19 +1,22 @@
+# ----------------------------------------------------------------------------------------------- #
 TE = joinpath(tempdir(), "OnePiece.test")
 
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end
 
 mkdir(TE)
 
-println("Made ", TE, ".")
+println("Made $TE.")
 
+# ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
+# ----------------------------------------------------------------------------------------------- #
 OnePiece.feature_set_enrichment.get_probability_and_cumulate([1, 4])
 
 OnePiece.feature_set_enrichment.sum_1_absolute_and_0_count(
@@ -62,7 +65,7 @@ using DataFrames
 
 fe_, sc_, fe1_ = OnePiece.feature_set_enrichment.make_benchmark("myc")
 
-in_ = OnePiece.extension.vector.is_in(fe_, fe1_)
+in_ = OnePiece.vector.is_in(fe_, fe1_)
 
 sc_fe_sa = DataFrame(
     "Feature" => fe_,
@@ -91,10 +94,11 @@ OnePiece.feature_set_enrichment.score_set_new(fe_, sc_, se_fe_)
 
 OnePiece.feature_set_enrichment.try_method(fe_, sc_, fe1_, plp = false)
 
+# ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end

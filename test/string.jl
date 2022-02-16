@@ -1,26 +1,29 @@
+# ----------------------------------------------------------------------------------------------- #
 TE = joinpath(tempdir(), "OnePiece.test")
 
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end
 
 mkdir(TE)
 
-println("Made ", TE, ".")
+println("Made $TE.")
 
+# ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
+# ----------------------------------------------------------------------------------------------- #
 for st in ["aa", "DNA", "Hello world!", "SARS-COVID-2"]
 
-    println(OnePiece.extension.string.title(st))
+    println(OnePiece.string.title(st))
 
 end
 
-OnePiece.extension.string.replace(
+OnePiece.string.replace(
     "Sanji, Zoro, and Nami.",
     ["Sanji" => "Usoppu", "Zoro" => "Chopper", "Nami" => "Robin"],
 )
@@ -37,7 +40,7 @@ for st_ in [
 
     println("-"^99)
 
-    println(OnePiece.extension.string.remove_longest_common_prefix(st_))
+    println(OnePiece.string.remove_longest_common_prefix(st_))
 
 end
 
@@ -47,12 +50,13 @@ st2 = "a--bb--ccc"
 
 de = "--"
 
-OnePiece.extension.string.transplant(st1, st2, de, [1, 2, 1])
+OnePiece.string.transplant(st1, st2, de, [1, 2, 1])
 
+# ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end

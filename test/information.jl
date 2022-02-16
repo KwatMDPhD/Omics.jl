@@ -1,19 +1,23 @@
+# ----------------------------------------------------------------------------------------------- #
 TE = joinpath(tempdir(), "OnePiece.test")
 
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end
 
 mkdir(TE)
 
-println("Made ", TE, ".")
+println("Made $TE.")
 
+
+# ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
+# ----------------------------------------------------------------------------------------------- #
 OnePiece.informatics.information.get_entropy
 
 ve1 = collect(1:3)
@@ -114,10 +118,11 @@ z = bi.density
 
 display(OnePiece.figure.plot_heat_map(z))
 
+# ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end

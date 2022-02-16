@@ -1,3 +1,22 @@
+# ----------------------------------------------------------------------------------------------- #
+TE = joinpath(tempdir(), "OnePiece.test")
+
+if isdir(TE)
+
+    rm(TE, recursive = true)
+
+    println("Removed $TE.")
+
+end
+
+mkdir(TE)
+
+println("Made $TE.")
+
+# ----------------------------------------------------------------------------------------------- #
+using OnePiece
+
+# ----------------------------------------------------------------------------------------------- #
 n_ro = 3
 
 da = DataFrame("Index" => [string("Index ", id) for id in 1:n_ro])
@@ -70,3 +89,12 @@ da[!, "Column 3"] = string.(da[!, "Column 1"])
 da
 
 OnePiece.io.pandas.make_series(da[1, :])
+
+# ----------------------------------------------------------------------------------------------- #
+if isdir(TE)
+
+    rm(TE, recursive = true)
+
+    println("Removed $TE.")
+
+end

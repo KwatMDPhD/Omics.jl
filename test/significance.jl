@@ -1,19 +1,22 @@
+# ----------------------------------------------------------------------------------------------- #
 TE = joinpath(tempdir(), "OnePiece.test")
 
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end
 
 mkdir(TE)
 
-println("Made ", TE, ".")
+println("Made $TE.")
 
+# ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
+# ----------------------------------------------------------------------------------------------- #
 ra_ = collect(1:10)
 
 for va in [1, 2, 9, 10]
@@ -94,10 +97,11 @@ for po in 0:8
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end

@@ -1,8 +1,8 @@
-function write(pa, di; id = 3)
+function write(pa, di; id = IN)
 
     open(pa, "w") do io
 
-        print(io, di, id)
+        JSON.print(io, di, id)
 
     end
 

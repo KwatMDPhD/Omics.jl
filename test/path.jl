@@ -1,19 +1,22 @@
-TE = joinpath(tempdir(), "OnePiece.test")
+# ----------------------------------------------------------------------------------------------- #
+TE = joinpath(tempdir(), "dataframe.test")
 
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end
 
 mkdir(TE)
 
-println("Made ", TE, ".")
+println("Made $TE.")
 
+# ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
+# ----------------------------------------------------------------------------------------------- #
 pa = pwd()
 
 try
@@ -165,10 +168,11 @@ println(readline(open(fi1)))
 
 println(readline(open(fi2)))
 
+# ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end

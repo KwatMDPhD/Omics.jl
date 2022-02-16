@@ -1,27 +1,32 @@
-TE = joinpath(tempdir(), "OnePiece.test")
+# ----------------------------------------------------------------------------------------------- #
+TE = joinpath(tempdir(), "constant.test")
 
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end
 
 mkdir(TE)
 
-println("Made ", TE, ".")
+println("Made $TE.")
 
+# ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
-OnePiece.extension.constant.ALPHABET
+# ----------------------------------------------------------------------------------------------- #
+println(OnePiece.constant.ALPHABET)
 
-OnePiece.extension.constant.CARD
+# ----------------------------------------------------------------------------------------------- #
+println(OnePiece.constant.CARD)
 
+# ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end

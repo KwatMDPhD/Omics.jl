@@ -1,21 +1,25 @@
+# ----------------------------------------------------------------------------------------------- #
 TE = joinpath(tempdir(), "OnePiece.test")
 
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end
 
 mkdir(TE)
 
-println("Made ", TE, ".")
+println("Made $TE.")
 
+# ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
+# ----------------------------------------------------------------------------------------------- #
 using BenchmarkTools
 
+# ----------------------------------------------------------------------------------------------- #
 ve = [-2.0, -1, 0, 1, 2]
 
 in_ = convert(Vector{Bool}, [1, 1, 0, 0, 1])
@@ -26,7 +30,7 @@ using DataFrames
 
 fe_, sc_, fe1_ = OnePiece.feature_set_enrichment.make_benchmark("myc")
 
-in_ = OnePiece.extension.vector.is_in(fe_, fe1_)
+in_ = OnePiece.vector.is_in(fe_, fe1_)
 
 sc_fe_sa = DataFrame(
     "Feature" => fe_,
@@ -41,7 +45,7 @@ se_fe_ = OnePiece.io.gmt.read(
 
 ;
 
-@btime OnePiece.extension.vector.is_in(fe_, fe1_)
+@btime OnePiece.vector.is_in(fe_, fe1_)
 
 @btime OnePiece.feature_set_enrichment.score_set(fe_, sc_, fe1_, in_, pl = false)
 
@@ -55,10 +59,11 @@ se_fe_ = OnePiece.io.gmt.read(
 
 @btime OnePiece.feature_set_enrichment.score_set_new(fe_, sc_, se_fe_)
 
+# ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end

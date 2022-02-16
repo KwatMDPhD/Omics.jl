@@ -1,19 +1,23 @@
+# ----------------------------------------------------------------------------------------------- #
 TE = joinpath(tempdir(), "OnePiece.test")
 
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end
 
 mkdir(TE)
 
-println("Made ", TE, ".")
+println("Made $TE.")
 
+
+# ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
+# ----------------------------------------------------------------------------------------------- #
 using PlotlyLight
 
 tr_ = [Dict()]
@@ -72,6 +76,19 @@ display(OnePiece.figure.plot_bar(y_; la = la))
 name1 = "Orange"
 
 name2 = "Blue"
+TE = joinpath(tempdir(), "OnePiece.test")
+
+if isdir(TE)
+
+    rm(TE, recursive = true)
+
+    println("Removed ", TE, ".")
+
+end
+
+mkdir(TE)
+
+println("Made ", TE, ".")
 
 name_ = [name1, name2]
 
@@ -113,10 +130,12 @@ display(
 
 display(OnePiece.figure.plot_heat_map(ma, ou = joinpath(TE, "heat_map.html")))
 
+
+# ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
     rm(TE, recursive = true)
 
-    println("Removed ", TE, ".")
+    println("Removed $TE.")
 
 end

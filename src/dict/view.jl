@@ -1,5 +1,5 @@
-function view(di)
+function view(di; id = IN)
 
-    print(di, 3)
+    JSON.print(di, id)
 
 end

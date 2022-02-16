@@ -16,7 +16,7 @@ function merge(di1, di2)
 
             else
 
-                println(ke, " => (", va1, ") ", va2)
+                println(ke, "$ke => ($va1) $va2")
 
                 va = va2
 
