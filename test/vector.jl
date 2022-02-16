@@ -30,29 +30,27 @@ for ve_ in [
 
 end
 
-OnePiece.vector.get_longest_common_prefix(["abc", "abcd", "a"])
+println(OnePiece.vector.get_longest_common_prefix(["abc", "abcd", "a"]))
 
+# ----------------------------------------------------------------------------------------------- #
 ca_ = collect("A23456789XJQK")
 
 st1_ = ['1', '2', 'K']
 
-;
-
-OnePiece.vector.is_in(ca_, st1_)
+println(OnePiece.vector.is_in(ca_, st1_))
 
 ca_id = Dict(ca => id for (id, ca) in enumerate(ca_))
 
-OnePiece.vector.is_in(ca_id, st1_)
+println(OnePiece.vector.is_in(ca_id, st1_))
 
-ve_ = [['a', 'e', 'K', 't'], ["a", "K", "t", "w"]]
+# ----------------------------------------------------------------------------------------------- #
+ve1 = ['a', 'e', 'K', 't']
 
-OnePiece.vector.sort_like([[2, 4, 1, 3], ve_...])
+ve2 = ["a", "K", "t", "w"]
 
-OnePiece.vector.sort_like([[3, 1, 4, 2], ve_...])
+OnePiece.vector.sort_like([2, 4, 1, 3], ve1, ve2)
 
-al_ = collect("abcdefghijklmnopqrstuvwxyz")
-
-OnePiece.vector.get_order(al_, "aiko!")
+OnePiece.vector.sort_like([3, 1, 4, 2], ve1, ve2)
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)

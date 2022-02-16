@@ -4,15 +4,15 @@ function get_longest_common_prefix(ve_)
 
     mi = minimum(le_)
 
-    ve = ve_[findfirst([le .== mi for le in le_])]
+    sh = ve_[findfirst(le_ .== mi)]
 
     id = 1
 
     while id <= mi
 
-        va = ve[id]
+        va = sh[id]
 
-        if any(ve[id] != va for ve in ve_[2:end])
+        if any(ve[id] != va for ve in ve_)
 
             break
 
@@ -24,14 +24,12 @@ function get_longest_common_prefix(ve_)
 
     if id == 1
 
-        pr_ = nothing
+        nothing
 
     else
 
-        pr_ = ve[1:(id - 1)]
+        sh[1:(id - 1)]
 
     end
-
-    pr_
 
 end

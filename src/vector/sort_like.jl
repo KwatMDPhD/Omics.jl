@@ -1,4 +1,4 @@
-function sort_like(ve_; re = false)
+function sort_like(ve_...; re = false)
 
     id_ = sortperm(ve_[1], rev = re)
 
