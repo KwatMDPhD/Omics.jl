@@ -74,12 +74,21 @@ function plot_mountain(
             ),
             merge(
                 annotationy,
-                Config(y = get_center(yaxis1_domain...), text = string("<b>", names, "</b>")),
+                Config(
+                    y = OnePiece.geometry.get_center(yaxis1_domain...),
+                    text = string("<b>", names, "</b>"),
+                ),
             ),
-            merge(annotationy, Config(y = get_center(yaxis2_domain...), text = "<b>Set</b>")),
             merge(
                 annotationy,
-                Config(y = get_center(yaxis3_domain...), text = string("<b>", namee, "</b>")),
+                Config(y = OnePiece.geometry.get_center(yaxis2_domain...), text = "<b>Set</b>"),
+            ),
+            merge(
+                annotationy,
+                Config(
+                    y = OnePiece.geometry.get_center(yaxis3_domain...),
+                    text = string("<b>", namee, "</b>"),
+                ),
             ),
             merge(
                 annotationx,
@@ -144,6 +153,6 @@ function plot_mountain(
 
     end
 
-    plot(trace_, layout, ou = ou)
+    OnePiece.figure.plot(trace_, layout, ou = ou)
 
 end

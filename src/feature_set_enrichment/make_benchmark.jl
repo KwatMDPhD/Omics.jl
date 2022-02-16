@@ -4,7 +4,7 @@ function make_benchmark(ho)
 
     if sp_[1] == "card"
 
-        fe_ = string.(CARD)
+        fe_ = string.(OnePiece.constant.CARD)
 
         n_fe = length(fe_)
 
@@ -38,13 +38,20 @@ function make_benchmark(ho)
 
         di = joinpath(dirname(dirname(@__DIR__)), "test", "feature_set_enrichment.data")
 
-        da = table_read(joinpath(di, "gene_score.tsv"))
+        da = OnePiece.table.read(joinpath(di, "gene_score.tsv"))
 
         fe_ = string.(da[!, "Gene"])
 
         sc_ = da[!, "Score"]
 
-        fe1_ = string.(gmt_read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"])
+        fe1_ =
+            string.(
+                OnePiece.gmt.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"],
+            )
+
+    else
+
+        error()
 
     end
 

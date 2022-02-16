@@ -6,7 +6,7 @@ function get_probability_and_cumulate(ve)
 
     cur_ = cumsum(pr_) .+ ep
 
-    cul_ = cumulate_sum_reverse(pr_) .+ ep
+    cul_ = OnePiece.tensor.cumulate_sum_reverse(pr_) .+ ep
 
     pr_, cur_, cul_
 

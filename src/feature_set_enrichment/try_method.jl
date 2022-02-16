@@ -7,7 +7,7 @@ end
 function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
 
     #
-    in_ = convert(Vector{Float64}, is_in(fe_, fe1_))
+    in_ = convert(Vector{Float64}, OnePiece.vector.is_in(fe_, fe1_))
 
     ou_ = 1.0 .- in_
 
@@ -39,7 +39,8 @@ function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
 
         plot_process([sc_, in_], ["Score", "In"], "Input")
 
-        na_ = ["Value", "PDF", "Right CDF ", "Left CDF"],
+        na_ = ["Value", "PDF", "Right CDF ", "Left CDF"]
+
         plot_process([ab_, abp_, abpr_, abpl_], na_, "Absolute")
 
         plot_process([ina_, inap_, inapr_, inapl_], na_, "In * Absolute")
@@ -57,11 +58,11 @@ function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
     ]
 
         for (me2, fu1) in [
-            ["KS", get_kolmogorov_smirnov_statistic],
-            ["JS", get_jensen_shannon_divergence],
-            ["KP", get_kwat_pablo_divergence],
-            #["SB", get_thermodynamic_breadth],
-            #["SD", get_thermodynamic_depth],
+            ["KS", OnePiece.information.get_kolmogorov_smirnov_statistic],
+            ["JS", OnePiece.information.get_jensen_shannon_divergence],
+            ["KP", OnePiece.information.get_kwat_pablo_divergence],
+            #["SB", OnePiece.information.get_thermodynamic_breadth],
+            #["SD", OnePiece.information.get_thermodynamic_depth],
         ]
 
             if me2 in ["JS", "KP"]
@@ -89,8 +90,8 @@ function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
             ]
 
                 for (me4, fu2) in [
-                    ["Area", get_area],
-                    #["Extreme", get_extreme],
+                    ["Area", OnePiece.tensor.get_area],
+                    #["Extreme", OnePiece.tensor.get_extreme],
                 ]
 
                     me = join([me1, me3, me2, me4], " ")

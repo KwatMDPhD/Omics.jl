@@ -1,7 +1,7 @@
 function score_set_new(fe_, sc_, fe1_; we = 1.0, pl = true, ke_ar...)
 
     #
-    in_ = convert(Vector{Float64}, is_in(fe_, fe1_))
+    in_ = convert(Vector{Float64}, OnePiece.vector.is_in(fe_, fe1_))
 
     ou_ = 1.0 .- in_
 
@@ -21,13 +21,13 @@ function score_set_new(fe_, sc_, fe1_; we = 1.0, pl = true, ke_ar...)
 
     #oup_, oupr_, oupl_ = get_probability_and_cumulate(ou_)
 
-    fl_ = get_kwat_pablo_divergence(inapl_, ouapl_, abpl_)
+    fl_ = OnePiece.information.get_kwat_pablo_divergence(inapl_, ouapl_, abpl_)
 
-    fr_ = get_kwat_pablo_divergence(inapr_, ouapr_, abpr_)
+    fr_ = OnePiece.information.get_kwat_pablo_divergence(inapr_, ouapr_, abpr_)
 
     en_ = fl_ - fr_
 
-    en = get_area(en_)
+    en = OnePiece.tensor.get_area(en_)
 
     if pl
 

@@ -86,7 +86,16 @@ end
 
 function score_set(fe_, sc_, fe1_; we = 1.0, al = "ks", pl = true, ke_ar...)
 
-    score_set(fe_, sc_, fe1_, is_in(fe_, fe1_); we = we, al = al, pl = pl, ke_ar...)
+    score_set(
+        fe_,
+        sc_,
+        fe1_,
+        OnePiece.vector.is_in(fe_, fe1_);
+        we = we,
+        al = al,
+        pl = pl,
+        ke_ar...,
+    )
 
 end
 
@@ -103,8 +112,15 @@ function score_set(fe_, sc_, se_fe_::Dict; we = 1.0, al = "ks", n_jo = 1)
     end
 
     Dict(
-        se => score_set(fe_, sc_, fe1_, is_in(ch, fe1_), we = we, al = al, pl = false) for
-        (se, fe1_) in se_fe_
+        se => score_set(
+            fe_,
+            sc_,
+            fe1_,
+            OnePiece.vector.is_in(ch, fe1_),
+            we = we,
+            al = al,
+            pl = false,
+        ) for (se, fe1_) in se_fe_
     )
 
 end
@@ -119,7 +135,7 @@ function score_set(sc_fe_sa, se_fe_; we = 1.0, al = "ks", n_jo = 1)
 
         go_ = findall(!ismissing, sc_fe_sa[!, sa])
 
-        sc_, fe_ = sort_like(sc_fe_sa[go_, sa], fe_[go_])
+        sc_, fe_ = OnePiece.vector.sort_like(sc_fe_sa[go_, sa], fe_[go_])
 
         if in(al, ["ks", "auc"])
 
