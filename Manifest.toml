@@ -139,9 +139,9 @@ uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 
 [[deps.EasyConfig]]
 deps = ["JSON3", "OrderedCollections", "StructTypes"]
-git-tree-sha1 = "901ecfdee36dd6d58def7073661db73873eae07d"
+git-tree-sha1 = "c070b3c48a8ba3c6e6507997f0a7f5ebf85c3600"
 uuid = "acab07b0-f158-46d4-8913-50acef6d41fe"
-version = "0.1.9"
+version = "0.1.10"
 
 [[deps.EzXML]]
 deps = ["Printf", "XML2_jll"]
@@ -363,10 +363,10 @@ deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markd
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [[deps.PlotlyLight]]
-deps = ["Cobweb", "DefaultApplication", "Downloads", "EasyConfig", "JSON3", "Random"]
-git-tree-sha1 = "b316a59f0d12d972cca33b75bfa1bcf3824556de"
+deps = ["Artifacts", "Cobweb", "DefaultApplication", "Downloads", "EasyConfig", "JSON3", "Random"]
+git-tree-sha1 = "9ea43624437e21fd24ac9565aa3d6386711b354b"
 uuid = "ca7969ec-10b3-423e-8d99-40f33abb42bf"
-version = "0.4.1"
+version = "0.4.4"
 
 [[deps.PooledArrays]]
 deps = ["DataAPI", "Future"]
@@ -485,15 +485,16 @@ deps = ["LinearAlgebra", "SparseArrays"]
 uuid = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [[deps.StatsAPI]]
-git-tree-sha1 = "d88665adc9bcf45903013af0982e2fd05ae3d0a6"
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "c3d8ba7f3fa0625b062b82853a7d5229cb728b6b"
 uuid = "82ae8749-77ed-4fe6-ae5f-f523153014b0"
-version = "1.2.0"
+version = "1.2.1"
 
 [[deps.StatsBase]]
 deps = ["DataAPI", "DataStructures", "LinearAlgebra", "LogExpFunctions", "Missings", "Printf", "Random", "SortingAlgorithms", "SparseArrays", "Statistics", "StatsAPI"]
-git-tree-sha1 = "118e8411d506d583fbbcf4f3a0e3c5a9e83370b8"
+git-tree-sha1 = "8977b17906b0a1cc74ab2e3a05faa16cf08a8291"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-version = "0.33.15"
+version = "0.33.16"
 
 [[deps.StatsFuns]]
 deps = ["ChainRulesCore", "InverseFunctions", "IrrationalConstants", "LogExpFunctions", "Reexport", "Rmath", "SpecialFunctions"]

@@ -1,23 +1,23 @@
-LA = Config(template = "plotly_white", autosize = false, hovermode = "closest")
+function plot(tr_, la = Dict(); ou = "")
 
-CO = Config(modeBarButtonsToRemove = ["select", "lasso", "resetScale"], displaylogo = false)
+    pl = Plot(
+        tr_,
+        OnePiece.dict.merge(
+            Dict("template" => PlotlyLight.template("plotly_dark"), "hovermode" => "closest"),
+            la,
+        ),
+        Dict(
+            "modeBarButtonsToRemove" => ["select", "lasso", "resetScale"],
+            #"displaylogo" => false,
+        ),
+    )
 
-function plot(tr_, la, co = CO; ou = "")
+    if !isempty(ou)
 
-    pl = Plot(tr_, merge(LA, la), co)
-
-    if ou != ""
-
-        save(Page(pl), ou)
+        Cobweb.save(Cobweb.Page(pl), ou)
 
     end
 
     pl
-
-end
-
-function plot(tr_; ke_ar...)
-
-    plot(tr_, Config(); ke_ar...)
 
 end

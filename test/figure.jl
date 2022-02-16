@@ -13,36 +13,35 @@ mkdir(TE)
 
 println("Made $TE.")
 
-
 # ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
 # ----------------------------------------------------------------------------------------------- #
-using PlotlyLight
-
 tr_ = [Dict()]
 
 display(OnePiece.figure.plot(tr_))
 
-la = Config(
-    template = "plotly_dark",
-    title = "Title",
-    yaxis = Config(title = "Y-Axis Title"),
-    xaxis = Config(title = "X-Axis Title"),
+# ----------------------------------------------------------------------------------------------- #
+using PlotlyLight
+
+# ----------------------------------------------------------------------------------------------- #
+la = Dict(
+    "template" => PlotlyLight.template("plotly_white"),
+    "title" => "Title",
+    "yaxis" => Dict("title" => "Y-Axis Title"),
+    "xaxis" => Dict("title" => "X-Axis Title"),
 )
 
 display(OnePiece.figure.plot(tr_, la))
 
-co = Config(displaylog = true)
+OnePiece.figure.plot(tr_, ou = joinpath(TE, "output.html"))
 
-display(OnePiece.figure.plot(tr_, la, co))
-
-display(OnePiece.figure.plot(tr_, ou = joinpath(TE, "output.html")))
-
+# ----------------------------------------------------------------------------------------------- #
 pl = OnePiece.figure.plot(tr_)
 
-OnePiece.figure.write(joinpath(tempdir(), "snow.png"), pl, 400, 200, 1.0)
+OnePiece.figure.write(joinpath(TE, "snow.png"), pl, 400, 200, 1.0)
 
+# ----------------------------------------------------------------------------------------------- #
 x1 = [-1, 0, 2]
 
 x2 = [3, 4]
@@ -55,14 +54,13 @@ y2 = x2 .* 20
 
 y_ = [y1, y2]
 
-;
-
 display(OnePiece.figure.plot_x_y(y_))
 
 display(OnePiece.figure.plot_x_y(y_; la = la))
 
 display(OnePiece.figure.plot_x_y(y_, x_; la = la, ou = joinpath(TE, "x_y.html")))
 
+# ----------------------------------------------------------------------------------------------- #
 y1 = [-1, 2, 5]
 
 y2 = reverse(y1)
@@ -73,22 +71,10 @@ display(OnePiece.figure.plot_bar(y_))
 
 display(OnePiece.figure.plot_bar(y_; la = la))
 
+# ----------------------------------------------------------------------------------------------- #
 name1 = "Orange"
 
 name2 = "Blue"
-TE = joinpath(tempdir(), "OnePiece.test")
-
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed ", TE, ".")
-
-end
-
-mkdir(TE)
-
-println("Made ", TE, ".")
 
 name_ = [name1, name2]
 
@@ -118,18 +104,20 @@ display(
     ),
 )
 
-ma = convert(Matrix, reshape(1:8, (2, 4)))
+# ----------------------------------------------------------------------------------------------- #
+ma = OnePiece.tensor.simulate(2, 4)
+
+println(ma)
 
 display(
     OnePiece.figure.plot_heat_map(
         ma,
-        [string("Row", id) for id in 1:size(ma, 1)],
-        [string("Column", id) for id in 1:size(ma, 2)],
+        ["Row$id" for id in 1:size(ma, 1)],
+        ["Column$id" for id in 1:size(ma, 2)],
     ),
 )
 
 display(OnePiece.figure.plot_heat_map(ma, ou = joinpath(TE, "heat_map.html")))
-
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)

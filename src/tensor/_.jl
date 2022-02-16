@@ -12,4 +12,6 @@ include("make_increasing_by_stepping_up!.jl")
 
 include("shift_minimum.jl")
 
+include("simulate.jl")
+
 end

@@ -29,33 +29,17 @@ bi_ = convert(BitVector, [zeros(n_ze); ones(n_on)])
 
 te = [10^(id - 1) for id in 1:n_co]
 
-ma = convert(Matrix, reshape(1:(n_ro * n_co), (n_ro, n_co)))
+ma = OnePiece.tensor.simulate(n_ro, n_co)
 
-OnePiece.tensor_function.apply(te, te, .-)
+println(OnePiece.tensor_function.apply(te, te, .-))
 
-OnePiece.tensor_function.apply(bi_, te, .-)
+println(OnePiece.tensor_function.apply(bi_, te, .-))
 
-OnePiece.tensor_function.apply(te, ma, .*)
+println(OnePiece.tensor_function.apply(te, ma, .*))
 
-OnePiece.tensor_function.apply(bi_, ma, .+)
+println(OnePiece.tensor_function.apply(bi_, ma, .+))
 
-OnePiece.tensor_function.apply(ma, ma, (ro1, ro2) -> minimum([ro1; ro2]))
-
-for i in [1, 2], j in [10, 20]
-
-    println(i, " ", j)
-
-end
-
-for i in [1, 2]
-
-    for j in [10, 20]
-
-        println(i, " ", j)
-
-    end
-
-end
+println(OnePiece.tensor_function.apply(ma, ma, (ro1, ro2) -> minimum([ro1; ro2])))
 
 ma2 = [
     1 10 100 1000
@@ -67,7 +51,7 @@ ma1 = [
     -1 0 1 2
 ]
 
-OnePiece.tensor_function.apply(ma1, ma2, .+)
+println(OnePiece.tensor_function.apply(ma1, ma2, .+))
 
 ma1 = convert(
     BitMatrix,
@@ -77,7 +61,7 @@ ma1 = convert(
     ],
 )
 
-OnePiece.tensor_function.apply(ma1, ma2, .-)
+println(OnePiece.tensor_function.apply(ma1, ma2, .-))
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
