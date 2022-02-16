@@ -24,7 +24,7 @@ for (co1, co2) in [[0, 100], [-1, 1]]
 
     println(co1, " ... ", co2)
 
-    println(OnePiece.informatics.geometry.get_center(co1, co2))
+    println(OnePiece.geometry.get_center(co1, co2))
 
 end
 

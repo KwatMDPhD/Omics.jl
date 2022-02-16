@@ -74,9 +74,8 @@ sc_fe_sa = DataFrame(
     "Constant" => fill(0.8, length(fe_)),
 )
 
-se_fe_ = OnePiece.io.gmt.read(
-    joinpath(@__DIR__, "feature_set_enrichment.data", "h.all.v7.1.symbols.gmt"),
-)
+se_fe_ =
+    OnePiece.gmt.read(joinpath(@__DIR__, "feature_set_enrichment.data", "h.all.v7.1.symbols.gmt"))
 
 ;
 

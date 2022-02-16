@@ -25,7 +25,7 @@ for cu in fr_
 
     println(cu)
 
-    println(OnePiece.informatics.statistics.get_z_score(cu))
+    println(OnePiece.statistics.get_z_score(cu))
 
 end
 
@@ -35,7 +35,7 @@ for co in fr_
 
     println(co)
 
-    println(OnePiece.informatics.statistics.get_confidence_interval(co))
+    println(OnePiece.statistics.get_confidence_interval(co))
 
 end
 

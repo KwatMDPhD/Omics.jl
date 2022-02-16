@@ -31,7 +31,7 @@ for va in [1, 2, 9, 10]
 
         println(si)
 
-        println(OnePiece.informatics.significance.get_p_value(va, ra_, si))
+        println(OnePiece.significance.get_p_value(va, ra_, si))
 
     end
 
@@ -49,9 +49,9 @@ for me in ["bonferroni", "benjamini_hochberg"]
 
     println(me)
 
-    println(OnePiece.informatics.significance.adjust_p_value(pv_; me = me))
+    println(OnePiece.significance.adjust_p_value(pv_; me = me))
 
-    println(OnePiece.informatics.significance.adjust_p_value(pv_, n_te; me = me))
+    println(OnePiece.significance.adjust_p_value(pv_, n_te; me = me))
 
 end
 
@@ -59,7 +59,7 @@ pv_ = [0.005, 0.009, 0.019, 0.022, 0.051, 0.101, 0.361, 0.387]
 
 pva_ = [0.036, 0.036, 0.044, 0.044, 0.082, 0.135, 0.387, 0.387]
 
-@assert all(pva_ .== round.(OnePiece.informatics.significance.adjust_p_value(pv_); digits = 3))
+@assert all(pva_ .== round.(OnePiece.significance.adjust_p_value(pv_); digits = 3))
 
 for n_pv in [2, 4, 8, 10]
 
@@ -69,7 +69,7 @@ for n_pv in [2, 4, 8, 10]
 
     println(pv_)
 
-    println(OnePiece.informatics.significance.adjust_p_value(pv_))
+    println(OnePiece.significance.adjust_p_value(pv_))
 
 end
 
@@ -79,11 +79,11 @@ ra_ = collect(0:9)
 
 for si in ["<", ">"]
 
-    println(OnePiece.informatics.significance.get_p_value_and_adjust(fl_, ra_, si))
+    println(OnePiece.significance.get_p_value_and_adjust(fl_, ra_, si))
 
 end
 
-println(OnePiece.informatics.significance.get_p_value_and_adjust(fl_, ra_))
+println(OnePiece.significance.get_p_value_and_adjust(fl_, ra_))
 
 for po in 0:8
 
@@ -93,7 +93,7 @@ for po in 0:8
 
     println(n_po)
 
-    println(OnePiece.informatics.significance.get_margin_of_error(randn(n_po)))
+    println(OnePiece.significance.get_margin_of_error(randn(n_po)))
 
 end
 

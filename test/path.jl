@@ -17,76 +17,77 @@ println("Made $TE.")
 using OnePiece
 
 # ----------------------------------------------------------------------------------------------- #
-pa = pwd()
+pa = @__DIR__
 
 try
 
-    OnePiece.extension.path.shorten(pa, "Shanks")
+    OnePiece.path.shorten(pa, "Shanks")
 
 catch er
 
-    er
+    println(er)
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
 for n_ba in [2, 1]
 
-    println(OnePiece.extension.path.shorten(pa, n_ba))
+    println(OnePiece.path.shorten(pa, n_ba))
 
 end
 
-for di in ["OnePiece.jl", "test", "OnePiece.jl/test", "extension"]
+for di in ["OnePiece.jl", "test", "OnePiece.jl/test"]
 
-    println(OnePiece.extension.path.shorten(pa, di))
+    println(OnePiece.path.shorten(pa, di))
 
 end
 
-OnePiece.extension.path.clean("a_b.c-d+e!f%g%h]iJK")
+# ----------------------------------------------------------------------------------------------- #
+OnePiece.path.clean("a_b.c-d+e!f%g%h]iJK")
 
+# ----------------------------------------------------------------------------------------------- #
 for pa in ["~/file", "~/directory/"]
 
-    println(OnePiece.extension.path.make_absolute(pa))
+    println(OnePiece.path.make_absolute(pa))
 
 end
 
-OnePiece.extension.path.remove_extension("/path/to/a/file.extension")
+# ----------------------------------------------------------------------------------------------- #
+OnePiece.path.remove_extension("/path/to/a/file.extension")
 
-OnePiece.extension.path.remove_extension("/path/to/a/file")
+OnePiece.path.remove_extension("/path/to/a/file")
 
-OnePiece.extension.path.remove_extension("/path/to/a/directory/")
+OnePiece.path.remove_extension("/path/to/a/directory/")
 
+# ----------------------------------------------------------------------------------------------- #
 di = homedir()
 
-;
+OnePiece.path.select(di)
 
-OnePiece.extension.path.select(di)
+OnePiece.path.select(di; ig_ = [], ke_ = [r"^\."], jo = false)
 
-OnePiece.extension.path.select(di; ig_ = [], ke_ = [r"^\."], jo = false)
+# ----------------------------------------------------------------------------------------------- #
+go = "test/path.jl"
 
-go = "extension/path.ipynb"
-
-OnePiece.extension.path.error_missing_path(dirname(@__DIR__), [go])
+OnePiece.path.error_missing_path(dirname(@__DIR__), [go])
 
 try
 
-    OnePiece.extension.path.error_missing_path(
-        dirname(@__DIR__),
-        [go, "missing/file", "missing/directory/"],
-    )
+    OnePiece.path.error_missing_path(dirname(@__DIR__), [go, "missing/file", "missing/directory/"])
 
 catch er
 
-    er
+    println(er)
 
 end
 
-OnePiece.extension.path.error_extension("file.extension", ".extension")
+OnePiece.path.error_extension("file.extension", ".extension")
 
 for ex in ["extension", ".another_extension"]
 
     try
 
-        OnePiece.extension.path.error_extension("file.extension", ex)
+        OnePiece.path.error_extension("file.extension", ex)
 
     catch er
 
@@ -96,7 +97,8 @@ for ex in ["extension", ".another_extension"]
 
 end
 
-te = joinpath(tempdir(), "move")
+# ----------------------------------------------------------------------------------------------- #
+te = joinpath(TE, "move")
 
 di1 = mkpath(joinpath(te, "di1"))
 
@@ -114,32 +116,28 @@ touch(fi2)
 
 run(`tree $te`)
 
-;
-
 fi12 = replace(fi1, "di1" => "di3")
 
-println(OnePiece.extension.path.move(fi1, fi12))
+println(OnePiece.path.move(fi1, fi12))
 
 run(`tree $te`)
-
-;
 
 try
 
-    OnePiece.extension.path.move(di2, di3)
+    OnePiece.path.move(di2, di3)
 
 catch er
 
-    er
+    println(er)
 
 end
 
-println(OnePiece.extension.path.move(di2, di3; fo = true))
+# ----------------------------------------------------------------------------------------------- #
+println(OnePiece.path.move(di2, di3; fo = true))
 
 run(`tree $te`)
 
-;
-
+# ----------------------------------------------------------------------------------------------- #
 fi1 = joinpath(te, "fi1")
 
 fi2 = joinpath(te, "fi2")
@@ -160,9 +158,7 @@ println(readline(open(fi1)))
 
 println(readline(open(fi2)))
 
-;
-
-OnePiece.extension.path.sed_recursively(te, ["Before" => "After"])
+OnePiece.path.sed_recursively(te, ["Before" => "After"])
 
 println(readline(open(fi1)))
 

@@ -19,11 +19,11 @@ using OnePiece
 # ----------------------------------------------------------------------------------------------- #
 da = joinpath(@__DIR__, "table.data")
 
-OnePiece.io.table.read(joinpath(da, "titanic.tsv"))
+OnePiece.table.read(joinpath(da, "titanic.tsv"))
 
-OnePiece.io.table.read(joinpath(da, "enst_gene.tsv.gz"))
+OnePiece.table.read(joinpath(da, "enst_gene.tsv.gz"))
 
-OnePiece.io.table.read(joinpath(da, "12859_2019_2886_MOESM2_ESM.xlsx"), xl = "HumanSpecific Genes")
+OnePiece.table.read(joinpath(da, "12859_2019_2886_MOESM2_ESM.xlsx"), xl = "HumanSpecific Genes")
 
 # ----------------------------------------------------------------------------------------------- #
 using DataFrames
@@ -44,7 +44,7 @@ ts = joinpath(TE, "write.csv")
 
 try
 
-    OnePiece.io.table.write(ts, da)
+    OnePiece.table.write(ts, da)
 
 catch er
 
@@ -52,7 +52,7 @@ catch er
 
 end
 
-OnePiece.io.table.write(replace(ts, ".csv" => ".tsv"), da)
+OnePiece.table.write(replace(ts, ".csv" => ".tsv"), da)
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)

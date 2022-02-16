@@ -17,10 +17,18 @@ println("Made $TE.")
 using OnePiece
 
 # ----------------------------------------------------------------------------------------------- #
-OnePiece.dict.view(Dict())
+di = OnePiece.dict.make(a = 1, b = [2], c = Dict("d" => 3))
+
+println(di)
 
 # ----------------------------------------------------------------------------------------------- #
-OnePiece.dict.view(OnePiece.dict.make(a = 1, b = [2], c = Dict("d" => 3)), id = 2)
+OnePiece.dict.view(Dict())
+
+OnePiece.dict.view(di)
+
+OnePiece.dict.view(di, n_pa = 2)
+
+OnePiece.dict.view(di, n_pa = 1, id = 8)
 
 # ----------------------------------------------------------------------------------------------- #
 OnePiece.dict.summarize(Dict(1 => "a", 2 => "a", 3 => "b", 4 => nothing, 5 => nothing, 6 => NaN))

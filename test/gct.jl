@@ -17,11 +17,7 @@ println("Made $TE.")
 using OnePiece
 
 # ----------------------------------------------------------------------------------------------- #
-gc = joinpath("gct.data", "a.gct")
-
-OnePiece.io.gct.read(gc)
-
-OnePiece.io.gct.read(gc, na = "Heso")
+OnePiece.dataframe.view(OnePiece.gct.read(joinpath(@__DIR__, "gct.data", "a.gct")))
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)

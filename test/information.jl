@@ -18,29 +18,29 @@ println("Made $TE.")
 using OnePiece
 
 # ----------------------------------------------------------------------------------------------- #
-OnePiece.informatics.information.get_entropy
+OnePiece.information.get_entropy
 
 ve1 = collect(1:3)
 
 ve2 = collect(10:10:30)
 
-OnePiece.informatics.information.get_signal_to_noise_ratio(ve1, ve2)
+OnePiece.information.get_signal_to_noise_ratio(ve1, ve2)
 
 function call_all(ve1, ve2, ve)
 
     vcat(
         [
             fu(ve1, ve2) for fu in [
-                OnePiece.informatics.information.get_kolmogorov_smirnov_statistic,
-                OnePiece.informatics.information.get_kullback_leibler_divergence,
-                OnePiece.informatics.information.get_thermodynamic_breadth,
-                OnePiece.informatics.information.get_thermodynamic_depth,
+                OnePiece.information.get_kolmogorov_smirnov_statistic,
+                OnePiece.information.get_kullback_leibler_divergence,
+                OnePiece.information.get_thermodynamic_breadth,
+                OnePiece.information.get_thermodynamic_depth,
             ]
         ],
         [
             fu(ve1, ve2, ve) for fu in [
-                OnePiece.informatics.information.get_jensen_shannon_divergence,
-                OnePiece.informatics.information.get_kwat_pablo_divergence,
+                OnePiece.information.get_jensen_shannon_divergence,
+                OnePiece.information.get_kwat_pablo_divergence,
             ]
         ],
     )
@@ -68,11 +68,11 @@ end
 
 n_po = 100
 
-ve1 = OnePiece.informatics.tensor.shift_minimum(randn(n_po), "0<")
+ve1 = OnePiece.tensor.shift_minimum(randn(n_po), "0<")
 
 ve1s = ve1 .+ 1
 
-ve2 = OnePiece.informatics.tensor.shift_minimum(randn(n_po), "0<")
+ve2 = OnePiece.tensor.shift_minimum(randn(n_po), "0<")
 
 ;
 

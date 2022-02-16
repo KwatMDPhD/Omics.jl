@@ -19,7 +19,7 @@ using OnePiece
 # ----------------------------------------------------------------------------------------------- #
 try
 
-    OnePiece.informatics.normalization.normalize([], "0-1")
+    OnePiece.normalization.normalize([], "0-1")
 
 catch er
 
@@ -29,7 +29,7 @@ end
 
 try
 
-    OnePiece.informatics.normalization.normalize([-1, 0, 1], "sum")
+    OnePiece.normalization.normalize([-1, 0, 1], "sum")
 
 catch er
 
@@ -49,7 +49,7 @@ for ve in [[0], [1], [0, 0, 0], [1, 1, 1], [0, 1, 2]]
 
         println(me)
 
-        println(OnePiece.informatics.normalization.normalize(ve, me))
+        println(OnePiece.normalization.normalize(ve, me))
 
     end
 
@@ -69,7 +69,7 @@ for ve in [[0], [-1, 0, 0, 1, 1, 1, 2]]
 
         println(me)
 
-        println(OnePiece.informatics.normalization.normalize(ve, me))
+        println(OnePiece.normalization.normalize(ve, me))
 
     end
 
@@ -79,7 +79,7 @@ ve = [NaN, -2, 0, NaN, 2, NaN]
 
 println(hash(ve))
 
-OnePiece.informatics.normalization.normalize!(ve, "0-1")
+OnePiece.normalization.normalize!(ve, "0-1")
 
 println(hash(ve))
 

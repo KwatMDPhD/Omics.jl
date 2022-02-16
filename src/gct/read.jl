@@ -1,5 +1,5 @@
-function read(pa; na = "Name")
+function read(pa)
 
-    rename(select(DataFrame(File(pa, header = 3, delim = "\t")), Not("Description")), "Name" => na)
+    select(DataFrame(CSV.File(pa, header = 3, delim = "\t")), Not("Description"))
 
 end

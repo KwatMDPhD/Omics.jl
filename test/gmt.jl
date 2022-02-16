@@ -17,17 +17,15 @@ println("Made $TE.")
 using OnePiece
 
 # ----------------------------------------------------------------------------------------------- #
-da = joinpath("gmt.data", "")
-
-;
+da = joinpath(@__DIR__, "gmt.data")
 
 gm = joinpath(da, "h.all.v7.1.symbols.gmt")
 
-;
+n_pa = 2
 
-OnePiece.io.gmt.read(gm)
+OnePiece.dict.view(OnePiece.gmt.read(gm), n_pa = n_pa)
 
-OnePiece.io.gmt.read([gm, joinpath(da, "c2.all.v7.1.symbols.gmt")])
+OnePiece.dict.view(OnePiece.gmt.read([gm, joinpath(da, "c2.all.v7.1.symbols.gmt")]), n_pa = n_pa)
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
