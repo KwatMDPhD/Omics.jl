@@ -68,7 +68,7 @@ function plot_mountain(
                 annotationx,
                 Config(
                     y = 1.04,
-                    text = string("<b>Statistic = ", en, "</b>"),
+                    text = string("<b>Score = ", en, "</b>"),
                     font = Config(size = title_font_size * 0.64, color = "2a603b"),
                 ),
             ),
