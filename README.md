@@ -1,8 +1,6 @@
 # OnePiece.jl
 
-One for all :eagle:
-
-(Oda is a genius.)
+One for all :recycle:
 
 ---
 
