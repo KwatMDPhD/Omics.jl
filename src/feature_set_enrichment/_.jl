@@ -1,15 +1,9 @@
 module feature_set_enrichment
 
 using DataFrames
-
 using OrderedCollections
-
-using PlotlyLight
-
 using Printf
-
 using StatsBase
-
 using ..OnePiece
 
 include("get_probability_and_cumulate.jl")

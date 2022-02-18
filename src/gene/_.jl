@@ -1,7 +1,6 @@
 module gene
 
 using DataFrames
-
 using ..OnePiece
 
 include("map_to_ensembl_gene.jl")

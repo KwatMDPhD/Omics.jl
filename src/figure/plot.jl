@@ -1,23 +1,53 @@
-function plot(tr_, la = Dict(); ou = "")
+function plot(tr_, la = Dict(); co = Dict(), ou = "")
 
-    pl = Plot(
-        tr_,
-        OnePiece.dict.merge(Dict(
-            #"template" => PlotlyLight.template("plotly_white"),
-            "hovermode" => "closest",
-        ), la),
-        Dict(
-            "modeBarButtonsToRemove" => ["select", "lasso", "resetScale"],
-            #"displaylogo" => false,
-        ),
+    lad = Dict("hovermode" => "closest")
+
+    cod = Dict(
+        "modebarbuttonstoremove" => ["select", "lasso", "resetscale"],
+        "displaylogo" => false,
+        "responsive" => true,
     )
 
-    if !isempty(ou)
+    la = OnePiece.dict.merge(lad, la)
 
-        Cobweb.save(Cobweb.Page(pl), ou)
+    co = OnePiece.dict.merge(cod, co)
+
+    if isempty(ou)
+
+        ou = joinpath(SC, "index.html")
 
     end
 
-    pl
+    open(ou, "w") do io
+
+        id = splitext(basename(ou))[1]
+
+        println(io, "<!doctype html>")
+
+        println(io, "<div id=\"$id\" style=\"height: 100%; width: 100%\"></div>")
+
+        println(io, "<script src=\"https://cdn.plot.ly/plotly-latest.min.js\"></script>")
+
+        println(io, "<script>")
+
+        print(io, "Plotly.newPlot(\"$id\", ")
+
+        JSON3.write(io, tr_)
+
+        print(io, ", ")
+
+        JSON3.write(io, la)
+
+        print(io, ", ")
+
+        JSON3.write(io, co)
+
+        println(io, ");")
+
+        print(io, "</script>\n")
+
+    end
+
+    ou
 
 end

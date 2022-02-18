@@ -31,7 +31,7 @@ function score_set_new(fe_, sc_, fe1_; we = 1.0, pl = true, ke_ar...)
 
     if pl
 
-        display(plot_mountain(fe_, sc_, in_, en_, en; ke_ar...))
+        OnePiece.figure.view(plot_mountain(fe_, sc_, in_, en_, en; ke_ar...))
 
     end
 

@@ -1,6 +1,12 @@
-function plot_process(ve_, na_, title_text)
+function plot_process(ve_, na_, la, title_text)
 
-    display(plot_x_y(ve_, name_ = na_, la = merge(la, Config(title_text = title_text))))
+    OnePiece.figure.view(
+        OnePiece.figure.plot_x_y(
+            ve_,
+            name_ = na_,
+            la = merge(la, Dict("title_text" => title_text)),
+        ),
+    )
 
 end
 
@@ -29,25 +35,25 @@ function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
 
     if plp
 
-        la = Config(xaxis_title_text = "Feature")
+        la = Dict("xaxis_title_text" => "Feature")
 
         if length(fe_) < 100
 
-            la = merge(la, Config(xaxis_tickvals = 1:length(fe_), xaxis_ticktext = fe_))
+            la = merge(la, Dict("xaxis_tickvals" => 1:length(fe_), "xaxis_ticktext" => fe_))
 
         end
 
-        plot_process([sc_, in_], ["Score", "In"], "Input")
+        plot_process([sc_, in_], ["Score", "In"], la, "Input")
 
         na_ = ["Value", "PDF", "Right CDF ", "Left CDF"]
 
-        plot_process([ab_, abp_, abpr_, abpl_], na_, "Absolute")
+        plot_process([ab_, abp_, abpr_, abpl_], na_, la, "Absolute")
 
-        plot_process([ina_, inap_, inapr_, inapl_], na_, "In * Absolute")
+        plot_process([ina_, inap_, inapr_, inapl_], na_, la, "In * Absolute")
 
-        plot_process([oua_, ouap_, ouapr_, ouapl_], na_, "Out * Absolute")
+        plot_process([oua_, ouap_, ouapr_, ouapl_], na_, la, "Out * Absolute")
 
-        plot_process([ou_, oup_, oupr_, oupl_], na_, "Out")
+        plot_process([ou_, oup_, oupr_, oupl_], na_, la, "Out")
     end
 
     me_en = OrderedDict()
@@ -102,13 +108,15 @@ function try_method(fe_, sc_, fe1_; we = 1.0, plp = true, pl = true)
 
                     if plp
 
-                        plot_process([fl_, fr_, en_], ["Left", "Right", "Enrichment"], me)
+                        plot_process([fl_, fr_, en_], ["Left", "Right", "Enrichment"], la, me)
 
                     end
 
                     if pl
 
-                        display(plot_mountain(fe_, sc_, in_, en_, en, title_text = me))
+                        OnePiece.figure.view(
+                            plot_mountain(fe_, sc_, in_, en_, en, title_text = me),
+                        )
 
                     end
 

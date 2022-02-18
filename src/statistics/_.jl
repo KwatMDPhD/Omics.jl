@@ -1,7 +1,6 @@
 module statistics
 
 using Distributions
-
 using Statistics
 
 include("get_confidence_interval.jl")

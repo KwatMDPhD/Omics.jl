@@ -1,7 +1,6 @@
 module significance
 
 using Statistics
-
 using ..OnePiece
 
 include("adjust_p_value.jl")

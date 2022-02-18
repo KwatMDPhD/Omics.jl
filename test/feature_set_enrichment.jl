@@ -98,7 +98,7 @@ OnePiece.feature_set_enrichment.score_set_new(fe_, sc_, fe1_)
 OnePiece.feature_set_enrichment.score_set_new(fe_, sc_, se_fe_)
 
 # ----------------------------------------------------------------------------------------------- #
-OnePiece.feature_set_enrichment.try_method(fe_, sc_, fe1_, plp = false)
+OnePiece.feature_set_enrichment.try_method(fe_, sc_, fe1_, plp = true)
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)

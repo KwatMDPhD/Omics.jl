@@ -70,9 +70,9 @@ for (te1, te2) in [([1, 1, 1], [1, 1, 1]), ([1, 2, 3], [10, 20, 30])]
 
     te = 0.2 * te1 + 0.8 * te2
 
-    display(OnePiece.figure.plot_x_y([te1, te2]))
+    OnePiece.figure.view(OnePiece.figure.plot_x_y([te1, te2]))
 
-    display(OnePiece.figure.plot_x_y(call_all(te1, te2, te); name_ = name_))
+    OnePiece.figure.view(OnePiece.figure.plot_x_y(call_all(te1, te2, te); name_ = name_))
 
 end
 
@@ -101,7 +101,7 @@ for (te1, te2) in [(te1, te1), (te1, ve1s), (te1, te2)]
 
     de3 = 0.2 * de1 + 0.8 * de2
 
-    display(
+    OnePiece.figure.view(
         OnePiece.figure.plot_x_y(
             [de1, de2],
             [collect(un1.x), collect(un2.x)];
@@ -109,7 +109,7 @@ for (te1, te2) in [(te1, te1), (te1, ve1s), (te1, te2)]
         ),
     )
 
-    display(OnePiece.figure.plot_x_y(call_all(de1, de2, de3); name_ = name_))
+    OnePiece.figure.view(OnePiece.figure.plot_x_y(call_all(de1, de2, de3); name_ = name_))
 
 end
 
@@ -126,7 +126,7 @@ x = collect(bi.x)
 
 z = bi.density
 
-display(OnePiece.figure.plot_heat_map(z, y, x))
+OnePiece.figure.view(OnePiece.figure.plot_heat_map(z, y, x))
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
