@@ -8,8 +8,6 @@ function __init__()
 
     global SC = @get_scratch!("figure")
 
-    println("Scratch directory is $SC.")
-
 end
 
 include("plot.jl")
