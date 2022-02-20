@@ -56,13 +56,29 @@ OnePiece.dict.view(OnePiece.dict.merge(di1, di2))
 OnePiece.dict.view(OnePiece.dict.merge(di2, di1))
 
 # ----------------------------------------------------------------------------------------------- #
+println("-"^99)
+
+println("read")
+
+println("-"^99)
+
 da = joinpath(@__DIR__, "dict.data")
 
-OnePiece.dict.view(OnePiece.dict.read(joinpath(da, "example_1.json")))
+js1 = joinpath(da, "example_1.json")
 
-OnePiece.dict.view(OnePiece.dict.read(joinpath(da, "example_2.json")))
+js2 = joinpath(da, "example_2.json")
 
-OnePiece.dict.view(OnePiece.dict.read(joinpath(da, "example.toml")))
+to = joinpath(da, "example.toml")
+
+OnePiece.dict.view(OnePiece.dict.read(js1))
+
+OnePiece.dict.view(OnePiece.dict.read(js1, js1))
+
+OnePiece.dict.view(OnePiece.dict.read(js2))
+
+OnePiece.dict.view(OnePiece.dict.read(to))
+
+OnePiece.dict.view(OnePiece.dict.read(js1, js2, to))
 
 # ----------------------------------------------------------------------------------------------- #
 js = joinpath(TE, "write.json")

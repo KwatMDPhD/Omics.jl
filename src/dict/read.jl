@@ -10,11 +10,24 @@ function read(pa)
 
         TOML.parsefile(pa)
 
-
     else
 
         error()
 
     end
+
+end
+
+function read(pa_...)
+
+    di = Dict()
+
+    for pa in pa_
+
+        di = merge(di, read(pa))
+
+    end
+
+    di
 
 end

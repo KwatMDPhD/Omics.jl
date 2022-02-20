@@ -10,6 +10,8 @@ include("make_increasing_by_stepping_down!.jl")
 
 include("make_increasing_by_stepping_up!.jl")
 
+include("make_matrix.jl")
+
 include("shift_minimum.jl")
 
 include("simulate.jl")

@@ -16,7 +16,11 @@ function merge(di1, di2)
 
             else
 
-                println(ke, "$ke => ($va1) $va2")
+                if va1 != va2
+
+                    println(ke, "$ke => ($va1) $va2")
+
+                end
 
                 va = va2
 
