@@ -16,46 +16,65 @@ println("Made $TE.")
 # ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
-# ----------------------------------------------------------------------------------------------- #
-hg = OnePiece.gene.read_hgnc()
+println("-"^99)
 
-OnePiece.dataframe.view(hg)
+println("read_ensembl")
 
-# ----------------------------------------------------------------------------------------------- #
+println("-"^99)
+
 en = OnePiece.gene.read_ensembl()
 
 OnePiece.dataframe.view(en)
 
-OnePiece.dataframe.view(OnePiece.gene.read_ensembl(or = "mouse"))
+println("-"^99)
 
-# ----------------------------------------------------------------------------------------------- #
-OnePiece.dict.view(OnePiece.gene.map_to_hgnc_gene(), n_pa = 3)
+println("read_hgnc")
 
-# ----------------------------------------------------------------------------------------------- #
+println("-"^99)
+
+hg = OnePiece.gene.read_hgnc()
+
+OnePiece.dataframe.view(hg)
+
+println("-"^99)
+
+println("map_to_ensembl_gene")
+
+println("-"^99)
+
 OnePiece.dict.view(OnePiece.gene.map_to_ensembl_gene(), n_pa = 3)
 
-# ----------------------------------------------------------------------------------------------- #
+println("-"^99)
+
+println("map_to_hgnc_gene")
+
+println("-"^99)
+
+OnePiece.dict.view(OnePiece.gene.map_to_hgnc_gene(), n_pa = 3)
+
+println("-"^99)
+
+println("map_with_mouse")
+
+println("-"^99)
+
 OnePiece.dict.view(OnePiece.gene.map_with_mouse(), n_pa = 3)
 
-OnePiece.dict.view(OnePiece.gene.map_with_mouse(ho = "human_to_mouse"), n_pa = 3)
+println("-"^99)
 
-# ----------------------------------------------------------------------------------------------- #
-hg_ = string.(hg[!, "symbol"])
+println("rename (Ensembl)")
 
-na_, ma_ = OnePiece.gene.rename(hg_)
+println("-"^99)
 
-ge_ = unique(skipmissing(en[!, "Gene name"]))
+na_, ma_ = OnePiece.gene.rename(unique(skipmissing(en[!, "Gene name"])), en = false, mo = false)
 
-na_, ma_ = OnePiece.gene.rename(ge_, mo = false, en = false)
+println("-"^99)
 
-# ----------------------------------------------------------------------------------------------- #
-hg_gr = OnePiece.dataframe.map_to_column(coalesce.(hg, "?"), ["symbol", "gene_group"])
+println("rename (HGNC)")
 
-println(join(unique([hg_gr[na] for na in na_[ma_ .== 1]]), "\n"))
+println("-"^99)
 
-en_ty = OnePiece.dataframe.map_to_column(en, ["Gene name", "Gene type"])
-
-println(join(unique([en_ty[na] for na in na_[ma_ .== 2]]), "\n"))
+na_, ma_ = OnePiece.gene.rename(unique(skipmissing(hg[!, "symbol"])), hg=false, mo = false)
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)

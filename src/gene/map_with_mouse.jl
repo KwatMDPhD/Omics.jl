@@ -1,28 +1,12 @@
-function map_with_mouse(; ho = "mouse_to_human")
+function map_with_mouse()
 
-    if ho == "mouse_to_human"
+    or = OnePiece.table.read(joinpath(@__DIR__, "ensembl.mouse_human.tsv.gz"))
 
-        ke = "Gene name"
+    ke = "Gene name"
 
-        va = "Human gene name"
-
-        hu = va
-
-    elseif ho == "human_to_mouse"
-
-        ke = "Gene name"
-
-        va = "Mouse gene name"
-
-        hu = ke
-
-    end
-
-    or = OnePiece.table.read(joinpath(@__DIR__, "ensembl.$ho.tsv.gz"))
+    va = "Human gene name"
 
     dropmissing!(or, [ke, va])
-
-    or[!, hu] = rename(or[!, hu], mo = false)[1]
 
     ke_va = Dict(ro[ke] => ro[va] for ro in eachrow(or))
 

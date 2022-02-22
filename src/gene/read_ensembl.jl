@@ -1,5 +1,5 @@
-function read_ensembl(; or = "human")
+function read_ensembl()
 
-    OnePiece.table.read(joinpath(@__DIR__, "ensembl.$or.tsv.gz"))
+    OnePiece.table.read(joinpath(@__DIR__, "ensembl.tsv.gz"))
 
 end
