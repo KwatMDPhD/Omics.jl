@@ -2,13 +2,25 @@ function map_with_mouse()
 
     or = OnePiece.table.read(joinpath(@__DIR__, "ensembl.mouse_human.tsv.gz"))
 
-    ke = "Gene name"
+    co_ = ["Gene name", "Human gene name"]
 
-    va = "Human gene name"
+    dropmissing!(or, co_)
 
-    dropmissing!(or, [ke, va])
+    ke_va = Dict()
 
-    ke_va = Dict(ro[ke] => ro[va] for ro in eachrow(or))
+    for ro in eachrow(or)
+
+        ke, va = ro[co_]
+
+        if haskey(ke_va, ke)
+
+            continue
+
+        end
+
+        ke_va[ke] = va
+
+    end
 
     OnePiece.dict.summarize(ke_va)
 

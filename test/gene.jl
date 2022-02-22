@@ -74,7 +74,7 @@ println("rename (HGNC)")
 
 println("-"^99)
 
-na_, ma_ = OnePiece.gene.rename(unique(skipmissing(hg[!, "symbol"])), hg=false, mo = false)
+na_, ma_ = OnePiece.gene.rename(unique(skipmissing(hg[!, "symbol"])), hg = false, mo = false)
 
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)

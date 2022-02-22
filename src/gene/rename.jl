@@ -44,9 +44,9 @@ function rename(st_; mo = true, en = true, hg = true)
 
     end
 
-    println("Kept $(count(ma_ .== 0))") 
+    println("Kept $(count(ma_ .== 0))")
 
-    println("Named $(count(ma_ .== 1))") 
+    println("Named $(count(ma_ .== 1))")
 
     println("Failed $(count(ma_ .== 2))")
 
