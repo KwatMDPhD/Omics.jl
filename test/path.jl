@@ -16,8 +16,15 @@ println("Made $TE.")
 # ----------------------------------------------------------------------------------------------- #
 using OnePiece
 
-# ----------------------------------------------------------------------------------------------- #
+println("-"^99)
+
+println("shorten")
+
+println("-"^99)
+
 pa = @__DIR__
+
+println("pa=$pa")
 
 try
 
@@ -29,8 +36,12 @@ catch er
 
 end
 
-# ----------------------------------------------------------------------------------------------- #
+
 for n_ba in [2, 1]
+
+    println("-"^99)
+
+    println("n_ba=$n_ba")
 
     println(OnePiece.path.shorten(pa, n_ba))
 
@@ -38,7 +49,19 @@ end
 
 for di in ["OnePiece.jl", "test", "OnePiece.jl/test"]
 
+    println("-"^99)
+
+    println("di=$di")
+
     println(OnePiece.path.shorten(pa, di))
+
+    for sh in [-1, 1]
+
+        println("sh=$sh")
+
+        println(OnePiece.path.shorten(pa, di, sh = sh))
+
+    end
 
 end
 
