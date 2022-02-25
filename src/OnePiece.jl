@@ -20,6 +20,8 @@ include("gct/_.jl")
 include("gmt/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
+include("number/_.jl")
+
 include("tensor/_.jl")
 
 include("normalization/_.jl")
