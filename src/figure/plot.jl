@@ -6,6 +6,7 @@ function plot(tr_, la = Dict(); co = Dict(), ou = "")
         "modebarbuttonstoremove" => ["select", "lasso", "resetscale"],
         "displaylogo" => false,
         "responsive" => true,
+        "editable" => true,
     )
 
     la = OnePiece.dict.merge(lad, la)
