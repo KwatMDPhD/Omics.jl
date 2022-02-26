@@ -18,7 +18,7 @@ function merge(di1, di2)
 
                 if va1 != va2
 
-                    println(ke, "$ke => ($va1) $va2")
+                    println("$ke => ($va1) $va2")
 
                 end
 
@@ -33,6 +33,12 @@ function merge(di1, di2)
         else
 
             va = di2[ke]
+
+        end
+
+        if isa(va, AbstractDict)
+
+            va = copy(va)
 
         end
 
