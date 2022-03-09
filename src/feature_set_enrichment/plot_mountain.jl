@@ -56,20 +56,25 @@ function plot_mountain(
             "zeroline" => false,
             "showspikes" => true,
             "spikethickness" => 0.8,
+            "spikecolor" => "#ffb61e",
             "spikedash" => "solid",
             "spikemode" => "across",
         ),
         "annotations" => [
             merge(
                 annotationx,
-                Dict("y" => 1.16, "text" => "<b>$title_text</b>", "font_size" => title_font_size),
+                Dict(
+                    "y" => 1.16,
+                    "text" => "<b>$title_text</b>",
+                    "font" => Dict("size" => title_font_size, "color" => "#2b2028"),
+                ),
             ),
             merge(
                 annotationx,
                 Dict(
                     "y" => 1.04,
-                    "text" => "<b>Score = $en</b>",
-                    "font" => Dict("size" => title_font_size * 0.64, "color" => "2a603b"),
+                    "text" => "<b>Enrichment = $en</b>",
+                    "font" => Dict("size" => title_font_size * 0.64, "color" => "#181b26"),
                 ),
             ),
             merge(

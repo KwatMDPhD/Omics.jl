@@ -103,7 +103,7 @@ OnePiece.feature_set_enrichment.try_method(fe_, sc_, fe1_, plp = true)
 # ----------------------------------------------------------------------------------------------- #
 if isdir(TE)
 
-    rm(TE, recursive = true)
+    #rm(TE, recursive = true)
 
     println("Removed $TE.")
 
