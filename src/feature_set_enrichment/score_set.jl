@@ -1,4 +1,4 @@
-function score_set(fe_, sc_, fe1_, in_; we = 1.0, al = "ks", pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_, in_; po = 1.0, al = "kolmogorov_smirnov", pl = true, ke_ar...)
 
     n_fe = length(fe_)
 
@@ -64,11 +64,11 @@ function score_set(fe_, sc_, fe1_, in_; we = 1.0, al = "ks", pl = true, ke_ar...
 
     end
 
-    if al == "ks"
+    if al == "kolmogorov_smirnov"
 
         en = ex
 
-    elseif al == "auc"
+    elseif al == "kolmogorov_smirnov_area"
 
         en = ar / convert(Float64, n_fe)
 
@@ -84,14 +84,14 @@ function score_set(fe_, sc_, fe1_, in_; we = 1.0, al = "ks", pl = true, ke_ar...
 
 end
 
-function score_set(fe_, sc_, fe1_; we = 1.0, al = "ks", pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_; po = 1.0, al = "kolmogorov_smirnov", pl = true, ke_ar...)
 
     score_set(
         fe_,
         sc_,
         fe1_,
         OnePiece.vector.is_in(fe_, fe1_);
-        we = we,
+        po = po,
         al = al,
         pl = pl,
         ke_ar...,
@@ -99,7 +99,7 @@ function score_set(fe_, sc_, fe1_; we = 1.0, al = "ks", pl = true, ke_ar...)
 
 end
 
-function score_set(fe_, sc_, se_fe_::Dict; we = 1.0, al = "ks", n_jo = 1)
+function score_set(fe_, sc_, se_fe_::Dict; po = 1.0, al = "kolmogorov_smirnov", n_jo = 1)
 
     if length(se_fe_) < 10
 
@@ -117,7 +117,7 @@ function score_set(fe_, sc_, se_fe_::Dict; we = 1.0, al = "ks", n_jo = 1)
             sc_,
             fe1_,
             OnePiece.vector.is_in(ch, fe1_),
-            we = we,
+            po = po,
             al = al,
             pl = false,
         ) for (se, fe1_) in se_fe_
@@ -125,7 +125,7 @@ function score_set(fe_, sc_, se_fe_::Dict; we = 1.0, al = "ks", n_jo = 1)
 
 end
 
-function score_set(sc_fe_sa, se_fe_; we = 1.0, al = "ks", n_jo = 1)
+function score_set(sc_fe_sa, se_fe_; po = 1.0, al = "kolmogorov_smirnov", n_jo = 1)
 
     fe_ = sc_fe_sa[!, 1]
 
@@ -137,11 +137,11 @@ function score_set(sc_fe_sa, se_fe_; we = 1.0, al = "ks", n_jo = 1)
 
         sc_, fe_ = OnePiece.vector.sort_like(sc_fe_sa[go_, sa], fe_[go_])
 
-        if in(al, ["ks", "auc"])
+        if in(al, ["kolmogorov_smirnov", "kolmogorov_smirnov_area"])
 
-            se_en = score_set(fe_, sc_, se_fe_, we = we, al = al)
+            se_en = score_set(fe_, sc_, se_fe_, po = po, al = al)
 
-        elseif al == "new"
+        elseif al == "jensen_shannon"
 
             se_en = score_set_new(fe_, sc_, se_fe_)
 
