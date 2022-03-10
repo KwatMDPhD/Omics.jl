@@ -1,4 +1,4 @@
-function score_set(fe_, sc_, fe1_, in_; po = 1.0, al = "kolmogorov_smirnov", pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "kolmogorov_smirnov", pl = true, ke_ar...)
 
     n_fe = length(fe_)
 
@@ -84,14 +84,14 @@ function score_set(fe_, sc_, fe1_, in_; po = 1.0, al = "kolmogorov_smirnov", pl 
 
 end
 
-function score_set(fe_, sc_, fe1_; po = 1.0, al = "kolmogorov_smirnov", pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_; ex = 1.0, al = "kolmogorov_smirnov", pl = true, ke_ar...)
 
     score_set(
         fe_,
         sc_,
         fe1_,
         OnePiece.vector.is_in(fe_, fe1_);
-        po = po,
+        ex = ex,
         al = al,
         pl = pl,
         ke_ar...,
@@ -99,7 +99,7 @@ function score_set(fe_, sc_, fe1_; po = 1.0, al = "kolmogorov_smirnov", pl = tru
 
 end
 
-function score_set(fe_, sc_, se_fe_::Dict; po = 1.0, al = "kolmogorov_smirnov", n_jo = 1)
+function score_set(fe_, sc_, se_fe_::Dict; ex = 1.0, al = "kolmogorov_smirnov", n_jo = 1)
 
     if length(se_fe_) < 10
 
@@ -117,7 +117,7 @@ function score_set(fe_, sc_, se_fe_::Dict; po = 1.0, al = "kolmogorov_smirnov", 
             sc_,
             fe1_,
             OnePiece.vector.is_in(ch, fe1_),
-            po = po,
+            ex = ex,
             al = al,
             pl = false,
         ) for (se, fe1_) in se_fe_
@@ -125,7 +125,7 @@ function score_set(fe_, sc_, se_fe_::Dict; po = 1.0, al = "kolmogorov_smirnov", 
 
 end
 
-function score_set(sc_fe_sa, se_fe_; po = 1.0, al = "kolmogorov_smirnov", n_jo = 1)
+function score_set(sc_fe_sa, se_fe_; ex = 1.0, al = "kolmogorov_smirnov", n_jo = 1)
 
     fe_ = sc_fe_sa[!, 1]
 
@@ -139,7 +139,7 @@ function score_set(sc_fe_sa, se_fe_; po = 1.0, al = "kolmogorov_smirnov", n_jo =
 
         if in(al, ["kolmogorov_smirnov", "kolmogorov_smirnov_area"])
 
-            se_en = score_set(fe_, sc_, se_fe_, po = po, al = al)
+            se_en = score_set(fe_, sc_, se_fe_, ex = ex, al = al)
 
         elseif al == "jensen_shannon"
 

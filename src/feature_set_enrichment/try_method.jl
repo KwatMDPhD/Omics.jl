@@ -10,7 +10,7 @@ function plot_process(ve_, na_, la, title_text)
 
 end
 
-function try_method(fe_, sc_, fe1_; po = 1.0, plp = true, pl = true)
+function try_method(fe_, sc_, fe1_; ex = 1.0, plp = true, pl = true)
 
     #
     in_ = convert(Vector{Float64}, OnePiece.vector.is_in(fe_, fe1_))
@@ -18,7 +18,7 @@ function try_method(fe_, sc_, fe1_; po = 1.0, plp = true, pl = true)
     ou_ = 1.0 .- in_
 
     #
-    ab_ = abs.(sc_) .^ po
+    ab_ = abs.(sc_) .^ ex
 
     ina_ = in_ .* ab_
 
@@ -132,10 +132,10 @@ function try_method(fe_, sc_, fe1_; po = 1.0, plp = true, pl = true)
 
 end
 
-function try_method(fe_, sc_, se_fe_::Dict; po = 1.0)
+function try_method(fe_, sc_, se_fe_::Dict; ex = 1.0)
 
     Dict(
-        se => try_method(fe_, sc_, fe1_, po = po, plp = false, pl = false) for (se, fe1_) in se_fe_
+        se => try_method(fe_, sc_, fe1_, ex = ex, plp = false, pl = false) for (se, fe1_) in se_fe_
     )
 
 end

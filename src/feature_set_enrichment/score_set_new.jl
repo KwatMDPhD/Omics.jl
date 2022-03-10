@@ -1,4 +1,4 @@
-function score_set_new(fe_, sc_, fe1_; po = 1.0, pl = true, ke_ar...)
+function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
     #
     in_ = convert(Vector{Float64}, OnePiece.vector.is_in(fe_, fe1_))
@@ -6,7 +6,7 @@ function score_set_new(fe_, sc_, fe1_; po = 1.0, pl = true, ke_ar...)
     ou_ = 1.0 .- in_
 
     #
-    ab_ = abs.(sc_) .^ po
+    ab_ = abs.(sc_) .^ ex
 
     ina_ = in_ .* ab_
 
@@ -39,8 +39,8 @@ function score_set_new(fe_, sc_, fe1_; po = 1.0, pl = true, ke_ar...)
 
 end
 
-function score_set_new(fe_, sc_, se_fe_::Dict; po = 1.0, n_jo = 1)
+function score_set_new(fe_, sc_, se_fe_::Dict; ex = 1.0, n_jo = 1)
 
-    Dict(se => score_set_new(fe_, sc_, fe1_, po = po, pl = false) for (se, fe1_) in se_fe_)
+    Dict(se => score_set_new(fe_, sc_, fe1_, ex = ex, pl = false) for (se, fe1_) in se_fe_)
 
 end
