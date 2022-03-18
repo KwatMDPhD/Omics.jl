@@ -105,10 +105,4 @@ OnePiece.dict.write(js, di)
 OnePiece.dict.view(OnePiece.dict.read(js))
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

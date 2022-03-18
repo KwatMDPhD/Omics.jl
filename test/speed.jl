@@ -82,10 +82,4 @@ println("score_set_new se_fe_")
 @btime OnePiece.feature_set_enrichment.score_set_new(fe_, sc_, se_fe_)
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

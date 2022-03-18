@@ -28,10 +28,4 @@ OnePiece.dict.view(OnePiece.gmt.read(gm), n_pa = n_pa)
 OnePiece.dict.view(OnePiece.gmt.read([gm, joinpath(da, "c2.all.v7.1.symbols.gmt")]), n_pa = n_pa)
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

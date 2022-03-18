@@ -84,10 +84,4 @@ for po in 0:8
 end
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

@@ -71,10 +71,4 @@ ro1[1] = convert(Float64, ro1[1])
 println(OnePiece.tensor.make_matrix(ro1, ro2))
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

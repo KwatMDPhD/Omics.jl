@@ -75,10 +75,4 @@ println(OnePiece.normalization.normalize!(te, "0-1"))
 println(te)
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

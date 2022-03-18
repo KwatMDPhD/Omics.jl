@@ -55,10 +55,4 @@ end
 OnePiece.table.write(replace(ts, ".csv" => ".tsv"), da)
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

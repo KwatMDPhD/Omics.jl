@@ -188,10 +188,4 @@ println(readline(open(fi1)))
 println(readline(open(fi2)))
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

@@ -1,4 +1,4 @@
-function plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ou = "")
+function plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ma = true, ou = "")
 
     height = 800
 
@@ -29,12 +29,6 @@ function plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ou 
         title_text = "$(title_text[1:n_ch])..."
 
     end
-
-    eny = en
-
-    eni_ = findall(en_ .== en)
-
-    en = @sprintf "%.3f" en
 
     n_fe = length(fe_)
 
@@ -69,7 +63,7 @@ function plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ou 
                 annotationx,
                 Dict(
                     "y" => 1.04,
-                    "text" => "<b>Enrichment Score = $en</b>",
+                    "text" => "<b>Enrichment Score = $(@sprintf "%.3f" en)</b>",
                     "font" => Dict("size" => 24, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
                     "bordercolor" => "#404ed8",
@@ -130,8 +124,8 @@ function plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ou 
         "text" => fe_[in_],
         "mode" => "markers",
         "marker" => Dict(
-            "symbol" => "line-ns-open",
-            "size" => height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.64,
+            "symbol" => "line-ns",
+            "size" => height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.32,
             "line" => Dict("width" => 2.4),
             "color" => "#9017e6",
         ),
@@ -159,16 +153,24 @@ function plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ou 
 
     end
 
-    if !empty(eni_)
+    if ma
+
+        id_ = findall(en_ .== en)
 
         push!(
             trace_,
             Dict(
                 "yaxis" => "y3",
-                "y" => eny,
-                "x" => x[eni_],
+                "y" => en_[id_],
+                "x" => x[id_],
                 "mode" => "markers",
-                "marker" => Dict("size" => 4, "color" => "#404ed8"),
+                "marker" => Dict(
+                    "symbol" => "circle",
+                    "size" => height * (yaxis3_domain[2] - yaxis3_domain[1]) * 0.04,
+                    "color" => "#ebf6f7",
+                    "opacity" => 0.72,
+                    "line" => Dict("width" => 2, "color" => "#404ed8", "opacity" => 1),
+                ),
                 "hoverinfo" => "y",
             ),
         )

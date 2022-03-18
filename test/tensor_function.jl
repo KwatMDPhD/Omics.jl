@@ -64,10 +64,4 @@ ma1 = convert(
 println(OnePiece.tensor_function.apply(ma1, ma2, .-))
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

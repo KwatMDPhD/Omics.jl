@@ -53,10 +53,4 @@ OnePiece.vector.sort_like([2, 4, 1, 3], ve1, ve2)
 OnePiece.vector.sort_like([3, 1, 4, 2], ve1, ve2)
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

@@ -48,10 +48,4 @@ de = "--"
 OnePiece.string.transplant(st1, st2, de, [1, 2, 1])
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

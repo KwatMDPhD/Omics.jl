@@ -23,10 +23,4 @@ println(OnePiece.constant.ALPHABET)
 println(OnePiece.constant.CARD)
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

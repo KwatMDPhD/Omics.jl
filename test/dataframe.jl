@@ -45,10 +45,4 @@ OnePiece.dict.view(OnePiece.dataframe.map_to_column(da, ["Column 1", "Column 3",
 OnePiece.dict.view(OnePiece.dataframe.map_to_column(da, ["Column 3", "Column 2"]))
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

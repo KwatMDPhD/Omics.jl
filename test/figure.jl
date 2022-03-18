@@ -114,10 +114,4 @@ OnePiece.figure.view(
 OnePiece.figure.view(OnePiece.figure.plot_heat_map(ma, ou = joinpath(TE, "heat_map.html")))
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

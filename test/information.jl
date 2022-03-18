@@ -129,10 +129,4 @@ z = bi.density
 OnePiece.figure.view(OnePiece.figure.plot_heat_map(z, y, x))
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

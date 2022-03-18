@@ -77,10 +77,4 @@ println("-"^99)
 na_, ma_ = OnePiece.gene.rename(unique(skipmissing(hg[!, "symbol"])), hg = false, mo = false)
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

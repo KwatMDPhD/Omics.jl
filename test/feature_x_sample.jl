@@ -34,10 +34,4 @@ ma = OnePiece.tensor.simulate(n_ro, n_co)
 println(OnePiece.feature_x_sample.compare_with_target(bi_, ma, "signal_to_noise_ratio"))
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")

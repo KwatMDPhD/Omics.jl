@@ -45,10 +45,4 @@ for (id, jl) in enumerate(jl_)
 end
 
 # ----------------------------------------------------------------------------------------------- #
-if isdir(TE)
-
-    rm(TE, recursive = true)
-
-    println("Removed $TE.")
-
-end
+println("Done.")
