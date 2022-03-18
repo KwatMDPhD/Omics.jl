@@ -126,8 +126,7 @@ function plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ma 
         "marker" => Dict(
             "symbol" => "line-ns",
             "size" => height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.32,
-            "line" => Dict("width" => 2.4),
-            "color" => "#9017e6",
+            "line" => Dict("width" => 2.4, "color" => "#9017e6"),
         ),
         "hoverinfo" => "x+text",
     )
