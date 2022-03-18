@@ -1,37 +1,38 @@
-function plot_mountain(
-    fe_,
-    sc_,
-    in_,
-    en_,
-    en;
-    height = 480,
-    title_text = "Mountain Plot",
-    title_font_size = 24,
-    axis_title_font_size = 12,
-    names = "Score",
-    line_width = 2.0,
-    ou = "",
-)
+function plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ou = "")
+
+    height = 800
 
     width = height * MathConstants.golden
 
-    yaxis1_domain = [0.0, 0.24]
+    yaxis1_domain = (0.0, 0.24)
 
-    yaxis2_domain = [0.24, 0.32]
+    yaxis2_domain = (0.24, 0.32)
 
-    yaxis3_domain = [0.32, 1.0]
+    yaxis3_domain = (0.32, 1.0)
 
     annotation =
         Dict("xref" => "paper", "yref" => "paper", "yanchor" => "middle", "showarrow" => false)
 
+    axis_title_font_size = 16
+
     annotationy = merge(
         annotation,
-        Dict("xanchor" => "right", "x" => -0.064, "font_size" => axis_title_font_size),
+        Dict("xanchor" => "right", "x" => -0.064, "font" => Dict("size" => axis_title_font_size)),
     )
 
-    annotationx = merge(annotation, Dict("xanchor" => "center", "x" => 0.5))
+    annotationx = merge(annotation, Dict("xanchor" => "center", "x" => 1 / 2))
 
-    namee = "Enrichment"
+    n_ch = 32
+
+    if n_ch < length(title_text)
+
+        title_text = "$(title_text[1:n_ch])..."
+
+    end
+
+    eny = en
+
+    eni_ = findall(en_ .== en)
 
     en = @sprintf "%.3f" en
 
@@ -41,47 +42,45 @@ function plot_mountain(
         "height" => height,
         "width" => width,
         "margin" => Dict("t" => trunc(height * 0.16), "l" => trunc(width * 0.16)),
-        "legend" => Dict(
-            "orientation" => "h",
-            "yanchor" => "middle",
-            "xanchor" => "center",
-            "y" => -0.2,
-            "x" => 0.5,
-        ),
-        "yaxis1" => Dict("domain" => yaxis1_domain, "showline" => true),
+        "showlegend" => false,
+        "yaxis1" => Dict("domain" => yaxis1_domain, "showline" => true, "showgrid" => false),
         "yaxis2" =>
             Dict("domain" => yaxis2_domain, "showticklabels" => false, "showgrid" => false),
-        "yaxis3" => Dict("domain" => yaxis3_domain, "showline" => true),
+        "yaxis3" => Dict("domain" => yaxis3_domain, "showline" => true, "showgrid" => false),
         "xaxis" => Dict(
             "zeroline" => false,
+            "showgrid" => false,
             "showspikes" => true,
-            "spikethickness" => 0.8,
+            "spikethickness" => 1.08,
             "spikecolor" => "#ffb61e",
             "spikedash" => "solid",
             "spikemode" => "across",
         ),
-        "annotations" => [
+        "annotations" => (
             merge(
                 annotationx,
                 Dict(
                     "y" => 1.16,
                     "text" => "<b>$title_text</b>",
-                    "font" => Dict("size" => title_font_size, "color" => "#2b2028"),
+                    "font" => Dict("size" => 32, "color" => "#2b2028"),
                 ),
             ),
             merge(
                 annotationx,
                 Dict(
                     "y" => 1.04,
-                    "text" => "<b>Enrichment = $en</b>",
-                    "font" => Dict("size" => title_font_size * 0.64, "color" => "#181b26"),
+                    "text" => "<b>Enrichment Score = $en</b>",
+                    "font" => Dict("size" => 24, "color" => "#181b26"),
+                    "bgcolor" => "#ebf6f7",
+                    "bordercolor" => "#404ed8",
+                    "borderpad" => 6.4,
                 ),
             ),
             merge(
                 annotationy,
                 Dict(
                     "y" => OnePiece.geometry.get_center(yaxis1_domain...),
-                    "text" => "<b>$names</b>",
+                    "text" => "<b>Feature</b>",
                 ),
             ),
             merge(
@@ -95,32 +94,36 @@ function plot_mountain(
                 annotationy,
                 Dict(
                     "y" => OnePiece.geometry.get_center(yaxis3_domain...),
-                    "text" => "<b>$namee</b>",
+                    "text" => "<b>Enrichment</b>",
                 ),
             ),
-            merge(annotationx, Dict("y" => -0.088, "text" => "<b>Feature Rank (n=$n_fe)</b>")),
-        ],
+            merge(
+                annotationx,
+                Dict(
+                    "y" => -0.088,
+                    "text" => "<b>Feature (n=$n_fe)</b>",
+                    "font" => Dict("size" => axis_title_font_size),
+                ),
+            ),
+        ),
     )
 
     x = 1:n_fe
 
     tracef = Dict(
-        "type" => "scatter",
-        "name" => names,
         "y" => sc_,
         "x" => x,
         "text" => fe_,
         "mode" => "lines",
-        "line" => Dict("width" => 0, "color" => "20d9ba"),
+        "line" => Dict("width" => 0),
         "fill" => "tozeroy",
+        "fillcolor" => "#20d9ba",
         "hoverinfo" => "x+y+text",
     )
 
     in_ = convert(BitVector, in_)
 
     traces = Dict(
-        "type" => "scatter",
-        "name" => "Set",
         "yaxis" => "y2",
         "y" => zeros(sum(in_)),
         "x" => x[in_],
@@ -129,30 +132,44 @@ function plot_mountain(
         "marker" => Dict(
             "symbol" => "line-ns-open",
             "size" => height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.64,
-            "line_width" => line_width,
-            "color" => "9017e6",
+            "line" => Dict("width" => 2.4),
+            "color" => "#9017e6",
         ),
         "hoverinfo" => "x+text",
     )
 
     trace_ = [tracef, traces]
 
-    for (name, is_, color) in
-        [["- Enrichment", en_ .< 0.0, "0088ff"], ["+ Enrichment", 0.0 .< en_, "ff1968"]]
+    for (is_, fillcolor) in ((en_ .< 0.0, "#1992ff"), (0.0 .< en_, "#ff1993"))
 
         push!(
             trace_,
             Dict(
-                "type" => "scatter",
-                "name" => name,
                 "yaxis" => "y3",
                 "y" => ifelse.(is_, en_, 0.0),
                 "x" => x,
                 "text" => fe_,
                 "mode" => "lines",
-                "line" => Dict("width" => 0.0, "color" => color),
+                "line" => Dict("width" => 0),
                 "fill" => "tozeroy",
+                "fillcolor" => fillcolor,
                 "hoverinfo" => "x+y+text",
+            ),
+        )
+
+    end
+
+    if !empty(eni_)
+
+        push!(
+            trace_,
+            Dict(
+                "yaxis" => "y3",
+                "y" => eny,
+                "x" => x[eni_],
+                "mode" => "markers",
+                "marker" => Dict("size" => 4, "color" => "#404ed8"),
+                "hoverinfo" => "y",
             ),
         )
 
