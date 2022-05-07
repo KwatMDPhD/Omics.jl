@@ -37,11 +37,14 @@ include("significance/_.jl")
 include("tensor_function/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
-include("figure/_.jl")
-
 include("dataframe/_.jl")
 
 include("feature_x_sample/_.jl")
+
+# ----------------------------------------------------------------------------------------------- #
+include("html/_.jl")
+
+include("figure/_.jl")
 
 include("network/_.jl")
 

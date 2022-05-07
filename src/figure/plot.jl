@@ -9,46 +9,24 @@ function plot(tr_, la = Dict(); co = Dict(), ou = "")
         "editable" => false,
     )
 
-    la = OnePiece.dict.merge(lad, la)
+    di = "plot"
 
-    co = OnePiece.dict.merge(cod, co)
+    sr = "https://cdn.plot.ly/plotly-latest.min.js"
 
-    if isempty(ou)
+    sc = """
+    Plotly.newPlot(
 
-        ou = joinpath(SC, "index.html")
+        \"$di\",
 
-    end
+        $(JSON3.write(tr_)),
 
-    open(ou, "w") do io
+        $(JSON3.write(OnePiece.dict.merge(lad, la))),
 
-        id = splitext(basename(ou))[1]
+        $(JSON3.write(OnePiece.dict.merge(cod, co))),
 
-        println(io, "<!doctype html>")
+    )
+    """
 
-        println(io, "<div id=\"$id\" style=\"height: 100%; width: 100%\"></div>")
-
-        println(io, "<script src=\"https://cdn.plot.ly/plotly-latest.min.js\"></script>")
-
-        println(io, "<script>")
-
-        print(io, "Plotly.newPlot(\"$id\", ")
-
-        JSON3.write(io, tr_)
-
-        print(io, ", ")
-
-        JSON3.write(io, la)
-
-        print(io, ", ")
-
-        JSON3.write(io, co)
-
-        println(io, ");")
-
-        print(io, "</script>\n")
-
-    end
-
-    ou
+    OnePiece.html.make(di, sr, sc, ou)
 
 end
