@@ -43,6 +43,8 @@ include("dataframe/_.jl")
 
 include("feature_x_sample/_.jl")
 
+include("network/_.jl")
+
 # ----------------------------------------------------------------------------------------------- #
 include("feature_set_enrichment/_.jl")
 

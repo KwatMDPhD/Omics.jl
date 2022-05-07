@@ -1,18 +1,21 @@
 name = "OnePiece"
 uuid = "1fe83854-81c0-42f7-afc9-71ba9af673ca"
 authors = ["KwatMDPhD <kwat.me@icloud.com>"]
-version = "0.7.3"
+version = "0.7.4"
 
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CodecZlib = "944b1d66-785c-5afd-91f1-9de20f533193"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+DefaultApplication = "3f0dd361-4fe0-5fc6-8523-80b14ec94d85"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 KernelDensity = "5ab0869b-81aa-558d-bb23-cbf5423bbe9b"
 Mmap = "a63ad114-7e13-5084-954f-fe012c677804"
+NetworkLayout = "46757867-2c16-5918-afeb-47bfcb05e46a"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
