@@ -25,7 +25,7 @@ function plot(el_, st_, la, ou = "")
 
     cy.ready(function () {
 
-        var png = cy.png({"full":true, "scale":2});
+        var png = cy.png({"full": true, "scale": 2});
 
         saveAs(png, "$pn")
 
