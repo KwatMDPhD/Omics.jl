@@ -1,4 +1,4 @@
-function make(di, sr, sc, ht = "")
+function make(di, sr_, sc, ht = "")
 
     if isempty(ht)
 
@@ -15,7 +15,11 @@ function make(di, sr, sc, ht = "")
             "<div id=\"$di\" style=\"display: block; height: 1000px; width: 80%; margin-left: auto; margin-right: auto; background: #fefefe\"></div>",
         )
 
-        println(io, "<script src=\"$sr\"></script>")
+        for sr in sr_
+
+            println(io, "<script src=\"$sr\"></script>")
+
+        end
 
         println(io, "<script>")
 
