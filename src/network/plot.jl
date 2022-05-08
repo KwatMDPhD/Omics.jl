@@ -2,7 +2,11 @@ function plot(el_, st_, la, ou = "")
 
     di = "plot"
 
-    sr_ = ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.1/cytoscape.min.js", "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js", "https://cdn.rawgit.com/eligrey/FileSaver.js/master/dist/FileSaver.js"]
+    sr_ = [
+        "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.1/cytoscape.min.js",
+        "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
+        "https://cdn.rawgit.com/eligrey/FileSaver.js/master/dist/FileSaver.js",
+    ]
 
     pn = "$(splitext(basename(ou))[1]).png"
 
