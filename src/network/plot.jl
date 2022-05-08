@@ -5,7 +5,7 @@ function plot(el_, st_, la, ou = "")
     sr = "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.1/cytoscape.min.js"
 
     sc = """
-    cytoscape({
+    var cy = cytoscape({
 
         container: document.getElementById("$di"),
 
