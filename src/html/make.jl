@@ -12,7 +12,7 @@ function make(di, sr_, sc, ht = "")
 
         println(
             io,
-            "<div id=\"$di\" style=\"display: block; height: 1000px; width: 80%; margin-left: auto; margin-right: auto; background: #fefefe\"></div>",
+            "<div id=\"$di\" style=\"display: block; height: 1000px; width: 80%; margin-left: auto; margin-right: auto; background: #fdfdfd\"></div>",
         )
 
         for sr in sr_
