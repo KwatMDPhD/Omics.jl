@@ -25,7 +25,7 @@ function make(di, sr_, sc, ht = "")
 
         println(io, "$sc")
 
-        println(io, "</script>\n")
+        println(io, "</script>")
 
     end
 
