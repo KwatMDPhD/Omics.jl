@@ -88,4 +88,6 @@ function factorize(ma, ro_, co_, k_, ti, ou; al = :greedycd, it = 1000000, rp = 
 
     end
 
+    println("Saved NMF results at $ou for k = $k_")
+
 end
