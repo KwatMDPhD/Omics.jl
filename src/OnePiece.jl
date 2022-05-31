@@ -39,10 +39,7 @@ include("tensor_function/_.jl")
 # ----------------------------------------------------------------------------------------------- #
 include("dataframe/_.jl")
 
-include("factorization/_.jl")
-
 include("feature_x_sample/_.jl")
-
 
 # ----------------------------------------------------------------------------------------------- #
 include("html/_.jl")
@@ -52,6 +49,8 @@ include("figure/_.jl")
 include("network/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
+include("factorization/_.jl")
+
 include("feature_set_enrichment/_.jl")
 
 include("gene/_.jl")
