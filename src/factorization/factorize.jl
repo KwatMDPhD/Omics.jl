@@ -1,4 +1,4 @@
-function factorize(ma, ro_, co_, k_, ti, ou, al = :greedycd, it = 1000000, rp = 1)
+function factorize(ma, ro_, co_, k_, ti, ou; al = :greedycd, it = 1000000, rp = 1)
 
     for k in k_
 
