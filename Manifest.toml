@@ -352,6 +352,12 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 [[deps.MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
 
+[[deps.NMF]]
+deps = ["LinearAlgebra", "NonNegLeastSquares", "Printf", "Random", "RandomizedLinAlg", "Statistics", "StatsBase"]
+git-tree-sha1 = "bb6043f8bffb1437128b3d1c036801c624f9220b"
+uuid = "6ef6ca0d-6ad7-5ff6-b225-e928bfa0a386"
+version = "0.5.3"
+
 [[deps.NetworkLayout]]
 deps = ["GeometryBasics", "LinearAlgebra", "Random", "Requires", "SparseArrays"]
 git-tree-sha1 = "cac8fc7ba64b699c678094fa630f49b80618f625"
@@ -360,6 +366,12 @@ version = "0.4.4"
 
 [[deps.NetworkOptions]]
 uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
+
+[[deps.NonNegLeastSquares]]
+deps = ["Distributed", "LinearAlgebra", "SparseArrays"]
+git-tree-sha1 = "1271344271ffae97e2855b0287356e6ea5c221cc"
+uuid = "b7351bd1-99d9-5c5d-8786-f205a815c4d7"
+version = "0.4.0"
 
 [[deps.OffsetArrays]]
 deps = ["Adapt"]
@@ -441,6 +453,12 @@ uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 [[deps.Random]]
 deps = ["SHA", "Serialization"]
 uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+
+[[deps.RandomizedLinAlg]]
+deps = ["LinearAlgebra", "Random", "Test"]
+git-tree-sha1 = "de93780c85c207586369522af7525aa3011b09c3"
+uuid = "0448d7d9-159c-5637-8537-fd72090fea46"
+version = "0.1.0"
 
 [[deps.Ratios]]
 deps = ["Requires"]

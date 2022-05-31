@@ -11,7 +11,7 @@ function plot(tr_, la = Dict(); co = Dict(), ou = "")
 
     di = "plot"
 
-    sr = "https://cdn.plot.ly/plotly-latest.min.js"
+    sr = ["https://cdn.plot.ly/plotly-latest.min.js"]
 
     sc = """
     Plotly.newPlot(
