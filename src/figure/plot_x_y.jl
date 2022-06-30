@@ -8,7 +8,7 @@ function plot_x_y(
     ou = "",
 )
 
-    tr_ = make_empty_trace("scatter", length(y_))
+    tr_ = _make_empty_trace("scatter", length(y_))
 
     for (id, tr) in enumerate(tr_)
 

@@ -29,6 +29,6 @@ function make(di, sr_, sc, ht = "")
 
     end
 
-    ht
+    DefaultApplication.open(ht)
 
 end
