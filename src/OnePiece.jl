@@ -1,9 +1,11 @@
 module OnePiece
 
 # ----------------------------------------------------------------------------------------------- #
+
 include("constant/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
+
 include("dict/_.jl")
 
 include("vector/_.jl")
@@ -13,6 +15,7 @@ include("string/_.jl")
 include("path/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
+
 include("table/_.jl")
 
 include("gct/_.jl")
@@ -20,6 +23,7 @@ include("gct/_.jl")
 include("gmt/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
+
 include("number/_.jl")
 
 include("tensor/_.jl")
@@ -30,6 +34,8 @@ include("geometry/_.jl")
 
 include("information/_.jl")
 
+include("matrix_factorization/_.jl")
+
 include("statistics/_.jl")
 
 include("significance/_.jl")
@@ -37,11 +43,13 @@ include("significance/_.jl")
 include("tensor_function/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
+
 include("dataframe/_.jl")
 
 include("feature_x_sample/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
+
 include("html/_.jl")
 
 include("figure/_.jl")
@@ -49,7 +57,6 @@ include("figure/_.jl")
 include("network/_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
-include("factorization/_.jl")
 
 include("feature_set_enrichment/_.jl")
 

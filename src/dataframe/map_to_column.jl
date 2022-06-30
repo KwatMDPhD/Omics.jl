@@ -34,8 +34,6 @@ function map_to_column(da, co_; de = "|")
 
     end
 
-    OnePiece.dict.summarize(ke_va)
-
     ke_va
 
 end

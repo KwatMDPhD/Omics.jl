@@ -1,4 +1,4 @@
-module factorization
+module matrix_factorization
 
 using JSON3
 using NMF

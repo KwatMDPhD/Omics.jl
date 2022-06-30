@@ -5,8 +5,8 @@ using ..OnePiece
 
 include("map_to_column.jl")
 
-include("view.jl")
-
 include("simulate.jl")
+
+include("view.jl")
 
 end
