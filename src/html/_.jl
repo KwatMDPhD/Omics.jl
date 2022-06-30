@@ -1,6 +1,5 @@
 module html
 
-using DefaultApplication
 using Scratch
 
 function __init__()

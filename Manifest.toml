@@ -113,12 +113,6 @@ version = "1.0.0"
 deps = ["Printf"]
 uuid = "ade2ca70-3891-5945-98fb-dc099432e06a"
 
-[[deps.DefaultApplication]]
-deps = ["InteractiveUtils"]
-git-tree-sha1 = "c0dfa5a35710a193d83f03124356eef3386688fc"
-uuid = "3f0dd361-4fe0-5fc6-8523-80b14ec94d85"
-version = "1.1.0"
-
 [[deps.DelimitedFiles]]
 deps = ["Mmap"]
 uuid = "8bb1440f-4735-579b-a4ab-409b98df4dab"
