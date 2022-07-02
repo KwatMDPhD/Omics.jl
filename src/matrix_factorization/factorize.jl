@@ -6,7 +6,6 @@ function factorize(ma, ro_, co_, k_, ti, ou; al = :greedycd, it = 1000000, rp = 
 
         h, w = re.H, re.W
 
-
         # Cluster h
 
         cl_ = []
@@ -31,7 +30,6 @@ function factorize(ma, ro_, co_, k_, ti, ou; al = :greedycd, it = 1000000, rp = 
 
         hc = transpose(htc)
 
-
         # Cluster w
 
         cl_ = []
@@ -52,8 +50,7 @@ function factorize(ma, ro_, co_, k_, ti, ou; al = :greedycd, it = 1000000, rp = 
 
         wc = wc[:, setdiff(1:end, (gr, gr - 1))]
 
-
-        # Make heatmaps
+        # Make heat map
 
         ti_fe =
             "title" => Dict(

@@ -1,4 +1,4 @@
-function map_with_mouse()
+function map_from_mouse()
 
     or = OnePiece.table.read(joinpath(@__DIR__, "ensembl.mouse_human.tsv.gz"))
 
@@ -21,8 +21,6 @@ function map_with_mouse()
         ke_va[ke] = va
 
     end
-
-    OnePiece.dict.summarize(ke_va)
 
     ke_va
 

@@ -1,4 +1,4 @@
-function map_to_ensembl_gene()
+function map_to_ensembl()
 
     OnePiece.dataframe.map_to_column(
         read_ensembl(),

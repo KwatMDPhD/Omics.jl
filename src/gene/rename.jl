@@ -4,19 +4,19 @@ function rename(st_; mo = true, en = true, hg = true)
 
     if mo
 
-        merge!(st_na, map_with_mouse())
+        merge!(st_na, map_from_mouse())
 
     end
 
     if en
 
-        merge!(st_na, map_to_ensembl_gene())
+        merge!(st_na, map_to_ensembl())
 
     end
 
     if hg
 
-        merge!(st_na, map_to_hgnc_gene())
+        merge!(st_na, map_to_hgnc())
 
     end
 

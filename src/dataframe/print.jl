@@ -1,8 +1,8 @@
-function view(da; n_ro = 3, n_co = 3)
+function print(da; n_ro = 3, n_co = 3)
 
     si1, si2 = size(da)
 
-    println("Viewing $si1 x $si2")
+    println("Printing $si1 x $si2")
 
     if si1 == 0
 

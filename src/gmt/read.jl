@@ -1,4 +1,4 @@
-function read(pa)
+function read(pa::String)
 
     se_ge_ = Dict()
 
@@ -14,7 +14,7 @@ function read(pa)
 
 end
 
-function read(pa_::AbstractArray)
+function read(pa_)
 
     se_ge_ = Dict()
 
