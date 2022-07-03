@@ -1,10 +1,6 @@
 function plot_process(ve_, na_, la, title_text)
 
-    OnePiece.figure.plot_x_y(
-        ve_,
-        name_ = na_,
-        la = merge(la, Dict("title_text" => title_text)),
-    )
+    OnePiece.figure.plot_x_y(ve_, name_ = na_, la = merge(la, Dict("title_text" => title_text)))
 
 end
 

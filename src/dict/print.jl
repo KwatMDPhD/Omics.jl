@@ -10,7 +10,7 @@ function print(di; n_pa = -1, sp = IN)
 
         println("{")
 
-        sp = " " ^ sp
+        sp = " "^sp
 
         for (id, (ke, va)) in enumerate(di)
 
