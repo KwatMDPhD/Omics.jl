@@ -12,7 +12,7 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "kolmogorov_smirnov", pl 
 
     ar = 0.0
 
-    su1, su0 = sum_1_absolute_and_0_count(sc_, in_)
+    su1, su0 = _sum_1_absolute_and_0_count(sc_, in_)
 
     de = 1.0 / su0
 
@@ -76,7 +76,7 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "kolmogorov_smirnov", pl 
 
     if pl
 
-        OnePiece.figure.view(plot_mountain(fe_, sc_, in_, en_, en; ke_ar...))
+        _plot_mountain(fe_, sc_, in_, en_, en; ke_ar...)
 
     end
 

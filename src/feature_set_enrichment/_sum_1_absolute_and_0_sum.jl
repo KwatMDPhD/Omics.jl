@@ -1,4 +1,4 @@
-function sum_1_absolute_and_0_count(sc_::Vector{Float64}, in_::Vector{Bool})
+function _sum_1_absolute_and_0_count(sc_::Vector{Float64}, in_::Vector{Bool})
 
     su1 = 0.0
 

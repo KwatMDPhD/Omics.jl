@@ -1,4 +1,4 @@
-function plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ma = true, ou = "")
+function _plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ma = true, ou = "")
 
     height = 800
 

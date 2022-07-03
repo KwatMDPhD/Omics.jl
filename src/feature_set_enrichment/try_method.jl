@@ -1,11 +1,9 @@
 function plot_process(ve_, na_, la, title_text)
 
-    OnePiece.figure.view(
-        OnePiece.figure.plot_x_y(
-            ve_,
-            name_ = na_,
-            la = merge(la, Dict("title_text" => title_text)),
-        ),
+    OnePiece.figure.plot_x_y(
+        ve_,
+        name_ = na_,
+        la = merge(la, Dict("title_text" => title_text)),
     )
 
 end
@@ -25,13 +23,13 @@ function try_method(fe_, sc_, fe1_; ex = 1.0, plp = true, pl = true)
     oua_ = ou_ .* ab_
 
     #
-    abp_, abpr_, abpl_ = get_probability_and_cumulate(ab_)
+    abp_, abpr_, abpl_ = _get_probability_and_cumulate(ab_)
 
-    inap_, inapr_, inapl_ = get_probability_and_cumulate(ina_)
+    inap_, inapr_, inapl_ = _get_probability_and_cumulate(ina_)
 
-    ouap_, ouapr_, ouapl_ = get_probability_and_cumulate(oua_)
+    ouap_, ouapr_, ouapl_ = _get_probability_and_cumulate(oua_)
 
-    oup_, oupr_, oupl_ = get_probability_and_cumulate(ou_)
+    oup_, oupr_, oupl_ = _get_probability_and_cumulate(ou_)
 
     if plp
 
@@ -114,9 +112,7 @@ function try_method(fe_, sc_, fe1_; ex = 1.0, plp = true, pl = true)
 
                     if pl
 
-                        OnePiece.figure.view(
-                            plot_mountain(fe_, sc_, in_, en_, en, title_text = me),
-                        )
+                        _plot_mountain(fe_, sc_, in_, en_, en, title_text = me)
 
                     end
 

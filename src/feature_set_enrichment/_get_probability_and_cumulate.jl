@@ -1,4 +1,4 @@
-function get_probability_and_cumulate(ve)
+function _get_probability_and_cumulate(ve)
 
     pr_ = ve / sum(ve)
 
