@@ -2,19 +2,25 @@ function print(di; n_pa = -1, sp = IN)
 
     println("$(length(keys(di))) keys and $(length(Set(values(di)))) unique values")
 
-    if 0 < n_pa
+    if n_pa == -1
+
+        JSON.print(di, sp)
+
+    else
 
         println("{")
+
+        sp = " " ^ sp
 
         for (id, (ke, va)) in enumerate(di)
 
             if id <= n_pa
 
-                println("$(" "^sp)$ke => $va")
+                println("$sp$ke => $va")
 
             else
 
-                println("...")
+                println("$sp...")
 
                 break
 
@@ -23,10 +29,6 @@ function print(di; n_pa = -1, sp = IN)
         end
 
         println("}")
-
-    else
-
-        JSON.print(di, sp)
 
     end
 
