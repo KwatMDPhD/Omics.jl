@@ -2,7 +2,7 @@ function make(di, sr_, sc, ht = "")
 
     if isempty(ht)
 
-        ht = joinpath(SC, "scratch.html")
+        ht = joinpath(SC, "$(OnePiece.time.stamp()).html")
 
     end
 
@@ -31,6 +31,6 @@ function make(di, sr_, sc, ht = "")
 
     println("Made $ht.")
 
-    ht
+    DefaultApplication.open(ht)
 
 end
