@@ -12,8 +12,6 @@ include("make_absolute.jl")
 
 include("move.jl")
 
-include("remove_extension.jl")
-
 include("sed_recursively.jl")
 
 include("select.jl")
