@@ -11,25 +11,22 @@ mkdir(TE)
 #using Revise
 using OnePiece
 
-pa = dirname(@__DIR__)
+sr_ =
+    [basename(na) for na in readdir(joinpath(dirname(@__DIR__), "src"), join = true) if isdir(na)]
 
-pap = joinpath(pa, "Project.toml")
-
-pas = joinpath(pa, "src")
-
-pat = joinpath(pa, "test")
-
-sr_ = [na for na in readdir(pas) if isdir(joinpath(pas, na))]
-
-te_ = [splitext(na)[1] for na in readdir(pat) if endswith(na, ".ipynb")]
-
-te_ = [te for te in te_ if !(te in ("runtests",))]
+te_ = [splitext(na)[1] for na in readdir() if endswith(na, ".ipynb") && na != "runtests.ipynb"]
 
 symdiff(sr_, te_)
 
-for (id, te) in enumerate(te_)
+nb_ = [na for na in readdir() if occursin(r".ipynb$", na) && na != "runtests.ipynb"]
 
-    nb = joinpath(pat, "$te.ipynb")
+if all(startswith.(nb_, r"^[0-9]+\."))
+
+    sort!(nb_, by = nb -> parse(Int64, split(nb, '.')[1]))
+
+end
+
+for (id, nb) in enumerate(nb_)
 
     if id < 1
 
