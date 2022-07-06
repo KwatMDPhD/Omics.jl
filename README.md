@@ -1,6 +1,6 @@
 # OnePiece.jl
 
-One for all ::
+One for all :recycle:
 
 ---
 
