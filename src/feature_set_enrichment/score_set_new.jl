@@ -1,33 +1,59 @@
+function _cumulate(ve)
+
+    ep = eps()
+
+    cul_ = OnePiece.tensor.cumulate_sum_reverse(ve) .+ ep
+
+    cul_ /= sum(cul_)
+
+    # To do #
+
+    # Kwat
+    #cur_ = cumsum(ve) .+ ep
+    #cur_ /= sum(cur_)
+
+    # Pablo
+    cur_ = 1.0 .- cul_
+
+    println("Sums: $(sum(cul_)) and $(sum(cur_))")
+
+    # ----- #
+
+    cul_, cur_
+
+end
+
 function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
-    #
     in_ = convert(Vector{Float64}, OnePiece.vector.is_in(fe_, fe1_))
 
     ou_ = 1.0 .- in_
 
-    #
     ab_ = abs.(sc_) .^ ex
 
     ina_ = in_ .* ab_
 
     oua_ = ou_ .* ab_
 
-    #
-    abp_, abpr_, abpl_ = _get_probability_and_cumulate(ab_)
+    inapl_, inapr_ = _cumulate(ina_)
 
-    inap_, inapr_, inapl_ = _get_probability_and_cumulate(ina_)
+    ouapl_, ouapr_ = _cumulate(oua_)
 
-    ouap_, ouapr_, ouapl_ = _get_probability_and_cumulate(oua_)
+    fl_ = OnePiece.information.get_kullback_leibler_divergence(inapl_, ouapl_)
 
-    #oup_, oupr_, oupl_ = _get_probability_and_cumulate(ou_)
-
-    fl_ = OnePiece.information.get_kwat_pablo_divergence(inapl_, ouapl_, abpl_)
-
-    fr_ = OnePiece.information.get_kwat_pablo_divergence(inapr_, ouapr_, abpr_)
+    fr_ = OnePiece.information.get_kullback_leibler_divergence(inapr_, ouapr_)
 
     en_ = fl_ - fr_
 
-    en = OnePiece.tensor.get_area(en_)
+    # To do #
+
+    # Kwat
+    #en = OnePiece.tensor.get_area(en_)
+
+    # Pablo
+    en = sum(en_)
+
+    # ----- #
 
     if pl
 
