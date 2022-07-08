@@ -24,6 +24,8 @@ include("gct/_.jl")
 
 include("gmt/_.jl")
 
+include("ipynb/_.jl")
+
 #
 
 include("number/_.jl")

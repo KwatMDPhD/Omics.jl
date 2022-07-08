@@ -10,6 +10,8 @@ include("error_missing.jl")
 
 include("make_absolute.jl")
 
+include("make_temporary.jl")
+
 include("move.jl")
 
 include("sed_recursively.jl")
