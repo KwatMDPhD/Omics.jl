@@ -1,4 +1,4 @@
-function plot(el_, st_, la, ou = "")
+function plot(el_, st_, la; ou = "")
 
     di = "plot"
 
