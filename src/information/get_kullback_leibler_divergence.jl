@@ -1,5 +1,5 @@
-function get_kullback_leibler_divergence(te1, te2)
+function get_kullback_leibler_divergence(ve1, ve2)
 
-    te1 .* log.(te1 ./ te2)
+    ve1 .* log.(ve1 ./ ve2)
 
 end

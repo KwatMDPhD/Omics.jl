@@ -4,26 +4,17 @@ function _cumulate(ve)
 
     cul_ = OnePiece.tensor.cumulate_sum_reverse(ve) .+ ep
 
-    cul_ /= sum(cul_)
+    cul_ /= sum(ve)
 
-    # To do #
+    cur_ = cumsum(ve) .+ ep
 
-    # Kwat
-    #cur_ = cumsum(ve) .+ ep
-    #cur_ /= sum(cur_)
-
-    # Pablo
-    cur_ = 1.0 .- cul_
-
-    println("Sums: $(sum(cul_)) and $(sum(cur_))")
-
-    # ----- #
+    cur_ /= sum(ve)
 
     cul_, cur_
 
 end
 
-function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
+function score_set_new(fe_, sc_, fe1_; ex = 1.0, al = "klc", pl = true, ke_ar...)
 
     in_ = convert(Vector{Float64}, OnePiece.vector.is_in(fe_, fe1_))
 
@@ -39,21 +30,39 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
     ouapl_, ouapr_ = _cumulate(oua_)
 
-    fl_ = OnePiece.information.get_kullback_leibler_divergence(inapl_, ouapl_)
+    abl_, abr_ = _cumulate(ab_)
 
-    fr_ = OnePiece.information.get_kullback_leibler_divergence(inapr_, ouapr_)
+    if al == "klc"
+
+        fl_ = OnePiece.information.get_kullback_leibler_divergence(inapl_, abl_)
+
+        fr_ = OnePiece.information.get_kullback_leibler_divergence(inapr_, abr_)
+
+    elseif al == "sklc"
+
+        fl_ = OnePiece.information.get_symmetric_kullback_leibler_divergence(inapl_, ouapl_, abl_)
+
+        fr_ = OnePiece.information.get_symmetric_kullback_leibler_divergence(inapr_, ouapr_, abr_)
+
+    elseif al == "aklc"
+
+        fl_ = OnePiece.information.get_antisymmetric_kullback_leibler_divergence(
+            inapl_,
+            ouapl_,
+            abl_,
+        )
+
+        fr_ = OnePiece.information.get_antisymmetric_kullback_leibler_divergence(
+            inapr_,
+            ouapr_,
+            abr_,
+        )
+
+    end
 
     en_ = fl_ - fr_
 
-    # To do #
-
-    # Kwat
-    #en = OnePiece.tensor.get_area(en_)
-
-    # Pablo
-    en = sum(en_)
-
-    # ----- #
+    en = OnePiece.tensor.get_area(en_)
 
     if pl
 
