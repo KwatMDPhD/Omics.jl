@@ -1,4 +1,18 @@
-function _plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ma = true, ou = "")
+function _ro(fl)
+
+    fl = round(fl, sigdigits = 2)
+
+    if abs(fl) < eps()
+
+        fl = 0.0
+
+    end
+
+    "<b>$fl</b>"
+
+end
+
+function _plot_mountain(fe_, sc_, in_, en_, (ex, ar); title_text = "Mountain Plot", ou = "")
 
     height = 800
 
@@ -63,7 +77,7 @@ function _plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ma
                 annotationx,
                 Dict(
                     "y" => 1.04,
-                    "text" => "<b>Enrichment Score = $(@sprintf "%.3f" en)</b>",
+                    "text" => "Extreme = $(_ro(ex)) and Area = $(_ro(ar))",
                     "font" => Dict("size" => 24, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
                     "bordercolor" => "#404ed8",
@@ -152,29 +166,25 @@ function _plot_mountain(fe_, sc_, in_, en_, en; title_text = "Mountain Plot", ma
 
     end
 
-    if ma
+    id_ = findall(en_ .== ex)
 
-        id_ = findall(en_ .== en)
-
-        push!(
-            trace_,
-            Dict(
-                "yaxis" => "y3",
-                "y" => en_[id_],
-                "x" => x[id_],
-                "mode" => "markers",
-                "marker" => Dict(
-                    "symbol" => "circle",
-                    "size" => height * (yaxis3_domain[2] - yaxis3_domain[1]) * 0.04,
-                    "color" => "#ebf6f7",
-                    "opacity" => 0.72,
-                    "line" => Dict("width" => 2, "color" => "#404ed8", "opacity" => 1),
-                ),
-                "hoverinfo" => "y",
+    push!(
+        trace_,
+        Dict(
+            "yaxis" => "y3",
+            "y" => en_[id_],
+            "x" => x[id_],
+            "mode" => "markers",
+            "marker" => Dict(
+                "symbol" => "circle",
+                "size" => height * (yaxis3_domain[2] - yaxis3_domain[1]) * 0.04,
+                "color" => "#ebf6f7",
+                "opacity" => 0.72,
+                "line" => Dict("width" => 2, "color" => "#404ed8", "opacity" => 1),
             ),
-        )
-
-    end
+            "hoverinfo" => "y",
+        ),
+    )
 
     OnePiece.figure.plot(trace_, layout, ou = ou)
 

@@ -30,11 +30,11 @@ function _sum_1_absolute_and_0_count(sc_::Vector{Float64}, in_::Vector{Bool})
 
 end
 
-function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "ks", pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
 
     n_fe = length(fe_)
 
-    en = 0.0
+    cu = 0.0
 
     en_ = Vector{Float64}(undef, n_fe)
 
@@ -60,29 +60,29 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "ks", pl = true, ke_ar...
 
             end
 
-            en += sc / su1
+            cu += sc / su1
 
         else
 
-            en -= de
+            cu -= de
 
         end
 
         if pl
 
-            en_[id] = en
+            en_[id] = cu
 
         end
 
-        ar += en
+        ar += cu
 
-        if en < 0.0
+        if cu < 0.0
 
-            ena = -en
+            ena = -cu
 
         else
 
-            ena = en
+            ena = cu
 
         end
 
@@ -90,21 +90,13 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "ks", pl = true, ke_ar...
 
             exa = ena
 
-            ex = en
+            ex = cu
 
         end
 
     end
 
-    if al == "ks"
-
-        en = ex
-
-    elseif al == "ksa"
-
-        en = ar / convert(Float64, n_fe)
-
-    end
+    en = ex, ar / convert(Float64, n_fe)
 
     if pl
 
@@ -116,22 +108,13 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "ks", pl = true, ke_ar...
 
 end
 
-function score_set(fe_, sc_, fe1_; ex = 1.0, al = "ks", pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
-    score_set(
-        fe_,
-        sc_,
-        fe1_,
-        OnePiece.vector.is_in(fe_, fe1_);
-        ex = ex,
-        al = al,
-        pl = pl,
-        ke_ar...,
-    )
+    score_set(fe_, sc_, fe1_, OnePiece.vector.is_in(fe_, fe1_); ex = ex, pl = pl, ke_ar...)
 
 end
 
-function score_set(fe_, sc_, se_fe_::Dict; ex = 1.0, al = "ks", n_jo = 1)
+function score_set(fe_, sc_, se_fe_::Dict; ex = 1.0, n_jo = 1)
 
     if length(se_fe_) < 10
 
@@ -144,45 +127,42 @@ function score_set(fe_, sc_, se_fe_::Dict; ex = 1.0, al = "ks", n_jo = 1)
     end
 
     Dict(
-        se => score_set(
-            fe_,
-            sc_,
-            fe1_,
-            OnePiece.vector.is_in(ch, fe1_),
-            ex = ex,
-            al = al,
-            pl = false,
-        ) for (se, fe1_) in se_fe_
+        se => score_set(fe_, sc_, fe1_, OnePiece.vector.is_in(ch, fe1_), ex = ex, pl = false) for
+        (se, fe1_) in se_fe_
     )
 
 end
 
-function score_set(sc_fe_sa, se_fe_; ex = 1.0, al = "ks", n_jo = 1)
+function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
-    fe_ = sc_fe_sa[!, 1]
+    fe_ = fe_x_sa_x_sc[!, 1]
 
-    en_se_sa = DataFrame("Set" => collect(keys(se_fe_)))
+    se_x_sa_x_en = DataFrame("Set" => collect(keys(se_fe_)))
 
-    for sa in names(sc_fe_sa)[2:end]
+    for sa in names(fe_x_sa_x_sc)[2:end]
 
-        go_ = findall(!ismissing, sc_fe_sa[!, sa])
+        go_ = findall(!ismissing, fe_x_sa_x_sc[!, sa])
 
-        sc_, fe_ = OnePiece.vector.sort_like(sc_fe_sa[go_, sa], fe_[go_])
+        sc_, fe_ = OnePiece.vector.sort_like(fe_x_sa_x_sc[go_, sa], fe_[go_])
 
-        if in(al, ["ks", "ksa"])
+        if al == "cidac"
 
-            se_en = score_set(fe_, sc_, se_fe_, ex = ex, al = al)
+            fu = score_set_new
 
-        elseif al == "cidac"
+        else
 
-            se_en = score_set_new(fe_, sc_, se_fe_)
+            fu = score_set
 
         end
 
-        en_se_sa[!, sa] = collect(se_en[se] for se in en_se_sa[!, "Set"])
+        se_en = fu(fe_, sc_, se_fe_, ex = ex)
+
+        se_en = Dict(se => en[2] for (se, en) in se_en)
+
+        se_x_sa_x_en[!, sa] = collect(se_en[se] for se in se_x_sa_x_en[!, "Set"])
 
     end
 
-    en_se_sa
+    se_x_sa_x_en
 
 end

@@ -6,6 +6,8 @@ using Printf
 using StatsBase
 using ..OnePiece
 
+include("_cumulate.jl")
+
 include("_plot_mountain.jl")
 
 include("make_benchmark.jl")

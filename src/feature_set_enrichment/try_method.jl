@@ -16,13 +16,13 @@ function try_method(fe_, sc_, fe1_; ex = 1.0, plp = true, pl = true)
 
     oua_ = ou_ .* ab_
 
-    abl_, abr_ = _cumulate(ab_)
+    abr_, abl_ = _cumulate(ab_)
 
-    inal_, inar_ = _cumulate(ina_)
+    inar_, inal_ = _cumulate(ina_)
 
-    oual_, ouar_ = _cumulate(oua_)
+    ouar_, oual_ = _cumulate(oua_)
 
-    oul_, our_ = _cumulate(ou_)
+    our_, oul_ = _cumulate(ou_)
 
     if plp
 
@@ -69,24 +69,23 @@ function try_method(fe_, sc_, fe1_; ex = 1.0, plp = true, pl = true)
 
         en_ = fl_ - fr_
 
-        for (me2, fu2) in
-            [["Extreme", OnePiece.tensor.get_extreme], ["Area", OnePiece.tensor.get_area]]
+        en = OnePiece.tensor.get_extreme(en_), OnePiece.tensor.get_area(en_)
 
-            en = fu2(en_)
+        for (id, me2) in enumerate(["Extreme", "Area"])
 
-            me_en["$me $me2"] = en
+            me_en["$me $me2"] = en[id]
 
-            if plp
+        end
 
-                _plot([fl_, fr_, en_], ["Left", "Right", "Enrichment"], la, me)
+        if plp
 
-            end
+            _plot([fl_, fr_, en_], ["Left", "Right", "Enrichment"], la, me)
 
-            if pl
+        end
 
-                _plot_mountain(fe_, sc_, in_, en_, en, title_text = me)
+        if pl
 
-            end
+            _plot_mountain(fe_, sc_, in_, en_, en, title_text = me)
 
         end
 

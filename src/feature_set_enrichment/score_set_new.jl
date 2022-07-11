@@ -1,19 +1,3 @@
-function _cumulate(ve)
-
-    ep = eps()
-
-    cul_ = OnePiece.tensor.cumulate_sum_reverse(ve) .+ ep
-
-    cul_ /= sum(ve)
-
-    cur_ = cumsum(ve) .+ ep
-
-    cur_ /= sum(ve)
-
-    cul_, cur_
-
-end
-
 function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
     in_ = convert(Vector{Float64}, OnePiece.vector.is_in(fe_, fe1_))
@@ -26,11 +10,11 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
     oua_ = ou_ .* ab_
 
-    abl_, abr_ = _cumulate(ab_)
+    abr_, abl_ = _cumulate(ab_)
 
-    inal_, inar_ = _cumulate(ina_)
+    inar_, inal_ = _cumulate(ina_)
 
-    oual_, ouar_ = _cumulate(oua_)
+    ouar_, oual_ = _cumulate(oua_)
 
     fl_ = OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_)
 
@@ -38,7 +22,7 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
     en_ = fl_ - fr_
 
-    en = OnePiece.tensor.get_area(en_)
+    en = OnePiece.tensor.get_extreme(en_), OnePiece.tensor.get_area(en_)
 
     if pl
 
