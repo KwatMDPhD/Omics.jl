@@ -14,4 +14,6 @@ include("score_set.jl")
 
 include("score_set_new.jl")
 
+include("try_method.jl")
+
 end

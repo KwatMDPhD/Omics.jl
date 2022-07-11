@@ -26,37 +26,31 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, al = "klc", pl = true, ke_ar...
 
     oua_ = ou_ .* ab_
 
-    inapl_, inapr_ = _cumulate(ina_)
-
-    ouapl_, ouapr_ = _cumulate(oua_)
-
     abl_, abr_ = _cumulate(ab_)
+
+    inal_, inar_ = _cumulate(ina_)
+
+    oual_, ouar_ = _cumulate(oua_)
 
     if al == "klc"
 
-        fl_ = OnePiece.information.get_kullback_leibler_divergence(inapl_, abl_)
+        fl_ = OnePiece.information.get_kullback_leibler_divergence(inal_, abl_)
 
-        fr_ = OnePiece.information.get_kullback_leibler_divergence(inapr_, abr_)
+        fr_ = OnePiece.information.get_kullback_leibler_divergence(inar_, abr_)
 
     elseif al == "sklc"
 
-        fl_ = OnePiece.information.get_symmetric_kullback_leibler_divergence(inapl_, ouapl_, abl_)
+        fl_ = OnePiece.information.get_symmetric_kullback_leibler_divergence(inal_, oual_, abl_)
 
-        fr_ = OnePiece.information.get_symmetric_kullback_leibler_divergence(inapr_, ouapr_, abr_)
+        fr_ = OnePiece.information.get_symmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
 
     elseif al == "aklc"
 
-        fl_ = OnePiece.information.get_antisymmetric_kullback_leibler_divergence(
-            inapl_,
-            ouapl_,
-            abl_,
-        )
+        fl_ =
+            OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_)
 
-        fr_ = OnePiece.information.get_antisymmetric_kullback_leibler_divergence(
-            inapr_,
-            ouapr_,
-            abr_,
-        )
+        fr_ =
+            OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
 
     end
 

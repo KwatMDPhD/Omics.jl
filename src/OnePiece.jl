@@ -32,6 +32,8 @@ include("number/_.jl")
 
 include("tensor/_.jl")
 
+include("matrix/_.jl")
+
 include("normalization/_.jl")
 
 include("geometry/_.jl")
