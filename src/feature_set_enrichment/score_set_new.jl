@@ -14,7 +14,7 @@ function _cumulate(ve)
 
 end
 
-function score_set_new(fe_, sc_, fe1_; ex = 1.0, al = "klc", pl = true, ke_ar...)
+function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
     in_ = convert(Vector{Float64}, OnePiece.vector.is_in(fe_, fe1_))
 
@@ -32,27 +32,9 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, al = "klc", pl = true, ke_ar...
 
     oual_, ouar_ = _cumulate(oua_)
 
-    if al == "klc"
+    fl_ = OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_)
 
-        fl_ = OnePiece.information.get_kullback_leibler_divergence(inal_, abl_)
-
-        fr_ = OnePiece.information.get_kullback_leibler_divergence(inar_, abr_)
-
-    elseif al == "sklc"
-
-        fl_ = OnePiece.information.get_symmetric_kullback_leibler_divergence(inal_, oual_, abl_)
-
-        fr_ = OnePiece.information.get_symmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
-
-    elseif al == "aklc"
-
-        fl_ =
-            OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_)
-
-        fr_ =
-            OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
-
-    end
+    fr_ = OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
 
     en_ = fl_ - fr_
 

@@ -49,19 +49,19 @@ function try_method(fe_, sc_, fe1_; ex = 1.0, plp = true, pl = true)
     me_en = OrderedDict()
 
     for (me, fl_, fr_) in [
-        ["Ou < KS", inal_, oul_],
+        ["KS", inal_, oul_],
         [
-            "OuA <> KLC",
+            "CIDC",
             OnePiece.information.get_kullback_leibler_divergence(inal_, abl_),
             OnePiece.information.get_kullback_leibler_divergence(inar_, abr_),
         ],
         [
-            "OuA < SKLC",
+            "CIDSC",
             OnePiece.information.get_symmetric_kullback_leibler_divergence(inal_, oual_, abl_),
             OnePiece.information.get_symmetric_kullback_leibler_divergence(inar_, ouar_, abr_),
         ],
         [
-            "OuA < AKLC",
+            "CIDAC",
             OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_),
             OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_),
         ],

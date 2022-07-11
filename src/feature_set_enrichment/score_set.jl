@@ -30,7 +30,7 @@ function _sum_1_absolute_and_0_count(sc_::Vector{Float64}, in_::Vector{Bool})
 
 end
 
-function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "kolmogorov_smirnov", pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "ks", pl = true, ke_ar...)
 
     n_fe = length(fe_)
 
@@ -96,11 +96,11 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "kolmogorov_smirnov", pl 
 
     end
 
-    if al == "kolmogorov_smirnov"
+    if al == "ks"
 
         en = ex
 
-    elseif al == "kolmogorov_smirnov_area"
+    elseif al == "ksa"
 
         en = ar / convert(Float64, n_fe)
 
@@ -116,7 +116,7 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, al = "kolmogorov_smirnov", pl 
 
 end
 
-function score_set(fe_, sc_, fe1_; ex = 1.0, al = "kolmogorov_smirnov", pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_; ex = 1.0, al = "ks", pl = true, ke_ar...)
 
     score_set(
         fe_,
@@ -131,7 +131,7 @@ function score_set(fe_, sc_, fe1_; ex = 1.0, al = "kolmogorov_smirnov", pl = tru
 
 end
 
-function score_set(fe_, sc_, se_fe_::Dict; ex = 1.0, al = "kolmogorov_smirnov", n_jo = 1)
+function score_set(fe_, sc_, se_fe_::Dict; ex = 1.0, al = "ks", n_jo = 1)
 
     if length(se_fe_) < 10
 
@@ -157,7 +157,7 @@ function score_set(fe_, sc_, se_fe_::Dict; ex = 1.0, al = "kolmogorov_smirnov", 
 
 end
 
-function score_set(sc_fe_sa, se_fe_; ex = 1.0, al = "kolmogorov_smirnov", n_jo = 1)
+function score_set(sc_fe_sa, se_fe_; ex = 1.0, al = "ks", n_jo = 1)
 
     fe_ = sc_fe_sa[!, 1]
 
@@ -169,11 +169,11 @@ function score_set(sc_fe_sa, se_fe_; ex = 1.0, al = "kolmogorov_smirnov", n_jo =
 
         sc_, fe_ = OnePiece.vector.sort_like(sc_fe_sa[go_, sa], fe_[go_])
 
-        if in(al, ["kolmogorov_smirnov", "kolmogorov_smirnov_area"])
+        if in(al, ["ks", "ksa"])
 
             se_en = score_set(fe_, sc_, se_fe_, ex = ex, al = al)
 
-        elseif al == "jensen_shannon"
+        elseif al == "cidac"
 
             se_en = score_set_new(fe_, sc_, se_fe_)
 
