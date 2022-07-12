@@ -14,6 +14,8 @@ include("make_temporary.jl")
 
 include("move.jl")
 
+include("rename_recursively.jl")
+
 include("sed_recursively.jl")
 
 include("select.jl")

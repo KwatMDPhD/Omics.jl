@@ -10,7 +10,7 @@ function run(di, sk_)
 
     nb_ = [na for na in readdir(di) if occursin(r".ipynb$", na) && !(na in sk_)]
 
-    if all(startswith.(nb_, r"^[0-9]+\."))
+    if all(occursin.(r"^[0-9]+\.", nb_))
 
         sort!(nb_, by = nb -> parse(Int64, split(nb, '.')[1]))
 
@@ -18,7 +18,9 @@ function run(di, sk_)
 
     for (id, nb) in enumerate(nb_)
 
-        println("Running ", nb, " (", id, ")")
+        nb = joinpath(di, nb)
+
+        println("Running $nb ($id)")
 
         run(nb)
 

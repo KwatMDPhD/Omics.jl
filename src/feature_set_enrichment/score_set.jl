@@ -145,19 +145,9 @@ function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
         sc_, fe_ = OnePiece.vector.sort_like(fe_x_sa_x_sc[go_, sa], fe_[go_])
 
-        if al == "cidac"
+        fu, st = _match_algorithm(al)
 
-            fu = score_set_new
-
-        else
-
-            fu = score_set
-
-        end
-
-        se_en = fu(fe_, sc_, se_fe_, ex = ex)
-
-        se_en = Dict(se => en[2] for (se, en) in se_en)
+        se_en = _match_algorithm(fu(fe_, sc_, se_fe_, ex = ex), st)
 
         se_x_sa_x_en[!, sa] = collect(se_en[se] for se in se_x_sa_x_en[!, "Set"])
 
