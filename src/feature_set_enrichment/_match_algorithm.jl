@@ -18,6 +18,10 @@ function _match_algorithm(al)
 
         st = 2
 
+    else
+
+        error("Algorithm is not `cidac`, `ks` or `ksa`.")
+
     end
 
     fu, st
