@@ -135,11 +135,15 @@ end
 
 function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
-    fe_ = fe_x_sa_x_sc[!, 1]
+    fe_, fe_x_sa_x_sc = OnePiece.dataframe.separate_row(fe_x_sa_x_sc)
+
+    OnePiece.vector.error_duplicate(fe_)
+
+    OnePiece.dataframe.error_bad(fe_x_sa_x_sc)
 
     se_x_sa_x_en = DataFrame("Set" => collect(keys(se_fe_)))
 
-    for sa in names(fe_x_sa_x_sc)[2:end]
+    for sa in names(fe_x_sa_x_sc)
 
         go_ = findall(!ismissing, fe_x_sa_x_sc[!, sa])
 
