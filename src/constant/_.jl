@@ -1,7 +1,9 @@
 module constant
 
-include("ALPHABET.jl")
+const ALPHABET = collect("abcdefghijklmnopqrstuvwxyz")
 
-include("CARD.jl")
+const CARD = collect("A23456789XJQK")
+
+RANDOM_SEED = 20121020
 
 end

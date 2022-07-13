@@ -84,27 +84,9 @@ function _plot_mountain(fe_, sc_, in_, en_, (ex, ar); title_text = "Mountain Plo
                     "borderpad" => 6.4,
                 ),
             ),
-            merge(
-                annotationy,
-                Dict(
-                    "y" => OnePiece.geometry.get_center(yaxis1_domain...),
-                    "text" => "<b>Feature</b>",
-                ),
-            ),
-            merge(
-                annotationy,
-                Dict(
-                    "y" => OnePiece.geometry.get_center(yaxis2_domain...),
-                    "text" => "<b>Set</b>",
-                ),
-            ),
-            merge(
-                annotationy,
-                Dict(
-                    "y" => OnePiece.geometry.get_center(yaxis3_domain...),
-                    "text" => "<b>Enrichment</b>",
-                ),
-            ),
+            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>Feature</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
             merge(
                 annotationx,
                 Dict(

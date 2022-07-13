@@ -1,4 +1,4 @@
-module tensor_function
+module fu
 
 include("apply.jl")
 

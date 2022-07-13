@@ -26,6 +26,6 @@ function compare_with_target(sa_, an_fe_sa, fu)
 
     end
 
-    OnePiece.tensor_function.apply(sa_, an_fe_sa, fu)
+    OnePiece.fu.apply(sa_, an_fe_sa, fu)
 
 end

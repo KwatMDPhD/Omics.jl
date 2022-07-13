@@ -12,7 +12,7 @@ function adjust_p_value(pv_, n_pv = length(pv_); me = "benjamini_hochberg")
 
         pv_ .*= n_pv ./ (1:length(pv_))
 
-        pv_ = OnePiece.tensor.make_increasing_by_stepping_up!(pv_)[so_]
+        pv_ = OnePiece.vector_number.make_increasing_by_stepping_up!(pv_)[so_]
 
     else
 

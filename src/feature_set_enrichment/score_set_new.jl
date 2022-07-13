@@ -22,7 +22,7 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
     en_ = fl_ - fr_
 
-    en = OnePiece.tensor.get_extreme(en_), OnePiece.tensor.get_area(en_)
+    en = OnePiece.vector_number.get_extreme(en_), OnePiece.vector_number.get_area(en_)
 
     if pl
 

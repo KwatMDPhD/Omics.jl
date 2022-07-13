@@ -2,7 +2,7 @@ function make(di, sr_, sc, ht = "")
 
     if isempty(ht)
 
-        ht = joinpath(SC, "$(OnePiece.time.stamp()).html")
+        ht = joinpath(OnePiece.TEMPORARY_DIRECTORY, "$(OnePiece.time.stamp()).html")
 
     end
 
