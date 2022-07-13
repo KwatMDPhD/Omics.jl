@@ -1,4 +1,4 @@
-module dataframe
+module data_frame
 
 using DataFrames
 using OrderedCollections

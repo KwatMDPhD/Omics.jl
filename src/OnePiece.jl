@@ -48,7 +48,7 @@ include("tensor_function/_.jl")
 
 #
 
-include("dataframe/_.jl")
+include("data_frame/_.jl")
 
 include("feature_x_sample/_.jl")
 

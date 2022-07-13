@@ -1,6 +1,6 @@
 function map_to_ensembl()
 
-    OnePiece.dataframe.map_to_column(
+    OnePiece.data_frame.map_to_column(
         read_ensembl(),
         [
             "Transcript stable ID version",

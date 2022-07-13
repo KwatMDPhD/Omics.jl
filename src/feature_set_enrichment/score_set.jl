@@ -135,11 +135,11 @@ end
 
 function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
-    fe_, fe_x_sa_x_sc = OnePiece.dataframe.separate_row(fe_x_sa_x_sc)
+    fe_, fe_x_sa_x_sc = OnePiece.data_frame.separate_row(fe_x_sa_x_sc)
 
     OnePiece.vector.error_duplicate(fe_)
 
-    OnePiece.dataframe.error_bad(fe_x_sa_x_sc)
+    OnePiece.data_frame.error_bad(fe_x_sa_x_sc)
 
     se_x_sa_x_en = DataFrame("Set" => collect(keys(se_fe_)))
 

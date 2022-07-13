@@ -77,7 +77,7 @@ function factorize(ma, ro_, co_, k_, ti, ou; al = :greedycd, it = 1000000, rp = 
                 se[1],
                 se[2],
                 se[3],
-                la = se[4],
+                layout = se[4],
                 ou = joinpath(pa, "$(se[5]).html"),
             )
 
