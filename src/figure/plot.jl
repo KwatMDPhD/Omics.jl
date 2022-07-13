@@ -1,8 +1,8 @@
-function plot(tr_, la = Dict(); co = Dict(), ou = "")
+function plot(data, layout = Dict(); config = Dict(), ou = "")
 
-    lad = Dict("hovermode" => "closest")
+    layout0 = Dict("hovermode" => "closest")
 
-    cod = Dict(
+    config0 = Dict(
         "modebarbuttonstoremove" => ["select", "lasso", "resetscale"],
         "displaylogo" => false,
         "responsive" => true,
@@ -18,11 +18,11 @@ function plot(tr_, la = Dict(); co = Dict(), ou = "")
 
         \"$di\",
 
-        $(JSON3.write(tr_)),
+        $(JSON3.write(data)),
 
-        $(JSON3.write(OnePiece.dict.merge(lad, la))),
+        $(JSON3.write(OnePiece.dict.merge(layout0, layout))),
 
-        $(JSON3.write(OnePiece.dict.merge(cod, co))),
+        $(JSON3.write(OnePiece.dict.merge(config0, config))),
 
     )
     """
