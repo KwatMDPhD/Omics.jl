@@ -6,17 +6,13 @@ function simulate(n_po; ho = "", ra = OnePiece.constant.RANDOM_SEED)
 
     po_ = rand(di, n_po)
 
-    shift_minimum(po_, "0<")
+    po_ = shift_minimum(po_, 0)
 
     sort!(po_)
 
     ne_ = reverse(-po_)
 
-    if ho == ""
-
-        ne_
-
-    elseif ho == "deep"
+    if ho == "deep"
 
         ne_ *= 2
 
