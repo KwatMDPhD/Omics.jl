@@ -31,7 +31,17 @@ function make(di, sr_, sc, ht = "")
 
     println("Made $ht.")
 
-    #DefaultApplication.open(ht)
+    try
+
+        DefaultApplication.open(ht)
+
+    catch er
+
+        println("Tried to open $ht.")
+
+        println(er)
+
+    end
 
     ht
 
