@@ -38,6 +38,8 @@ include("path/_.jl")
 
 include("significance/_.jl")
 
+include("spider/_.jl")
+
 include("statistics/_.jl")
 
 include("string/_.jl")

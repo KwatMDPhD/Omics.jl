@@ -10,7 +10,7 @@ function read(pa; xl = "", ke_ar...)
 
     if ex == ".xlsx"
 
-        DataFrame(XLSX.readtable(pa, xl)...)
+        DataFrame(XLSX.readtable(pa, xl))
 
     else
 
