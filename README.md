@@ -1,7 +1,3 @@
-# OnePiece.jl
-
-One for all :recycle:
-
 ---
 
 ## :wave: :cowboy_hat_face: Howdy
