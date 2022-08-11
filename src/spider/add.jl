@@ -1,6 +1,10 @@
 function add(ve)
 
-    if !(ve in VE_)
+    if ve in VE_
+
+        println("$ve has already been added.")
+
+    else
 
         push!(VE_, ve)
 
@@ -8,18 +12,19 @@ function add(ve)
 
 end
 
-function add(ve1, ve2)
+function add(ed...)
 
-    ed = (ve1, ve2)
+    if ed in ED_
 
-    # TODO: Consider delegating
-    for ve in ed
+        println("$ed has already been added.")
 
-        add(ve)
+    else
 
-    end
+        for ve in ed
 
-    if !(ed in ED_)
+            add(ve)
+
+        end
 
         push!(ED_, ed)
 

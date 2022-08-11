@@ -30,20 +30,20 @@ function >>(ve1, ve2_::Vector)
 
 end
 
-function make_vertex2(ve1::DataType)
+function _make_ve2(ve1)
 
-    "act.$ve1"
+    "$ve1.act"
 
 end
 
-function make_vertex2(ve1_::Vector{DataType})
+function _make_ve2(ve1_::Vector)
 
-    "react.$(join(ve1_, "_"))"
+    "$(join(ve1_, "_")).react"
 
 end
 
 function >>(ve1::Union{DataType, Vector{DataType}}, ve3::Union{DataType, Vector{DataType}})
 
-    ve1 >> make_vertex2(ve1) >> ve3
+    ve1 >> _make_ve2(ve1) >> ve3
 
 end

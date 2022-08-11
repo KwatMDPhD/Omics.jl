@@ -1,14 +1,40 @@
-function plot(; no_si = 32, st_ = [], ou = "")
+function _make_element(ve, cl_)
 
-    ve_ = make_element.(VE_)
+    Dict("data" => Dict("id" => ve), "classes" => cl_)
 
-    ed_ = make_element.(ED_)
+end
 
-    edge_line_color = "#171412"
+function _make_element(ve::DataType)
 
-    noe_si = no_si / 2
+    _make_element(ve, ["no"])
 
-    ed_wi = no_si / 8
+end
+
+function _make_element(ve::String)
+
+    _make_element(ve, ["ed", splitext(ve)[2]])
+
+end
+
+function _make_element((so, ta)::Tuple)
+
+    Dict("data" => Dict("source" => so, "target" => ta))
+
+end
+
+function plot(;
+    no_si = 32,
+    ed_si = no_si / 2,
+    ed_wi = no_si / 8,
+    edge_line_color = "#171412",
+    st_ = [],
+    he = 1000,
+    ou = "",
+)
+
+    ve_ = _make_element.(VE_)
+
+    ed_ = _make_element.(ED_)
 
     st_ = [
         Dict(
@@ -25,7 +51,7 @@ function plot(; no_si = 32, st_ = [], ou = "")
         ),
         Dict(
             "selector" => ".ed",
-            "style" => Dict("height" => noe_si, "width" => noe_si, "shape" => "triangle"),
+            "style" => Dict("height" => ed_si, "width" => ed_si, "shape" => "triangle"),
         ),
         Dict("selector" => ".act", "style" => Dict("background-color" => "#ffa400")),
         Dict("selector" => ".react", "style" => Dict("background-color" => "#ff1968")),
@@ -45,19 +71,26 @@ function plot(; no_si = 32, st_ = [], ou = "")
         st_...,
     ]
 
-    he = 1000
+    la = Dict()
 
-    la = Dict(
-        "name" => "cose",
-        "animate" => false,
-        "padding" => 16,
-        "boundingBox" =>
-            Dict("x1" => 0, "y1" => 0, "h" => he, "w" => he * MathConstants.golden),
-        "componentSpacing" => 40,
-        "nodeRepulsion" => 8000,
-        "idealEdgeLength" => 16,
-        "numIter" => 10000,
-    )
+    if !isempty(ed_)
+
+        la = OnePiece.dict.merge(
+            la,
+            Dict(
+                "name" => "cose",
+                "animate" => false,
+                "padding" => 16,
+                "boundingBox" =>
+                    Dict("x1" => 0, "y1" => 0, "h" => he, "w" => he * MathConstants.golden),
+                "componentSpacing" => 40,
+                "nodeRepulsion" => 8000,
+                "idealEdgeLength" => 16,
+                "numIter" => 10000,
+            ),
+        )
+
+    end
 
     OnePiece.network.plot([ve_; ed_], st_, la, ou = ou)
 
