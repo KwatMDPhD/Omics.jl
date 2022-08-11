@@ -1,6 +1,7 @@
 module figure
 
 using JSON3
+
 using ..OnePiece
 
 include("_set.jl")

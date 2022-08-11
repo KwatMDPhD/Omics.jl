@@ -1,7 +1,9 @@
 module data_frame
 
 using DataFrames
+
 using OrderedCollections
+
 using ..OnePiece
 
 include("error_bad.jl")

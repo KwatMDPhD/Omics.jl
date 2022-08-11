@@ -1,7 +1,9 @@
 module vector_number
 
 using Distributions
+
 using Random
+
 using ..OnePiece
 
 include("cumulate_sum_reverse.jl")
