@@ -2,6 +2,10 @@ module spider
 
 import Base: >>
 
+using ColorSchemes
+
+using Colors
+
 using ..OnePiece
 
 VE_ = []

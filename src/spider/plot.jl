@@ -27,6 +27,7 @@ function plot(;
     ed_si = no_si / 2,
     ed_wi = no_si / 8,
     edge_line_color = "#171412",
+    ve_sc = nothing,
     st_ = [],
     he = 800,
     ou = "",
@@ -36,40 +37,61 @@ function plot(;
 
     ed_ = _make_element.(ED_)
 
-    st_ = [
-        Dict(
-            "selector" => "node",
-            "style" => Dict(
-                "border-width" => 1,
-                "border-color" => "#ebf6f7",
-                "font-size" => no_si * 2 / 3,
+    append!(
+        st_,
+        [
+            Dict(
+                "selector" => "node",
+                "style" => Dict(
+                    "border-width" => 1,
+                    "border-color" => "#ebf6f7",
+                    "font-size" => no_si * 2 / 3,
+                ),
             ),
-        ),
-        Dict(
-            "selector" => ".no",
-            "style" => Dict("height" => no_si, "width" => no_si, "label" => "data(id)"),
-        ),
-        Dict(
-            "selector" => ".ed",
-            "style" => Dict("height" => ed_si, "width" => ed_si, "shape" => "triangle"),
-        ),
-        Dict("selector" => ".act", "style" => Dict("background-color" => "#ffa400")),
-        Dict("selector" => ".react", "style" => Dict("background-color" => "#ff1968")),
-        Dict(
-            "selector" => "edge",
-            "style" => Dict(
-                "width" => ed_wi,
-                "curve-style" => "straight-triangle",
-                "line-color" => edge_line_color,
-                "target-arrow-shape" => "triangle-backcurve",
-                "target-arrow-color" => edge_line_color,
-                "source-distance-from-node" => ed_wi,
-                "target-distance-from-node" => ed_wi,
-                "opacity" => 0.32,
+            Dict(
+                "selector" => ".no",
+                "style" => Dict("height" => no_si, "width" => no_si, "label" => "data(id)"),
             ),
-        ),
-        st_...,
-    ]
+            Dict(
+                "selector" => ".ed",
+                "style" => Dict("height" => ed_si, "width" => ed_si, "shape" => "triangle"),
+            ),
+            Dict("selector" => ".act", "style" => Dict("background-color" => "#ffa400")),
+            Dict("selector" => ".react", "style" => Dict("background-color" => "#ff1968")),
+            Dict(
+                "selector" => "edge",
+                "style" => Dict(
+                    "width" => ed_wi,
+                    "curve-style" => "straight-triangle",
+                    "line-color" => edge_line_color,
+                    "target-arrow-shape" => "triangle-backcurve",
+                    "target-arrow-color" => edge_line_color,
+                    "source-distance-from-node" => ed_wi,
+                    "target-distance-from-node" => ed_wi,
+                    "opacity" => 0.32,
+                ),
+            ),
+        ],
+    )
+
+    if !isnothing(ve_sc)
+
+        ve_fl = Dict(
+            ke => va for (ke, va) in
+            zip(keys(ve_sc), OnePiece.normalization.normalize(values(ve_sc), "0-1"))
+        )
+
+        append!(
+            st_,
+            [
+                Dict(
+                    "selector" => "#$ve",
+                    "style" => Dict("background-color" => "#$(hex(get(ColorSchemes.plasma, fl)))"),
+                ) for (ve, fl) in ve_fl
+            ],
+        )
+
+    end
 
     la = Dict()
 
