@@ -1,6 +1,6 @@
 function plot(el_, st_, la; ou = "")
 
-    di = "plot"
+    di = "OnePiece.network.plot.$(OnePiece.time.stamp())"
 
     OnePiece.html.make(
         di,

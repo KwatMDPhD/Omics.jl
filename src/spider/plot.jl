@@ -28,7 +28,7 @@ function plot(;
     ed_wi = no_si / 8,
     edge_line_color = "#171412",
     st_ = [],
-    he = 1000,
+    he = 800,
     ou = "",
 )
 

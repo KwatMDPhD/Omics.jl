@@ -6,43 +6,25 @@ function make(di, sr_, sc, ht = "")
 
     end
 
+    li_ = [
+        "<!doctype html>",
+        "<div id=\"$di\" style=\"display: block; height: 800px; width: 80%; margin-left: auto; margin-right: auto; background: #fdfdfd\"></div>",
+        ["<script src=\"$sr\"></script>" for sr in sr_]...,
+        "<script>",
+        "$sc",
+        "</script>",
+    ]
+
+    jo = join(li_, '\n')
+
     open(ht, "w") do io
 
-        println(io, "<!doctype html>")
-
-        println(
-            io,
-            "<div id=\"$di\" style=\"display: block; height: 1000px; width: 80%; margin-left: auto; margin-right: auto; background: #fdfdfd\"></div>",
-        )
-
-        for sr in sr_
-
-            println(io, "<script src=\"$sr\"></script>")
-
-        end
-
-        println(io, "<script>")
-
-        println(io, "$sc")
-
-        println(io, "</script>")
+        write(io, jo)
 
     end
 
-    println("Made $ht.")
+    println("Wrote $ht.")
 
-    try
-
-        DefaultApplication.open(ht)
-
-    catch er
-
-        println("Tried to open $ht.")
-
-        println(er)
-
-    end
-
-    ht
+    HTML(jo)
 
 end
