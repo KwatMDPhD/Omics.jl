@@ -10,7 +10,7 @@ function load()
 
             for ty in ev.types
 
-                add(ev, ty)
+                add(ty, ev)
 
             end
 
@@ -22,22 +22,8 @@ function load()
 
     n_ed = length(ED_)
 
-    ve = "vertex"
-
-    if 1 < n_ve
-
-        ve = replace(ve, r"ex$" => "ices")
-
-    end
-
-    ed = "edge"
-
-    if 1 < n_ed
-
-        ed *= "s"
-
-    end
-
-    println("Loaded $n_ve $ve and $n_ed $ed.")
+    println(
+        "Loaded $n_ve $(OnePiece.string.count_noun(n_ve,"vertex")) and $n_ed $(OnePiece.string.count_noun(n_ed, "edge")).",
+    )
 
 end
