@@ -9,7 +9,7 @@ function plot(data, layout = Dict(); config = Dict(), ou = "")
         "editable" => false,
     )
 
-    di = "plot"
+    di = "OnePiece.figure.plot.$(OnePiece.time.stamp())"
 
     sr = ["https://cdn.plot.ly/plotly-latest.min.js"]
 

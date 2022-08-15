@@ -8,9 +8,9 @@ using Colors
 
 using ..OnePiece
 
-VE_ = []
+VERTEX_ = []
 
-ED_ = []
+EDGE_ = []
 
 include("add.jl")
 

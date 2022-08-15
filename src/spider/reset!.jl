@@ -1,7 +1,7 @@
 function reset!()
 
-    empty!(VE_)
+    empty!(VERTEX_)
 
-    empty!(ED_)
+    empty!(EDGE_)
 
 end
