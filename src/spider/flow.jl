@@ -2,6 +2,8 @@ function flow()
 
     ve_x_ve_x_ed = edge()
 
+    global HEAT_
+
     ve_x_ve_x_fl = ve_x_ve_x_ed * Diagonal(HEAT_)
 
     up_ = []
