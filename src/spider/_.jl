@@ -10,6 +10,8 @@ using DataFrames
 
 using LinearAlgebra
 
+using Statistics
+
 using ..OnePiece
 
 VERTEX_ = []
@@ -22,10 +24,11 @@ include("add.jl")
 
 include("edge.jl")
 
-println(HEAT_)
 include("flow.jl")
 
 include("heat.jl")
+
+include("heat_check.jl")
 
 include("highlight.jl")
 

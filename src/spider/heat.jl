@@ -2,7 +2,7 @@ function heat(fi_, al_ve)
 
     ve_id = Dict(ve => id for (id, ve) in enumerate(string.(VERTEX_)))
 
-    global HEAT_ = fill(0, length(ve_id))
+    global HEAT_ = fill(0.0, length(ve_id))
 
     for (ve, fi) in fi_
 
@@ -20,6 +20,6 @@ function heat(fi_, al_ve)
 
     end
 
-    println("The total heat is $(sum(HEAT_)).")
+    heat_check()
 
 end

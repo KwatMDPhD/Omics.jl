@@ -6,7 +6,7 @@ function highlight(ve_x_ve_x_nu)
 
         nu = ve_x_ve_x_nu[ro, co]
 
-        if nu != 0
+        if nu != 0.0
 
             ve_x_ve_x_st[ro, co] = "$nu"
 

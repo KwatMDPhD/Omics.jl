@@ -10,13 +10,15 @@ function flow()
 
     for (ed_, fl_) in zip(eachrow(ve_x_ve_x_ed), eachrow(ve_x_ve_x_fl))
 
-        if sum(ed_) == 0
+        fle_ = fl_[convert(BitVector, ed_)]
 
-            ne = 0
+        if sum(fle_) == 0.0
+
+            ne = 0.0
 
         else
 
-            ne = prod(fl_[convert(BitVector, ed_)])
+            ne = mean(fle_)
 
         end
 
@@ -25,6 +27,8 @@ function flow()
     end
 
     HEAT_ += up_
+
+    heat_check()
 
     ve_x_ve_x_fl, up_
 
