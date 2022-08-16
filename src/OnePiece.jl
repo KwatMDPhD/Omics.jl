@@ -28,6 +28,8 @@ include("ipynb/_.jl")
 
 include("matrix/_.jl")
 
+include("matrix_factorization/_.jl")
+
 include("network/_.jl")
 
 include("normalization/_.jl")
