@@ -6,20 +6,10 @@ using OrderedCollections
 
 using TOML
 
-IN = 3
+INDENT = 3
 
-include("make.jl")
+include("../include_neighbor.jl")
 
-include("merge.jl")
-
-include("print.jl")
-
-include("read.jl")
-
-include("sort_recursively!.jl")
-
-include("symbolize.jl")
-
-include("write.jl")
+include_neighbor(@__FILE__)
 
 end

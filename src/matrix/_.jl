@@ -1,7 +1,7 @@
 module matrix
 
-include("convert.jl")
+include("../include_neighbor.jl")
 
-include("simulate.jl")
+include_neighbor(@__FILE__)
 
 end

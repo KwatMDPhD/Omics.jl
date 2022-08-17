@@ -20,24 +20,8 @@ HEAT_ = []
 
 EDGE_ = []
 
-include("add.jl")
+include("../include_neighbor.jl")
 
-include("edge.jl")
-
-include("flow.jl")
-
-include("heat.jl")
-
-include("heat_check.jl")
-
-include("highlight.jl")
-
-include("load.jl")
-
-include("plot.jl")
-
-include("react.jl")
-
-include("reset!.jl")
+include_neighbor(@__FILE__)
 
 end

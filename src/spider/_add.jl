@@ -1,8 +1,8 @@
-function add(ve)
+function _add(ve)
 
     if ve in VERTEX_
 
-        println("$ve has already been added.")
+        #println("$ve has already been added.")
 
     else
 
@@ -12,17 +12,17 @@ function add(ve)
 
 end
 
-function add(ed...)
+function _add(ed...)
 
     if ed in EDGE_
 
-        println("$ed has already been added.")
+        #println("$ed has already been added.")
 
     else
 
         for ve in ed
 
-            add(ve)
+            _add(ve)
 
         end
 

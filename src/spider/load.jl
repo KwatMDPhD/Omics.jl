@@ -6,11 +6,11 @@ function load()
 
         if ev isa DataType
 
-            add(ev)
+            _add(ev)
 
             for ty in ev.types
 
-                add(ty, ev)
+                _add(ty, ev)
 
             end
 

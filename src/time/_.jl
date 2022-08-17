@@ -2,6 +2,8 @@ module time
 
 using Dates
 
-include("stamp.jl")
+include("../include_neighbor.jl")
+
+include_neighbor(@__FILE__)
 
 end

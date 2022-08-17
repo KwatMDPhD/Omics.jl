@@ -6,14 +6,8 @@ using OrderedCollections
 
 using ..OnePiece
 
-include("error_bad.jl")
+include("../include_neighbor.jl")
 
-include("map_to_column.jl")
-
-include("print.jl")
-
-include("separate_row.jl")
-
-include("simulate.jl")
+include_neighbor(@__FILE__)
 
 end

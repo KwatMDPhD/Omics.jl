@@ -4,8 +4,8 @@ using NMF
 
 using ..OnePiece
 
-include("factorize.jl")
+include("../include_neighbor.jl")
 
-include("plot.jl")
+include_neighbor(@__FILE__)
 
 end

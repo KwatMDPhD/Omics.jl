@@ -2,6 +2,8 @@ module html
 
 using ..OnePiece
 
-include("make.jl")
+include("../include_neighbor.jl")
+
+include_neighbor(@__FILE__)
 
 end

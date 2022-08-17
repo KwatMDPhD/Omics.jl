@@ -1,5 +1,7 @@
 module ipynb
 
-include("run.jl")
+include("../include_neighbor.jl")
+
+include_neighbor(@__FILE__)
 
 end

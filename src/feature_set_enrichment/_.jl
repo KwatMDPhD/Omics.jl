@@ -6,16 +6,8 @@ using StatsBase
 
 using ..OnePiece
 
-include("_cumulate.jl")
+include("../include_neighbor.jl")
 
-include("_match_algorithm.jl")
-
-include("_plot_mountain.jl")
-
-include("make_benchmark.jl")
-
-include("score_set.jl")
-
-include("score_set_new.jl")
+include_neighbor(@__FILE__)
 
 end

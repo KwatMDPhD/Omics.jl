@@ -4,8 +4,8 @@ using Distributions
 
 using Statistics
 
-include("get_confidence_interval.jl")
+include("../include_neighbor.jl")
 
-include("get_z_score.jl")
+include_neighbor(@__FILE__)
 
 end

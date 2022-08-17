@@ -1,5 +1,7 @@
 module gmt
 
-include("read.jl")
+include("../include_neighbor.jl")
+
+include_neighbor(@__FILE__)
 
 end

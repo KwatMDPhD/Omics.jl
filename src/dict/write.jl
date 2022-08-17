@@ -1,4 +1,4 @@
-function write(pa, di; id = IN)
+function write(pa, di; id = INDENT)
 
     open(pa, "w") do io
 

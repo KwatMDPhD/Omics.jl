@@ -2,8 +2,8 @@ module normalization
 
 using StatsBase
 
-include("normalize!.jl")
+include("../include_neighbor.jl")
 
-include("normalize.jl")
+include_neighbor(@__FILE__)
 
 end

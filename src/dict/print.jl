@@ -1,4 +1,4 @@
-function print(di; n_pa = -1, sp = IN)
+function print(di; n_pa = -1, sp = INDENT)
 
     println("$(length(keys(di))) keys and $(length(Set(values(di)))) unique values")
 

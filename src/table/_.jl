@@ -10,8 +10,8 @@ using Mmap
 
 using XLSX
 
-include("read.jl")
+include("../include_neighbor.jl")
 
-include("write.jl")
+include_neighbor(@__FILE__)
 
 end

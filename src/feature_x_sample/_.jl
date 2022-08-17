@@ -4,6 +4,8 @@ using Statistics
 
 using ..OnePiece
 
-include("compare_with_target.jl")
+include("../include_neighbor.jl")
+
+include_neighbor(@__FILE__)
 
 end

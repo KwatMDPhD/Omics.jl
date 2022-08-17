@@ -20,6 +20,6 @@ function heat(fi_, al_ve)
 
     end
 
-    heat_check()
+    _heat_check()
 
 end
