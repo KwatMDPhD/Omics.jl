@@ -1,58 +1,14 @@
 module OnePiece
 
-include("constant/_.jl")
+for pa in readdir(@__DIR__, join = true)
 
-include("data_frame/_.jl")
+    if isdir(pa)
 
-include("dict/_.jl")
+        include(joinpath(basename(pa), "_.jl"))
 
-include("feature_set_enrichment/_.jl")
+    end
 
-include("feature_x_sample/_.jl")
-
-include("figure/_.jl")
-
-include("fu/_.jl")
-
-include("gct/_.jl")
-
-include("gene/_.jl")
-
-include("gmt/_.jl")
-
-include("html/_.jl")
-
-include("information/_.jl")
-
-include("ipynb/_.jl")
-
-include("matrix/_.jl")
-
-include("matrix_factorization/_.jl")
-
-include("network/_.jl")
-
-include("normalization/_.jl")
-
-include("number/_.jl")
-
-include("path/_.jl")
-
-include("significance/_.jl")
-
-include("spider/_.jl")
-
-include("statistics/_.jl")
-
-include("string/_.jl")
-
-include("table/_.jl")
-
-include("time/_.jl")
-
-include("vector/_.jl")
-
-include("vector_number/_.jl")
+end
 
 function __init__()
 

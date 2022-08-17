@@ -2,8 +2,8 @@ module information
 
 using Statistics
 
-include("../include_neighbor.jl")
+include("../_include_neighbor.jl")
 
-include_neighbor(@__FILE__)
+_include_neighbor(@__FILE__)
 
 end
