@@ -1,8 +1,10 @@
 function run(nb)
 
     Base.run(
-        `jupyter-nbconvert --log-level 40 --inplace --execute --ExecutePreprocessor.timeout=-1 --clear-output $nb`,
+        `jupyter-nbconvert --log-level 40 --inplace --execute --ExecutePreprocessor.timeout=-1 $nb`,
     )
+
+    Base.run(`jupyter-nbconvert --log-level 40 --inplace --clear-output $nb`)
 
 end
 
