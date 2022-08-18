@@ -1,10 +1,6 @@
 function _add(ve)
 
-    if ve in VERTEX_
-
-        #println("$ve has already been added.")
-
-    else
+    if !(ve in VERTEX_)
 
         push!(VERTEX_, ve)
 
@@ -14,11 +10,7 @@ end
 
 function _add(ed...)
 
-    if ed in EDGE_
-
-        #println("$ed has already been added.")
-
-    else
+    if !(ed in EDGE_)
 
         for ve in ed
 
