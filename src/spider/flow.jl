@@ -10,8 +10,6 @@ function flow()
 
         if !(isempty(fl_) || splitext(string(ve))[2] in ex_ && any(fl_ .== 0.0))
 
-            println(mean(fl_))
-
             HEAT_[id] = mean([HEAT_[id], mean(fl_)])
 
         end

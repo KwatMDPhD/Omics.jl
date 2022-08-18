@@ -1,17 +1,3 @@
-function _ro(fl)
-
-    fl = round(fl, sigdigits = 2)
-
-    if abs(fl) < eps()
-
-        fl = 0.0
-
-    end
-
-    "<b>$fl</b>"
-
-end
-
 function _plot_mountain(fe_, sc_, in_, en_, (ex, ar); title_text = "Mountain Plot", ou = "")
 
     height = 800
@@ -77,7 +63,7 @@ function _plot_mountain(fe_, sc_, in_, en_, (ex, ar); title_text = "Mountain Plo
                 annotationx,
                 Dict(
                     "y" => 1.04,
-                    "text" => "Extreme = $(_ro(ex)) and Area = $(_ro(ar))",
+                    "text" => "Extreme = <b>$(OnePiece.number.format(ex))</b> and Area = <b>$(OnePiece.number.format(ar))</b>",
                     "font" => Dict("size" => 24, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
                     "bordercolor" => "#404ed8",

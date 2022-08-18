@@ -10,7 +10,7 @@ using DataFrames
 
 using LinearAlgebra
 
-using Statistics
+using StatsBase
 
 using ..OnePiece
 
