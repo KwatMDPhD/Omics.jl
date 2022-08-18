@@ -2,36 +2,22 @@ function flow()
 
     ve_x_ve_x_ed = edge()
 
-    global HEAT_
+    ex_ = [".act", ".react"]
 
-    ve_x_ve_x_fl = ve_x_ve_x_ed * Diagonal(HEAT_)
+    for (id, (ve, co_)) in enumerate(zip(VERTEX_, eachrow(ve_x_ve_x_ed)))
 
-    up_ = []
+        fl_ = HEAT_[convert(BitVector, co_)]
 
-    for (ed_, fl_) in zip(eachrow(ve_x_ve_x_ed), eachrow(ve_x_ve_x_fl))
+        if !(isempty(fl_) || splitext(string(ve))[2] in ex_ && any(fl_ .== 0.0))
 
-        fle_ = fl_[convert(BitVector, ed_)]
+            println(mean(fl_))
 
-        if sum(fle_) == 0.0
-
-            ne = 0.0
-
-        else
-
-            ne = mean(fle_)
+            HEAT_[id] = mean([HEAT_[id], mean(fl_)])
 
         end
 
-        push!(up_, ne)
-
     end
 
-    HEAT_ += up_
-
-    HEAT_ /= 2
-
     _heat_check()
-
-    ve_x_ve_x_fl
 
 end

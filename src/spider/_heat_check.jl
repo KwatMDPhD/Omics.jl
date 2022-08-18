@@ -1,8 +1,8 @@
 function _heat_check()
 
-    println("Norm = $(norm(HEAT_))")
+    println("Norm 🔥 $(norm(HEAT_))")
 
-    println("Total = $(round(sum(HEAT_), sigdigits = 2))")
+    println("Sum 🔥 $(sum(HEAT_))")
 
     for (_, (he, ve)) in enumerate(zip(OnePiece.vector.sort_like(HEAT_, VERTEX_, re = true)...))
 
@@ -12,7 +12,7 @@ function _heat_check()
 
         end
 
-        println("$ve = $(he)")
+        println("$ve 🔥 $(he)")
 
     end
 
