@@ -1,25 +1,51 @@
-function heat(fi_, al_ve)
+function heat(st_he, ve_al_)
 
-    ve_id = Dict(ve => id for (id, ve) in enumerate(string.(VERTEX_)))
+    empty!(HEAT_)
 
-    global HEAT_ = fill(0.0, length(ve_id))
+    for ve in string.(VERTEX_)
 
-    for (ve, fi) in fi_
+        if haskey(st_he, ve)
 
-        if !haskey(ve_id, ve)
+            he = st_he[ve]
 
-            print("$ve =(alias)=> ")
+        elseif haskey(ve_al_, ve)
 
-            ve = al_ve[ve]
+            he_ = []
 
-            println(ve)
+            for al in ve_al_[ve]
+
+                if haskey(st_he, al)
+
+                    println("$al =(alias)=> $ve")
+
+                    push!(he_, st_he[al])
+
+                end
+
+            end
+
+            if isempty(he_)
+
+                println("$ve and its aliases are missing.")
+
+                he = 0.0
+
+            else
+
+                he = sum(he_)
+
+            end
+
+        else
+
+            println("$ve is missing.")
+
+            he = 0.0
 
         end
 
-        HEAT_[ve_id[ve]] = fi
+        push!(HEAT_, he)
 
     end
-
-    _heat_check()
 
 end

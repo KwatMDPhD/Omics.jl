@@ -20,9 +20,9 @@ function rename(st_; mo = true, en = true, hg = true)
 
     end
 
-    na_ = Vector{String}()
+    na_ = String[]
 
-    ma_ = Vector{Int}()
+    ma_ = []
 
     for st in st_
 
@@ -32,23 +32,23 @@ function rename(st_; mo = true, en = true, hg = true)
 
             push!(na_, na)
 
-            push!(ma_, 1 - (st == na))
+            push!(ma_, 2 - (st == na))
 
         else
 
             push!(na_, st)
 
-            push!(ma_, 2)
+            push!(ma_, 3)
 
         end
 
     end
 
-    println("Kept $(count(ma_ .== 0))")
+    println("👍 $(count(ma_ .== 1))")
 
-    println("Named $(count(ma_ .== 1))")
+    println("✋ $(count(ma_ .== 2))")
 
-    println("Failed $(count(ma_ .== 2))")
+    println("👎 $(count(ma_ .== 3))")
 
     na_, ma_
 
