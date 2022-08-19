@@ -1,14 +1,10 @@
-function _heat_check()
+function _heat_check(he_)
 
-    println("🔥")
+    no = norm(he_)
 
-    no = norm(HEAT_)
+    println("🔥 $(OnePiece.number.format(no))")
 
-    println("Norm $(OnePiece.number.format(no))")
-
-    println("Sum $(OnePiece.number.format(sum(HEAT_)))")
-
-    for (_, (he, ve)) in enumerate(zip(OnePiece.vector.sort_like(HEAT_, VERTEX_, re = true)...))
+    for (_, (he, ve)) in enumerate(zip(OnePiece.vector.sort_like(he_, VERTEX_, re = true)...))
 
         if he == 0.0
 

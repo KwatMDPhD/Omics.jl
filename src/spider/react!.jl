@@ -1,6 +1,6 @@
 function >>(ve1, ve2)
 
-    _add(ve1, ve2)
+    _add!(ve1, ve2)
 
     ve2
 
@@ -10,7 +10,7 @@ function >>(ve1_::Vector, ve2)
 
     for ve1 in ve1_
 
-        _add(ve1, ve2)
+        _add!(ve1, ve2)
 
     end
 
@@ -22,7 +22,7 @@ function >>(ve1, ve2_::Vector)
 
     for ve2 in ve2_
 
-        _add(ve1, ve2)
+        _add!(ve1, ve2)
 
     end
 
@@ -32,13 +32,13 @@ end
 
 function _make_ve2(ve1)
 
-    "$ve1.act"
+    "$ve1.+"
 
 end
 
 function _make_ve2(ve1_::Vector)
 
-    "$(join(ve1_, "_")).react"
+    "$(join(ve1_, "_")).+"
 
 end
 

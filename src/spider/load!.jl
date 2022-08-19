@@ -1,4 +1,4 @@
-function load()
+function load!()
 
     for na in names(Main)
 
@@ -6,11 +6,11 @@ function load()
 
         if ev isa DataType
 
-            _add(ev)
+            _add!(ev)
 
             for ty in ev.types
 
-                _add(ty, ev)
+                _add!(ty, ev)
 
             end
 
@@ -23,7 +23,7 @@ function load()
     n_ed = length(EDGE_)
 
     println(
-        "Loaded $n_ve $(OnePiece.string.count_noun(n_ve,"vertex")) and $n_ed $(OnePiece.string.count_noun(n_ed, "edge")).",
+        "Loaded $n_ve $(OnePiece.string.count_noun(n_ve, "vertex")) and $n_ed $(OnePiece.string.count_noun(n_ed, "edge")).",
     )
 
 end

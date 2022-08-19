@@ -1,4 +1,4 @@
-function _add(ve)
+function _add!(ve)
 
     if !(ve in VERTEX_)
 
@@ -8,13 +8,13 @@ function _add(ve)
 
 end
 
-function _add(ed...)
+function _add!(ed...)
 
     if !(ed in EDGE_)
 
         for ve in ed
 
-            _add(ve)
+            _add!(ve)
 
         end
 

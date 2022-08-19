@@ -27,6 +27,7 @@ function plot(;
     ed_si = no_si / 2,
     ed_wi = no_si / 8,
     edge_line_color = "#171412",
+    he_ = [],
     st_ = [
         Dict(
             "selector" => "node",
@@ -68,7 +69,7 @@ function plot(;
 
     ed_ = _make_element.(EDGE_)
 
-    if !isempty(HEAT_)
+    if !isempty(he_)
 
         append!(
             st_,
@@ -77,7 +78,7 @@ function plot(;
                     "selector" => "#$ve",
                     "style" => Dict("background-color" => "#$(hex(get(ColorSchemes.plasma, fr)))"),
                 ) for
-                (ve, fr) in zip(string.(VERTEX_), OnePiece.normalization.normalize(HEAT_, "0-1"))
+                (ve, fr) in zip(string.(VERTEX_), OnePiece.normalization.normalize(he_, "0-1"))
             ],
         )
 

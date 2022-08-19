@@ -16,8 +16,6 @@ using ..OnePiece
 
 VERTEX_ = []
 
-HEAT_ = []
-
 EDGE_ = []
 
 include("../_include_neighbor.jl")
