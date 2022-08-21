@@ -4,9 +4,7 @@ function _increase(cu, wa)
 
 end
 
-function flow!(he_; n_fl = 1000)
-
-    de_x_so_x_ed = make_edge_matrix()
+function flow!(de_x_so_x_ed, he_; n_fl = 1000, ch = 1e-6)
 
     no1 = 0.0
 
@@ -48,7 +46,7 @@ function flow!(he_; n_fl = 1000)
 
         no2 = _heat_check(he_)
 
-        if abs(no2 - no1) < 1e-6
+        if abs(no2 - no1) < ch
 
             println("$id 🏁")
 
@@ -61,5 +59,19 @@ function flow!(he_; n_fl = 1000)
     end
 
     he_
+
+end
+
+function flow!(_he_; ke_ar...)
+
+    de_x_so_x_ed = make_edge_matrix()
+
+    for he_ in _he_
+
+        flow!(de_x_so_x_ed, he_; ke_ar...)
+
+    end
+
+    _he_
 
 end

@@ -6,6 +6,8 @@ function _add!(ve)
 
     end
 
+    VERTEX_
+
 end
 
 function _add!(ed...)
@@ -21,5 +23,7 @@ function _add!(ed...)
         push!(EDGE_, ed)
 
     end
+
+    EDGE_
 
 end

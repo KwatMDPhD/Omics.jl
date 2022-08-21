@@ -26,4 +26,6 @@ function load!()
         "Loaded $n_ve $(OnePiece.string.count_noun(n_ve, "vertex")) and $n_ed $(OnePiece.string.count_noun(n_ed, "edge")).",
     )
 
+    VERTEX_, EDGE_
+
 end
