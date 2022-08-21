@@ -1,3 +1,9 @@
+function _increase(cu, wa)
+
+    (cu + wa) / 2.0
+
+end
+
 function flow!(he_; n_fl = 1000)
 
     de_x_so_x_ed = make_edge_matrix()
@@ -20,7 +26,7 @@ function flow!(he_; n_fl = 1000)
 
             if ve isa DataType
 
-                he_[id] = (he_[id] + wa) / 2.0
+                he_[id] = _increase(he_[id], wa)
 
             elseif all(0.0 .< fl_)
 
@@ -32,7 +38,7 @@ function flow!(he_; n_fl = 1000)
 
                 elseif ex == ".+"
 
-                    he_[id] = (he_[id] + wa) / 2.0
+                    he_[id] = _increase(he_[id], wa)
 
                 end
 
