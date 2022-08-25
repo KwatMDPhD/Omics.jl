@@ -13,8 +13,8 @@ function plot(wm_, hm_, _ro_, _co_)
         display(
             OnePiece.figure.plot_heat_map(
                 wm,
-                ro_,
-                fa_,
+                y = ro_,
+                x = fa_,
                 layout = Dict(
                     "height" => lo,
                     "width" => sh,
@@ -31,8 +31,8 @@ function plot(wm_, hm_, _ro_, _co_)
         display(
             OnePiece.figure.plot_heat_map(
                 hm,
-                fa_,
-                co_,
+                y = fa_,
+                x = co_,
                 layout = Dict(
                     "height" => sh,
                     "width" => lo,
