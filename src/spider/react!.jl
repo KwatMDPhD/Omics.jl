@@ -30,20 +30,26 @@ function >>(ve1, ve2_::Vector)
 
 end
 
-function _make_ve2(ve1)
+function _make_ve2(ve1, ed)
 
-    "$ve1.+"
+    "$ve1.$ed"
 
 end
 
-function _make_ve2(ve1_::Vector)
+function _make_ve2(ve1_::Vector, ed)
 
-    "$(join(ve1_, "_")).+"
+    _make_ve2(join(ve1_, "_"), ed)
 
 end
 
 function >>(ve1::Union{DataType, Vector{DataType}}, ve3::Union{DataType, Vector{DataType}})
 
-    ve1 >> _make_ve2(ve1) >> ve3
+    ve1 >> _make_ve2(ve1, "in") >> ve3
+
+end
+
+function <<(ve1::Union{DataType, Vector{DataType}}, ve3::Union{DataType, Vector{DataType}})
+
+    ve1 >> _make_ve2(ve1, "de") >> ve3
 
 end

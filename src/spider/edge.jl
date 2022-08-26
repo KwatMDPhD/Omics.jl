@@ -1,4 +1,4 @@
-function make_edge_matrix()
+function edge()
 
     ve_id = Dict(ve => id for (id, ve) in enumerate(VERTEX_))
 

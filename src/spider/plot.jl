@@ -12,7 +12,7 @@ end
 
 function _make_element(ve::String)
 
-    _make_element(ve, ["ed", splitext(ve)[2]])
+    _make_element(ve, ["ed", splitext(ve)[2][2:end]])
 
 end
 
@@ -28,39 +28,7 @@ function plot(;
     ed_wi = no_si / 8,
     edge_line_color = "#171412",
     he_ = [],
-    st_ = [
-        Dict(
-            "selector" => "node",
-            "style" => Dict(
-                "border-width" => 1,
-                "border-color" => "#ebf6f7",
-                "font-size" => no_si * 2 / 3,
-            ),
-        ),
-        Dict(
-            "selector" => ".no",
-            "style" => Dict("height" => no_si, "width" => no_si, "label" => "data(id)"),
-        ),
-        Dict(
-            "selector" => ".ed",
-            "style" => Dict("height" => ed_si, "width" => ed_si, "shape" => "triangle"),
-        ),
-        Dict("selector" => ".act", "style" => Dict("background-color" => "#ffa400")),
-        Dict("selector" => ".react", "style" => Dict("background-color" => "#ff1968")),
-        Dict(
-            "selector" => "edge",
-            "style" => Dict(
-                "width" => ed_wi,
-                "curve-style" => "straight-triangle",
-                "line-color" => edge_line_color,
-                "target-arrow-shape" => "triangle-backcurve",
-                "target-arrow-color" => edge_line_color,
-                "source-distance-from-node" => ed_wi,
-                "target-distance-from-node" => ed_wi,
-                "opacity" => 0.32,
-            ),
-        ),
-    ],
+    st_ = [],
     he = 800,
     ou = "",
 )
@@ -68,6 +36,44 @@ function plot(;
     ve_ = _make_element.(VERTEX_)
 
     ed_ = _make_element.(EDGE_)
+
+    st_ = append!(
+        [
+            Dict(
+                "selector" => "node",
+                "style" => Dict("border-width" => 2, "border-color" => "#ebf6f7"),
+            ),
+            Dict(
+                "selector" => ".no",
+                "style" => Dict(
+                    "height" => no_si,
+                    "width" => no_si,
+                    "label" => "data(id)",
+                    "font-size" => no_si * 2 / 3,
+                ),
+            ),
+            Dict(
+                "selector" => ".ed",
+                "style" => Dict("height" => ed_si, "width" => ed_si, "shape" => "triangle"),
+            ),
+            Dict("selector" => ".in", "style" => Dict("background-color" => "#f47983")),
+            Dict("selector" => ".de", "style" => Dict("background-color" => "#4d8fac")),
+            Dict(
+                "selector" => "edge",
+                "style" => Dict(
+                    "width" => ed_wi,
+                    "curve-style" => "straight-triangle",
+                    "line-color" => edge_line_color,
+                    "target-arrow-shape" => "triangle-backcurve",
+                    "target-arrow-color" => edge_line_color,
+                    "source-distance-from-node" => ed_wi,
+                    "target-distance-from-node" => ed_wi,
+                    "opacity" => 0.32,
+                ),
+            ),
+        ],
+        st_,
+    )
 
     if !isempty(he_)
 
@@ -84,10 +90,13 @@ function plot(;
 
     end
 
-    OnePiece.network.plot(
-        [ve_; ed_],
-        st_,
-        Dict(
+    if length(ve_) == 1
+
+        la = Dict()
+
+    else
+
+        la = Dict(
             "name" => "cose",
             "animate" => false,
             "padding" => 16,
@@ -97,8 +106,10 @@ function plot(;
             "nodeRepulsion" => 8000,
             "idealEdgeLength" => 16,
             "numIter" => 10000,
-        ),
-        ou = ou,
-    )
+        )
+
+    end
+
+    OnePiece.network.plot([ve_; ed_], st_, la, ou = ou)
 
 end

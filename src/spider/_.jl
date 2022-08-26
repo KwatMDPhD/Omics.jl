@@ -1,6 +1,6 @@
 module spider
 
-import Base: >>
+import Base: <<, >>
 
 using ColorSchemes
 

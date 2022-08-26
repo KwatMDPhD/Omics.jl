@@ -30,11 +30,11 @@ function flow!(de_x_so_x_ed, he_; n_fl = 1000, ch = 1e-6)
 
                 ex = splitext(ve)[2]
 
-                if ex == ".-"
+                if ex == ".de"
 
                     he_[id] = 0.0
 
-                elseif ex == ".+"
+                elseif ex == ".in"
 
                     he_[id] = _increase(he_[id], wa)
 
@@ -62,16 +62,16 @@ function flow!(de_x_so_x_ed, he_; n_fl = 1000, ch = 1e-6)
 
 end
 
-function flow!(_he_; ke_ar...)
+function flow!(ve_x_sa_x_he; ke_ar...)
 
-    de_x_so_x_ed = make_edge_matrix()
+    de_x_so_x_ed = edge()
 
-    for he_ in _he_
+    for he_ in eachcol(ve_x_sa_x_he)
 
         flow!(de_x_so_x_ed, he_; ke_ar...)
 
     end
 
-    _he_
+    ve_x_sa_x_he
 
 end
