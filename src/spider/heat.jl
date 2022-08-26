@@ -1,34 +1,26 @@
-function heat(st_he_, ve_al_)
+function heat(st_, he_; ve_al_ = nothing)
 
-    n_sa_ = unique(length.(values(st_he_)))
+    st_he = Dict(zip(st_, he_))
 
-    if length(n_sa_) != 1
-
-        error()
-
-    end
-
-    n_sa = n_sa_[1]
-
-    ve_x_sa_x_he = fill(0.0, length(VERTEX_), n_sa)
+    hev_ = fill(0.0, length(VERTEX_))
 
     for (id, ve) in enumerate(string.(VERTEX_))
 
-        if haskey(st_he_, ve)
+        if haskey(st_he, ve)
 
-            ve_x_sa_x_he[id, :] = st_he_[ve]
+            hev_[id] = st_he[ve]
 
-        elseif haskey(ve_al_, ve)
+        elseif !isnothing(ve_al_) && haskey(ve_al_, ve)
 
             al_ = []
 
             for al in ve_al_[ve]
 
-                if haskey(st_he_, al)
+                if haskey(st_he, al)
 
                     println("$al =(alias)=> $ve")
 
-                    push!(al_, st_he_[al])
+                    push!(al_, st_he[al])
 
                 end
 
@@ -36,7 +28,7 @@ function heat(st_he_, ve_al_)
 
             if !isempty(al_)
 
-                ve_x_sa_x_he[id, :] = mean(al_)
+                hev_[id] = mean(al_)
 
             end
 
@@ -44,12 +36,12 @@ function heat(st_he_, ve_al_)
 
     end
 
-    ve_x_sa_x_he
+    hev_
 
 end
 
-function heat(st_he::Dict{<:AbstractString, <:Real}, ve_al_)
+function heat(st_, st_x_sa_x_he::Matrix; ke_ar...)
 
-    heat(Dict(st => [he] for (st, he) in st_he), ve_al_)[:, 1]
+    [heat.([st_], eachcol(st_x_sa_x_he); ke_ar...)...;;]
 
 end

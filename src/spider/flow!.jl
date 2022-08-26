@@ -4,7 +4,7 @@ function _increase(cu, wa)
 
 end
 
-function flow!(de_x_so_x_ed, he_; n_fl = 1000, ch = 1e-6)
+function flow!(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6)
 
     no1 = 0.0
 
@@ -62,13 +62,13 @@ function flow!(de_x_so_x_ed, he_; n_fl = 1000, ch = 1e-6)
 
 end
 
-function flow!(ve_x_sa_x_he; ke_ar...)
+function flow!(ve_x_sa_x_he::Matrix; ke_ar...)
 
     de_x_so_x_ed = edge()
 
     for he_ in eachcol(ve_x_sa_x_he)
 
-        flow!(de_x_so_x_ed, he_; ke_ar...)
+        flow!(he_; de_x_so_x_ed = de_x_so_x_ed, ke_ar...)
 
     end
 
