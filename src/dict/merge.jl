@@ -18,7 +18,7 @@ function merge(di1, di2)
 
                 if va1 != va2
 
-                    println("$ke => ($va1) $va2")
+                    println("$ke (=> $va1) => $va2")
 
                 end
 

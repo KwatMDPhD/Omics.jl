@@ -1,4 +1,4 @@
-function heat(st_, he_; ve_al_ = nothing)
+function heat(st_, he_; ve_al_ = nothing, pr = true)
 
     st_he = Dict(zip(st_, he_))
 
@@ -18,7 +18,11 @@ function heat(st_, he_; ve_al_ = nothing)
 
                 if haskey(st_he, al)
 
-                    println("$al =(alias)=> $ve")
+                    if pr
+
+                        println("$al =(alias)=> $ve")
+
+                    end
 
                     push!(al_, st_he[al])
 

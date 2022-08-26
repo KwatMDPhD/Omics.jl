@@ -8,7 +8,7 @@ function factorize(
     mf = nnmf(ma, n_fa)
 
     println(
-        "Iterations = $(mf.niters), objective value = $(mf.objvalue), and converged = $(mf.converged)",
+        "Iterations = $(mf.niters), objective value = $(OnePiece.number.format(mf.objvalue)), and converged = $(mf.converged)",
     )
 
     plot([mf.W], [mf.H], [ro_], [co_])

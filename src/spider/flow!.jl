@@ -4,7 +4,7 @@ function _increase(cu, wa)
 
 end
 
-function flow!(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6)
+function flow!(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6, pr = true)
 
     no1 = 0.0
 
@@ -44,11 +44,15 @@ function flow!(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6)
 
         end
 
-        no2 = _heat_check(he_)
+        no2 = _heat_check(he_, pr = pr)
 
         if abs(no2 - no1) < ch
 
-            println("$id 🏁")
+            if pr
+
+                println("$id 🏁")
+
+            end
 
             break
 
