@@ -14,7 +14,7 @@ function plot(wm_, hm_, _ro_, _co_)
 
         display(
             OnePiece.figure.plot_heat_map(
-                wm[or_, :],
+                OnePiece.normalization.normalize!(wm[or_, :], 1, "-0-"),
                 y = ro_[or_],
                 x = fa_,
                 layout = Dict(
@@ -34,7 +34,7 @@ function plot(wm_, hm_, _ro_, _co_)
 
         display(
             OnePiece.figure.plot_heat_map(
-                hm[:, or_],
+                OnePiece.normalization.normalize!(hm[:, or_], 2, "-0-"),
                 y = fa_,
                 x = co_[or_],
                 layout = Dict(
