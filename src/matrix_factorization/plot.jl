@@ -10,10 +10,12 @@ function plot(wm_, hm_, _ro_, _co_)
 
     for (id, (wm, ro_)) in enumerate(zip(wm_, _ro_))
 
+        or_ = OnePiece.clustering.cluster(wm)[1]
+
         display(
             OnePiece.figure.plot_heat_map(
-                wm,
-                y = ro_,
+                wm[or_, :],
+                y = ro_[or_],
                 x = fa_,
                 layout = Dict(
                     "height" => lo,
@@ -28,11 +30,13 @@ function plot(wm_, hm_, _ro_, _co_)
 
     for (id, (hm, co_)) in enumerate(zip(hm_, _co_))
 
+        or_ = OnePiece.clustering.cluster(transpose(hm))[1]
+
         display(
             OnePiece.figure.plot_heat_map(
-                hm,
+                hm[:, or_],
                 y = fa_,
-                x = co_,
+                x = co_[or_],
                 layout = Dict(
                     "height" => sh,
                     "width" => lo,
