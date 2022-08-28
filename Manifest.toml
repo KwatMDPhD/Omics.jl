@@ -2,7 +2,7 @@
 
 julia_version = "1.8.0"
 manifest_format = "2.0"
-project_hash = "42fab85b36b67d3bd54028088286039dec256ffa"
+project_hash = "9436d68fa5b7e3415b80e40e854d8773bca4e341"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -248,6 +248,12 @@ version = "0.4.2"
 [[deps.Future]]
 deps = ["Random"]
 uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
+
+[[deps.GZip]]
+deps = ["Libdl"]
+git-tree-sha1 = "039be665faf0b8ae36e089cd694233f5dee3f7d6"
+uuid = "92fee26a-97fe-5a0c-ad85-20a5f3185b63"
+version = "0.5.1"
 
 [[deps.GeoInterface]]
 deps = ["Extents"]
