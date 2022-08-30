@@ -1,6 +1,6 @@
 function remove_longest_common_prefix(st_)
 
-    pr = OnePiece.vector.get_longest_common_prefix(st_...)
+    pr = OnePiece.vector.get_longest_common_prefix(st_)
 
     if pr === nothing
 
