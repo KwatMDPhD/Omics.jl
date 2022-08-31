@@ -1,4 +1,4 @@
-function get(gs; di = OnePiece.TEMPORARY_DIRECTORY)
+function parse(gs; di = OnePiece.TEMPORARY_DIRECTORY)
 
     fi = "$(gs)_family.soft.gz"
 
@@ -50,7 +50,7 @@ function get(gs; di = OnePiece.TEMPORARY_DIRECTORY)
 
             da = OnePiece.data_frame.make(pop!(ke_va, "ro_"))
 
-            if parse(Int, ke_va["!$(titlecase(ty))_data_row_count"]) != size(da, 1)
+            if Base.parse(Int, ke_va["!$(titlecase(ty))_data_row_count"]) != size(da, 1)
 
                 error()
 

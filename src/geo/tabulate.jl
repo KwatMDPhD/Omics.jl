@@ -1,72 +1,60 @@
-function rename(fe_, pl, da)
+function tabulate(ty_bl)
 
-    pl = parse(Int, pl[4:end])
+    ch_pr = Dict()
 
-    fu = (na) -> na
+    de = ": "
 
-    ke = "ID"
+    sa_su = Dict()
 
-    if pl in [96, 97, 570]
+    for (sa, di) in ty_bl["SAMPLE"]
 
-        va = "Gene Symbol"
+        if isempty(ch_pr)
 
-        fu = (na) -> split(na, " /// ", limit = 2)[1]
+            ch_ = [fe for fe in keys(di) if startswith(fe, "!Sample_characteristics")]
 
-    elseif pl in [13534]
+            an_ = [di[ch] for ch in ch_]
 
-        va = "UCSC_RefGene_Name"
+            if !all(contains.(an_, de))
 
-        fu = (na) -> split(na, ';', limit = 2)[1]
+                println("Bad characteristics:\n$(join(an_, '\n'))\n")
 
-    elseif pl in [5175, 11532]
+                continue
 
-        va = "gene_assignment"
+            end
 
-        fu = (na) -> split(na, " // ", limit = 2)[2]
+            sp_ = [split(an, de, limit = 2) for an in an_]
 
-    elseif pl in [2004, 2005, 3718, 3720]
+            ch_pr = Dict(zip(ch_, (sp[1] for sp in sp_)))
 
-        va = "Associated Gene"
+            sa_su[sa] = [sp[2] for sp in sp_]
 
-        fu = (na) -> split(na, " // ", limit = 2)[1]
-
-    elseif pl in [10558]
-
-        va = "Symbol"
-
-    elseif pl in [16686]
-
-        va = "GB_ACC"
-
-    end
-
-    n_pe = 8
-
-    println(first(da, n_pe))
-
-    println("$ke => $va")
-
-    fe_na = Dict()
-
-    for (fe, na) in zip(da[!, ke], da[!, va])
-
-        if na isa AbstractString && !isempty(na) && !(na in ["---"])
-
-            fe_na[fe] = fu(na)
+            continue
 
         end
 
+        su_ = []
+
+        for (ch, pr) in ch_pr
+
+            pr2, su = split(di[ch], de, limit = 2)
+
+            if pr == pr2
+
+                push!(su_, su)
+
+            else
+
+                error()
+
+            end
+
+        end
+
+        sa_su[sa] = su_
+
     end
 
-    OnePiece.dict.print(fe_na, n_pa = n_pe)
-
-    [Base.get(fe_na, fe, fe) for fe in fe_]
-
-end
-
-function tabulate(ty_bl)
-
-    an = DataFrame()
+    fe_x_sa_x_an = DataFrame(Dict("Feature" => collect(values(ch_pr)), sa_su...))
 
     pl = ""
 
@@ -86,15 +74,43 @@ function tabulate(ty_bl)
 
         end
 
+        if !haskey(di, "da")
+
+            println("Data frame is empty.")
+
+            continue
+
+        end
+
         da = di["da"]
+
+        fe2_ = da[!, 1]
 
         if isempty(fe_)
 
-            fe_ = da[!, 1]
+            fe_ = fe2_
 
-        elseif !all(fe_ .== da[!, 1])
+        elseif !all(fe2_ .== fe_)
 
-            error()
+            println("Sorting sample table")
+
+            id_ = []
+
+            for fe in fe_
+
+                fo_ = findall(fe2_ .== fe)
+
+                if length(fo_) != 1
+
+                    error()
+
+                end
+
+                push!(id_, fo_[1])
+
+            end
+
+            da = da[id_, :]
 
         end
 
@@ -102,8 +118,30 @@ function tabulate(ty_bl)
 
     end
 
-    nu = DataFrame(Dict("Feature" => rename(fe_, pl, ty_bl["PLATFORM"][pl]["da"]), sa_nu...))
+    pl_di = ty_bl["PLATFORM"]
 
-    an, nu
+    if isempty(pl)
+
+        println("Sample platforms are not specified. Using the first")
+
+        pl = collect(keys(pl_di))[1]
+
+    end
+
+    if haskey(pl_di[pl], "da")
+
+        fe_na = name(pl, pl_di[pl]["da"])
+
+        fe_ = [get(fe_na, fe, nothing) for fe in fe_]
+
+    else
+
+        println("Platform table is empty.")
+
+    end
+
+    fe_x_sa_x_nu = DataFrame(Dict("Feature" => fe_, sa_nu...))
+
+    fe_x_sa_x_an, fe_x_sa_x_nu
 
 end
