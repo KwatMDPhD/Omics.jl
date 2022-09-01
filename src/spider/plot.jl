@@ -23,6 +23,7 @@ function _make_element((so, ta)::Tuple)
 end
 
 function plot(;
+    js = "",
     no_si = 32,
     ed_si = no_si / 2,
     ed_wi = no_si / 8,
@@ -34,6 +35,12 @@ function plot(;
 )
 
     ve_ = _make_element.(VERTEX_)
+
+    if !isempty(js)
+
+        OnePiece.network.position!(ve_, js)
+
+    end
 
     ed_ = _make_element.(EDGE_)
 
