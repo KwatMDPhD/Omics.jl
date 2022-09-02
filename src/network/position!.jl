@@ -1,18 +1,24 @@
-function position!(el_, js)
+function position!(ve_, id_di)
 
-    id_di =
-        Dict(di["data"]["id"] => di for di in vcat(values(OnePiece.dict.read(js)["elements"])...))
+    for ve in ve_
 
-    for el in el_
-
-        da = el["data"]
+        da = ve["data"]
 
         ke = "position"
 
-        el[ke] = id_di[da["id"]][ke]
+        ve[ke] = id_di[string(da["id"])][ke]
 
     end
 
-    el_
+    ve_
+
+end
+
+function position!(ve_, js::AbstractString)
+
+    position!(
+        ve_,
+        Dict(di["data"]["id"] => di for di in OnePiece.dict.read(js)["elements"]["nodes"]),
+    )
 
 end

@@ -36,9 +36,15 @@ function plot(;
 
     ve_ = _make_element.(VERTEX_)
 
-    if !isempty(js)
+    if isempty(js)
+
+        po = false
+
+    else
 
         OnePiece.network.position!(ve_, js)
+
+        po = true
 
     end
 
@@ -97,22 +103,26 @@ function plot(;
 
     end
 
-    if length(ve_) == 1
+    la = Dict{String, Any}("animate" => false)
 
-        la = Dict()
+    if po
+
+        merge!(la, Dict("name" => "preset"))
 
     else
 
-        la = Dict(
-            "name" => "cose",
-            "animate" => false,
-            "padding" => 16,
-            "boundingBox" =>
-                Dict("x1" => 0, "y1" => 0, "h" => he, "w" => he * MathConstants.golden),
-            "componentSpacing" => 40,
-            "nodeRepulsion" => 8000,
-            "idealEdgeLength" => 16,
-            "numIter" => 10000,
+        merge!(
+            la,
+            Dict(
+                "name" => "cose",
+                "padding" => 16,
+                "boundingBox" =>
+                    Dict("x1" => 0, "y1" => 0, "h" => he, "w" => he * MathConstants.golden),
+                "componentSpacing" => 40,
+                "nodeRepulsion" => 8000,
+                "idealEdgeLength" => 16,
+                "numIter" => 10000,
+            ),
         )
 
     end

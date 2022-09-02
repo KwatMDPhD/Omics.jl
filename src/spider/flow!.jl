@@ -6,9 +6,13 @@ end
 
 function flow!(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6, pr = true)
 
+    he__ = []
+
     no1 = 0.0
 
     for id in 1:n_fl
+
+        push!(he__, copy(he_))
 
         for (id, (ve, so_)) in enumerate(zip(VERTEX_, eachrow(de_x_so_x_ed)))
 
@@ -62,7 +66,7 @@ function flow!(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6, pr = true)
 
     end
 
-    he_
+    he_, he__
 
 end
 

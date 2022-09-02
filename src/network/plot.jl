@@ -26,7 +26,7 @@ function plot(el_, st_, la; ou = "")
 
         cy.ready(function() {
 
-            let js = new Blob([JSON.stringify(cy.json())], {type: "application/json"});
+            let js = new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"});
 
             saveAs(js, "$pr.json");
 
