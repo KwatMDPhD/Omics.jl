@@ -4,6 +4,7 @@ function plot_heat_map(
     x = ["* $id" for id in 1:size(z, 2)],
     na1 = "Row",
     na2 = "Column",
+    co = NAME_COLORSCALE["Plasma"],
     gr1_ = [],
     gr2_ = [],
     layout = Dict(),
@@ -66,14 +67,14 @@ function plot_heat_map(
             "z" => collect(eachrow(z))[fl_],
             "y" => y[fl_],
             "x" => x,
-            "colorscale" => "Picnic",
+            "colorscale" => co,
             "colorbar" => Dict("x" => 1.05),
         ),
     )
 
     tr = Dict(
         "type" => "heatmap",
-        "colorscale" => "Rainbow",
+        "colorscale" => NAME_COLORSCALE["Plotly"],
         "colorbar" => Dict("x" => 1.15, "dtick" => 1),
     )
 

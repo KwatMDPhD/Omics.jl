@@ -30,7 +30,7 @@ function parse(gs; di = OnePiece.TEMPORARY_DIRECTORY)
 
             ty, bl = split(li[2:end], eq, limit = 2)
 
-            get!(ty_bl, ty, Dict())[bl] = Dict()
+            get!(ty_bl, ty, OrderedDict())[bl] = OrderedDict()
 
             continue
 

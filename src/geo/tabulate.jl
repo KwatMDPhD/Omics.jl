@@ -1,6 +1,6 @@
 function tabulate(ty_bl, sa = "!Sample_title")
 
-    sa_di = Dict(di[sa] => di for di in values(ty_bl["SAMPLE"]))
+    sa_di = OrderedDict(di[sa] => di for di in values(ty_bl["SAMPLE"]))
 
     sa_an = OrderedDict()
 
