@@ -12,7 +12,7 @@ function plot_heat_map(
 
     si1, si2 = size(z)
 
-    axis = Dict("domain" => [0.0, 0.95])
+    axis = Dict("domain" => [0.0, 0.95], "automargin" => true)
 
     axis2 = Dict("domain" => [0.96, 1.0], "tickvals" => [])
 
@@ -30,6 +30,8 @@ function plot_heat_map(
     )
 
     data = []
+
+    # TODO: cluster within a group
 
     if !isempty(gr1_)
 
