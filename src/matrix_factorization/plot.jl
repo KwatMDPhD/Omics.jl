@@ -14,7 +14,7 @@ function plot(wm_, hm_, _ro_, _co_)
 
         display(
             OnePiece.figure.plot_heat_map(
-                replace(OnePiece.normalization.normalize!(wm[or_, :], 1, "-0-"), NaN => 0),
+                replace(OnePiece.normalization.normalize!(wm[or_, :], 1, "-0-"), NaN => nothing),
                 y = ro_[or_],
                 x = fa_,
                 layout = Dict(
