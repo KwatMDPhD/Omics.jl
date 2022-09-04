@@ -98,6 +98,12 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
     end
 
-    DataFrame(sa_an), DataFrame(sa_nu)
+    fe_x_sa_x_an = DataFrame(sa_an)
+
+    fe_x_sa_x_nu = DataFrame(sa_nu)
+
+    OnePiece.data_frame.print_unique(eachrow(fe_x_sa_x_an))
+
+    fe_x_sa_x_an, fe_x_sa_x_nu
 
 end

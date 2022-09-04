@@ -46,6 +46,6 @@ end
 
 function heat(st_, st_x_sa_x_he::Matrix; ke_ar...)
 
-    [heat.([st_], eachcol(st_x_sa_x_he); ke_ar...)...;;]
+    hcat([heat(st_, co; ke_ar...) for co in eachcol(st_x_sa_x_he)]...)
 
 end

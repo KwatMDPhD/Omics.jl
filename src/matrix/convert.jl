@@ -1,4 +1,4 @@
-function convert(ro_...)
+function convert(ro_)
 
     if length(unique(length.(ro_))) != 1
 
@@ -21,5 +21,12 @@ function convert(ro_...)
     end
 
     ma
+
+end
+
+# TODO: Remove
+function convert(ro_...)
+
+    convert(ro_)
 
 end
