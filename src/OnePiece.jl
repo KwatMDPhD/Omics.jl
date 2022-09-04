@@ -14,7 +14,7 @@ function __init__()
 
     global TEMPORARY_DIRECTORY = OnePiece.path.make_temporary("OnePiece")
 
-    ENV["COLUMNS"] = 160
+    ENV["COLUMNS"] = Int(1e5)
 
 end
 
