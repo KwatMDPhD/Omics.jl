@@ -6,7 +6,7 @@ end
 
 function _make_element(ve::DataType)
 
-    _make_element(ve, ["no"])
+    _make_element(ve, ["no", supertypes(ve)[2:(end - 1)]...])
 
 end
 
@@ -34,7 +34,7 @@ function plot(;
     ou = "",
 )
 
-    ve_ = _make_element.(VERTEX_)
+    ve_ = [_make_element(ve) for ve in VERTEX_]
 
     if isempty(js)
 
@@ -48,7 +48,7 @@ function plot(;
 
     end
 
-    ed_ = _make_element.(EDGE_)
+    ed_ = [_make_element(ed) for ed in EDGE_]
 
     st_ = append!(
         [

@@ -8,6 +8,8 @@ using Colors
 
 using DataFrames
 
+using InteractiveUtils
+
 using LinearAlgebra
 
 using StatsBase

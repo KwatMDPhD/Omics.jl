@@ -4,7 +4,7 @@ function load!()
 
         ev = Base.eval(Main, na)
 
-        if ev isa DataType
+        if ev isa DataType && !isabstracttype(ev)
 
             _add!(ev)
 
