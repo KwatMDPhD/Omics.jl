@@ -1,4 +1,4 @@
-function animate(he__, di; pe = 1)
+function animate(he__, di; pe = 1, js = "", st_ = [])
 
     dw = joinpath(homedir(), "Downloads")
 
@@ -12,7 +12,7 @@ function animate(he__, di; pe = 1)
 
         pe = round(Int, pe * n_he_)
 
-        println("Plotting per $pe / $n_he_")
+        println("Plotting $pe / $n_he_")
 
     end
 
@@ -24,17 +24,23 @@ function animate(he__, di; pe = 1)
 
         end
 
+        js2 = joinpath(dw, "$pr.1.json")
+
         if id == 1
 
-            js = ""
+            if isempty(js)
 
-        else
+                js2 = ""
 
-            js = joinpath(dw, "$pr.1.json")
+            else
+
+                cp(js, js2)
+
+            end
 
         end
 
-        display(plot(js = js, he_ = he__[id], ou = joinpath(di, "$pr.$id.html")))
+        display(plot(js = js2, st_ = st_, he_ = he__[id], ou = joinpath(di, "$pr.$id.html")))
 
         sleep(2)
 
@@ -46,6 +52,8 @@ function animate(he__, di; pe = 1)
 
     end
 
+    wo = pwd()
+
     cd(di)
 
     for na in OnePiece.path.select(pwd(), ke_ = [pr], jo = false)
@@ -54,6 +62,8 @@ function animate(he__, di; pe = 1)
 
     end
 
-    run(`convert -delay 40 -loop 0 "*".png spider.gif`)
+    run(`convert -delay 10 -loop 0 "*".png spider.gif`)
+
+    cd(wo)
 
 end

@@ -1,12 +1,12 @@
 function _make_element(ve, cl_)
 
-    Dict("data" => Dict("id" => ve), "classes" => cl_)
+    Dict("data" => Dict("id" => string(ve)), "classes" => [string(cl) for cl in cl_])
 
 end
 
 function _make_element(ve::DataType)
 
-    _make_element(ve, ["no", supertypes(ve)[2:(end - 1)]...])
+    _make_element(ve, vcat("no", collect(supertypes(ve))[2:(end - 1)]))
 
 end
 
@@ -18,7 +18,7 @@ end
 
 function _make_element((so, ta)::Tuple)
 
-    Dict("data" => Dict("source" => so, "target" => ta))
+    Dict("data" => Dict("source" => string(so), "target" => string(ta)))
 
 end
 
@@ -28,8 +28,8 @@ function plot(;
     ed_si = no_si / 2,
     ed_wi = no_si / 8,
     edge_line_color = "#171412",
-    he_ = [],
     st_ = [],
+    he_ = [],
     he = 800,
     ou = "",
 )
@@ -127,6 +127,6 @@ function plot(;
 
     end
 
-    OnePiece.network.plot([ve_; ed_], st_, la, ou = ou)
+    OnePiece.network.plot(vcat(ve_, ed_), st_, la, ou = ou)
 
 end
