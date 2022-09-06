@@ -52,18 +52,19 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     end
 
-    wo = pwd()
+    for pa in OnePiece.path.select(di, ke_ = [pr])
 
-    cd(di)
-
-    for na in OnePiece.path.select(pwd(), ke_ = [pr], jo = false)
-
-        mv(na, replace(na, "$pr." => ""))
+        mv(pa, replace(pa, "$pr." => ""))
 
     end
 
-    run(`convert -delay 10 -loop 0 "*".png spider.gif`)
+    pn_ = sort(
+        OnePiece.path.select(di, ke_ = [r".png$"]),
+        by = pa -> parse(Int, splitext(basename(pa))[1]),
+    )
 
-    cd(wo)
+    gi = joinpath(di, "animate.gif")
+
+    run(`convert -delay 10 -loop 0 $pn_ $gi`)
 
 end
