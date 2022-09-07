@@ -90,19 +90,16 @@ function plot(;
 
     if !isempty(he_)
 
-        if 1 < length(he_)
-
-            he_ = OnePiece.normalization.normalize(he_, "0-1")
-
-        end
-
         append!(
             st_,
             [
                 Dict(
                     "selector" => "#$ve",
                     "style" => Dict("background-color" => "#$(hex(get(ColorSchemes.plasma, fr)))"),
-                ) for (ve, fr) in zip(string.(VERTEX_), he_)
+                ) for (ve, fr) in zip(
+                    string.(VERTEX_),
+                    replace(OnePiece.normalization.normalize(he_, "0-1"), NaN => 0),
+                )
             ],
         )
 

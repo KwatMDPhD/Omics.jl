@@ -32,7 +32,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
         display(plot(js = js, st_ = st_, he_ = he__[id], ou = joinpath(di, "$pr.$id.html")))
 
-        sleep(2)
+        sleep(8)
 
     end
 
