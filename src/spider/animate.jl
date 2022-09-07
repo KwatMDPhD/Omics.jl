@@ -10,7 +10,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     if pe < 1
 
-        pe = round(Int, pe * n_he_)
+        pe = ceil(Int, pe * n_he_)
 
         println("Plotting $pe / $n_he_")
 
