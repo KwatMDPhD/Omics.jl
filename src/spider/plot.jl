@@ -90,26 +90,31 @@ function plot(;
 
     if !isempty(he_)
 
+        if 1 < length(he_)
+
+            he_ = OnePiece.normalization.normalize(he_, "0-1")
+
+        end
+
         append!(
             st_,
             [
                 Dict(
                     "selector" => "#$ve",
                     "style" => Dict("background-color" => "#$(hex(get(ColorSchemes.plasma, fr)))"),
-                ) for
-                (ve, fr) in zip(string.(VERTEX_), OnePiece.normalization.normalize(he_, "0-1"))
+                ) for (ve, fr) in zip(string.(VERTEX_), he_)
             ],
         )
 
     end
 
-    la = Dict{String, Any}("animate" => false)
+    la = Dict{String, Any}("name" => "grid", "animate" => false)
 
     if po
 
         merge!(la, Dict("name" => "preset"))
 
-    else
+    elseif 1 < length(ed_)
 
         merge!(
             la,
