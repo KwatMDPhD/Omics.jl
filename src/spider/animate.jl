@@ -12,7 +12,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
         pe = ceil(Int, pe * n_he_)
 
-        println("Plotting $pe / $n_he_")
+        println("Plotting every $pe of $n_he_")
 
     end
 
@@ -24,23 +24,13 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
         end
 
-        js2 = joinpath(dw, "$pr.1.json")
+        if 1 < id
 
-        if id == 1
-
-            if isempty(js)
-
-                js2 = ""
-
-            else
-
-                cp(js, js2)
-
-            end
+            js = joinpath(dw, "$pr.1.json")
 
         end
 
-        display(plot(js = js2, st_ = st_, he_ = he__[id], ou = joinpath(di, "$pr.$id.html")))
+        display(plot(js = js, st_ = st_, he_ = he__[id], ou = joinpath(di, "$pr.$id.html")))
 
         sleep(2)
 
