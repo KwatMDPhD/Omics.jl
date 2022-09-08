@@ -34,13 +34,13 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
         display(plot(js = js, st_ = st_, he_ = he__[id], ou = ht))
 
-        #DefaultApplication.open(ht)
-
         while !ispath(joinpath(dw, "$pr.$id.png"))
 
         end
 
     end
+
+    sleep(1)
 
     for na in OnePiece.path.select(dw, ke_ = [pr], jo = false)
 
