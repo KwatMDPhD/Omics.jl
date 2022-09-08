@@ -4,6 +4,8 @@ using JSON3
 
 using ..OnePiece
 
+# TODO: Use the categorical colorscale
+
 include("../_include_neighbor.jl")
 
 _include_neighbor(@__FILE__)
