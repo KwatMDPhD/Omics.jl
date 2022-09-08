@@ -8,6 +8,8 @@ using Colors
 
 using DataFrames
 
+using DefaultApplication
+
 using InteractiveUtils
 
 using LinearAlgebra

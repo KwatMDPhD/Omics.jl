@@ -24,15 +24,21 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
         end
 
-        if 1 < id
+        if 1 < id && isempty(js)
 
             js = joinpath(dw, "$pr.1.json")
 
         end
 
-        display(plot(js = js, st_ = st_, he_ = he__[id], ou = joinpath(di, "$pr.$id.html")))
+        ht = joinpath(di, "$pr.$id.html")
 
-        sleep(4)
+        display(plot(js = js, st_ = st_, he_ = he__[id], ou = ht))
+
+        #DefaultApplication.open(ht)
+
+        while !ispath(joinpath(dw, "$pr.$id.png"))
+
+        end
 
     end
 
@@ -55,6 +61,6 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     gi = joinpath(di, "animate.gif")
 
-    run(`convert -delay 10 -loop 0 $pn_ $gi`)
+    run(`convert -delay 40 -loop 0 $pn_ $gi`)
 
 end

@@ -32,7 +32,7 @@ function plot(el_, st_, la; ou = "")
 
             saveAs(js, "$pr.json");
 
-            let pn = cy.png({"full": true, "scale": 2, "bg": "#fcc9b9"});
+            let pn = cy.png({"full": true, "scale": 1, "bg": "#fcc9b9"});
 
             saveAs(pn, "$pr.png");
 

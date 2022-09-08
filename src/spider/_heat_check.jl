@@ -10,7 +10,7 @@ function _heat_check(he_; pr = true)
 
             if he != 0.0
 
-                println("$ve $(OnePiece.number.format(he))")
+                println("$ve\t$(OnePiece.number.format(he))")
 
             end
 
