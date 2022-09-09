@@ -5,7 +5,7 @@ function plot(
     nac_ = ["Columns $id" for id in 1:length(wm_)],
     naf = "Factor",
     _ro_ = [["$na $id" for id in 1:size(wm, 1)] for (wm, na) in zip(wm_, nar_)],
-    _co_ = [["$na $id" for id in 1:size(hm, 2)] for (hm, na) in zip(hm_, nar_)],
+    _co_ = [["$na $id" for id in 1:size(hm, 2)] for (hm, na) in zip(hm_, nac_)],
     ou = "",
 )
 
@@ -19,8 +19,6 @@ function plot(
 
     for (id, (wm, ro_, nar)) in enumerate(zip(wm_, _ro_, nar_))
 
-        or_ = OnePiece.clustering.cluster(wm)[1]
-
         title_text = "W $id"
 
         if isempty(ou)
@@ -31,7 +29,14 @@ function plot(
 
             ou2 = joinpath(ou, "$title_text.html")
 
+            OnePiece.table.write(
+                joinpath(ou, "$title_text.tsv"),
+                OnePiece.data_frame.make(ro_, fa_, wm, nar = nar),
+            )
+
         end
+
+        or_ = OnePiece.clustering.cluster(wm)[1]
 
         display(
             OnePiece.figure.plot_heat_map(
@@ -54,8 +59,6 @@ function plot(
 
     for (id, (hm, co_, nac)) in enumerate(zip(hm_, _co_, nac_))
 
-        or_ = OnePiece.clustering.cluster(transpose(hm))[1]
-
         title_text = "H $id"
 
         if isempty(ou)
@@ -66,7 +69,14 @@ function plot(
 
             ou2 = joinpath(ou, "$title_text.html")
 
+            OnePiece.table.write(
+                joinpath(ou, "$title_text.tsv"),
+                OnePiece.data_frame.make(fa_, co_, hm, nar = naf),
+            )
+
         end
+
+        or_ = OnePiece.clustering.cluster(transpose(hm))[1]
 
         display(
             OnePiece.figure.plot_heat_map(
