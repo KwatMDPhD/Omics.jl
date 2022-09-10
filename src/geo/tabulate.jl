@@ -56,7 +56,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             end
 
-            sa_nu[sa] = da[id_, "VALUE"]
+            sa_nu[sa] = [Base.parse(Float64, va) for va in da[id_, "VALUE"]]
 
         else
 

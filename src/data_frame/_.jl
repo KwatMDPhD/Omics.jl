@@ -4,6 +4,8 @@ using DataFrames
 
 using OrderedCollections
 
+using Statistics
+
 using ..OnePiece
 
 include("../_include_neighbor.jl")
