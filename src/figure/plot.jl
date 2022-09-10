@@ -1,6 +1,8 @@
 function plot(data, layout = Dict(); config = Dict(), ou = "")
 
-    layout0 = Dict("hovermode" => "closest")
+    axis = Dict("automargin" => true)
+
+    layout0 = Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis)
 
     config0 = Dict(
         "modebarbuttonstoremove" => ["select", "lasso", "resetscale"],
