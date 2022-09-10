@@ -6,7 +6,7 @@ function collapse(da, fu = median)
 
     ge_id_ = Dict()
 
-    ro_, co_, ma = OnePiece.data_frame.separate(da)
+    nar, ro_, co_, ma = OnePiece.data_frame.separate(da)
 
     for (id, ge) in enumerate(ro_)
 
@@ -34,7 +34,7 @@ function collapse(da, fu = median)
 
     end
 
-    da2 = OnePiece.data_frame.make(ro2_, co_, ma2)
+    da2 = OnePiece.data_frame.make(nar, ro2_, co_, ma2)
 
     println("After")
 

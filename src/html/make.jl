@@ -8,7 +8,7 @@ function make(di, sr_, sc, ht = "")
 
     li_ = [
         "<!doctype html>",
-        "<div id=\"$di\" style=\"display: block; height: 1000px; width: 100%; margin-left: auto; margin-right: auto; background: #fdfdfd\"></div>",
+        "<div id=\"$di\" style=\"display: block; height: 800; width: 100%; margin-left: auto; margin-right: auto; background: #fdfdfd\"></div>",
         ["<script src=\"$sr\"></script>" for sr in sr_]...,
         "<script>",
         "$sc",

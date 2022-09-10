@@ -10,6 +10,8 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
     de = ": "
 
+    naf = "Feature"
+
     for (sa, di) in sa_di
 
         ch_ = [va for (ke, va) in di if startswith(ke, "!Sample_characteristics")]
@@ -20,7 +22,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             pr_ = [sp[1] for sp in sp_]
 
-            if get!(sa_an, "Feature", pr_) != pr_
+            if get!(sa_an, naf, pr_) != pr_
 
                 error()
 
@@ -42,7 +44,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             fe_ = da[!, 1]
 
-            cu_ = get!(sa_nu, "Feature", fe_)
+            cu_ = get!(sa_nu, naf, fe_)
 
             if cu_ == fe_
 
@@ -65,6 +67,10 @@ function tabulate(ty_bl, sa = "!Sample_title")
         end
 
     end
+
+    fe_x_sa_x_an = DataFrame(sa_an)
+
+    fe_x_sa_x_nu = DataFrame(sa_nu)
 
     pl_di = ty_bl["PLATFORM"]
 
@@ -90,17 +96,15 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
         fe_na = name(pl, pl_di[pl]["da"])
 
-        sa_nu["Feature"] = [get(fe_na, fe, "") for fe in sa_nu["Feature"]]
+        fe_x_sa_x_nu[!, naf] = [get(fe_na, fe, "") for fe in fe_x_sa_x_nu[!, naf]]
+
+        rename!(fe_x_sa_x_nu, naf => "Gene")
 
     else
 
         println("$pl table is empty.")
 
     end
-
-    fe_x_sa_x_an = DataFrame(sa_an)
-
-    fe_x_sa_x_nu = DataFrame(sa_nu)
 
     OnePiece.data_frame.print_unique(eachrow(fe_x_sa_x_an))
 

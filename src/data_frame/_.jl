@@ -2,8 +2,6 @@ module data_frame
 
 using DataFrames
 
-using OrderedCollections
-
 using Statistics
 
 using ..OnePiece

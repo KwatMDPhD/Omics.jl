@@ -135,19 +135,19 @@ end
 
 function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
-    fe_, fe_x_sa_x_sc = OnePiece.data_frame.separate_row(fe_x_sa_x_sc)
+    fe_, sa_, ma = OnePiece.data_frame.separate(fe_x_sa_x_sc)[[2, 3, 4]]
 
     OnePiece.vector.error_duplicate(fe_)
 
-    OnePiece.data_frame.error_bad(fe_x_sa_x_sc)
+    OnePiece.vector.error_bad(eachcol(ma), na_ = sa_)
 
     se_x_sa_x_en = DataFrame("Set" => collect(keys(se_fe_)))
 
-    for sa in names(fe_x_sa_x_sc)
+    for (id, sa) in enumerate(sa_)
 
-        go_ = findall(!ismissing, fe_x_sa_x_sc[!, sa])
+        go_ = findall(!ismissing, ma[!, id])
 
-        sc_, fe_ = OnePiece.vector.sort_like(fe_x_sa_x_sc[go_, sa], fe_[go_])
+        sc_, fe_ = OnePiece.vector.sort_like(ma[go_, id], fe_[go_])
 
         fu, st = _match_algorithm(al)
 

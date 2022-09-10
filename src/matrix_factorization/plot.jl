@@ -41,10 +41,10 @@ function plot(
         display(
             OnePiece.figure.plot_heat_map(
                 replace(OnePiece.normalization.normalize!(wm[or_, :], 1, "-0-"), NaN => nothing),
-                y = ro_[or_],
-                x = fa_,
-                na1 = nar,
-                na2 = naf,
+                ro_[or_],
+                fa_,
+                nar = nar,
+                nac = naf,
                 layout = Dict(
                     "height" => lo,
                     "width" => sh,
@@ -81,10 +81,10 @@ function plot(
         display(
             OnePiece.figure.plot_heat_map(
                 OnePiece.normalization.normalize!(hm[:, or_], 2, "-0-"),
-                y = fa_,
-                x = co_[or_],
-                na1 = naf,
-                na2 = nac,
+                fa_,
+                co_[or_],
+                nar = naf,
+                nac = nac,
                 layout = Dict(
                     "height" => sh,
                     "width" => lo,

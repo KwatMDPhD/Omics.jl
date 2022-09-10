@@ -6,7 +6,7 @@ function make(ro_)
 
 end
 
-function make(ro_, co_, ma; nar = "Row")
+function make(nar, ro_, co_, ma)
 
     insertcols!(DataFrame(ma, co_), 1, nar => ro_)
 

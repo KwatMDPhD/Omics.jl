@@ -1,8 +1,7 @@
-# TODO: merge with `separate_row`
 function separate(da)
 
-    ri = da[!, 2:end]
+    co_ = names(da)
 
-    da[!, 1], names(ri), Matrix(ri)
+    co_[1], da[!, 1], co_[2:end], Matrix(da[!, 2:end])
 
 end

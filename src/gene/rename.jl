@@ -46,7 +46,7 @@ function rename(st_; mo = true, en = true, hg = true)
 
     println("👍 $(count(ma_ .== 1))")
 
-    println("🤞 $(count(ma_ .== 2))")
+    println("✌️ $(count(ma_ .== 2))")
 
     println("👎 $(count(ma_ .== 3))")
 

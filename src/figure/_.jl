@@ -1,5 +1,7 @@
 module figure
 
+using DataFrames
+
 using JSON3
 
 using ..OnePiece
