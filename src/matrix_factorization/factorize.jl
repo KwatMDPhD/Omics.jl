@@ -1,6 +1,6 @@
 function factorize(ma, n_fa; ke_ar...)
 
-    mf = nnmf(ma, n_fa, init = :random, alg = :multmse, maxiter = Int(1e6))
+    mf = nnmf(ma, n_fa, init = :random, alg = :multmse, tol = 1.0e-6, maxiter = Int(1e6))
 
     if !mf.converged
 
