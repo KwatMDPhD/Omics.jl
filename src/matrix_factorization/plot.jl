@@ -11,7 +11,7 @@ function plot(
 
     fa_ = ["$naf $id" for id in 1:size(wm_[1], 2)]
 
-    sh = 720
+    sh = 584
 
     lo = sh * MathConstants.golden
 
