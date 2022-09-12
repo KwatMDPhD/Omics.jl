@@ -40,9 +40,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     end
 
-    sleep(1)
-
-    for na in OnePiece.path.select(dw, ke_ = [pr], jo = false)
+    for na in OnePiece.path.select(dw, ke_ = [pr], ig_ = [r"\.download$"], jo = false)
 
         mv(joinpath(dw, na), joinpath(di, na))
 
@@ -61,6 +59,6 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     gi = joinpath(di, "animate.gif")
 
-    run(`convert -delay 40 -loop 0 $pn_ $gi`)
+    run(`convert -delay 32 -loop 0 $pn_ $gi`)
 
 end

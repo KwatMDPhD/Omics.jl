@@ -129,6 +129,6 @@ function plot(;
 
     end
 
-    OnePiece.network.plot(vcat(ve_, ed_), st_, la, ou = ou)
+    OnePiece.network.plot(vcat(ve_, ed_), st_, la, ou = ou, js = !po)
 
 end

@@ -31,7 +31,7 @@ function plot(
 
             OnePiece.table.write(
                 joinpath(ou, "$title_text.tsv"),
-                OnePiece.data_frame.make(ro_, fa_, wm, nar = nar),
+                OnePiece.data_frame.make(nar, ro_, fa_, wm),
             )
 
         end
@@ -71,7 +71,7 @@ function plot(
 
             OnePiece.table.write(
                 joinpath(ou, "$title_text.tsv"),
-                OnePiece.data_frame.make(fa_, co_, hm, nar = naf),
+                OnePiece.data_frame.make(naf, fa_, co_, hm),
             )
 
         end

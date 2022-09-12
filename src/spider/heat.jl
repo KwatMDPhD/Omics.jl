@@ -1,6 +1,6 @@
-function heat(st_, he_; ve_al_ = nothing, pr = true)
+function heat(st_, he_; ve_al_ = nothing, ve_he = Dict(), pr = true)
 
-    st_he = Dict(zip(st_, he_))
+    st_he = merge(Dict(zip(st_, he_)), ve_he)
 
     hev_ = fill(0.0, length(VERTEX_))
 

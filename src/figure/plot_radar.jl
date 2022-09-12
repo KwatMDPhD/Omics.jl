@@ -10,14 +10,15 @@ function plot_radar(
     data = [
         Dict(
             "type" => "scatterpolar",
+            "name" => name,
             "theta" => theta,
             "r" => r_,
             "opacity" => 0.8,
-            "marker" => Dict("symbol" => "diamond", "size" => 2, "color" => "#8c1515"),
+            "marker" => Dict("symbol" => "diamond", "size" => 2, "color" => marker_color),
             "line" => Dict("width" => 0),
             "fill" => "toself",
-            "fillcolor" => "#ff1968",
-        ) for (theta, r_) in zip(theta_, r__)
+            "fillcolor" => marker_color,
+        ) for (theta, r_, name, marker_color) in zip(theta_, r__, name_, marker_color_)
     ]
 
     axis = Dict(

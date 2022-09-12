@@ -36,6 +36,14 @@ function plot_heat_map(
 
     if !isempty(grr_)
 
+        if eltype(grr_) <: AbstractString
+
+            gr_id = OnePiece.vector.map_index(unique(grr_))[1]
+
+            grr_ = [gr_id[gr] for gr in grr_]
+
+        end
+
         so_ = sortperm(grr_)
 
         grr_ = grr_[so_]
@@ -47,6 +55,14 @@ function plot_heat_map(
     end
 
     if !isempty(grc_)
+
+        if eltype(grc_) <: AbstractString
+
+            gr_id = OnePiece.vector.map_index(unique(grc_))[1]
+
+            grc_ = [gr_id[gr] for gr in grc_]
+
+        end
 
         so_ = sortperm(grc_)
 

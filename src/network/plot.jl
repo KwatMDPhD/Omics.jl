@@ -1,10 +1,32 @@
-function plot(el_, st_, la; ou = "")
+function plot(el_, st_, la; ou = "", js = true, pn = true)
 
     di = "OnePiece.network.plot.$(OnePiece.time.stamp())"
 
     pr = splitext(basename(ou))[1]
 
-    # TODO: Save with keyword argument
+    rej = ""
+
+    if js
+
+        rej = """
+            let js = new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"});
+
+            saveAs(js, "$pr.json");
+            """
+
+    end
+
+    rep = ""
+
+    if pn
+
+        rep = """
+            let pn = cy.png({"full": true, "scale": 1, "bg": "#fcc9b9"});
+
+            saveAs(pn, "$pr.png");
+            """
+
+    end
 
     OnePiece.html.make(
         di,
@@ -28,13 +50,9 @@ function plot(el_, st_, la; ou = "")
 
         cy.ready(function() {
 
-            let js = new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"});
+            $rej
 
-            saveAs(js, "$pr.json");
-
-            let pn = cy.png({"full": true, "scale": 1, "bg": "#fcc9b9"});
-
-            saveAs(pn, "$pr.png");
+            $rep
 
         });
         """,
