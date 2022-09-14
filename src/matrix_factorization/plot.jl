@@ -59,7 +59,7 @@ function plot(
 
     for (id, (hm, co_, nac)) in enumerate(zip(hm_, _co_, nac_))
 
-        title_text = "H $id"
+        title_text = "H.$id"
 
         if isempty(ou)
 
