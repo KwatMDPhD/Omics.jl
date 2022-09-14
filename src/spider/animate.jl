@@ -42,13 +42,13 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     for na in OnePiece.path.select(dw, ke_ = [pr], ig_ = [r"\.download$"], jo = false)
 
-        mv(joinpath(dw, na), joinpath(di, na))
+        mv(joinpath(dw, na), joinpath(di, na), force = true)
 
     end
 
     for pa in OnePiece.path.select(di, ke_ = [pr])
 
-        mv(pa, replace(pa, "$pr." => ""))
+        mv(pa, replace(pa, "$pr." => ""), force = true)
 
     end
 
