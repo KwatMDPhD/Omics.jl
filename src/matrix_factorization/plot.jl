@@ -19,7 +19,7 @@ function plot(
 
     for (id, (wm, ro_, nar)) in enumerate(zip(wm_, _ro_, nar_))
 
-        title_text = "W $id"
+        title_text = "W.$id"
 
         if isempty(ou)
 
