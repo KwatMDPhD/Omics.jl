@@ -21,7 +21,7 @@ function plot(el_, st_, la; ou = "", js = true, pn = true)
     if pn
 
         rep = """
-            let pn = cy.png({"full": true, "scale": 1, "bg": "#fcc9b9"});
+            let pn = cy.png({"full": true, "scale": 1, "bg": "#fdfdfd"});
 
             saveAs(pn, "$pr.png");
             """
