@@ -16,9 +16,11 @@ function _make_element(ve::String)
 
 end
 
-function _make_element((so, ta)::Tuple)
+function _make_element(ed::Vector)
 
-    Dict("data" => Dict("source" => string(so), "target" => string(ta)))
+    so, de = ed
+
+    Dict("data" => Dict("source" => string(so), "target" => string(de)))
 
 end
 

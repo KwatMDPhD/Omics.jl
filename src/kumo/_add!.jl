@@ -10,7 +10,9 @@ function _add!(ve)
 
 end
 
-function _add!(ed...)
+function _add!(so, de)
+
+    ed = [so, de]
 
     if !(ed in EDGE_)
 

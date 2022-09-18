@@ -1,20 +1,26 @@
-function _increase(cu, wa)
+function _increase(cu, fl_)
 
-    (cu + wa) / 2.0
+    maximum(vcat(cu, fl_))
+
+end
+
+function _decrease(cu, fl_)
+
+    0.0
 
 end
 
 function flow(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6, pr = true)
 
-    he__ = [he_]
+    no1 = _heat_check(he_, pr = pr)
 
-    no1 = 0.0
+    he__ = [he_]
 
     for id in 1:n_fl
 
         he2_ = copy(he__[end])
 
-        for (id, (ve, so_)) in enumerate(zip(VERTEX_, eachrow(de_x_so_x_ed)))
+        for (id, (de, so_)) in enumerate(zip(VERTEX_, eachrow(de_x_so_x_ed)))
 
             if all(so_ .== 0)
 
@@ -24,29 +30,25 @@ function flow(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6, pr = true)
 
             fl_ = he2_[convert(BitVector, so_)]
 
-            wa = mean(fl_)
+            if isconcretetype(de)
 
-            if ve isa DataType
-
-                he2_[id] = _increase(he2_[id], wa)
+                he2_[id] = _increase(he2_[id], fl_)
 
             elseif all(0.0 .< fl_)
 
-                ex = splitext(ve)[2]
+                ex = splitext(de)[2]
 
                 if ex == ".de"
 
-                    he2_[id] = 0.0
+                    fu = _decrease
 
                 elseif ex == ".in"
 
-                    he2_[id] = _increase(he2_[id], wa)
-
-                else
-
-                    error()
+                    fu = _increase
 
                 end
+
+                he2_[id] = fu(he2_[id], fl_)
 
             end
 
@@ -66,9 +68,9 @@ function flow(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6, pr = true)
 
         end
 
-        push!(he__, he2_)
-
         no1 = no2
+
+        push!(he__, he2_)
 
     end
 

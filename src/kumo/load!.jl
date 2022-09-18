@@ -4,15 +4,9 @@ function load!()
 
         ev = Base.eval(Main, na)
 
-        if ev isa DataType && !isabstracttype(ev)
+        if isconcretetype(ev)
 
             _add!(ev)
-
-            for ty in ev.types
-
-                _add!(ty, ev)
-
-            end
 
         end
 

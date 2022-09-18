@@ -1,4 +1,4 @@
-module spider
+module kumo
 
 import Base: <<, >>
 

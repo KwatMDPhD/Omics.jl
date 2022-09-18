@@ -2,7 +2,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     dw = joinpath(homedir(), "Downloads")
 
-    pr = "spider.animate.temporary"
+    pr = "kumo.animate.temporary"
 
     rm.(OnePiece.path.select(dw, ke_ = [pr]))
 
