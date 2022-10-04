@@ -1,7 +1,7 @@
 name = "OnePiece"
 uuid = "1fe83854-81c0-42f7-afc9-71ba9af673ca"
 authors = ["KwatMDPhD <kwat.me@icloud.com>"]
-version = "0.25.0"
+version = "0.25.1"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
