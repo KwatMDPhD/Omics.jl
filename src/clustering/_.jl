@@ -1,8 +1,8 @@
 module clustering
 
-using Clustering
+using Clustering: cutree, hclust
 
-using Distances
+using Distances: Euclidean, pairwise
 
 include("../_include.jl")
 
