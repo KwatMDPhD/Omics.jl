@@ -1,4 +1,12 @@
-function _include_neighbor(fi)
+macro _include()
+
+    fi = Base.string(__source__.file)
+
+    :(_include($fi))
+
+end
+
+function _include(fi)
 
     di, fi = splitdir(fi)
 

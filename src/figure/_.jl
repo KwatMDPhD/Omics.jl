@@ -8,10 +8,6 @@ using ..OnePiece
 
 # TODO: Use the categorical colorscale
 
-include("../_include_neighbor.jl")
-
-_include_neighbor(@__FILE__)
-
 #from plotly.colors import make_colorscale, qualitative, sequential
 #
 #{
@@ -65,5 +61,9 @@ NAME_COLORSCALE = Dict(
     "human" => [[0.0, "#4b3c39"], [0.5, "#ffffff"], [1.0, "#ffddca"]],
     "stanford" => [[0.0, "#ffffff"], [1.0, "#8c1515"]],
 )
+
+include("../_include.jl")
+
+@_include()
 
 end
