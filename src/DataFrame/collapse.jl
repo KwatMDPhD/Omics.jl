@@ -1,4 +1,3 @@
-# TODO;
 function collapse(da, fu = median)
 
     println("Before")
