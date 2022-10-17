@@ -1,8 +1,8 @@
-function print_unique(ro_)
+function print_unique(da)
 
-    for ro in ro_
+    for va_ in eachrow(da)
 
-        na, an_ = ro[1], ro[2:end]
+        na, an_ = va_[1], va_[2:end]
 
         un_ = sort(unique(an_))
 

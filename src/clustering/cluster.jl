@@ -1,5 +1,5 @@
-function cluster(ma, n_gr; ke_ar...)
+function cluster(ma, n_gr, ar_...)
 
-    cutree(_hierarchize(ma; ke_ar...), k = n_gr)
+    cutree(_hierarchize(ma, ar_...), k = n_gr)
 
 end

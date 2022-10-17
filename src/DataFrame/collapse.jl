@@ -4,37 +4,39 @@ function collapse(da, fu = median)
 
     println((size(da)))
 
-    ge_id_ = Dict()
+    ro_id_ = Dict()
 
-    nar, ro_, co_, ma = OnePiece.data_frame.separate(da)
+    na, ro_, co_, ma = OnePiece.DataFrame.separate(da)
 
-    for (id, ge) in enumerate(ro_)
+    for (id, ro) in enumerate(ro_)
 
-        push!(get!(ge_id_, ge, []), id)
+        push!(get!(ro_id_, ro, []), id)
 
     end
 
     ro2_ = []
 
-    ma2 = Matrix(undef, length(ge_id_), length(co_))
+    ma2 = Matrix(undef, length(ro_id_), length(co_))
 
-    for (id2, (ge, id_)) in enumerate(sort(ge_id_))
+    for (id2, (ro, id_)) in enumerate(sort(ro_id_))
 
-        push!(ro2_, ge)
+        push!(ro2_, ro)
 
         if length(id_) == 1
 
-            ma2[id2, :] = ma[id_[1], :]
+            va_ = ma[id_[1], :]
 
         else
 
-            ma2[id2, :] = [fu(co) for co in eachcol(ma[id_, :])]
+            va_ = [fu(co) for co in eachcol(ma[id_, :])]
 
         end
 
+        ma2[id2, :] = va_
+
     end
 
-    da2 = OnePiece.data_frame.make(nar, ro2_, co_, ma2)
+    da2 = OnePiece.DataFrame.make(na, ro2_, co_, ma2)
 
     println("After")
 

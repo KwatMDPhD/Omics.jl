@@ -1,8 +1,8 @@
-module data_frame
+module DataFrame
 
-using DataFrames
+using DataFrames: DataFrames, insertcols!
 
-using Statistics
+using Statistics: median
 
 using ..OnePiece
 

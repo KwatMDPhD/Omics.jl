@@ -1,14 +1,14 @@
-function print(da; n_ro = 3, n_co = 3)
+function print(da, n_ro = 3, n_co = 3)
+
+    if isempty(da)
+
+        error("Data frame is empty.")
+
+    end
 
     si1, si2 = size(da)
 
-    println("Printing $si1 x $si2")
-
-    if si1 == 0
-
-        return
-
-    end
+    println("Size: $si1 x $si2")
 
     if si1 <= n_ro
 
@@ -16,7 +16,7 @@ function print(da; n_ro = 3, n_co = 3)
 
     else
 
-        id1__ = [1:n_ro, (si1 - n_ro + 1):si1]
+        id1__ = [1:n_ro, (1 + si1 - n_ro):si1]
 
     end
 
@@ -26,15 +26,13 @@ function print(da; n_ro = 3, n_co = 3)
 
     else
 
-        id2__ = [1:n_co, (si2 - n_co + 1):si2]
+        id2__ = [1:n_co, (1 + si2 - n_co):si2]
 
     end
 
     for id1_ in id1__, id2_ in id2__
 
-        println("$id1_ x $id2_")
-
-        println(da[id1_, id2_])
+        println("$id1_ x $id2_\n$(da[id1_, id2_])")
 
     end
 

@@ -1,4 +1,4 @@
-function simulate(n_ro, n_co; ho = "1:")
+function simulate(n_ro, n_co, ho = "1:")
 
     if ho == "1:"
 

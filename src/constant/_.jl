@@ -1,4 +1,4 @@
-module constant
+module Constant
 
 ALPHABET = collect("abcdefghijklmnopqrstuvwxyz")
 

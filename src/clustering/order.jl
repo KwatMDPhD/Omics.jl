@@ -1,5 +1,5 @@
-function order(ma; ke_ar...)
+function order(ma, ar_...)
 
-    _hierarchize(ma; ke_ar...).order
+    _hierarchize(ma, ar_...).order
 
 end

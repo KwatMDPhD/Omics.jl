@@ -1,4 +1,4 @@
-module clustering
+module Clustering
 
 using Clustering: cutree, hclust
 

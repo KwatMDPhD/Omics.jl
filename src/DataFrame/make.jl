@@ -1,13 +1,13 @@
-function make(ro_)
+function make(va__)
 
-    na_ = ro_[1]
+    co_ = va__[1]
 
-    DataFrame([ro_[n_ro][n_co] for n_ro in 2:length(ro_), n_co in 1:length(na_)], na_)
+    DataFrames.DataFrame([va__[idr][idc] for idr in 2:length(va__), idc in 1:length(co_)], co_)
 
 end
 
-function make(nar, ro_, co_, ma)
+function make(na, ro_, co_, ma)
 
-    insertcols!(DataFrame(ma, co_), 1, nar => ro_)
+    insertcols!(DataFrames.DataFrame(ma, co_), 1, na => ro_)
 
 end
