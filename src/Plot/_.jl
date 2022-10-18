@@ -1,4 +1,4 @@
-module figure
+module Plot
 
 using DataFrames
 

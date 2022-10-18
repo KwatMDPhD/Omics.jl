@@ -1,4 +1,4 @@
-module number
+module Number
 
 using Printf
 

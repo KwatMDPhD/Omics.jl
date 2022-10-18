@@ -1,4 +1,4 @@
-module geo
+module GEO
 
 using DataFrames
 

@@ -1,4 +1,4 @@
-module vector
+module Vector
 
 include("../_include.jl")
 

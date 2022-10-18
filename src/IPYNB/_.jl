@@ -1,4 +1,4 @@
-module ipynb
+module IPYNB
 
 include("../_include.jl")
 

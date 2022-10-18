@@ -1,4 +1,4 @@
-module network
+module Network
 
 using JSON3
 

@@ -1,4 +1,4 @@
-module matrix_factorization
+module MatrixFactorization
 
 using LinearAlgebra
 

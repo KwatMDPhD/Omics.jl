@@ -1,4 +1,4 @@
-module time
+module Time
 
 using Dates
 

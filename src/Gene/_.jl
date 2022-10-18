@@ -1,4 +1,4 @@
-module gene
+module Gene
 
 using DataFrames
 

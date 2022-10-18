@@ -1,4 +1,4 @@
-module gct
+module GCT
 
 using CSV
 

@@ -1,4 +1,4 @@
-module significance
+module Significance
 
 using Statistics
 

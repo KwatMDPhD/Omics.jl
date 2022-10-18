@@ -1,4 +1,4 @@
-module fu
+module Function
 
 include("../_include.jl")
 

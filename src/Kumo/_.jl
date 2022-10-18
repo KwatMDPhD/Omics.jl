@@ -1,4 +1,4 @@
-module kumo
+module Kumo
 
 import Base: <<, >>
 

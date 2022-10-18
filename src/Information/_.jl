@@ -1,4 +1,4 @@
-module information
+module Information
 
 using Statistics
 

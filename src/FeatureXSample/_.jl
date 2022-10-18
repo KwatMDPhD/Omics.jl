@@ -1,4 +1,4 @@
-module feature_x_sample
+module FeatureXSample
 
 using Statistics
 

@@ -1,4 +1,4 @@
-module matrix
+module Matrix
 
 include("../_include.jl")
 

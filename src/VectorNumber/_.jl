@@ -1,4 +1,4 @@
-module vector_number
+module VectorNumber
 
 using Distributions
 

@@ -1,4 +1,4 @@
-module statistics
+module Statistics
 
 using Distributions
 

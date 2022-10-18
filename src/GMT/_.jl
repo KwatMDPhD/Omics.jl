@@ -1,4 +1,4 @@
-module gmt
+module GMT
 
 include("../_include.jl")
 

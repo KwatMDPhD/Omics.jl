@@ -1,4 +1,4 @@
-module feature_set_enrichment
+module FeatureSetEnrichment
 
 using DataFrames
 

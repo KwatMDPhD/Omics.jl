@@ -1,4 +1,4 @@
-module normalization
+module Normalization
 
 using StatsBase
 

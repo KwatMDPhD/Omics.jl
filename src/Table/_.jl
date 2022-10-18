@@ -1,4 +1,4 @@
-module table
+module Table
 
 using CodecZlib
 
