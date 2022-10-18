@@ -1,26 +1,32 @@
-function print(di; n_pa = -1, sp = INDENT)
+function print(di, n_pa = -1)
 
-    println("$(length(keys(di))) keys and $(length(Set(values(di)))) unique values")
+    n_ke = length(keys(di))
+
+    n_va = length(Set(values(di)))
+
+    println(
+        "$n_ke $(OnePiece.String.count_noun(n_ke, "key")) and $n_va unique $(OnePiece.String.count_noun(n_va, "value"))",
+    )
 
     if n_pa == -1
 
-        JSON.print(di, sp)
+        JSON_print(di, 2)
 
     else
 
         println("{")
 
-        sp = " "^sp
-
         for (id, (ke, va)) in enumerate(di)
+
+            Base.print("  ")
 
             if id <= n_pa
 
-                println("$sp$ke => $va")
+                println("$ke => $va")
 
             else
 
-                println("$sp...")
+                println("...")
 
                 break
 

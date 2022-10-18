@@ -1,4 +1,4 @@
-module string
+module String
 
 using ..OnePiece
 

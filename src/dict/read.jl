@@ -4,11 +4,11 @@ function read(pa)
 
     if ex in [".json", ".ipynb"]
 
-        JSON.parse(open(pa))
+        parse(open(pa))
 
     elseif ex == ".toml"
 
-        TOML.parsefile(pa)
+        parsefile(pa)
 
     else
 
@@ -18,9 +18,9 @@ function read(pa)
 
 end
 
-function read(pa_...)
+function read(pa_::AbstractVector)
 
-    di = Dict()
+    di = Base.Dict()
 
     for pa in pa_
 

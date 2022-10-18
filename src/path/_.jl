@@ -1,4 +1,4 @@
-module path
+module Path
 
 using ..OnePiece
 

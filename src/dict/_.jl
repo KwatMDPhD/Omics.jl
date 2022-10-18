@@ -1,12 +1,10 @@
-module dict
+module Dict
 
-using JSON
+using JSON: parse, print as JSON_print
 
-using OrderedCollections
+using TOML: parsefile
 
-using TOML
-
-INDENT = 3
+using ..OnePiece
 
 include("../_include.jl")
 

@@ -12,7 +12,7 @@ function sort_recursively!(an)
 
         end
 
-        sort!(OrderedDict(an))
+        sort(an)
 
     else
 

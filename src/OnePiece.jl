@@ -12,7 +12,7 @@ end
 
 function __init__()
 
-    global TEMPORARY_DIRECTORY = OnePiece.path.make_temporary("OnePiece")
+    global TEMPORARY_DIRECTORY = OnePiece.Path.make_temporary("OnePiece")
 
     ENV["LINES"] = 19
 

@@ -1,6 +1,6 @@
 function merge(di1, di2)
 
-    di = Dict()
+    me = Base.Dict()
 
     for ke in union(keys(di1), keys(di2))
 
@@ -26,26 +26,30 @@ function merge(di1, di2)
 
             end
 
-        elseif haskey(di1, ke)
-
-            va = di1[ke]
-
         else
 
-            va = di2[ke]
+            for di in [di1, di2]
+
+                if haskey(di, ke)
+
+                    va = di[ke]
+
+                end
+
+            end
 
         end
 
-        if isa(va, AbstractDict)
+        if va isa AbstractDict
 
             va = copy(va)
 
         end
 
-        di[ke] = va
+        me[ke] = va
 
     end
 
-    di
+    me
 
 end

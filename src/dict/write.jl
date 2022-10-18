@@ -1,8 +1,8 @@
-function write(pa, di; id = INDENT)
+function write(js, di)
 
-    open(pa, "w") do io
+    open(js, "w") do io
 
-        JSON.print(io, di, id)
+        JSON_print(io, di, 2)
 
     end
 
