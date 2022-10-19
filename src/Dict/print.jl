@@ -2,7 +2,7 @@ function print(di, n_pa = nothing)
 
     n_ke = length(keys(di))
 
-    n_va = length(Set(values(di)))
+    n_va = length(unique((values(di))))
 
     println(
         "$n_ke $(OnePiece.String.count_noun(n_ke, "key")) and $n_va unique $(OnePiece.String.count_noun(n_va, "value"))",

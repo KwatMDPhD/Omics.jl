@@ -1,10 +1,10 @@
 module GEO
 
-using DataFrames
+using DataFrames: DataFrame, rename!
 
-using GZip
+using GZip: open
 
-using OrderedCollections
+using OrderedCollections: OrderedDict
 
 using ..OnePiece
 

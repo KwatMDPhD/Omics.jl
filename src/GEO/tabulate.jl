@@ -1,9 +1,76 @@
+function _name(pl, da)
+
+    pl = parse(Int, pl[4:end])
+
+    fu = na -> na
+
+    ke = "ID"
+
+    if pl in [96, 97, 570]
+
+        va = "Gene Symbol"
+
+        fu = na -> split(na, " /// ", limit = 2)[1]
+
+    elseif pl in [13534]
+
+        va = "UCSC_RefGene_Name"
+
+        fu = na -> split(na, ';', limit = 2)[1]
+
+    elseif pl in [5175, 11532]
+
+        va = "gene_assignment"
+
+        fu = na -> split(na, " // ", limit = 2)[2]
+
+    elseif pl in [2004, 2005, 3718, 3720]
+
+        va = "Associated Gene"
+
+        fu = na -> split(na, " // ", limit = 2)[1]
+
+    elseif pl in [10558]
+
+        va = "Symbol"
+
+    elseif pl in [16686]
+
+        va = "GB_ACC"
+
+    end
+
+    println(first(da, 4))
+
+    println("$ke => $va")
+
+    fe_na = Dict()
+
+    for (fe, na) in zip(da[!, ke], da[!, va])
+
+        if na isa AbstractString && !isempty(na) && !(na in ["---"])
+
+            fe_na[fe] = fu(na)
+
+        end
+
+    end
+
+    OnePiece.Dict.print(fe_na, 0)
+
+    fe_na
+
+end
+
 function tabulate(ty_bl, sa = "!Sample_title")
 
-    sa_di = OrderedDict(di[sa] => di for di in values(ty_bl["SAMPLE"]))
+    #
+    sa_di = OrderedDict(pop!(di, sa) => di for di in values(ty_bl["SAMPLE"]))
 
+    #
     sa_an = OrderedDict()
 
+    #
     pl_ = []
 
     sa_nu = OrderedDict()
@@ -12,8 +79,10 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
     naf = "Feature"
 
+    #
     for (sa, di) in sa_di
 
+        #
         ch_ = [va for (ke, va) in di if startswith(ke, "!Sample_characteristics")]
 
         if all([contains(ch, de) for ch in ch_])
@@ -32,12 +101,14 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
         else
 
-            println("$sa characteristic lacks \"$de\":\n$(join(ch_, '\n'))")
+            println("$sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  "))")
 
         end
 
+        #
         push!(pl_, di["!Sample_platform_id"])
 
+        #
         if haskey(di, "da")
 
             da = di["da"]
@@ -58,7 +129,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             end
 
-            sa_nu[sa] = [Base.parse(Float64, va) for va in da[id_, "VALUE"]]
+            sa_nu[sa] = [parse(Float64, va) for va in da[id_, "VALUE"]]
 
         else
 
@@ -68,12 +139,17 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
     end
 
+    #
     fe_x_sa_x_an = DataFrame(sa_an)
 
+    OnePiece.DataFrame.print_unique(fe_x_sa_x_an)
+
+    #
     fe_x_sa_x_nu = DataFrame(sa_nu)
 
     pl_di = ty_bl["PLATFORM"]
 
+    #
     unique!(pl_)
 
     if isempty(pl_)
@@ -92,9 +168,10 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
     end
 
+    #
     if haskey(pl_di[pl], "da")
 
-        fe_na = name(pl, pl_di[pl]["da"])
+        fe_na = _name(pl, pl_di[pl]["da"])
 
         fe_x_sa_x_nu[!, naf] = [get(fe_na, fe, "") for fe in fe_x_sa_x_nu[!, naf]]
 
@@ -106,8 +183,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
     end
 
-    OnePiece.data_frame.print_unique(eachrow(fe_x_sa_x_an))
-
+    #
     fe_x_sa_x_an, fe_x_sa_x_nu
 
 end

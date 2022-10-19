@@ -1,19 +1,21 @@
-function parse(gs; di = OnePiece.TEMPORARY_DIRECTORY)
+function read(gs, di = OnePiece.TEMPORARY_DIRECTORY)
 
+    #
     fi = "$(gs)_family.soft.gz"
 
-    pa = joinpath(di, fi)
+    gz = joinpath(di, fi)
 
-    if ispath(pa)
+    if ispath(gz)
 
-        println("Using $pa")
+        println("Using $gz")
 
     else
 
-        download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:end-3])nnn/$gs/soft/$fi", pa)
+        download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:end-3])nnn/$gs/soft/$fi", gz)
 
     end
 
+    #
     ty = nothing
 
     bl = nothing
@@ -22,8 +24,10 @@ function parse(gs; di = OnePiece.TEMPORARY_DIRECTORY)
 
     eq = " = "
 
-    for li in split(read(GZip.open(pa, "r"), String), '\n')[1:(end - 1)]
+    #
+    for li in split(Base.read(open(gz, "r"), String), '\n')[1:(end - 1)]
 
+        #
         if startswith(li, '^')
 
             println(li)
@@ -40,6 +44,7 @@ function parse(gs; di = OnePiece.TEMPORARY_DIRECTORY)
 
         ta = "!$(lowercase(ty))_table_"
 
+        #
         if li == "$(ta)begin"
 
             ke_va["ro_"] = []
@@ -48,9 +53,9 @@ function parse(gs; di = OnePiece.TEMPORARY_DIRECTORY)
 
         elseif li == "$(ta)end"
 
-            da = OnePiece.data_frame.make(pop!(ke_va, "ro_"))
+            da = OnePiece.DataFrame.make(pop!(ke_va, "ro_"))
 
-            if Base.parse(Int, ke_va["!$(titlecase(ty))_data_row_count"]) != size(da, 1)
+            if parse(Int, ke_va["!$(titlecase(ty))_data_row_count"]) != size(da, 1)
 
                 error()
 
@@ -62,6 +67,7 @@ function parse(gs; di = OnePiece.TEMPORARY_DIRECTORY)
 
         end
 
+        #
         if haskey(ke_va, "ro_")
 
             push!(ke_va["ro_"], split(li, '\t'))
