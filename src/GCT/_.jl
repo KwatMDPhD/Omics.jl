@@ -1,8 +1,8 @@
 module GCT
 
-using CSV
+using CSV: read as CSV_read
 
-using DataFrames
+using DataFrames: DataFrame, Not
 
 include("../_include.jl")
 

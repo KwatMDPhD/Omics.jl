@@ -1,4 +1,4 @@
-function read(pa::String)
+function read(pa::AbstractString)
 
     se_ge_ = Dict()
 

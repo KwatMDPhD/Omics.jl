@@ -1,5 +1,5 @@
 function read(pa)
 
-    select(DataFrame(CSV.File(pa, header = 3, delim = "\t")), Not("Description"))
+    CSV_read(pa, DataFrame, header = 3, delim = "\t")[!, Not("Description")]
 
 end
