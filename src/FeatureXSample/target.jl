@@ -1,3 +1,4 @@
+# TODO: Consider moving elsewhere
 function error_size(nu1_, nu2_)
 
     if size(nu1_) != size(nu2_)
@@ -20,7 +21,7 @@ function _aim(bi_::AbstractVector{Bool}, nu_)
 
     error_size(bi_, nu_)
 
-    nu_[.!bi_], nu_[bi_]
+    nu_[[!bi for bi in bi_]], nu_[bi_]
 
 end
 
@@ -30,27 +31,15 @@ function _trigger(fu, nu1_, nu2_)
 
 end
 
-function _get_median_difference(ve1, ve2)
-
-    median(ve2) - median(ve1)
-
-end
-
-function _get_mean_difference(ve1, ve2)
-
-    mean(ve2) - mean(ve1)
-
-end
-
 function target(nu_, fe_x_sa_x_nu, fu)
 
     if fu == "median_difference"
 
-        fu = _get_median_difference
+        fu = (ve1, ve2) -> median(ve2) - median(ve1)
 
     elseif fu == "mean_difference"
 
-        fu = _get_mean_difference
+        fu = (ve1, ve2) -> mean(ve2) - mean(ve1)
 
     elseif fu == "signal_to_noise_ratio"
 
