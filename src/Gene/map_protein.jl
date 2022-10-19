@@ -1,32 +1,40 @@
 function map_protein()
 
-    un = OnePiece.table.read(joinpath(@__DIR__, "uniprot.tsv.gz"))
+    un = OnePiece.Table.read(_path("uniprot.tsv.gz"))
 
     pr_di = Dict()
 
-    na_ = names(un)
+    co_ = names(un)
 
     for ro in eachrow(un)
 
         di = Dict()
 
-        for (na, an) in zip(na_, ro)
+        for (co, an) in zip(co_, ro)
 
-            if na == "Entry Name"
+            if co == "Entry Name"
 
-                pr_di[split(an, "_HUMAN", limit = 2)[1]] = di
+                pr = split(an, "_HUMAN", limit = 2)[1]
+
+                if haskey(pr_di, pr)
+
+                    error()
+
+                end
+
+                pr_di[pr] = di
 
                 continue
 
             end
 
-            if !ismissing(an)
+            if an isa AbstractString
 
-                if na == "Gene Names"
+                if co == "Gene Names"
 
                     an = split(an, " ")
 
-                elseif na == "Interacts with"
+                elseif co == "Interacts with"
 
                     an = split(an, "; ")
 
@@ -34,7 +42,7 @@ function map_protein()
 
             end
 
-            di[na] = an
+            di[co] = an
 
         end
 

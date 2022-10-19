@@ -1,26 +1,24 @@
-function rename(st_; mo = true, en = true, hg = true)
+function rename(st_, wh_ = ["mouse", "ensembl", "hgnc"])
 
     st_na = Dict()
 
-    if mo
+    if "mouse" in wh_
 
-        merge!(st_na, map_from_mouse())
-
-    end
-
-    if en
-
-        merge!(st_na, map_to_ensembl())
+        merge!(st_na, map_mouse())
 
     end
 
-    if hg
+    for wh in ["ensembl", "hgnc"]
 
-        merge!(st_na, map_to_hgnc())
+        if wh in wh_
+
+            merge!(st_na, map_to(wh))
+
+        end
 
     end
 
-    na_ = String[]
+    na_ = []
 
     ma_ = []
 

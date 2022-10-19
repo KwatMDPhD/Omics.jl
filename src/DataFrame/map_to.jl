@@ -1,4 +1,4 @@
-function map_to(da, co_, de = "|")
+function map_to(da, co_, de = "|"; pr = true)
 
     no_ta = Dict()
 
@@ -26,13 +26,19 @@ function map_to(da, co_, de = "|")
 
             for nos in split(no, de)
 
-                if haskey(no_ta, nos)
+                cu = get!(no_ta, nos, ta)
 
-                    error("$nos => $(no_ta[nos]) (=> $ta)")
+                if cu != ta
+
+                    if pr
+
+                        println("$nos => $cu (=> $ta)")
+
+                    end
+
+                    continue
 
                 end
-
-                no_ta[nos] = ta
 
             end
 
