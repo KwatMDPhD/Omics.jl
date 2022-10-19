@@ -1,4 +1,4 @@
-function print(di, n_pa = -1)
+function print(di, n_pa = nothing)
 
     n_ke = length(keys(di))
 
@@ -8,7 +8,7 @@ function print(di, n_pa = -1)
         "$n_ke $(OnePiece.String.count_noun(n_ke, "key")) and $n_va unique $(OnePiece.String.count_noun(n_va, "value"))",
     )
 
-    if n_pa == -1
+    if isnothing(n_pa)
 
         JSON_print(di, 2)
 

@@ -1,6 +1,6 @@
 module FeatureXSample
 
-using Statistics
+using Statistics: mean, median
 
 using ..OnePiece
 
