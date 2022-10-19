@@ -14,7 +14,7 @@ function map_to(da, co_, de = "|"; pr = true)
 
         end
 
-        no_ta[ta] = ta
+        OnePiece.Dict.set!(no_ta, ta => ta, pr)
 
         for no in va_[1:(id - 1)]
 
@@ -26,19 +26,7 @@ function map_to(da, co_, de = "|"; pr = true)
 
             for nos in split(no, de)
 
-                cu = get!(no_ta, nos, ta)
-
-                if cu != ta
-
-                    if pr
-
-                        println("$nos => $cu (=> $ta)")
-
-                    end
-
-                    continue
-
-                end
+                OnePiece.Dict.set!(no_ta, nos => ta, pr)
 
             end
 

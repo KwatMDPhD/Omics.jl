@@ -55,7 +55,7 @@ function read(gs, di = OnePiece.TEMPORARY_DIRECTORY)
 
             da = OnePiece.DataFrame.make(pop!(ke_va, "ro_"))
 
-            if parse(Int, ke_va["!$(titlecase(ty))_data_row_count"]) != size(da, 1)
+            if parse(Int, pop!(ke_va, "!$(titlecase(ty))_data_row_count")) != size(da, 1)
 
                 error()
 
@@ -76,21 +76,7 @@ function read(gs, di = OnePiece.TEMPORARY_DIRECTORY)
 
             ke, va = split(li, eq, limit = 2)
 
-            n_du = 1
-
-            while haskey(ke_va, ke)
-
-                if n_du == 1
-
-                    ke = "$ke.1"
-
-                end
-
-                ke = replace(ke, Regex(".$n_du\$") => ".$(n_du+=1)")
-
-            end
-
-            ke_va[ke] = va
+            OnePiece.Dict.set!(ke_va, ke => va, "suffix")
 
         end
 
