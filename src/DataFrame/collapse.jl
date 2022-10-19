@@ -1,3 +1,4 @@
+# TODO: Try with `groupby`
 function collapse(da, fu = median)
 
     println("Before")
