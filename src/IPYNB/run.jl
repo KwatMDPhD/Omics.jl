@@ -12,9 +12,9 @@ function run(di, sk_)
 
     nb_ = [na for na in readdir(di) if occursin(r".ipynb$", na) && !(na in sk_)]
 
-    if all(occursin.(r"^[0-9]+\.", nb_))
+    if all(contains(nb, r"^[0-9]+\.") for nb in nb_)
 
-        sort!(nb_, by = nb -> parse(Int64, split(nb, '.')[1]))
+        sort!(nb_, by = nb -> parse(Int, split(nb, '.', limit = 2)[1]))
 
     end
 

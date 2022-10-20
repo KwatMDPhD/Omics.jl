@@ -50,7 +50,7 @@ function _name(pl, da)
 
         if na isa AbstractString && !isempty(na) && !(na in ["---"])
 
-            fe_na[fe] = fu(na)
+            OnePiece.Dict.set!(fe_na, fe => fu(na))
 
         end
 
@@ -67,17 +67,17 @@ function tabulate(ty_bl, sa = "!Sample_title")
     #
     sa_di = OrderedDict(pop!(di, sa) => di for di in values(ty_bl["SAMPLE"]))
 
+    naf = "Feature"
+
     #
+    de = ": "
+
     sa_an = OrderedDict()
 
     #
     pl_ = []
 
     sa_nu = OrderedDict()
-
-    de = ": "
-
-    naf = "Feature"
 
     #
     for (sa, di) in sa_di
@@ -97,7 +97,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             end
 
-            sa_an[sa] = [sp[2] for sp in sp_]
+            OnePiece.Dict.set!(sa_an, sa => [sp[2] for sp in sp_])
 
         else
 
@@ -129,7 +129,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             end
 
-            sa_nu[sa] = [parse(Float64, va) for va in da[id_, "VALUE"]]
+            OnePiece.Dict.set!(sa_nu, sa => [parse(Float64, va) for va in da[id_, "VALUE"]])
 
         else
 

@@ -1,4 +1,4 @@
-function map_mouse(; pr = true)
+function map_mouse()
 
     mo = OnePiece.Table.read(_path("ensembl.mouse_human.tsv.gz"))
 
@@ -12,19 +12,7 @@ function map_mouse(; pr = true)
 
         end
 
-        cu = get!(ke_va, ke, va)
-
-        if cu != va
-
-            if pr
-
-                println("$ke => $cu (=> $va)")
-
-            end
-
-            continue
-
-        end
+        OnePiece.Dict.set!(ke_va, ke => va, pr = false)
 
     end
 

@@ -1,4 +1,4 @@
-function set!(di, (ke, va), ho = "first", pr = true)
+function set!(di, (ke, va), ho = "first"; pr = true)
 
     if ho == "first"
 
@@ -8,7 +8,11 @@ function set!(di, (ke, va), ho = "first", pr = true)
 
             if cu != va
 
-                println("$ke => $cu (=> $va)")
+                if pr
+
+                    println("$ke => $cu (=> $va)")
+
+                end
 
             end
 
@@ -26,7 +30,11 @@ function set!(di, (ke, va), ho = "first", pr = true)
 
             if cu != va
 
-                println("$ke (=> $cu) => $va")
+                if pr
+
+                    println("$ke (=> $cu) => $va")
+
+                end
 
             end
 
@@ -54,7 +62,11 @@ function set!(di, (ke, va), ho = "first", pr = true)
 
             end
 
-            println("($cu =>) $ke => $va")
+            if pr
+
+                println("($cu =>) $ke => $va")
+
+            end
 
         end
 

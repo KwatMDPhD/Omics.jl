@@ -1,10 +1,9 @@
-function make(di, sr_, sc, ht = "")
-
-    if isempty(ht)
-
-        ht = joinpath(OnePiece.TEMPORARY_DIRECTORY, "$(OnePiece.time.stamp()).html")
-
-    end
+function make(
+    di,
+    sr_,
+    sc,
+    ht = joinpath(OnePiece.TEMPORARY_DIRECTORY, "$(OnePiece.Time.stamp()).html"),
+)
 
     li_ = [
         "<!doctype html>",
@@ -25,6 +24,6 @@ function make(di, sr_, sc, ht = "")
 
     println("Wrote $ht.")
 
-    HTML(jo)
+    Base.HTML(jo)
 
 end

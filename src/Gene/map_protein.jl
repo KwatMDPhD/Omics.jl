@@ -1,3 +1,4 @@
+# TODO: Simplify
 function map_protein()
 
     un = OnePiece.Table.read(_path("uniprot.tsv.gz"))
@@ -14,35 +15,27 @@ function map_protein()
 
             if co == "Entry Name"
 
-                pr = split(an, "_HUMAN", limit = 2)[1]
+                OnePiece.Dict.set!(pr_di, split(an, "_HUMAN", limit = 2)[1] => di)
 
-                if haskey(pr_di, pr)
+            else
 
-                    error()
+                if an isa AbstractString
 
-                end
+                    if co == "Gene Names"
 
-                pr_di[pr] = di
+                        an = split(an, " ")
 
-                continue
+                    elseif co == "Interacts with"
 
-            end
+                        an = split(an, "; ")
 
-            if an isa AbstractString
-
-                if co == "Gene Names"
-
-                    an = split(an, " ")
-
-                elseif co == "Interacts with"
-
-                    an = split(an, "; ")
+                    end
 
                 end
 
-            end
+                di[co] = an
 
-            di[co] = an
+            end
 
         end
 
