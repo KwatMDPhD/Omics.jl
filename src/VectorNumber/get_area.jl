@@ -1,5 +1,5 @@
-function get_area(te)
+function get_area(nu_)
 
-    sum(te) / length(te)
+    sum(nu_) / length(nu_)
 
 end

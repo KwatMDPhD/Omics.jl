@@ -1,8 +1,8 @@
-function get_extreme(te)
+function get_extreme(nu_)
 
-    mi = minimum(te)
+    mi = minimum(nu_)
 
-    ma = maximum(te)
+    ma = maximum(nu_)
 
     mia = abs(mi)
 

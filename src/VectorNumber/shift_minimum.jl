@@ -1,11 +1,13 @@
-function shift_minimum(te, mi)
+function shift_minimum(nu_, mi)
 
-    if isa(mi, String) && endswith(mi, "<")
+    sh = mi - minimum(nu_)
 
-        mi = minimum(te[parse(Float64, split(mi, "<")[1]) .< te])
+    [nu + sh for nu in nu_]
 
-    end
+end
 
-    te .+ (mi - minimum(te))
+function shift_minimum(nu_, mi::AbstractString)
+
+    shift_minimum(nu_, minimum(nu_[parse(eltype(nu_), split(mi, "<", limit = 2)[1]) .< nu_]))
 
 end

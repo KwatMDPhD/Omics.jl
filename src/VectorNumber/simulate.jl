@@ -1,27 +1,53 @@
-function simulate(n_po; ho = "", ra = OnePiece.constant.RANDOM_SEED)
+function simulate(n, ra = OnePiece.Constant.RANDOM_SEED; di = "Normal", mi = "")
 
-    di = Normal()
+    #
+    if di == "Normal"
 
-    Random.seed!(ra)
+        di = Normal()
 
-    po_ = rand(di, n_po)
+    end
 
-    po_ = shift_minimum(po_, 0)
+    seed!(ra)
+
+    ra_ = rand(di, n)
+
+    #
+    po_ = shift_minimum(ra_, 0)
 
     sort!(po_)
 
     ne_ = reverse(-po_)
 
-    if ho == "deep"
+    #
+    if isempty(mi)
 
-        ne_ *= 2
+        ne2_ = ne_
 
-    elseif ho == "long"
+    elseif mi == "deep"
 
-        ne_ = sort(vcat(ne_, [mean(ne_[(id - 1):id]) for id in 2:length(ne_)]))
+        ne2_ = ne_ * 2
+
+    elseif mi == "long"
+
+        ne2_ = Vector{eltype(ne_)}(undef, n * 2 - 1)
+
+        for (id, ne) in enumerate(ne_)
+
+            id2 = id * 2
+
+            ne2_[id2 - 1] = ne
+
+            if id < n
+
+                ne2_[id2] = (ne + ne_[id + 1]) / 2
+
+            end
+
+        end
 
     end
 
-    vcat(ne_, po_)
+    #
+    vcat(ne2_, po_)
 
 end

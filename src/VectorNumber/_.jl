@@ -1,8 +1,8 @@
 module VectorNumber
 
-using Distributions
+using Distributions: Normal
 
-using Random
+using Random: seed!
 
 using ..OnePiece
 
