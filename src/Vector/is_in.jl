@@ -1,21 +1,28 @@
-# TODO: Use Set
-function is_in(st_, st1_)
+function is_in(ne_, ha_)
 
-    st1_no = Dict(st1 => nothing for st1 in st1_)
+    ha_ = Set(ha_)
 
-    [haskey(st1_no, st) for st in st_]
+    [ne in ha_ for ne in ne_]
 
 end
 
-function is_in(st_id::AbstractDict, st1_)
+function x(ne_, ha_)
 
-    in_ = fill(false, length(st_id))
+    ha_ = Set(ha_)
 
-    @inbounds @fastmath @simd for st1 in st1_
+    [ne in ha_ for ne in ne_]
 
-        id = get(st_id, st1, nothing)
+end
 
-        if id !== nothing
+function is_in(ne_id::AbstractDict, ha_)
+
+    in_ = fill(false, length(ne_id))
+
+    @inbounds @fastmath @simd for ha in ha_
+
+        id = get(ne_id, ha, nothing)
+
+        if !isnothing(id)
 
             in_[id] = true
 

@@ -1,6 +1,6 @@
 module Time
 
-using Dates
+using Dates: format, now
 
 include("../_include.jl")
 
