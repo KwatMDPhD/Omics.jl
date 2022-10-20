@@ -14,7 +14,7 @@ function run(di, sk_)
 
     if all(contains(nb, r"^[0-9]+\.") for nb in nb_)
 
-        sort!(nb_, by = nb -> parse(Int, split(nb, '.', limit = 2)[1]))
+        sort!(nb_, by = nb -> parse(Int, OnePiece.String.split_and_get(nb, ".", 1)))
 
     end
 

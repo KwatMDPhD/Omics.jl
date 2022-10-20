@@ -5,16 +5,16 @@ function make(
     ht = joinpath(OnePiece.TEMPORARY_DIRECTORY, "$(OnePiece.Time.stamp()).html"),
 )
 
-    li_ = [
+    li_ = vcat(
         "<!doctype html>",
         "<div id=\"$di\" style=\"display: block; height: 800px; width: 80%; margin-left: auto; margin-right: auto; background: #fdfdfd\"></div>",
-        ["<script src=\"$sr\"></script>" for sr in sr_]...,
+        ["<script src=\"$sr\"></script>" for sr in sr_],
         "<script>",
         "$sc",
         "</script>",
-    ]
+    )
 
-    jo = join(li_, '\n')
+    jo = join(li_, "\n")
 
     open(ht, "w") do io
 

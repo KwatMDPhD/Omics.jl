@@ -1,4 +1,3 @@
-# TODO: Use Set
 module FeatureSetEnrichment
 
 using DataFrames

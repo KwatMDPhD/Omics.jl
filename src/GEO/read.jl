@@ -25,10 +25,10 @@ function read(gs, di = OnePiece.TEMPORARY_DIRECTORY)
     eq = " = "
 
     #
-    for li in split(Base.read(open(gz, "r"), String), '\n')[1:(end - 1)]
+    for li in split(Base.read(open(gz, "r"), String), "\n")[1:(end - 1)]
 
         #
-        if startswith(li, '^')
+        if startswith(li, "^")
 
             println(li)
 
@@ -70,7 +70,7 @@ function read(gs, di = OnePiece.TEMPORARY_DIRECTORY)
         #
         if haskey(ke_va, "ro_")
 
-            push!(ke_va["ro_"], split(li, '\t'))
+            push!(ke_va["ro_"], split(li, "\t"))
 
         else
 

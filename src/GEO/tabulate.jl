@@ -10,25 +10,25 @@ function _name(pl, da)
 
         va = "Gene Symbol"
 
-        fu = na -> split(na, " /// ", limit = 2)[1]
+        fu = na -> OnePiece.String.split_and_get(na, " /// ", 1)
 
     elseif pl in [13534]
 
         va = "UCSC_RefGene_Name"
 
-        fu = na -> split(na, ';', limit = 2)[1]
+        fu = na -> OnePiece.String.split_and_get(na, ";", 1)
 
     elseif pl in [5175, 11532]
 
         va = "gene_assignment"
 
-        fu = na -> split(na, " // ", limit = 2)[2]
+        fu = na -> OnePiece.String.split_and_get(na, " // ", 2)
 
     elseif pl in [2004, 2005, 3718, 3720]
 
         va = "Associated Gene"
 
-        fu = na -> split(na, " // ", limit = 2)[1]
+        fu = na -> OnePiece.String.split_and_get(na, " // ", 1)
 
     elseif pl in [10558]
 
