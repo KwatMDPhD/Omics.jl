@@ -30,7 +30,6 @@ function _sum_1_absolute_and_0_count(sc_::Vector{Float64}, in_::Vector{Bool})
 
 end
 
-# TODO: Use Set
 function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
 
     n_fe = length(fe_)

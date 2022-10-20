@@ -1,4 +1,3 @@
-# TODO: Add to .ipynb
 function map_index(an_)
 
     an_id = Dict()

@@ -1,4 +1,4 @@
-function get_longest_common_prefix(ve_)
+function get_common_start(ve_)
 
     le_ = [length(ve) for ve in ve_]
 
