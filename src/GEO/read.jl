@@ -74,9 +74,7 @@ function read(gs, di = OnePiece.TEMPORARY_DIRECTORY)
 
         else
 
-            ke, va = split(li, eq, limit = 2)
-
-            OnePiece.Dict.set!(ke_va, ke => va, "suffix")
+            OnePiece.Dict.set!(ke_va, Pair(split(li, eq, limit = 2)), "suffix")
 
         end
 
