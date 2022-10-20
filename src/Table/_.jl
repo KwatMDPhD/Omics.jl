@@ -1,14 +1,14 @@
 module Table
 
-using CodecZlib
+using CodecZlib: GzipDecompressor, transcode
 
-using CSV
+using CSV: read as CSV_read, write as CSV_write
 
-using DataFrames
+using DataFrames: DataFrame
 
-using Mmap
+using Mmap: mmap
 
-using XLSX
+using XLSX: readtable
 
 include("../_include.jl")
 
