@@ -4,7 +4,7 @@ function get_common_start(ve_)
 
     mi = minimum(le_)
 
-    sh = ve_[findfirst(le_ .== mi)]
+    sh = ve_[findfirst(le == mi for le in le_)]
 
     id = 1
 
@@ -22,14 +22,6 @@ function get_common_start(ve_)
 
     end
 
-    if id == 1
-
-        nothing
-
-    else
-
-        sh[1:(id - 1)]
-
-    end
+    sh[1:(id - 1)]
 
 end

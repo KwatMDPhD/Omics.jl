@@ -1,22 +1,24 @@
-function count_noun(n_st, st)
+function count_noun(n, st)
 
-    if n_st <= 1
+    if n <= 1
 
         return st
 
     end
 
-    for (si, pl) in [r"ex$" => "ices", r"ry$" => "ries", r"o$" => "oes"]
+    for (si, pl) in ["ex" => "ices", "ry" => "ries", "o" => "oes"]
 
-        if si == r"ex$" && length(st) <= 3
+        if si == "ex" && length(st) <= 3
 
             return st * "es"
 
         end
 
-        if contains(st, si)
+        sir = Regex("$si\$")
 
-            return replace(st, si => pl)
+        if occursin(sir, st)
+
+            return replace(st, sir => pl)
 
         end
 
