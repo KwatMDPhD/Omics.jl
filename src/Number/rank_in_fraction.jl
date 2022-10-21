@@ -1,4 +1,4 @@
-function fractionate(it)
+function rank_in_fraction(it)
 
     fr = 0
 
@@ -6,11 +6,11 @@ function fractionate(it)
 
     for de in 1:fl
 
-        fr += 9 * 10^-(de)
+        fr += 9 * 10^-de
 
     end
 
-    de = fl + 1
+    de = fl + 1.0
 
     fr += (it % 9) * 10^-de
 

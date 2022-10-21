@@ -1,6 +1,6 @@
 module Number
 
-using Printf
+using Printf: @sprintf
 
 include("../_include.jl")
 

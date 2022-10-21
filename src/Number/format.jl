@@ -1,8 +1,8 @@
 function format(nu)
 
-    if iszero(nu)
+    if nu == -0
 
-        nu = 0.0
+        nu = 0
 
     end
 
