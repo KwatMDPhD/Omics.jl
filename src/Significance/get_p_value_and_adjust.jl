@@ -8,10 +8,11 @@ end
 
 function get_p_value_and_adjust(nu_, ra_)
 
-    lp_, lpa_ = get_p_value_and_adjust(nu_, ra_, -1.0)
+    lp_, la_ = get_p_value_and_adjust(nu_, ra_, -1)
 
-    rp_, rpa_ = get_p_value_and_adjust(nu_, ra_, 1.0)
+    rp_, ra_ = get_p_value_and_adjust(nu_, ra_, 1)
 
-    ifelse.(lp_ .< rp_, lp_, rp_), ifelse.(lpa_ .< rpa_, lpa_, rpa_)
+    [ifelse(lp < rp, lp, rp) for (lp, rp) in zip(lp_, rp_)],
+    [ifelse(la < ra, la, ra) for (la, ra) in zip(la_, ra_)]
 
 end

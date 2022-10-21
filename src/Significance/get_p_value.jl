@@ -1,22 +1,12 @@
 function get_p_value(nu, ra_, si)
 
-    if isempty(ra_)
+    if si == -1
 
-        error("there is not enough randoms ($(length(ra_)) to compute significance.")
+        si_ = [ra <= nu for ra in ra_]
 
-    end
+    elseif si == 1
 
-    if si == -1.0
-
-        si_ = ra_ .<= nu
-
-    elseif si == 1.0
-
-        si_ = nu .<= ra_
-
-    else
-
-        error()
+        si_ = [nu <= ra for ra in ra_]
 
     end
 
@@ -26,12 +16,10 @@ function get_p_value(nu, ra_, si)
 
     if n_si == 0
 
-        1 / n_ra
-
-    else
-
-        n_si / n_ra
+        n_si = 1
 
     end
+
+    n_si / n_ra
 
 end
