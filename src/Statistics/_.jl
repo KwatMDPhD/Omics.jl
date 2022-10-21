@@ -1,8 +1,6 @@
 module Statistics
 
-using Distributions
-
-using Statistics
+using Distributions: Normal, quantile
 
 include("../_include.jl")
 
