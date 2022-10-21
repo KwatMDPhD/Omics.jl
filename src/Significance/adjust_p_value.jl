@@ -1,25 +1,19 @@
-function adjust_p_value(pv_, n_pv = length(pv_); me = "benjamini_hochberg")
+function adjust_p_value(pv_, me = "benjamini_hochberg"; n = length(pv_))
 
     if me == "bonferroni"
 
-        pv_ = pv_ * n_pv
+        cl_ = pv_ * n
 
     elseif me == "benjamini_hochberg"
 
         so_ = sortperm(pv_)
 
-        pv_ = pv_[so_]
-
-        pv_ .*= n_pv ./ (1:length(pv_))
-
-        pv_ = OnePiece.vector_number.make_increasing_by_stepping_up!(pv_)[sortperm(so_)]
-
-    else
-
-        error()
+        cl_ = OnePiece.VectorNumber.force_increasing_with_min!([
+            pv_[so] * n / id for (id, so) in enumerate(so_)
+        ])[sortperm(so_)]
 
     end
 
-    clamp.(pv_, 0, 1)
+    [clamp(cl, 0.0, 1.0) for cl in cl_]
 
 end
