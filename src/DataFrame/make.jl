@@ -1,8 +1,6 @@
 function make(va__)
 
-    co_ = va__[1]
-
-    DataFrames.DataFrame([va__[idr][idc] for idr in 2:length(va__), idc in 1:length(co_)], co_)
+    DataFrames.DataFrame(OnePiece.Matrix.convert(va__[2:end]), va__[1])
 
 end
 

@@ -41,37 +41,3 @@ function error_bad(ma, ty)
     end
 
 end
-
-function error_bad(ma)
-
-    id_ba = Dict()
-
-    for (id, ve) in enumerate(eachrow(ma))
-
-        for an in ve
-
-            if an isa String
-
-                continue
-
-            end
-
-            if any(is(an) for is in [ismissing, isnothing, isnan, isinf])
-
-                push!(get!(id_ba, id, []), an)
-
-            end
-
-        end
-
-    end
-
-    if !isempty(id_ba)
-
-        OnePiece.dict.print(id_ba, 8)
-
-        error()
-
-    end
-
-end
