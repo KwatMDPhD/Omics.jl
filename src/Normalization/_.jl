@@ -1,6 +1,6 @@
 module Normalization
 
-using StatsBase
+using StatsBase: competerank, denserank, mean, ordinalrank, std, tiedrank
 
 include("../_include.jl")
 

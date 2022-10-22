@@ -2,7 +2,7 @@ function normalize(te, me)
 
     if isempty(te)
 
-        error()
+        error("Tensor is empty.")
 
     end
 
@@ -10,17 +10,23 @@ function normalize(te, me)
 
         mi = minimum(te)
 
-        (te .- mi) / (maximum(te) - mi)
+        ra = maximum(te) - mi
+
+        [(nu - mi) / ra for nu in te]
 
     elseif me == "-0-"
 
-        (te .- mean(te)) / std(te)
+        ma = mean(te)
+
+        st = std(te)
+
+        [(nu - ma) / st for nu in te]
 
     elseif me == "sum"
 
-        if any(te .< 0)
+        if any(nu < 0 for nu in te)
 
-            error()
+            error("Tensor values are not all positive.")
 
         end
 

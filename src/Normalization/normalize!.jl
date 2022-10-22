@@ -1,10 +1,10 @@
 function normalize!(te, me)
 
-    go_ = .!isnan.(te)
+    go_ = [!isnan(nu) for nu in te]
 
     if any(go_)
 
-        te[go_] .= normalize(te[go_], me)
+        te[go_] = normalize(te[go_], me)
 
     end
 
@@ -22,7 +22,11 @@ function normalize!(ma::Matrix, di, me)
 
     end
 
-    normalize!.(ea(ma), me)
+    for nu_ in ea(ma)
+
+        normalize!(nu_, me)
+
+    end
 
     ma
 
