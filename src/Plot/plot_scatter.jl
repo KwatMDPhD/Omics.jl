@@ -1,29 +1,13 @@
 function _set_mode(y_)
 
-    mode_ = []
-
-    for y in y_
-
-        if length(y) < 1000
-
-            push!(mode_, "markers+lines")
-
-        else
-
-            push!(mode_, "lines")
-
-        end
-
-    end
-
-    mode_
+    [ifelse(length(y) < 1000, "markers+lines", "lines") for y in y_]
 
 end
 
 function plot_scatter(
     y_,
     x_ = _set_x(y_);
-    text_ = [nothing for id in 1:length(y_)],
+    text_ = fill(nothing, length(y_)),
     name_ = _set_name(y_),
     mode_ = _set_mode(y_),
     marker_color_ = _set_color(y_),

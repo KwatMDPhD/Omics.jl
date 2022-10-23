@@ -12,6 +12,8 @@ end
 
 function _set_color(y_)
 
-    [nothing for _ in 1:length(y_)]
+    println([fr for fr in 0:(1 / (length(y_) - 1)):1])
+
+    [hex(NA_CO["Plotly"][fr]) for fr in 0:(1 / (length(y_) - 1)):1]
 
 end

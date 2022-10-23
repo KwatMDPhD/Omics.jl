@@ -1,9 +1,10 @@
-function make(
-    di,
-    sr_,
-    sc,
-    ht = joinpath(OnePiece.TEMPORARY_DIRECTORY, "$(OnePiece.Time.stamp()).html"),
-)
+function make(di, sr_, sc, ht = "")
+
+    if ht == ""
+
+        ht = joinpath(OnePiece.TEMPORARY_DIRECTORY, "$(OnePiece.Time.stamp()).html")
+
+    end
 
     li_ = vcat(
         "<!doctype html>",
