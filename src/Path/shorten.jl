@@ -4,7 +4,7 @@ function shorten(pa, n_ba)
 
 end
 
-function shorten(pa, di, sh = 0)
+function shorten(pa, di::AbstractString, sh = 0)
 
     sp_ = splitpath(pa)
 
