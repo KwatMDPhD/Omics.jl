@@ -6,8 +6,6 @@ using JSON3
 
 using ..OnePiece
 
-# TODO: Use the categorical colorscale
-
 #from plotly.colors import make_colorscale, qualitative, sequential
 #
 #{
