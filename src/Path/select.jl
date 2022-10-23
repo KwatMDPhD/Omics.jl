@@ -1,4 +1,4 @@
-function select(di; ig_ = [r"^\."], ke_ = [], jo = true)
+function select(di, jo = true; ig_ = [r"^\."], ke_ = [])
 
     pa_ = []
 
@@ -6,7 +6,8 @@ function select(di; ig_ = [r"^\."], ke_ = [], jo = true)
 
         na = basename(pa)
 
-        if !any(occursin.(ig_, na)) && (isempty(ke_) || any(occursin.(ke_, na)))
+        if !any(occursin(ig, na) for ig in ig_) &&
+           (isempty(ke_) || any(occursin(ke, na) for ke in ke_))
 
             push!(pa_, pa)
 

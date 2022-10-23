@@ -1,12 +1,8 @@
-function clean(na; pr = true)
+function clean(na)
 
     cl = replace(lowercase(na), r"[^_.0-9a-z]" => "_")
 
-    if pr
-
-        println(na, " ==> ", cl)
-
-    end
+    println(na, " ==> ", cl)
 
     cl
 

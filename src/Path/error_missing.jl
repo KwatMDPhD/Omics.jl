@@ -1,6 +1,6 @@
 function error_missing(ro, pa_)
 
-    mi_ = [pa for pa in joinpath.(ro, pa_) if !ispath(pa)]
+    mi_ = [pa for pa in pa_ if !ispath(joinpath(ro, pa))]
 
     if !isempty(mi_)
 

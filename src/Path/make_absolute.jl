@@ -1,5 +1,5 @@
 function make_absolute(pa)
 
-    string(rstrip(abspath(expanduser(pa)), '/'))
+    abspath(expanduser(pa))
 
 end
