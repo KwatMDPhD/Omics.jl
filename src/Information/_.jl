@@ -1,6 +1,6 @@
 module Information
 
-#using Statistics:
+using Statistics: mean, std
 
 include("../_include.jl")
 
