@@ -11,7 +11,7 @@ function plot(data, layout = Dict(), config = Dict(); ou = "")
         "editable" => false,
     )
 
-    di = "OnePiece.figure.plot.$(OnePiece.Time.stamp())"
+    di = "OnePiece.figure.Plot.$(OnePiece.Time.stamp())"
 
     sr = ["https://cdn.plot.ly/plotly-latest.min.js"]
 

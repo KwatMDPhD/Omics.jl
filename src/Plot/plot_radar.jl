@@ -13,7 +13,7 @@ function plot_radar(
             "name" => name,
             "theta" => theta,
             "r" => r_,
-            "opacity" => 0.8,
+            "opacity" => 0.64,
             "marker" => Dict("symbol" => "diamond", "size" => 2, "color" => marker_color),
             "line" => Dict("width" => 0),
             "fill" => "toself",
@@ -29,17 +29,17 @@ function plot_radar(
         "tickfont" => Dict("color" => "#1f4788"),
     )
 
-    layout = OnePiece.dict.merge(
+    layout = OnePiece.Dict.merge(
         Dict(
             "polar" => Dict(
-                "angularaxis" => OnePiece.dict.merge(
+                "angularaxis" => OnePiece.Dict.merge(
                     axis,
                     Dict(
                         "direction" => "clockwise",
                         "tickfont" => Dict("size" => 32, "family" => "Optima"),
                     ),
                 ),
-                "radialaxis" => OnePiece.dict.merge(
+                "radialaxis" => OnePiece.Dict.merge(
                     axis,
                     Dict("nticks" => 8, "tickfont" => Dict("size" => 16, "family" => "Monospace")),
                 ),

@@ -6,8 +6,8 @@ end
 
 function plot_scatter(
     y_,
-    x_ = _set_x(y_);
-    text_ = fill(nothing, length(y_)),
+    x_ = _set_x(y_),
+    text_ = _set_text(y_);
     name_ = _set_name(y_),
     mode_ = _set_mode(y_),
     marker_color_ = _set_color(y_),

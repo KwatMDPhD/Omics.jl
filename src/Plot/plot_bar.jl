@@ -24,7 +24,7 @@ function plot_bar(
 
     end
 
-    layout = OnePiece.dict.merge(Dict("barmode" => "stack"), layout)
+    layout = OnePiece.Dict.merge(Dict("barmode" => "stack"), layout)
 
     plot(data, layout, ou = ou)
 

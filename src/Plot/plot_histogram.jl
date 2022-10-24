@@ -1,21 +1,21 @@
 function plot_histogram(
     x_,
-    text_ = [];
+    text_ = _set_text(x_);
     name_ = _set_name(x_),
-    histnorm = nothing,
+    histnorm = "",
     xbins_size = nothing,
     marker_color_ = _set_color(x_),
     layout = Dict(),
     ou = "",
 )
 
-    ru = ~isempty(text_) && all(length.(x_) .< 1e5)
+    ru = all(length(x) < 1e5 for x in x_)
 
-    n_hi = length(x_)
+    n = length(x_)
 
     if ru
 
-        fr = minimum([n_hi * 0.08, 0.5])
+        fr = min(n * 0.08, 0.5)
 
     else
 
@@ -23,7 +23,7 @@ function plot_histogram(
 
     end
 
-    if isnothing(histnorm)
+    if histnorm == ""
 
         yaxis2_title = "N"
 
@@ -33,7 +33,7 @@ function plot_histogram(
 
     end
 
-    layout = OnePiece.dict.merge(
+    layout = OnePiece.Dict.merge(
         Dict(
             "yaxis" => Dict(
                 "domain" => [0, fr],
@@ -49,9 +49,9 @@ function plot_histogram(
 
     data = []
 
-    for id in 1:n_hi
+    for id in 1:n
 
-        sh = Dict(
+        le = Dict(
             "legendgroup" => id,
             "name" => name_[id],
             "x" => x_[id],
@@ -60,8 +60,8 @@ function plot_histogram(
 
         push!(
             data,
-            OnePiece.dict.merge(
-                sh,
+            OnePiece.Dict.merge(
+                le,
                 Dict(
                     "yaxis" => "y2",
                     "type" => "histogram",
@@ -75,15 +75,14 @@ function plot_histogram(
 
             push!(
                 data,
-                OnePiece.dict.merge(
-                    sh,
+                OnePiece.Dict.merge(
+                    le,
                     Dict(
                         "showlegend" => false,
                         "y" => fill(id, length(x_[id])),
                         "text" => text_[id],
                         "mode" => "markers",
-                        "marker" =>
-                            Dict("symbol" => "line-ns-open", "size" => 16, "opacity" => 0.92),
+                        "marker" => Dict("symbol" => "line-ns-open", "size" => 16),
                         "hoverinfo" => "x+text",
                     ),
                 ),
