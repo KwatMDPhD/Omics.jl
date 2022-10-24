@@ -1,8 +1,8 @@
 module MatrixFactorization
 
-using LinearAlgebra
+using LinearAlgebra: pinv
 
-using NMF
+using NMF: nnmf
 
 using ..OnePiece
 

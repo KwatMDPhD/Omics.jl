@@ -1,15 +1,15 @@
 function plot(
-    wm_,
-    hm_;
-    nar_ = ["Rows $id" for id in 1:length(wm_)],
-    nac_ = ["Columns $id" for id in 1:length(wm_)],
+    maw_,
+    mah_;
+    nar_ = ["Rows $id" for id in 1:length(maw_)],
+    nac_ = ["Columns $id" for id in 1:length(mah_)],
     naf = "Factor",
-    _ro_ = [["$na $id" for id in 1:size(wm, 1)] for (wm, na) in zip(wm_, nar_)],
-    _co_ = [["$na $id" for id in 1:size(hm, 2)] for (hm, na) in zip(hm_, nac_)],
+    ro__ = [["$na $id" for id in 1:size(maw, 1)] for (maw, na) in zip(maw_, nar_)],
+    co__ = [["$na $id" for id in 1:size(mah, 2)] for (mah, na) in zip(mah_, nac_)],
     ou = "",
 )
 
-    fa_ = ["$naf $id" for id in 1:size(wm_[1], 2)]
+    fa_ = ["$naf $id" for id in 1:size(maw_[1], 2)]
 
     sh = 480
 
@@ -17,11 +17,11 @@ function plot(
 
     axis = Dict("dtick" => 1)
 
-    for (id, (wm, ro_, nar)) in enumerate(zip(wm_, _ro_, nar_))
+    for (id, (maw, ro_, nar)) in enumerate(zip(maw_, ro__, nar_))
 
         title_text = "W.$id"
 
-        if isempty(ou)
+        if ou == ""
 
             ou2 = ou
 
@@ -29,18 +29,18 @@ function plot(
 
             ou2 = joinpath(ou, "$title_text.html")
 
-            OnePiece.table.write(
+            OnePiece.Table.write(
                 joinpath(ou, "$title_text.tsv"),
-                OnePiece.data_frame.make(nar, ro_, fa_, wm),
+                OnePiece.DataFrame.make(nar, ro_, fa_, maw),
             )
 
         end
 
-        or_ = OnePiece.clustering.cluster(wm)[1]
+        or_ = OnePiece.Clustering.order(maw)
 
         display(
-            OnePiece.figure.plot_heat_map(
-                replace(OnePiece.normalization.normalize!(wm[or_, :], 1, "-0-"), NaN => nothing),
+            OnePiece.Plot.plot_heat_map(
+                replace(OnePiece.Normalization.normalize!(maw[or_, :], 1, "-0-"), NaN => nothing),
                 ro_[or_],
                 fa_,
                 nar = nar,
@@ -57,11 +57,11 @@ function plot(
 
     end
 
-    for (id, (hm, co_, nac)) in enumerate(zip(hm_, _co_, nac_))
+    for (id, (mah, co_, nac)) in enumerate(zip(mah_, co__, nac_))
 
         title_text = "H.$id"
 
-        if isempty(ou)
+        if ou == ""
 
             ou2 = ou
 
@@ -69,18 +69,18 @@ function plot(
 
             ou2 = joinpath(ou, "$title_text.html")
 
-            OnePiece.table.write(
+            OnePiece.Table.write(
                 joinpath(ou, "$title_text.tsv"),
-                OnePiece.data_frame.make(naf, fa_, co_, hm),
+                OnePiece.DataFrame.make(naf, fa_, co_, mah),
             )
 
         end
 
-        or_ = OnePiece.clustering.cluster(transpose(hm))[1]
+        or_ = OnePiece.Clustering.order(transpose(mah))
 
         display(
-            OnePiece.figure.plot_heat_map(
-                OnePiece.normalization.normalize!(hm[:, or_], 2, "-0-"),
+            OnePiece.Plot.plot_heat_map(
+                replace(OnePiece.Normalization.normalize!(mah[:, or_], 2, "-0-"), NaN => nothing),
                 fa_,
                 co_[or_],
                 nar = naf,
