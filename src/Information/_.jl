@@ -1,6 +1,6 @@
 module Information
 
-using Statistics
+#using Statistics:
 
 include("../_include.jl")
 

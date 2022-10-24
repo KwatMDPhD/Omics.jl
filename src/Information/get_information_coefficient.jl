@@ -1,4 +1,4 @@
-function get_information_coefficient(ve1, ve2)
+function get_information_coefficient(nu1_, nu2_)
 
     0.777
 

@@ -1,5 +1,5 @@
-function get_kullback_leibler_divergence(ve1, ve2)
+function get_kullback_leibler_divergence(nu1_, nu2_)
 
-    ve1 .* log.(ve1 ./ ve2)
+    [nu1 * log(nu1 / nu2) for (nu1, nu2) in zip(nu1_, nu2_)]
 
 end

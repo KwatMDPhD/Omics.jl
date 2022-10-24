@@ -1,5 +1,5 @@
-function get_kolmogorov_smirnov_statistic(cu1, cu2)
+function get_kolmogorov_smirnov_statistic(cu1_, cu2_)
 
-    cu1 - cu2
+    cu1_ - cu2_
 
 end
