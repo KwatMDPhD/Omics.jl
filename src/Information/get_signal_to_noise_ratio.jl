@@ -1,31 +1,25 @@
-function _update(me, st)
+function _get_standard_deviation(ve, me)
 
-    fa = 0.2
-
-    lo = abs(me) * fa
+    fr = 0.2
 
     if me == 0.0
 
-        st = fa
+        fr
 
-    elseif st < lo
+    else
 
-        st = lo
+        max(abs(me) * fr, std(ve, corrected = true))
 
     end
-
-    me, st
 
 end
 
 function get_signal_to_noise_ratio(ve1, ve2)
 
-    co = true
+    me1 = mean(ve1)
 
-    me1, st1 = _update(mean(ve1), std(ve1, corrected = co))
+    me2 = mean(ve2)
 
-    me2, st2 = _update(mean(ve2), std(ve2, corrected = co))
-
-    (me1 - me2) / (st1 + st2)
+    (me2 - me1) / (_get_standard_deviation(ve1, me1) + _get_standard_deviation(ve2, me2))
 
 end
