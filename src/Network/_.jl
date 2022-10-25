@@ -1,6 +1,6 @@
 module Network
 
-using JSON3
+using JSON3: write
 
 using ..OnePiece
 

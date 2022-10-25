@@ -18,7 +18,7 @@ function position!(ve_, js::AbstractString)
 
     position!(
         ve_,
-        Dict(di["data"]["id"] => di for di in OnePiece.dict.read(js)["elements"]["nodes"]),
+        Dict(di["data"]["id"] => di for di in OnePiece.Dict.read(js)["elements"]["nodes"]),
     )
 
 end

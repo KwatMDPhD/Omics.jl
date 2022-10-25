@@ -1,14 +1,14 @@
-function plot(el_, st_, la; ou = "", js = true, pn = true)
+function plot(el_, st_, la; ht = "", js = true, pn = true, bg = "#fdfdfd")
 
-    di = "OnePiece.network.plot.$(OnePiece.time.stamp())"
+    di = "OnePiece.Network.plot.$(OnePiece.Time.stamp())"
 
-    pr = splitext(basename(ou))[1]
+    pr = splitext(basename(ht))[1]
 
-    rej = ""
+    scj = ""
 
     if js
 
-        rej = """
+        scj = """
             let js = new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"});
 
             saveAs(js, "$pr.json");
@@ -16,19 +16,19 @@ function plot(el_, st_, la; ou = "", js = true, pn = true)
 
     end
 
-    rep = ""
+    scp = ""
 
     if pn
 
-        rep = """
-            let pn = cy.png({"full": true, "scale": 1, "bg": "#fdfdfd"});
+        scp = """
+            let pn = cy.png({"full": true, "scale": 1, "bg": "$bg"});
 
             saveAs(pn, "$pr.png");
             """
 
     end
 
-    OnePiece.html.make(
+    OnePiece.HTML.make(
         di,
         [
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
@@ -40,23 +40,23 @@ function plot(el_, st_, la; ou = "", js = true, pn = true)
 
             container: document.getElementById("$di"),
 
-            elements: $(JSON3.write(el_)),
+            elements: $(write(el_)),
 
-            style: $(JSON3.write(st_)),
+            style: $(write(st_)),
 
-            layout: $(JSON3.write(la)),
+            layout: $(write(la)),
 
         });
 
         cy.ready(function() {
 
-            $rej
+            $scj
 
-            $rep
+            $scp
 
         });
         """,
-        ou,
+        ht,
     )
 
 end
