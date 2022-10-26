@@ -6,7 +6,7 @@ function _plot_mountain(
     (ex, ar);
     title_text = "Mountain Plot",
     fe = "Feature",
-    ou = "",
+    ht = "",
 )
 
     height = 800
@@ -72,7 +72,7 @@ function _plot_mountain(
                 annotationx,
                 Dict(
                     "y" => 1.04,
-                    "text" => "Extreme = <b>$(OnePiece.number.format(ex))</b> and Area = <b>$(OnePiece.number.format(ar))</b>",
+                    "text" => "Extreme = <b>$(OnePiece.Number.format(ex))</b> and Area = <b>$(OnePiece.Number.format(ar))</b>",
                     "font" => Dict("size" => 24, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
                     "bordercolor" => "#404ed8",
@@ -129,7 +129,7 @@ function _plot_mountain(
             trace_,
             Dict(
                 "yaxis" => "y3",
-                "y" => ifelse.(is_, en_, 0.0),
+                "y" => [ifelse(is, en, 0.0) for (is, en) in zip(is_, en_)],
                 "x" => x,
                 "text" => fe_,
                 "mode" => "lines",
@@ -162,6 +162,6 @@ function _plot_mountain(
         ),
     )
 
-    OnePiece.figure.plot(trace_, layout, ou = ou)
+    OnePiece.Plot.plot(trace_, layout, ht = ht)
 
 end

@@ -6,7 +6,7 @@ function plot_histogram(
     xbins_size = nothing,
     marker_color_ = _set_color(x_),
     layout = Dict(),
-    ou = "",
+    ht = "",
 )
 
     ru = all(length(x) < 1e5 for x in x_)
@@ -92,6 +92,6 @@ function plot_histogram(
 
     end
 
-    plot(data, layout, ou = ou)
+    plot(data, layout, ht = ht)
 
 end

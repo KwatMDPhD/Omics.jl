@@ -4,7 +4,7 @@ function plot_bar(
     name_ = _set_name(y_),
     marker_color_ = _set_color(y_),
     layout = Dict(),
-    ou = "",
+    ht = "",
 )
 
     data = []
@@ -26,6 +26,6 @@ function plot_bar(
 
     layout = OnePiece.Dict.merge(Dict("barmode" => "stack"), layout)
 
-    plot(data, layout, ou = ou)
+    plot(data, layout, ht = ht)
 
 end

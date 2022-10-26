@@ -12,7 +12,7 @@ function plot_scatter(
     mode_ = _set_mode(y_),
     marker_color_ = _set_color(y_),
     layout = Dict(),
-    ou = "",
+    ht = "",
 )
 
     data = []
@@ -33,6 +33,6 @@ function plot_scatter(
 
     end
 
-    plot(data, layout, ou = ou)
+    plot(data, layout, ht = ht)
 
 end

@@ -1,6 +1,6 @@
 function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
-    in_ = convert(Vector{Float64}, OnePiece.vector.is_in(fe_, fe1_))
+    in_ = convert(Vector{Float64}, OnePiece.Vector.is_in(fe_, fe1_))
 
     ou_ = 1.0 .- in_
 
@@ -16,13 +16,13 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
     ouar_, oual_ = _cumulate(oua_)
 
-    fl_ = OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_)
+    fl_ = OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_)
 
-    fr_ = OnePiece.information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
+    fr_ = OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
 
     en_ = fl_ - fr_
 
-    en = OnePiece.vector_number.get_extreme(en_), OnePiece.vector_number.get_area(en_)
+    en = OnePiece.VectorNumber.get_extreme(en_), OnePiece.VectorNumber.get_area(en_)
 
     if pl
 

@@ -1,4 +1,4 @@
-function plot(data, layout = Dict(), config = Dict(); ou = "")
+function plot(data, layout = Dict(), config = Dict(); ht = "")
 
     axis = Dict("automargin" => true)
 
@@ -29,6 +29,6 @@ function plot(data, layout = Dict(), config = Dict(); ou = "")
     )
     """
 
-    OnePiece.HTML.make(di, sr, sc, ou)
+    OnePiece.HTML.make(di, sr, sc, ht)
 
 end

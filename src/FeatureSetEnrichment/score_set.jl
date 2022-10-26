@@ -110,7 +110,7 @@ end
 
 function score_set(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
-    score_set(fe_, sc_, fe1_, OnePiece.vector.is_in(fe_, fe1_); ex = ex, pl = pl, ke_ar...)
+    score_set(fe_, sc_, fe1_, OnePiece.Vector.is_in(fe_, fe1_); ex = ex, pl = pl, ke_ar...)
 
 end
 
@@ -127,7 +127,7 @@ function score_set(fe_, sc_, se_fe_::Dict; ex = 1.0, n_jo = 1)
     end
 
     Dict(
-        se => score_set(fe_, sc_, fe1_, OnePiece.vector.is_in(ch, fe1_), ex = ex, pl = false) for
+        se => score_set(fe_, sc_, fe1_, OnePiece.Vector.is_in(ch, fe1_), ex = ex, pl = false) for
         (se, fe1_) in se_fe_
     )
 
@@ -135,11 +135,11 @@ end
 
 function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
-    fe_, sa_, ma = OnePiece.data_frame.separate(fe_x_sa_x_sc)[[2, 3, 4]]
+    fe_, sa_, ma = OnePiece.DataFrame.separate(fe_x_sa_x_sc)[[2, 3, 4]]
 
-    OnePiece.vector.error_duplicate(fe_)
+    OnePiece.Vector.error_duplicate(fe_)
 
-    OnePiece.matrix.error_bad(ma, Real)
+    OnePiece.Matrix.error_bad(ma, Real)
 
     se_x_sa_x_en = DataFrame("Set" => collect(keys(se_fe_)))
 
@@ -147,7 +147,7 @@ function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
         go_ = findall(!ismissing, ma[:, id])
 
-        sc_, fe_ = OnePiece.vector.sort_like(ma[go_, id], fe_[go_])
+        sc_, fe_ = OnePiece.Vector.sort_like(ma[go_, id], fe_[go_])
 
         fu, st = _match_algorithm(al)
 

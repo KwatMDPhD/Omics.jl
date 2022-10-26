@@ -8,7 +8,7 @@ function plot_heat_map(
     grr_ = [],
     grc_ = [],
     layout = Dict(),
-    ou = "",
+    ht = "",
 )
 
     si1, si2 = size(z)
@@ -115,7 +115,7 @@ function plot_heat_map(
 
     end
 
-    plot(data, layout, ou = ou)
+    plot(data, layout, ht = ht)
 
 end
 

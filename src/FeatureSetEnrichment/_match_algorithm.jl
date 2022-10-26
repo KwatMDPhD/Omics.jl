@@ -2,19 +2,19 @@ function _match_algorithm(al)
 
     if al == "ks"
 
-        fu = OnePiece.feature_set_enrichment.score_set
+        fu = score_set
 
         st = 1
 
     elseif al == "ksa"
 
-        fu = OnePiece.feature_set_enrichment.score_set
+        fu = score_set
 
         st = 2
 
     elseif al == "cidac"
 
-        fu = OnePiece.feature_set_enrichment.score_set_new
+        fu = score_set_new
 
         st = 2
 
@@ -28,14 +28,14 @@ function _match_algorithm(al)
 
 end
 
-function _match_algorithm(se_en::Dict, st)
+function _match_algorithm(se_en, st)
 
     Dict(se => en[st] for (se, en) in se_en)
 
 end
 
-function _match_algorithm(se_en__::Vector, st)
+function _match_algorithm(se_en_::AbstractVector, st)
 
-    [Dict(se => en[st] for (se, en) in se_en) for se_en in se_en__]
+    [_match_algorithm(se_en, st) for se_en in se_en_]
 
 end
