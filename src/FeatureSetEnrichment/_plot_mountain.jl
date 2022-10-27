@@ -1,9 +1,3 @@
-function center(do_)
-
-    sum(do_) / 2.0
-
-end
-
 function _plot_mountain(
     fe_,
     sc_,
@@ -96,9 +90,9 @@ function _plot_mountain(
                     "borderpad" => 6.4,
                 ),
             ),
-            merge(annotationy, Dict("y" => center(yaxis1_domain), "text" => "<b>Score</b>")),
-            merge(annotationy, Dict("y" => center(yaxis2_domain), "text" => "<b>Set</b>")),
-            merge(annotationy, Dict("y" => center(yaxis3_domain), "text" => "<b>Enrichment</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>Score</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
             merge(
                 annotationx,
                 Dict(
@@ -113,7 +107,7 @@ function _plot_mountain(
     #
     x = 1:n_fe
 
-    #in_ = convert(BitVector, in_)
+    in_ = convert(BitVector, in_)
 
     trace_ = [
         Dict(
@@ -128,7 +122,7 @@ function _plot_mountain(
         ),
         Dict(
             "yaxis" => "y2",
-            "y" => fill(0, sum(in_)),
+            "y" => fill(0, convert(Int, sum(in_))),
             "x" => x[in_],
             "text" => fe_[in_],
             "mode" => "markers",

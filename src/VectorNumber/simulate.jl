@@ -1,4 +1,4 @@
-function simulate(n, ra = OnePiece.Constant.RA; di = "Normal", mi = "")
+function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", mi = "")
 
     #
     if di == "Normal"
@@ -26,7 +26,7 @@ function simulate(n, ra = OnePiece.Constant.RA; di = "Normal", mi = "")
 
     elseif mi == "deep"
 
-        ne2_ = ne_ * 2
+        ne2_ = ne_ * 2.0
 
     elseif mi == "long"
 
@@ -45,6 +45,13 @@ function simulate(n, ra = OnePiece.Constant.RA; di = "Normal", mi = "")
             end
 
         end
+
+    end
+
+    #
+    if !re
+
+        ne2_ = ne2_[1:(end - 1)]
 
     end
 

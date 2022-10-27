@@ -4,7 +4,7 @@ function _cumulate(ve)
 
     cur_ = [cu + ep for cu in cumsum(ve)]
 
-    cul_ = [cu + ep for cu in OnePiece.VectorNumber.cumulate_sum_reverse(ve)]
+    cul_ = [cu + ep for cu in OnePiece.VectorNumber.reverse_cumulate(ve)]
 
     su = sum(ve)
 

@@ -6,7 +6,7 @@ function _sum_1_absolute_and_0_count(sc_, in_)
 
     @inbounds @fastmath @simd for id in 1:length(sc_)
 
-        if in_[id]
+        if in_[id] == 1.0
 
             nu = sc_[id]
 
@@ -142,7 +142,7 @@ end
 
 function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
-    fe_, sa_, ma = OnePiece.DataFrame.split(fe_x_sa_x_sc)[[2, 3, 4]]
+    fe_, sa_, ma = OnePiece.DataFrame.separate(fe_x_sa_x_sc)[[2, 3, 4]]
 
     OnePiece.Array.error_duplicate(fe_)
 

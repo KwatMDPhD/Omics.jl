@@ -6,11 +6,11 @@ function make_benchmark(ho)
 
         fe_ = OnePiece.Constant.CA_
 
-        n_fe = length(fe_)
+        n = length(fe_)
 
-        mi = ceil(Int, n_fe / 2)
+        mi = ceil(Int, n / 2)
 
-        sc_ = convert(Vector{Float64}, (mi - n_fe):(mi - 1))
+        sc_ = convert(Vector{Float64}, (mi - n):(mi - 1))
 
         fe1_ = [string(fe1) for fe1 in sp_[2]]
 
@@ -22,9 +22,11 @@ function make_benchmark(ho)
 
     elseif sp_[1] == "random"
 
-        fe_ = ["Feature $id" for id in 1:parse(Int, sp_[2])]
+        n = parse(Int, sp_[2])
 
-        sc_ = OnePiece.VectorNumber.simulate(length(fe_))
+        fe_ = ["Feature $id" for id in 1:n]
+
+        sc_ = OnePiece.VectorNumber.simulate(ceil(Int, n / 2), iseven(n))
 
         fe1_ = sample(fe_, parse(Int, sp_[3]), replace = false)
 
