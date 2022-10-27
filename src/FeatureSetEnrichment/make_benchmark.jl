@@ -8,7 +8,7 @@ function make_benchmark(ho)
 
         n_fe = length(fe_)
 
-        mi = convert(Int, ceil(n_fe / 2))
+        mi = ceil(Int, n_fe / 2)
 
         sc_ = convert(Vector{Float64}, (mi - n_fe):(mi - 1))
 
@@ -22,7 +22,7 @@ function make_benchmark(ho)
 
     elseif sp_[1] == "random"
 
-        fe_ = [string("Feature ", id) for id in 1:parse(Int, sp_[2])]
+        fe_ = ["Feature $id" for id in 1:parse(Int, sp_[2])]
 
         sc_ = OnePiece.VectorNumber.simulate(length(fe_))
 
@@ -30,18 +30,18 @@ function make_benchmark(ho)
 
     elseif sp_[1] == "myc"
 
-        di = joinpath(dirname(dirname(@__DIR__)), "test", "feature_set_enrichment.data")
+        di = joinpath(dirname(dirname(@__DIR__)), "test", "FeatureSetEnrichment.data")
 
         da = OnePiece.Table.read(joinpath(di, "gene_score.tsv"))
 
-        fe_ = [string(fe) for fe in da[!, "Gene"]]
+        fe_ = convert(Vector{String}, da[!, "Gene"])
 
         sc_ = da[!, "Score"]
 
-        fe1_ = [
-            string(fe1) for fe1 in
-            OnePiece.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
-        ]
+        fe1_ = convert(
+            Vector{String},
+            OnePiece.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"],
+        )
 
     else
 

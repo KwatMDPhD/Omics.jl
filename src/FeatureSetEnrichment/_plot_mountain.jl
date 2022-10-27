@@ -3,34 +3,44 @@ function _plot_mountain(
     sc_,
     in_,
     en_,
-    (ex, ar);
+    ex,
+    ar;
     title_text = "Mountain Plot",
     fe = "Feature",
     ht = "",
 )
 
+    #
     height = 800
 
     width = height * MathConstants.golden
 
+    #
     yaxis1_domain = [0.0, 0.24]
 
     yaxis2_domain = [0.24, 0.32]
 
     yaxis3_domain = [0.32, 1.0]
 
-    annotation =
-        Dict("xref" => "paper", "yref" => "paper", "yanchor" => "middle", "showarrow" => false)
+    #
+    title_font_size = 32
+
+    statistic_font_size = 24
 
     axis_title_font_size = 16
+
+    #
+    annotation =
+        Dict("xref" => "paper", "yref" => "paper", "yanchor" => "middle", "showarrow" => false)
 
     annotationy = merge(
         annotation,
         Dict("xanchor" => "right", "x" => -0.064, "font" => Dict("size" => axis_title_font_size)),
     )
 
-    annotationx = merge(annotation, Dict("xanchor" => "center", "x" => 1 / 2))
+    annotationx = merge(annotation, Dict("xanchor" => "center", "x" => 0.5))
 
+    #
     n_ch = 32
 
     if n_ch < length(title_text)
@@ -39,12 +49,13 @@ function _plot_mountain(
 
     end
 
+    #
     n_fe = length(fe_)
 
     layout = Dict(
         "height" => height,
         "width" => width,
-        "margin" => Dict("t" => trunc(height * 0.16), "l" => trunc(width * 0.16)),
+        "margin" => Dict("t" => round(height * 0.16), "l" => round(width * 0.16)),
         "showlegend" => false,
         "yaxis" => Dict("domain" => yaxis1_domain, "showline" => true, "showgrid" => false),
         "yaxis2" =>
@@ -65,7 +76,7 @@ function _plot_mountain(
                 Dict(
                     "y" => 1.16,
                     "text" => "<b>$title_text</b>",
-                    "font" => Dict("size" => 32, "color" => "#2b2028"),
+                    "font" => Dict("size" => title_font_size, "color" => "#2b2028"),
                 ),
             ),
             merge(
@@ -73,29 +84,30 @@ function _plot_mountain(
                 Dict(
                     "y" => 1.04,
                     "text" => "Extreme = <b>$(OnePiece.Number.format(ex))</b> and Area = <b>$(OnePiece.Number.format(ar))</b>",
-                    "font" => Dict("size" => 24, "color" => "#181b26"),
+                    "font" => Dict("size" => statistic_font_size, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
                     "bordercolor" => "#404ed8",
                     "borderpad" => 6.4,
                 ),
             ),
-            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>$fe</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>Score</b>")),
             merge(annotationy, Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
             merge(annotationy, Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
             merge(
                 annotationx,
                 Dict(
                     "y" => -0.088,
-                    "text" => "<b>Feature (n=$n_fe)</b>",
+                    "text" => "<b>$fe (n=$n_fe)</b>",
                     "font" => Dict("size" => axis_title_font_size),
                 ),
             ),
         ),
     )
 
+    #
     x = 1:n_fe
 
-    in_ = convert(BitVector, in_)
+    #in_ = convert(BitVector, in_)
 
     trace_ = [
         Dict(
@@ -110,21 +122,24 @@ function _plot_mountain(
         ),
         Dict(
             "yaxis" => "y2",
-            "y" => zeros(sum(in_)),
+            "y" => fill(0, sum(in_)),
             "x" => x[in_],
             "text" => fe_[in_],
             "mode" => "markers",
             "marker" => Dict(
                 "symbol" => "line-ns",
-                "size" => height * (yaxis2_domain[2] - yaxis2_domain[1]) * 0.32,
+                "size" => height * diff(yaxis2_domain)[1] * 0.32,
                 "line" => Dict("width" => 2.4, "color" => "#9017e6"),
             ),
             "hoverinfo" => "x+text",
         ),
     ]
 
-    for (is_, fillcolor) in
-        [[[en < 0.0 for en in en_], "#1992ff"], [[0.0 < en for en in en_], "#ff1993"]]
+    le_ = [en < 0.0 for en in en_]
+
+    gr_ = [!le for le in le_]
+
+    for (is_, fillcolor) in [[le_, "#1992ff"], [gr_, "#ff1993"]]
 
         push!(
             trace_,
@@ -154,7 +169,7 @@ function _plot_mountain(
             "mode" => "markers",
             "marker" => Dict(
                 "symbol" => "circle",
-                "size" => height * (yaxis3_domain[2] - yaxis3_domain[1]) * 0.04,
+                "size" => height * diff(yaxis3_domain)[1] * 0.04,
                 "color" => "#ebf6f7",
                 "opacity" => 0.72,
                 "line" => Dict("width" => 2, "color" => "#404ed8", "opacity" => 1),

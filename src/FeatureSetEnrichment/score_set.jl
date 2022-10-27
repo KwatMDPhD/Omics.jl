@@ -1,4 +1,4 @@
-function _sum_1_absolute_and_0_count(sc_::Vector{Float64}, in_::Vector{Bool})
+function _sum_1_absolute_and_0_count(sc_, in_)
 
     su1 = 0.0
 
@@ -32,24 +32,28 @@ end
 
 function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
 
+    #
     n_fe = length(fe_)
 
+    #
     cu = 0.0
 
     en_ = Vector{Float64}(undef, n_fe)
 
-    ex = 0.0
+    eta = 0.0
 
-    exa = 0.0
+    et = 0.0
 
     ar = 0.0
 
+    #
     su1, su0 = _sum_1_absolute_and_0_count(sc_, in_)
 
     de = 1.0 / su0
 
     @inbounds @fastmath @simd for id in n_fe:-1:1
 
+        #
         if in_[id] == 1.0
 
             sc = sc_[id]
@@ -60,7 +64,7 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
 
             end
 
-            cu += sc / su1
+            cu += sc^ex / su1
 
         else
 
@@ -68,14 +72,14 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
 
         end
 
+        #
         if pl
 
             en_[id] = cu
 
         end
 
-        ar += cu
-
+        #
         if cu < 0.0
 
             ena = -cu
@@ -86,25 +90,28 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
 
         end
 
-        if exa < ena
+        if eta < ena
 
-            exa = ena
+            eta = ena
 
-            ex = cu
+            et = cu
 
         end
 
+        #
+        ar += cu
+
     end
 
-    en = ex, ar / convert(Float64, n_fe)
+    ar /= convert(Float64, n_fe)
 
     if pl
 
-        _plot_mountain(fe_, sc_, in_, en_, en; ke_ar...)
+        _plot_mountain(fe_, sc_, in_, en_, et, ar; ke_ar...)
 
     end
 
-    en
+    et, ar
 
 end
 
@@ -122,7 +129,7 @@ function score_set(fe_, sc_, se_fe_::Dict; ex = 1.0, n_jo = 1)
 
     else
 
-        ch = Dict(fe => id for (fe, id) in zip(fe_, 1:length(fe_)))
+        ch = Dict(fe => id for (id, fe) in enumerate(fe_))
 
     end
 
@@ -135,9 +142,9 @@ end
 
 function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
-    fe_, sa_, ma = OnePiece.DataFrame.separate(fe_x_sa_x_sc)[[2, 3, 4]]
+    fe_, sa_, ma = OnePiece.DataFrame.split(fe_x_sa_x_sc)[[2, 3, 4]]
 
-    OnePiece.Vector.error_duplicate(fe_)
+    OnePiece.Array.error_duplicate(fe_)
 
     OnePiece.Matrix.error_bad(ma, Real)
 
@@ -147,13 +154,13 @@ function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
         go_ = findall(!ismissing, ma[:, id])
 
-        sc_, fe_ = OnePiece.Vector.sort_like(ma[go_, id], fe_[go_])
+        sc_, fe_ = OnePiece.Vector.sort_like([ma[go_, id], fe_[go_]])
 
         fu, st = _match_algorithm(al)
 
         se_en = _match_algorithm(fu(fe_, sc_, se_fe_, ex = ex), st)
 
-        se_x_sa_x_en[!, sa] = collect(se_en[se] for se in se_x_sa_x_en[!, "Set"])
+        se_x_sa_x_en[!, sa] = [se_en[se] for se in se_x_sa_x_en[!, "Set"]]
 
     end
 
