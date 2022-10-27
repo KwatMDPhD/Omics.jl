@@ -1,6 +1,6 @@
 module FeatureSetEnrichment
 
-using StatsBase: mean
+using DataFrames: DataFrame
 
 using ..OnePiece
 

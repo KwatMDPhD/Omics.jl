@@ -1,3 +1,9 @@
+function center(do_)
+
+    sum(do_) / 2.0
+
+end
+
 function _plot_mountain(
     fe_,
     sc_,
@@ -90,9 +96,9 @@ function _plot_mountain(
                     "borderpad" => 6.4,
                 ),
             ),
-            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>Score</b>")),
-            merge(annotationy, Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
-            merge(annotationy, Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
+            merge(annotationy, Dict("y" => center(yaxis1_domain), "text" => "<b>Score</b>")),
+            merge(annotationy, Dict("y" => center(yaxis2_domain), "text" => "<b>Set</b>")),
+            merge(annotationy, Dict("y" => center(yaxis3_domain), "text" => "<b>Enrichment</b>")),
             merge(
                 annotationx,
                 Dict(
