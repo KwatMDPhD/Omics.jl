@@ -123,7 +123,8 @@ function _plot_mountain(
         ),
     ]
 
-    for (is_, fillcolor) in [[en_ .< 0.0, "#1992ff"], [0.0 .< en_, "#ff1993"]]
+    for (is_, fillcolor) in
+        [[[en < 0.0 for en in en_], "#1992ff"], [[0.0 < en for en in en_], "#ff1993"]]
 
         push!(
             trace_,
@@ -142,7 +143,7 @@ function _plot_mountain(
 
     end
 
-    id_ = findall(en_ .== ex)
+    id_ = findall([en == ex for en in en_])
 
     push!(
         trace_,

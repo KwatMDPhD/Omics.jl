@@ -4,7 +4,7 @@ function make_benchmark(ho)
 
     if sp_[1] == "card"
 
-        fe_ = OnePiece.Constant.CARD
+        fe_ = OnePiece.Constant.CA_
 
         n_fe = length(fe_)
 
@@ -24,13 +24,7 @@ function make_benchmark(ho)
 
         fe_ = [string("Feature ", id) for id in 1:parse(Int, sp_[2])]
 
-        n_fe = length(fe_)
-
-        mi = convert(Int, ceil(n_fe / 2))
-
-        ha = randn(mi)
-
-        sc_ = sort([.-ha[1:(n_fe - mi)]; ha])
+        sc_ = OnePiece.VectorNumber.simulate(length(fe_))
 
         fe1_ = sample(fe_, parse(Int, sp_[3]), replace = false)
 

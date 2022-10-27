@@ -1,4 +1,4 @@
-function simulate(n, ra = OnePiece.Constant.RANDOM_SEED; di = "Normal", mi = "")
+function simulate(n, ra = OnePiece.Constant.RA; di = "Normal", mi = "")
 
     #
     if di == "Normal"
@@ -7,6 +7,7 @@ function simulate(n, ra = OnePiece.Constant.RANDOM_SEED; di = "Normal", mi = "")
 
     end
 
+    #
     seed!(ra)
 
     ra_ = rand(di, n)
@@ -19,7 +20,7 @@ function simulate(n, ra = OnePiece.Constant.RANDOM_SEED; di = "Normal", mi = "")
     ne_ = reverse(-po_)
 
     #
-    if isempty(mi)
+    if mi == ""
 
         ne2_ = ne_
 
