@@ -4,7 +4,7 @@ function plot_radar(
     name_ = _set_name(theta_),
     marker_color_ = _set_color(theta_),
     layout = Dict(),
-    ou = "",
+    ht = "",
 )
 
     data = [
@@ -53,6 +53,6 @@ function plot_radar(
         layout,
     )
 
-    plot(data, layout, ou = ou)
+    plot(data, layout, ht = ht)
 
 end
