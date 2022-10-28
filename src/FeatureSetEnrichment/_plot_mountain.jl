@@ -178,6 +178,6 @@ function _plot_mountain(
         ),
     )
 
-    OnePiece.Plot.plot(trace_, layout, ht = ht)
+    display(OnePiece.Plot.plot(trace_, layout, ht = ht))
 
 end
