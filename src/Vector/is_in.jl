@@ -6,14 +6,6 @@ function is_in(ne_, ha_)
 
 end
 
-function x(ne_, ha_)
-
-    ha_ = Set(ha_)
-
-    [ne in ha_ for ne in ne_]
-
-end
-
 function is_in(ne_id::AbstractDict, ha_)
 
     in_ = fill(false, length(ne_id))

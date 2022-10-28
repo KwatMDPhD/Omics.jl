@@ -85,7 +85,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
         #
         ch_ = [va for (ke, va) in di if startswith(ke, "!Sample_characteristics")]
 
-        if all([contains(ch, de) for ch in ch_])
+        if all(occursin(de, ch) for ch in ch_)
 
             sp_ = [split(ch, de, limit = 2) for ch in ch_]
 
