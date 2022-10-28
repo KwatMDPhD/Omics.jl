@@ -36,7 +36,7 @@ function plot(;
     ou = "",
 )
 
-    ve_ = [_make_element(ve) for ve in VERTEX_]
+    ve_ = [_make_element(ve) for ve in VE_]
 
     if isempty(js)
 
@@ -50,7 +50,7 @@ function plot(;
 
     end
 
-    ed_ = [_make_element(ed) for ed in EDGE_]
+    ed_ = [_make_element(ed) for ed in ED_]
 
     st_ = append!(
         [
@@ -98,10 +98,8 @@ function plot(;
                 Dict(
                     "selector" => "#$ve",
                     "style" => Dict("background-color" => "#$(hex(get(ColorSchemes.plasma, fr)))"),
-                ) for (ve, fr) in zip(
-                    string.(VERTEX_),
-                    replace(OnePiece.normalization.normalize(he_, "0-1"), NaN => 0),
-                )
+                ) for (ve, fr) in
+                zip(string.(VE_), replace(OnePiece.normalization.normalize(he_, "0-1"), NaN => 0))
             ],
         )
 

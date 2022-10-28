@@ -12,14 +12,14 @@ function load!()
 
     end
 
-    n_ve = length(VERTEX_)
+    n_ve = length(VE_)
 
-    n_ed = length(EDGE_)
+    n_ed = length(ED_)
 
     println(
         "Loaded $n_ve $(OnePiece.string.count_noun(n_ve, "vertex")) and $n_ed $(OnePiece.string.count_noun(n_ed, "edge")).",
     )
 
-    VERTEX_, EDGE_
+    VE_, ED_
 
 end

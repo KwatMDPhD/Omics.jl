@@ -2,9 +2,9 @@ function heat(st_, he_; ve_al_ = nothing, ve_he = Dict(), pr = true)
 
     st_he = merge(Dict(zip(st_, he_)), ve_he)
 
-    hev_ = fill(0.0, length(VERTEX_))
+    hev_ = fill(0.0, length(VE_))
 
-    for (id, ve) in enumerate(string.(VERTEX_))
+    for (id, ve) in enumerate(string.(VE_))
 
         if haskey(st_he, ve)
 

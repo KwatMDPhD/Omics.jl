@@ -10,7 +10,7 @@ using DataFrames
 
 using InteractiveUtils
 
-using LinearAlgebra
+using LinearAlgebra: norm
 
 using StatsBase
 

@@ -10,7 +10,7 @@ function _decrease(cu, fl_)
 
 end
 
-function flow(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6, pr = true)
+function flow(he_, de_x_so_x_ed = edge(); n_fl = 1000, ch = 1e-6, pr = true)
 
     no1 = _heat_check(he_, pr = pr)
 
@@ -20,7 +20,7 @@ function flow(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6, pr = true)
 
         he2_ = copy(he__[end])
 
-        for (id, (de, so_)) in enumerate(zip(VERTEX_, eachrow(de_x_so_x_ed)))
+        for (id, (de, so_)) in enumerate(zip(VE_, eachrow(de_x_so_x_ed)))
 
             if all(so_ .== 0)
 
@@ -78,7 +78,7 @@ function flow(he_; de_x_so_x_ed = edge(), n_fl = 1000, ch = 1e-6, pr = true)
 
 end
 
-function flow(ve_x_sa_x_he::Matrix; ke_ar...)
+function flow(ve_x_sa_x_he; ke_ar...)
 
     de_x_so_x_ed = edge()
 

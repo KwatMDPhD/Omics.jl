@@ -1,12 +1,12 @@
 function _add!(ve)
 
-    if !(ve in VERTEX_)
+    if !(ve in VE_)
 
-        push!(VERTEX_, ve)
+        push!(VE_, ve)
 
     end
 
-    VERTEX_
+    VE_
 
 end
 
@@ -14,7 +14,7 @@ function _add!(so, de)
 
     ed = [so, de]
 
-    if !(ed in EDGE_)
+    if !(ed in ED_)
 
         for ve in ed
 
@@ -22,10 +22,10 @@ function _add!(so, de)
 
         end
 
-        push!(EDGE_, ed)
+        push!(ED_, ed)
 
     end
 
-    EDGE_
+    ED_
 
 end
