@@ -8,9 +8,11 @@ function adjust_p_value(pv_, me = "benjamini_hochberg"; n = length(pv_))
 
         so_ = sortperm(pv_)
 
-        cl_ = OnePiece.VectorNumber.force_increasing_with_min!([
-            pv_[so] * n / id for (id, so) in enumerate(so_)
-        ])[sortperm(so_)]
+        pvs_ = [pv_[so] * n / id for (id, so) in enumerate(so_)]
+
+        OnePiece.VectorNumber.force_increasing_with_min!(pvs_)
+
+        cl_ = pvs_[sortperm(so_)]
 
     end
 

@@ -1,4 +1,4 @@
-function read(gs, di = OnePiece.TEMPORARY_DIRECTORY)
+function read(gs, di = OnePiece.TE)
 
     #
     fi = "$(gs)_family.soft.gz"

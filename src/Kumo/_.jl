@@ -16,9 +16,9 @@ using StatsBase
 
 using ..OnePiece
 
-VERTEX_ = []
+VE_ = []
 
-EDGE_ = []
+ED_ = []
 
 include("../_include.jl")
 

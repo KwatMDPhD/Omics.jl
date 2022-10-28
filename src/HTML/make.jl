@@ -2,7 +2,7 @@ function make(di, sr_, sc, ht = "")
 
     if ht == ""
 
-        ht = joinpath(OnePiece.TEMPORARY_DIRECTORY, "$(OnePiece.Time.stamp()).html")
+        ht = joinpath(OnePiece.TE, "$(OnePiece.Time.stamp()).html")
 
     end
 

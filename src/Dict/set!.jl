@@ -6,13 +6,9 @@ function set!(di, (ke, va), ho = "first"; pr = true)
 
             cu = di[ke]
 
-            if cu != va
+            if pr && cu != va
 
-                if pr
-
-                    println("$ke => $cu (=> $va)")
-
-                end
+                println("$ke => $cu (=> $va)")
 
             end
 
@@ -28,13 +24,9 @@ function set!(di, (ke, va), ho = "first"; pr = true)
 
             cu = di[ke]
 
-            if cu != va
+            if pr && cu != va
 
-                if pr
-
-                    println("$ke (=> $cu) => $va")
-
-                end
+                println("$ke (=> $cu) => $va")
 
             end
 
@@ -73,5 +65,7 @@ function set!(di, (ke, va), ho = "first"; pr = true)
         di[ke] = va
 
     end
+
+    nothing
 
 end

@@ -8,11 +8,7 @@ function plot(el_, st_, la; ht = "", js = true, pn = true, bg = "#fdfdfd")
 
     if js
 
-        scj = """
-            let js = new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"});
-
-            saveAs(js, "$pr.json");
-            """
+        scj = """let js = new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"}); saveAs(js, "$pr.json");"""
 
     end
 
@@ -20,11 +16,7 @@ function plot(el_, st_, la; ht = "", js = true, pn = true, bg = "#fdfdfd")
 
     if pn
 
-        scp = """
-            let pn = cy.png({"full": true, "scale": 1, "bg": "$bg"});
-
-            saveAs(pn, "$pr.png");
-            """
+        scp = """let pn = cy.png({"full": true, "scale": 1, "bg": "$bg"}); saveAs(pn, "$pr.png");"""
 
     end
 
