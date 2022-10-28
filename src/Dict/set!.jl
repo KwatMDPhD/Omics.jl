@@ -64,6 +64,10 @@ function set!(di, (ke, va), ho = "first"; pr = true)
 
         di[ke] = va
 
+    else
+
+        error()
+
     end
 
     nothing

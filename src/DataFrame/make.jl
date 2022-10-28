@@ -1,6 +1,6 @@
 function make(va__)
 
-    DataFrames.DataFrame(OnePiece.Matrix.convert(va__[2:end]), va__[1])
+    DataFrames.DataFrame(OnePiece.Matrix.make(va__[2:end]), va__[1])
 
 end
 

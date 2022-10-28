@@ -51,3 +51,29 @@ function normalize(te, me)
     end
 
 end
+
+function normalize(ma, di, me)
+
+    man = Matrix{Real}(undef, size(ma))
+
+    if di == 1
+
+        for (id, ro) in enumerate(eachrow(ma))
+
+            man[id, :] = normalize(ro, me)
+
+        end
+
+    elseif di == 2
+
+        for (id, co) in enumerate(eachcol(ma))
+
+            man[:, id] = normalize(co, me)
+
+        end
+
+    end
+
+    man
+
+end

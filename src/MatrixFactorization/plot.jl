@@ -11,9 +11,9 @@ function plot(
 
     fa_ = ["$naf $id" for id in 1:size(maw_[1], 2)]
 
-    sh = 480
+    lo = 1000
 
-    lo = sh * MathConstants.golden
+    sh = lo / MathConstants.golden
 
     axis = Dict("dtick" => 1)
 
@@ -23,11 +23,11 @@ function plot(
 
         if ou == ""
 
-            ou2 = ou
+            ht = ou
 
         else
 
-            ou2 = joinpath(ou, "$title_text.html")
+            ht = joinpath(ou, "$title_text.html")
 
             OnePiece.Table.write(
                 joinpath(ou, "$title_text.tsv"),
@@ -40,7 +40,7 @@ function plot(
 
         display(
             OnePiece.Plot.plot_heat_map(
-                replace(OnePiece.Normalization.normalize!(maw[or_, :], 1, "-0-"), NaN => nothing),
+                replace(OnePiece.Normalization.normalize(maw[or_, :], 1, "-0-"), NaN => nothing),
                 ro_[or_],
                 fa_,
                 nar = nar,
@@ -51,7 +51,7 @@ function plot(
                     "title" => Dict("text" => title_text),
                     "xaxis" => axis,
                 ),
-                ou = ou2,
+                ht = ht,
             ),
         )
 
@@ -63,11 +63,11 @@ function plot(
 
         if ou == ""
 
-            ou2 = ou
+            ht = ou
 
         else
 
-            ou2 = joinpath(ou, "$title_text.html")
+            ht = joinpath(ou, "$title_text.html")
 
             OnePiece.Table.write(
                 joinpath(ou, "$title_text.tsv"),
@@ -80,7 +80,7 @@ function plot(
 
         display(
             OnePiece.Plot.plot_heat_map(
-                replace(OnePiece.Normalization.normalize!(mah[:, or_], 2, "-0-"), NaN => nothing),
+                replace(OnePiece.Normalization.normalize(mah[:, or_], 2, "-0-"), NaN => nothing),
                 fa_,
                 co_[or_],
                 nar = naf,
@@ -91,7 +91,7 @@ function plot(
                     "title" => Dict("text" => title_text),
                     "yaxis" => axis,
                 ),
-                ou = ou2,
+                ht = ht,
             ),
         )
 

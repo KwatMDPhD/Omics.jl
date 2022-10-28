@@ -32,7 +32,7 @@ function plot(;
     edge_line_color = "#171412",
     st_ = [],
     he_ = [],
-    he = 800,
+    wi = 1000,
     ou = "",
 )
 
@@ -121,7 +121,7 @@ function plot(;
                 "name" => "cose",
                 "padding" => 16,
                 "boundingBox" =>
-                    Dict("x1" => 0, "y1" => 0, "h" => he, "w" => he * MathConstants.golden),
+                    Dict("x1" => 0, "y1" => 0, "h" => wi / MathConstants.golden, "w" => wi),
                 "componentSpacing" => 40,
                 "nodeRepulsion" => 8000,
                 "idealEdgeLength" => 16,

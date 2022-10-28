@@ -11,9 +11,9 @@ function _plot_mountain(
 )
 
     #
-    height = 800
+    width = 1000
 
-    width = height * MathConstants.golden
+    height = width / MathConstants.golden
 
     #
     yaxis1_domain = [0.0, 0.24]
@@ -55,7 +55,7 @@ function _plot_mountain(
     layout = Dict(
         "height" => height,
         "width" => width,
-        "margin" => Dict("t" => round(height * 0.16), "l" => round(width * 0.16)),
+        "margin" => Dict("t" => round(height * 0.17), "l" => round(width * 0.17)),
         "showlegend" => false,
         "yaxis" => Dict("domain" => yaxis1_domain, "showline" => true, "showgrid" => false),
         "yaxis2" =>

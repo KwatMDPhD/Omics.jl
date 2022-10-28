@@ -42,11 +42,19 @@ function rename(st_, wh_ = ["mouse", "ensembl", "hgnc"])
 
     end
 
-    println("👍 $(count(ma_ .== 1))")
+    n_ = [0, 0, 0]
 
-    println("✌️ $(count(ma_ .== 2))")
+    for ma in ma_
 
-    println("👎 $(count(ma_ .== 3))")
+        n_[ma] += 1
+
+    end
+
+    println("👍 $(n_[1])")
+
+    println("✌️ $(n_[2])")
+
+    println("👎 $(n_[3])")
 
     na_, ma_
 

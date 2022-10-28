@@ -1,4 +1,4 @@
-function map_to(da, co_, de = "|"; pr = true)
+function map_to(da, co_, ho = "first", de = "|"; pr = true)
 
     no_ta = Dict()
 
@@ -14,7 +14,7 @@ function map_to(da, co_, de = "|"; pr = true)
 
         end
 
-        OnePiece.Dict.set!(no_ta, ta => ta, pr)
+        OnePiece.Dict.set!(no_ta, ta => ta, ho, pr = pr)
 
         for no in va_[1:(id - 1)]
 
@@ -26,7 +26,7 @@ function map_to(da, co_, de = "|"; pr = true)
 
             for nos in split(no, de)
 
-                OnePiece.Dict.set!(no_ta, nos => ta, pr)
+                OnePiece.Dict.set!(no_ta, nos => ta, ho, pr = pr)
 
             end
 

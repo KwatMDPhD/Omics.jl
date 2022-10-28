@@ -8,11 +8,9 @@ function make(ro_)
 
     n_ro = length(ro_)
 
-    ro1 = ro_[1]
+    n_co = length(ro_[1])
 
-    n_co = length(ro1)
-
-    ma = Base.Matrix{eltype(ro1)}(undef, n_ro, n_co)
+    ma = Base.Matrix{eltype(vcat(ro_...))}(undef, n_ro, n_co)
 
     for idr in 1:n_ro, idc in 1:n_co
 
