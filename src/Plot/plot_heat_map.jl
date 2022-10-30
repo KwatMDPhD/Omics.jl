@@ -1,10 +1,16 @@
+function _fractionate(sc)
+
+    collect(zip(0.0:(1 / (length(sc) - 1)):1.0, "#$(hex(rg))" for rg in sc))
+
+end
+
 function plot_heat_map(
     z,
     y = ["$id *" for id in 1:size(z, 1)],
     x = ["* $id" for id in 1:size(z, 2)];
     nar = "Row",
     nac = "Column",
-    colorscale = NA_CA["Plasma"],
+    colorscale = _fractionate(NA_SC["plasma"]),
     grr_ = [],
     grc_ = [],
     layout = Dict(),
@@ -90,7 +96,7 @@ function plot_heat_map(
 
     tr = Dict(
         "type" => "heatmap",
-        "colorscale" => NA_CA["Plotly"],
+        "colorscale" => _fractionate(NA_SC["plotly"]),
         "colorbar" => Dict("x" => 1.15, "dtick" => 1),
     )
 

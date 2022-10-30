@@ -1,6 +1,6 @@
-function sort_like(ve_, re = false)
+function sort_like(ve_, de = false)
 
-    id_ = sortperm(ve_[1], rev = re)
+    id_ = sortperm(ve_[1], rev = de)
 
     [ve[id_] for ve in ve_]
 

@@ -78,7 +78,7 @@ function flow(he_, de_x_so_x_ed = edge(); n = 1000, ch = 1e-6, pr = true)
 
 end
 
-function flow(ve_x_sa_x_he; ke_ar...)
+function flow(ve_x_sa_x_he::Matrix; ke_ar...)
 
     de_x_so_x_ed = edge()
 

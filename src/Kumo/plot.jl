@@ -1,12 +1,12 @@
-function _make_element(ve, cl_)
+function _make_element(ve, cl_::Vector)
 
     Dict("data" => Dict("id" => string(ve)), "classes" => [string(cl) for cl in cl_])
 
 end
 
-function _make_element(ve::DataType)
+function _make_element(ve)
 
-    _make_element(ve, vcat("no", collect(supertypes(ve))[2:(end - 1)]))
+    _make_element(ve, vcat("ve", collect(supertypes(ve))[2:(end - 1)]))
 
 end
 
@@ -16,9 +16,7 @@ function _make_element(ve::String)
 
 end
 
-function _make_element(ed::Vector)
-
-    so, de = ed
+function _make_element(so, de)
 
     Dict("data" => Dict("source" => string(so), "target" => string(de)))
 
@@ -33,7 +31,7 @@ function plot(;
     st_ = [],
     he_ = [],
     wi = 1000,
-    ou = "",
+    ht = "",
 )
 
     ve_ = [_make_element(ve) for ve in VE_]
@@ -50,16 +48,18 @@ function plot(;
 
     end
 
-    ed_ = [_make_element(ed) for ed in ED_]
+    ed_ = [_make_element(so, de) for (so, de) in ED_]
 
     st_ = append!(
         [
+            #
             Dict(
                 "selector" => "node",
                 "style" => Dict("border-width" => 2, "border-color" => "#ebf6f7"),
             ),
+            #
             Dict(
-                "selector" => ".no",
+                "selector" => ".ve",
                 "style" => Dict(
                     "height" => no_si,
                     "width" => no_si,
@@ -67,12 +67,14 @@ function plot(;
                     "font-size" => no_si * 2 / 3,
                 ),
             ),
+            #
             Dict(
                 "selector" => ".ed",
                 "style" => Dict("height" => ed_si, "width" => ed_si, "shape" => "triangle"),
             ),
             Dict("selector" => ".in", "style" => Dict("background-color" => "#f47983")),
             Dict("selector" => ".de", "style" => Dict("background-color" => "#4d8fac")),
+            #
             Dict(
                 "selector" => "edge",
                 "style" => Dict(
@@ -90,6 +92,7 @@ function plot(;
         st_,
     )
 
+    #
     if !isempty(he_)
 
         append!(
@@ -97,15 +100,16 @@ function plot(;
             [
                 Dict(
                     "selector" => "#$ve",
-                    "style" => Dict("background-color" => "#$(hex(get(ColorSchemes.plasma, fr)))"),
-                ) for (ve, fr) in
-                zip(string.(VE_), replace(OnePiece.Normalization.normalize(he_, "0-1"), NaN => 0))
+                    "style" => Dict("background-color" => OnePiece.Plot.color("plasma", fr)),
+                ) for
+                (ve, fr) in zip(_stringify_vertex(), OnePiece.Normalization.normalize(he_, "0-1"))
             ],
         )
 
     end
 
-    la = Dict{String, Any}("name" => "grid", "animate" => false)
+    #
+    la = Dict("name" => "grid", "animate" => false)
 
     if po
 
@@ -129,6 +133,7 @@ function plot(;
 
     end
 
-    OnePiece.Network.plot(vcat(ve_, ed_), st_, la, ou = ou, js = !po)
+    #
+    OnePiece.Network.plot(vcat(ve_, ed_), st_, la, ht = ht, js = !po)
 
 end

@@ -1,6 +1,6 @@
 function edge()
 
-    ve_id = OnePiece.Vector.pair_index(VE_)
+    ve_id = OnePiece.Vector.pair_index(VE_)[1]
 
     n_ve = length(ve_id)
 

@@ -2,10 +2,6 @@ module Kumo
 
 import Base: <<, >>
 
-using ColorSchemes
-
-using Colors
-
 using DataFrames
 
 using InteractiveUtils

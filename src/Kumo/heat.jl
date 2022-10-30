@@ -6,7 +6,7 @@ function heat(st_, he_; ve_al_ = Dict(), ve_he = Dict(), pr = true)
     #
     hev_ = fill(0.0, length(VE_))
 
-    for (id, ve) in enumerate(string(ve) for ve in VE_)
+    for (id, ve) in enumerate(_stringify_vertex())
 
         #
         if haskey(st_he, ve)

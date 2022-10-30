@@ -40,7 +40,7 @@ function plot(
 
         display(
             OnePiece.Plot.plot_heat_map(
-                replace(OnePiece.Normalization.normalize(maw[or_, :], 1, "-0-"), NaN => nothing),
+                OnePiece.Normalization.normalize(maw[or_, :], 1, "-0-"),
                 ro_[or_],
                 fa_,
                 nar = nar,
@@ -80,7 +80,7 @@ function plot(
 
         display(
             OnePiece.Plot.plot_heat_map(
-                replace(OnePiece.Normalization.normalize(mah[:, or_], 2, "-0-"), NaN => nothing),
+                OnePiece.Normalization.normalize(mah[:, or_], 2, "-0-"),
                 fa_,
                 co_[or_],
                 nar = naf,

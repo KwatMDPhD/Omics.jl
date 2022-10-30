@@ -50,7 +50,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
     end
 
     #
-    for na in OnePiece.Path.select(dw, ke_ = [pr], ig_ = [r"\.download$"], jo = false)
+    for na in OnePiece.Path.select(dw, false, ig_ = [r"\.download$"], ke_ = [pr])
 
         mv(joinpath(dw, na), joinpath(di, replace(na, "$pr." => "")), force = true)
 
