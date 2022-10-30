@@ -4,9 +4,9 @@ function _heat_check(he_, pr = true)
 
     if pr
 
-        println("🔥 $(OnePiece.Number.format(no))")
+        println("$(OnePiece.Number.format(no)) 🔥")
 
-        for (he, ve) in zip(OnePiece.vector.sort_like([he_, VE_], re = true)...)
+        for (he, ve) in zip(OnePiece.Vector.sort_like([he_, VE_], re = true)...)
 
             if he != 0.0
 

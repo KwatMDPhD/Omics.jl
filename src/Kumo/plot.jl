@@ -44,7 +44,7 @@ function plot(;
 
     else
 
-        OnePiece.network.position!(ve_, js)
+        OnePiece.Network.position!(ve_, js)
 
         po = true
 
@@ -99,7 +99,7 @@ function plot(;
                     "selector" => "#$ve",
                     "style" => Dict("background-color" => "#$(hex(get(ColorSchemes.plasma, fr)))"),
                 ) for (ve, fr) in
-                zip(string.(VE_), replace(OnePiece.normalization.normalize(he_, "0-1"), NaN => 0))
+                zip(string.(VE_), replace(OnePiece.Normalization.normalize(he_, "0-1"), NaN => 0))
             ],
         )
 
@@ -129,6 +129,6 @@ function plot(;
 
     end
 
-    OnePiece.network.plot(vcat(ve_, ed_), st_, la, ou = ou, js = !po)
+    OnePiece.Network.plot(vcat(ve_, ed_), st_, la, ou = ou, js = !po)
 
 end

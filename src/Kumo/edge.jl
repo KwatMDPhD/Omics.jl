@@ -1,6 +1,6 @@
 function edge()
 
-    ve_id = Dict(ve => id for (id, ve) in enumerate(VE_))
+    ve_id = OnePiece.Vector.pair_index(VE_)
 
     n_ve = length(ve_id)
 

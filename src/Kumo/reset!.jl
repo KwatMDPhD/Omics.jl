@@ -4,4 +4,6 @@ function reset!()
 
     empty!(ED_)
 
+    nothing
+
 end

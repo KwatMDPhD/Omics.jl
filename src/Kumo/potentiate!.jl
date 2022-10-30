@@ -42,14 +42,20 @@ function _make_ve2(ve1_::Vector, ed)
 
 end
 
+function potentiate(ve1, ed, ve3)
+
+    ve1 >> _make_ve2(ve1, ed) >> ve3
+
+end
+
 function >>(ve1::Union{DataType, Vector{DataType}}, ve3::Union{DataType, Vector{DataType}})
 
-    ve1 >> _make_ve2(ve1, "in") >> ve3
+    potentiate(ve1, "in", ve3)
 
 end
 
 function <<(ve1::Union{DataType, Vector{DataType}}, ve3::Union{DataType, Vector{DataType}})
 
-    ve1 >> _make_ve2(ve1, "de") >> ve3
+    potentiate(ve1, "de", ve3)
 
 end

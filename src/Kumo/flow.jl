@@ -10,19 +10,19 @@ function _decrease(cu, fl_)
 
 end
 
-function flow(he_, de_x_so_x_ed = edge(); n_fl = 1000, ch = 1e-6, pr = true)
+function flow(he_, de_x_so_x_ed = edge(); n = 1000, ch = 1e-6, pr = true)
 
-    no1 = _heat_check(he_, pr = pr)
+    no1 = _heat_check(he_, pr)
 
     he__ = [he_]
 
-    for id in 1:n_fl
+    for id in 1:n
 
         he2_ = copy(he__[end])
 
         for (id, (de, so_)) in enumerate(zip(VE_, eachrow(de_x_so_x_ed)))
 
-            if all(so_ .== 0)
+            if all(so == 0 for so in so_)
 
                 continue
 
@@ -34,7 +34,7 @@ function flow(he_, de_x_so_x_ed = edge(); n_fl = 1000, ch = 1e-6, pr = true)
 
                 he2_[id] = _increase(he2_[id], fl_)
 
-            elseif all(0.0 .< fl_)
+            elseif all(0.0 < fl for fl in fl_)
 
                 ex = splitext(de)[2]
 
@@ -54,7 +54,7 @@ function flow(he_, de_x_so_x_ed = edge(); n_fl = 1000, ch = 1e-6, pr = true)
 
         end
 
-        no2 = _heat_check(he2_, pr = pr)
+        no2 = _heat_check(he2_, pr)
 
         if abs(no2 - no1) < ch
 
@@ -86,7 +86,7 @@ function flow(ve_x_sa_x_he; ke_ar...)
 
     for he_ in eachcol(ve_x_sa_x_he)
 
-        push!(he___, flow(collect(he_); de_x_so_x_ed = de_x_so_x_ed, ke_ar...))
+        push!(he___, flow(collect(he_), de_x_so_x_ed; ke_ar...))
 
     end
 

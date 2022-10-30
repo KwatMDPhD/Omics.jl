@@ -5,8 +5,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     pr = "Kumo.animate"
 
-    #
-    for pa in OnePiece.path.select(dw, ke_ = [pr])
+    for pa in OnePiece.Path.select(dw, ke_ = [pr])
 
         rm(pa)
 
@@ -19,9 +18,9 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
         pe = ceil(Int, pe * n)
 
-        println("Plotting every $pe of $n")
-
     end
+
+    println("Plotting every $pe of $n")
 
     #
     for id in 1:n
@@ -34,16 +33,14 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
         end
 
         #
-        if 1 < id && js == ""
+        if js == "" && 1 < id
 
             js = joinpath(dw, "$pr.1.json")
 
         end
 
-        #
         display(plot(js = js, st_ = st_, he_ = he__[id], ht = joinpath(di, "$pr.$id.html")))
 
-        #
         pn = joinpath(dw, "$pr.$id.png")
 
         while !ispath(pn)

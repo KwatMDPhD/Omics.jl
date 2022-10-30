@@ -17,9 +17,7 @@ function load!()
     n_ed = length(ED_)
 
     println(
-        "Loaded $n_ve $(OnePiece.string.count_noun(n_ve, "vertex")) and $n_ed $(OnePiece.string.count_noun(n_ed, "edge")).",
+        "Loaded $n_ve $(OnePiece.String.count_noun(n_ve, "vertex")) and $n_ed $(OnePiece.String.count_noun(n_ed, "edge")).",
     )
-
-    VE_, ED_
 
 end

@@ -1,4 +1,4 @@
-function map_index(an_)
+function pair_index(an_)
 
     an_id = Dict()
 
