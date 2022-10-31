@@ -2,13 +2,11 @@ module Kumo
 
 import Base: <<, >>
 
-using DataFrames
-
-using InteractiveUtils
+using InteractiveUtils: supertypes
 
 using LinearAlgebra: norm
 
-using StatsBase
+using StatsBase: mean
 
 using ..OnePiece
 
