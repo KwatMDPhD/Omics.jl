@@ -1,56 +1,62 @@
-function _name(pl, da)
+function _name(pl, fe_x_in_x_an)
 
     pl = parse(Int, pl[4:end])
 
-    fu = na -> na
-
     ke = "ID"
 
-    if pl in [96, 97, 570]
+    if pl in (96, 97, 570)
 
         va = "Gene Symbol"
 
         fu = na -> OnePiece.String.split_and_get(na, " /// ", 1)
 
-    elseif pl in [13534]
+    elseif pl == 13534
 
         va = "UCSC_RefGene_Name"
 
         fu = na -> OnePiece.String.split_and_get(na, ";", 1)
 
-    elseif pl in [5175, 11532]
+    elseif pl in (5175, 11532)
 
         va = "gene_assignment"
 
         fu = na -> OnePiece.String.split_and_get(na, " // ", 2)
 
-    elseif pl in [2004, 2005, 3718, 3720]
+    elseif pl in (2004, 2005, 3718, 3720)
 
         va = "Associated Gene"
 
         fu = na -> OnePiece.String.split_and_get(na, " // ", 1)
 
-    elseif pl in [10558]
+    elseif pl == 10558
 
         va = "Symbol"
 
-    elseif pl in [16686]
+        fu = na -> na
+
+    elseif pl == 16686
 
         va = "GB_ACC"
 
+        fu = na -> na
+
+    else
+
+        error()
+
     end
 
-    println(first(da, 4))
+    println(first(fe_x_in_x_an, 4))
 
     println("$ke => $va")
 
     fe_na = Dict()
 
-    for (fe, na) in zip(da[!, ke], da[!, va])
+    for (fe, na) in zip(fe_x_in_x_an[!, ke], fe_x_in_x_an[!, va])
 
         if na isa AbstractString && !isempty(na) && !(na in ["---"])
 
-            OnePiece.Dict.set!(fe_na, fe => fu(na))
+            OnePiece.Dict.set!(fe_na, (fe, fu(na)))
 
         end
 
@@ -65,25 +71,25 @@ end
 function tabulate(ty_bl, sa = "!Sample_title")
 
     #
-    sa_di = OrderedDict(pop!(di, sa) => di for di in values(ty_bl["SAMPLE"]))
+    sa_ke_va = OrderedDict(pop!(ke_va, sa) => ke_va for ke_va in values(ty_bl["SAMPLE"]))
 
-    naf = "Feature"
+    ro = "Feature"
 
     #
     de = ": "
 
-    sa_an = OrderedDict()
+    sa_an_ = OrderedDict()
 
     #
     pl_ = []
 
-    sa_nu = OrderedDict()
+    sa_nu_ = OrderedDict()
 
     #
-    for (sa, di) in sa_di
+    for (sa, ke_va) in sa_ke_va
 
         #
-        ch_ = [va for (ke, va) in di if startswith(ke, "!Sample_characteristics")]
+        ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
 
         if all(occursin(de, ch) for ch in ch_)
 
@@ -91,35 +97,35 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             pr_ = [sp[1] for sp in sp_]
 
-            if get!(sa_an, naf, pr_) != pr_
+            if get!(sa_an_, ro, pr_) != pr_
 
                 error()
 
             end
 
-            OnePiece.Dict.set!(sa_an, sa => [sp[2] for sp in sp_])
+            OnePiece.Dict.set!(sa_an_, (sa, [sp[2] for sp in sp_]))
 
         else
 
-            println("$sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  "))")
+            println("A $sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  "))")
 
         end
 
         #
-        push!(pl_, di["!Sample_platform_id"])
+        push!(pl_, ke_va["!Sample_platform_id"])
 
         #
-        if haskey(di, "da")
+        if haskey(ke_va, "fe_x_in_x_an")
 
-            da = di["da"]
+            fe_x_in_x_an = ke_va["fe_x_in_x_an"]
 
-            fe_ = da[!, 1]
+            fe_ = fe_x_in_x_an[!, 1]
 
-            cu_ = get!(sa_nu, naf, fe_)
+            cu_ = get!(sa_nu_, ro, fe_)
 
             if cu_ == fe_
 
-                id_ = 1:size(da, 1)
+                id_ = 1:size(fe_x_in_x_an, 1)
 
             else
 
@@ -129,7 +135,10 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             end
 
-            OnePiece.Dict.set!(sa_nu, sa => [parse(Float64, va) for va in da[id_, "VALUE"]])
+            OnePiece.Dict.set!(
+                sa_nu_,
+                (sa, [parse(Float64, va) for va in fe_x_in_x_an[id_, "VALUE"]]),
+            )
 
         else
 
@@ -140,14 +149,14 @@ function tabulate(ty_bl, sa = "!Sample_title")
     end
 
     #
-    fe_x_sa_x_an = DataFrame(sa_an)
+    fe_x_sa_x_an = DataFrame(sa_an_)
 
     OnePiece.DataFrame.print_unique(fe_x_sa_x_an)
 
     #
-    fe_x_sa_x_nu = DataFrame(sa_nu)
+    fe_x_sa_x_nu = DataFrame(sa_nu_)
 
-    pl_di = ty_bl["PLATFORM"]
+    pl_ke_va = ty_bl["PLATFORM"]
 
     #
     unique!(pl_)
@@ -156,7 +165,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
         println("Sample platforms are empty. Using the first")
 
-        pl = collect(keys(pl_di))[1]
+        pl = collect(keys(pl_ke_va))[1]
 
     elseif length(pl_) == 1
 
@@ -169,13 +178,13 @@ function tabulate(ty_bl, sa = "!Sample_title")
     end
 
     #
-    if haskey(pl_di[pl], "da")
+    if haskey(pl_ke_va[pl], "fe_x_in_x_an")
 
-        fe_na = _name(pl, pl_di[pl]["da"])
+        fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"])
 
-        fe_x_sa_x_nu[!, naf] = [get(fe_na, fe, "") for fe in fe_x_sa_x_nu[!, naf]]
+        fe_x_sa_x_nu[!, ro] = [get(fe_na, fe, "") for fe in fe_x_sa_x_nu[!, ro]]
 
-        rename!(fe_x_sa_x_nu, naf => "Gene")
+        rename!(fe_x_sa_x_nu, ro => "Gene")
 
     else
 

@@ -14,6 +14,10 @@ function adjust_p_value(pv_, me = "benjamini_hochberg"; n = length(pv_))
 
         cl_ = pvs_[sortperm(so_)]
 
+    else
+
+        error()
+
     end
 
     [clamp(cl, 0.0, 1.0) for cl in cl_]

@@ -1,12 +1,12 @@
-function read(pa::AbstractString)
+function read(gm)
 
     se_ge_ = Dict()
 
-    for li in readlines(pa)
+    for li in readlines(gm)
 
         sp_ = split(li, "\t")
 
-        OnePiece.Dict.set!(se_ge_, sp_[1] => [ge for ge in sp_[3:end] if !isempty(ge)])
+        OnePiece.Dict.set!(se_ge_, (sp_[1], [ge for ge in sp_[3:end] if !isempty(ge)]))
 
     end
 
@@ -14,13 +14,13 @@ function read(pa::AbstractString)
 
 end
 
-function read(pa_)
+function read(gm_::AbstractVector)
 
     se_ge_ = Dict()
 
-    for pa in pa_
+    for gm in gm_
 
-        merge!(se_ge_, read(pa))
+        merge!(se_ge_, read(gm))
 
     end
 

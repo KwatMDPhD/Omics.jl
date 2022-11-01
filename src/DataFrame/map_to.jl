@@ -1,32 +1,42 @@
-function map_to(da, co_, ho = "first", de = "|"; pr = true)
+function map_to(ro_x_co_x_st, co_, ho = "first"; de = "", pr = true)
 
-    no_ta = Dict()
+    fr_to = Dict()
 
     id = length(co_)
 
-    for va_ in eachrow(da[!, co_])
+    for st_ in eachrow(ro_x_co_x_st[!, co_])
 
-        ta = va_[id]
+        to = st_[id]
 
-        if ismissing(ta)
+        if ismissing(to)
 
             continue
 
         end
 
-        OnePiece.Dict.set!(no_ta, ta => ta, ho, pr = pr)
+        OnePiece.Dict.set!(fr_to, (to, to), ho, pr = pr)
 
-        for no in va_[1:(id - 1)]
+        for fr in st_[1:(id - 1)]
 
-            if ismissing(no)
+            if ismissing(fr)
 
                 continue
 
             end
 
-            for nos in split(no, de)
+            if isempty(de)
 
-                OnePiece.Dict.set!(no_ta, nos => ta, ho, pr = pr)
+                fr2_ = ()
+
+            else
+
+                fr2_ = split(fr, de)
+
+            end
+
+            for fr2 in fr2_
+
+                OnePiece.Dict.set!(fr_to, (fr2, to), ho, pr = pr)
 
             end
 
@@ -34,6 +44,6 @@ function map_to(da, co_, ho = "first", de = "|"; pr = true)
 
     end
 
-    no_ta
+    fr_to
 
 end

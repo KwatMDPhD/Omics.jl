@@ -1,26 +1,34 @@
-function print(di, n_pa = nothing)
+function print(ke_va, n = -1)
 
-    n_ke = length(keys(di))
+    n_ke = length(keys(ke_va))
 
-    n_va = length(unique((values(di))))
+    n_va = length(unique(values(ke_va)))
 
     println(
         "$n_ke $(OnePiece.String.count_noun(n_ke, "key")) and $n_va unique $(OnePiece.String.count_noun(n_va, "value"))",
     )
 
-    if isnothing(n_pa)
+    if n_ke == 0
 
-        JSON_print(di, 2)
+        return
 
-    else
+    end
+
+    ke_va = sort(ke_va)
+
+    if n == -1
+
+        JSON_print(ke_va, 2)
+
+    elseif 0 < n
 
         println("{")
 
-        for (id, (ke, va)) in enumerate(di)
+        for (id, (ke, va)) in enumerate(ke_va)
 
             Base.print("  ")
 
-            if id <= n_pa
+            if id <= n
 
                 println("$ke => $va")
 

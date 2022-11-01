@@ -3,13 +3,13 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
     #
     in_ = convert(Vector{Float64}, OnePiece.Vector.is_in(fe_, fe1_))
 
-    ou_ = [1.0 - is for is in in_]
+    ou_ = [1.0 - i for i in in_]
 
     #
     ab_ = [abs(sc)^ex for sc in sc_]
 
     #
-    ina_ = [is * ab for (is, ab) in zip(in_, ab_)]
+    ina_ = [i * ab for (i, ab) in zip(in_, ab_)]
 
     oua_ = [ou * ab for (ou, ab) in zip(ou_, ab_)]
 
@@ -25,6 +25,7 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
         OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_) -
         OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
 
+    #
     et = OnePiece.VectorNumber.get_extreme(en_)
 
     ar = OnePiece.VectorNumber.get_area(en_)
@@ -41,8 +42,8 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function score_set_new(fe_, sc_, se_fe_::Dict; ex = 1.0, n_jo = 1)
+function score_set_new(fe_, sc_, se_fe1_::AbstractDict; ex = 1.0, n_jo = 1)
 
-    Dict(se => score_set_new(fe_, sc_, fe1_, ex = ex, pl = false) for (se, fe1_) in se_fe_)
+    Dict(se => score_set_new(fe_, sc_, fe1_, ex = ex, pl = false) for (se, fe1_) in se_fe1_)
 
 end

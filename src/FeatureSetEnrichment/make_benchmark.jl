@@ -12,7 +12,7 @@ function make_benchmark(ho)
 
         sc_ = convert(Vector{Float64}, (mi - n):(mi - 1))
 
-        fe1_ = [string(fe1) for fe1 in sp_[2]]
+        fe1_ = split(sp_[2], "")
 
         if !all(fe1 in fe_ for fe1 in fe1_)
 
@@ -36,14 +36,11 @@ function make_benchmark(ho)
 
         da = OnePiece.Table.read(joinpath(di, "gene_score.tsv"))
 
-        fe_ = convert(Vector{String}, da[!, "Gene"])
+        fe_ = da[!, "Gene"]
 
         sc_ = da[!, "Score"]
 
-        fe1_ = convert(
-            Vector{String},
-            OnePiece.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"],
-        )
+        fe1_ = OnePiece.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
     else
 

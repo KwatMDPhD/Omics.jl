@@ -5,6 +5,10 @@ function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", mi = "
 
         di = Normal()
 
+    else
+
+        error()
+
     end
 
     #
@@ -20,7 +24,7 @@ function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", mi = "
     ne_ = reverse(-po_)
 
     #
-    if mi == ""
+    if isempty(mi)
 
         ne2_ = ne_
 
@@ -45,6 +49,10 @@ function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", mi = "
             end
 
         end
+
+    else
+
+        error()
 
     end
 

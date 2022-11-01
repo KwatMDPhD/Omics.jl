@@ -1,6 +1,6 @@
 macro _include()
 
-    fi = Base.string(__source__.file)
+    fi = string(__source__.file)
 
     :(_include($fi))
 

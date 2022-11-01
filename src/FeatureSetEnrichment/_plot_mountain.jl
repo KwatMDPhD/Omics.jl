@@ -52,18 +52,35 @@ function _plot_mountain(
     #
     n_fe = length(fe_)
 
+    #
     layout = Dict(
         "height" => height,
         "width" => width,
         "margin" => Dict("t" => round(height * 0.17), "l" => round(width * 0.17)),
         "showlegend" => false,
-        "yaxis" => Dict("domain" => yaxis1_domain, "showline" => true, "showgrid" => false),
-        "yaxis2" =>
-            Dict("domain" => yaxis2_domain, "showticklabels" => false, "showgrid" => false),
-        "yaxis3" => Dict("domain" => yaxis3_domain, "showline" => true, "showgrid" => false),
+        "yaxis" => Dict(
+            "domain" => yaxis1_domain,
+            #
+            "showline" => true,
+            "showgrid" => false,
+        ),
+        "yaxis2" => Dict(
+            "domain" => yaxis2_domain,
+            #
+            "showticklabels" => false,
+            "showgrid" => false,
+        ),
+        "yaxis3" => Dict(
+            "domain" => yaxis3_domain,
+            #
+            "showline" => true,
+            "showgrid" => false,
+        ),
         "xaxis" => Dict(
+            #
             "zeroline" => false,
             "showgrid" => false,
+            #
             "showspikes" => true,
             "spikethickness" => 1.08,
             "spikecolor" => "#ffb61e",
@@ -105,11 +122,12 @@ function _plot_mountain(
     )
 
     #
-    x = 1:n_fe
+    x = collect(1:n_fe)
 
-    in_ = convert(BitVector, in_)
+    bi_ = convert(BitVector, in_)
 
     trace_ = [
+        #
         Dict(
             "y" => sc_,
             "x" => x,
@@ -120,11 +138,12 @@ function _plot_mountain(
             "fillcolor" => "#20d9ba",
             "hoverinfo" => "x+y+text",
         ),
+        #
         Dict(
             "yaxis" => "y2",
-            "y" => fill(0, convert(Int, sum(in_))),
-            "x" => x[in_],
-            "text" => fe_[in_],
+            "y" => fill(0, convert(Int, sum(bi_))),
+            "x" => x[bi_],
+            "text" => fe_[bi_],
             "mode" => "markers",
             "marker" => Dict(
                 "symbol" => "line-ns",
@@ -135,11 +154,12 @@ function _plot_mountain(
         ),
     ]
 
+    #
     le_ = [en < 0.0 for en in en_]
 
     gr_ = [!le for le in le_]
 
-    for (is_, fillcolor) in [[le_, "#1992ff"], [gr_, "#ff1993"]]
+    for (is_, fillcolor) in ((le_, "#1992ff"), (gr_, "#ff1993"))
 
         push!(
             trace_,
@@ -158,7 +178,8 @@ function _plot_mountain(
 
     end
 
-    id_ = findall([en == ex for en in en_])
+    #
+    id_ = findall(en == ex for en in en_)
 
     push!(
         trace_,
@@ -172,12 +193,13 @@ function _plot_mountain(
                 "size" => height * diff(yaxis3_domain)[1] * 0.04,
                 "color" => "#ebf6f7",
                 "opacity" => 0.72,
-                "line" => Dict("width" => 2, "color" => "#404ed8", "opacity" => 1),
+                "line" => Dict("width" => 2, "color" => "#404ed8", "opacity" => 0.88),
             ),
             "hoverinfo" => "y",
         ),
     )
 
-    display(OnePiece.Plot.plot(trace_, layout, ht = ht))
+    #
+    OnePiece.Plot.plot(trace_, layout, ht = ht)
 
 end

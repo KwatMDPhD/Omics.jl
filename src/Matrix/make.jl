@@ -1,10 +1,6 @@
 function make(ro_)
 
-    if length(unique(length(ro) for ro in ro_)) != 1
-
-        error()
-
-    end
+    OnePiece.Array.error_size(ro_)
 
     n_ro = length(ro_)
 

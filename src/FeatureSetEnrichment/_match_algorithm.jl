@@ -2,29 +2,21 @@ function _match_algorithm(al)
 
     if al == "ks"
 
-        fu = score_set
-
-        id = 1
+        score_set, 1
 
     elseif al == "ksa"
 
-        fu = score_set
-
-        id = 2
+        score_set, 2
 
     elseif al == "cidac"
 
-        fu = score_set_new
-
-        id = 2
+        score_set_new, 2
 
     else
 
-        error("Algorithm is not `cidac`, `ks` or `ksa`.")
+        error()
 
     end
-
-    fu, id
 
 end
 

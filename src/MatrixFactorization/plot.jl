@@ -21,7 +21,7 @@ function plot(
 
         title_text = "W.$id"
 
-        if ou == ""
+        if isemptry(ou)
 
             ht = ou
 
@@ -36,23 +36,21 @@ function plot(
 
         end
 
-        or_ = OnePiece.Clustering.order(maw)
+        or_ = OnePiece.Clustering.hierarchize(maw).order
 
-        display(
-            OnePiece.Plot.plot_heat_map(
-                OnePiece.Normalization.normalize(maw[or_, :], 1, "-0-"),
-                ro_[or_],
-                fa_,
-                nar = nar,
-                nac = naf,
-                layout = Dict(
-                    "height" => lo,
-                    "width" => sh,
-                    "title" => Dict("text" => title_text),
-                    "xaxis" => axis,
-                ),
-                ht = ht,
+        OnePiece.Plot.plot_heat_map(
+            OnePiece.Normalization.normalize(maw[or_, :], 1, "-0-"),
+            ro_[or_],
+            fa_,
+            nar = nar,
+            nac = naf,
+            layout = Dict(
+                "height" => lo,
+                "width" => sh,
+                "title" => Dict("text" => title_text),
+                "xaxis" => axis,
             ),
+            ht = ht,
         )
 
     end
@@ -61,7 +59,7 @@ function plot(
 
         title_text = "H.$id"
 
-        if ou == ""
+        if isemptry(ou)
 
             ht = ou
 
@@ -76,23 +74,21 @@ function plot(
 
         end
 
-        or_ = OnePiece.Clustering.order(transpose(mah))
+        or_ = OnePiece.Clustering.hierarchize(transpose(mah)).order
 
-        display(
-            OnePiece.Plot.plot_heat_map(
-                OnePiece.Normalization.normalize(mah[:, or_], 2, "-0-"),
-                fa_,
-                co_[or_],
-                nar = naf,
-                nac = nac,
-                layout = Dict(
-                    "height" => sh,
-                    "width" => lo,
-                    "title" => Dict("text" => title_text),
-                    "yaxis" => axis,
-                ),
-                ht = ht,
+        OnePiece.Plot.plot_heat_map(
+            OnePiece.Normalization.normalize(mah[:, or_], 2, "-0-"),
+            fa_,
+            co_[or_],
+            nar = naf,
+            nac = nac,
+            layout = Dict(
+                "height" => sh,
+                "width" => lo,
+                "title" => Dict("text" => title_text),
+                "yaxis" => axis,
             ),
+            ht = ht,
         )
 
     end

@@ -12,7 +12,7 @@ function map_mouse()
 
         end
 
-        OnePiece.Dict.set!(ke_va, ke => va, pr = false)
+        OnePiece.Dict.set!(ke_va, (ke, va), pr = false)
 
     end
 

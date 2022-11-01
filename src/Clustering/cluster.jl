@@ -1,5 +1,5 @@
-function cluster(ma, n_gr, ar_...)
+function cluster(hi::Hclust, n)
 
-    cutree(_hierarchize(ma, ar_...), k = n_gr)
+    cutree(hi, k = n)
 
 end

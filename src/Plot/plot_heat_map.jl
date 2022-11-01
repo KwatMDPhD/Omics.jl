@@ -38,7 +38,7 @@ function plot_heat_map(
 
     data = []
 
-    # TODO: cluster within a group
+    # TODO: Cluster within a group
 
     if !isempty(grr_)
 

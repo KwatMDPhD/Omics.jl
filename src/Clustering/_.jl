@@ -1,6 +1,6 @@
 module Clustering
 
-using Clustering: cutree, hclust
+using Clustering: Hclust, cutree, hclust
 
 using Distances: Euclidean, pairwise
 

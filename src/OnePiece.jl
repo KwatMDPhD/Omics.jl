@@ -16,7 +16,7 @@ function __init__()
 
     ENV["LINES"] = 19
 
-    ENV["COLUMNS"] = Int(1e5)
+    ENV["COLUMNS"] = convert(Int, 1e5)
 
 end
 

@@ -14,6 +14,7 @@ function map_to(wh)
             ],
             "hgnc" => ["prev_symbol", "alias_symbol", "symbol"],
         )[wh],
+        de = "|",
         pr = false,
     )
 

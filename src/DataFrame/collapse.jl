@@ -1,13 +1,13 @@
-# TODO: Try with `groupby`
-function collapse(da, fu = median)
+# TODO: `groupby`
+function collapse(ro_x_co_x_nu, fu = median)
 
     println("Before")
 
-    println((size(da)))
+    println((size(ro_x_co_x_nu)))
 
     ro_id_ = Dict()
 
-    na, ro_, co_, ma = OnePiece.DataFrame.separate(da)
+    ro, ro_, co_, ro_x_co_x_nu = OnePiece.DataFrame.separate(ro_x_co_x_nu)
 
     for (id, ro) in enumerate(ro_)
 
@@ -15,34 +15,34 @@ function collapse(da, fu = median)
 
     end
 
-    ro2_ = []
+    roc_ = []
 
-    ma2 = Matrix(undef, length(ro_id_), length(co_))
+    roc_x_co_x_nu = Matrix(undef, length(ro_id_), length(co_))
 
     for (id2, (ro, id_)) in enumerate(sort(ro_id_))
 
-        push!(ro2_, ro)
+        push!(roc_, ro)
 
         if length(id_) == 1
 
-            va_ = ma[id_[1], :]
+            nu_ = ro_x_co_x_nu[id_[1], :]
 
         else
 
-            va_ = [fu(co) for co in eachcol(ma[id_, :])]
+            nu_ = [fu(nu_) for nu_ in eachcol(ro_x_co_x_nu[id_, :])]
 
         end
 
-        ma2[id2, :] = va_
+        roc_x_co_x_nu[id2, :] = nu_
 
     end
 
-    da2 = OnePiece.DataFrame.make(na, ro2_, co_, ma2)
+    roc_x_co_x_nu = OnePiece.DataFrame.make(ro, roc_, co_, roc_x_co_x_nu)
 
     println("After")
 
-    println((size(da2)))
+    println((size(roc_x_co_x_nu)))
 
-    da2
+    roc_x_co_x_nu
 
 end

@@ -1,6 +1,6 @@
-function error_size(ar1, ar2)
+function error_size(ar_)
 
-    if size(ar1) != size(ar2)
+    if length(unique(size(ar) for ar in ar_)) != 1
 
         error("Sizes mismatch.")
 

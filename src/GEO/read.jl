@@ -24,6 +24,8 @@ function read(gs, di = OnePiece.TE)
 
     eq = " = "
 
+    ket = "an_"
+
     #
     for li in split(Base.read(open(gz, "r"), String), "\n")[1:(end - 1)]
 
@@ -42,39 +44,44 @@ function read(gs, di = OnePiece.TE)
 
         ke_va = ty_bl[ty][bl]
 
-        ta = "!$(lowercase(ty))_table_"
-
         #
-        if li == "$(ta)begin"
+        if statswith(li, "!$(lowercase(ty))_table_")
 
-            ke_va["ro_"] = []
+            if endswith(li, "begin")
 
-            continue
+                ke_va[ket] = []
 
-        elseif li == "$(ta)end"
+            elseif endswith(li, "end")
 
-            da = OnePiece.DataFrame.make(pop!(ke_va, "ro_"))
+                fe_x_in_x_an = OnePiece.DataFrame.make(pop!(ke_va, ket))
 
-            if parse(Int, pop!(ke_va, "!$(titlecase(ty))_data_row_count")) != size(da, 1)
+                if size(fe_x_in_x_an, 1) !=
+                   parse(Int, pop!(ke_va, "!$(titlecase(ty))_data_row_count"))
+
+                    error()
+
+                end
+
+                ke_va["fe_x_in_x_an"] = fe_x_in_x_an
+
+            else
 
                 error()
 
             end
-
-            ke_va["da"] = da
 
             continue
 
         end
 
         #
-        if haskey(ke_va, "ro_")
+        if haskey(ke_va, ket)
 
-            push!(ke_va["ro_"], split(li, "\t"))
+            push!(ke_va[ket], split(li, "\t"))
 
         else
 
-            OnePiece.Dict.set!(ke_va, Pair(split(li, eq, limit = 2)...), "suffix")
+            OnePiece.Dict.set!(ke_va, split(li, eq, limit = 2), "suffix")
 
         end
 

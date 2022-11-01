@@ -48,6 +48,10 @@ function normalize(te, me)
 
         ordinalrank(te)
 
+    else
+
+        error()
+
     end
 
 end
@@ -71,6 +75,10 @@ function normalize(ma, di, me)
             man[:, id] = normalize(co, me)
 
         end
+
+    else
+
+        error()
 
     end
 

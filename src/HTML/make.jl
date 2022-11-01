@@ -1,6 +1,6 @@
 function make(di, sr_, sc, ht = "")
 
-    if ht == ""
+    if isempty(ht)
 
         ht = joinpath(OnePiece.TE, "$(OnePiece.Time.stamp()).html")
 
@@ -25,6 +25,6 @@ function make(di, sr_, sc, ht = "")
 
     println("Wrote $ht.")
 
-    Base.HTML(jo)
+    display(Base.HTML(jo))
 
 end

@@ -1,6 +1,6 @@
 function _aim(nu1_, nu2_)
 
-    OnePiece.Array.error_size(nu1_, nu2_)
+    OnePiece.Array.error_size((nu1_, nu2_))
 
     nu1_, nu2_
 
@@ -8,7 +8,7 @@ end
 
 function _aim(bi_::AbstractVector{Bool}, nu_)
 
-    OnePiece.Array.error_size(bi_, nu_)
+    OnePiece.Array.error_size((bi_, nu_))
 
     nu_[[!bi for bi in bi_]], nu_[bi_]
 

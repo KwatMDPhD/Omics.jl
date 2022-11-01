@@ -1,6 +1,6 @@
 module Significance
 
-using Statistics: std
+using StatsBase: std
 
 using ..OnePiece
 

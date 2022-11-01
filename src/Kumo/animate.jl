@@ -33,13 +33,13 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
         end
 
         #
-        if js == "" && 1 < id
+        if isempty(js) && 1 < id
 
             js = joinpath(dw, "$pr.1.json")
 
         end
 
-        display(plot(js = js, st_ = st_, he_ = he__[id], ht = joinpath(di, "$pr.$id.html")))
+        plot(js = js, st_ = st_, he_ = he__[id], ht = joinpath(di, "$pr.$id.html"))
 
         pn = joinpath(dw, "$pr.$id.png")
 

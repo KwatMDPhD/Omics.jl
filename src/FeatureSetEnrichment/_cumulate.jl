@@ -1,12 +1,12 @@
-function _cumulate(ve)
+function _cumulate(nu_)
 
     ep = eps()
 
-    cur_ = [cu + ep for cu in cumsum(ve)]
+    cur_ = [cu + ep for cu in cumsum(nu_)]
 
-    cul_ = [cu + ep for cu in OnePiece.VectorNumber.reverse_cumulate(ve)]
+    cul_ = [cu + ep for cu in OnePiece.VectorNumber.reverse_cumulate(nu_)]
 
-    su = sum(ve)
+    su = sum(nu_)
 
     cur_ / su, cul_ / su
 

@@ -8,6 +8,10 @@ function simulate(n_ro, n_co, ho = "1:")
 
         rand(n_ro, n_co)
 
+    else
+
+        error()
+
     end
 
 end

@@ -2,7 +2,7 @@ module DataFrame
 
 using DataFrames: DataFrames, insertcols!
 
-using Statistics: median
+using StatsBase: median
 
 using ..OnePiece
 

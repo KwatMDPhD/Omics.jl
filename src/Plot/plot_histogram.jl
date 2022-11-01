@@ -23,7 +23,7 @@ function plot_histogram(
 
     end
 
-    if histnorm == ""
+    if isempty(histnorm)
 
         yaxis2_title = "N"
 

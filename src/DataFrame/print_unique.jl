@@ -1,16 +1,16 @@
-function print_unique(da)
+function print_unique(ro_x_co_x_an)
 
-    for va_ in eachrow(da)
+    de = "\n  "
 
-        na, an_ = va_[1], va_[2:end]
+    for an_ in eachrow(ro_x_co_x_an)
 
-        un_ = sort(unique(an_))
+        ro, an_ = an_[1], an_[2:end]
 
-        n_un = length(un_)
+        anu_ = sort(unique(an_))
 
-        de = "\n  "
+        n = length(anu_)
 
-        println("$na ($n_un):$de$(join(un_, de))")
+        println("$ro ($n):$de$(join(anu_, de))")
 
     end
 

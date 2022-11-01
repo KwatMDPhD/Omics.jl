@@ -8,6 +8,10 @@ function get_p_value(nu, ra_, si)
 
         si_ = [nu <= ra for ra in ra_]
 
+    else
+
+        error()
+
     end
 
     n_si = sum(si_)

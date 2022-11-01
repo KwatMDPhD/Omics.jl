@@ -2,7 +2,7 @@ function read(pa)
 
     ex = splitext(pa)[2]
 
-    if ex in [".json", ".ipynb"]
+    if ex in (".json", ".ipynb")
 
         parse(open(pa))
 
