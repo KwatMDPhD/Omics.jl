@@ -1,5 +1,6 @@
-function rename(st_, wh_ = ["mouse", "ensembl", "hgnc"])
+function rename(st_, wh_ = ("mouse", "ensembl", "hgnc"))
 
+    #
     st_na = Dict()
 
     if "mouse" in wh_
@@ -8,7 +9,7 @@ function rename(st_, wh_ = ["mouse", "ensembl", "hgnc"])
 
     end
 
-    for wh in ["ensembl", "hgnc"]
+    for wh in ("ensembl", "hgnc")
 
         if wh in wh_
 
@@ -18,6 +19,7 @@ function rename(st_, wh_ = ["mouse", "ensembl", "hgnc"])
 
     end
 
+    #
     na_ = []
 
     ma_ = []
@@ -42,6 +44,7 @@ function rename(st_, wh_ = ["mouse", "ensembl", "hgnc"])
 
     end
 
+    #
     n_ = [0, 0, 0]
 
     for ma in ma_

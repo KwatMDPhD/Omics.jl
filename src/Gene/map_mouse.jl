@@ -1,10 +1,10 @@
 function map_mouse()
 
-    mo = OnePiece.Table.read(_path("ensembl.mouse_human.tsv.gz"))
-
     ke_va = Dict()
 
-    for (ke, va) in eachrow(mo[!, ["Gene name", "Human gene name"]])
+    fe_x_in_x_an = OnePiece.Table.read(_path("ensembl.mouse_human.tsv.gz"))
+
+    for (ke, va) in zip(fe_x_in_x_an[!, "Gene name"], fe_x_in_x_an[!, "Human gene name"])
 
         if ismissing(ke) || ismissing(va)
 

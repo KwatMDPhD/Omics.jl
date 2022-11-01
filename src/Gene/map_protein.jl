@@ -1,31 +1,33 @@
-# TODO: Simplify
 function map_protein()
 
-    un = OnePiece.Table.read(_path("uniprot.tsv.gz"))
+    pr_x_in_x_an = OnePiece.Table.read(_path("uniprot.tsv.gz"))
 
-    pr_di = Dict()
+    pr_io_an = Dict()
 
-    co_ = names(un)
+    in_ = names(pr_x_in_x_an)
 
-    for ro in eachrow(un)
+    for an_ in eachrow(pr_x_in_x_an)
 
-        di = Dict()
+        io_an = Dict()
 
-        for (co, an) in zip(co_, ro)
+        for (io, an) in zip(in_, an_)
 
-            if co == "Entry Name"
+            if io == "Entry Name"
 
-                OnePiece.Dict.set!(pr_di, (OnePiece.String.split_and_get(an, "_HUMAN", 1), di))
+                OnePiece.Dict.set!(
+                    pr_io_an,
+                    (OnePiece.String.split_and_get(an, "_HUMAN", 1), io_an),
+                )
 
             else
 
                 if an isa AbstractString
 
-                    if co == "Gene Names"
+                    if io == "Gene Names"
 
                         an = split(an, " ")
 
-                    elseif co == "Interacts with"
+                    elseif io == "Interacts with"
 
                         an = split(an, "; ")
 
@@ -33,7 +35,7 @@ function map_protein()
 
                 end
 
-                di[co] = an
+                io_an[io] = an
 
             end
 
@@ -41,6 +43,6 @@ function map_protein()
 
     end
 
-    pr_di
+    pr_io_an
 
 end
