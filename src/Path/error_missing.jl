@@ -1,10 +1,8 @@
-function error_missing(ro, pa_)
+function error_missing(di, pa_)
 
-    mi_ = [pa for pa in pa_ if !ispath(joinpath(ro, pa))]
+    if !isempty(pa for pa in pa_ if !ispath(joinpath(di, pa)))
 
-    if !isempty(mi_)
-
-        error(mi_)
+        error()
 
     end
 

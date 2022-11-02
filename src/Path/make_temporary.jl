@@ -1,13 +1,13 @@
-function make_temporary(na)
+function make_temporary(pa)
 
-    te = joinpath(tempdir(), na)
+    pat = joinpath(tempdir(), pa)
 
-    if isdir(te)
+    if ispath(pat)
 
-        rm(te, recursive = true)
+        rm(pat, recursive = true)
 
     end
 
-    mkdir(te)
+    mkdir(pat)
 
 end

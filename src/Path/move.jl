@@ -1,13 +1,13 @@
-function move(pa1, pa2; ke_ar...)
+function move(paf, pat; ke_ar...)
 
-    sp1_ = splitpath(pa1)
+    spf_ = splitpath(paf)
 
-    sp2_ = splitpath(pa2)
+    spt_ = splitpath(pat)
 
-    n_sk = length(OnePiece.Vector.get_common_start([sp1_, sp2_]))
+    n = length(OnePiece.Vector.get_common_start((spf_, spt_)))
 
-    println("$(shorten(pa1, length(sp1_) - n_sk)) ==> $(shorten(pa2, length(sp2_) - n_sk))")
+    println("$(shorten(paf, length(spf_) - n)) ==> $(shorten(pat, length(spt_) - n))")
 
-    mv(pa1, pa2; ke_ar...)
+    mv(paf, pat; ke_ar...)
 
 end

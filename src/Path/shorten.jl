@@ -1,6 +1,6 @@
-function shorten(pa, n_ba)
+function shorten(pa, n)
 
-    joinpath(splitpath(pa)[clamp(end - n_ba, 1, end):end]...)
+    joinpath(splitpath(pa)[clamp(end - n, 1, end):end]...)
 
 end
 
@@ -8,16 +8,16 @@ function shorten(pa, di::AbstractString, sh = 0)
 
     sp_ = splitpath(pa)
 
-    ba = basename(di)
+    na = basename(di)
 
-    n_sk = findlast(sp == ba for sp in sp_)
+    n = findlast(sp -> sp == na, sp_)
 
-    if isnothing(n_sk)
+    if isnothing(n)
 
         error()
 
     end
 
-    shorten(pa, length(sp_) - n_sk + sh)
+    shorten(pa, length(sp_) - n + sh)
 
 end

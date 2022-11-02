@@ -1,8 +1,8 @@
-function clean(na)
+function clean(pa)
 
-    cl = replace(lowercase(na), r"[^_.0-9a-z]" => "_")
+    cl = replace(lowercase(pa), r"[^_.0-9a-z]" => "_")
 
-    println(na, " ==> ", cl)
+    println("$pa ==> $cl")
 
     cl
 
