@@ -1,8 +1,8 @@
-function _check_bad(va, ba_)
+function _check_bad(an, ba_)
 
     for ba in ba_
 
-        if isequal(va, ba)
+        if isequal(an, ba)
 
             error("Value is $ba.")
 
@@ -12,15 +12,15 @@ function _check_bad(va, ba_)
 
 end
 
-function error_bad(ma, ty)
+function error_bad(ro_x_co_x_an, ty)
 
-    n_ro, n_co = size(ma)
+    n_ro, n_co = size(ro_x_co_x_an)
 
     for idr in 1:n_ro, idc in 1:n_co
 
-        va = ma[idr, idc]
+        an = ro_x_co_x_an[idr, idc]
 
-        if !(va isa ty)
+        if !(an isa ty)
 
             error("Value is not a $ty.")
 
@@ -28,15 +28,15 @@ function error_bad(ma, ty)
 
         if ty <: Number
 
-            ba_ = [-Inf, Inf, NaN]
+            ba_ = (-Inf, Inf, NaN)
 
         elseif ty <: AbstractString
 
-            ba_ = [""]
+            ba_ = ("",)
 
         end
 
-        _check_bad(va, ba_)
+        _check_bad(an, ba_)
 
     end
 

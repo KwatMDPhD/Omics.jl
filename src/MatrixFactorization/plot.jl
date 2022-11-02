@@ -1,45 +1,57 @@
 function plot(
-    maw_,
-    mah_;
-    nar_ = ["Rows $id" for id in 1:length(maw_)],
-    nac_ = ["Columns $id" for id in 1:length(mah_)],
+    ro_x_fa_x_po_,
+    fa_x_co_x_po_;
+    nar_ = ["Rows $id" for id in 1:length(ro_x_fa_x_po_)],
+    nac_ = ["Columns $id" for id in 1:length(fa_x_co_x_po_)],
     naf = "Factor",
-    ro__ = [["$na $id" for id in 1:size(maw, 1)] for (maw, na) in zip(maw_, nar_)],
-    co__ = [["$na $id" for id in 1:size(mah, 2)] for (mah, na) in zip(mah_, nac_)],
-    ou = "",
+    ro__ = [
+        ["$na $id" for id in 1:size(ro_x_fa_x_po, 1)] for
+        (ro_x_fa_x_po, na) in zip(ro_x_fa_x_po_, nar_)
+    ],
+    co__ = [
+        ["$na $id" for id in 1:size(fa_x_co_x_po, 2)] for
+        (fa_x_co_x_po, na) in zip(fa_x_co_x_po_, nac_)
+    ],
+    di = "",
 )
 
-    fa_ = ["$naf $id" for id in 1:size(maw_[1], 2)]
+    #
+    fa_ = ["$naf $id" for id in 1:size(ro_x_fa_x_po_[1], 2)]
 
+    #
     lo = 1000
 
     sh = lo / MathConstants.golden
 
     axis = Dict("dtick" => 1)
 
-    for (id, (maw, ro_, nar)) in enumerate(zip(maw_, ro__, nar_))
+    #
+    for (id, (ro_x_fa_x_po, ro_, nar)) in enumerate(zip(ro_x_fa_x_po_, ro__, nar_))
 
+        #
         title_text = "W.$id"
 
-        if isemptry(ou)
+        #
+        if isemptry(di)
 
-            ht = ou
+            ht = ""
 
         else
 
-            ht = joinpath(ou, "$title_text.html")
+            ht = joinpath(di, "$title_text.html")
 
             OnePiece.Table.write(
-                joinpath(ou, "$title_text.tsv"),
-                OnePiece.DataFrame.make(nar, ro_, fa_, maw),
+                joinpath(di, "$title_text.tsv"),
+                OnePiece.DataFrame.make(nar, ro_, fa_, ro_x_fa_x_po),
             )
 
         end
 
-        or_ = OnePiece.Clustering.hierarchize(maw).order
+        #
+        or_ = OnePiece.Clustering.hierarchize(ro_x_fa_x_po).order
 
         OnePiece.Plot.plot_heat_map(
-            OnePiece.Normalization.normalize(maw[or_, :], 1, "-0-"),
+            OnePiece.Normalization.normalize(ro_x_fa_x_po[or_, :], 1, "-0-"),
             ro_[or_],
             fa_,
             nar = nar,
@@ -55,29 +67,33 @@ function plot(
 
     end
 
-    for (id, (mah, co_, nac)) in enumerate(zip(mah_, co__, nac_))
+    #
+    for (id, (fa_x_co_x_po, co_, nac)) in enumerate(zip(fa_x_co_x_po_, co__, nac_))
 
+        #
         title_text = "H.$id"
 
-        if isemptry(ou)
+        #
+        if isemptry(di)
 
-            ht = ou
+            ht = ""
 
         else
 
-            ht = joinpath(ou, "$title_text.html")
+            ht = joinpath(di, "$title_text.html")
 
             OnePiece.Table.write(
-                joinpath(ou, "$title_text.tsv"),
-                OnePiece.DataFrame.make(naf, fa_, co_, mah),
+                joinpath(di, "$title_text.tsv"),
+                OnePiece.DataFrame.make(naf, fa_, co_, fa_x_co_x_po),
             )
 
         end
 
-        or_ = OnePiece.Clustering.hierarchize(transpose(mah)).order
+        #
+        or_ = OnePiece.Clustering.hierarchize(transpose(fa_x_co_x_po)).order
 
         OnePiece.Plot.plot_heat_map(
-            OnePiece.Normalization.normalize(mah[:, or_], 2, "-0-"),
+            OnePiece.Normalization.normalize(fa_x_co_x_po[:, or_], 2, "-0-"),
             fa_,
             co_[or_],
             nar = naf,

@@ -1,12 +1,10 @@
-function position!(ve_, id_di)
+function position!(ke_va_, id_kec_vac)
 
-    for ve in ve_
+    for ke_va in ke_va_
 
-        da = ve["data"]
+        po = "position"
 
-        ke = "position"
-
-        ve[ke] = id_di[string(da["id"])][ke]
+        ke_va[po] = id_kec_vac[ke_va["data"]["id"]][po]
 
     end
 
@@ -14,11 +12,14 @@ function position!(ve_, id_di)
 
 end
 
-function position!(ve_, js::AbstractString)
+function position!(ke_va_, js::AbstractString)
 
     position!(
-        ve_,
-        Dict(di["data"]["id"] => di for di in OnePiece.Dict.read(js)["elements"]["nodes"]),
+        ke_va_,
+        Dict(
+            pop!(kec_vac["data"], "id") => kec_vac for
+            kec_vac in OnePiece.Dict.read(js)["elements"]["nodes"]
+        ),
     )
 
 end

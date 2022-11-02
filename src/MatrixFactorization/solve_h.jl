@@ -1,5 +1,5 @@
-function solve_h(ma, mw)
+function solve_h(ro_x_co_x_po, ro_x_fa_x_po)
 
-    pinv(mw) * ma
+    pinv(ro_x_fa_x_po) * ro_x_co_x_po
 
 end

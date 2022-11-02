@@ -1,19 +1,19 @@
-function make(ro_)
+function make(an__)
 
-    OnePiece.Array.error_size(ro_)
+    OnePiece.Array.error_size(an__)
 
-    n_ro = length(ro_)
+    n_ro = length(an__)
 
-    n_co = length(ro_[1])
+    n_co = length(an__[1])
 
-    ma = Base.Matrix{eltype(vcat(ro_...))}(undef, n_ro, n_co)
+    ro_x_co_x_an = Base.Matrix{eltype(vcat(an__...))}(undef, n_ro, n_co)
 
     for idr in 1:n_ro, idc in 1:n_co
 
-        ma[idr, idc] = ro_[idr][idc]
+        ro_x_co_x_an[idr, idc] = an__[idr][idc]
 
     end
 
-    ma
+    ro_x_co_x_an
 
 end

@@ -2,7 +2,7 @@ function normalize(te, me)
 
     if isempty(te)
 
-        error("Tensor is empty.")
+        error()
 
     end
 
@@ -26,7 +26,7 @@ function normalize(te, me)
 
         if any(nu < 0 for nu in te)
 
-            error("Tensor values are not all positive.")
+            error()
 
         end
 
@@ -56,23 +56,23 @@ function normalize(te, me)
 
 end
 
-function normalize(ma, di, me)
+function normalize(ro_x_co_x_nu, di, me)
 
-    man = Matrix{Real}(undef, size(ma))
+    ro_x_co_x_nun = Matrix{Real}(undef, size(ro_x_co_x_nu))
 
     if di == 1
 
-        for (id, ro) in enumerate(eachrow(ma))
+        for (id, nu_) in enumerate(eachrow(ro_x_co_x_nu))
 
-            man[id, :] = normalize(ro, me)
+            ro_x_co_x_nun[id, :] = normalize(nu_, me)
 
         end
 
     elseif di == 2
 
-        for (id, co) in enumerate(eachcol(ma))
+        for (id, nu_) in enumerate(eachcol(ro_x_co_x_nu))
 
-            man[:, id] = normalize(co, me)
+            ro_x_co_x_nun[:, id] = normalize(nu_, me)
 
         end
 
@@ -82,6 +82,6 @@ function normalize(ma, di, me)
 
     end
 
-    man
+    ro_x_co_x_nun
 
 end

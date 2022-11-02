@@ -1,6 +1,13 @@
-function factorize(ma, n_fa; ke_ar...)
+function factorize(ro_x_co_x_po, n; ke_ar...)
 
-    mf = nnmf(ma, n_fa, init = :random, alg = :multmse, tol = 1.0e-6, maxiter = convert(Int, 1e6))
+    mf = nnmf(
+        ro_x_co_x_po,
+        n,
+        init = :random,
+        alg = :multmse,
+        tol = 1e-6,
+        maxiter = convert(Int, 1e6),
+    )
 
     if !mf.converged
 
@@ -8,11 +15,11 @@ function factorize(ma, n_fa; ke_ar...)
 
     end
 
-    println(
-        "Iterations = $(mf.niters) and objective value = $(OnePiece.Number.format(mf.objvalue))",
-    )
+    println("Iterations: $(mf.niters)")
 
-    plot([mf.W], [mf.H]; ke_ar...)
+    println("Objective value: $(OnePiece.Number.format(mf.objvalue))")
+
+    plot((mf.W,), (mf.H,); ke_ar...)
 
     mf.W, mf.H
 
