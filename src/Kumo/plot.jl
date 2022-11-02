@@ -1,9 +1,11 @@
+#
 function _make_element(ve, cl_::Vector)
 
     Dict("data" => Dict("id" => string(ve)), "classes" => [string(cl) for cl in cl_])
 
 end
 
+#
 function _make_element(ve)
 
     _make_element(ve, vcat("ve", collect(supertypes(ve))[2:(end - 1)]))
@@ -16,12 +18,14 @@ function _make_element(ve::String)
 
 end
 
+#
 function _make_element(so, de)
 
     Dict("data" => Dict("source" => string(so), "target" => string(de)))
 
 end
 
+#
 function plot(;
     js = "",
     no_si = 32,
@@ -34,8 +38,10 @@ function plot(;
     ht = "",
 )
 
+    #
     ve_ = [_make_element(ve) for ve in VE_]
 
+    #
     if isempty(js)
 
         po = false
@@ -48,8 +54,10 @@ function plot(;
 
     end
 
+    #
     ed_ = [_make_element(so, de) for (so, de) in ED_]
 
+    #
     st_ = append!(
         [
             #
@@ -99,39 +107,42 @@ function plot(;
             st_,
             [
                 Dict(
-                    "selector" => "#$ve",
+                    "selector" => "#$st",
                     "style" => Dict("background-color" => OnePiece.Plot.color("plasma", fr)),
                 ) for
-                (ve, fr) in zip(_stringify_vertex(), OnePiece.Normalization.normalize(he_, "0-1"))
+                (st, fr) in zip(_stringify_vertex(), OnePiece.Normalization.normalize(he_, "0-1"))
             ],
         )
 
     end
 
     #
-    la = Dict("name" => "grid", "animate" => false)
+    la = Dict("animate" => false)
 
     if po
 
-        merge!(la, Dict("name" => "preset"))
+        me = Dict("name" => "preset")
 
     elseif 1 < length(ed_)
 
-        merge!(
-            la,
-            Dict(
-                "name" => "cose",
-                "padding" => 16,
-                "boundingBox" =>
-                    Dict("x1" => 0, "y1" => 0, "h" => wi / MathConstants.golden, "w" => wi),
-                "componentSpacing" => 40,
-                "nodeRepulsion" => 8000,
-                "idealEdgeLength" => 16,
-                "numIter" => 10000,
-            ),
+        me = Dict(
+            "name" => "cose",
+            "padding" => 16,
+            "boundingBox" =>
+                Dict("x1" => 0, "y1" => 0, "h" => wi / MathConstants.golden, "w" => wi),
+            "componentSpacing" => 40,
+            "nodeRepulsion" => 8000,
+            "idealEdgeLength" => 16,
+            "numIter" => 10000,
         )
 
+    else
+
+        me = Dict("name" => "grid")
+
     end
+
+    merge!(la, me)
 
     #
     OnePiece.Network.plot(vcat(ve_, ed_), st_, la, ht = ht, js = !po)

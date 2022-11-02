@@ -1,37 +1,37 @@
-function heat(st_, he_; ve_al_ = Dict(), ve_he = Dict(), pr = true)
+function heat(st_he; st_al_ = Dict(), ve_he = Dict(), pr = true)
 
     #
-    st_he = merge(Dict(zip(st_, he_)), ve_he)
+    st_hem = merge(st_he, ve_he)
 
     #
-    hev_ = fill(0.0, length(VE_))
+    he_ = fill(0.0, length(VE_))
 
-    for (id, ve) in enumerate(_stringify_vertex())
+    for (id, st) in enumerate(_stringify_vertex())
 
         #
-        if haskey(st_he, ve)
+        if haskey(st_hem, st)
 
-            hev_[id] = st_he[ve]
+            he_[id] = st_hem[st]
 
             #
-        elseif haskey(ve_al_, ve)
+        elseif haskey(st_al_, st)
 
             #
             hea_ = []
 
-            for al in ve_al_[ve]
+            for al in st_al_[st]
 
-                if haskey(st_he, al)
+                if haskey(st_hem, al)
 
-                    hea = st_he[al]
+                    he = st_hem[al]
 
                     if pr
 
-                        println("$ve ==> $al ==> $hea")
+                        println("$st ==> $al ==> $he")
 
                     end
 
-                    push!(hea_, hea)
+                    push!(hea_, he)
 
                 end
 
@@ -40,11 +40,11 @@ function heat(st_, he_; ve_al_ = Dict(), ve_he = Dict(), pr = true)
             #
             if !isempty(hea_)
 
-                hea = mean(hea_)
+                he = mean(hea_)
 
-                println("$ve ==> $hea")
+                println("$st ==> $he")
 
-                hev_[id] = hea
+                he_[id] = he
 
             end
 
@@ -53,12 +53,12 @@ function heat(st_, he_; ve_al_ = Dict(), ve_he = Dict(), pr = true)
     end
 
     #
-    hev_
+    he_
 
 end
 
 function heat(st_, st_x_sa_x_he::Matrix; ke_ar...)
 
-    hcat([heat(st_, he_; ke_ar...) for he_ in eachcol(st_x_sa_x_he)]...)
+    hcat((heat(Dict(zip(st_, he_)); ke_ar...) for he_ in eachcol(st_x_sa_x_he))...)
 
 end

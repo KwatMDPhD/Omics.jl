@@ -2,16 +2,16 @@ function edge()
 
     ve_id = OnePiece.Vector.pair_index(VE_)[1]
 
-    n_ve = length(ve_id)
+    n = length(ve_id)
 
-    de_x_so_x_ed = fill(0, n_ve, n_ve)
+    so_x_de_x_ed = fill(0, (n, n))
 
-    for (ve1, ve2) in ED_
+    for (so, de) in ED_
 
-        de_x_so_x_ed[ve_id[ve2], ve_id[ve1]] = 1
+        so_x_de_x_ed[ve_id[so], ve_id[de]] = 1
 
     end
 
-    de_x_so_x_ed
+    so_x_de_x_ed
 
 end

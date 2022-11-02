@@ -12,7 +12,7 @@ end
 
 function _add!(so, de)
 
-    ed = [so, de]
+    ed = (so, de)
 
     if !(ed in ED_)
 

@@ -1,4 +1,4 @@
-function select(di, jo = true; ig_ = [r"^\."], ke_ = [])
+function select(di, jo = true; ig_ = (r"^\.",), ke_ = ())
 
     pa_ = []
 

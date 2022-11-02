@@ -5,7 +5,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     pr = "Kumo.animate"
 
-    for pa in OnePiece.Path.select(dw, ke_ = [pr])
+    for pa in OnePiece.Path.select(dw, ke_ = (pr,))
 
         rm(pa)
 
@@ -16,7 +16,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     if pe < 1
 
-        pe = ceil(Int, pe * n)
+        pe = round(Int, pe * n)
 
     end
 
@@ -41,16 +41,10 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
         plot(js = js, st_ = st_, he_ = he__[id], ht = joinpath(di, "$pr.$id.html"))
 
-        pn = joinpath(dw, "$pr.$id.png")
-
-        while !ispath(pn)
-
-        end
-
     end
 
     #
-    for na in OnePiece.Path.select(dw, false, ig_ = [r"\.download$"], ke_ = [pr])
+    for na in OnePiece.Path.select(dw, false, ig_ = (r"\.download$",), ke_ = (pr,))
 
         mv(joinpath(dw, na), joinpath(di, replace(na, "$pr." => "")), force = true)
 
@@ -58,7 +52,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     #
     run(`convert -delay 32 -loop 0 $(sort(
-        OnePiece.Path.select(di, ke_ = [r".png$"]),
+                                          OnePiece.Path.select(di, ke_ = (r".png$",)),
         by = pa -> parse(Int, splitext(basename(pa))[1]),
        )) $(joinpath(di, "animate.gif"))`)
 
