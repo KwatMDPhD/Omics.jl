@@ -1,4 +1,4 @@
-function _get_standard_deviation(ve, me)
+function _get_standard_deviation(nu_, me)
 
     fr = 0.2
 
@@ -8,18 +8,19 @@ function _get_standard_deviation(ve, me)
 
     else
 
-        max(abs(me) * fr, std(ve, corrected = true))
+        max(abs(me) * fr, std(nu_, corrected = true))
 
     end
 
 end
 
-function get_signal_to_noise_ratio(ve1, ve2)
+function get_signal_to_noise_ratio(nu1_, nu2_)
 
-    me1 = mean(ve1)
+    me1 = mean(nu1_)
 
-    me2 = mean(ve2)
+    me2 = mean(nu2_)
 
-    (me2 - me1) / (_get_standard_deviation(ve1, me1) + _get_standard_deviation(ve2, me2))
+    # TODO: Check directionality
+    (me2 - me1) / (_get_standard_deviation(nu1_, me1) + _get_standard_deviation(nu2_, me2))
 
 end
