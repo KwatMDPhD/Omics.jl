@@ -26,25 +26,25 @@ function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", mi = "
     #
     if isempty(mi)
 
-        ne2_ = ne_
+        nem_ = ne_
 
     elseif mi == "deep"
 
-        ne2_ = ne_ * 2.0
+        nem_ = ne_ * 2.0
 
     elseif mi == "long"
 
-        ne2_ = Vector{eltype(ne_)}(undef, n * 2 - 1)
+        nem_ = Vector{eltype(ne_)}(undef, n * 2 - 1)
 
         for (id, ne) in enumerate(ne_)
 
             id2 = id * 2
 
-            ne2_[id2 - 1] = ne
+            nem_[id2 - 1] = ne
 
             if id < n
 
-                ne2_[id2] = (ne + ne_[id + 1]) / 2
+                nem_[id2] = (ne + ne_[id + 1]) / 2
 
             end
 
@@ -59,11 +59,11 @@ function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", mi = "
     #
     if !re
 
-        ne2_ = ne2_[1:(end - 1)]
+        nem_ = nem_[1:(end - 1)]
 
     end
 
     #
-    vcat(ne2_, po_)
+    vcat(nem_, po_)
 
 end

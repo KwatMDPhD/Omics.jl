@@ -13,7 +13,7 @@ using ..OnePiece
 NA_SC = Dict{String, ColorScheme}("plasma" => plasma)
 
 for (na, he_) in Dict(
-    "plotly3" => [
+    "plotly3" => (
         "#0508b8",
         "#1910d8",
         "#3c19f0",
@@ -27,8 +27,8 @@ for (na, he_) in Dict(
         "#fea5fd",
         "#febefe",
         "#fec3fe",
-    ],
-    "plotly" => [
+    ),
+    "plotly" => (
         "#636EFA",
         "#EF553B",
         "#00CC96",
@@ -39,11 +39,11 @@ for (na, he_) in Dict(
         "#B6E880",
         "#FF97FF",
         "#FECB52",
-    ],
-    "binary" => ["#006442", "#ffffff", "#ffb61e"],
-    "aspen" => ["#00936e", "#a4e2b4", "#e0f5e5", "#ffffff", "#fff8d1", "#ffec9f", "#ffd96a"],
-    "human" => ["#4b3c39", "#ffffff", "#ffddca"],
-    "stanford" => ["#ffffff", "#8c1515"],
+    ),
+    "binary" => ("#006442", "#ffffff", "#ffb61e"),
+    "aspen" => ("#00936e", "#a4e2b4", "#e0f5e5", "#ffffff", "#fff8d1", "#ffec9f", "#ffd96a"),
+    "human" => ("#4b3c39", "#ffffff", "#ffddca"),
+    "stanford" => ("#ffffff", "#8c1515"),
 )
 
     NA_SC[na] = ColorScheme([parse(Colorant, he) for he in he_])

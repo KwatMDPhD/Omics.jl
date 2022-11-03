@@ -45,7 +45,7 @@ function read(gs, di = OnePiece.TE)
         ke_va = ty_bl[ty][bl]
 
         #
-        if statswith(li, "!$(lowercase(ty))_table_")
+        if startswith(li, "!$(lowercase(ty))_table_")
 
             if endswith(li, "begin")
 

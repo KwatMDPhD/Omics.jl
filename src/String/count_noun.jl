@@ -6,7 +6,7 @@ function count_noun(n, st)
 
     end
 
-    for (si, pl) in ["ex" => "ices", "ry" => "ries", "o" => "oes"]
+    for (si, pl) in (("ex", "ices"), ("ry", "ries"), ("o", "oes"))
 
         if si == "ex" && length(st) <= 3
 

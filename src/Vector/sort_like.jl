@@ -1,7 +1,7 @@
-function sort_like(ve_, de = false)
+function sort_like(an__, de = false)
 
-    id_ = sortperm(ve_[1], rev = de)
+    so_ = sortperm(an__[1], rev = de)
 
-    [ve[id_] for ve in ve_]
+    [an_[so_] for an_ in an__]
 
 end

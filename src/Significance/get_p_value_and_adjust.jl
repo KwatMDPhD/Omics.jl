@@ -1,6 +1,6 @@
-function get_p_value_and_adjust(nu_, ra_, si)
+function get_p_value_and_adjust(nu_, ra_, ho)
 
-    pv_ = [get_p_value(nu, ra_, si) for nu in nu_]
+    pv_ = [get_p_value(nu, ra_, ho) for nu in nu_]
 
     pv_, adjust_p_value(pv_)
 

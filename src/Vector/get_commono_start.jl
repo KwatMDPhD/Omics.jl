@@ -1,18 +1,18 @@
-function get_common_start(ve_)
+function get_common_start(an__)
 
-    le_ = [length(ve) for ve in ve_]
+    le_ = [length(an_) for an_ in an__]
 
     mi = minimum(le_)
 
-    sh = ve_[findfirst(le == mi for le in le_)]
+    sh = an__[findfirst(le == mi for le in le_)]
 
     id = 1
 
     while id <= mi
 
-        va = sh[id]
+        an = sh[id]
 
-        if any(ve[id] != va for ve in ve_)
+        if any(an_[id] != an for an_ in an__)
 
             break
 

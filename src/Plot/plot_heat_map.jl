@@ -17,31 +17,36 @@ function plot_heat_map(
     ht = "",
 )
 
-    si1, si2 = size(z)
+    #
+    n_ro, n_co = size(z)
 
-    axis = Dict("domain" => [0.0, 0.95], "automargin" => true)
+    #
+    axis = Dict("domain" => (0.0, 0.95), "automargin" => true)
 
-    axis2 = Dict("domain" => [0.96, 1.0], "tickvals" => [])
+    axis2 = Dict("domain" => (0.96, 1.0), "tickvals" => ())
 
     layout = OnePiece.Dict.merge(
         Dict(
             "title" => Dict("text" => "Heat Map"),
             "yaxis" =>
-                OnePiece.Dict.merge(axis, Dict("title" => Dict("text" => "$nar (n=$si1)"))),
+                OnePiece.Dict.merge(axis, Dict("title" => Dict("text" => "$nar (n=$n_ro)"))),
             "xaxis" =>
-                OnePiece.Dict.merge(axis, Dict("title" => Dict("text" => "$nac (n=$si2)"))),
+                OnePiece.Dict.merge(axis, Dict("title" => Dict("text" => "$nac (n=$n_co)"))),
             "yaxis2" => axis2,
             "xaxis2" => axis2,
         ),
         layout,
     )
 
+    #
     data = []
 
     # TODO: Cluster within a group
 
+    #
     if !isempty(grr_)
 
+        #
         if eltype(grr_) <: AbstractString
 
             gr_id = OnePiece.vector.pair_index(unique(grr_))[1]
@@ -50,6 +55,7 @@ function plot_heat_map(
 
         end
 
+        #
         so_ = sortperm(grr_)
 
         grr_ = grr_[so_]
@@ -60,8 +66,10 @@ function plot_heat_map(
 
     end
 
+    #
     if !isempty(grc_)
 
+        #
         if eltype(grc_) <: AbstractString
 
             gr_id = OnePiece.vector.pair_index(unique(grc_))[1]
@@ -70,6 +78,7 @@ function plot_heat_map(
 
         end
 
+        #
         so_ = sortperm(grc_)
 
         grc_ = grc_[so_]
@@ -80,8 +89,10 @@ function plot_heat_map(
 
     end
 
-    fl_ = si1:-1:1
+    #
+    fl_ = n_ro:-1:1
 
+    #
     push!(
         data,
         Dict(
@@ -94,41 +105,45 @@ function plot_heat_map(
         ),
     )
 
-    tr = Dict(
+    #
+    trace = Dict(
         "type" => "heatmap",
         "colorscale" => _fractionate(NA_SC["plotly"]),
         "colorbar" => Dict("x" => 1.15, "dtick" => 1),
     )
 
+    #
     if !isempty(grr_)
 
         push!(
             data,
             OnePiece.Dict.merge(
-                tr,
-                Dict("xaxis" => "x2", "z" => [[gr] for gr in grr_][fl_], "hoverinfo" => "z+y"),
+                trace,
+                Dict("xaxis" => "x2", "z" => [[grr] for grr in grr_][fl_], "hoverinfo" => "z+y"),
             ),
         )
 
     end
 
+    #
     if !isempty(grc_)
 
         push!(
             data,
-            OnePiece.Dict.merge(tr, Dict("yaxis" => "y2", "z" => [grc_], "hoverinfo" => "z+x")),
+            OnePiece.Dict.merge(trace, Dict("yaxis" => "y2", "z" => [grc_], "hoverinfo" => "z+x")),
         )
 
     end
 
+    #
     plot(data, layout, ht = ht)
 
 end
 
-function plot_heat_map(da::DataFrame; ke_ar...)
+function plot_heat_map(ro_x_co_x_nu::DataFrame; ke_ar...)
 
-    nar, ro_, co_, ma = OnePiece.DataFrame.separate(da)
+    ro, ro_, co_, ro_x_co_x_nu = OnePiece.DataFrame.separate(ro_x_co_x_nu)
 
-    plot_heat_map(ma, ro_, co_; nar = nar, ke_ar...)
+    plot_heat_map(ro_x_co_x_nu, ro_, co_; nar = ro, ke_ar...)
 
 end

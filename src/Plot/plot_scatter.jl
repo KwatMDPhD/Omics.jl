@@ -15,12 +15,8 @@ function plot_scatter(
     ht = "",
 )
 
-    data = []
-
-    for id in 1:length(y_)
-
-        push!(
-            data,
+    plot(
+        [
             Dict(
                 "name" => name_[id],
                 "y" => y_[id],
@@ -28,11 +24,10 @@ function plot_scatter(
                 "text" => text_[id],
                 "mode" => mode_[id],
                 "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
-            ),
-        )
-
-    end
-
-    plot(data, layout, ht = ht)
+            ) for id in 1:length(y_)
+        ],
+        layout,
+        ht = ht,
+    )
 
 end

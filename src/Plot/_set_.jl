@@ -1,6 +1,6 @@
 function _set_x(y_)
 
-    [1:length(y) for y in y_]
+    [collect(1:length(y)) for y in y_]
 
 end
 
@@ -22,14 +22,14 @@ function _set_color(y_)
 
     if n == 0
 
-        ge_ = 1:1
+        nu_ = 1:1
 
     else
 
-        ge_ = 0.0:(1 / n):1.0
+        nu_ = 0.0:(1 / n):1.0
 
     end
 
-    [color("plotly", ge) for ge in ge_]
+    [color("plotly", nu) for nu in nu_]
 
 end

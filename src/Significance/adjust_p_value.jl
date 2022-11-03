@@ -1,10 +1,10 @@
-function adjust_p_value(pv_, me = "benjamini_hochberg"; n = length(pv_))
+function adjust_p_value(pv_, ho = "benjamini_hochberg"; n = length(pv_))
 
-    if me == "bonferroni"
+    if ho == "bonferroni"
 
         cl_ = pv_ * n
 
-    elseif me == "benjamini_hochberg"
+    elseif ho == "benjamini_hochberg"
 
         so_ = sortperm(pv_)
 

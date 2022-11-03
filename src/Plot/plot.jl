@@ -2,33 +2,31 @@ function plot(data, layout = Dict(), config = Dict(); ht = "")
 
     axis = Dict("automargin" => true)
 
-    layout0 = Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis)
+    di = "OnePiece.Plot.plot.$(OnePiece.Time.stamp())"
 
-    config0 = Dict(
-        "modebarbuttonstoremove" => ["select", "lasso", "resetscale"],
-        "displaylogo" => false,
-        "responsive" => true,
-        "editable" => false,
+    OnePiece.HTML.make(
+        di,
+        ("https://cdn.plot.ly/plotly-latest.min.js",),
+        """
+        Plotly.newPlot(
+            \"$di\",
+            $(write(data)),
+            $(write(OnePiece.Dict.merge(
+                Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis),
+                layout,
+            ))),
+            $(write(OnePiece.Dict.merge(
+                Dict(
+                    "modebarbuttonstoremove" => ("select", "lasso", "resetscale"),
+                    "displaylogo" => false,
+                    "responsive" => true,
+                    "editable" => false,
+                ),
+                config,
+            ))),
+        )
+        """,
+        ht,
     )
-
-    di = "OnePiece.figure.Plot.$(OnePiece.Time.stamp())"
-
-    sr = ["https://cdn.plot.ly/plotly-latest.min.js"]
-
-    sc = """
-    Plotly.newPlot(
-
-        \"$di\",
-
-        $(write(data)),
-
-        $(write(OnePiece.Dict.merge(layout0, layout))),
-
-        $(write(OnePiece.Dict.merge(config0, config))),
-
-    )
-    """
-
-    OnePiece.HTML.make(di, sr, sc, ht)
 
 end

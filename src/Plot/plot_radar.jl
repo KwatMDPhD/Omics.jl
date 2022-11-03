@@ -7,20 +7,6 @@ function plot_radar(
     ht = "",
 )
 
-    data = [
-        Dict(
-            "type" => "scatterpolar",
-            "name" => name,
-            "theta" => theta,
-            "r" => r_,
-            "opacity" => 0.64,
-            "marker" => Dict("symbol" => "diamond", "size" => 2, "color" => marker_color),
-            "line" => Dict("width" => 0),
-            "fill" => "toself",
-            "fillcolor" => marker_color,
-        ) for (theta, r_, name, marker_color) in zip(theta_, r__, name_, marker_color_)
-    ]
-
     axis = Dict(
         "linewidth" => 1.6,
         "linecolor" => "#48929b",
@@ -29,30 +15,51 @@ function plot_radar(
         "tickfont" => Dict("color" => "#1f4788"),
     )
 
-    layout = OnePiece.Dict.merge(
-        Dict(
-            "polar" => Dict(
-                "angularaxis" => OnePiece.Dict.merge(
-                    axis,
-                    Dict(
-                        "direction" => "clockwise",
-                        "tickfont" => Dict("size" => 32, "family" => "Optima"),
+    plot(
+        [
+            Dict(
+                "type" => "scatterpolar",
+                "name" => name,
+                "theta" => theta,
+                "r" => r_,
+                "opacity" => 0.64,
+                "marker" => Dict("symbol" => "diamond", "size" => 2, "color" => marker_color),
+                "line" => Dict("width" => 0),
+                "fill" => "toself",
+                "fillcolor" => marker_color,
+            ) for (theta, r_, name, marker_color) in zip(theta_, r__, name_, marker_color_)
+        ],
+        OnePiece.Dict.merge(
+            Dict(
+                "polar" => Dict(
+                    "angularaxis" => OnePiece.Dict.merge(
+                        axis,
+                        Dict(
+                            "direction" => "clockwise",
+                            "tickfont" => Dict("size" => 32, "family" => "Optima"),
+                        ),
+                    ),
+                    "radialaxis" => OnePiece.Dict.merge(
+                        axis,
+                        Dict(
+                            "nticks" => 8,
+                            "tickfont" => Dict("size" => 16, "family" => "Monospace"),
+                        ),
                     ),
                 ),
-                "radialaxis" => OnePiece.Dict.merge(
-                    axis,
-                    Dict("nticks" => 8, "tickfont" => Dict("size" => 16, "family" => "Monospace")),
+                "title" => Dict(
+                    "text" => "Radar",
+                    "x" => 0.01,
+                    "font" => Dict(
+                        "size" => 48,
+                        "family" => "Times New Roman",
+                        "color" => "#27221f",
+                    ),
                 ),
             ),
-            "title" => Dict(
-                "text" => "Radar",
-                "x" => 0.01,
-                "font" => Dict("size" => 48, "family" => "Times New Roman", "color" => "#27221f"),
-            ),
+            layout,
         ),
-        layout,
+        ht = ht,
     )
-
-    plot(data, layout, ht = ht)
 
 end

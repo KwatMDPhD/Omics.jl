@@ -3,12 +3,13 @@ function plot_histogram(
     text_ = _set_text(x_);
     name_ = _set_name(x_),
     histnorm = "",
-    xbins_size = nothing,
+    xbins_size = 0.0,
     marker_color_ = _set_color(x_),
     layout = Dict(),
     ht = "",
 )
 
+    #
     ru = all(length(x) < 1e5 for x in x_)
 
     n = length(x_)
@@ -23,6 +24,7 @@ function plot_histogram(
 
     end
 
+    #
     if isempty(histnorm)
 
         yaxis2_title = "N"
@@ -33,24 +35,35 @@ function plot_histogram(
 
     end
 
+    # TODO: Check
+    #
+    #if xbins_size == 0.0
+
+    #    xbins_size = nothing
+
+    #end
+
+    #
     layout = OnePiece.Dict.merge(
         Dict(
             "yaxis" => Dict(
-                "domain" => [0, fr],
+                "domain" => (0.0, fr),
                 "zeroline" => false,
                 "dtick" => 1,
                 "showticklabels" => false,
             ),
-            "yaxis2" => Dict("domain" => [fr, 1], "title" => Dict("text" => yaxis2_title)),
+            "yaxis2" => Dict("domain" => (fr, 1.0), "title" => Dict("text" => yaxis2_title)),
             "xaxis" => Dict("anchor" => "y"),
         ),
         layout,
     )
 
+    #
     data = []
 
     for id in 1:n
 
+        #
         le = Dict(
             "legendgroup" => id,
             "name" => name_[id],
@@ -58,6 +71,7 @@ function plot_histogram(
             "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
         )
 
+        #
         push!(
             data,
             OnePiece.Dict.merge(
@@ -71,6 +85,7 @@ function plot_histogram(
             ),
         )
 
+        #
         if ru
 
             push!(
@@ -92,6 +107,7 @@ function plot_histogram(
 
     end
 
+    #
     plot(data, layout, ht = ht)
 
 end

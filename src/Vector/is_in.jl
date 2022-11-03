@@ -1,6 +1,4 @@
-function is_in(ne_, ha_)
-
-    ha_ = Set(ha_)
+function is_in(ne_, ha_::AbstractSet)
 
     [ne in ha_ for ne in ne_]
 
@@ -12,6 +10,7 @@ function is_in(ne_id::AbstractDict, ha_)
 
     @inbounds @fastmath @simd for ha in ha_
 
+        # TODO: Check
         id = get(ne_id, ha, nothing)
 
         if !isnothing(id)

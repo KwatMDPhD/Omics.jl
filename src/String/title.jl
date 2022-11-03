@@ -1,14 +1,8 @@
 function title(st)
 
-    st = replace(st, "_" => " ")
+    ti = ""
 
-    up_ = [isuppercase(ch) for ch in st]
-
-    st = titlecase(st)
-
-    st2 = ""
-
-    for (up, ch) in zip(up_, st)
+    for (up, ch) in zip((isuppercase(ch) for ch in st), titlecase(replace(st, "_" => " ")))
 
         if up
 
@@ -16,13 +10,11 @@ function title(st)
 
         end
 
-        st2 *= ch
+        ti *= ch
 
     end
 
-    st = st2
-
-    for lo in [
+    for lo in (
         "a",
         "an",
         "the",
@@ -47,18 +39,18 @@ function title(st)
         "with",
         "as",
         "vs",
-    ]
+    )
 
-        st = replace(st, " $(titlecase(lo)) " => " $lo ")
-
-    end
-
-    for sh in ["m", "re", "s", "ve", "d"]
-
-        st = replace(st, "'$(titlecase(sh)) " => "'$sh ")
+        ti = replace(ti, " $(titlecase(lo)) " => " $lo ")
 
     end
 
-    st
+    for sh in ("m", "re", "s", "ve", "d")
+
+        ti = replace(ti, "'$(titlecase(sh)) " => "'$sh ")
+
+    end
+
+    ti
 
 end

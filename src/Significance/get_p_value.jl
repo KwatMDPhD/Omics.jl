@@ -1,10 +1,10 @@
-function get_p_value(nu, ra_, si)
+function get_p_value(nu, ra_, ho)
 
-    if si == -1
+    if ho == -1
 
         si_ = [ra <= nu for ra in ra_]
 
-    elseif si == 1
+    elseif ho == 1
 
         si_ = [nu <= ra for ra in ra_]
 

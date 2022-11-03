@@ -8,9 +8,8 @@ end
 
 function shift_minimum(nu_, mi::AbstractString)
 
-    shift_minimum(
-        nu_,
-        minimum(nu_[parse(eltype(nu_), OnePiece.String.split_and_get(mi, "<", 1)) .< nu_]),
-    )
+    mi = parse(eltype(nu_), OnePiece.String.split_and_get(mi, "<", 1))
+
+    shift_minimum(nu_, minimum(nu_[[mi < nu for nu in nu_]]))
 
 end

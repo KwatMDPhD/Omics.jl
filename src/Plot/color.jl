@@ -1,5 +1,5 @@
-function color(na, ge)
+function color(na, nu)
 
-    "#$(hex(NA_SC[na][ge]))"
+    "#$(hex(NA_SC[na][nu]))"
 
 end

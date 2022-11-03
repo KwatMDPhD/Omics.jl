@@ -7,25 +7,18 @@ function plot_bar(
     ht = "",
 )
 
-    data = []
-
-    for id in 1:length(y_)
-
-        push!(
-            data,
+    plot(
+        [
             Dict(
                 "type" => "bar",
                 "name" => name_[id],
                 "y" => y_[id],
                 "x" => x_[id],
                 "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
-            ),
-        )
-
-    end
-
-    layout = OnePiece.Dict.merge(Dict("barmode" => "stack"), layout)
-
-    plot(data, layout, ht = ht)
+            ) for id in 1:length(y_)
+        ],
+        OnePiece.Dict.merge(Dict("barmode" => "stack"), layout),
+        ht = ht,
+    )
 
 end
