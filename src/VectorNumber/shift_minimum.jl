@@ -1,4 +1,4 @@
-function shift_minimum(nu_, mi)
+function shift_minimum(nu_, mi::Real)
 
     sh = mi - minimum(nu_)
 
@@ -6,7 +6,7 @@ function shift_minimum(nu_, mi)
 
 end
 
-function shift_minimum(nu_, mi::AbstractString)
+function shift_minimum(nu_, mi)
 
     mi = parse(eltype(nu_), OnePiece.String.split_and_get(mi, "<", 1))
 

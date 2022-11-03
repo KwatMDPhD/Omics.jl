@@ -1,25 +1,25 @@
 #
-function _make_element(ve, cl_::Vector)
+function _make_vertex(ve, cl_)
 
     Dict("data" => Dict("id" => string(ve)), "classes" => [string(cl) for cl in cl_])
 
 end
 
 #
-function _make_element(ve)
+function _make_vertex(ve::DataType)
 
-    _make_element(ve, vcat("ve", collect(supertypes(ve))[2:(end - 1)]))
+    _make_vertex(ve, vcat("ve", collect(supertypes(ve))[2:(end - 1)]))
 
 end
 
-function _make_element(ve::String)
+function _make_vertex(ve)
 
-    _make_element(ve, ["ed", splitext(ve)[2][2:end]])
+    _make_vertex(ve, ["ed", splitext(ve)[2][2:end]])
 
 end
 
 #
-function _make_element(so, de)
+function _make_edge(so, de)
 
     Dict("data" => Dict("source" => string(so), "target" => string(de)))
 
@@ -39,7 +39,7 @@ function plot(;
 )
 
     #
-    ve_ = [_make_element(ve) for ve in VE_]
+    ve_ = [_make_vertex(ve) for ve in VE_]
 
     #
     if isempty(js)
@@ -55,7 +55,7 @@ function plot(;
     end
 
     #
-    ed_ = [_make_element(so, de) for (so, de) in ED_]
+    ed_ = [_make_edge(so, de) for (so, de) in ED_]
 
     #
     st_ = append!(

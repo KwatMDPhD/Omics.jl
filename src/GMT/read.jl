@@ -1,4 +1,4 @@
-function read(gm)
+function read(gm::AbstractString)
 
     se_ge_ = Dict()
 
@@ -14,7 +14,7 @@ function read(gm)
 
 end
 
-function read(gm_::AbstractVector)
+function read(gm_)
 
     se_ge_ = Dict()
 

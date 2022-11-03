@@ -1,10 +1,10 @@
-function shorten(pa, n)
+function shorten(pa, n::Real)
 
     joinpath(splitpath(pa)[clamp(end - n, 1, end):end]...)
 
 end
 
-function shorten(pa, di::AbstractString, sh = 0)
+function shorten(pa, di, sh = 0)
 
     sp_ = splitpath(pa)
 

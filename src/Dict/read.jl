@@ -1,4 +1,4 @@
-function read(pa)
+function read(pa::AbstractString)
 
     ex = splitext(pa)[2]
 
@@ -18,7 +18,7 @@ function read(pa)
 
 end
 
-function read(pa_::AbstractVector)
+function read(pa_)
 
     di = Base.Dict()
 

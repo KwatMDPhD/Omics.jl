@@ -8,7 +8,7 @@ function >>(so, de)
 end
 
 #
-function >>(so_::Vector, de)
+function >>(so_::AbstractVector, de)
 
     for so in so_
 
@@ -18,7 +18,7 @@ function >>(so_::Vector, de)
 
 end
 
-function >>(so, de_::Vector)
+function >>(so, de_::AbstractVector)
 
     for de in de_
 
@@ -36,7 +36,7 @@ function _make_vee(so, ed)
 end
 
 #
-function _make_vee(so_::Vector, ed)
+function _make_vee(so_::AbstractVector, ed)
 
     _make_vee(join(so_, "_"), ed)
 
@@ -50,13 +50,13 @@ function potentiate(so, ed, de)
 end
 
 #
-function >>(so::Union{DataType, Vector{DataType}}, de::Union{DataType, Vector{DataType}})
+function >>(so::Union{DataType, AbstractVector}, de::Union{DataType, AbstractVector})
 
     potentiate(so, "in", de)
 
 end
 
-function <<(so::Union{DataType, Vector{DataType}}, de::Union{DataType, Vector{DataType}})
+function <<(so::Union{DataType, AbstractVector}, de::Union{DataType, AbstractVector})
 
     potentiate(so, "de", de)
 

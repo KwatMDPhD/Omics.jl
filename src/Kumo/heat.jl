@@ -57,7 +57,7 @@ function heat(st_he; st_al_ = Dict(), ve_he = Dict(), pr = true)
 
 end
 
-function heat(st_, st_x_sa_x_he::Matrix; ke_ar...)
+function heat(st_, st_x_sa_x_he; ke_ar...)
 
     hcat((heat(Dict(zip(st_, he_)); ke_ar...) for he_ in eachcol(st_x_sa_x_he))...)
 

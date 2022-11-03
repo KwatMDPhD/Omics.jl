@@ -26,7 +26,7 @@ function error_bad(ro_x_co_x_an, ty)
 
         end
 
-        if ty <: Number
+        if ty <: Real
 
             ba_ = (-Inf, Inf, NaN)
 

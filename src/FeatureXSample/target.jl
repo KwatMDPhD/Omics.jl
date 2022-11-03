@@ -6,7 +6,7 @@ function _aim(nu1_, nu2_)
 
 end
 
-function _aim(bi_::AbstractVector{Bool}, nu_)
+function _aim(bi_::AbstractVector, nu_)
 
     OnePiece.Array.error_size((bi_, nu_))
 

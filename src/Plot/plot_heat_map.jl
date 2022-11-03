@@ -5,7 +5,7 @@ function _fractionate(sc)
 end
 
 function plot_heat_map(
-    z,
+    z::AbstractMatrix,
     y = ["$id *" for id in 1:size(z, 1)],
     x = ["* $id" for id in 1:size(z, 2)];
     nar = "Row",
@@ -140,7 +140,7 @@ function plot_heat_map(
 
 end
 
-function plot_heat_map(ro_x_co_x_nu::DataFrame; ke_ar...)
+function plot_heat_map(ro_x_co_x_nu; ke_ar...)
 
     ro, ro_, co_, ro_x_co_x_nu = OnePiece.DataFrame.separate(ro_x_co_x_nu)
 

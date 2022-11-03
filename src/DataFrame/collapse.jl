@@ -17,7 +17,7 @@ function collapse(ro_x_co_x_nu, fu = median)
 
     roc_ = []
 
-    roc_x_co_x_nu = Matrix(undef, length(ro_id_), length(co_))
+    roc_x_co_x_nu = Matrix{Real}(undef, (length(ro_id_), length(co_)))
 
     for (id2, (ro, id_)) in enumerate(sort(ro_id_))
 

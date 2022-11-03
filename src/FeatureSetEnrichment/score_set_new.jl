@@ -1,4 +1,4 @@
-function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
+function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
     #
     in_ = convert(Vector{Float64}, OnePiece.Vector.is_in(fe_, fe1_))
@@ -42,7 +42,7 @@ function score_set_new(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function score_set_new(fe_, sc_, se_fe1_::AbstractDict; ex = 1.0, n_jo = 1)
+function score_set_new(fe_, sc_, se_fe1_; ex = 1.0, n_jo = 1)
 
     Dict(se => score_set_new(fe_, sc_, fe1_, ex = ex, pl = false) for (se, fe1_) in se_fe1_)
 

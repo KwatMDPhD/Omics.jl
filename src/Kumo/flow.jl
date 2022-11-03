@@ -10,7 +10,7 @@ function _decrease(cu, fl_)
 
 end
 
-function flow(he_, so_x_de_x_ed = edge(); n = 1000, ch = 1e-6, pr = true)
+function flow(he_::AbstractVector, so_x_de_x_ed = edge(); n = 1000, ch = 1e-6, pr = true)
 
     #
     no = _heat_check(he_, pr)
@@ -88,7 +88,7 @@ function flow(he_, so_x_de_x_ed = edge(); n = 1000, ch = 1e-6, pr = true)
 
 end
 
-function flow(ve_x_sa_x_he::Matrix; ke_ar...)
+function flow(ve_x_sa_x_he; ke_ar...)
 
     so_x_de_x_ed = edge()
 

@@ -118,13 +118,13 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function score_set(fe_, sc_, fe1_; ex = 1.0, pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
     score_set(fe_, sc_, fe1_, OnePiece.Vector.is_in(fe_, fe1_); ex = ex, pl = pl, ke_ar...)
 
 end
 
-function score_set(fe_, sc_, se_fe1_::AbstractDict; ex = 1.0, n_jo = 1)
+function score_set(fe_, sc_, se_fe1_; ex = 1.0, n_jo = 1)
 
     if length(se_fe1_) < 10
 
