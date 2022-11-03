@@ -1,4 +1,4 @@
-function position!(ke_va_, id_kec_vac)
+function position!(ke_va_, id_kec_vac::AbstractDict)
 
     for ke_va in ke_va_
 
@@ -12,7 +12,7 @@ function position!(ke_va_, id_kec_vac)
 
 end
 
-function position!(ke_va_, js::AbstractString)
+function position!(ke_va_, js)
 
     position!(
         ke_va_,

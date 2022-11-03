@@ -6,10 +6,10 @@ function shift_minimum(nu_, mi::Real)
 
 end
 
-function shift_minimum(nu_, mi)
+function shift_minimum(nu_, st)
 
-    mi = parse(eltype(nu_), OnePiece.String.split_and_get(mi, "<", 1))
+    fl = parse(eltype(nu_), OnePiece.String.split_and_get(st, "<", 1))
 
-    shift_minimum(nu_, minimum(nu_[[mi < nu for nu in nu_]]))
+    shift_minimum(nu_, minimum(nu_[[fl < nu for nu in nu_]]))
 
 end
