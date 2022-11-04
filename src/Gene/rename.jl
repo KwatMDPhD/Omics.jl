@@ -8,7 +8,6 @@ function rename(st_, wh_ = ("mouse", "ensembl", "hgnc"))
         merge!(st_na, map_mouse())
 
     end
-
     for wh in ("ensembl", "hgnc")
 
         if wh in wh_
@@ -53,11 +52,11 @@ function rename(st_, wh_ = ("mouse", "ensembl", "hgnc"))
 
     end
 
-    println("👍 $(n_[1])")
+    for (id, em) in ((1, "👍"), (2, "✌️"), (3, "👎"))
 
-    println("✌️ $(n_[2])")
+        println("$em $(n_[id])")
 
-    println("👎 $(n_[3])")
+    end
 
     na_, ma_
 

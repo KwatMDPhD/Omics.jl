@@ -4,14 +4,14 @@ function plot(
     nar_ = ["Rows $id" for id in 1:length(ro_x_fa_x_po_)],
     nac_ = ["Columns $id" for id in 1:length(fa_x_co_x_po_)],
     naf = "Factor",
-    ro__ = [
+    ro__ = (
         ["$na $id" for id in 1:size(ro_x_fa_x_po, 1)] for
         (ro_x_fa_x_po, na) in zip(ro_x_fa_x_po_, nar_)
-    ],
-    co__ = [
+    ),
+    co__ = (
         ["$na $id" for id in 1:size(fa_x_co_x_po, 2)] for
         (fa_x_co_x_po, na) in zip(fa_x_co_x_po_, nac_)
-    ],
+    ),
     di = "",
 )
 

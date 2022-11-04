@@ -14,7 +14,7 @@ end
 
 function _make_vertex(ve)
 
-    _make_vertex(ve, ["ed", splitext(ve)[2][2:end]])
+    _make_vertex(ve, ("ed", splitext(ve)[2][2:end]))
 
 end
 
@@ -59,7 +59,7 @@ function plot(;
 
     #
     st_ = append!(
-        [
+        (
             #
             Dict(
                 "selector" => "node",
@@ -96,7 +96,7 @@ function plot(;
                     "opacity" => 0.32,
                 ),
             ),
-        ],
+        ),
         st_,
     )
 
@@ -105,13 +105,13 @@ function plot(;
 
         append!(
             st_,
-            [
+            (
                 Dict(
                     "selector" => "#$st",
                     "style" => Dict("background-color" => OnePiece.Plot.color("plasma", fr)),
                 ) for
                 (st, fr) in zip(_stringify_vertex(), OnePiece.Normalization.normalize(he_, "0-1"))
-            ],
+            ),
         )
 
     end

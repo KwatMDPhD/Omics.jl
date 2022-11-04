@@ -10,7 +10,7 @@ function make_benchmark(ho)
 
         mi = ceil(Int, n / 2)
 
-        sc_ = convert(Vector{Float64}, (mi - n):(mi - 1))
+        sc_ = collect((mi - n):(mi - 1))
 
         fe1_ = split(sp_[2], "")
 

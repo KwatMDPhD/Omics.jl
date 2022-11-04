@@ -6,7 +6,7 @@ function _heat_check(he_, pr = true)
 
         println("$(OnePiece.Number.format(no)) 🔥")
 
-        for (he, ve) in zip(OnePiece.Vector.sort_like([he_, VE_], true)...)
+        for (he, ve) in zip(OnePiece.Vector.sort_like((he_, VE_), true)...)
 
             if he != 0.0
 

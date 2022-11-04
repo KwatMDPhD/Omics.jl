@@ -54,7 +54,7 @@ function _name(pl, fe_x_in_x_an)
 
     for (fe, na) in zip(fe_x_in_x_an[!, ke], fe_x_in_x_an[!, va])
 
-        if na isa AbstractString && !isempty(na) && !(na in ["---"])
+        if na isa AbstractString && !isempty(na) && !(na in ("---",))
 
             OnePiece.Dict.set!(fe_na, (fe, fu(na)))
 
@@ -182,7 +182,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
         fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"])
 
-        fe_x_sa_x_nu[!, ro] = [get(fe_na, fe, "") for fe in fe_x_sa_x_nu[!, ro]]
+        fe_x_sa_x_nu[!, ro] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, ro]]
 
         rename!(fe_x_sa_x_nu, ro => "Gene")
 

@@ -16,11 +16,11 @@ function _plot_mountain(
     height = width / MathConstants.golden
 
     #
-    yaxis1_domain = [0.0, 0.24]
+    yaxis1_domain = (0.0, 0.24)
 
-    yaxis2_domain = [0.24, 0.32]
+    yaxis2_domain = (0.24, 0.32)
 
-    yaxis3_domain = [0.32, 1.0]
+    yaxis3_domain = (0.32, 1.0)
 
     #
     title_font_size = 32
@@ -141,7 +141,7 @@ function _plot_mountain(
         #
         Dict(
             "yaxis" => "y2",
-            "y" => fill(0, convert(Int, sum(bi_))),
+            "y" => fill(0, sum(bi_)),
             "x" => x[bi_],
             "text" => fe_[bi_],
             "mode" => "markers",
@@ -155,9 +155,9 @@ function _plot_mountain(
     ]
 
     #
-    le_ = [en < 0.0 for en in en_]
+    le_ = (en < 0.0 for en in en_)
 
-    gr_ = [!le for le in le_]
+    gr_ = (!le for le in le_)
 
     for (is_, fillcolor) in ((le_, "#1992ff"), (gr_, "#ff1993"))
 

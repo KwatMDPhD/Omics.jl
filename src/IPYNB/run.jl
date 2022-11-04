@@ -8,9 +8,9 @@ function run(nb)
 
 end
 
-function run(di, sk_)
+function run(di, ig_ = ())
 
-    nb_ = [na for na in readdir(di) if occursin(r".ipynb$", na) && !(na in sk_)]
+    nb_ = OnePiece.Path.select(di, false, ig_ = ig_, ke_ = (r".ipynb$",))
 
     if all(occursin(r"^[0-9]+\.", nb) for nb in nb_)
 

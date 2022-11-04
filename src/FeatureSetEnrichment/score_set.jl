@@ -159,7 +159,7 @@ function score_set(fe_x_sa_x_sc, se_fe1_; al = "cidac", ex = 1.0, n_jo = 1)
 
         go_ = findall(!ismissing, fe_x_sa_x_sc[:, id])
 
-        sc_, fe_ = OnePiece.Vector.sort_like([fe_x_sa_x_sc[go_, id], fe_[go_]])
+        sc_, fe_ = OnePiece.Vector.sort_like((fe_x_sa_x_sc[go_, id], fe_[go_]))
 
         fu, st = _match_algorithm(al)
 

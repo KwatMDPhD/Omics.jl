@@ -3,7 +3,7 @@ function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_a
     #
     in_ = convert(Vector{Float64}, OnePiece.Vector.is_in(fe_, fe1_))
 
-    ou_ = [1.0 - i for i in in_]
+    ou_ = (1.0 - i for i in in_)
 
     #
     ab_ = [abs(sc)^ex for sc in sc_]
