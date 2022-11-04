@@ -10,7 +10,7 @@ function plot_histogram(
 )
 
     #
-    ru = all(length(x) < 1e5 for x in x_)
+    ru = all(length(x) < 10^5 for x in x_)
 
     n = length(x_)
 
