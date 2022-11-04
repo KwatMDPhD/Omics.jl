@@ -33,12 +33,12 @@ end
 function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
 
     #
-    n_fe = length(fe_)
+    n = length(fe_)
 
     #
     cu = 0.0
 
-    en_ = Vector{Float64}(undef, n_fe)
+    en_ = Vector{Float64}(undef, n)
 
     eta = 0.0
 
@@ -51,7 +51,7 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
 
     de = 1.0 / su0
 
-    @inbounds @fastmath @simd for id in n_fe:-1:1
+    @inbounds @fastmath @simd for id in n:-1:1
 
         #
         if in_[id] == 1.0
@@ -104,7 +104,7 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
     end
 
     #
-    ar /= convert(Float64, n_fe)
+    ar /= convert(Float64, n)
 
     #
     if pl

@@ -1,10 +1,10 @@
-function _check_bad(an, ba_)
+function _error_bad(an, ba_)
 
     for ba in ba_
 
         if isequal(an, ba)
 
-            error("Value is $ba.")
+            error()
 
         end
 
@@ -22,7 +22,7 @@ function error_bad(ro_x_co_x_an, ty)
 
         if !(an isa ty)
 
-            error("Value is not a $ty.")
+            error()
 
         end
 
@@ -36,7 +36,7 @@ function error_bad(ro_x_co_x_an, ty)
 
         end
 
-        _check_bad(an, ba_)
+        _error_bad(an, ba_)
 
     end
 

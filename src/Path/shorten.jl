@@ -10,7 +10,7 @@ function shorten(pa, di, sh = 0)
 
     na = basename(di)
 
-    n = findlast(sp -> sp == na, sp_)
+    n = findlast(==(na), sp_)
 
     if isnothing(n)
 

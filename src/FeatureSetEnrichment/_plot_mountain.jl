@@ -50,7 +50,7 @@ function _plot_mountain(
     end
 
     #
-    n_fe = length(fe_)
+    n = length(fe_)
 
     #
     layout = Dict(
@@ -114,7 +114,7 @@ function _plot_mountain(
                 annotationx,
                 Dict(
                     "y" => -0.088,
-                    "text" => "<b>$fe (n=$n_fe)</b>",
+                    "text" => "<b>$fe (n=$n)</b>",
                     "font" => Dict("size" => axis_title_font_size),
                 ),
             ),
@@ -122,7 +122,7 @@ function _plot_mountain(
     )
 
     #
-    x = collect(1:n_fe)
+    x = collect(1:n)
 
     bi_ = convert(BitVector, in_)
 
@@ -179,7 +179,7 @@ function _plot_mountain(
     end
 
     #
-    id_ = findall(en == ex for en in en_)
+    id_ = findall(==(ex), en_)
 
     push!(
         trace_,
