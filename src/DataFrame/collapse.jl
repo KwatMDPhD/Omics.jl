@@ -3,7 +3,7 @@ function collapse(ro_x_co_x_nu, fu = median)
 
     println("Before")
 
-    println((size(ro_x_co_x_nu)))
+    println(size(ro_x_co_x_nu))
 
     ro_id_ = Dict()
 
@@ -41,7 +41,7 @@ function collapse(ro_x_co_x_nu, fu = median)
 
     println("After")
 
-    println((size(roc_x_co_x_nu)))
+    println(size(roc_x_co_x_nu))
 
     roc_x_co_x_nu
 
