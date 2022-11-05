@@ -23,7 +23,7 @@ function plot(
 
     sh = lo / MathConstants.golden
 
-    axis = Dict("dtick" => 1)
+    axis = Dict("dtick" => 1.0)
 
     #
     for (id, (ro_x_fa_x_po, ro_, nar)) in enumerate(zip(ro_x_fa_x_po_, ro__, nar_))

@@ -17,7 +17,7 @@ function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", mi = "
     ra_ = rand(di, n)
 
     #
-    po_ = shift_minimum(ra_, 0)
+    po_ = shift_minimum(ra_, 0.0)
 
     sort!(po_)
 

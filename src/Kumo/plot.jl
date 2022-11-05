@@ -28,9 +28,9 @@ end
 #
 function plot(;
     js = "",
-    no_si = 32,
-    ed_si = no_si / 2,
-    ed_wi = no_si / 8,
+    no_si = 32.0,
+    ed_si = no_si / 2.0,
+    ed_wi = no_si / 8.0,
     edge_line_color = "#171412",
     st_ = [],
     he_ = [],
@@ -63,7 +63,7 @@ function plot(;
             #
             Dict(
                 "selector" => "node",
-                "style" => Dict("border-width" => 2, "border-color" => "#ebf6f7"),
+                "style" => Dict("border-width" => 2.0, "border-color" => "#ebf6f7"),
             ),
             #
             Dict(

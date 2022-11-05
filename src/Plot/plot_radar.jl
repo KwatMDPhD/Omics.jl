@@ -23,8 +23,8 @@ function plot_radar(
                 "theta" => theta,
                 "r" => r_,
                 "opacity" => 0.64,
-                "marker" => Dict("symbol" => "diamond", "size" => 2, "color" => marker_color),
-                "line" => Dict("width" => 0),
+                "marker" => Dict("symbol" => "diamond", "size" => 2.0, "color" => marker_color),
+                "line" => Dict("width" => 0.0),
                 "fill" => "toself",
                 "fillcolor" => marker_color,
             ) for (theta, r_, name, marker_color) in zip(theta_, r__, name_, marker_color_)
@@ -36,14 +36,14 @@ function plot_radar(
                         axis,
                         Dict(
                             "direction" => "clockwise",
-                            "tickfont" => Dict("size" => 32, "family" => "Optima"),
+                            "tickfont" => Dict("size" => 32.0, "family" => "Optima"),
                         ),
                     ),
                     "radialaxis" => OnePiece.Dict.merge(
                         axis,
                         Dict(
                             "nticks" => 8,
-                            "tickfont" => Dict("size" => 16, "family" => "Monospace"),
+                            "tickfont" => Dict("size" => 16.0, "family" => "Monospace"),
                         ),
                     ),
                 ),
@@ -51,7 +51,7 @@ function plot_radar(
                     "text" => "Radar",
                     "x" => 0.01,
                     "font" => Dict(
-                        "size" => 48,
+                        "size" => 48.0,
                         "family" => "Times New Roman",
                         "color" => "#27221f",
                     ),

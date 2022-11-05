@@ -22,7 +22,7 @@ function plot(el_, st_, la; ht = "", js = true, pn = true, bg = "#fdfdfd")
     if pn
 
         scp = """
-        let blp = cy.png({"full": true, "scale": 1, "bg": "$bg"});
+        let blp = cy.png({"full": true, "scale": 1.0, "bg": "$bg"});
         let pap = "$pr.png";
         saveAs(blp, pap);
         Fs.existsSync(pap);

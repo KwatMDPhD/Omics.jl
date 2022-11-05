@@ -44,17 +44,17 @@ function rename(st_, wh_ = ("mouse", "ensembl", "hgnc"))
     end
 
     #
-    n_ = [0, 0, 0]
+    n_ = [0.0, 0.0, 0.0]
 
     for ma in ma_
 
-        n_[ma] += 1
+        n_[ma] += 1.0
 
     end
 
     for (id, em) in ((1, "👍"), (2, "✌️"), (3, "👎"))
 
-        println("$em $(n_[id])")
+        println("$em $(convert(Int, n_[id]))")
 
     end
 

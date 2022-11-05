@@ -97,7 +97,7 @@ function plot_histogram(
                         "y" => fill(id, length(x_[id])),
                         "text" => text_[id],
                         "mode" => "markers",
-                        "marker" => Dict("symbol" => "line-ns-open", "size" => 16),
+                        "marker" => Dict("symbol" => "line-ns-open", "size" => 16.0),
                         "hoverinfo" => "x+text",
                     ),
                 ),

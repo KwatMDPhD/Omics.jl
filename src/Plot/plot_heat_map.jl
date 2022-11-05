@@ -109,7 +109,7 @@ function plot_heat_map(
     trace = Dict(
         "type" => "heatmap",
         "colorscale" => _fractionate(NA_SC["plotly"]),
-        "colorbar" => Dict("x" => 1.15, "dtick" => 1),
+        "colorbar" => Dict("x" => 1.15, "dtick" => 1.0),
     )
 
     #
