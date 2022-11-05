@@ -24,7 +24,7 @@ function normalize(te, ho)
 
     elseif ho == "sum"
 
-        if any(nu < 0 for nu in te)
+        if any(nu < 0.0 for nu in te)
 
             error()
 

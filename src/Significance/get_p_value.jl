@@ -2,11 +2,11 @@ function get_p_value(nu, ra_, ho)
 
     if ho == -1
 
-        si_ = [ra <= nu for ra in ra_]
+        si_ = (ra <= nu for ra in ra_)
 
     elseif ho == 1
 
-        si_ = [nu <= ra for ra in ra_]
+        si_ = (nu <= ra for ra in ra_)
 
     else
 
