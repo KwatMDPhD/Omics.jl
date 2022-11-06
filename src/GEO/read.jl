@@ -81,7 +81,7 @@ function read(gs, di = OnePiece.TE)
 
         else
 
-            OnePiece.Dict.set!(ke_va, split(li, eq, limit = 2), "suffix")
+            OnePiece.Dict.set!(ke_va, split(li, eq, limit = 2)..., "suffix")
 
         end
 

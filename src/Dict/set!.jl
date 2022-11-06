@@ -1,5 +1,5 @@
 # TODO: Use merge
-function set!(ke_va, (ke, va), ho = "first"; pr = true)
+function set!(ke_va, ke, va, ho = "first"; pr = true)
 
     if ho == "first"
 

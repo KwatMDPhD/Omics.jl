@@ -14,10 +14,7 @@ function map_protein()
 
             if io == "Entry Name"
 
-                OnePiece.Dict.set!(
-                    pr_io_an,
-                    (OnePiece.String.split_and_get(an, "_HUMAN", 1), io_an),
-                )
+                OnePiece.Dict.set!(pr_io_an, OnePiece.String.split_and_get(an, "_HUMAN", 1), io_an)
 
             else
 

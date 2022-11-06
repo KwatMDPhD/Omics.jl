@@ -56,7 +56,7 @@ function _name(pl, fe_x_in_x_an)
 
         if na isa AbstractString && !isempty(na) && !(na in ("---",))
 
-            OnePiece.Dict.set!(fe_na, (fe, fu(na)))
+            OnePiece.Dict.set!(fe_na, fe, fu(na))
 
         end
 
@@ -103,7 +103,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             end
 
-            OnePiece.Dict.set!(sa_an_, (sa, [sp[2] for sp in sp_]))
+            OnePiece.Dict.set!(sa_an_, sa, [sp[2] for sp in sp_])
 
         else
 
@@ -137,7 +137,8 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             OnePiece.Dict.set!(
                 sa_nu_,
-                (sa, [parse(Float64, va) for va in fe_x_in_x_an[id_, "VALUE"]]),
+                sa,
+                [parse(Float64, va) for va in fe_x_in_x_an[id_, "VALUE"]],
             )
 
         else

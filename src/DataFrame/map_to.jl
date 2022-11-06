@@ -14,7 +14,7 @@ function map_to(ro_x_co_x_st, co_, ho = "first"; de = "", pr = true)
 
         end
 
-        OnePiece.Dict.set!(fr_to, (to, to), ho, pr = pr)
+        OnePiece.Dict.set!(fr_to, to, to, ho, pr = pr)
 
         for fr in st_[1:(id - 1)]
 
@@ -36,7 +36,7 @@ function map_to(ro_x_co_x_st, co_, ho = "first"; de = "", pr = true)
 
             for fr2 in fr2_
 
-                OnePiece.Dict.set!(fr_to, (fr2, to), ho, pr = pr)
+                OnePiece.Dict.set!(fr_to, fr2, to, ho, pr = pr)
 
             end
 
