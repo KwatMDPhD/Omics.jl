@@ -16,7 +16,7 @@ function flow(he_::AbstractVector, so_x_de_x_ed = edge(); n = 10^3, ch = 10^-6, 
     no = _heat_check(he_, pr)
 
     #
-    he__ = [he_]
+    he__ = Vector{Float64}[he_]
 
     for id in 1:n
 

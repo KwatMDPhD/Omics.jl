@@ -16,7 +16,7 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
     if pe < 1
 
-        pe = round(Int, pe * n)
+        pe = ceil(Int, pe * n)
 
     end
 
@@ -36,6 +36,10 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
         if isempty(js) && 1 < id
 
             js = joinpath(dw, "$pr.1.json")
+
+            while !ispath(js)
+
+            end
 
         end
 
