@@ -1,3 +1,9 @@
+function _range(di_)
+
+    di_[2] - di_[1]
+
+end
+
 function _plot_mountain(
     fe_,
     sc_,
@@ -7,6 +13,7 @@ function _plot_mountain(
     ar;
     title_text = "Mountain Plot",
     fe = "Feature",
+    sc = "Score",
     ht = "",
 )
 
@@ -107,7 +114,7 @@ function _plot_mountain(
                     "borderpad" => 6.4,
                 ),
             ),
-            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>Score</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>$sc</b>")),
             merge(annotationy, Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
             merge(annotationy, Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
             merge(
@@ -147,7 +154,7 @@ function _plot_mountain(
             "mode" => "markers",
             "marker" => Dict(
                 "symbol" => "line-ns",
-                "size" => height * diff(yaxis2_domain)[1] * 0.32,
+                "size" => height * _range(yaxis2_domain) * 0.32,
                 "line" => Dict("width" => 2.4, "color" => "#9017e6"),
             ),
             "hoverinfo" => "x+text",
@@ -190,7 +197,7 @@ function _plot_mountain(
             "mode" => "markers",
             "marker" => Dict(
                 "symbol" => "circle",
-                "size" => height * diff(yaxis3_domain)[1] * 0.04,
+                "size" => height * _range(yaxis3_domain) * 0.04,
                 "color" => "#ebf6f7",
                 "opacity" => 0.72,
                 "line" => Dict("width" => 2.0, "color" => "#404ed8", "opacity" => 0.88),

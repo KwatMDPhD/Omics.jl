@@ -8,7 +8,7 @@ function run(nb)
 
 end
 
-function run(di, ig_ = ())
+function run(di, ig_)
 
     nb_ = OnePiece.Path.select(di, false, ig_ = ig_, ke_ = (r".ipynb$",))
 

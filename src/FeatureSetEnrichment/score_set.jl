@@ -1,3 +1,4 @@
+# TODO: Consider using in_::BitVector
 function _sum_1_absolute_and_0_count(sc_, in_)
 
     su1 = 0.0
@@ -120,7 +121,7 @@ end
 
 function score_set(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
-    score_set(fe_, sc_, fe1_, OnePiece.Vector.is_in(fe_, fe1_); ex = ex, pl = pl, ke_ar...)
+    score_set(fe_, sc_, fe1_, OnePiece.Vector.is_in(fe_, Set(fe1_)); ex = ex, pl = pl, ke_ar...)
 
 end
 
@@ -143,6 +144,7 @@ function score_set(fe_, sc_, se_fe1_; ex = 1.0, n_jo = 1)
 
 end
 
+# TODO: Refactor API
 function score_set(fe_x_sa_x_sc, se_fe1_; al = "cidac", ex = 1.0, n_jo = 1)
 
     #

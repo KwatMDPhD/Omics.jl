@@ -1,7 +1,7 @@
 function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
     #
-    in_ = convert(Vector{Float64}, OnePiece.Vector.is_in(fe_, fe1_))
+    in_ = convert(Vector{Float64}, OnePiece.Vector.is_in(fe_, Set(fe1_)))
 
     ou_ = (1.0 - i for i in in_)
 
