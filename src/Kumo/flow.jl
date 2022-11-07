@@ -10,7 +10,7 @@ function _decrease(cu, fl_)
 
 end
 
-function flow(he_::AbstractVector, so_x_de_x_ed = edge(); n = 1000, ch = 10^-6, pr = true)
+function flow(he_::AbstractVector, so_x_de_x_ed = edge(); n = 10^3, ch = 10^-6, pr = true)
 
     #
     no = _heat_check(he_, pr)

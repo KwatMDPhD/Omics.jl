@@ -16,6 +16,8 @@ function >>(so_::AbstractVector, de)
 
     end
 
+    de
+
 end
 
 function >>(so, de_::AbstractVector)
@@ -25,6 +27,8 @@ function >>(so, de_::AbstractVector)
         so >> de
 
     end
+
+    de_
 
 end
 
@@ -50,13 +54,19 @@ function potentiate(so, ed, de)
 end
 
 #
-function >>(so::Union{DataType, AbstractVector}, de::Union{DataType, AbstractVector})
+function >>(
+    so::Union{DataType, AbstractVector{DataType}},
+    de::Union{DataType, AbstractVector{DataType}},
+)
 
     potentiate(so, "in", de)
 
 end
 
-function <<(so::Union{DataType, AbstractVector}, de::Union{DataType, AbstractVector})
+function <<(
+    so::Union{DataType, AbstractVector{DataType}},
+    de::Union{DataType, AbstractVector{DataType}},
+)
 
     potentiate(so, "de", de)
 

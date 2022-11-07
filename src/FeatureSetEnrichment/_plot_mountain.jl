@@ -18,7 +18,7 @@ function _plot_mountain(
 )
 
     #
-    width = 1000
+    width = 800
 
     height = width / MathConstants.golden
 

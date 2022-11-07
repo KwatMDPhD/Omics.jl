@@ -1,6 +1,6 @@
 function _set_mode(y_)
 
-    [ifelse(length(y) < 1000, "markers+lines", "lines") for y in y_]
+    [ifelse(length(y) < 10^3, "markers+lines", "lines") for y in y_]
 
 end
 

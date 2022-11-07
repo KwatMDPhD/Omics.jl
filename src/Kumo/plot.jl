@@ -34,7 +34,7 @@ function plot(;
     edge_line_color = "#171412",
     st_ = [],
     he_ = [],
-    wi = 1000,
+    wi = 800,
     ht = "",
 )
 
@@ -59,7 +59,7 @@ function plot(;
 
     #
     st_ = append!(
-        (
+        [
             #
             Dict(
                 "selector" => "node",
@@ -96,7 +96,7 @@ function plot(;
                     "opacity" => 0.32,
                 ),
             ),
-        ),
+        ],
         st_,
     )
 
@@ -117,7 +117,7 @@ function plot(;
     end
 
     #
-    la = Dict("animate" => false)
+    la = Dict{String, Any}("animate" => false)
 
     if po
 
@@ -133,7 +133,7 @@ function plot(;
             "componentSpacing" => 40,
             "nodeRepulsion" => 8000,
             "idealEdgeLength" => 16,
-            "numIter" => 10000,
+            "numIter" => 10^4,
         )
 
     else

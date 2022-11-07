@@ -12,7 +12,6 @@ function plot(el_, st_, la; ht = "", js = true, pn = true, bg = "#fdfdfd")
         let blj = new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"});
         let paj = "$pr.json";
         saveAs(blj, paj);
-        Fs.existsSync(paj);
         """
 
     end
@@ -25,7 +24,6 @@ function plot(el_, st_, la; ht = "", js = true, pn = true, bg = "#fdfdfd")
         let blp = cy.png({"full": true, "scale": 1.0, "bg": "$bg"});
         let pap = "$pr.png";
         saveAs(blp, pap);
-        Fs.existsSync(pap);
         """
 
     end
@@ -44,6 +42,7 @@ function plot(el_, st_, la; ht = "", js = true, pn = true, bg = "#fdfdfd")
             style: $(write(st_)),
             layout: $(write(la)),
         });
+
 
         cy.ready(function() {
             $scj

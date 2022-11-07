@@ -8,7 +8,7 @@ function make(di, so_, sc, ht = "")
 
     li_ = vcat(
         "<!doctype html>",
-        "<div id=\"$di\" style=\"display: block; height: 1000px; width: 90%; margin: auto; background: #f8f8f8\"></div>",
+        "<div id=\"$di\" style=\"display: block; height: 800px; width: 90%; margin: auto; background: #f8f8f8\"></div>",
         ["<script src=\"$so\"></script>" for so in so_],
         "<script>",
         "$sc",

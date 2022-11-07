@@ -41,6 +41,10 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
 
         plot(js = js, st_ = st_, he_ = he__[id], ht = joinpath(di, "$pr.$id.html"))
 
+        while !ispath(joinpath(dw, "$pr.$id.png"))
+
+        end
+
     end
 
     #

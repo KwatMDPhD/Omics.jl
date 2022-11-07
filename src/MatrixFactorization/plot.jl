@@ -19,7 +19,7 @@ function plot(
     fa_ = ["$naf $id" for id in 1:size(ro_x_fa_x_po_[1], 2)]
 
     #
-    lo = 1000
+    lo = 800
 
     sh = lo / MathConstants.golden
 
