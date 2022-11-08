@@ -29,10 +29,10 @@ function plot(
     for (id, (ro_x_fa_x_po, ro_, nar)) in enumerate(zip(ro_x_fa_x_po_, ro__, nar_))
 
         #
-        title_text = "W.$id"
+        title_text = "row$(id)_x_factor_x_positive"
 
         #
-        if isemptry(di)
+        if isempty(di)
 
             ht = ""
 
@@ -59,7 +59,8 @@ function plot(
             layout = Dict(
                 "height" => lo,
                 "width" => sh,
-                "title" => Dict("text" => title_text),
+                "title" =>
+                    Dict("text" => OnePiece.String.title(replace(title_text, "_x_" => "_by_"))),
                 "xaxis" => axis,
             ),
             ht = ht,
@@ -71,10 +72,10 @@ function plot(
     for (id, (fa_x_co_x_po, co_, nac)) in enumerate(zip(fa_x_co_x_po_, co__, nac_))
 
         #
-        title_text = "H.$id"
+        title_text = "factor_x_column$(id)_x_positive"
 
         #
-        if isemptry(di)
+        if isempty(di)
 
             ht = ""
 
@@ -101,7 +102,8 @@ function plot(
             layout = Dict(
                 "height" => sh,
                 "width" => lo,
-                "title" => Dict("text" => title_text),
+                "title" =>
+                    Dict("text" => OnePiece.String.title(replace(title_text, "_x_" => "_by_"))),
                 "yaxis" => axis,
             ),
             ht = ht,
