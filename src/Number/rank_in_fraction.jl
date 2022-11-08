@@ -7,14 +7,14 @@ function rank_in_fraction(it)
 
     for de in 1:n
 
-        fr += 9.0 * 10^-de
+        fr += 9.0 * 10.0^-de
 
     end
 
     #
     de = n + 1
 
-    fr += convert(Float64, it % 9) * 10^-de
+    fr += convert(Float64, it % 9) * 10.0^-de
 
     #
     round(fr, digits = de)
