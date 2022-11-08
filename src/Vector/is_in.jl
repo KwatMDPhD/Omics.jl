@@ -4,7 +4,7 @@ function is_in(ne_, ha_::AbstractSet)
 
 end
 
-function is_in(ne_id, ha_)
+function is_in(ne_id, ha_::AbstractVector)
 
     in_ = fill(false, length(ne_id))
 
