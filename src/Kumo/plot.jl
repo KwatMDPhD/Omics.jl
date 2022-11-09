@@ -36,6 +36,7 @@ function plot(;
     he_ = [],
     wi = 800,
     ht = "",
+    pn = true,
 )
 
     #
@@ -44,13 +45,13 @@ function plot(;
     #
     if isempty(js)
 
-        po = false
+        js = true
 
     else
 
         OnePiece.Network.position!(ve_, js)
 
-        po = true
+        js = false
 
     end
 
@@ -145,6 +146,6 @@ function plot(;
     merge!(la, me)
 
     #
-    OnePiece.Network.plot(vcat(ve_, ed_), st_, la, ht = ht, js = !po)
+    OnePiece.Network.plot(vcat(ve_, ed_), st_, la, ht = ht, js = js, pn = pn)
 
 end

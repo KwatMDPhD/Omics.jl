@@ -1,4 +1,4 @@
-function animate(he__, di; pe = 1, js = "", st_ = [])
+function animate(he__, js, di; pe = 1, st_ = [])
 
     #
     dw = joinpath(homedir(), "Downloads")
@@ -29,17 +29,6 @@ function animate(he__, di; pe = 1, js = "", st_ = [])
         if !(id == 1 || id % pe == 0 || id == n)
 
             continue
-
-        end
-
-        #
-        if isempty(js) && 1 < id
-
-            js = joinpath(dw, "$pr.1.json")
-
-            while !ispath(js)
-
-            end
 
         end
 

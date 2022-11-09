@@ -1,4 +1,4 @@
-function plot(el_, st_, la; ht = "", js = true, pn = true, bg = "#fdfdfd")
+function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
 
     di = "OnePiece.Network.plot.$(OnePiece.Time.stamp())"
 
@@ -42,7 +42,6 @@ function plot(el_, st_, la; ht = "", js = true, pn = true, bg = "#fdfdfd")
             style: $(write(st_)),
             layout: $(write(la)),
         });
-
 
         cy.ready(function() {
             $scj

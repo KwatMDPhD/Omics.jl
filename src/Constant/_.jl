@@ -1,7 +1,7 @@
 module Constant
 
-CA_ = [string(ca) for ca in "A23456789XJQK"]
+include("../_include.jl")
 
-RA = 20121020
+@_include()
 
 end
