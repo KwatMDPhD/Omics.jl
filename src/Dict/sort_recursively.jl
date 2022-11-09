@@ -2,16 +2,26 @@ function sort_recursively(an)
 
     if an isa AbstractArray
 
-        [sort_recursively(an2) for an2 in an]
+        ans = [sort_recursively(an2) for an2 in an]
 
     elseif an isa AbstractDict
 
-        sort(Base.Dict(ke => sort_recursively(va) for (ke, va) in an))
+        ans = sort(Base.Dict(ke => sort_recursively(va) for (ke, va) in an))
 
     else
 
-        an
+        ans = an
 
     end
+
+    try
+
+        sort!(ans)
+
+    catch
+
+    end
+
+    ans
 
 end

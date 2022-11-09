@@ -35,14 +35,6 @@ function plot_histogram(
 
     end
 
-    # TODO: Check
-    #
-    #if xbins_size == 0.0
-
-    #    xbins_size = nothing
-
-    #end
-
     #
     layout = OnePiece.Dict.merge(
         Dict(

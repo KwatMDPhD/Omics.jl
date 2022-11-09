@@ -1,12 +1,10 @@
-function map_to(ro_x_co_x_st, co_, ho = "first"; de = "", pr = true)
+function map_to(ro_x_co_x_st, fr_, to, ho = "first"; de = "", pr = true)
 
     fr_to = Dict()
 
-    id = length(co_)
+    id = findfirst(==(to), names(ro_x_co_x_st))
 
-    for st_ in eachrow(ro_x_co_x_st[!, co_])
-
-        to = st_[id]
+    for (fr_, to) in zip(eachrow(ro_x_co_x_st[!, fr_]), ro_x_co_x_st[!, id])
 
         if ismissing(to)
 
@@ -16,7 +14,7 @@ function map_to(ro_x_co_x_st, co_, ho = "first"; de = "", pr = true)
 
         OnePiece.Dict.set!(fr_to, to, to, ho, pr = pr)
 
-        for fr in st_[1:(id - 1)]
+        for fr in fr_
 
             if ismissing(fr)
 
@@ -26,7 +24,7 @@ function map_to(ro_x_co_x_st, co_, ho = "first"; de = "", pr = true)
 
             if isempty(de)
 
-                fr2_ = ()
+                fr2_ = (fr,)
 
             else
 

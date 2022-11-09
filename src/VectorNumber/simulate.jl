@@ -1,4 +1,4 @@
-function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", mi = "")
+function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", ho = "")
 
     #
     if di == "Normal"
@@ -24,15 +24,15 @@ function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", mi = "
     ne_ = reverse(-po_)
 
     #
-    if isempty(mi)
+    if isempty(ho)
 
         nem_ = ne_
 
-    elseif mi == "deep"
+    elseif ho == "deep"
 
         nem_ = ne_ * 2.0
 
-    elseif mi == "long"
+    elseif ho == "long"
 
         nem_ = Vector{eltype(ne_)}(undef, n * 2 - 1)
 
