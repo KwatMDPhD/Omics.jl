@@ -1,14 +1,14 @@
 macro _include()
 
-    fi = string(__source__.file)
+    pa = string(__source__.file)
 
-    :(_include($fi))
+    :(_include($pa))
 
 end
 
-function _include(fi)
+function _include(pa)
 
-    di, fi = splitdir(fi)
+    di, fi = splitdir(pa)
 
     for na in readdir(di)
 

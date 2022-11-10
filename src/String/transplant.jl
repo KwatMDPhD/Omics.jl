@@ -1,11 +1,11 @@
-function transplant(sth, std, de, id_)
+function transplant(st1, st2, de, id_)
 
-    sph_ = split(sth, de)
+    sp1_ = split(st1, de)
 
-    spd_ = split(std, de)
+    sp2_ = split(st2, de)
 
-    OnePiece.Array.error_size((sph_, spd_))
+    OnePiece.Array.error_size((sp1_, sp2_))
 
-    join(((sph, spd)[id] for (sph, spd, id) in zip(sph_, spd_, id_)), de)
+    join(((sp1, sp2)[id] for (sp1, sp2, id) in zip(sp1_, sp2_, id_)), de)
 
 end
