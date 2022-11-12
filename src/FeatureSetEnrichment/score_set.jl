@@ -125,9 +125,9 @@ function score_set(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...
 
 end
 
-function score_set(fe_, sc_, se_fe1_; ex = 1.0, n_jo = 1)
+function score_set(fe_, sc_, se_fe_; ex = 1.0, n_jo = 1)
 
-    if length(se_fe1_) < 10
+    if length(se_fe_) < 10
 
         ch = fe_
 
@@ -139,13 +139,13 @@ function score_set(fe_, sc_, se_fe1_; ex = 1.0, n_jo = 1)
 
     Dict(
         se => score_set(fe_, sc_, fe1_, OnePiece.Vector.is_in(ch, fe1_), ex = ex, pl = false) for
-        (se, fe1_) in se_fe1_
+        (se, fe1_) in se_fe_
     )
 
 end
 
 # TODO: Refactor API
-function score_set(fe_x_sa_x_sc, se_fe1_; al = "cidac", ex = 1.0, n_jo = 1)
+function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
     #
     fe_, sa_, fe_x_sa_x_sc = OnePiece.DataFrame.separate(fe_x_sa_x_sc)[[2, 3, 4]]
@@ -155,7 +155,7 @@ function score_set(fe_x_sa_x_sc, se_fe1_; al = "cidac", ex = 1.0, n_jo = 1)
     OnePiece.Matrix.error_bad(fe_x_sa_x_sc, Real)
 
     #
-    se_x_sa_x_en = DataFrame("Set" => collect(keys(se_fe1_)))
+    se_x_sa_x_en = DataFrame("Set" => collect(keys(se_fe_)))
 
     for (id, sa) in enumerate(sa_)
 
@@ -165,7 +165,7 @@ function score_set(fe_x_sa_x_sc, se_fe1_; al = "cidac", ex = 1.0, n_jo = 1)
 
         fu, st = _match_algorithm(al)
 
-        se_en = _match_algorithm(fu(fe_, sc_, se_fe1_, ex = ex), st)
+        se_en = _match_algorithm(fu(fe_, sc_, se_fe_, ex = ex), st)
 
         se_x_sa_x_en[!, sa] = [se_en[se] for se in se_x_sa_x_en[!, "Set"]]
 
