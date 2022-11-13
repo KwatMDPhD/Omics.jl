@@ -22,8 +22,8 @@ function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_a
 
     #
     en_ =
-        OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_) -
-        OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
+        OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(oual_, inal_, abl_) -
+        OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(ouar_, inar_, abr_)
 
     #
     et = OnePiece.VectorNumber.get_extreme(en_)

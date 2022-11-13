@@ -19,15 +19,3 @@ function _match_algorithm(al)
     end
 
 end
-
-function _match_algorithm(se_en::AbstractDict, id)
-
-    Dict(se => en[id] for (se, en) in se_en)
-
-end
-
-function _match_algorithm(se_en_, id)
-
-    [_match_algorithm(se_en, id) for se_en in se_en_]
-
-end

@@ -6,7 +6,7 @@ function sort_recursively(an)
 
     elseif an isa AbstractDict
 
-        ans = sort(Base.Dict(ke => sort_recursively(va) for (ke, va) in an))
+        ans = sort(OrderedDict(ke => sort_recursively(va) for (ke, va) in an))
 
     else
 

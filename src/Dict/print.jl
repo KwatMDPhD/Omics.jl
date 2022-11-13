@@ -14,7 +14,7 @@ function print(ke_va, n = -1)
 
     end
 
-    ke_va = sort(ke_va)
+    ke_va = sort(OrderedDict(ke_va))
 
     if n == -1
 

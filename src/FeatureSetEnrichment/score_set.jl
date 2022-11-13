@@ -159,14 +159,17 @@ function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
 
     for (id, sa) in enumerate(sa_)
 
+        #
         go_ = findall(!ismissing, fe_x_sa_x_sc[:, id])
 
         sc_, fe_ = OnePiece.Vector.sort_like((fe_x_sa_x_sc[go_, id], fe_[go_]))
 
-        fu, st = _match_algorithm(al)
+        #
+        fu, id = _match_algorithm(al)
 
-        se_en = _match_algorithm(fu(fe_, sc_, se_fe_, ex = ex), st)
+        se_en = Dict(se => en[id] for (se, en) in fu(fe_, sc_, se_fe_, ex = ex))
 
+        #
         se_x_sa_x_en[!, sa] = [se_en[se] for se in se_x_sa_x_en[!, "Set"]]
 
     end
