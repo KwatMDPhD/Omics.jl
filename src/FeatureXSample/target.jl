@@ -32,7 +32,7 @@ function target(nu_, fe_x_sa_x_nu, fu)
 
     elseif fu == "signal_to_noise_ratio"
 
-        fu = OnePiece.information.get_signal_to_noise_ratio
+        fu = OnePiece.Information.get_signal_to_noise_ratio
 
     end
 

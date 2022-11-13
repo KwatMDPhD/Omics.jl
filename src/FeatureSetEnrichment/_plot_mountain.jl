@@ -30,11 +30,11 @@ function _plot_mountain(
     yaxis3_domain = (0.32, 1.0)
 
     #
-    title_font_size = 32
+    title_font_size = 24
 
-    statistic_font_size = 24
+    statistic_font_size = 16
 
-    axis_title_font_size = 16
+    axis_title_font_size = 12
 
     #
     annotation =
@@ -63,7 +63,11 @@ function _plot_mountain(
     layout = Dict(
         "height" => height,
         "width" => width,
-        "margin" => Dict("t" => round(height * 0.17), "l" => round(width * 0.17)),
+        "margin" => Dict(
+            "t" => round(height * 0.24),
+            "b" => round(height * 0.088),
+            "l" => round(width * 0.19),
+        ),
         "showlegend" => false,
         "yaxis" => Dict(
             "domain" => yaxis1_domain,
@@ -98,7 +102,7 @@ function _plot_mountain(
             merge(
                 annotationx,
                 Dict(
-                    "y" => 1.16,
+                    "y" => 1.29,
                     "text" => "<b>$title_text</b>",
                     "font" => Dict("size" => title_font_size, "color" => "#2b2028"),
                 ),
@@ -106,8 +110,8 @@ function _plot_mountain(
             merge(
                 annotationx,
                 Dict(
-                    "y" => 1.04,
-                    "text" => "Extreme = <b>$(OnePiece.Number.format(ex))</b> and Area = <b>$(OnePiece.Number.format(ar))</b>",
+                    "y" => 1.16,
+                    "text" => "Extreme: <b>$(OnePiece.Number.format(ex))</b> & Area: <b>$(OnePiece.Number.format(ar))</b>",
                     "font" => Dict("size" => statistic_font_size, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
                     "bordercolor" => "#404ed8",
