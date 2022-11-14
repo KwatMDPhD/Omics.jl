@@ -25,6 +25,26 @@ function make(di, so_, sc, ht = "")
 
     println("Wrote $ht.")
 
-    display(Base.HTML(jo))
+    if displayable("html")
+
+        display(Base.HTML(jo))
+
+    else
+
+        print("HTML is not displayable")
+
+        try
+
+            DefaultApplication_open(ht)
+
+            println(".")
+
+        catch
+
+            println(" nor openable.")
+
+        end
+
+    end
 
 end
