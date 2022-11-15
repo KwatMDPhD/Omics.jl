@@ -1,37 +1,45 @@
-# TODO: Consider using in_::BitVector
-function _sum_1_absolute_and_0_count(sc_, in_)
+# TODO: Refactor API, decouple extreme and area
 
-    su1 = 0.0
+function _sum_1_absolute_and_0_count(sc_, bi_)
 
-    su0 = 0.0
+    #
+    sut = 0.0
+
+    suf = 0.0
 
     @inbounds @fastmath @simd for id in 1:length(sc_)
 
-        if in_[id] == 1.0
+        #
+        if bi_[id]
 
-            nu = sc_[id]
+            #
+            sc = sc_[id]
 
-            if nu < 0.0
+            #
+            if sc < 0.0
 
-                nu = -nu
+                sc = -sc
 
             end
 
-            su1 += nu
+            #
+            sut += sc
 
+            #
         else
 
-            su0 += 1.0
+            suf += 1.0
 
         end
 
     end
 
-    su1, su0
+    #
+    sut, suf
 
 end
 
-function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
+function score_set(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
 
     #
     n = length(fe_)
@@ -48,25 +56,29 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
     ar = 0.0
 
     #
-    su1, su0 = _sum_1_absolute_and_0_count(sc_, in_)
+    sut, suf = _sum_1_absolute_and_0_count(sc_, bi_)
 
-    de = 1.0 / su0
+    de = 1.0 / suf
 
     @inbounds @fastmath @simd for id in n:-1:1
 
         #
-        if in_[id] == 1.0
+        if bi_[id]
 
+            #
             sc = sc_[id]
 
+            #
             if sc < 0.0
 
                 sc = -sc
 
             end
 
-            cu += sc^ex / su1
+            #
+            cu += sc^ex / sut
 
+            #
         else
 
             cu -= de
@@ -110,7 +122,7 @@ function score_set(fe_, sc_, fe1_, in_; ex = 1.0, pl = true, ke_ar...)
     #
     if pl
 
-        _plot_mountain(fe_, sc_, in_, en_, et, ar; ke_ar...)
+        _plot_mountain(fe_, sc_, bi_, en_, et, ar; ke_ar...)
 
     end
 
@@ -121,13 +133,13 @@ end
 
 function score_set(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
-    score_set(fe_, sc_, fe1_, OnePiece.Vector.is_in(fe_, Set(fe1_)); ex = ex, pl = pl, ke_ar...)
+    score_set(fe_, sc_, fe1_, OnePiece.Vector.is_in(fe_, fe1_); ex = ex, pl = pl, ke_ar...)
 
 end
 
-function score_set(fe_, sc_, se_fe_; ex = 1.0, n_jo = 1)
+function score_set(fe_, sc_, se_fe_; ex = 1.0)
 
-    if length(se_fe_) < 10
+    if length(se_fe_) < 2
 
         ch = fe_
 
@@ -144,8 +156,7 @@ function score_set(fe_, sc_, se_fe_; ex = 1.0, n_jo = 1)
 
 end
 
-# TODO: Refactor API
-function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0, n_jo = 1)
+function score_set(fe_x_sa_x_sc, se_fe_; al = "cidac", ex = 1.0)
 
     #
     fe_, sa_, fe_x_sa_x_sc = OnePiece.DataFrame.separate(fe_x_sa_x_sc)[[2, 3, 4]]

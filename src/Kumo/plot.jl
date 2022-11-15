@@ -120,7 +120,7 @@ function plot(;
     #
     la = Dict{String, Any}("animate" => false)
 
-    if po
+    if !js
 
         me = Dict("name" => "preset")
 

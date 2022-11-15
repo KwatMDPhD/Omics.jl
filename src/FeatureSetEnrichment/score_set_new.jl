@@ -1,15 +1,15 @@
 function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
     #
-    in_ = convert(Vector{Float64}, OnePiece.Vector.is_in(fe_, Set(fe1_)))
+    bi_ = convert(Vector{Float64}, OnePiece.Vector.is_in(fe_, fe1_))
 
-    ou_ = (1.0 - i for i in in_)
+    ou_ = (1.0 - bi for bi in bi_)
 
     #
     ab_ = [abs(sc)^ex for sc in sc_]
 
     #
-    ina_ = [i * ab for (i, ab) in zip(in_, ab_)]
+    ina_ = [bi * ab for (bi, ab) in zip(bi_, ab_)]
 
     oua_ = [ou * ab for (ou, ab) in zip(ou_, ab_)]
 
@@ -22,8 +22,8 @@ function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_a
 
     #
     en_ =
-        OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(oual_, inal_, abl_) -
-        OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(ouar_, inar_, abr_)
+        OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_) -
+        OnePiece.Information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
 
     #
     et = OnePiece.VectorNumber.get_extreme(en_)
@@ -33,7 +33,7 @@ function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_a
     #
     if pl
 
-        _plot_mountain(fe_, sc_, in_, en_, et, ar; ke_ar...)
+        _plot_mountain(fe_, sc_, bi_, en_, et, ar; ke_ar...)
 
     end
 
@@ -42,7 +42,7 @@ function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_a
 
 end
 
-function score_set_new(fe_, sc_, se_fe_; ex = 1.0, n_jo = 1)
+function score_set_new(fe_, sc_, se_fe_; ex = 1.0)
 
     Dict(se => score_set_new(fe_, sc_, fe1_, ex = ex, pl = false) for (se, fe1_) in se_fe_)
 

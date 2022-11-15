@@ -1,8 +1,10 @@
 function pair_index(an_)
 
-    an_id = Dict()
+    ty = eltype(an_)
 
-    id_an = Dict()
+    an_id = Dict{ty, Int}()
+
+    id_an = Dict{Int, ty}()
 
     for (id, an) in enumerate(an_)
 

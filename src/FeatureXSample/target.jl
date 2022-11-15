@@ -20,21 +20,25 @@ function _trigger(fu, nu1_, nu2_)
 
 end
 
-function target(nu_, fe_x_sa_x_nu, fu)
+function _get_mean_difference(ve1, ve2)
 
-    if fu == "median_difference"
+    mean(ve1) - mean(ve2)
 
-        fu = (ve1, ve2) -> median(ve2) - median(ve1)
+end
 
-    elseif fu == "mean_difference"
+function _get_median_difference(ve1, ve2)
 
-        fu = (ve1, ve2) -> mean(ve2) - mean(ve1)
+    median(ve1) - median(ve2)
 
-    elseif fu == "signal_to_noise_ratio"
+end
 
-        fu = OnePiece.Information.get_signal_to_noise_ratio
+function target(nu_, fe_x_sa_x_nu, na)
 
-    end
+    fu = Dict(
+        "mean_difference" => _get_mean_difference,
+        "median_difference" => _get_median_difference,
+        "signal_to_noise_ratio" => OnePiece.Information.get_signal_to_noise_ratio,
+    )[na]
 
     [_trigger(fu, nu_, nu2_) for nu2_ in eachrow(fe_x_sa_x_nu)]
 

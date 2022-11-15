@@ -6,15 +6,15 @@ function make_benchmark(ho)
 
         fe_ = OnePiece.Constant.CA_
 
-        n = length(fe_)
+        n = convert(Float64, length(fe_))
 
-        mi = ceil(Int, n / 2)
+        mi = ceil(n / 2.0)
 
-        sc_ = collect((mi - n):(mi - 1))
+        sc_ = collect((mi - n):(mi - 1.0))
 
-        fe1_ = split(sp_[2], "")
+        fe1_ = convert(Vector{String}, split(sp_[2], ""))
 
-        if !all(fe1 in fe_ for fe1 in fe1_)
+        if !all(OnePiece.Vector.is_in(fe1, fe_))
 
             error()
 
@@ -34,11 +34,11 @@ function make_benchmark(ho)
 
         di = joinpath(dirname(dirname(@__DIR__)), "test", "FeatureSetEnrichment.data")
 
-        da = OnePiece.Table.read(joinpath(di, "gene_score.tsv"))
+        da = OnePiece.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 
-        fe_ = da[!, "Gene"]
+        fe_ = convert(Vector{String}, da[!, 1])
 
-        sc_ = da[!, "Score"]
+        sc_ = da[!, 2]
 
         fe1_ = OnePiece.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 

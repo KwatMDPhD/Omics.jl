@@ -1,6 +1,6 @@
 function read(gm::AbstractString)
 
-    se_ge_ = Dict()
+    se_ge_ = Dict{String, Vector{String}}()
 
     for li in readlines(gm)
 
@@ -16,7 +16,7 @@ end
 
 function read(gm_)
 
-    se_ge_ = Dict()
+    se_ge_ = Dict{String, Vector{String}}()
 
     for gm in gm_
 
