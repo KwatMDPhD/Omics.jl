@@ -1,4 +1,4 @@
-function read(gs, di = OnePiece.TE)
+function read(gs, di = OnePiece.TE; pr = true)
 
     #
     fi = "$(gs)_family.soft.gz"
@@ -7,7 +7,11 @@ function read(gs, di = OnePiece.TE)
 
     if ispath(gz)
 
-        println("Using $gz")
+        if pr
+
+            println("Using $gz")
+
+        end
 
     else
 
@@ -20,7 +24,7 @@ function read(gs, di = OnePiece.TE)
 
     bl = nothing
 
-    ty_bl = Dict()
+    ty_bl = Dict{String, OrderedDict{String, OrderedDict{String, Any}}}()
 
     eq = " = "
 
@@ -32,11 +36,15 @@ function read(gs, di = OnePiece.TE)
         #
         if startswith(li, "^")
 
-            println(li)
+            if pr
+
+                println(li)
+
+            end
 
             ty, bl = split(li[2:end], eq, limit = 2)
 
-            get!(ty_bl, ty, OrderedDict())[bl] = OrderedDict()
+            get!(ty_bl, ty, OrderedDict{String, OrderedDict}())[bl] = OrderedDict{String, Any}()
 
             continue
 
@@ -81,7 +89,7 @@ function read(gs, di = OnePiece.TE)
 
         else
 
-            OnePiece.Dict.set!(ke_va, split(li, eq, limit = 2)..., "suffix")
+            OnePiece.Dict.set!(ke_va, split(li, eq, limit = 2)..., "suffix", pr = pr)
 
         end
 

@@ -6,15 +6,15 @@ function make_benchmark(ho)
 
         fe_ = OnePiece.Constant.CA_
 
-        n = convert(Float64, length(fe_))
+        n = length(fe_)
 
-        mi = ceil(n / 2.0)
+        mi = ceil(n / 2)
 
-        sc_ = collect((mi - n):(mi - 1.0))
+        sc_ = collect((mi - n):(mi - 1))
 
-        fe1_ = convert(Vector{String}, split(sp_[2], ""))
+        fe1_ = split(sp_[2], "")
 
-        if !all(OnePiece.Vector.is_in(fe1, fe_))
+        if !all(OnePiece.Vector.is_in(fe1_, fe_))
 
             error()
 
@@ -36,7 +36,7 @@ function make_benchmark(ho)
 
         da = OnePiece.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 
-        fe_ = convert(Vector{String}, da[!, 1])
+        fe_ = da[!, 1]
 
         sc_ = da[!, 2]
 

@@ -1,4 +1,4 @@
-function _name(pl, fe_x_in_x_an)
+function _name(pl, fe_x_in_x_an; pr = true)
 
     pl = parse(Int, pl[4:end])
 
@@ -46,29 +46,37 @@ function _name(pl, fe_x_in_x_an)
 
     end
 
-    println(first(fe_x_in_x_an, 4))
+    if pr
 
-    println("$ke => $va")
+        println(first(fe_x_in_x_an, 4))
 
-    fe_na = Dict()
+        println("$ke => $va")
+
+    end
+
+    fe_na = Dict{String, String}()
 
     for (fe, na) in zip(fe_x_in_x_an[!, ke], fe_x_in_x_an[!, va])
 
         if na isa AbstractString && !isempty(na) && !(na in ("---",))
 
-            OnePiece.Dict.set!(fe_na, fe, fu(na))
+            OnePiece.Dict.set!(fe_na, fe, fu(na), pr = pr)
 
         end
 
     end
 
-    OnePiece.Dict.print(fe_na, 0)
+    if pr
+
+        OnePiece.Dict.print(fe_na, 0)
+
+    end
 
     fe_na
 
 end
 
-function tabulate(ty_bl, sa = "!Sample_title")
+function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
     #
     sa_ke_va = OrderedDict(pop!(ke_va, sa) => ke_va for ke_va in values(ty_bl["SAMPLE"]))
@@ -103,7 +111,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
 
             end
 
-            OnePiece.Dict.set!(sa_an_, sa, [sp[2] for sp in sp_])
+            OnePiece.Dict.set!(sa_an_, sa, [sp[2] for sp in sp_], pr = pr)
 
         else
 
@@ -139,6 +147,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
                 sa_nu_,
                 sa,
                 [parse(Float64, va) for va in fe_x_in_x_an[id_, "VALUE"]],
+                pr = pr,
             )
 
         else
@@ -152,7 +161,11 @@ function tabulate(ty_bl, sa = "!Sample_title")
     #
     fe_x_sa_x_an = DataFrame(sa_an_)
 
-    OnePiece.DataFrame.print_unique(fe_x_sa_x_an)
+    if pr
+
+        OnePiece.DataFrame.print_unique(fe_x_sa_x_an)
+
+    end
 
     #
     fe_x_sa_x_nu = DataFrame(sa_nu_)
@@ -181,7 +194,7 @@ function tabulate(ty_bl, sa = "!Sample_title")
     #
     if haskey(pl_ke_va[pl], "fe_x_in_x_an")
 
-        fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"])
+        fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"], pr = pr)
 
         fe_x_sa_x_nu[!, ro] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, ro]]
 

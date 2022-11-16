@@ -135,7 +135,7 @@ function _plot_mountain(
     #
     x = collect(1:n)
 
-    bi_ = convert(BitVector, in_)
+    bi_ = convert(Vector{Bool}, in_)
 
     trace_ = [
         #

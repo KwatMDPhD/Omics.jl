@@ -117,7 +117,7 @@ function score_set(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
     end
 
     #
-    ar /= convert(Float64, n)
+    ar /= n
 
     #
     if pl

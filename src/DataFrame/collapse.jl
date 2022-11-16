@@ -1,11 +1,15 @@
 # TODO: `groupby`
-function collapse(ro_x_co_x_nu, fu = median)
+function collapse(ro_x_co_x_nu, fu = median; pr = true)
 
-    println("Before")
+    if pr
 
-    println(size(ro_x_co_x_nu))
+        println("Before")
 
-    ro_id_ = Dict()
+        println(size(ro_x_co_x_nu))
+
+    end
+
+    ro_id_ = Dict{String, Vector{Int}}()
 
     ro, ro_, co_, ro_x_co_x_nu = OnePiece.DataFrame.separate(ro_x_co_x_nu)
 
@@ -17,7 +21,7 @@ function collapse(ro_x_co_x_nu, fu = median)
 
     roc_ = []
 
-    roc_x_co_x_nu = Matrix{Real}(undef, (length(ro_id_), length(co_)))
+    roc_x_co_x_nu = Matrix{Float64}(undef, (length(ro_id_), length(co_)))
 
     for (id2, (ro, id_)) in enumerate(sort(ro_id_))
 
@@ -39,9 +43,13 @@ function collapse(ro_x_co_x_nu, fu = median)
 
     roc_x_co_x_nu = OnePiece.DataFrame.make(ro, roc_, co_, roc_x_co_x_nu)
 
-    println("After")
+    if pr
 
-    println(size(roc_x_co_x_nu))
+        println("After")
+
+        println(size(roc_x_co_x_nu))
+
+    end
 
     roc_x_co_x_nu
 

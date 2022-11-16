@@ -1,9 +1,9 @@
 function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
     #
-    bi_ = convert(Vector{Float64}, OnePiece.Vector.is_in(fe_, fe1_))
+    bi_ = OnePiece.Vector.is_in(fe_, fe1_)
 
-    ou_ = (1.0 - bi for bi in bi_)
+    ou_ = (1 - bi for bi in bi_)
 
     #
     ab_ = [abs(sc)^ex for sc in sc_]

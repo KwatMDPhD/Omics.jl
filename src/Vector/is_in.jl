@@ -20,7 +20,7 @@ function is_in(ne_, ha_)
 
 end
 
-function is_in(ne_id::Dict{String, Int}, ha_::Base.Vector{String})
+function is_in(ne_id::AbstractDict, ha_)
 
     bi_ = fill(false, length(ne_id))
 
