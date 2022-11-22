@@ -8,7 +8,7 @@ using LinearAlgebra: norm
 
 using StatsBase: mean
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

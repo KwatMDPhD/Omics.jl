@@ -12,7 +12,7 @@ function map_to(ro_x_co_x_st, fr_, to, ho = "first"; de = "", pr = true)
 
         end
 
-        OnePiece.Dict.set!(fr_to, to, to, ho, pr = pr)
+        BioinformaticsCore.Dict.set!(fr_to, to, to, ho, pr = pr)
 
         for fr in fr_
 
@@ -34,7 +34,7 @@ function map_to(ro_x_co_x_st, fr_, to, ho = "first"; de = "", pr = true)
 
             for fr2 in fr2_
 
-                OnePiece.Dict.set!(fr_to, fr2, to, ho, pr = pr)
+                BioinformaticsCore.Dict.set!(fr_to, fr2, to, ho, pr = pr)
 
             end
 

@@ -6,7 +6,7 @@ using GZip: open
 
 using OrderedCollections: OrderedDict
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

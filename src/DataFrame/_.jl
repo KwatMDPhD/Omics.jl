@@ -4,7 +4,7 @@ using DataFrames: DataFrames, insertcols!
 
 using StatsBase: median
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

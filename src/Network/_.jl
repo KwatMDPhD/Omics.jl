@@ -2,7 +2,7 @@ module Network
 
 using JSON3: write
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

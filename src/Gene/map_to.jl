@@ -1,6 +1,6 @@
 function map_to(wh)
 
-    OnePiece.DataFrame.map_to(
+    BioinformaticsCore.DataFrame.map_to(
         read(wh),
         Dict(
             "ensembl" => (

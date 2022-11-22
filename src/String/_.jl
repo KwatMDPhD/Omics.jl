@@ -1,6 +1,6 @@
 module String
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

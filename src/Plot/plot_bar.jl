@@ -17,7 +17,7 @@ function plot_bar(
                 "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
             ) for id in 1:length(y_)
         ],
-        OnePiece.Dict.merge(Dict("barmode" => "stack"), layout),
+        BioinformaticsCore.Dict.merge(Dict("barmode" => "stack"), layout),
         ht = ht,
     )
 

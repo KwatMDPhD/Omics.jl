@@ -2,7 +2,7 @@ module FeatureXSample
 
 using StatsBase: mean, median
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

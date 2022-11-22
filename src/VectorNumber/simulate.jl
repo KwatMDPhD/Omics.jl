@@ -1,4 +1,4 @@
-function simulate(n, re = true, ra = OnePiece.Constant.RA; di = "Normal", ho = "")
+function simulate(n, re = true, ra = BioinformaticsCore.Constant.RA; di = "Normal", ho = "")
 
     #
     if di == "Normal"

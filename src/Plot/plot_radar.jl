@@ -29,17 +29,17 @@ function plot_radar(
                 "fillcolor" => marker_color,
             ) for (theta, r_, name, marker_color) in zip(theta_, r__, name_, marker_color_)
         ],
-        OnePiece.Dict.merge(
+        BioinformaticsCore.Dict.merge(
             Dict(
                 "polar" => Dict(
-                    "angularaxis" => OnePiece.Dict.merge(
+                    "angularaxis" => BioinformaticsCore.Dict.merge(
                         axis,
                         Dict(
                             "direction" => "clockwise",
                             "tickfont" => Dict("size" => 32.0, "family" => "Optima"),
                         ),
                     ),
-                    "radialaxis" => OnePiece.Dict.merge(
+                    "radialaxis" => BioinformaticsCore.Dict.merge(
                         axis,
                         Dict(
                             "nticks" => 8,

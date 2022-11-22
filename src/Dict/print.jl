@@ -5,7 +5,7 @@ function print(ke_va, n = -1)
     n_va = length(unique(values(ke_va)))
 
     println(
-        "$n_ke $(OnePiece.String.count_noun(n_ke, "key")) and $n_va unique $(OnePiece.String.count_noun(n_va, "value"))",
+        "$n_ke $(BioinformaticsCore.String.count_noun(n_ke, "key")) and $n_va unique $(BioinformaticsCore.String.count_noun(n_va, "value"))",
     )
 
     if n_ke == 0

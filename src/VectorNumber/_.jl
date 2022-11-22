@@ -4,7 +4,7 @@ using Distributions: Normal
 
 using Random: seed!
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

@@ -6,7 +6,7 @@ using OrderedCollections: OrderedDict
 
 using TOML: parsefile
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

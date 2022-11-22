@@ -1,6 +1,6 @@
 function make(an__)
 
-    OnePiece.Array.error_size(an__)
+    BioinformaticsCore.Array.error_size(an__)
 
     n_ro = length(an__)
 

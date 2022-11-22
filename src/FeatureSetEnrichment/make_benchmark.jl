@@ -4,7 +4,7 @@ function make_benchmark(ho)
 
     if sp_[1] == "card"
 
-        fe_ = OnePiece.Constant.CA_
+        fe_ = BioinformaticsCore.Constant.CA_
 
         n = length(fe_)
 
@@ -14,7 +14,7 @@ function make_benchmark(ho)
 
         fe1_ = split(sp_[2], "")
 
-        if !all(OnePiece.Vector.is_in(fe1_, fe_))
+        if !all(BioinformaticsCore.Vector.is_in(fe1_, fe_))
 
             error()
 
@@ -26,7 +26,7 @@ function make_benchmark(ho)
 
         fe_ = ["Feature $id" for id in 1:n]
 
-        sc_ = OnePiece.VectorNumber.simulate(ceil(Int, n / 2), iseven(n))
+        sc_ = BioinformaticsCore.VectorNumber.simulate(ceil(Int, n / 2), iseven(n))
 
         fe1_ = sample(fe_, parse(Int, sp_[3]), replace = false)
 
@@ -34,13 +34,13 @@ function make_benchmark(ho)
 
         di = joinpath(dirname(dirname(@__DIR__)), "test", "FeatureSetEnrichment.data")
 
-        da = OnePiece.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
+        da = BioinformaticsCore.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 
         fe_ = da[!, 1]
 
         sc_ = da[!, 2]
 
-        fe1_ = OnePiece.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+        fe1_ = BioinformaticsCore.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
     else
 

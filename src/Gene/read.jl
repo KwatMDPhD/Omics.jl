@@ -1,6 +1,6 @@
 function read(wh)
 
-    OnePiece.Table.read(
+    BioinformaticsCore.Table.read(
         _path(Dict("ensembl" => "ensembl.tsv.gz", "hgnc" => "hgnc_complete_set.tsv.gz")[wh]),
     )
 

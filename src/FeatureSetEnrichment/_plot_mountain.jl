@@ -111,7 +111,7 @@ function _plot_mountain(
                 annotationx,
                 Dict(
                     "y" => 1.16,
-                    "text" => "Extreme: <b>$(OnePiece.Number.format(ex))</b> & Area: <b>$(OnePiece.Number.format(ar))</b>",
+                    "text" => "Extreme: <b>$(BioinformaticsCore.Number.format(ex))</b> & Area: <b>$(BioinformaticsCore.Number.format(ar))</b>",
                     "font" => Dict("size" => statistic_font_size, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
                     "bordercolor" => "#404ed8",
@@ -211,6 +211,6 @@ function _plot_mountain(
     )
 
     #
-    OnePiece.Plot.plot(trace_, layout, ht = ht)
+    BioinformaticsCore.Plot.plot(trace_, layout, ht = ht)
 
 end

@@ -23,7 +23,7 @@ function make(di, so_, sc, ht = "")
 
     if isempty(ht)
 
-        ht = joinpath(OnePiece.TE, "$(OnePiece.Time.stamp()).html")
+        ht = joinpath(BioinformaticsCore.TE, "$(BioinformaticsCore.Time.stamp()).html")
 
     end
 

@@ -1,6 +1,6 @@
 function edge()
 
-    ve_id = OnePiece.Vector.pair_index(VE_)[1]
+    ve_id = BioinformaticsCore.Vector.pair_index(VE_)[1]
 
     n = length(ve_id)
 

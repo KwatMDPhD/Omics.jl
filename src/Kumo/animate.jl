@@ -5,7 +5,7 @@ function animate(he__, js, di; pe = 1, st_ = [])
 
     pr = "Kumo.animate"
 
-    for pa in OnePiece.Path.select(dw, ke_ = (pr,))
+    for pa in BioinformaticsCore.Path.select(dw, ke_ = (pr,))
 
         rm(pa)
 
@@ -41,7 +41,7 @@ function animate(he__, js, di; pe = 1, st_ = [])
     end
 
     #
-    for na in OnePiece.Path.select(dw, false, ig_ = (r"\.download$",), ke_ = (pr,))
+    for na in BioinformaticsCore.Path.select(dw, false, ig_ = (r"\.download$",), ke_ = (pr,))
 
         mv(joinpath(dw, na), joinpath(di, replace(na, "$pr." => "")), force = true)
 
@@ -49,7 +49,7 @@ function animate(he__, js, di; pe = 1, st_ = [])
 
     #
     run(`convert -delay 32 -loop 0 $(sort(
-                                          OnePiece.Path.select(di, ke_ = (r".png$",)),
+                                          BioinformaticsCore.Path.select(di, ke_ = (r".png$",)),
         by = pa -> parse(Int, splitext(basename(pa))[1]),
        )) $(joinpath(di, "animate.gif"))`)
 

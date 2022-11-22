@@ -1,6 +1,6 @@
 module IPYNB
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

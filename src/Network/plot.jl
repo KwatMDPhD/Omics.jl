@@ -1,6 +1,6 @@
 function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
 
-    di = "OnePiece.Network.plot.$(OnePiece.Time.stamp())"
+    di = "BioinformaticsCore.Network.plot.$(BioinformaticsCore.Time.stamp())"
 
     pr = splitext(basename(ht))[1]
 
@@ -28,7 +28,7 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
 
     end
 
-    OnePiece.HTML.make(
+    BioinformaticsCore.HTML.make(
         di,
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",

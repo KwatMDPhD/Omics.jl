@@ -19,7 +19,7 @@ function load!()
     n_ed = length(ED_)
 
     println(
-        "Loaded $n_ve $(OnePiece.String.count_noun(n_ve, "vertex")) and $n_ed $(OnePiece.String.count_noun(n_ed, "edge")).",
+        "Loaded $n_ve $(BioinformaticsCore.String.count_noun(n_ve, "vertex")) and $n_ed $(BioinformaticsCore.String.count_noun(n_ed, "edge")).",
     )
 
 end

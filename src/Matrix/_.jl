@@ -1,6 +1,6 @@
 module Matrix
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

@@ -36,7 +36,7 @@ function plot_histogram(
     end
 
     #
-    layout = OnePiece.Dict.merge(
+    layout = BioinformaticsCore.Dict.merge(
         Dict(
             "yaxis" => Dict(
                 "domain" => (0.0, fr),
@@ -66,7 +66,7 @@ function plot_histogram(
         #
         push!(
             data,
-            OnePiece.Dict.merge(
+            BioinformaticsCore.Dict.merge(
                 le,
                 Dict(
                     "yaxis" => "y2",
@@ -82,7 +82,7 @@ function plot_histogram(
 
             push!(
                 data,
-                OnePiece.Dict.merge(
+                BioinformaticsCore.Dict.merge(
                     le,
                     Dict(
                         "showlegend" => false,

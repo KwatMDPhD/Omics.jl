@@ -8,7 +8,7 @@ end
 
 function shift_minimum(nu_, st)
 
-    fl = parse(eltype(nu_), OnePiece.String.split_and_get(st, "<", 1))
+    fl = parse(eltype(nu_), BioinformaticsCore.String.split_and_get(st, "<", 1))
 
     shift_minimum(nu_, minimum(nu_[[fl < nu for nu in nu_]]))
 

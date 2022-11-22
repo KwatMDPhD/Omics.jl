@@ -4,13 +4,13 @@ function _heat_check(he_, pr = true)
 
     if pr
 
-        println("$(OnePiece.Number.format(no)) 🔥")
+        println("$(BioinformaticsCore.Number.format(no)) 🔥")
 
-        for (he, ve) in zip(OnePiece.Vector.sort_like((he_, VE_), true)...)
+        for (he, ve) in zip(BioinformaticsCore.Vector.sort_like((he_, VE_), true)...)
 
             if he != 0.0
 
-                println("$ve\t$(OnePiece.Number.format(he))")
+                println("$ve\t$(BioinformaticsCore.Number.format(he))")
 
             end
 

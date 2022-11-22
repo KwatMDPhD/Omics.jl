@@ -25,13 +25,13 @@ function plot_heat_map(
 
     axis2 = Dict("domain" => (0.96, 1.0), "tickvals" => ())
 
-    layout = OnePiece.Dict.merge(
+    layout = BioinformaticsCore.Dict.merge(
         Dict(
             "title" => Dict("text" => "Heat Map"),
             "yaxis" =>
-                OnePiece.Dict.merge(axis, Dict("title" => Dict("text" => "$nar (n=$n_ro)"))),
+                BioinformaticsCore.Dict.merge(axis, Dict("title" => Dict("text" => "$nar (n=$n_ro)"))),
             "xaxis" =>
-                OnePiece.Dict.merge(axis, Dict("title" => Dict("text" => "$nac (n=$n_co)"))),
+                BioinformaticsCore.Dict.merge(axis, Dict("title" => Dict("text" => "$nac (n=$n_co)"))),
             "yaxis2" => axis2,
             "xaxis2" => axis2,
         ),
@@ -49,7 +49,7 @@ function plot_heat_map(
         #
         if eltype(grr_) <: AbstractString
 
-            gr_id = OnePiece.vector.pair_index(unique(grr_))[1]
+            gr_id = BioinformaticsCore.vector.pair_index(unique(grr_))[1]
 
             grr_ = [gr_id[gr] for gr in grr_]
 
@@ -72,7 +72,7 @@ function plot_heat_map(
         #
         if eltype(grc_) <: AbstractString
 
-            gr_id = OnePiece.vector.pair_index(unique(grc_))[1]
+            gr_id = BioinformaticsCore.vector.pair_index(unique(grc_))[1]
 
             grc_ = [gr_id[gr] for gr in grc_]
 
@@ -117,7 +117,7 @@ function plot_heat_map(
 
         push!(
             data,
-            OnePiece.Dict.merge(
+            BioinformaticsCore.Dict.merge(
                 trace,
                 Dict("xaxis" => "x2", "z" => [[grr] for grr in grr_][fl_], "hoverinfo" => "z+y"),
             ),
@@ -130,7 +130,7 @@ function plot_heat_map(
 
         push!(
             data,
-            OnePiece.Dict.merge(trace, Dict("yaxis" => "y2", "z" => [grc_], "hoverinfo" => "z+x")),
+            BioinformaticsCore.Dict.merge(trace, Dict("yaxis" => "y2", "z" => [grc_], "hoverinfo" => "z+x")),
         )
 
     end
@@ -142,7 +142,7 @@ end
 
 function plot_heat_map(ro_x_co_x_nu; ke_ar...)
 
-    ro, ro_, co_, ro_x_co_x_nu = OnePiece.DataFrame.separate(ro_x_co_x_nu)
+    ro, ro_, co_, ro_x_co_x_nu = BioinformaticsCore.DataFrame.separate(ro_x_co_x_nu)
 
     plot_heat_map(ro_x_co_x_nu, ro_, co_; nar = ro, ke_ar...)
 

@@ -2,7 +2,7 @@ module HTML
 
 using DefaultApplication: open as DefaultApplication_open
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

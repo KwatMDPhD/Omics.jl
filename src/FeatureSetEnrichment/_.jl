@@ -4,7 +4,7 @@ using DataFrames: DataFrame
 
 using StatsBase: mean, sample
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

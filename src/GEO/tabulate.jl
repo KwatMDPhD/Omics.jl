@@ -8,25 +8,25 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         va = "Gene Symbol"
 
-        fu = na -> OnePiece.String.split_and_get(na, " /// ", 1)
+        fu = na -> BioinformaticsCore.String.split_and_get(na, " /// ", 1)
 
     elseif pl == 13534
 
         va = "UCSC_RefGene_Name"
 
-        fu = na -> OnePiece.String.split_and_get(na, ";", 1)
+        fu = na -> BioinformaticsCore.String.split_and_get(na, ";", 1)
 
     elseif pl in (5175, 11532)
 
         va = "gene_assignment"
 
-        fu = na -> OnePiece.String.split_and_get(na, " // ", 2)
+        fu = na -> BioinformaticsCore.String.split_and_get(na, " // ", 2)
 
     elseif pl in (2004, 2005, 3718, 3720)
 
         va = "Associated Gene"
 
-        fu = na -> OnePiece.String.split_and_get(na, " // ", 1)
+        fu = na -> BioinformaticsCore.String.split_and_get(na, " // ", 1)
 
     elseif pl == 10558
 
@@ -60,7 +60,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         if na isa AbstractString && !isempty(na) && !(na in ("---",))
 
-            OnePiece.Dict.set!(fe_na, fe, fu(na), pr = pr)
+            BioinformaticsCore.Dict.set!(fe_na, fe, fu(na), pr = pr)
 
         end
 
@@ -68,7 +68,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     if pr
 
-        OnePiece.Dict.print(fe_na, 0)
+        BioinformaticsCore.Dict.print(fe_na, 0)
 
     end
 
@@ -111,7 +111,7 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
             end
 
-            OnePiece.Dict.set!(sa_an_, sa, [sp[2] for sp in sp_], pr = pr)
+            BioinformaticsCore.Dict.set!(sa_an_, sa, [sp[2] for sp in sp_], pr = pr)
 
         else
 
@@ -143,7 +143,7 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
             end
 
-            OnePiece.Dict.set!(
+            BioinformaticsCore.Dict.set!(
                 sa_nu_,
                 sa,
                 [parse(Float64, va) for va in fe_x_in_x_an[id_, "VALUE"]],
@@ -163,7 +163,7 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
     if pr
 
-        OnePiece.DataFrame.print_unique(fe_x_sa_x_an)
+        BioinformaticsCore.DataFrame.print_unique(fe_x_sa_x_an)
 
     end
 

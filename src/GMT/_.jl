@@ -1,6 +1,6 @@
 module GMT
 
-using ..OnePiece
+using ..BioinformaticsCore
 
 include("../_include.jl")
 

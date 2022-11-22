@@ -6,7 +6,7 @@ function read(gm::AbstractString)
 
         sp_ = split(li, "\t")
 
-        OnePiece.Dict.set!(se_ge_, sp_[1], [ge for ge in sp_[3:end] if !isempty(ge)])
+        BioinformaticsCore.Dict.set!(se_ge_, sp_[1], [ge for ge in sp_[3:end] if !isempty(ge)])
 
     end
 

@@ -40,18 +40,18 @@ function plot(
 
             ht = joinpath(di, "$title_text.html")
 
-            OnePiece.Table.write(
+            BioinformaticsCore.Table.write(
                 joinpath(di, "$title_text.tsv"),
-                OnePiece.DataFrame.make(nar, ro_, fa_, ro_x_fa_x_po),
+                BioinformaticsCore.DataFrame.make(nar, ro_, fa_, ro_x_fa_x_po),
             )
 
         end
 
         #
-        or_ = OnePiece.Clustering.hierarchize(ro_x_fa_x_po).order
+        or_ = BioinformaticsCore.Clustering.hierarchize(ro_x_fa_x_po).order
 
-        OnePiece.Plot.plot_heat_map(
-            OnePiece.Normalization.normalize(ro_x_fa_x_po[or_, :], 1, "-0-"),
+        BioinformaticsCore.Plot.plot_heat_map(
+            BioinformaticsCore.Normalization.normalize(ro_x_fa_x_po[or_, :], 1, "-0-"),
             ro_[or_],
             fa_,
             nar = nar,
@@ -60,7 +60,7 @@ function plot(
                 "height" => lo,
                 "width" => sh,
                 "title" =>
-                    Dict("text" => OnePiece.String.title(replace(title_text, "_x_" => "_by_"))),
+                    Dict("text" => BioinformaticsCore.String.title(replace(title_text, "_x_" => "_by_"))),
                 "xaxis" => axis,
             ),
             ht = ht,
@@ -83,18 +83,18 @@ function plot(
 
             ht = joinpath(di, "$title_text.html")
 
-            OnePiece.Table.write(
+            BioinformaticsCore.Table.write(
                 joinpath(di, "$title_text.tsv"),
-                OnePiece.DataFrame.make(naf, fa_, co_, fa_x_co_x_po),
+                BioinformaticsCore.DataFrame.make(naf, fa_, co_, fa_x_co_x_po),
             )
 
         end
 
         #
-        or_ = OnePiece.Clustering.hierarchize(transpose(fa_x_co_x_po)).order
+        or_ = BioinformaticsCore.Clustering.hierarchize(transpose(fa_x_co_x_po)).order
 
-        OnePiece.Plot.plot_heat_map(
-            OnePiece.Normalization.normalize(fa_x_co_x_po[:, or_], 2, "-0-"),
+        BioinformaticsCore.Plot.plot_heat_map(
+            BioinformaticsCore.Normalization.normalize(fa_x_co_x_po[:, or_], 2, "-0-"),
             fa_,
             co_[or_],
             nar = naf,
@@ -103,7 +103,7 @@ function plot(
                 "height" => sh,
                 "width" => lo,
                 "title" =>
-                    Dict("text" => OnePiece.String.title(replace(title_text, "_x_" => "_by_"))),
+                    Dict("text" => BioinformaticsCore.String.title(replace(title_text, "_x_" => "_by_"))),
                 "yaxis" => axis,
             ),
             ht = ht,

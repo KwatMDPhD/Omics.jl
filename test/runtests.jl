@@ -6,11 +6,11 @@ te_ = (splitext(na)[1] for na in readdir() if endswith(na, ".ipynb"))
 
 symdiff(sr_, te_)
 
-using OnePiece
+using BioinformaticsCore
 
-OnePiece.TE
+BioinformaticsCore.TE
 
-for nb in OnePiece.Path.select(".", false, ig_ = (r"^runtests",), ke_ = (r".ipynb$",))
+for nb in BioinformaticsCore.Path.select(".", false, ig_ = (r"^runtests",), ke_ = (r".ipynb$",))
 
     na = splitext(nb)[1]
 
@@ -20,7 +20,7 @@ for nb in OnePiece.Path.select(".", false, ig_ = (r"^runtests",), ke_ = (r".ipyn
 
     ma_ = Set()
 
-    for ce in OnePiece.Dict.read(nb)["cells"]
+    for ce in BioinformaticsCore.Dict.read(nb)["cells"]
 
         if ce["cell_type"] != "markdown"
 
@@ -30,13 +30,13 @@ for nb in OnePiece.Path.select(".", false, ig_ = (r"^runtests",), ke_ = (r".ipyn
 
         for li in ce["source"]
 
-            push!(ma_, OnePiece.String.split_and_get(rstrip(li, '\n'), " ", 2))
+            push!(ma_, BioinformaticsCore.String.split_and_get(rstrip(li, '\n'), " ", 2))
 
         end
 
     end
 
-    for jl in OnePiece.Path.select(
+    for jl in BioinformaticsCore.Path.select(
         joinpath(dirname(@__DIR__), "src", na),
         false,
         ig_ = (r"^_.jl$",),
@@ -65,4 +65,4 @@ for nb in OnePiece.Path.select(".", false, ig_ = (r"^runtests",), ke_ = (r".ipyn
 
 end
 
-OnePiece.IPYNB.run(@__DIR__, ["$pr.ipynb" for pr in ("runtests", "Kumo")])
+BioinformaticsCore.IPYNB.run(@__DIR__, ["$pr.ipynb" for pr in ("runtests", "Kumo")])
