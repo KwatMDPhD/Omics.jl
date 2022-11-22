@@ -1,4 +1,4 @@
-Library of lower-level functions for `GSEA.jl`, `Kata.jl`, `Clean.jl`, and other bioinformatics packages.
+Core functions for bioinformatics packages and projects such as gene set enrichment analysis (`GSEA.jl`) 🧰
 
 Documentation is coming soon...
 
