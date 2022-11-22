@@ -1,5 +1,7 @@
 Library of lower-level functions for `GSEA.jl`, `Kata.jl`, `Clean.jl`, and other bioinformatics packages.
 
+Documentation is coming soon...
+
 ---
 
 ## 👋 🤠 Howdy
