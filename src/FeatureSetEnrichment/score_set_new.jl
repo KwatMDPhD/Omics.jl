@@ -22,8 +22,15 @@ function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_a
 
     #
     en_ =
-        BioinformaticsCore.Information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_) -
-        BioinformaticsCore.Information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
+        BioinformaticsCore.Information.get_antisymmetric_kullback_leibler_divergence(
+            inal_,
+            oual_,
+            abl_,
+        ) - BioinformaticsCore.Information.get_antisymmetric_kullback_leibler_divergence(
+            inar_,
+            ouar_,
+            abr_,
+        )
 
     #
     et = BioinformaticsCore.VectorNumber.get_extreme(en_)

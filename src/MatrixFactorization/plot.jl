@@ -59,8 +59,10 @@ function plot(
             layout = Dict(
                 "height" => lo,
                 "width" => sh,
-                "title" =>
-                    Dict("text" => BioinformaticsCore.String.title(replace(title_text, "_x_" => "_by_"))),
+                "title" => Dict(
+                    "text" =>
+                        BioinformaticsCore.String.title(replace(title_text, "_x_" => "_by_")),
+                ),
                 "xaxis" => axis,
             ),
             ht = ht,
@@ -102,8 +104,10 @@ function plot(
             layout = Dict(
                 "height" => sh,
                 "width" => lo,
-                "title" =>
-                    Dict("text" => BioinformaticsCore.String.title(replace(title_text, "_x_" => "_by_"))),
+                "title" => Dict(
+                    "text" =>
+                        BioinformaticsCore.String.title(replace(title_text, "_x_" => "_by_")),
+                ),
                 "yaxis" => axis,
             ),
             ht = ht,

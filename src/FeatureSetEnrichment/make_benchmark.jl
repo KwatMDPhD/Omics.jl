@@ -40,7 +40,8 @@ function make_benchmark(ho)
 
         sc_ = da[!, 2]
 
-        fe1_ = BioinformaticsCore.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+        fe1_ =
+            BioinformaticsCore.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
     else
 

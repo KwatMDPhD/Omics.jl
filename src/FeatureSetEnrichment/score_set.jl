@@ -133,7 +133,15 @@ end
 
 function score_set(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
-    score_set(fe_, sc_, fe1_, BioinformaticsCore.Vector.is_in(fe_, fe1_); ex = ex, pl = pl, ke_ar...)
+    score_set(
+        fe_,
+        sc_,
+        fe1_,
+        BioinformaticsCore.Vector.is_in(fe_, fe1_);
+        ex = ex,
+        pl = pl,
+        ke_ar...,
+    )
 
 end
 
@@ -150,8 +158,14 @@ function score_set(fe_, sc_, se_fe_; ex = 1.0)
     end
 
     Dict(
-        se => score_set(fe_, sc_, fe1_, BioinformaticsCore.Vector.is_in(ch, fe1_), ex = ex, pl = false) for
-        (se, fe1_) in se_fe_
+        se => score_set(
+            fe_,
+            sc_,
+            fe1_,
+            BioinformaticsCore.Vector.is_in(ch, fe1_),
+            ex = ex,
+            pl = false,
+        ) for (se, fe1_) in se_fe_
     )
 
 end

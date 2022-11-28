@@ -109,9 +109,10 @@ function plot(;
             (
                 Dict(
                     "selector" => "#$st",
-                    "style" => Dict("background-color" => BioinformaticsCore.Plot.color("plasma", fr)),
-                ) for
-                (st, fr) in zip(_stringify_vertex(), BioinformaticsCore.Normalization.normalize(he_, "0-1"))
+                    "style" =>
+                        Dict("background-color" => BioinformaticsCore.Plot.color("plasma", fr)),
+                ) for (st, fr) in
+                zip(_stringify_vertex(), BioinformaticsCore.Normalization.normalize(he_, "0-1"))
             ),
         )
 
