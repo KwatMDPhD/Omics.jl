@@ -1,4 +1,4 @@
-NA_SC = Dict{String, ColorScheme}("plasma" => plasma)
+const NA_SC = Dict{String, ColorScheme}("plasma" => plasma)
 
 for (na, he_) in Dict(
     "plotly3" => (

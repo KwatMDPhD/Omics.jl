@@ -1,1 +1,1 @@
-CA_ = [string(ca) for ca in "A23456789XJQK"]
+const CA_ = [ca for ca in "A23456789XJQK"]

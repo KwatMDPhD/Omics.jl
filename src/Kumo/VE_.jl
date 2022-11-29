@@ -1,1 +1,1 @@
-VE_ = []
+const VE_ = Vector{Any}()

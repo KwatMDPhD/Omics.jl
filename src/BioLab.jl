@@ -12,7 +12,7 @@ for pa in readdir(@__DIR__, join = true)
 end
 
 #
-const global TE = BioLab.Path.make_temporary("BioLab")
+const TE = BioLab.Path.make_temporary("BioLab")
 
 #
 ENV["LINES"] = 19
