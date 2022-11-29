@@ -6,7 +6,7 @@ using GZip: open
 
 using OrderedCollections: OrderedDict
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

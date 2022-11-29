@@ -4,7 +4,7 @@ using Distributions: Normal
 
 using Random: seed!
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

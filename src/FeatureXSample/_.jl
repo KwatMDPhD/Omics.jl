@@ -2,7 +2,7 @@ module FeatureXSample
 
 using StatsBase: mean, median
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

@@ -1,4 +1,4 @@
-function read(gs, di = BioinformaticsCore.TE; pr = true)
+function read(gs, di = BioLab.TE; pr = true)
 
     #
     fi = "$(gs)_family.soft.gz"
@@ -61,7 +61,7 @@ function read(gs, di = BioinformaticsCore.TE; pr = true)
 
             elseif endswith(li, "end")
 
-                fe_x_in_x_an = BioinformaticsCore.DataFrame.make(pop!(ke_va, ket))
+                fe_x_in_x_an = BioLab.DataFrame.make(pop!(ke_va, ket))
 
                 if size(fe_x_in_x_an, 1) !=
                    parse(Int, pop!(ke_va, "!$(titlecase(ty))_data_row_count"))
@@ -89,7 +89,7 @@ function read(gs, di = BioinformaticsCore.TE; pr = true)
 
         else
 
-            BioinformaticsCore.Dict.set!(ke_va, split(li, eq, limit = 2)..., "suffix", pr = pr)
+            BioLab.Dict.set!(ke_va, split(li, eq, limit = 2)..., "suffix", pr = pr)
 
         end
 

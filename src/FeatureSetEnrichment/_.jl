@@ -4,7 +4,7 @@ using DataFrames: DataFrame
 
 using StatsBase: mean, sample
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

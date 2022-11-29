@@ -1,6 +1,6 @@
 function edge()
 
-    ve_id = BioinformaticsCore.Vector.pair_index(VE_)[1]
+    ve_id = BioLab.Vector.pair_index(VE_)[1]
 
     n = length(ve_id)
 

@@ -10,7 +10,7 @@ function factorize(ro_x_co_x_po, n; ke_ar...)
 
     println("Iterations: $(mf.niters)")
 
-    println("Objective value: $(BioinformaticsCore.Number.format(mf.objvalue))")
+    println("Objective value: $(BioLab.Number.format(mf.objvalue))")
 
     plot((mf.W,), (mf.H,); ke_ar...)
 

@@ -1,6 +1,6 @@
 function remove_common_prefix(st_)
 
-    pr = BioinformaticsCore.Vector.get_common_start(st_)
+    pr = BioLab.Vector.get_common_start(st_)
 
     n = length(pr)
 

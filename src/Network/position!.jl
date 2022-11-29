@@ -18,7 +18,7 @@ function position!(ke_va_, js)
         ke_va_,
         Dict(
             pop!(kec_vac["data"], "id") => kec_vac for
-            kec_vac in BioinformaticsCore.Dict.read(js)["elements"]["nodes"]
+            kec_vac in BioLab.Dict.read(js)["elements"]["nodes"]
         ),
     )
 

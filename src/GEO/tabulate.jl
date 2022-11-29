@@ -8,25 +8,25 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         va = "Gene Symbol"
 
-        fu = na -> BioinformaticsCore.String.split_and_get(na, " /// ", 1)
+        fu = na -> BioLab.String.split_and_get(na, " /// ", 1)
 
     elseif pl == 13534
 
         va = "UCSC_RefGene_Name"
 
-        fu = na -> BioinformaticsCore.String.split_and_get(na, ";", 1)
+        fu = na -> BioLab.String.split_and_get(na, ";", 1)
 
     elseif pl in (5175, 11532)
 
         va = "gene_assignment"
 
-        fu = na -> BioinformaticsCore.String.split_and_get(na, " // ", 2)
+        fu = na -> BioLab.String.split_and_get(na, " // ", 2)
 
     elseif pl in (2004, 2005, 3718, 3720)
 
         va = "Associated Gene"
 
-        fu = na -> BioinformaticsCore.String.split_and_get(na, " // ", 1)
+        fu = na -> BioLab.String.split_and_get(na, " // ", 1)
 
     elseif pl == 10558
 
@@ -60,7 +60,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         if na isa AbstractString && !isempty(na) && !(na in ("---",))
 
-            BioinformaticsCore.Dict.set!(fe_na, fe, fu(na), pr = pr)
+            BioLab.Dict.set!(fe_na, fe, fu(na), pr = pr)
 
         end
 
@@ -68,7 +68,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     if pr
 
-        BioinformaticsCore.Dict.print(fe_na, 0)
+        BioLab.Dict.print(fe_na, 0)
 
     end
 
@@ -111,7 +111,7 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
             end
 
-            BioinformaticsCore.Dict.set!(sa_an_, sa, [sp[2] for sp in sp_], pr = pr)
+            BioLab.Dict.set!(sa_an_, sa, [sp[2] for sp in sp_], pr = pr)
 
         else
 
@@ -143,7 +143,7 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
             end
 
-            BioinformaticsCore.Dict.set!(
+            BioLab.Dict.set!(
                 sa_nu_,
                 sa,
                 [parse(Float64, va) for va in fe_x_in_x_an[id_, "VALUE"]],
@@ -163,7 +163,7 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
     if pr
 
-        BioinformaticsCore.DataFrame.print_unique(fe_x_sa_x_an)
+        BioLab.DataFrame.print_unique(fe_x_sa_x_an)
 
     end
 

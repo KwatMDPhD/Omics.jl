@@ -1,6 +1,6 @@
 module IPYNB
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

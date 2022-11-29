@@ -2,7 +2,7 @@ module HTML
 
 using DefaultApplication: open as DefaultApplication_open
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

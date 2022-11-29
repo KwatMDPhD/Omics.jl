@@ -1,7 +1,7 @@
 function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
     #
-    bi_ = BioinformaticsCore.Vector.is_in(fe_, fe1_)
+    bi_ = BioLab.Vector.is_in(fe_, fe1_)
 
     ou_ = (1 - bi for bi in bi_)
 
@@ -22,20 +22,13 @@ function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_a
 
     #
     en_ =
-        BioinformaticsCore.Information.get_antisymmetric_kullback_leibler_divergence(
-            inal_,
-            oual_,
-            abl_,
-        ) - BioinformaticsCore.Information.get_antisymmetric_kullback_leibler_divergence(
-            inar_,
-            ouar_,
-            abr_,
-        )
+        BioLab.Information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_) -
+        BioLab.Information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
 
     #
-    et = BioinformaticsCore.VectorNumber.get_extreme(en_)
+    et = BioLab.VectorNumber.get_extreme(en_)
 
-    ar = BioinformaticsCore.VectorNumber.get_area(en_)
+    ar = BioLab.VectorNumber.get_area(en_)
 
     #
     if pl

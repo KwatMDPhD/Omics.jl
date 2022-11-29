@@ -1,6 +1,6 @@
 module GMT
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

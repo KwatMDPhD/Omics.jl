@@ -10,7 +10,7 @@ function adjust_p_value(pv_, ho = "benjamini_hochberg"; n = length(pv_))
 
         pvs_ = [pv_[so] * n / id for (id, so) in enumerate(so_)]
 
-        BioinformaticsCore.VectorNumber.force_increasing_with_min!(pvs_)
+        BioLab.VectorNumber.force_increasing_with_min!(pvs_)
 
         cl_ = pvs_[sortperm(so_)]
 

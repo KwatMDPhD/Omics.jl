@@ -1,4 +1,4 @@
-module BioinformaticsCore
+module BioLab
 
 #
 for pa in readdir(@__DIR__, join = true)
@@ -15,7 +15,7 @@ end
 function __init__()
 
     #
-    global TE = BioinformaticsCore.Path.make_temporary("BioinformaticsCore")
+    global TE = BioLab.Path.make_temporary("BioLab")
 
     #
     ENV["LINES"] = 19

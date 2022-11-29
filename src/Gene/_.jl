@@ -1,6 +1,6 @@
 module Gene
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

@@ -2,7 +2,7 @@ module Significance
 
 using StatsBase: std
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

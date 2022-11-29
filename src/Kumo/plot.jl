@@ -49,7 +49,7 @@ function plot(;
 
     else
 
-        BioinformaticsCore.Network.position!(ve_, js)
+        BioLab.Network.position!(ve_, js)
 
         js = false
 
@@ -109,10 +109,9 @@ function plot(;
             (
                 Dict(
                     "selector" => "#$st",
-                    "style" =>
-                        Dict("background-color" => BioinformaticsCore.Plot.color("plasma", fr)),
-                ) for (st, fr) in
-                zip(_stringify_vertex(), BioinformaticsCore.Normalization.normalize(he_, "0-1"))
+                    "style" => Dict("background-color" => BioLab.Plot.color("plasma", fr)),
+                ) for
+                (st, fr) in zip(_stringify_vertex(), BioLab.Normalization.normalize(he_, "0-1"))
             ),
         )
 
@@ -147,6 +146,6 @@ function plot(;
     merge!(la, me)
 
     #
-    BioinformaticsCore.Network.plot(vcat(ve_, ed_), st_, la, ht = ht, js = js, pn = pn)
+    BioLab.Network.plot(vcat(ve_, ed_), st_, la, ht = ht, js = js, pn = pn)
 
 end

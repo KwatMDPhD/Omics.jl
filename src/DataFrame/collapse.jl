@@ -11,7 +11,7 @@ function collapse(ro_x_co_x_nu, fu = median; pr = true)
 
     ro_id_ = Dict{String, Vector{Int}}()
 
-    ro, ro_, co_, ro_x_co_x_nu = BioinformaticsCore.DataFrame.separate(ro_x_co_x_nu)
+    ro, ro_, co_, ro_x_co_x_nu = BioLab.DataFrame.separate(ro_x_co_x_nu)
 
     for (id, ro) in enumerate(ro_)
 
@@ -41,7 +41,7 @@ function collapse(ro_x_co_x_nu, fu = median; pr = true)
 
     end
 
-    roc_x_co_x_nu = BioinformaticsCore.DataFrame.make(ro, roc_, co_, roc_x_co_x_nu)
+    roc_x_co_x_nu = BioLab.DataFrame.make(ro, roc_, co_, roc_x_co_x_nu)
 
     if pr
 

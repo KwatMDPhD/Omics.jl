@@ -36,7 +36,7 @@ function plot_histogram(
     end
 
     #
-    layout = BioinformaticsCore.Dict.merge(
+    layout = BioLab.Dict.merge(
         Dict(
             "yaxis" => Dict(
                 "domain" => (0.0, fr),
@@ -66,7 +66,7 @@ function plot_histogram(
         #
         push!(
             data,
-            BioinformaticsCore.Dict.merge(
+            BioLab.Dict.merge(
                 le,
                 Dict(
                     "yaxis" => "y2",
@@ -82,7 +82,7 @@ function plot_histogram(
 
             push!(
                 data,
-                BioinformaticsCore.Dict.merge(
+                BioLab.Dict.merge(
                     le,
                     Dict(
                         "showlegend" => false,

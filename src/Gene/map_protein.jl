@@ -1,6 +1,6 @@
 function map_protein()
 
-    pr_x_in_x_an = BioinformaticsCore.Table.read(_path("uniprot.tsv.gz"))
+    pr_x_in_x_an = BioLab.Table.read(_path("uniprot.tsv.gz"))
 
     pr_io_an = Dict()
 
@@ -14,11 +14,7 @@ function map_protein()
 
             if io == "Entry Name"
 
-                BioinformaticsCore.Dict.set!(
-                    pr_io_an,
-                    BioinformaticsCore.String.split_and_get(an, "_HUMAN", 1),
-                    io_an,
-                )
+                BioLab.Dict.set!(pr_io_an, BioLab.String.split_and_get(an, "_HUMAN", 1), io_an)
 
             else
 

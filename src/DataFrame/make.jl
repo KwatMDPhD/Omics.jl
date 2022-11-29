@@ -1,6 +1,6 @@
 function make(an__)
 
-    DataFrames.DataFrame(BioinformaticsCore.Matrix.make(an__[2:end]), an__[1])
+    DataFrames.DataFrame(BioLab.Matrix.make(an__[2:end]), an__[1])
 
 end
 

@@ -10,11 +10,11 @@ end
 
 function run(di, ig_)
 
-    nb_ = BioinformaticsCore.Path.select(di, false, ig_ = ig_, ke_ = (r".ipynb$",))
+    nb_ = BioLab.Path.select(di, false, ig_ = ig_, ke_ = (r".ipynb$",))
 
     if all(occursin(r"^[0-9]+\.", nb) for nb in nb_)
 
-        sort!(nb_, by = nb -> parse(Int, BioinformaticsCore.String.split_and_get(nb, ".", 1)))
+        sort!(nb_, by = nb -> parse(Int, BioLab.String.split_and_get(nb, ".", 1)))
 
     end
 

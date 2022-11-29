@@ -8,7 +8,7 @@ using DataFrames: DataFrame
 
 using JSON3: write
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

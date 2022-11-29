@@ -1,6 +1,6 @@
 module String
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

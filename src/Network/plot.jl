@@ -1,6 +1,6 @@
 function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
 
-    di = "BioinformaticsCore.Network.plot.$(BioinformaticsCore.Time.stamp())"
+    di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
 
     pr = splitext(basename(ht))[1]
 
@@ -28,7 +28,7 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
 
     end
 
-    BioinformaticsCore.HTML.make(
+    BioLab.HTML.make(
         di,
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",

@@ -1,6 +1,6 @@
 function map_to(wh)
 
-    BioinformaticsCore.DataFrame.map_to(
+    BioLab.DataFrame.map_to(
         read(wh),
         Dict(
             "ensembl" => (

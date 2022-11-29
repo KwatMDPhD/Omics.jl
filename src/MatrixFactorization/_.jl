@@ -4,7 +4,7 @@ using LinearAlgebra: pinv
 
 using NMF: nnmf
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 

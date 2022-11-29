@@ -6,11 +6,11 @@ te_ = (splitext(na)[1] for na in readdir() if endswith(na, ".ipynb"))
 
 symdiff(sr_, te_)
 
-using BioinformaticsCore
+using BioLab
 
-BioinformaticsCore.TE
+BioLab.TE
 
-for nb in BioinformaticsCore.Path.select(".", false, ig_ = (r"^runtests",), ke_ = (r".ipynb$",))
+for nb in BioLab.Path.select(".", false, ig_ = (r"^runtests",), ke_ = (r".ipynb$",))
 
     na = splitext(nb)[1]
 
@@ -20,7 +20,7 @@ for nb in BioinformaticsCore.Path.select(".", false, ig_ = (r"^runtests",), ke_ 
 
     ma_ = Set()
 
-    for ce in BioinformaticsCore.Dict.read(nb)["cells"]
+    for ce in BioLab.Dict.read(nb)["cells"]
 
         if ce["cell_type"] != "markdown"
 
@@ -30,13 +30,13 @@ for nb in BioinformaticsCore.Path.select(".", false, ig_ = (r"^runtests",), ke_ 
 
         for li in ce["source"]
 
-            push!(ma_, BioinformaticsCore.String.split_and_get(rstrip(li, '\n'), " ", 2))
+            push!(ma_, BioLab.String.split_and_get(rstrip(li, '\n'), " ", 2))
 
         end
 
     end
 
-    for jl in BioinformaticsCore.Path.select(
+    for jl in BioLab.Path.select(
         joinpath(dirname(@__DIR__), "src", na),
         false,
         ig_ = (r"^_.jl$",),
@@ -65,4 +65,4 @@ for nb in BioinformaticsCore.Path.select(".", false, ig_ = (r"^runtests",), ke_ 
 
 end
 
-BioinformaticsCore.IPYNB.run(@__DIR__, ["$pr.ipynb" for pr in ("runtests", "Kumo")])
+BioLab.IPYNB.run(@__DIR__, ["$pr.ipynb" for pr in ("runtests", "Kumo")])

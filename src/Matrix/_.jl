@@ -1,6 +1,6 @@
 module Matrix
 
-using ..BioinformaticsCore
+using ..BioLab
 
 include("../_include.jl")
 
