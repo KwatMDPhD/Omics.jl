@@ -15,7 +15,7 @@ end
 function __init__()
 
     #
-    global TE = BioLab.Path.make_temporary("BioLab")
+    const global TE = BioLab.Path.make_temporary("BioLab")
 
     #
     ENV["LINES"] = 19
