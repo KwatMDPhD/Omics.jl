@@ -2,7 +2,7 @@ module Information
 
 using StatsBase: mean, std
 
-include("../_include.jl")
+include(joinpath(pkgdir(@__MODULE__), "src", "_include.jl"))
 
 @_include()
 

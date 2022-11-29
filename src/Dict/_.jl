@@ -8,7 +8,7 @@ using TOML: parsefile
 
 using ..BioLab
 
-include("../_include.jl")
+include(joinpath(pkgdir(@__MODULE__), "src", "_include.jl"))
 
 @_include()
 

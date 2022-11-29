@@ -12,16 +12,11 @@ for pa in readdir(@__DIR__, join = true)
 end
 
 #
-function __init__()
+const global TE = BioLab.Path.make_temporary("BioLab")
 
-    #
-    const global TE = BioLab.Path.make_temporary("BioLab")
+#
+ENV["LINES"] = 19
 
-    #
-    ENV["LINES"] = 19
-
-    ENV["COLUMNS"] = 10^5
-
-end
+ENV["COLUMNS"] = 10^5
 
 end

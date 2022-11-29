@@ -4,7 +4,7 @@ using Clustering: Hclust, cutree, hclust
 
 using Distances: Euclidean, pairwise
 
-include("../_include.jl")
+include(joinpath(pkgdir(@__MODULE__), "src", "_include.jl"))
 
 @_include()
 

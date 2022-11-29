@@ -2,7 +2,7 @@ module Statistics
 
 using Distributions: Normal, quantile
 
-include("../_include.jl")
+include(joinpath(pkgdir(@__MODULE__), "src", "_include.jl"))
 
 @_include()
 
