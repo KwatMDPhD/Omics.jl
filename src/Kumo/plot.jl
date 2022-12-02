@@ -58,6 +58,18 @@ function plot(;
     #
     ed_ = [_make_edge(so, de) for (so, de) in ED_]
 
+    edv_ = Set()
+
+    for ed in ed_
+
+        push!(edv_, ed["data"]["source"])
+
+        push!(edv_, ed["data"]["target"])
+
+    end
+
+    filter!(ve -> ve["data"]["id"] in edv_, ve_)
+
     #
     st_ = append!(
         [

@@ -1,1 +1,1 @@
-const VE_ = Vector{Any}()
+const VE_ = Vector{Union{DataType, String}}()
