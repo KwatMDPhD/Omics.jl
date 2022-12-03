@@ -1,4 +1,4 @@
-function load!()
+function load()
 
     #
     for na in names(Main)
@@ -7,7 +7,7 @@ function load!()
 
         if isconcretetype(ev)
 
-            _add!(ev)
+            _add(ev)
 
         end
 

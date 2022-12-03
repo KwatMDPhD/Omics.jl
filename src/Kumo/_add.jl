@@ -1,4 +1,4 @@
-function _add!(ve)
+function _add(ve)
 
     if !(ve in VE_)
 
@@ -6,11 +6,9 @@ function _add!(ve)
 
     end
 
-    nothing
-
 end
 
-function _add!(so, de)
+function _add(so, de)
 
     ed = (so, de)
 
@@ -18,14 +16,12 @@ function _add!(so, de)
 
         for ve in ed
 
-            _add!(ve)
+            _add(ve)
 
         end
 
         push!(ED_, ed)
 
     end
-
-    nothing
 
 end

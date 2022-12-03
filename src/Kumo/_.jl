@@ -1,6 +1,6 @@
 module Kumo
 
-import Base: <<, >>
+import Base: >, <<, >>
 
 using InteractiveUtils: supertypes
 
