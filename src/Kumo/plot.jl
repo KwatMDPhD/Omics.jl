@@ -28,7 +28,7 @@ end
 #
 function plot(;
     js = "",
-    no_si = 32.0,
+    no_si = 16.0,
     ed_si = no_si / 2.0,
     ed_wi = no_si / 8.0,
     edge_line_color = "#171412",
