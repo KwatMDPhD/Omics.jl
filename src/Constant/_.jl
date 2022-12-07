@@ -1,7 +1,7 @@
 module Constant
 
-include(joinpath(pkgdir(@__MODULE__), "src", "_include.jl"))
+using ..BioLab
 
-@_include()
+BioLab.@include
 
 end
