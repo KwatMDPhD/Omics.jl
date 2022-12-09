@@ -2,7 +2,15 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
 
-    pr = splitext(basename(ht))[1]
+    if isempty(ht)
+
+        pr = @__MODULE__
+
+    else
+
+        pr = splitext(basename(ht))[1]
+
+    end
 
     if wr == "json"
 
