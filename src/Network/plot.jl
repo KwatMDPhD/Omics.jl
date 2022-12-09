@@ -1,29 +1,28 @@
-# TODO: Save `.json` and `.png`.
-function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
+function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
 
     pr = splitext(basename(ht))[1]
 
-    scj = ""
+    if wr == "json"
 
-    scp = ""
-
-    if js
-
-        scj = """
+        re = """
         let blj = new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"});
         let paj = "$pr.json";
         saveAs(blj, paj);
         """
 
-    elseif pn
+    elseif wr == "png"
 
-        scp = """
+        re = """
         let blp = cy.png({"full": true, "scale": 1.0, "bg": "$bg"});
         let pap = "$pr.png";
         saveAs(blp, pap);
         """
+
+    else
+
+        re = ""
 
     end
 
@@ -43,8 +42,7 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
         });
 
         cy.ready(function() {
-            $scj
-            $scp
+            $re
         });
         """,
         ht,
