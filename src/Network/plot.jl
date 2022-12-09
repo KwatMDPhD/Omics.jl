@@ -1,3 +1,4 @@
+# TODO: Save `.json` and `.png`.
 function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
@@ -5,6 +6,8 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
     pr = splitext(basename(ht))[1]
 
     scj = ""
+
+    scp = ""
 
     if js
 
@@ -14,11 +17,7 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", js = true, pn = true)
         saveAs(blj, paj);
         """
 
-    end
-
-    scp = ""
-
-    if pn
+    elseif pn
 
         scp = """
         let blp = cy.png({"full": true, "scale": 1.0, "bg": "$bg"});
