@@ -1,5 +1,4 @@
-# TODO: Rename to "list".
-function select(di, jo = true; ig_ = (r"^\.",), ke_ = ())
+function list(di, jo = true; ig_ = (r"^\.",), ke_ = ())
 
     pa_ = []
 
