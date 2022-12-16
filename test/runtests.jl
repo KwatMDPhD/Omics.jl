@@ -10,7 +10,7 @@ using BioLab
 
 BioLab.TE
 
-for nb in BioLab.Path.select(".", false, ig_ = (r"^runtests",), ke_ = (r".ipynb$",))
+for nb in BioLab.Path.list(".", false, ig_ = (r"^runtests",), ke_ = (r".ipynb$",))
 
     na = splitext(nb)[1]
 
@@ -36,7 +36,7 @@ for nb in BioLab.Path.select(".", false, ig_ = (r"^runtests",), ke_ = (r".ipynb$
 
     end
 
-    for jl in BioLab.Path.select(
+    for jl in BioLab.Path.list(
         joinpath(dirname(@__DIR__), "src", na),
         false,
         ig_ = (r"^_.jl$",),
