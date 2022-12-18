@@ -52,6 +52,39 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
         cy.ready(function() {
             $re
         });
+
+
+        cy.on("mouseover", "node", function(ev) {
+            ev.target.style({
+                "border-style": "double",
+                "border-color": "#20d9ba",
+            });
+        });
+
+        cy.on("mouseout", "node", function(ev) {
+            ev.target.style({
+                "border-style": "",
+                "border-color": "#ebf6f7",
+            });
+        });
+
+        cy.on("mouseover", "edge", function(ev) {
+            ev.target.style({
+                "label": ev.target.data("id"),
+                "target-arrow-shape": "triangle-backcurve",
+                "line-color": "#20d9ba",
+                "line-opacity": 1,
+            });
+        });
+
+        cy.on("mouseout", "edge", function(ev) {
+            ev.target.style({
+                "label": "",
+                "target-arrow-shape": "",
+                "line-color": "#171412",
+                "line-opacity": 0.64,
+            });
+        });
         """,
         ht,
     )
