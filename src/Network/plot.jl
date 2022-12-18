@@ -70,7 +70,6 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
 
         cy.on("mouseover", "edge", function(ev) {
             ev.target.style({
-                "label": ev.target.data("id"),
                 "target-arrow-shape": "triangle-backcurve",
                 "line-color": "#20d9ba",
                 "line-opacity": 1,
@@ -79,7 +78,6 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
 
         cy.on("mouseout", "edge", function(ev) {
             ev.target.style({
-                "label": "",
                 "target-arrow-shape": "",
                 "line-color": "#171412",
                 "line-opacity": 0.64,
