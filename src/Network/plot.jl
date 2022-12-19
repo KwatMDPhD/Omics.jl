@@ -66,6 +66,7 @@ function plot(
 
         cy.on("mouseover", "node", function(ev) {
             ev.target.style({
+                "label": ev.target.data("weight"),
                 "border-style": "double",
                 "border-color": "$emc",
             });
@@ -73,6 +74,7 @@ function plot(
 
         cy.on("mouseout", "node", function(ev) {
             ev.target.style({
+                "label": ev.target.data("id"),
                 "border-style": "",
                 "border-color": "$boc",
             });
