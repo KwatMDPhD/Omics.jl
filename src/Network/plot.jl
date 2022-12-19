@@ -1,4 +1,16 @@
-function plot(el_, st_, la; ht = "", wr = "", sc = 1.0, bg = "#fdfdfd")
+function plot(
+    el_,
+    st_,
+    la;
+    emc = "#20d9ba",
+    boc = "#ebf6f7",
+    lic = "#171412",
+    lio = 0.56,
+    ht = "",
+    wr = "",
+    sc = 1.0,
+    bg = "#fdfdfd",
+)
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
 
@@ -37,8 +49,6 @@ function plot(el_, st_, la; ht = "", wr = "", sc = 1.0, bg = "#fdfdfd")
 
     end
 
-    coe = "#20d9ba"
-
     BioLab.HTML.make(
         di,
         (
@@ -57,21 +67,22 @@ function plot(el_, st_, la; ht = "", wr = "", sc = 1.0, bg = "#fdfdfd")
         cy.on("mouseover", "node", function(ev) {
             ev.target.style({
                 "border-style": "double",
-                "border-color": "$coe",
+                "border-color": "$emc",
             });
         });
 
         cy.on("mouseout", "node", function(ev) {
             ev.target.style({
                 "border-style": "",
-                "border-color": "#ebf6f7",
+                "border-color": "$boc",
             });
         });
 
         cy.on("mouseover", "edge", function(ev) {
             ev.target.style({
                 "target-arrow-shape": "triangle-backcurve",
-                "line-color": "$coe",
+                "target-arrow-color": "$emc",
+                "line-color": "$emc",
                 "line-opacity": 1,
             });
         });
@@ -79,8 +90,8 @@ function plot(el_, st_, la; ht = "", wr = "", sc = 1.0, bg = "#fdfdfd")
         cy.on("mouseout", "edge", function(ev) {
             ev.target.style({
                 "target-arrow-shape": "",
-                "line-color": "#171412",
-                "line-opacity": 0.64,
+                "line-color": "$lic",
+                "line-opacity": $lio,
             });
         });
 
