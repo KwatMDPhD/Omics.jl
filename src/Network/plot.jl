@@ -1,4 +1,4 @@
-function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
+function plot(el_, st_, la; ht = "", wr = "", sc = 1.0, bg = "#fdfdfd")
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
 
@@ -12,27 +12,32 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
 
     end
 
-    if wr == "json"
-
-        re = """
-        let blj = new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"});
-        let paj = "$pr.json";
-        saveAs(blj, paj);
-        """
-
-    elseif wr == "png"
-
-        re = """
-        let blp = cy.png({"full": true, "scale": 1.0, "bg": "$bg"});
-        let pap = "$pr.png";
-        saveAs(blp, pap);
-        """
-
-    else
+    if isempty(wr)
 
         re = ""
 
+    else
+
+        if wr == "json"
+
+            bl = """
+            new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"})"""
+
+        elseif wr == "png"
+
+            bl = """
+            cy.png({"full": true, "scale": $sc, "bg": "$bg"})"""
+
+        end
+
+        re = """
+        cy.ready(function() {
+            saveAs($bl, "$pr.$wr");
+        });"""
+
     end
+
+    coe = "#20d9ba"
 
     BioLab.HTML.make(
         di,
@@ -49,15 +54,10 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
             layout: $(write(la)),
         });
 
-        cy.ready(function() {
-            $re
-        });
-
-
         cy.on("mouseover", "node", function(ev) {
             ev.target.style({
                 "border-style": "double",
-                "border-color": "#20d9ba",
+                "border-color": "$coe",
             });
         });
 
@@ -71,7 +71,7 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
         cy.on("mouseover", "edge", function(ev) {
             ev.target.style({
                 "target-arrow-shape": "triangle-backcurve",
-                "line-color": "#20d9ba",
+                "line-color": "$coe",
                 "line-opacity": 1,
             });
         });
@@ -83,7 +83,8 @@ function plot(el_, st_, la; bg = "#fdfdfd", ht = "", wr = "")
                 "line-opacity": 0.64,
             });
         });
-        """,
+
+        $re""",
         ht,
     )
 
