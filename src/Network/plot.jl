@@ -1,16 +1,4 @@
-function plot(
-    el_,
-    st_,
-    la;
-    emc = "#20d9ba",
-    boc = "#ebf6f7",
-    lic = "#171412",
-    lio = 0.56,
-    ht = "",
-    wr = "",
-    sc = 1.0,
-    bg = "#fdfdfd",
-)
+function plot(el_, st_, la; ht = "", wr = "", sc = 1.0, bg = "#fdfdfd")
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
 
@@ -65,36 +53,19 @@ function plot(
         });
 
         cy.on("mouseover", "node", function(ev) {
-            ev.target.style({
-                "label": ev.target.data("weight"),
-                "border-style": "double",
-                "border-color": "$emc",
-            });
+            ev.target.addClass("nodehover");
         });
 
         cy.on("mouseout", "node", function(ev) {
-            ev.target.style({
-                "label": ev.target.data("id"),
-                "border-style": "",
-                "border-color": "$boc",
-            });
+            ev.target.removeClass("nodehover");
         });
 
         cy.on("mouseover", "edge", function(ev) {
-            ev.target.style({
-                "target-arrow-shape": "triangle-backcurve",
-                "target-arrow-color": "$emc",
-                "line-color": "$emc",
-                "line-opacity": 1,
-            });
+            ev.target.addClass("edgehover");
         });
 
         cy.on("mouseout", "edge", function(ev) {
-            ev.target.style({
-                "target-arrow-shape": "",
-                "line-color": "$lic",
-                "line-opacity": $lio,
-            });
+            ev.target.removeClass("edgehover");
         });
 
         $re""",
