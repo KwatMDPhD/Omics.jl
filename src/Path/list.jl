@@ -1,4 +1,4 @@
-function list(di, jo = true; ig_ = (r"^\.",), ke_ = ())
+function list(di, jo = false; ig_ = (r"^\.",), ke_ = ())
 
     pa_ = []
 
