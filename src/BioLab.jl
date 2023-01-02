@@ -34,8 +34,14 @@ end
 
 const TE = BioLab.Path.make_temporary("BioLab")
 
-ENV["LINES"] = 19
+function __init__()
 
-ENV["COLUMNS"] = 10^5
+    mkpath(TE)
+
+    ENV["LINES"] = 19
+
+    ENV["COLUMNS"] = 10^5
+
+end
 
 end
