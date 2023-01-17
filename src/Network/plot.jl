@@ -1,4 +1,4 @@
-function plot(el_, st_, la; ht = "", wr = "", sc = 1.0, bg = "#fdfdfd")
+function plot(el_, st_, la; ht = "", he = 800, wr = "", sc = 1.0, bg = "#fdfdfd")
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
 
@@ -69,7 +69,8 @@ function plot(el_, st_, la; ht = "", wr = "", sc = 1.0, bg = "#fdfdfd")
         });
 
         $re""",
-        ht,
+        ht;
+        he = he,
     )
 
 end

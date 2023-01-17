@@ -1,11 +1,11 @@
-function make(di, so_, sc, ht = "")
+function make(di, so_, sc, ht = ""; he = 800)
 
     st = "display: flex; justify-content: center; align-items: center;"
 
     li_ = vcat(
         "<!doctype html>",
         """
-        <div style="$st height: 800px; width: 88%; background: #ebf6f7; margin: auto;">
+        <div style="$st height: $(he)px; width: 88%; background: #ebf6f7; margin: auto;">
             <div id="$di" style="$st height: 88%; width: 88%; background: #f8f8f8;"></div>
         </div>""",
         ["<script src=\"$so\"></script>" for so in so_],
