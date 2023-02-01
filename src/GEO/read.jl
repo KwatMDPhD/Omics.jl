@@ -1,6 +1,5 @@
 function read(gs, di = BioLab.TE; pr = true)
 
-    #
     fi = "$(gs)_family.soft.gz"
 
     gz = joinpath(di, fi)
@@ -19,7 +18,6 @@ function read(gs, di = BioLab.TE; pr = true)
 
     end
 
-    #
     ty = nothing
 
     bl = nothing
@@ -30,11 +28,9 @@ function read(gs, di = BioLab.TE; pr = true)
 
     ket = "an_"
 
-    #
-    for li in split(Base.read(open(gz, "r"), String), "\n")[1:(end - 1)]
+    for li in split(Base.read(open(gz, "r"), String), '\n')[1:(end - 1)]
 
-        #
-        if startswith(li, "^")
+        if startswith(li, '^')
 
             if pr
 
@@ -52,7 +48,6 @@ function read(gs, di = BioLab.TE; pr = true)
 
         ke_va = ty_bl[ty][bl]
 
-        #
         if startswith(li, "!$(lowercase(ty))_table_")
 
             if endswith(li, "begin")
@@ -82,10 +77,9 @@ function read(gs, di = BioLab.TE; pr = true)
 
         end
 
-        #
         if haskey(ke_va, ket)
 
-            push!(ke_va[ket], split(li, "\t"))
+            push!(ke_va[ket], split(li, '\t'))
 
         else
 

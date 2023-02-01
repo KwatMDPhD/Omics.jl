@@ -2,6 +2,8 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     pl = parse(Int, pl[4:end])
 
+    println(pl)
+
     ke = "ID"
 
     if pl in (96, 97, 570)
@@ -28,7 +30,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         fu = na -> BioLab.String.split_and_get(na, " // ", 1)
 
-    elseif pl == 10558
+    elseif pl in (10558, 14951)
 
         va = "Symbol"
 
@@ -42,7 +44,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     else
 
-        error()
+        error(pl)
 
     end
 
@@ -78,25 +80,16 @@ end
 
 function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
-    #
-    sa_ke_va = OrderedDict(pop!(ke_va, sa) => ke_va for ke_va in values(ty_bl["SAMPLE"]))
+    sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl["SAMPLE"]))
 
-    ro = "Feature"
-
-    #
     de = ": "
 
     sa_an_ = OrderedDict()
 
-    #
-    pl_ = []
+    pl_sa_nu_ = Dict()
 
-    sa_nu_ = OrderedDict()
-
-    #
     for (sa, ke_va) in sa_ke_va
 
-        #
         ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
 
         if all(occursin(de, ch) for ch in ch_)
@@ -105,7 +98,7 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
             pr_ = [sp[1] for sp in sp_]
 
-            if get!(sa_an_, ro, pr_) != pr_
+            if get!(sa_an_, "Feature", pr_) != pr_
 
                 error()
 
@@ -119,17 +112,17 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
         end
 
-        #
-        push!(pl_, ke_va["!Sample_platform_id"])
+        pl = ke_va["!Sample_platform_id"]
 
-        #
+        sa_nu_ = get!(pl_sa_nu_, pl, OrderedDict())
+
         if haskey(ke_va, "fe_x_in_x_an")
 
             fe_x_in_x_an = ke_va["fe_x_in_x_an"]
 
             fe_ = fe_x_in_x_an[!, 1]
 
-            cu_ = get!(sa_nu_, ro, fe_)
+            cu_ = get!(sa_nu_, pl, fe_)
 
             if cu_ == fe_
 
@@ -158,7 +151,6 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
     end
 
-    #
     fe_x_sa_x_an = DataFrame(sa_an_)
 
     if pr
@@ -167,46 +159,34 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
     end
 
-    #
-    fe_x_sa_x_nu = DataFrame(sa_nu_)
+    fe_x_sa_x_nu_____ = []
 
-    pl_ke_va = ty_bl["PLATFORM"]
+    for (pl, sa_nu_) in pl_sa_nu_
 
-    #
-    unique!(pl_)
+        fe_x_sa_x_nu = DataFrame(sa_nu_)
 
-    if isempty(pl_)
+        pl_ke_va = ty_bl["PLATFORM"]
 
-        println("Sample platforms are empty. Using the first")
+        if haskey(pl_ke_va[pl], "fe_x_in_x_an")
 
-        pl = collect(keys(pl_ke_va))[1]
+            fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"], pr = pr)
 
-    elseif length(pl_) == 1
+            fe_x_sa_x_nu[!, pl] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, pl]]
 
-        pl = pl_[1]
+            n_fe = size(fe_x_sa_x_nu, 1)
 
-    else
+            println("Rename $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $n_fe $pl.")
 
-        error()
+        else
 
-    end
+            println("$pl table is empty.")
 
-    #
-    if haskey(pl_ke_va[pl], "fe_x_in_x_an")
+        end
 
-        fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"], pr = pr)
-
-        fe_x_sa_x_nu[!, ro] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, ro]]
-
-        rename!(fe_x_sa_x_nu, ro => "Gene")
-
-    else
-
-        println("$pl table is empty.")
+        push!(fe_x_sa_x_nu_____, fe_x_sa_x_nu)
 
     end
 
-    #
-    fe_x_sa_x_an, fe_x_sa_x_nu
+    fe_x_sa_x_an, fe_x_sa_x_nu_____...
 
 end
