@@ -1,4 +1,4 @@
-function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
+function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, al = "KL", pl = true, ke_ar...)
 
     #
     bi_ = BioLab.Vector.is_in(fe_, fe1_)
@@ -21,9 +21,25 @@ function score_set_new(fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_a
     ouar_, oual_ = _cumulate(oua_)
 
     #
-    en_ =
-        BioLab.Information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_) -
-        BioLab.Information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
+    if al == "KL"
+
+        en_ =
+            BioLab.Information.get_kullback_leibler_divergence(inal_, abl_) -
+            BioLab.Information.get_kullback_leibler_divergence(inar_, abr_)
+
+    elseif al == "SKL"
+
+        en_ =
+            BioLab.Information.get_symmetric_kullback_leibler_divergence(inal_, oual_, abl_) -
+            BioLab.Information.get_symmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
+
+    elseif al == "AKL"
+
+        en_ =
+            BioLab.Information.get_antisymmetric_kullback_leibler_divergence(inal_, oual_, abl_) -
+            BioLab.Information.get_antisymmetric_kullback_leibler_divergence(inar_, ouar_, abr_)
+
+    end
 
     #
     et = BioLab.VectorNumber.get_extreme(en_)
