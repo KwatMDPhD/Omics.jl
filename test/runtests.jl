@@ -65,4 +65,4 @@ for nb in BioLab.Path.list(".", false, ig_ = (r"^runtests",), ke_ = (r".ipynb$",
 
 end
 
-BioLab.IPYNB.run(@__DIR__, ["$pr.ipynb" for pr in ("runtests", "Kumo")])
+BioLab.IPYNB.run(@__DIR__, ("$pr.ipynb" for pr in ("runtests",)))

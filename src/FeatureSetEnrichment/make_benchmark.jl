@@ -12,7 +12,7 @@ function make_benchmark(ho)
 
         sc_ = collect((mi - n):(mi - 1))
 
-        fe1_ = split(sp_[2], "")
+        fe1_ = collect(sp_[2])
 
         if !all(BioLab.Vector.is_in(fe1_, fe_))
 
