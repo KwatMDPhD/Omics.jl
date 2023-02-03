@@ -9,34 +9,29 @@ function _plot_mountain(
     sc_,
     in_,
     en_,
-    ex,
-    ar;
+    en;
     title_text = "Mountain Plot",
     fe = "Feature",
     sc = "Score",
     ht = "",
 )
 
-    #
     width = 800
 
     height = width / MathConstants.golden
 
-    #
     yaxis1_domain = (0.0, 0.24)
 
     yaxis2_domain = (0.24, 0.32)
 
     yaxis3_domain = (0.32, 1.0)
 
-    #
     title_font_size = 24
 
     statistic_font_size = 16
 
     axis_title_font_size = 12
 
-    #
     annotation =
         Dict("xref" => "paper", "yref" => "paper", "yanchor" => "middle", "showarrow" => false)
 
@@ -47,7 +42,6 @@ function _plot_mountain(
 
     annotationx = merge(annotation, Dict("xanchor" => "center", "x" => 0.5))
 
-    #
     n_ch = 32
 
     if n_ch < length(title_text)
@@ -56,10 +50,8 @@ function _plot_mountain(
 
     end
 
-    #
     n = length(fe_)
 
-    #
     layout = Dict(
         "height" => height,
         "width" => width,
@@ -69,29 +61,13 @@ function _plot_mountain(
             "l" => round(width * 0.19),
         ),
         "showlegend" => false,
-        "yaxis" => Dict(
-            "domain" => yaxis1_domain,
-            #
-            "showline" => true,
-            "showgrid" => false,
-        ),
-        "yaxis2" => Dict(
-            "domain" => yaxis2_domain,
-            #
-            "showticklabels" => false,
-            "showgrid" => false,
-        ),
-        "yaxis3" => Dict(
-            "domain" => yaxis3_domain,
-            #
-            "showline" => true,
-            "showgrid" => false,
-        ),
+        "yaxis" => Dict("domain" => yaxis1_domain, "showline" => true, "showgrid" => false),
+        "yaxis2" =>
+            Dict("domain" => yaxis2_domain, "showticklabels" => false, "showgrid" => false),
+        "yaxis3" => Dict("domain" => yaxis3_domain, "showline" => true, "showgrid" => false),
         "xaxis" => Dict(
-            #
             "zeroline" => false,
             "showgrid" => false,
-            #
             "showspikes" => true,
             "spikethickness" => 1.08,
             "spikecolor" => "#ffb61e",
@@ -111,7 +87,7 @@ function _plot_mountain(
                 annotationx,
                 Dict(
                     "y" => 1.16,
-                    "text" => "Extreme: <b>$(BioLab.Number.format(ex))</b> & Area: <b>$(BioLab.Number.format(ar))</b>",
+                    "text" => "Enrichment: <b>$(BioLab.Number.format(en))</b>",
                     "font" => Dict("size" => statistic_font_size, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
                     "bordercolor" => "#404ed8",
@@ -132,13 +108,11 @@ function _plot_mountain(
         ),
     )
 
-    #
     x = collect(1:n)
 
     bi_ = convert(Vector{Bool}, in_)
 
     trace_ = [
-        #
         Dict(
             "y" => sc_,
             "x" => x,
@@ -149,7 +123,6 @@ function _plot_mountain(
             "fillcolor" => "#20d9ba",
             "hoverinfo" => "x+y+text",
         ),
-        #
         Dict(
             "yaxis" => "y2",
             "y" => fill(0, sum(bi_)),
@@ -165,7 +138,6 @@ function _plot_mountain(
         ),
     ]
 
-    #
     le_ = (en < 0.0 for en in en_)
 
     gr_ = (!le for le in le_)
@@ -189,7 +161,8 @@ function _plot_mountain(
 
     end
 
-    #
+    ex = BioLab.VectorNumber.get_extreme(en_)
+
     id_ = findall(==(ex), en_)
 
     push!(
@@ -210,7 +183,6 @@ function _plot_mountain(
         ),
     )
 
-    #
     BioLab.Plot.plot(trace_, layout, ht = ht)
 
 end

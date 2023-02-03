@@ -1,16 +1,24 @@
 function _match_algorithm(al)
 
-    if al == "ks"
+    if al == "KS"
 
-        score_set, 1
+        fu = score_set_ks
 
-    elseif al == "ksa"
+    elseif al == "AUC"
 
-        score_set, 2
+        fu = score_set_auc
 
-    elseif al == "cidac"
+    elseif al == "KL"
 
-        score_set_new, 2
+        score_set_kl
+
+    elseif al == "SKL"
+
+        score_set_skl
+
+    elseif al == "AKL"
+
+        score_set_akl
 
     else
 
