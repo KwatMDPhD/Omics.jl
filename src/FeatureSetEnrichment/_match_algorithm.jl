@@ -4,7 +4,7 @@ function _match_algorithm(al)
 
         fu = score_set_ks
 
-    elseif al == "AUC"
+    elseif al == "KSA"
 
         fu = score_set_auc
 

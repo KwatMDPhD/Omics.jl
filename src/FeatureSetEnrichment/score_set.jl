@@ -12,7 +12,7 @@ function score_set(al, fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_a
 
 end
 
-function score_set(al, fe_, sc_, se_fe_; ex = 1.0)
+function score_set(al, fe_, sc_, se_fe_; ex = 1.0, n_jo = 1)
 
     if length(se_fe_) < 2
 
@@ -37,7 +37,7 @@ function score_set(al, fe_, sc_, se_fe_; ex = 1.0)
 
 end
 
-function score_set(al, fe_x_sa_x_sc, se_fe_; ex = 1.0)
+function score_set(al, fe_x_sa_x_sc, se_fe_; ex = 1.0, n_jo = 1)
 
     fe_, sa_, fe_x_sa_x_sc = BioLab.DataFrame.separate(fe_x_sa_x_sc)[[2, 3, 4]]
 
