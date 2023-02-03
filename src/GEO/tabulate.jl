@@ -82,9 +82,11 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl["SAMPLE"]))
 
+    ch = "Characteristic"
+
     de = ": "
 
-    sa_an_ = OrderedDict()
+    co_va___ = Vector{Dict{String, Vector}}()
 
     pl_sa_nu_ = Dict()
 
@@ -96,15 +98,7 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
             sp_ = [split(ch, de, limit = 2) for ch in ch_]
 
-            pr_ = [sp[1] for sp in sp_]
-
-            if get!(sa_an_, "Feature", pr_) != pr_
-
-                error()
-
-            end
-
-            BioLab.Dict.set!(sa_an_, sa, [sp[2] for sp in sp_], pr = pr)
+            push!(co_va___, Dict(ch => [sp[1] for sp in sp_], sa => [sp[2] for sp in sp_]))
 
         else
 
@@ -151,7 +145,15 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
     end
 
-    fe_x_sa_x_an = DataFrame(sa_an_)
+    if isempty(co_va___)
+
+        fe_x_sa_x_an = DataFrame()
+
+    else
+
+        fe_x_sa_x_an = outerjoin(DataFrame.(co_va___)...; on = ch)
+
+    end
 
     if pr
 

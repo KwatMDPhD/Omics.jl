@@ -1,6 +1,6 @@
 module GEO
 
-using DataFrames: DataFrame, rename!
+using DataFrames: DataFrame, outerjoin, rename!
 
 using GZip: open
 
