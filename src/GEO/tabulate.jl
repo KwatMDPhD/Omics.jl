@@ -30,7 +30,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         fu = na -> BioLab.String.split_and_get(na, " // ", 1)
 
-    elseif pl in (10558, 14951, 6947)
+    elseif pl in (10558, 14951, 6947, 6098)
 
         va = "Symbol"
 
