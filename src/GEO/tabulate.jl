@@ -2,7 +2,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     pl = parse(Int, pl[4:end])
 
-    println(pl)
+    println("🚉 $pl")
 
     ke = "ID"
 
@@ -50,9 +50,9 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     if pr
 
-        println(first(fe_x_in_x_an, 4))
+        println("🧭 Mapping paltform features using the platform table ($ke ➡️ $va)")
 
-        println("$ke => $va")
+        println(first(fe_x_in_x_an, 2))
 
     end
 
@@ -86,9 +86,9 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
     de = ": "
 
-    co_va___ = Vector{Dict{String, Vector}}()
+    co_st____ = Vector{Dict{String, Vector{String}}}()
 
-    pl_sa_nu_ = Dict()
+    pl_co_nu____ = Dict{String, Vector{Dict{String, Vector{Union{String, Float64}}}}}()
 
     for (sa, ke_va) in sa_ke_va
 
@@ -98,90 +98,69 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
             sp_ = [split(ch, de, limit = 2) for ch in ch_]
 
-            push!(co_va___, Dict(ch => [sp[1] for sp in sp_], sa => [sp[2] for sp in sp_]))
+            push!(co_st____, Dict(ch => [sp[1] for sp in sp_], sa => [sp[2] for sp in sp_]))
 
         else
 
-            println("A $sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  "))")
+            println("⚠️ A $sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  "))")
 
         end
 
         pl = ke_va["!Sample_platform_id"]
 
-        sa_nu_ = get!(pl_sa_nu_, pl, OrderedDict())
+        co_nu____ = get!(pl_co_nu____, pl, [])
 
         if haskey(ke_va, "fe_x_in_x_an")
 
             fe_x_in_x_an = ke_va["fe_x_in_x_an"]
 
-            fe_ = fe_x_in_x_an[!, 1]
-
-            cu_ = get!(sa_nu_, pl, fe_)
-
-            if cu_ == fe_
-
-                id_ = 1:size(fe_x_in_x_an, 1)
-
-            else
-
-                println("$sa table rows do not match. Sorting")
-
-                id_ = indexin(cu_, fe_)
-
-            end
-
-            BioLab.Dict.set!(
-                sa_nu_,
-                sa,
-                [parse(Float64, va) for va in fe_x_in_x_an[id_, "VALUE"]],
-                pr = pr,
+            push!(
+                co_nu____,
+                Dict(
+                    pl => string.(fe_x_in_x_an[!, 1]),
+                    sa => parse.(Float64, fe_x_in_x_an[!, "VALUE"]),
+                ),
             )
 
         else
 
-            println("$sa table is empty.")
+            println("⚠️ $sa table is empty.")
 
         end
 
     end
 
-    if isempty(co_va___)
-
-        fe_x_sa_x_an = DataFrame()
-
-    else
-
-        fe_x_sa_x_an = outerjoin(DataFrame.(co_va___)...; on = ch)
-
-    end
+    ch_x_sa_x_an = _outerjoin(co_st____, ch)
 
     if pr
 
-        BioLab.DataFrame.print_unique(fe_x_sa_x_an)
+        BioLab.DataFrame.print_unique(ch_x_sa_x_an)
 
     end
 
     fe_x_sa_x_nu_____ = []
 
-    for (pl, sa_nu_) in pl_sa_nu_
+    for (pl, co_nu____) in pl_co_nu____
 
-        fe_x_sa_x_nu = DataFrame(sa_nu_)
+        fe_x_sa_x_nu = _outerjoin(co_nu____, pl)
 
         pl_ke_va = ty_bl["PLATFORM"]
 
         if haskey(pl_ke_va[pl], "fe_x_in_x_an")
 
-            fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"], pr = pr)
+            fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"]; pr = pr)
 
             fe_x_sa_x_nu[!, pl] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, pl]]
 
             n_fe = size(fe_x_sa_x_nu, 1)
 
-            println("Rename $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $n_fe $pl.")
+            println(
+                "📛 Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $n_fe $pl $(BioLab.String.count_noun(n_fe,"feature")).",
+            )
 
         else
 
-            println("$pl table is empty.")
+            println("⚠️ $pl table is empty.")
 
         end
 
@@ -189,6 +168,22 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
     end
 
-    fe_x_sa_x_an, fe_x_sa_x_nu_____...
+    ch_x_sa_x_an, fe_x_sa_x_nu_____...
+
+end
+
+function _outerjoin(co_va____, on)
+
+    if isempty(co_va____)
+
+        fe_x_co_x_va = DataFrame()
+
+    else
+
+        fe_x_co_x_va = select!(outerjoin(DataFrame.(co_va____)...; on = on), on, :)
+
+    end
+
+    fe_x_co_x_va
 
 end

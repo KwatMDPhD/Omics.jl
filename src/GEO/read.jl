@@ -8,7 +8,7 @@ function read(gs, di = BioLab.TE; pr = true)
 
         if pr
 
-            println("Using $gz")
+            println("🤞 Using $gz")
 
         end
 
@@ -34,7 +34,7 @@ function read(gs, di = BioLab.TE; pr = true)
 
             if pr
 
-                println(li)
+                println("📍 $li")
 
             end
 
