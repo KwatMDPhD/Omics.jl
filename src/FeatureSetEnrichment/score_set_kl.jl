@@ -1,12 +1,10 @@
 function score_set_kl(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
 
-    if ex == 1.0
+    ab_ = abs.(sc_)
 
-        ab_ = abs.(sc_)
+    if ex != 1.0
 
-    else
-
-        ab_ = abs.(sc_) .^ ex
+        ab_ .^= ex
 
     end
 
@@ -16,9 +14,11 @@ function score_set_kl(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
 
     inar_, inal_ = _cumulate(ina_)
 
+    ep = eps()
+
     en_ =
-        BioLab.Information.get_kullback_leibler_divergence(inal_, abl_) -
-        BioLab.Information.get_kullback_leibler_divergence(inar_, abr_)
+        BioLab.Information.get_kullback_leibler_divergence(inal_ .+ ep, abl_ .+ ep) -
+        BioLab.Information.get_kullback_leibler_divergence(inar_ .+ ep, abr_ .+ ep)
 
     ar = BioLab.VectorNumber.get_area(en_)
 
