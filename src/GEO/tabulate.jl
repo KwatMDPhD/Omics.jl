@@ -42,6 +42,12 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         fu = na -> na
 
+    elseif pl == 10332
+
+        va = "GENE_SYMBOL"
+
+        fu = na -> na
+
     else
 
         error(pl)
