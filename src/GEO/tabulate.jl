@@ -18,7 +18,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         fu = na -> BioLab.String.split_and_get(na, ";", 1)
 
-    elseif pl in (5175, 11532)
+    elseif pl in (5175, 6244, 11532)
 
         va = "gene_assignment"
 
@@ -30,7 +30,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         fu = na -> BioLab.String.split_and_get(na, " // ", 1)
 
-    elseif pl in (10558, 14951, 6947, 6098)
+    elseif pl in (6098, 6947, 10558, 14951)
 
         va = "Symbol"
 
