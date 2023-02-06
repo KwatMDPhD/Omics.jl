@@ -1,14 +1,14 @@
-function _cumulate(nu_)
+function _cumulate(ab_)
 
-    n = length(nu_)
+    n = length(ab_)
 
-    su = sum(nu_)
+    su = sum(ab_)
 
     ri_ = Vector{Float64}(undef, n)
 
     le_ = Vector{Float64}(undef, n)
 
-    ri_[1] = nu_[1]
+    ri_[1] = ab_[1]
 
     le_[1] = su
 
@@ -16,9 +16,9 @@ function _cumulate(nu_)
 
         idn = id + 1
 
-        ri_[idn] = ri_[id] + nu_[idn]
+        ri_[idn] = ri_[id] + ab_[idn]
 
-        le_[idn] = le_[id] - nu_[id]
+        le_[idn] = le_[id] - ab_[id]
 
     end
 
