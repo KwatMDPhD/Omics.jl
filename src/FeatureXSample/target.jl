@@ -6,11 +6,11 @@ function _aim(nu1_, nu2_)
 
 end
 
-function _aim(bi_::AbstractVector{Bool}, nu_)
+function _aim(bo_::AbstractVector{Bool}, nu_)
 
-    BioLab.Array.error_size((bi_, nu_))
+    BioLab.Array.error_size((bo_, nu_))
 
-    nu_[[!bi for bi in bi_]], nu_[bi_]
+    nu_[[!bo for bo in bo_]], nu_[bo_]
 
 end
 

@@ -1,59 +1,112 @@
-function _cumulate(ab_)
-
-    n = length(ab_)
-
-    su = sum(ab_)
-
-    ri_ = Vector{Float64}(undef, n)
-
-    le_ = Vector{Float64}(undef, n)
-
-    ri_[1] = ab_[1]
-
-    le_[1] = su
-
-    @inbounds @fastmath @simd for id in 1:(n - 1)
-
-        idn = id + 1
-
-        ri_[idn] = ri_[id] + ab_[idn]
-
-        le_[idn] = le_[id] - ab_[id]
-
-    end
-
-    ri_ / su, le_ / su
-
-end
-
-# TODO: Speed up.
 function _score_set_sakl(fe_, sc_, fe1_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
-    ou_ = 1 .- bo_
+    n, su, sut = _sum_all_and_true(sc_, bo_)
 
-    if ex == 1.0
+    suf = su - sut
 
-        ab_ = abs.(sc_)
+    ri = 0.0
 
-    else
+    rit = 0.0
 
-        ab_ = abs.(sc_) .^ ex
+    rif = 0.0
+
+    le = su
+
+    ler = sut
+
+    lef = suf
+
+    ep = eps()
+
+    abp = 0.0
+
+    bop = false
+
+    if pl
+
+        en_ = Vector{Float64}(undef, n)
 
     end
 
-    ina_ = bo_ .* ab_
+    ar = 0.0
 
-    oua_ = ou_ .* ab_
+    @inbounds @fastmath @simd for id in 1:n
 
-    abr_, abl_ = _cumulate(ab_)
+        ab = sc_[id]
 
-    inar_, inal_ = _cumulate(ina_)
+        if ab < 0.0
 
-    ouar_, oual_ = _cumulate(oua_)
+            ab = -ab
 
-    en_ = fu(inal_, oual_, abl_) - fu(inar_, ouar_, abr_)
+        end
 
-    ar = BioLab.VectorNumber.get_area(en_)
+        if ex != 1.0
+
+            ab ^= ex
+
+        end
+
+        ri += ab
+
+        bo = bo_[id]
+
+        if bo
+
+            rit += ab
+
+        else
+
+            rif += ab
+
+        end
+
+        rits = (rit / sut) + ep
+
+        rifs = (rif / suf) + ep
+
+        ris = (ri / su) + ep
+
+        en = fu(rits * log(rits / ris) / 2, rifs * log(rifs / ris) / 2)
+
+        if 1 < id
+
+            le -= abp
+
+            if bop
+
+                ler -= abp
+
+            else
+
+                lef -= abp
+
+            end
+
+            lets = (ler / sut) + ep
+
+            lefs = (lef / suf) + ep
+
+            les = (le / su) + ep
+
+            en -= fu(lets * log(lets / les) / 2, lefs * log(lefs / les) / 2)
+
+        end
+
+        abp = ab
+
+        bop = bo
+
+        if pl
+
+            en_[id] = en
+
+        end
+
+        ar += en
+
+    end
+
+    ar /= n
 
     if pl
 
@@ -67,30 +120,12 @@ end
 
 function score_set_skl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    _score_set_sakl(
-        fe_,
-        sc_,
-        fe1_,
-        bo_,
-        BioLab.Information.get_symmetric_kullback_leibler_divergence;
-        ex = ex,
-        pl = pl,
-        ke_ar...,
-    )
+    _score_set_sakl(fe_, sc_, fe1_, bo_, (tr, fa) -> tr + fa; ex = ex, pl = pl, ke_ar...)
 
 end
 
 function score_set_akl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    _score_set_sakl(
-        fe_,
-        sc_,
-        fe1_,
-        bo_,
-        BioLab.Information.get_antisymmetric_kullback_leibler_divergence;
-        ex = ex,
-        pl = pl,
-        ke_ar...,
-    )
+    _score_set_sakl(fe_, sc_, fe1_, bo_, (tr, fa) -> tr - fa; ex = ex, pl = pl, ke_ar...)
 
 end

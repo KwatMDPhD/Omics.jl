@@ -6,7 +6,7 @@ function _match_algorithm(al)
 
     elseif al == "KSA"
 
-        fu = score_set_auc
+        fu = score_set_ksa
 
     elseif al == "KL"
 

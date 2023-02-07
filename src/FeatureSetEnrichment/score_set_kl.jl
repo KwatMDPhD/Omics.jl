@@ -1,6 +1,6 @@
 function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    n, su, sut = _sum_kl(sc_, bo_)
+    n, su, sut = _sum_all_and_true(sc_, bo_)
 
     ri = 0.0
 
@@ -12,6 +12,10 @@ function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     ep = eps()
 
+    abp = 0.0
+
+    bop = false
+
     if pl
 
         en_ = Vector{Float64}(undef, n)
@@ -19,10 +23,6 @@ function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
     end
 
     ar = 0.0
-
-    abp = 0.0
-
-    bop = false
 
     @inbounds @fastmath @simd for id in 1:n
 
@@ -52,11 +52,9 @@ function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         rits = (rit / sut) + ep
 
-        if id == 1
+        en = rits * log(rits / ((ri / su) + ep))
 
-            en = -rits * log(rits / ((ri / su) + ep))
-
-        else
+        if 1 < id
 
             le -= abp
 
@@ -68,9 +66,13 @@ function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
             lets = (ler / sut) + ep
 
-            en = lets * log(lets / ((le / su) + ep)) - rits * log(rits / ((ri / su) + ep))
+            en -= lets * log(lets / ((le / su) + ep))
 
         end
+
+        abp = ab
+
+        bop = bo
 
         if pl
 
@@ -79,10 +81,6 @@ function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
         end
 
         ar += en
-
-        abp = ab
-
-        bop = bo
 
     end
 

@@ -1,6 +1,6 @@
-function score_set_auc(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
+function score_set_ksa(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    n, sut, suf = _sum_ks(sc_, bo_)
+    n, sut, suf = _sum_true_and_false(sc_, bo_)
 
     cu = 0.0
 

@@ -136,6 +136,8 @@ function _plot_mountain(
         ),
     ]
 
+    #en_ .= .-reverse!(en_)
+
     le_ = (en < 0.0 for en in en_)
 
     gr_ = (!le for le in le_)

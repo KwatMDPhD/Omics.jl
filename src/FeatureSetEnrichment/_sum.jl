@@ -1,4 +1,4 @@
-function _sum_ks(sc_, bo_)
+function _sum_true_and_false(sc_, bo_)
 
     n = length(sc_)
 
@@ -32,7 +32,7 @@ function _sum_ks(sc_, bo_)
 
 end
 
-function _sum_kl(sc_, bo_)
+function _sum_all_and_true(sc_, bo_)
 
     n = length(sc_)
 
