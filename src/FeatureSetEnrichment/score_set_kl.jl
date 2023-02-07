@@ -44,7 +44,7 @@ function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         bo = bo_[id]
 
-        if bo 
+        if bo
 
             rit += ab
 
@@ -52,9 +52,9 @@ function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         rits = (rit / sut) + ep
 
-        if id == 1 
+        if id == 1
 
-            en = - rits * log(rits / ((ri / su) + ep))
+            en = -rits * log(rits / ((ri / su) + ep))
 
         else
 
