@@ -7,7 +7,7 @@ end
 function _plot_mountain(
     fe_,
     sc_,
-    in_,
+    bo_,
     en_,
     en;
     title_text = "Mountain Plot",
@@ -110,8 +110,6 @@ function _plot_mountain(
 
     x = collect(1:n)
 
-    bi_ = convert(Vector{Bool}, in_)
-
     trace_ = [
         Dict(
             "y" => sc_,
@@ -125,9 +123,9 @@ function _plot_mountain(
         ),
         Dict(
             "yaxis" => "y2",
-            "y" => fill(0, sum(bi_)),
-            "x" => x[bi_],
-            "text" => fe_[bi_],
+            "y" => fill(0, sum(bo_)),
+            "x" => x[bo_],
+            "text" => fe_[bo_],
             "mode" => "markers",
             "marker" => Dict(
                 "symbol" => "line-ns",

@@ -1,7 +1,35 @@
-# TODO: Speed up.
-function _score_set_sakl(fe_, sc_, fe1_, bi_, fu; ex = 1.0, pl = true, ke_ar...)
+function _cumulate(ab_)
 
-    ou_ = 1 .- bi_
+    n = length(ab_)
+
+    su = sum(ab_)
+
+    ri_ = Vector{Float64}(undef, n)
+
+    le_ = Vector{Float64}(undef, n)
+
+    ri_[1] = ab_[1]
+
+    le_[1] = su
+
+    @inbounds @fastmath @simd for id in 1:(n - 1)
+
+        idn = id + 1
+
+        ri_[idn] = ri_[id] + ab_[idn]
+
+        le_[idn] = le_[id] - ab_[id]
+
+    end
+
+    ri_ / su, le_ / su
+
+end
+
+# TODO: Speed up.
+function _score_set_sakl(fe_, sc_, fe1_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
+
+    ou_ = 1 .- bo_
 
     if ex == 1.0
 
@@ -13,7 +41,7 @@ function _score_set_sakl(fe_, sc_, fe1_, bi_, fu; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    ina_ = bi_ .* ab_
+    ina_ = bo_ .* ab_
 
     oua_ = ou_ .* ab_
 
@@ -29,7 +57,7 @@ function _score_set_sakl(fe_, sc_, fe1_, bi_, fu; ex = 1.0, pl = true, ke_ar...)
 
     if pl
 
-        _plot_mountain(fe_, sc_, bi_, en_, ar; ke_ar...)
+        _plot_mountain(fe_, sc_, bo_, en_, ar; ke_ar...)
 
     end
 
@@ -37,13 +65,13 @@ function _score_set_sakl(fe_, sc_, fe1_, bi_, fu; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function score_set_skl(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
+function score_set_skl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     _score_set_sakl(
         fe_,
         sc_,
         fe1_,
-        bi_,
+        bo_,
         BioLab.Information.get_symmetric_kullback_leibler_divergence;
         ex = ex,
         pl = pl,
@@ -52,13 +80,13 @@ function score_set_skl(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function score_set_akl(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
+function score_set_akl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     _score_set_sakl(
         fe_,
         sc_,
         fe1_,
-        bi_,
+        bo_,
         BioLab.Information.get_antisymmetric_kullback_leibler_divergence;
         ex = ex,
         pl = pl,

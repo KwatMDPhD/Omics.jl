@@ -1,6 +1,6 @@
-function score_set_ks(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
+function score_set_ks(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    n, sut, suf = _sum_ks(sc_, bi_)
+    n, sut, suf = _sum_ks(sc_, bo_)
 
     cu = 0.0
 
@@ -18,7 +18,7 @@ function score_set_ks(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
 
     @inbounds @fastmath @simd for id in n:-1:1
 
-        if bi_[id]
+        if bo_[id]
 
             sc = sc_[id]
 
@@ -70,7 +70,7 @@ function score_set_ks(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
 
     if pl
 
-        _plot_mountain(fe_, sc_, bi_, en_, et; ke_ar...)
+        _plot_mountain(fe_, sc_, bo_, en_, et; ke_ar...)
 
     end
 
