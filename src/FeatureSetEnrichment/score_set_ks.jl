@@ -1,8 +1,10 @@
 function score_set_ks(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
 
-    n = length(fe_)
+    n, sut, suf = _sum_ks(sc_, bi_)
 
     cu = 0.0
+
+    de = 1.0 / suf
 
     if pl
 
@@ -13,10 +15,6 @@ function score_set_ks(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
     eta = 0.0
 
     et = 0.0
-
-    sut, suf = _sum_1_absolute_and_0_count(sc_, bi_)
-
-    de = 1.0 / suf
 
     @inbounds @fastmath @simd for id in n:-1:1
 

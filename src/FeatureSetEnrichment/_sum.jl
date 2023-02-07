@@ -1,12 +1,14 @@
-function _sum_1_absolute_and_0_count(sc_, bi_)
+function _sum_ks(sc_, bo_)
+
+    n = length(sc_)
 
     sut = 0.0
 
     suf = 0.0
 
-    @inbounds @fastmath @simd for id in 1:length(sc_)
+    @inbounds @fastmath @simd for id in 1:n
 
-        if bi_[id]
+        if bo_[id]
 
             sc = sc_[id]
 
@@ -26,17 +28,17 @@ function _sum_1_absolute_and_0_count(sc_, bi_)
 
     end
 
-    sut, suf
+    n, sut, suf
 
 end
 
-function _xxx(sc_, bi_)
+function _sum_kl(sc_, bo_)
+
+    n = length(sc_)
 
     su = 0.0
 
-    sub = 0.0
-
-    n = length(sc_)
+    sut = 0.0
 
     @inbounds @fastmath @simd for id in 1:n
 
@@ -50,14 +52,14 @@ function _xxx(sc_, bi_)
 
         su += sc
 
-        if bi_[id]
+        if bo_[id]
 
-            sub += sc
+            sut += sc
 
         end
 
     end
 
-    su, sub, n
+    n, su, sut
 
 end

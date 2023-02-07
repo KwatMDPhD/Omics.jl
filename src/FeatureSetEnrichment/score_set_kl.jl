@@ -1,96 +1,88 @@
-function score_set_kl(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
+function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    su, sub, n = _xxx(sc_, bi_)
+    n, su, sut = _sum_kl(sc_, bo_)
 
-    ep = eps()
+    ri = 0.0
 
-    nu = sc_[1]
-
-    if nu < 0.0
-
-        nu = -nu
-
-    end
-
-    ri = nu
-
-    rib = 0.0
-
-    if bi_[1]
-
-        rib += nu
-
-    end
-
-    ribs = (rib / sub) + ep
+    rit = 0.0
 
     le = su
 
-    leb = sub
+    ler = sut
 
-    lebs = (leb / sub) + ep
-
-    en = lebs * log(lebs / ((le / su) + ep)) - ribs * log(ribs / ((ri / su) + ep))
+    ep = eps()
 
     if pl
 
         en_ = Vector{Float64}(undef, n)
 
-        en_[1] = en
-
     end
 
-    ar = en
+    ar = 0.0
 
-    @inbounds @fastmath @simd for id in 1:(n - 1)
+    abp = 0.0
 
-        idn = id + 1
+    bop = false
 
-        nun = sc_[idn]
+    @inbounds @fastmath @simd for id in 1:n
 
-        if nun < 0.0
+        ab = sc_[id]
 
-            nun = -nun
+        if ab < 0.0
 
-        end
-
-        ri += nun
-
-        if bi_[idn]
-
-            rib += nun
+            ab = -ab
 
         end
 
-        ribs = (rib / sub) + ep
+        if ex != 1.0
 
-        nu = sc_[id]
-
-        if nu < 0.0
-
-            nu = -nu
+            ab ^= ex
 
         end
 
-        le -= nu
+        ri += ab
 
-        if bi_[id]
+        bo = bo_[id]
 
-            leb -= nu
+        if bo 
+
+            rit += ab
 
         end
 
-        lebs = (leb / sub) + ep
+        rits = (rit / sut) + ep
 
-        en = lebs * log(lebs / ((le / su) + ep)) - ribs * log(ribs / ((ri / su) + ep))
+        if id == 1 
+
+            en = - rits * log(rits / ((ri / su) + ep))
+
+        else
+
+            le -= abp
+
+            if bop
+
+                ler -= abp
+
+            end
+
+            lets = (ler / sut) + ep
+
+            en = lets * log(lets / ((le / su) + ep)) - rits * log(rits / ((ri / su) + ep))
+
+        end
 
         if pl
 
-            en_[idn] = en
+            en_[id] = en
 
         end
 
         ar += en
+
+        abp = ab
+
+        bop = bo
 
     end
 
@@ -98,7 +90,7 @@ function score_set_kl(fe_, sc_, fe1_, bi_; ex = 1.0, pl = true, ke_ar...)
 
     if pl
 
-        _plot_mountain(fe_, sc_, bi_, en_, ar; ke_ar...)
+        _plot_mountain(fe_, sc_, bo_, en_, ar; ke_ar...)
 
     end
 
