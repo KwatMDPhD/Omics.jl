@@ -22,7 +22,7 @@ macro include()
 
 end
 
-for pa in readdir(@__DIR__, join = true)
+for pa in readdir(@__DIR__; join = true)
 
     if isdir(pa)
 
@@ -38,9 +38,11 @@ function __init__()
 
     mkpath(TE)
 
-    ENV["LINES"] = 19
+    ENV["LINES"] = 80
 
-    ENV["COLUMNS"] = 10^5
+    ENV["COLUMNS"] = 80
+
+    nothing
 
 end
 
