@@ -1,1 +1,1 @@
-const CA_ = [ca for ca in "A23456789XJQK"]
+const CA_ = collect("A23456789XJQK")
