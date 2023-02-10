@@ -1,5 +1,5 @@
-# TODO: Use merge
-function set!(ke_va, ke, va, ho = "first"; pr = true)
+# TODO: Combine with `merge`.
+function set!(ke_va, ke, va, ho; pr = true)
 
     if ho == "first"
 
@@ -9,7 +9,7 @@ function set!(ke_va, ke, va, ho = "first"; pr = true)
 
             if pr && vac != va
 
-                println("$ke => $vac (=> $va)")
+                println("$ke ➡ $vac (➡ $va)")
 
             end
 
@@ -27,7 +27,7 @@ function set!(ke_va, ke, va, ho = "first"; pr = true)
 
             if pr && vac != va
 
-                println("$ke (=> $vac) => $va")
+                println("$ke (➡ $vac) ➡ $va")
 
             end
 
@@ -57,7 +57,7 @@ function set!(ke_va, ke, va, ho = "first"; pr = true)
 
             if pr
 
-                println("($kec =>) $ke => $va")
+                println("($kec ➡) $ke ➡ $va")
 
             end
 

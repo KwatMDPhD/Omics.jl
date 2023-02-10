@@ -1,18 +1,12 @@
-function print(ke_va, n = -1; so = true)
+function print(ke_va; so = true, n = length(ke_va))
 
     n_ke = length(keys(ke_va))
 
     n_va = length(unique(values(ke_va)))
 
     println(
-        "$n_ke $(BioLab.String.count_noun(n_ke, "key")) and $n_va unique $(BioLab.String.count_noun(n_va, "value"))",
+        "$n_ke $(BioLab.String.count_noun(n_ke, "key")) 👉 $n_va unique $(BioLab.String.count_noun(n_va, "value"))",
     )
-
-    if n_ke == 0
-
-        return
-
-    end
 
     if so
 
@@ -20,33 +14,11 @@ function print(ke_va, n = -1; so = true)
 
     end
 
-    if n == -1
+    display(typeof(ke_va)(collect(ke_va)[1:n]))
 
-        JSON_print(ke_va, 2)
+    if n < length(ke_va)
 
-    elseif 0 < n
-
-        println("{")
-
-        for (id, (ke, va)) in enumerate(ke_va)
-
-            Base.print("  ")
-
-            if id <= n
-
-                println("$ke => $va")
-
-            else
-
-                println("...")
-
-                break
-
-            end
-
-        end
-
-        println("}")
+        println("  ...")
 
     end
 

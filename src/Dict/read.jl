@@ -24,7 +24,7 @@ function read(pa_)
 
     for pa in pa_
 
-        di = merge(di, read(pa))
+        di = merge(di, read(pa), "last")
 
     end
 

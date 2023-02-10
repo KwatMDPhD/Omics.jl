@@ -1,4 +1,4 @@
-function merge(ke1_va1, ke2_va2, ho = "last")
+function merge(ke1_va1, ke2_va2, ho)
 
     ke_va = Base.Dict()
 
@@ -12,7 +12,7 @@ function merge(ke1_va1, ke2_va2, ho = "last")
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                va = merge(va1, va2)
+                va = merge(va1, va2, ho)
 
             else
 
@@ -22,13 +22,13 @@ function merge(ke1_va1, ke2_va2, ho = "last")
 
                 elseif ho == "first"
 
-                    println("$ke => $va1 (=> $va2)")
+                    println("$ke ➡ $va1 (➡ $va2)")
 
                     va = va1
 
                 elseif ho == "last"
 
-                    println("$ke (=> $va1) => $va2")
+                    println("$ke (➡ $va1) ➡ $va2")
 
                     va = va2
 
@@ -40,17 +40,13 @@ function merge(ke1_va1, ke2_va2, ho = "last")
 
             end
 
+        elseif haskey(ke1_va1, ke)
+
+            va = ke1_va1[ke]
+
         else
 
-            for ke_va in (ke1_va1, ke2_va2)
-
-                if haskey(ke_va, ke)
-
-                    va = ke_va[ke]
-
-                end
-
-            end
+            va = ke2_va2[ke]
 
         end
 

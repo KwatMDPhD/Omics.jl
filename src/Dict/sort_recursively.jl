@@ -1,3 +1,4 @@
+# TODO: Move elsewhere.
 function sort_recursively(an)
 
     if an isa AbstractArray
@@ -15,6 +16,12 @@ function sort_recursively(an)
     end
 
     try
+
+        if ans isa Tuple
+
+            ans = Tuple(sort!(collect(ans)))
+
+        end
 
         sort!(ans)
 

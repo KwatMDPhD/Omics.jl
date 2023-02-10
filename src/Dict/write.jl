@@ -1,4 +1,4 @@
-function write(js, ke_va, id = 2)
+function write(js, ke_va; id = 2)
 
     open(js, "w") do io
 

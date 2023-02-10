@@ -8,6 +8,10 @@ function print_unique(ro_x_co_x_an; di = 2)
 
         ea = eachcol
 
+    else
+
+        error()
+
     end
 
     for an_ in ea(ro_x_co_x_an)
