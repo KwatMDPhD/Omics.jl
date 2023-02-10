@@ -4,7 +4,7 @@ using DataFrames: DataFrames, insertcols!
 
 using OrderedCollections: OrderedDict
 
-using StatsBase: mean
+using StatsBase: countmap, mean
 
 using ..BioLab
 

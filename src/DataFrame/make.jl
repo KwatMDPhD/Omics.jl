@@ -2,11 +2,9 @@ function make(an__)
 
     co_ = an__[1]
 
-    n_co = length(co_)
-
     ro_ = an__[2:end]
 
-    DataFrames.DataFrame([[ro[id] for ro in ro_] for id in 1:n_co], co_)
+    DataFrames.DataFrame([[ro[id] for ro in ro_] for id in 1:length(co_)], co_)
 
 end
 

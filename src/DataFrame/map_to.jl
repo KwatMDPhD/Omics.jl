@@ -1,10 +1,11 @@
-function map_to(ro_x_co_x_st, fr_, to, ho = "first"; de = "", pr = true)
+function map_to(ro_x_co_x_st, fr_, to, ho; de = "", pr = true)
 
     fr_to = Dict{String, String}()
 
-    id = findfirst(na == to for na in names(ro_x_co_x_st))
-
-    for (fr_, to) in zip(eachrow(ro_x_co_x_st[!, fr_]), ro_x_co_x_st[!, id])
+    for (fr_, to) in zip(
+        eachrow(ro_x_co_x_st[!, fr_]),
+        ro_x_co_x_st[!, findfirst(co == to for co in names(ro_x_co_x_st))],
+    )
 
         if ismissing(to)
 
@@ -24,7 +25,7 @@ function map_to(ro_x_co_x_st, fr_, to, ho = "first"; de = "", pr = true)
 
             if isempty(de)
 
-                fr2_ = (fr,)
+                fr2_ = [fr]
 
             else
 

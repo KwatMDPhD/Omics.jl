@@ -17,15 +17,15 @@ function collapse(ro_x_co_x_nu; fu = mean, pr = true)
 
     end
 
-    n_roc = length(ro_id_)
+    n = length(ro_id_)
 
-    roc_ = Vector{String}(undef, n_roc)
+    ro2_ = Vector{String}(undef, n)
 
-    roc_x_co_x_nu = Matrix{Float64}(undef, (n_roc, length(co_)))
+    ro2_x_co_x_nu = Matrix{Float64}(undef, (n, length(co_)))
 
-    for (idc, (ro, id_)) in enumerate(ro_id_)
+    for (id2, (ro, id_)) in enumerate(ro_id_)
 
-        roc_[idc] = ro
+        ro2_[id2] = ro
 
         if length(id_) == 1
 
@@ -37,18 +37,18 @@ function collapse(ro_x_co_x_nu; fu = mean, pr = true)
 
         end
 
-        roc_x_co_x_nu[idc, :] = nu_
+        ro2_x_co_x_nu[id2, :] = nu_
 
     end
 
-    roc_x_co_x_nu = BioLab.DataFrame.make(ro, roc_, co_, roc_x_co_x_nu)
+    ro2_x_co_x_nu = BioLab.DataFrame.make(ro, ro2_, co_, ro2_x_co_x_nu)
 
     if pr
 
-        println("📐 After $(size(roc_x_co_x_nu))")
+        println("📐 After $(size(ro2_x_co_x_nu))")
 
     end
 
-    roc_x_co_x_nu
+    ro2_x_co_x_nu
 
 end

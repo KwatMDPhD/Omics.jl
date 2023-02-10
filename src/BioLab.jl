@@ -2,9 +2,7 @@ module BioLab
 
 macro include()
 
-    pa = string(__source__.file)
-
-    di, fi = splitdir(pa)
+    di, fi = splitdir(string(__source__.file))
 
     esc(quote
 
