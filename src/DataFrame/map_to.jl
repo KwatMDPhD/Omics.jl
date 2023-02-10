@@ -2,7 +2,7 @@ function map_to(ro_x_co_x_st, fr_, to, ho = "first"; de = "", pr = true)
 
     fr_to = Dict{String, String}()
 
-    id = findfirst(co == to for co in names(ro_x_co_x_st))
+    id = findfirst(na == to for na in names(ro_x_co_x_st))
 
     for (fr_, to) in zip(eachrow(ro_x_co_x_st[!, fr_]), ro_x_co_x_st[!, id])
 
@@ -12,7 +12,7 @@ function map_to(ro_x_co_x_st, fr_, to, ho = "first"; de = "", pr = true)
 
         end
 
-        BioLab.Dict.set!(fr_to, to, to, ho, pr = pr)
+        BioLab.Dict.set!(fr_to, to, to, ho; pr = pr)
 
         for fr in fr_
 
@@ -34,7 +34,7 @@ function map_to(ro_x_co_x_st, fr_, to, ho = "first"; de = "", pr = true)
 
             for fr2 in fr2_
 
-                BioLab.Dict.set!(fr_to, fr2, to, ho, pr = pr)
+                BioLab.Dict.set!(fr_to, fr2, to, ho; pr = pr)
 
             end
 

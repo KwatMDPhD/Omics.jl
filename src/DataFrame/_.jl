@@ -2,7 +2,9 @@ module DataFrame
 
 using DataFrames: DataFrames, insertcols!
 
-using StatsBase: median
+using OrderedCollections: OrderedDict
+
+using StatsBase: mean
 
 using ..BioLab
 

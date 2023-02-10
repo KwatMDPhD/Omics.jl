@@ -1,31 +1,31 @@
-# TODO: `groupby`
-function collapse(ro_x_co_x_nu, fu = median; pr = true)
+function collapse(ro_x_co_x_nu; fu = mean, pr = true)
 
     if pr
 
-        println("Before")
-
-        println(size(ro_x_co_x_nu))
+        println("📐 Before $(size(ro_x_co_x_nu))")
 
     end
 
-    ro_id_ = Dict{String, Vector{Int}}()
+    ro_id_ = OrderedDict{String, Vector{Int}}()
 
-    ro, ro_, co_, ro_x_co_x_nu = BioLab.DataFrame.separate(ro_x_co_x_nu)
+    ro, ro_::Vector{String}, co_, ro_x_co_x_nu::Matrix{Float64} =
+        BioLab.DataFrame.separate(ro_x_co_x_nu)
 
     for (id, ro) in enumerate(ro_)
 
-        push!(get!(ro_id_, ro, []), id)
+        push!(get!(ro_id_, ro, Int[]), id)
 
     end
 
-    roc_ = []
+    n_roc = length(ro_id_)
 
-    roc_x_co_x_nu = Matrix{Float64}(undef, (length(ro_id_), length(co_)))
+    roc_ = Vector{String}(undef, n_roc)
 
-    for (id2, (ro, id_)) in enumerate(sort(ro_id_))
+    roc_x_co_x_nu = Matrix{Float64}(undef, (n_roc, length(co_)))
 
-        push!(roc_, ro)
+    for (idc, (ro, id_)) in enumerate(ro_id_)
+
+        roc_[idc] = ro
 
         if length(id_) == 1
 
@@ -37,7 +37,7 @@ function collapse(ro_x_co_x_nu, fu = median; pr = true)
 
         end
 
-        roc_x_co_x_nu[id2, :] = nu_
+        roc_x_co_x_nu[idc, :] = nu_
 
     end
 
@@ -45,9 +45,7 @@ function collapse(ro_x_co_x_nu, fu = median; pr = true)
 
     if pr
 
-        println("After")
-
-        println(size(roc_x_co_x_nu))
+        println("📐 After $(size(roc_x_co_x_nu))")
 
     end
 

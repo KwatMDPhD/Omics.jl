@@ -1,16 +1,35 @@
-function print_unique(ro_x_co_x_an)
+# TODO: Use mapcount.
+function print_unique(ro_x_co_x_an; di = 2)
+
+    if di == 1
+
+        ea = eachrow
+
+    elseif di == 2
+
+        ea = eachcol
+
+    end
 
     de = "\n  "
 
-    for an_ in eachrow(ro_x_co_x_an)
+    for an_ in ea(ro_x_co_x_an)
 
-        ro, an_ = an_[1], an_[2:end]
+        na = an_[1]
 
-        anu_ = sort(unique(an_))
+        an_ = an_[2:end]
 
-        n = length(anu_)
+        un_ = unique(an_)
 
-        println("$ro ($n):$de$(join(anu_, de))")
+        try
+
+            un_ = sort(un_)
+
+        catch
+
+        end
+
+        println("🔦 $na ($(length(un_))):$de$(join(un_, de))")
 
     end
 
