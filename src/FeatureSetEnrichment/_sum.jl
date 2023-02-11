@@ -1,4 +1,4 @@
-function _sum_1_and_0(sc_, bo_)
+function _sum_1_and_0(sc_, bo_, ex)
 
     n = length(sc_)
 
@@ -10,15 +10,7 @@ function _sum_1_and_0(sc_, bo_)
 
         if bo_[id]
 
-            ab = sc_[id]
-
-            if ab < 0.0
-
-                ab = -ab
-
-            end
-
-            su1 += ab
+            su1 += _get_1(sc_, id, ex)
 
         else
 
@@ -32,7 +24,7 @@ function _sum_1_and_0(sc_, bo_)
 
 end
 
-function _sum_all_and_1(sc_, bo_)
+function _sum_all_and_1(sc_, bo_, ex)
 
     n = length(sc_)
 
@@ -42,13 +34,7 @@ function _sum_all_and_1(sc_, bo_)
 
     @inbounds @fastmath @simd for id in 1:n
 
-        ab = sc_[id]
-
-        if ab < 0.0
-
-            ab = -ab
-
-        end
+        ab = _get_1(sc_, id, ex)
 
         su += ab
 

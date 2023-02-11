@@ -1,6 +1,6 @@
 function score_set_kli(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    n, su, su1 = _sum_all_and_1(sc_, bo_)
+    n, su, su1 = _sum_all_and_1(sc_, bo_, ex)
 
     ep = eps()
 
