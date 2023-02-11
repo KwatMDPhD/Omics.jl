@@ -8,19 +8,21 @@ function get_extreme(nu_)
 
     maa = abs(ma)
 
-    if maa < mia
+    if isapprox(mia, maa)
 
-        mi
+        (mi, ma)
+
+    elseif maa < mia
+
+        (mi,)
+
+    elseif mia < maa
+
+        (ma,)
 
     else
 
-        if mia == maa
-
-            println("The minimum and the maximum have the same absolute value.")
-
-        end
-
-        ma
+        error()
 
     end
 

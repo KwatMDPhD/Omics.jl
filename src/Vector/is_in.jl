@@ -1,6 +1,16 @@
 function is_in(ne_, ha_)
 
-    map(in(ha_), ne_)
+    n = length(ne_)
+
+    bo_ = Base.Vector{Bool}(undef, n)
+
+    @inbounds @fastmath @simd for id in 1:n
+
+        bo_[id] = ne_[id] in ha_
+
+    end
+
+    bo_
 
 end
 

@@ -1,16 +1,16 @@
-function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
+function score_set_kli(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    n, su, sut = _sum_all_and_true(sc_, bo_)
+    n, su, su1 = _sum_all_and_1(sc_, bo_)
 
-    ri = 0.0
+    ep = eps()
 
-    rit = 0.0
+    ri = ep
+
+    ri1 = ep
 
     le = su
 
-    ler = sut
-
-    ep = eps()
+    le1 = su1
 
     abp = 0.0
 
@@ -46,27 +46,39 @@ function score_set_kl(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         if bo
 
-            rit += ab
+            ri1 += ab
 
         end
 
-        rits = (rit / sut) + ep
+        ri1n = ri1 / su1
 
-        en = rits * log(rits / ((ri / su) + ep))
+        en = ri1n * log(ri1n / (ri / su))
 
         if 1 < id
 
             le -= abp
 
-            if bop
+            if le < ep
 
-                ler -= abp
+                le = ep
 
             end
 
-            lets = (ler / sut) + ep
+            if bop
 
-            en -= lets * log(lets / ((le / su) + ep))
+                le1 -= abp
+
+                if le1 < ep
+
+                    le1 = ep
+
+                end
+
+            end
+
+            le1n = le1 / su1
+
+            en -= le1n * log(le1n / (le / su))
 
         end
 

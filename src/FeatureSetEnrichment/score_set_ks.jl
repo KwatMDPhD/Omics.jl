@@ -1,10 +1,10 @@
-function score_set_ks(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
+function score_set_ks(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    n, sut, suf = _sum_true_and_false(sc_, bo_)
+    n, su1, su0 = _sum_1_and_0(sc_, bo_)
 
     cu = 0.0
 
-    de = 1.0 / suf
+    de = 1.0 / su0
 
     if pl
 
@@ -20,21 +20,21 @@ function score_set_ks(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         if bo_[id]
 
-            sc = sc_[id]
+            ab = sc_[id]
 
-            if sc < 0.0
+            if ab < 0.0
 
-                sc = -sc
+                ab = -ab
 
             end
 
             if ex != 1.0
 
-                sc ^= ex
+                ab ^= ex
 
             end
 
-            cu += sc / sut
+            cu += ab / su1
 
         else
 
@@ -50,17 +50,17 @@ function score_set_ks(fe_, sc_, fe1_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         if cu < 0.0
 
-            ab = -cu
+            cua = -cu
 
         else
 
-            ab = cu
+            cua = cu
 
         end
 
-        if eta < ab
+        if eta < cua
 
-            eta = ab
+            eta = cua
 
             et = cu
 

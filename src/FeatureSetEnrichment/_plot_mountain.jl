@@ -33,7 +33,7 @@ function _plot_mountain(
     axis_title_font_size = 12
 
     annotation =
-        Dict("xref" => "paper", "yref" => "paper", "yanchor" => "middle", "showarrow" => false)
+        Dict("yref" => "paper", "xref" => "paper", "yanchor" => "middle", "showarrow" => false)
 
     annotationy = merge(
         annotation,
@@ -42,13 +42,7 @@ function _plot_mountain(
 
     annotationx = merge(annotation, Dict("xanchor" => "center", "x" => 0.5))
 
-    n_ch = 32
-
-    if n_ch < length(title_text)
-
-        title_text = "$(title_text[1:n_ch])..."
-
-    end
+    title_text = BioLab.String.limit(title_text, 32)
 
     n = length(fe_)
 
@@ -136,13 +130,9 @@ function _plot_mountain(
         ),
     ]
 
-    #en_ .= .-reverse!(en_)
-
     le_ = (en < 0.0 for en in en_)
 
-    gr_ = (!le for le in le_)
-
-    for (is_, fillcolor) in ((le_, "#1992ff"), (gr_, "#ff1993"))
+    for (is_, fillcolor) in ((le_, "#1992ff"), ((!le for le in le_), "#ff1993"))
 
         push!(
             trace_,
@@ -161,9 +151,9 @@ function _plot_mountain(
 
     end
 
-    ex = BioLab.VectorNumber.get_extreme(en_)
+    ex_ = BioLab.VectorNumber.get_extreme(en_)
 
-    id_ = findall(==(ex), en_)
+    id_ = findall(en in ex_ for en in en_)
 
     push!(
         trace_,
@@ -183,6 +173,6 @@ function _plot_mountain(
         ),
     )
 
-    BioLab.Plot.plot(trace_, layout, ht = ht)
+    BioLab.Plot.plot(trace_, layout; ht = ht)
 
 end

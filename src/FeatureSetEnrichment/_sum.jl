@@ -1,65 +1,65 @@
-function _sum_true_and_false(sc_, bo_)
+function _sum_1_and_0(sc_, bo_)
 
     n = length(sc_)
 
-    sut = 0.0
+    su1 = 0.0
 
-    suf = 0.0
+    su0 = 0.0
 
     @inbounds @fastmath @simd for id in 1:n
 
         if bo_[id]
 
-            sc = sc_[id]
+            ab = sc_[id]
 
-            if sc < 0.0
+            if ab < 0.0
 
-                sc = -sc
+                ab = -ab
 
             end
 
-            sut += sc
+            su1 += ab
 
         else
 
-            suf += 1.0
+            su0 += 1.0
 
         end
 
     end
 
-    n, sut, suf
+    n, su1, su0
 
 end
 
-function _sum_all_and_true(sc_, bo_)
+function _sum_all_and_1(sc_, bo_)
 
     n = length(sc_)
 
     su = 0.0
 
-    sut = 0.0
+    su1 = 0.0
 
     @inbounds @fastmath @simd for id in 1:n
 
-        sc = sc_[id]
+        ab = sc_[id]
 
-        if sc < 0.0
+        if ab < 0.0
 
-            sc = -sc
+            ab = -ab
 
         end
 
-        su += sc
+        su += ab
 
         if bo_[id]
 
-            sut += sc
+            su1 += ab
 
         end
 
     end
 
-    n, su, sut
+    n, su, su1
 
 end

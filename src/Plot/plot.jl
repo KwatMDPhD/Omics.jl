@@ -14,6 +14,7 @@ function plot(data, layout = Dict(), config = Dict(); ht = "")
             $(write(BioLab.Dict.merge(
                 Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis),
                 layout,
+                "last",
             ))),
             $(write(BioLab.Dict.merge(
                 Dict(
@@ -23,6 +24,8 @@ function plot(data, layout = Dict(), config = Dict(); ht = "")
                     "editable" => false,
                 ),
                 config,
+
+                "last",
             ))),
         )
         """,

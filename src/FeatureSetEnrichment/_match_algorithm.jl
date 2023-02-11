@@ -2,23 +2,23 @@ function _match_algorithm(al)
 
     if al == "KS"
 
-        fu = score_set_ks
+        score_set_ks
 
-    elseif al == "KSA"
+    elseif al == "KSa"
 
-        fu = score_set_ksa
+        score_set_ksa
 
-    elseif al == "KL"
+    elseif al == "KLi"
 
-        score_set_kl
+        score_set_kli
 
-    elseif al == "SKL"
+    elseif al == "KLiop"
 
-        score_set_skl
+        score_set_kliop
 
-    elseif al == "AKL"
+    elseif al == "KLiom"
 
-        score_set_akl
+        score_set_kliom
 
     else
 
