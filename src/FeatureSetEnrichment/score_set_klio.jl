@@ -32,19 +32,7 @@ function _score_set_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
     @inbounds @fastmath @simd for id in 1:n
 
-        ab = sc_[id]
-
-        if ab < 0.0
-
-            ab = -ab
-
-        end
-
-        if ex != 1.0
-
-            ab ^= ex
-
-        end
+        ab = _get_1(sc_, id, ex)
 
         ri += ab
 
