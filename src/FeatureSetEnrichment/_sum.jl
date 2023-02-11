@@ -6,11 +6,11 @@ function _sum_1_and_0(sc_, bo_, ex)
 
     su0 = 0.0
 
-    @inbounds @fastmath @simd for id in 1:n
+    @inbounds @simd for id in 1:n
 
         if bo_[id]
 
-            su1 += _get_1(sc_, id, ex)
+            su1 += _get_absolute_raise(sc_, id, ex)
 
         else
 
@@ -32,15 +32,15 @@ function _sum_all_and_1(sc_, bo_, ex)
 
     su1 = 0.0
 
-    @inbounds @fastmath @simd for id in 1:n
+    @inbounds @simd for id in 1:n
 
-        ab = _get_1(sc_, id, ex)
+        abe = _get_absolute_raise(sc_, id, ex)
 
-        su += ab
+        su += abe
 
         if bo_[id]
 
-            su1 += ab
+            su1 += abe
 
         end
 

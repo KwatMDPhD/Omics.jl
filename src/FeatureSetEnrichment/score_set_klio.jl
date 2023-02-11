@@ -1,4 +1,4 @@
-function _score_set_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
+@fastmath function _score_set_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
     n, su, su1 = _sum_all_and_1(sc_, bo_, ex)
 
@@ -18,9 +18,9 @@ function _score_set_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
     le0 = su0
 
-    abp = 0.0
+    pra = 0.0
 
-    bop = false
+    prb = false
 
     if pl
 
@@ -30,21 +30,21 @@ function _score_set_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
     ar = 0.0
 
-    @inbounds @fastmath @simd for id in 1:n
+    for id in 1:n
 
-        ab = _get_1(sc_, id, ex)
+        abe = _get_absolute_raise(sc_, id, ex)
 
-        ri += ab
+        ri += abe
 
         bo = bo_[id]
 
         if bo
 
-            ri1 += ab
+            ri1 += abe
 
         else
 
-            ri0 += ab
+            ri0 += abe
 
         end
 
@@ -54,53 +54,31 @@ function _score_set_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
         ri0n = ri0 / su0
 
-        en = fu(ri1n * log(ri1n / rin) / 2.0, ri0n * log(ri0n / rin) / 2.0)
+        le = _clip(le, pra, ep)
 
-        if 1 < id
+        if prb
 
-            le -= abp
+            le1 = _clip(le1, pra, ep)
 
-            if le < ep
+        else
 
-                le = ep
-
-            end
-
-            if bop
-
-                le1 -= abp
-
-                if le1 < ep
-
-                    le1 = ep
-
-                end
-
-            else
-
-                le0 -= abp
-
-                if le0 < ep
-
-                    le0 = ep
-
-                end
-
-            end
-
-            len = le / su
-
-            le1n = le1 / su1
-
-            le0n = le0 / su0
-
-            en -= fu(le1n * log(le1n / len) / 2.0, le0n * log(le0n / len) / 2.0)
+            le0 = _clip(le0, pra, ep)
 
         end
 
-        abp = ab
+        len = le / su
 
-        bop = bo
+        le1n = le1 / su1
+
+        le0n = le0 / su0
+
+        en =
+            fu(ri1n * log(ri1n / rin), ri0n * log(ri0n / rin)) -
+            fu(le1n * log(le1n / len), le0n * log(le0n / len))
+
+        pra = abe
+
+        prb = bo
 
         if pl
 

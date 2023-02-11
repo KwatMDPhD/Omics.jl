@@ -1,4 +1,4 @@
-function score_set_ks(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+@fastmath function score_set_ks(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     n, su1, su0 = _sum_1_and_0(sc_, bo_, ex)
 
@@ -16,11 +16,11 @@ function score_set_ks(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     et = 0.0
 
-    @inbounds @fastmath @simd for id in n:-1:1
+    for id in 1:n
 
         if bo_[id]
 
-            cu += _get_1(sc_, id, ex) / su1
+            cu += _get_absolute_raise(sc_, id, ex) / su1
 
         else
 

@@ -1,4 +1,4 @@
-function score_set_kli(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+@fastmath function score_set_kli(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     n, su, su1 = _sum_all_and_1(sc_, bo_, ex)
 
@@ -12,9 +12,9 @@ function score_set_kli(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     le1 = su1
 
-    abp = 0.0
+    pra = 0.0
 
-    bop = false
+    prb = false
 
     if pl
 
@@ -24,55 +24,41 @@ function score_set_kli(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     ar = 0.0
 
-    @inbounds @fastmath @simd for id in 1:n
+    for id in 1:n
 
-        ab = _get_1(sc_, id, ex)
+        abe = _get_absolute_raise(sc_, id, ex)
 
-        ri += ab
+        ri += abe
 
         bo = bo_[id]
 
         if bo
 
-            ri1 += ab
+            ri1 += abe
 
         end
+
+        rin = ri / su
 
         ri1n = ri1 / su1
 
-        en = ri1n * log(ri1n / (ri / su))
+        le = _clip(le, pra, ep)
 
-        if 1 < id
+        if prb
 
-            le -= abp
-
-            if le < ep
-
-                le = ep
-
-            end
-
-            if bop
-
-                le1 -= abp
-
-                if le1 < ep
-
-                    le1 = ep
-
-                end
-
-            end
-
-            le1n = le1 / su1
-
-            en -= le1n * log(le1n / (le / su))
+            le1 = _clip(le1, pra, ep)
 
         end
 
-        abp = ab
+        len = le / su
 
-        bop = bo
+        le1n = le1 / su1
+
+        en = ri1n * log(ri1n / rin) - le1n * log(le1n / len)
+
+        pra = abe
+
+        prb = bo
 
         if pl
 

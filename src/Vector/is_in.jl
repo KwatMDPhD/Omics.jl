@@ -4,7 +4,7 @@ function is_in(ne_, ha_)
 
     bo_ = Base.Vector{Bool}(undef, n)
 
-    @inbounds @fastmath @simd for id in 1:n
+    @inbounds @simd for id in 1:n
 
         bo_[id] = ne_[id] in ha_
 
@@ -18,7 +18,7 @@ function is_in(ne_id::AbstractDict, ha_)
 
     bo_ = fill(false, length(ne_id))
 
-    @inbounds @fastmath @simd for ha in ha_
+    @inbounds @simd for ha in ha_
 
         id = get(ne_id, ha, nothing)
 
