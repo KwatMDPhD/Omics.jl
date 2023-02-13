@@ -1,4 +1,4 @@
-function read(gs, di = BioLab.TE; pr = true)
+function read(gs; di = BioLab.TE, pr = true)
 
     fi = "$(gs)_family.soft.gz"
 
@@ -38,9 +38,10 @@ function read(gs, di = BioLab.TE; pr = true)
 
             end
 
-            ty, bl = split(li[2:end], eq, limit = 2)
+            ty, bl = split(li[2:end], eq; limit = 2)
 
-            get!(ty_bl, ty, OrderedDict{String, OrderedDict}())[bl] = OrderedDict{String, Any}()
+            get!(ty_bl, ty, OrderedDict{String, OrderedDict{String, Any}}())[bl] =
+                OrderedDict{String, Any}()
 
             continue
 
@@ -48,11 +49,12 @@ function read(gs, di = BioLab.TE; pr = true)
 
         ke_va = ty_bl[ty][bl]
 
+        # TODO: Use `_data_row_count`.
         if startswith(li, "!$(lowercase(ty))_table_")
 
             if endswith(li, "begin")
 
-                ke_va[ket] = []
+                ke_va[ket] = Vector{Vector{String}}()
 
             elseif endswith(li, "end")
 
@@ -83,7 +85,7 @@ function read(gs, di = BioLab.TE; pr = true)
 
         else
 
-            ke, va = split(li, eq, limit = 2)
+            ke, va = split(li, eq; limit = 2)
 
             BioLab.Dict.set!(ke_va, ke, va, "suffix"; pr = pr)
 

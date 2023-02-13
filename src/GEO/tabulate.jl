@@ -2,7 +2,11 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     pl = parse(Int, pl[4:end])
 
-    println("🚉 $pl")
+    if pr
+
+        println("🚉 $pl")
+
+    end
 
     ke = "ID"
 
@@ -16,7 +20,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         va = "UCSC_RefGene_Name"
 
-        fu = na -> BioLab.String.split_and_get(na, ";", 1)
+        fu = na -> BioLab.String.split_and_get(na, ';', 1)
 
     elseif pl in (5175, 6244, 11532, 17586)
 
@@ -66,7 +70,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     for (fe, na) in zip(fe_x_in_x_an[!, ke], fe_x_in_x_an[!, va])
 
-        if na isa AbstractString && !isempty(na) && !(na in ("---",))
+        if na isa AbstractString && !(na in ("", "---"))
 
             BioLab.Dict.set!(fe_na, fe, fu(na), "last"; pr)
 
@@ -84,7 +88,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
 end
 
-function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
+function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl["SAMPLE"]))
 
@@ -100,9 +104,9 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
         ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
 
-        if all(occursin(de, ch) for ch in ch_)
+        if all(contains(ch, de) for ch in ch_)
 
-            sp_ = [split(ch, de, limit = 2) for ch in ch_]
+            sp_ = [split(ch, de; limit = 2) for ch in ch_]
 
             push!(co_st____, Dict(ch => [sp[1] for sp in sp_], sa => [sp[2] for sp in sp_]))
 
@@ -114,7 +118,7 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
         pl = ke_va["!Sample_platform_id"]
 
-        co_nu____ = get!(pl_co_nu____, pl, [])
+        co_nu____ = get!(pl_co_nu____, pl, Vector{Union{String, Float64}}())
 
         if haskey(ke_va, "fe_x_in_x_an")
 
@@ -123,8 +127,8 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
             push!(
                 co_nu____,
                 Dict(
-                    pl => string.(fe_x_in_x_an[!, 1]),
-                    sa => parse.(Float64, fe_x_in_x_an[!, "VALUE"]),
+                    pl => fe_x_in_x_an[!, 1],
+                    sa => [parse(Float64, va) for va in fe_x_in_x_an[!, "VALUE"]],
                 ),
             )
 
@@ -160,9 +164,13 @@ function tabulate(ty_bl, sa = "!Sample_title"; pr = true)
 
             n_fe = size(fe_x_sa_x_nu, 1)
 
-            println(
-                "📛 Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $n_fe $pl $(BioLab.String.count_noun(n_fe,"feature")).",
-            )
+            if pr
+
+                println(
+                    "📛 Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $n_fe $pl $(BioLab.String.count_noun(n_fe,"feature")).",
+                )
+
+            end
 
         else
 

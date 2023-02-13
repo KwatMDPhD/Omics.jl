@@ -36,7 +36,7 @@ function __init__()
 
     mkpath(TE)
 
-    ENV["LINES"] = 80
+    ENV["LINES"] = 40
 
     ENV["COLUMNS"] = 80
 
