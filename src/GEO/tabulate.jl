@@ -68,7 +68,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         if na isa AbstractString && !isempty(na) && !(na in ("---",))
 
-            BioLab.Dict.set!(fe_na, fe, fu(na), pr = pr)
+            BioLab.Dict.set!(fe_na, fe, fu(na), "last"; pr)
 
         end
 
@@ -76,7 +76,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     if pr
 
-        BioLab.Dict.print(fe_na, 0)
+        BioLab.Dict.print(fe_na; n = 0)
 
     end
 
