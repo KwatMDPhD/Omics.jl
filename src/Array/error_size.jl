@@ -1,9 +1,15 @@
-function error_size(ar_)
+function error_size(ar1, ar2)
 
-    if length(unique(size(ar) for ar in ar_)) != 1
+    if size(ar1) != size(ar2)
 
         error()
 
     end
+
+end
+
+function error_size(ar_)
+
+    reduce(error_size, ar_)
 
 end

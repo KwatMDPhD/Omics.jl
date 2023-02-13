@@ -1,4 +1,4 @@
-function list(di, jo = false; ig_ = (r"^\.",), ke_ = ())
+function list(di; jo = false, ig_ = (r"^\.",), ke_ = ())
 
     pa_ = []
 
@@ -6,8 +6,8 @@ function list(di, jo = false; ig_ = (r"^\.",), ke_ = ())
 
         na = basename(pa)
 
-        if !any(occursin(ig, na) for ig in ig_) &&
-           (isempty(ke_) || any(occursin(ke, na) for ke in ke_))
+        if !any(contains(na, ig) for ig in ig_) &&
+           (isempty(ke_) || any(contains(na, ke) for ke in ke_))
 
             push!(pa_, pa)
 
