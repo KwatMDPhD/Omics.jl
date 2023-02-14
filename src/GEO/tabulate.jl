@@ -60,7 +60,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     if pr
 
-        println("🧭 Mapping paltform features using the platform table ($ke ➡️ $va)")
+        println("🧭 Mapping platform features using the platform table ($ke ➡️ $va)")
 
         println(first(fe_x_in_x_an, 2))
 
@@ -70,7 +70,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     for (fe, na) in zip(fe_x_in_x_an[!, ke], fe_x_in_x_an[!, va])
 
-        if na isa AbstractString && !(na in ("", "---"))
+        if na isa AbstractString && !isempty(na) && na != "---"
 
             BioLab.Dict.set!(fe_na, fe, fu(na), "last"; pr)
 
@@ -98,7 +98,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
     co_st____ = Vector{Dict{String, Vector{String}}}()
 
-    pl_co_nu____ = Dict{String, Vector{Dict{String, Vector{Union{String, Float64}}}}}()
+    pl_co_nu____ = Dict{String, Vector{Dict{String, Vector{String}}}}()
 
     for (sa, ke_va) in sa_ke_va
 
@@ -118,19 +118,13 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
         pl = ke_va["!Sample_platform_id"]
 
-        co_nu____ = get!(pl_co_nu____, pl, Vector{Union{String, Float64}}())
+        co_nu____ = get!(pl_co_nu____, pl, Vector{Dict{String, Vector{String}}}())
 
         if haskey(ke_va, "fe_x_in_x_an")
 
             fe_x_in_x_an = ke_va["fe_x_in_x_an"]
 
-            push!(
-                co_nu____,
-                Dict(
-                    pl => fe_x_in_x_an[!, 1],
-                    sa => [parse(Float64, va) for va in fe_x_in_x_an[!, "VALUE"]],
-                ),
-            )
+            push!(co_nu____, Dict(pl => fe_x_in_x_an[!, 1], sa => fe_x_in_x_an[!, "VALUE"]))
 
         else
 
@@ -144,15 +138,17 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
     if pr
 
-        BioLab.DataFrame.print_unique(ch_x_sa_x_an)
+        BioLab.DataFrame.print_unique(ch_x_sa_x_an; di = 1)
 
     end
 
-    fe_x_sa_x_nu_____ = []
+    fe_x_sa_x_nu_____ = Vector{DataFrame}(undef, length(pl_co_nu____))
 
-    for (pl, co_nu____) in pl_co_nu____
+    for (id, (pl, co_nu____)) in enumerate(pl_co_nu____)
 
         fe_x_sa_x_nu = _outerjoin(co_nu____, pl)
+
+        # TODO: Type.
 
         pl_ke_va = ty_bl["PLATFORM"]
 
@@ -178,7 +174,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
         end
 
-        push!(fe_x_sa_x_nu_____, fe_x_sa_x_nu)
+        fe_x_sa_x_nu_____[id] = fe_x_sa_x_nu
 
     end
 
