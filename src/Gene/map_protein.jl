@@ -14,7 +14,11 @@ function map_protein()
 
             if io == "Entry Name"
 
-                BioLab.Dict.set!(pr_io_an, BioLab.String.split_and_get(an, "_HUMAN", 1), io_an)
+                BioLab.Dict.set_with_last!(
+                    pr_io_an,
+                    BioLab.String.split_and_get(an, "_HUMAN", 1),
+                    io_an,
+                )
 
             else
 

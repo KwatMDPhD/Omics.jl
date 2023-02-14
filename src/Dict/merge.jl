@@ -12,51 +12,25 @@ function merge(ke1_va1, ke2_va2, ho)
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                va = merge(va1, va2, ho)
+                ke_va[ke] = merge(va1, va2, ho)
 
             else
 
-                if va1 == va2
+                ho(ke_va, ke, va1)
 
-                    va = va1
-
-                elseif ho == "first"
-
-                    println("$ke ➡ $va1 (➡ $va2)")
-
-                    va = va1
-
-                elseif ho == "last"
-
-                    println("$ke (➡ $va1) ➡ $va2")
-
-                    va = va2
-
-                else
-
-                    error()
-
-                end
+                ho(ke_va, ke, va2)
 
             end
 
         elseif haskey(ke1_va1, ke)
 
-            va = ke1_va1[ke]
+            ke_va[ke] = ke1_va1[ke]
 
         else
 
-            va = ke2_va2[ke]
+            ke_va[ke] = ke2_va2[ke]
 
         end
-
-        if va isa AbstractDict
-
-            va = copy(va)
-
-        end
-
-        ke_va[ke] = va
 
     end
 

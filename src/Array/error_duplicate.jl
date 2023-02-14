@@ -6,4 +6,6 @@ function error_duplicate(ar)
 
     end
 
+    nothing
+
 end

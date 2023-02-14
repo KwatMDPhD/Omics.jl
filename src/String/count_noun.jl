@@ -16,7 +16,7 @@ function count_noun(n, st)
 
         sir = Regex("$si\$")
 
-        if occursin(sir, st)
+        if contains(st, sir)
 
             return replace(st, sir => pl)
 

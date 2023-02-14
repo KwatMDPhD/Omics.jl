@@ -1,29 +1,18 @@
-function simulate(n, re = true, ra = BioLab.Constant.RA; di = "Normal", ho = "")
+# TODO: Check speed.
+# TODO: Multiple-dispatch.
+function simulate(n; ra = BioLab.Constant.RA, di = Normal(), ho = "", re = true)
 
-    #
-    if di == "Normal"
-
-        di = Normal()
-
-    else
-
-        error()
-
-    end
-
-    #
+    # TODO: Check correctness.
     seed!(ra)
 
     ra_ = rand(di, n)
 
-    #
     po_ = shift_minimum(ra_, 0.0)
 
     sort!(po_)
 
     ne_ = reverse(-po_)
 
-    #
     if isempty(ho)
 
         nem_ = ne_
@@ -34,8 +23,10 @@ function simulate(n, re = true, ra = BioLab.Constant.RA; di = "Normal", ho = "")
 
     elseif ho == "long"
 
+        # TODO: Use `Float64`.
         nem_ = Vector{eltype(ne_)}(undef, n * 2 - 1)
 
+        # TODO: Speed up.
         for (id, ne) in enumerate(ne_)
 
             id2 = id * 2
@@ -44,7 +35,7 @@ function simulate(n, re = true, ra = BioLab.Constant.RA; di = "Normal", ho = "")
 
             if id < n
 
-                nem_[id2] = (ne + ne_[id + 1]) / 2
+                nem_[id2] = (ne + ne_[id + 1]) / 2.0
 
             end
 
@@ -56,14 +47,13 @@ function simulate(n, re = true, ra = BioLab.Constant.RA; di = "Normal", ho = "")
 
     end
 
-    #
     if !re
 
         nem_ = nem_[1:(end - 1)]
 
     end
 
-    #
+    # TODO: Preallocate.
     vcat(nem_, po_)
 
 end

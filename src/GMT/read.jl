@@ -4,9 +4,9 @@ function read(gm::AbstractString)
 
     for li in readlines(gm)
 
-        sp_ = split(li, "\t")
+        sp_ = split(li, '\t')
 
-        BioLab.Dict.set!(se_ge_, sp_[1], [ge for ge in sp_[3:end] if !isempty(ge)], "suffix")
+        BioLab.Dict.set_with_last!(se_ge_, sp_[1], [ge for ge in sp_[3:end] if !isempty(ge)])
 
     end
 

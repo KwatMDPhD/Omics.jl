@@ -1,4 +1,4 @@
-# TODO: multiple-dispatch.
+# TODO: Multiple-dispatch.
 function _match_algorithm(al)
 
     if al == "KS"

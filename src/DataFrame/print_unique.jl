@@ -1,12 +1,18 @@
 function print_unique(ro_x_co_x_an; di = 2)
 
+    _x_co_x_an = ro_x_co_x_an[!, 2:end]
+
     if di == 1
 
-        ea = eachrow
+        na_ = ro_x_co_x_an[!, 1]
+
+        an__ = eachrow(_x_co_x_an)
 
     elseif di == 2
 
-        ea = eachcol
+        na_ = names(ro_x_co_x_an)[2:end]
+
+        an__ = eachcol(_x_co_x_an)
 
     else
 
@@ -14,12 +20,14 @@ function print_unique(ro_x_co_x_an; di = 2)
 
     end
 
-    for an_ in ea(ro_x_co_x_an)
+    for (na, an_) in zip(na_, an__)
 
-        println("🔦 $(an_[1])")
+        println("🔦 $na")
 
-        BioLab.Dict.print(sort(countmap(an_[2:end]); byvalue = true); so = false)
+        BioLab.Dict.print(sort(countmap(an_); byvalue = true); so = false)
 
     end
+
+    nothing
 
 end

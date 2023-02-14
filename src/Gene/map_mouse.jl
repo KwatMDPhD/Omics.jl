@@ -12,7 +12,7 @@ function map_mouse()
 
         end
 
-        BioLab.Dict.set!(ke_va, ke, va, pr = false)
+        BioLab.Dict.set_with_last!(ke_va, ke, va)
 
     end
 

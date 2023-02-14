@@ -87,7 +87,7 @@ function read(gs; di = BioLab.TE, pr = true)
 
             ke, va = split(li, eq; limit = 2)
 
-            BioLab.Dict.set!(ke_va, ke, va, "suffix"; pr = pr)
+            BioLab.Dict.set_with_suffix!(ke_va, ke, va)
 
         end
 

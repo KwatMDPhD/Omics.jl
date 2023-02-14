@@ -20,10 +20,6 @@ function get_extreme(nu_)
 
         (ma,)
 
-    else
-
-        error()
-
     end
 
 end

@@ -1,4 +1,3 @@
-# TODO: Make testample.
 function rank(di)
 
     na_ = readdir(di)

@@ -1,4 +1,4 @@
-@fastmath function score_set_ks(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function score_set_ks(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     n, su1, su0 = _sum_1_and_0(sc_, bo_, ex)
 

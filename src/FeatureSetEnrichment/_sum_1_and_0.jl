@@ -6,7 +6,7 @@ function _sum_1_and_0(sc_, bo_, ex)
 
     su0 = 0.0
 
-    @inbounds @simd for id in 1:n
+    for id in 1:n
 
         if bo_[id]
 

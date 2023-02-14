@@ -4,10 +4,11 @@ function get_common_start(an__)
 
     mi = minimum(le_)
 
-    sh = an__[findfirst(==(mi), le_)]
+    sh = an__[findfirst(le == mi for le in le_)]
 
     id = 1
 
+    # TODO: Speed up.
     while id <= mi
 
         an = sh[id]

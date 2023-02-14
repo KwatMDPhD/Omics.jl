@@ -10,11 +10,11 @@ end
 
 function run(di, ig_)
 
-    nb_ = BioLab.Path.list(di, false, ig_ = ig_, ke_ = (r".ipynb$",))
+    nb_ = BioLab.Path.list(di; jo = false, ig_, ke_ = (r".ipynb$",))
 
-    if all(occursin(r"^[0-9]+\.", nb) for nb in nb_)
+    if all(contains(nb, r"^[0-9]+\.") for nb in nb_)
 
-        sort!(nb_, by = nb -> parse(Int, BioLab.String.split_and_get(nb, ".", 1)))
+        sort!(nb_, by = nb -> parse(Int, BioLab.String.split_and_get(nb, '.', 1)))
 
     end
 
@@ -22,7 +22,7 @@ function run(di, ig_)
 
         nb = joinpath(di, nb)
 
-        println("Running $nb ($id)")
+        println("🚆 Running $nb ($id)")
 
         run(nb)
 

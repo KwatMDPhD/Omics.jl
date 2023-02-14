@@ -1,4 +1,4 @@
-function map_to(ro_x_co_x_st, fr_, to, ho; de = "", pr = true)
+function map_to(ro_x_co_x_st, ho, fr_, to; de = "")
 
     fr_to = Dict{String, String}()
 
@@ -13,7 +13,7 @@ function map_to(ro_x_co_x_st, fr_, to, ho; de = "", pr = true)
 
         end
 
-        BioLab.Dict.set!(fr_to, to, to, ho; pr = pr)
+        ho(fr_to, to, to)
 
         for fr in fr_
 
@@ -35,7 +35,7 @@ function map_to(ro_x_co_x_st, fr_, to, ho; de = "", pr = true)
 
             for fr2 in fr2_
 
-                BioLab.Dict.set!(fr_to, fr2, to, ho; pr = pr)
+                ho(fr_to, fr2, to)
 
             end
 

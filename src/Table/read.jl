@@ -1,10 +1,5 @@
-function read(pa, xl = ""; ke_ar...)
-
-    if !ispath(pa)
-
-        error()
-
-    end
+# TODO: Check speed.
+function read(pa; xl = "", ke_ar...)
 
     ex = splitext(pa)[2]
 

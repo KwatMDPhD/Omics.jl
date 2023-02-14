@@ -1,11 +1,14 @@
 function pair_index(an_)
 
+    # TODO: Check speed.
+
     ty = eltype(an_)
 
     an_id = Dict{ty, Int}()
 
     id_an = Dict{Int, ty}()
 
+    # TODO: Speed up.
     for (id, an) in enumerate(an_)
 
         an_id[an] = id
