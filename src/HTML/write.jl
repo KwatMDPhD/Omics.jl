@@ -1,4 +1,4 @@
-function make(di, so_, sc, ht = ""; he = 800)
+function write(di, so_, sc; ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html"), he = 800)
 
     st = "display: flex; justify-content: center; align-items: center;"
 
@@ -15,13 +15,7 @@ function make(di, so_, sc, ht = ""; he = 800)
         </script>""",
     )
 
-    jo = join(li_, "\n")
-
-    if isempty(ht)
-
-        ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html")
-
-    end
+    jo = join(li_, '\n')
 
     open(ht, "w") do io
 
@@ -29,7 +23,7 @@ function make(di, so_, sc, ht = ""; he = 800)
 
     end
 
-    println("Wrote $ht.")
+    println("🖼️ Wrote $ht.")
 
     if displayable("html")
 
@@ -37,7 +31,7 @@ function make(di, so_, sc, ht = ""; he = 800)
 
     else
 
-        print("HTML is not displayable")
+        print("💥 HTML is not displayable")
 
         try
 

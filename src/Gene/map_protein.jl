@@ -2,16 +2,15 @@ function map_protein()
 
     pr_x_in_x_an = BioLab.Table.read(_path("uniprot.tsv.gz"))
 
-    # TODO: Type.
-    pr_io_an = Dict()
+    pr_io_an = Dict{String, Dict{String, Vector{String}}}()
 
     in_ = names(pr_x_in_x_an)
 
     for an_ in eachrow(pr_x_in_x_an)
 
-        # TODO: Type.
-        io_an = Dict()
+        io_an = Dict{String, Vector{String}}()
 
+        # TODO: Use indexing to speed up.
         for (io, an) in zip(in_, an_)
 
             if io == "Entry Name"
@@ -28,7 +27,7 @@ function map_protein()
 
                     if io == "Gene Names"
 
-                        an = split(an, " ")
+                        an = split(an, ' ')
 
                     elseif io == "Interacts with"
 

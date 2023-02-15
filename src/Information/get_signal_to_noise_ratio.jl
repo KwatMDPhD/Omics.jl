@@ -8,7 +8,13 @@ function _get_standard_deviation(nu_, me)
 
     else
 
-        max(abs(me) * fr, std(nu_, corrected = true))
+        if me < 0.0
+
+            me = -me
+
+        end
+
+        max(me * fr, std(nu_; corrected = true))
 
     end
 

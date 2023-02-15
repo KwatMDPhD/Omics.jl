@@ -4,7 +4,7 @@ function _error_bad(an, ba_)
 
         if isequal(an, ba)
 
-            error()
+            error(ba)
 
         end
 

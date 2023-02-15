@@ -1,5 +1,5 @@
 function get_entropy(nu_)
 
-    nu_
+    0.0
 
 end

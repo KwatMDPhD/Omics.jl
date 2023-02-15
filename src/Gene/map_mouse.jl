@@ -1,6 +1,6 @@
 function map_mouse()
 
-    ke_va = Dict()
+    ke_va = Dict{String, String}()
 
     fe_x_in_x_an = BioLab.Table.read(_path("ensembl.mouse_human.tsv.gz"))
 

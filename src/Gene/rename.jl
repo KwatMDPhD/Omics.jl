@@ -1,61 +1,76 @@
-function rename(st_, wh_ = ("mouse", "ensembl", "hgnc"))
+function rename(st_; mo = true, en = true, hg = true)
 
-    # TODO: Type.
-    st_na = Dict()
+    st_na = Dict{String, String}()
 
-    if "mouse" in wh_
+    if mo
 
         merge!(st_na, map_mouse())
 
     end
 
-    for wh in ("ensembl", "hgnc")
+    if en
 
-        if wh in wh_
-
-            merge!(st_na, map_to(wh))
-
-        end
+        merge!(st_na, map_ensemble())
 
     end
 
-    # TODO: Type.
-    na_ = []
+    if hg
 
-    # TODO: Type.
-    ma_ = []
+        merge!(st_na, map_hgnc())
 
-    for st in st_
+    end
+
+    n = length(st_)
+
+    na_ = Vector{String}(undef, n)
+
+    ma_ = Vector{Int}(undef, n)
+
+    n_1 = 0
+
+    n_2 = 0
+
+    n_3 = 0
+
+    for id in 1:n
 
         if haskey(st_na, st)
 
             na = st_na[st]
 
-            push!(na_, na)
+            if st == na
 
-            push!(ma_, 2 - (st == na))
+                ma = 1
+
+                n_1 += 1
+
+            else
+
+                ma = 2
+
+                n_2 += 1
+
+            end
 
         else
 
-            push!(na_, st)
+            na = st
 
-            push!(ma_, 3)
+            ma = 3
+
+            n_3 += 1
 
         end
 
-    end
+        na_[id] = na
 
-    n_ = [0.0, 0.0, 0.0]
-
-    for ma in ma_
-
-        n_[ma] += 1.0
+        ma_[id] = ma
 
     end
 
-    for (id, em) in ((1, "👍"), (2, "✌️"), (3, "👎"))
+    for (n, em) in ((n_1, "👍"), (n_2, "✅"), (n_3, "❌"))
 
-        println("$em $(convert(Int, n_[id]))")
+        println("$em $n")
 
     end
 

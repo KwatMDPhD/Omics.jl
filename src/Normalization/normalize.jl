@@ -58,7 +58,7 @@ end
 
 function normalize(ro_x_co_x_nu, di, ho)
 
-    ro_x_co_x_nun = Matrix{Real}(undef, size(ro_x_co_x_nu))
+    ro_x_co_x_nun = Matrix{eltype(ro_x_co_x_nu)}(undef, size(ro_x_co_x_nu))
 
     if di == 1
 

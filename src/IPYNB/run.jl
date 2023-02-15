@@ -16,7 +16,7 @@ function run(di, ig_)
 
     if all(contains(nb, r"^[0-9]+\.") for nb in nb_)
 
-        sort!(nb_, by = nb -> parse(Int, BioLab.String.split_and_get(nb, '.', 1)))
+        sort!(nb_; by = nb -> parse(Int, BioLab.String.split_and_get(nb, '.', 1)))
 
     end
 
@@ -29,7 +29,5 @@ function run(di, ig_)
         run(nb)
 
     end
-
-    nothing
 
 end
