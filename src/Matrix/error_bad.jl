@@ -10,6 +10,8 @@ function _error_bad(an, ba_)
 
     end
 
+    nothing
+
 end
 
 function error_bad(ro_x_co_x_an, ty)
@@ -39,5 +41,7 @@ function error_bad(ro_x_co_x_an, ty)
         _error_bad(an, ba_)
 
     end
+
+    nothing
 
 end

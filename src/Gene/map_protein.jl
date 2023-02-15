@@ -2,12 +2,14 @@ function map_protein()
 
     pr_x_in_x_an = BioLab.Table.read(_path("uniprot.tsv.gz"))
 
+    # TODO: Type.
     pr_io_an = Dict()
 
     in_ = names(pr_x_in_x_an)
 
     for an_ in eachrow(pr_x_in_x_an)
 
+        # TODO: Type.
         io_an = Dict()
 
         for (io, an) in zip(in_, an_)

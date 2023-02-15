@@ -178,6 +178,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
     end
 
+    # TODO: Do not splat.
     ch_x_sa_x_an, fe_x_sa_x_nu_____...
 
 end
@@ -186,14 +187,12 @@ function _outerjoin(co_va____, on)
 
     if isempty(co_va____)
 
-        fe_x_co_x_va = DataFrame()
+        DataFrame()
 
     else
 
-        fe_x_co_x_va = select!(outerjoin(DataFrame.(co_va____)...; on = on), on, :)
+        select!(outerjoin(DataFrame.(co_va____)...; on = on), on, :)
 
     end
-
-    fe_x_co_x_va
 
 end

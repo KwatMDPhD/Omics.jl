@@ -36,4 +36,6 @@ function print(ro_x_co_x_an, n_ro = 3, n_co = 3)
 
     end
 
+    nothing
+
 end

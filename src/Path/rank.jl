@@ -20,4 +20,6 @@ function rank(di)
 
     end
 
+    nothing
+
 end

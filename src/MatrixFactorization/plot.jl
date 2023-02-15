@@ -111,4 +111,6 @@ function plot(
 
     end
 
+    nothing
+
 end

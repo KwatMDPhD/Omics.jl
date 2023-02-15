@@ -34,11 +34,11 @@ const TE = BioLab.Path.make_temporary("BioLab")
 
 function __init__()
 
-    mkpath(TE)
-
     ENV["LINES"] = 40
 
     ENV["COLUMNS"] = 80
+
+    mkpath(TE)
 
     nothing
 

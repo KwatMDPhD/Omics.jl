@@ -20,14 +20,14 @@ end
 
 function read(pa_)
 
-    di = Base.Dict()
+    ke_va = Base.Dict()
 
     for pa in pa_
 
-        di = merge(di, read(pa), "last")
+        ke_va = merge(ke_va, read(pa), "last")
 
     end
 
-    di
+    ke_va
 
 end

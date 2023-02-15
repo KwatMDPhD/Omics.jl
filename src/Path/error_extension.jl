@@ -6,4 +6,6 @@ function error_extension(pa, ex)
 
     end
 
+    nothing
+
 end
