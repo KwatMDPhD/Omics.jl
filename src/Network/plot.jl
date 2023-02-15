@@ -20,24 +20,23 @@ function plot(el_, st_, la; ht = "", he = 800, wr = "", sc = 1.0, bg = "#fdfdfd"
 
         if wr == "json"
 
-            bl = """
-            new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"})"""
+            bl = """new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"})"""
 
         elseif wr == "png"
 
-            bl = """
-            cy.png({"full": true, "scale": $sc, "bg": "$bg"})"""
+            bl = """cy.png({"full": true, "scale": $sc, "bg": "$bg"})"""
+
+        else
+
+            error()
 
         end
 
-        re = """
-        cy.ready(function() {
-            saveAs($bl, "$pr.$wr");
-        });"""
+        re = """cy.ready(function() {saveAs($bl, "$pr.$wr");});"""
 
     end
 
-    BioLab.HTML.make(
+    BioLab.HTML.write(
         di,
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
@@ -68,9 +67,9 @@ function plot(el_, st_, la; ht = "", he = 800, wr = "", sc = 1.0, bg = "#fdfdfd"
             ev.target.removeClass("edgehover");
         });
 
-        $re""",
-        ht;
-        he = he,
+        $re""";
+        ht,
+        he,
     )
 
 end

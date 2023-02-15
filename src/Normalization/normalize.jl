@@ -1,87 +1,61 @@
-function normalize(te, ho)
+function normalize_with_01(te)
 
-    if isempty(te)
+    mi = minimum(te)
 
-        error()
+    ra = maximum(te) - mi
 
-    end
-
-    if ho == "0-1"
-
-        mi = minimum(te)
-
-        ra = maximum(te) - mi
-
-        [(nu - mi) / ra for nu in te]
-
-    elseif ho == "-0-"
-
-        me = mean(te)
-
-        st = std(te)
-
-        [(nu - me) / st for nu in te]
-
-    elseif ho == "sum"
-
-        if any(nu < 0.0 for nu in te)
-
-            error()
-
-        end
-
-        te / sum(te)
-
-    elseif ho == "1223"
-
-        denserank(te)
-
-    elseif ho == "1224"
-
-        competerank(te)
-
-    elseif ho == "1 2.5 2.5 4"
-
-        tiedrank(te)
-
-    elseif ho == "1234"
-
-        ordinalrank(te)
-
-    else
-
-        error()
-
-    end
+    [(nu - mi) / ra for nu in te]
 
 end
 
-function normalize(ro_x_co_x_nu, di, ho)
+function normalize_with_0(te)
 
-    ro_x_co_x_nun = Matrix{eltype(ro_x_co_x_nu)}(undef, size(ro_x_co_x_nu))
+    me = mean(te)
 
-    if di == 1
+    st = std(te)
 
-        for (id, nu_) in enumerate(eachrow(ro_x_co_x_nu))
-
-            ro_x_co_x_nun[id, :] = normalize(nu_, ho)
-
-        end
-
-    elseif di == 2
-
-        for (id, nu_) in enumerate(eachcol(ro_x_co_x_nu))
-
-            ro_x_co_x_nun[:, id] = normalize(nu_, ho)
-
-        end
-
-    else
+    if st == 0
 
         error()
 
     end
 
-    ro_x_co_x_nun
+    [(nu - me) / st for nu in te]
+
+end
+
+function normalize_with_sum(te)
+
+    if any(nu < 0.0 for nu in te)
+
+        error()
+
+    end
+
+    te / sum(te)
+
+end
+
+function normalize_with_1223(te)
+
+    denserank(te)
+
+end
+
+function normalize_with_1224(te)
+
+    competerank(te)
+
+end
+
+function normalize_with_125254(te)
+
+    tiedrank(te)
+
+end
+
+function normalize_with_1234(te)
+
+    ordinalrank(te)
 
 end
