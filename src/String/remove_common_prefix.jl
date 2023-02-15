@@ -1,8 +1,6 @@
 function remove_common_prefix(st_)
 
-    pr = BioLab.Vector.get_common_start(st_)
-
-    n = length(pr)
+    n = length(BioLab.Vector.get_common_start(st_))
 
     [st[(n + 1):end] for st in st_]
 

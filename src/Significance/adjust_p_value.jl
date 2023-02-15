@@ -1,25 +1,19 @@
-function adjust_p_value(pv_, ho = "benjamini_hochberg"; n = length(pv_))
+function adjust_p_value_with_bonferroni(pv_, n = length(pv_))
 
-    if ho == "bonferroni"
+    clamp!(pv_ * n, 0.0, 1.0)
 
-        cl_ = pv_ * n
+end
 
-    elseif ho == "benjamini_hochberg"
+function adjust_p_value_with_benjamini_hochberg(pv_, n = length(pv_))
 
-        so_ = sortperm(pv_)
+    so_ = sortperm(pv_)
 
-        pvs_ = [pv_[so] * n / id for (id, so) in enumerate(so_)]
+    nf = convert(Float64, n)
 
-        BioLab.VectorNumber.force_increasing_with_min!(pvs_)
+    pvs_ = [pv_[so] * nf / convert(Float64, id) for (id, so) in enumerate(so_)]
 
-        cl_ = pvs_[sortperm(so_)]
+    BioLab.VectorNumber.force_increasing_with_min!(pvs_)
 
-    else
-
-        error()
-
-    end
-
-    [clamp(cl, 0.0, 1.0) for cl in cl_]
+    clamp!(pvs_[sortperm(so_)], 0.0, 1.0)
 
 end

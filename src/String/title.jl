@@ -2,7 +2,7 @@ function title(st)
 
     ti = ""
 
-    for (up, ch) in zip((isuppercase(ch) for ch in st), titlecase(replace(st, "_" => " ")))
+    for (up, ch) in zip((isuppercase(ch) for ch in st), titlecase(replace(st, '_' => ' ')))
 
         if up
 
