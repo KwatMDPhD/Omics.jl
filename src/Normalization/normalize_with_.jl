@@ -1,14 +1,20 @@
-function normalize_with_01(te)
+function normalize_with_01!(te)
 
     mi = minimum(te)
 
     ra = maximum(te) - mi
 
-    [(nu - mi) / ra for nu in te]
+    for (id, nu) in enumerate(te)
+
+        te[id] = (nu - mi) / ra
+
+    end
+
+    nothing
 
 end
 
-function normalize_with_0(te)
+function normalize_with_0!(te)
 
     me = mean(te)
 
@@ -20,11 +26,17 @@ function normalize_with_0(te)
 
     end
 
-    [(nu - me) / st for nu in te]
+    for (id, nu) in enumerate(te)
+
+        te[id] = (nu - me) / st
+
+    end
+
+    nothing
 
 end
 
-function normalize_with_sum(te)
+function normalize_with_sum!(te)
 
     if any(nu < 0.0 for nu in te)
 
@@ -32,7 +44,15 @@ function normalize_with_sum(te)
 
     end
 
-    te / sum(te)
+    te ./= sum(te)
+
+    nothing
+
+end
+
+function normalize_with_1234(te)
+
+    ordinalrank(te)
 
 end
 
@@ -51,11 +71,5 @@ end
 function normalize_with_125254(te)
 
     tiedrank(te)
-
-end
-
-function normalize_with_1234(te)
-
-    ordinalrank(te)
 
 end

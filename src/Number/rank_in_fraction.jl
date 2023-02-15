@@ -1,9 +1,8 @@
 function rank_in_fraction(it)
 
-    #
     fr = 0.0
 
-    n = floor(Int, it / 9)
+    n = fld(it, 9)
 
     for de in 1:n
 
@@ -11,12 +10,10 @@ function rank_in_fraction(it)
 
     end
 
-    #
     de = n + 1
 
-    fr += convert(Float64, it % 9) * 10.0^-de
+    fr += (it % 9) * 10.0^-de
 
-    #
-    round(fr, digits = de)
+    round(fr; digits = de)
 
 end
