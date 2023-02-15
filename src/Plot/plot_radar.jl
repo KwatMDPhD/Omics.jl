@@ -59,7 +59,7 @@ function plot_radar(
             ),
             layout,
         ),
-        ht = ht,
+        ht,
     )
 
 end

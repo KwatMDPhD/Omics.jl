@@ -4,10 +4,10 @@ function make_temporary(pa)
 
     if ispath(pat)
 
-        rm(pat, recursive = true)
+        rm(pat; recursive = true)
 
     end
 
-    mkdir(pat)
+    return mkdir(pat)
 
 end

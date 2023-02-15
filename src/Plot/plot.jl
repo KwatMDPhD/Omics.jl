@@ -1,10 +1,10 @@
-function plot(data, layout = Dict(), config = Dict(); ht = "")
+function plot(data, layout = Dict(); config = Dict(), ht = "")
 
     axis = Dict("automargin" => true)
 
     di = "BioLab.Plot.plot.$(BioLab.Time.stamp())"
 
-    BioLab.HTML.make(
+    return BioLab.HTML.write(
         di,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
         """
@@ -28,7 +28,7 @@ function plot(data, layout = Dict(), config = Dict(); ht = "")
                 "last",
             ))),
         )
-        """,
+        """;
         ht,
     )
 

@@ -1,8 +1,8 @@
 function list(di; jo = false, ig_ = (r"^\.",), ke_ = ())
 
-    pa_ = []
+    pa_ = Vector{String}()
 
-    for pa in readdir(di, join = jo)
+    for pa in readdir(di; join = jo)
 
         na = basename(pa)
 
@@ -15,6 +15,6 @@ function list(di; jo = false, ig_ = (r"^\.",), ke_ = ())
 
     end
 
-    pa_
+    return pa_
 
 end

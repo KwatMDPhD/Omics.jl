@@ -1,11 +1,17 @@
 function error_missing(di, pa_)
 
-    if !isempty(pa for pa in pa_ if !ispath(joinpath(di, pa)))
+    for pa in pa_
 
-        error()
+        paj = joinpath(di, pa)
+
+        if !ispath(paj)
+
+            error(paj)
+
+        end
 
     end
 
-    nothing
+    return nothing
 
 end

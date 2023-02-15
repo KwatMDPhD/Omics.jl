@@ -100,6 +100,6 @@ function plot_histogram(
     end
 
     #
-    plot(data, layout, ht = ht)
+    plot(data, layout; ht)
 
 end

@@ -12,14 +12,12 @@ function rank(di)
 
             de = joinpath(di, na2)
 
-            println("$sr ==> $de")
-
-            mv(sr, de)
+            move(sr, de)
 
         end
 
     end
 
-    nothing
+    return nothing
 
 end

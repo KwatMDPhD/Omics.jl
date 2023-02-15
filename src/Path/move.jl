@@ -6,8 +6,10 @@ function move(paf, pat; ke_ar...)
 
     n = length(BioLab.Vector.get_common_start((spf_, spt_)))
 
-    println("$(shorten(paf, length(spf_) - n)) ==> $(shorten(pat, length(spt_) - n))")
+    println("$(shorten(paf, length(spf_) - n)) 🛷 $(shorten(pat, length(spt_) - n))")
 
     mv(paf, pat; ke_ar...)
+
+    return nothing
 
 end
