@@ -24,11 +24,9 @@ function error_size(ar_)
 
 end
 
-function error_duplicate(ar)
+function error_duplicate(an_)
 
-    # TODO: Improve algorithm.
-
-    if length(ar) != length(unique(ar))
+    if length(an_) != length(Set(an_))
 
         error()
 
