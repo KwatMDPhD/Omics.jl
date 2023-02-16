@@ -105,4 +105,6 @@ function plot(
 
     end
 
+    return nothing
+
 end

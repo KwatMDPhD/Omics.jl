@@ -1,6 +1,6 @@
 function _range(di_)
 
-    di_[2] - di_[1]
+    return di_[2] - di_[1]
 
 end
 
@@ -173,6 +173,6 @@ function _plot_mountain(
         ),
     )
 
-    BioLab.Plot.plot(trace_, layout; ht = ht)
+    return BioLab.Plot.plot(trace_, layout; ht)
 
 end

@@ -24,6 +24,6 @@ function count_noun(n, st)
 
     end
 
-    st * "s"
+    return st * "s"
 
 end

@@ -36,7 +36,7 @@ function plot(el_, st_, la; ht = "", he = 800, wr = "", sc = 1.0, bg = "#fdfdfd"
 
     end
 
-    BioLab.HTML.write(
+    return BioLab.HTML.write(
         di,
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",

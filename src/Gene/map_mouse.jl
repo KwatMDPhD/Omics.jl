@@ -16,6 +16,6 @@ function map_mouse()
 
     end
 
-    ke_va
+    return ke_va
 
 end

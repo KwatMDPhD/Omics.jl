@@ -14,6 +14,6 @@ function _get_absolute_raise(sc_, id, ex)
 
     end
 
-    abe
+    return abe
 
 end

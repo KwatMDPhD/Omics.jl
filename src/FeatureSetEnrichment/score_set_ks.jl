@@ -60,6 +60,6 @@ function score_set_ks(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    et
+    return et
 
 end

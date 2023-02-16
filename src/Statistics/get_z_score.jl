@@ -1,5 +1,5 @@
 function get_z_score(cu)
 
-    quantile(Normal(), cu)
+    return quantile(Normal(), cu)
 
 end

@@ -1,4 +1,3 @@
-# TODO: Check speed.
 # TODO: Multiple-dispatch.
 function simulate(n; ra = BioLab.Constant.RA, di = Normal(), ho = "", re = true)
 
@@ -26,7 +25,6 @@ function simulate(n; ra = BioLab.Constant.RA, di = Normal(), ho = "", re = true)
         # TODO: Use `Float64`.
         nem_ = Vector{eltype(ne_)}(undef, n * 2 - 1)
 
-        # TODO: Speed up.
         for (id, ne) in enumerate(ne_)
 
             id2 = id * 2
@@ -54,6 +52,6 @@ function simulate(n; ra = BioLab.Constant.RA, di = Normal(), ho = "", re = true)
     end
 
     # TODO: Preallocate.
-    vcat(nem_, po_)
+    return vcat(nem_, po_)
 
 end

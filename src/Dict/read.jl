@@ -4,11 +4,11 @@ function read(pa::AbstractString)
 
     if ex in (".json", ".ipynb")
 
-        parse(open(pa))
+        return parse(open(pa))
 
     elseif ex == ".toml"
 
-        parsefile(pa)
+        return parsefile(pa)
 
     else
 
@@ -28,6 +28,6 @@ function read(pa_)
 
     end
 
-    ke_va
+    return ke_va
 
 end

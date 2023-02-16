@@ -6,7 +6,7 @@ function run(nb)
 
     Base.run(`jupyter-nbconvert --log-level 40 --inplace --clear-output $nb`)
 
-    nothing
+    return nothing
 
 end
 
@@ -29,5 +29,7 @@ function run(di, ig_)
         run(nb)
 
     end
+
+    return nothing
 
 end

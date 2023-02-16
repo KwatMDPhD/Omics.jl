@@ -10,7 +10,7 @@ function normalize_with_01!(te)
 
     end
 
-    nothing
+    return nothing
 
 end
 
@@ -32,7 +32,7 @@ function normalize_with_0!(te)
 
     end
 
-    nothing
+    return nothing
 
 end
 
@@ -46,30 +46,30 @@ function normalize_with_sum!(te)
 
     te ./= sum(te)
 
-    nothing
+    return nothing
 
 end
 
 function normalize_with_1234(te)
 
-    ordinalrank(te)
+    return ordinalrank(te)
 
 end
 
 function normalize_with_1223(te)
 
-    denserank(te)
+    return denserank(te)
 
 end
 
 function normalize_with_1224(te)
 
-    competerank(te)
+    return competerank(te)
 
 end
 
 function normalize_with_125254(te)
 
-    tiedrank(te)
+    return tiedrank(te)
 
 end

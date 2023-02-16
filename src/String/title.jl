@@ -51,6 +51,6 @@ function title(st)
 
     end
 
-    strip(ti)
+    return strip(ti)
 
 end

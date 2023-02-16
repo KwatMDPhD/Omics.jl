@@ -45,6 +45,6 @@ function map_protein()
 
     end
 
-    pr_io_an
+    return pr_io_an
 
 end

@@ -98,18 +98,18 @@ function _score_set_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    ar
+    return ar
 
 end
 
 function score_set_kliop(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    _score_set_klio(fe_, sc_, bo_, (_1, _0) -> _1 + _0; ex = ex, pl = pl, ke_ar...)
+    return _score_set_klio(fe_, sc_, bo_, (_1, _0) -> _1 + _0; ex = ex, pl = pl, ke_ar...)
 
 end
 
 function score_set_kliom(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    _score_set_klio(fe_, sc_, bo_, (_1, _0) -> _1 - _0; ex = ex, pl = pl, ke_ar...)
+    return _score_set_klio(fe_, sc_, bo_, (_1, _0) -> _1 - _0; ex = ex, pl = pl, ke_ar...)
 
 end

@@ -1,12 +1,12 @@
 function _map_to(wh)
 
-    BioLab.DataFrame.map_to(read(wh), fr_, to; de = '|', pr = false)
+    return BioLab.DataFrame.map_to(read(wh), fr_, to; de = '|', pr = false)
 
 end
 
 function map_to_ensembl()
 
-    _map_to(
+    return _map_to(
         [
             "Transcript stable ID version",
             "Transcript stable ID",
@@ -22,6 +22,6 @@ end
 
 function map_to_hgnc()
 
-    _map_to(["prev_symbol", "alias_symbol"], "symbol")
+    return _map_to(["prev_symbol", "alias_symbol"], "symbol")
 
 end

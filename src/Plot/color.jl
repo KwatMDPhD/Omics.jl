@@ -1,6 +1,5 @@
-# TODO: Do not use `Dict`.
-function color(na, nu)
+function color(co, nu)
 
-    "#$(hex(NA_SC[na][nu]))"
+    return "#$(hex(co[nu]))"
 
 end

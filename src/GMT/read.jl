@@ -10,7 +10,7 @@ function read(gm::AbstractString)
 
     end
 
-    se_ge_
+    return se_ge_
 
 end
 
@@ -24,6 +24,6 @@ function read(gm_)
 
     end
 
-    se_ge_
+    return se_ge_
 
 end

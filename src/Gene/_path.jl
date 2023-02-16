@@ -1,5 +1,5 @@
 function _path(fi)
 
-    joinpath(@__DIR__, "data", fi)
+    return joinpath(@__DIR__, "data", fi)
 
 end

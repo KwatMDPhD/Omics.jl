@@ -1,11 +1,10 @@
-# TODO: Check speed.
 function read(pa; xl = "", ke_ar...)
 
     ex = splitext(pa)[2]
 
     if ex == ".xlsx"
 
-        DataFrame(readtable(pa, xl))
+        return DataFrame(readtable(pa, xl))
 
     else
 
@@ -17,7 +16,7 @@ function read(pa; xl = "", ke_ar...)
 
         end
 
-        CSV_read(it_, DataFrame; ke_ar...)
+        return CSV_read(it_, DataFrame; ke_ar...)
 
     end
 

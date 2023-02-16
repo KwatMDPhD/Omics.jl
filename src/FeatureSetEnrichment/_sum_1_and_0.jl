@@ -20,6 +20,6 @@ function _sum_1_and_0(sc_, bo_, ex)
 
     end
 
-    n, su1, su0
+    return n, su1, su0
 
 end

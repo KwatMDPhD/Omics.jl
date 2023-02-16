@@ -3,23 +3,23 @@ function _match_algorithm(al)
 
     if al == "KS"
 
-        score_set_ks
+        return score_set_ks
 
     elseif al == "KSa"
 
-        score_set_ksa
+        return score_set_ksa
 
     elseif al == "KLi"
 
-        score_set_kli
+        return score_set_kli
 
     elseif al == "KLiop"
 
-        score_set_kliop
+        return score_set_kliop
 
     elseif al == "KLiom"
 
-        score_set_kliom
+        return score_set_kliom
 
     else
 

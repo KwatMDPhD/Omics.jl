@@ -20,6 +20,6 @@ function apply!(ma, di, fu!)
 
     end
 
-    nothing
+    return nothing
 
 end

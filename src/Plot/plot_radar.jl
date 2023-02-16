@@ -3,7 +3,7 @@ function plot_radar(
     r__;
     name_ = _set_name(theta_),
     marker_color_ = _set_color(theta_),
-    layout = Dict(),
+    layout = Dict{String, Any}(),
     ht = "",
 )
 
@@ -15,7 +15,7 @@ function plot_radar(
         "tickfont" => Dict("color" => "#1f4788"),
     )
 
-    plot(
+    return plot(
         [
             Dict(
                 "type" => "scatterpolar",
@@ -38,6 +38,7 @@ function plot_radar(
                             "direction" => "clockwise",
                             "tickfont" => Dict("size" => 32.0, "family" => "Optima"),
                         ),
+                        BioLab.Dict.set_with_last!,
                     ),
                     "radialaxis" => BioLab.Dict.merge(
                         axis,
@@ -45,6 +46,7 @@ function plot_radar(
                             "nticks" => 8,
                             "tickfont" => Dict("size" => 16.0, "family" => "Monospace"),
                         ),
+                        BioLab.Dict.set_with_last!,
                     ),
                 ),
                 "title" => Dict(
@@ -58,7 +60,8 @@ function plot_radar(
                 ),
             ),
             layout,
-        ),
+            BioLab.Dict.set_with_last!,
+        );
         ht,
     )
 

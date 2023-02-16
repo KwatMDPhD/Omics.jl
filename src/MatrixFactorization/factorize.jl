@@ -14,6 +14,6 @@ function factorize(ro_x_co_x_po, n; ke_ar...)
 
     plot((mf.W,), (mf.H,); ke_ar...)
 
-    mf.W, mf.H
+    return mf.W, mf.H
 
 end

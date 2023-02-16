@@ -29,6 +29,6 @@ function sort_recursively(an)
 
     end
 
-    ans
+    return ans
 
 end

@@ -1,6 +1,6 @@
 function _set_mode(y_)
 
-    [ifelse(length(y) < 10^3, "markers+lines", "lines") for y in y_]
+    return [ifelse(length(y) < 10^3, "markers+lines", "lines") for y in y_]
 
 end
 
@@ -11,7 +11,7 @@ function plot_scatter(
     name_ = _set_name(y_),
     mode_ = _set_mode(y_),
     marker_color_ = _set_color(y_),
-    layout = Dict(),
+    layout = Dict{String, Any}(),
     ht = "",
 )
 
@@ -26,7 +26,7 @@ function plot_scatter(
                 "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
             ) for id in eachindex(y_)
         ],
-        layout,
+        layout;
         ht,
     )
 

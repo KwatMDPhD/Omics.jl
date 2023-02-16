@@ -14,6 +14,6 @@ function set_with_last!(ke_va, ke, va)
 
     ke_va[ke] = va
 
-    nothing
+    return nothing
 
 end

@@ -1,5 +1,5 @@
 function cluster(hi::Hclust, n)
 
-    cutree(hi; k = n)
+    return cutree(hi; k = n)
 
 end

@@ -78,6 +78,6 @@ function score_set_kli(fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    ar
+    return ar
 
 end

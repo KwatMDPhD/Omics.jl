@@ -3,11 +3,11 @@ function plot_bar(
     x_ = _set_x(y_);
     name_ = _set_name(y_),
     marker_color_ = _set_color(y_),
-    layout = Dict(),
+    layout = Dict{String, Any}(),
     ht = "",
 )
 
-    plot(
+    return plot(
         [
             Dict(
                 "type" => "bar",
@@ -15,10 +15,10 @@ function plot_bar(
                 "y" => y_[id],
                 "x" => x_[id],
                 "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
-            ) for id in 1:length(y_)
+            ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(Dict("barmode" => "stack"), layout),
-        ht = ht,
+        BioLab.Dict.merge(Dict("barmode" => "stack"), layout, BioLab.Dict.merge.set_with_last!);
+        ht,
     )
 
 end

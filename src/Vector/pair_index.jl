@@ -1,7 +1,5 @@
 function pair_index(an_)
 
-    # TODO: Check speed.
-
     ty = eltype(an_)
 
     an_id = Dict{ty, Int}()
@@ -17,6 +15,6 @@ function pair_index(an_)
 
     end
 
-    an_id, id_an
+    return an_id, id_an
 
 end

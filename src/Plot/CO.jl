@@ -1,22 +1,22 @@
 function _make_color_scheme(he_)
 
-    ColorScheme((parse(Colorant, he) for he in he_))
+    return ColorScheme((parse(Colorant, he) for he in he_))
 
 end
 
 const COPL = plasma
 
 const COPO = _make_color_scheme((
-    "#636EFA",
-    "#EF553B",
-    "#00CC96",
-    "#AB63FA",
-    "#FFA15A",
-    "#19D3F3",
-    "#FF6692",
-    "#B6E880",
-    "#FF97FF",
-    "#FECB52",
+    "#636efa",
+    "#ef553b",
+    "#00cc96",
+    "#ab63fa",
+    "#ffa15a",
+    "#19d3f3",
+    "#ff6692",
+    "#b6e880",
+    "#ff97ff",
+    "#fecb52",
 ))
 
 const COP3 = _make_color_scheme((
@@ -35,7 +35,7 @@ const COP3 = _make_color_scheme((
     "#fec3fe",
 ))
 
-const COBI = _make_color_scheme(("#006442", "#ffffff", "#ffb61e"),)
+const COBI = _make_color_scheme(("#006442", "#ffffff", "#ffb61e"))
 
 const COAS = _make_color_scheme((
     "#00936e",
@@ -45,7 +45,7 @@ const COAS = _make_color_scheme((
     "#fff8d1",
     "#ffec9f",
     "#ffd96a",
-),)
+))
 
 const COHU = _make_color_scheme(("#4b3c39", "#ffffff", "#ffddca"))
 

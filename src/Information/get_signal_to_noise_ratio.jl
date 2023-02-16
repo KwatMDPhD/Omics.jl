@@ -4,7 +4,7 @@ function _get_standard_deviation(nu_, me)
 
     if me == 0.0
 
-        fr
+        return fr
 
     else
 
@@ -14,7 +14,7 @@ function _get_standard_deviation(nu_, me)
 
         end
 
-        max(me * fr, std(nu_; corrected = true))
+        return max(me * fr, std(nu_; corrected = true))
 
     end
 
@@ -26,6 +26,6 @@ function get_signal_to_noise_ratio(nu1_, nu2_)
 
     me2 = mean(nu2_)
 
-    (me1 - me2) / (_get_standard_deviation(nu1_, me1) + _get_standard_deviation(nu2_, me2))
+    return (me1 - me2) / (_get_standard_deviation(nu1_, me1) + _get_standard_deviation(nu2_, me2))
 
 end

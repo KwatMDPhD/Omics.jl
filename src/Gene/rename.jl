@@ -74,6 +74,6 @@ function rename(st_; mo = true, en = true, hg = true)
 
     end
 
-    na_, ma_
+    return na_, ma_
 
 end

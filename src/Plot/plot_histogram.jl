@@ -5,11 +5,10 @@ function plot_histogram(
     histnorm = "",
     xbins_size = 0.0,
     marker_color_ = _set_color(x_),
-    layout = Dict(),
+    layout = Dict{String, Any}(),
     ht = "",
 )
 
-    #
     ru = all(length(x) < 10^5 for x in x_)
 
     n = length(x_)
@@ -24,7 +23,6 @@ function plot_histogram(
 
     end
 
-    #
     if isempty(histnorm)
 
         yaxis2_title = "N"
@@ -35,7 +33,6 @@ function plot_histogram(
 
     end
 
-    #
     layout = BioLab.Dict.merge(
         Dict(
             "yaxis" => Dict(
@@ -48,14 +45,13 @@ function plot_histogram(
             "xaxis" => Dict("anchor" => "y"),
         ),
         layout,
+        BioLab.Dict.set_with_last!,
     )
 
-    #
-    data = []
+    data = Vector{Dict{String, Any}}()
 
     for id in 1:n
 
-        #
         le = Dict(
             "legendgroup" => id,
             "name" => name_[id],
@@ -63,7 +59,6 @@ function plot_histogram(
             "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
         )
 
-        #
         push!(
             data,
             BioLab.Dict.merge(
@@ -74,10 +69,10 @@ function plot_histogram(
                     "histnorm" => histnorm,
                     "xbins" => Dict("size" => xbins_size),
                 ),
+                BioLab.Dict.set_with_last!,
             ),
         )
 
-        #
         if ru
 
             push!(
@@ -92,6 +87,7 @@ function plot_histogram(
                         "marker" => Dict("symbol" => "line-ns-open", "size" => 16.0),
                         "hoverinfo" => "x+text",
                     ),
+                    BioLab.Dict.set_with_last!,
                 ),
             )
 
@@ -99,7 +95,6 @@ function plot_histogram(
 
     end
 
-    #
-    plot(data, layout; ht)
+    return plot(data, layout; ht)
 
 end

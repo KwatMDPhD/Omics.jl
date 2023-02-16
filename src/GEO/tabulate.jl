@@ -84,7 +84,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     end
 
-    fe_na
+    return fe_na
 
 end
 
@@ -179,7 +179,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
     end
 
     # TODO: Do not splat.
-    ch_x_sa_x_an, fe_x_sa_x_nu_____...
+    return ch_x_sa_x_an, fe_x_sa_x_nu_____...
 
 end
 
@@ -187,11 +187,11 @@ function _outerjoin(co_va____, on)
 
     if isempty(co_va____)
 
-        DataFrame()
+        return DataFrame()
 
     else
 
-        select!(outerjoin(DataFrame.(co_va____)...; on = on), on, :)
+        return select!(outerjoin(DataFrame.(co_va____)...; on = on), on, :)
 
     end
 

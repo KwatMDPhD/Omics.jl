@@ -8,7 +8,7 @@ function skip_nan_and_apply!!(nu_, fu!)
 
     end
 
-    nothing
+    return nothing
 
 end
 
@@ -22,6 +22,6 @@ function skip_nan_and_apply!(nu_, fu)
 
     end
 
-    nothing
+    return nothing
 
 end

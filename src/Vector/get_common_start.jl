@@ -8,7 +8,6 @@ function get_common_start(an__)
 
     id = 1
 
-    # TODO: Speed up.
     while id <= mi
 
         an = sh[id]
@@ -23,6 +22,6 @@ function get_common_start(an__)
 
     end
 
-    sh[1:(id - 1)]
+    return sh[1:(id - 1)]
 
 end

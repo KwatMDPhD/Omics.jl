@@ -49,6 +49,6 @@ function collapse(ro_x_co_x_nu; fu = mean, pr = true)
 
     end
 
-    ro2_x_co_x_nu
+    return ro2_x_co_x_nu
 
 end

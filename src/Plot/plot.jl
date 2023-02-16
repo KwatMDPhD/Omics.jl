@@ -1,4 +1,4 @@
-function plot(data, layout = Dict(); config = Dict(), ht = "")
+function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ht = "")
 
     axis = Dict("automargin" => true)
 
@@ -9,12 +9,12 @@ function plot(data, layout = Dict(); config = Dict(), ht = "")
         ("https://cdn.plot.ly/plotly-latest.min.js",),
         """
         Plotly.newPlot(
-            \"$di\",
+            "$di",
             $(write(data)),
             $(write(BioLab.Dict.merge(
                 Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis),
                 layout,
-                "last",
+                BioLab.Dict.set_with_last!,
             ))),
             $(write(BioLab.Dict.merge(
                 Dict(
@@ -24,8 +24,7 @@ function plot(data, layout = Dict(); config = Dict(), ht = "")
                     "editable" => false,
                 ),
                 config,
-
-                "last",
+                BioLab.Dict.set_with_last!,
             ))),
         )
         """;

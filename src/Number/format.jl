@@ -6,6 +6,6 @@ function format(nu)
 
     end
 
-    @sprintf("%.4g", nu)
+    return @sprintf("%.4g", nu)
 
 end

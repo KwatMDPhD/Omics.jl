@@ -14,6 +14,6 @@ function rank_in_fraction(it)
 
     fr += (it % 9) * 10.0^-de
 
-    round(fr; digits = de)
+    return round(fr; digits = de)
 
 end

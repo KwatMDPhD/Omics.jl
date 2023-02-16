@@ -24,6 +24,6 @@ function set_with_suffix!(ke_va, ke, va)
 
     ke_va[ke] = va
 
-    nothing
+    return nothing
 
 end

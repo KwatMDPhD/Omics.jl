@@ -4,7 +4,7 @@ macro include()
 
     di, fi = splitdir(string(__source__.file))
 
-    esc(quote
+    return esc(quote
 
         for na in readdir($di)
 
@@ -40,7 +40,7 @@ function __init__()
 
     mkpath(TE)
 
-    nothing
+    return nothing
 
 end
 

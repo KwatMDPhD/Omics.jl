@@ -8,6 +8,6 @@ function _clip(le, pr, mi)
 
     end
 
-    le
+    return le
 
 end

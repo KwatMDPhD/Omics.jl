@@ -6,7 +6,6 @@ function _sum_all_and_1(sc_, bo_, ex)
 
     su1 = 0.0
 
-    # TODO: Speed up.
     for id in 1:n
 
         abe = _get_absolute_raise(sc_, id, ex)
@@ -21,6 +20,6 @@ function _sum_all_and_1(sc_, bo_, ex)
 
     end
 
-    n, su, su1
+    return n, su, su1
 
 end

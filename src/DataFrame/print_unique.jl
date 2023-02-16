@@ -28,6 +28,6 @@ function print_unique(ro_x_co_x_an; di = 2)
 
     end
 
-    nothing
+    return nothing
 
 end

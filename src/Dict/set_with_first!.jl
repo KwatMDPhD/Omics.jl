@@ -16,6 +16,6 @@ function set_with_first!(ke_va, ke, va)
 
     end
 
-    nothing
+    return nothing
 
 end

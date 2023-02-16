@@ -8,13 +8,13 @@ function position!(ke_va_, id_kec_vac::AbstractDict)
 
     end
 
-    nothing
+    return nothing
 
 end
 
 function position!(ke_va_, js)
 
-    position!(
+    return position!(
         ke_va_,
         Dict(
             pop!(kec_vac["data"], "id") => kec_vac for

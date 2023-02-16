@@ -34,6 +34,6 @@ function merge(ke1_va1, ke2_va2, ho)
 
     end
 
-    ke_va
+    return ke_va
 
 end

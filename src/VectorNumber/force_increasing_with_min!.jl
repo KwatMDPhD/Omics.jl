@@ -4,6 +4,6 @@ function force_increasing_with_min!(nu_)
 
     reverse!(nu_)
 
-    nothing
+    return nothing
 
 end

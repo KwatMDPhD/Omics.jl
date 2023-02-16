@@ -10,15 +10,19 @@ function get_extreme(nu_)
 
     if isapprox(mia, maa)
 
-        (mi, ma)
+        return (mi, ma)
 
     elseif maa < mia
 
-        (mi,)
+        return (mi,)
 
     elseif mia < maa
 
-        (ma,)
+        return (ma,)
+
+    else
+
+        error()
 
     end
 
