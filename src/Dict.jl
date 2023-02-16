@@ -1,3 +1,13 @@
+module Dict
+
+using JSON: parse, print as JSON_print
+
+using OrderedCollections: OrderedDict
+
+using TOML: parsefile
+
+using ..BioLab
+
 function print(ke_va; so = true, n = length(ke_va))
 
     n_ke = length(keys(ke_va))
@@ -5,7 +15,7 @@ function print(ke_va; so = true, n = length(ke_va))
     n_va = length(unique(values(ke_va)))
 
     println(
-        "$n_ke $(BioLab.String.count_noun(n_ke, "key")) 👉 $n_va unique $(BioLab.String.count_noun(n_va, "value"))",
+        "$n_ke $(BioLab.String.count_noun(n_ke, "key")) ➡️ $n_va unique $(BioLab.String.count_noun(n_va, "value"))",
     )
 
     if so
@@ -23,5 +33,7 @@ function print(ke_va; so = true, n = length(ke_va))
     end
 
     return nothing
+
+end
 
 end

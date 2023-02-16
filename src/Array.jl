@@ -1,7 +1,5 @@
 module Array
 
-using ..BioLab
-
 function error_size(ar1, ar2)
 
     if size(ar1) != size(ar2)
@@ -29,6 +27,7 @@ end
 function error_duplicate(ar)
 
     # TODO: Improve algorithm.
+
     if length(ar) != length(unique(ar))
 
         error()
