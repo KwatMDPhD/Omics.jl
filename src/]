@@ -1,6 +1,6 @@
 module DataFrame
 
-using DataFrames: DataFrame as _DataFrame, insertcols!
+using DataFrames: DataFrame as DataFrames_DataFrame, insertcols!
 
 using OrderedCollections: OrderedDict
 
@@ -14,13 +14,13 @@ function make(an__)
 
     co_ = an__[1]
 
-    return _DataFrame([[an_[id] for an_ in an__[2:end]] for id in eachindex(co_)], co_)
+    return DataFrames_DataFrame([[an_[id] for an_ in an__[2:end]] for id in eachindex(co_)], co_)
 
 end
 
 function make(ro, ro_, co_, _x_co_x_an)
 
-    return insertcols!(_DataFrame(_x_co_x_an, co_), 1, ro => ro_)
+    return insertcols!(DataFrames_DataFrame(_x_co_x_an, co_), 1, ro => ro_)
 
 end
 
@@ -28,15 +28,33 @@ function separate(ro_x_co_x_an)
 
     co_ = names(ro_x_co_x_an)
 
-    id_ = 2:length(co_)
-
-    return co_[1], ro_x_co_x_an[:, 1]::Vector{String}, co_[id_], Matrix(ro_x_co_x_an[!, id_])
+    return co_[1], ro_x_co_x_an[:, 1]::Vector{String}, co_[2:end], Matrix(ro_x_co_x_an[!, 2:end])
 
 end
 
-function _print_unique(na_, an__)
+function print_unique(ro_x_co_x_an; di = 2)
 
-    for (na, an_) in zip(na_, an__)
+    ro_, co_, _x_co_x_an = separate(ro_x_co_x_an)[2:end]
+
+    if di == 1
+
+        na_ = ro_
+
+        ea = eachrow
+
+    elseif di == 2
+
+        na_ = co_
+
+        ea = eachcol
+
+    else
+
+        error()
+
+    end
+
+    for (na, an_) in zip(na_, ea(_x_co_x_an))
 
         println("🔦 $na")
 
@@ -45,18 +63,6 @@ function _print_unique(na_, an__)
     end
 
     return nothing
-
-end
-
-function print_column(ro_x_co_x_an)
-
-    return _print_unique(names(ro_x_co_x_an), eachcol(ro_x_co_x_an))
-
-end
-
-function print_row(ro_x_co_x_an)
-
-    return _print_unique(ro_x_co_x_an[!, 1], eachrow(ro_x_co_x_an))
 
 end
 
@@ -79,18 +85,6 @@ function collapse(ro_x_co_x_nu; fu = mean, pr = true)
     end
 
     n = length(ro_id_)
-
-    if length(ro_) == n
-
-        if pr
-
-            println("🤭 There are no rows to collapse.")
-
-        end
-
-        return ro_x_co_x_nu
-
-    end
 
     roc_ = Vector{String}(undef, n)
 
@@ -130,7 +124,10 @@ function map_to(ro_x_co_x_st, ho, fr_, to; de = "")
 
     fr_to = Dict{String, String}()
 
-    for (fr_, to) in zip(eachrow(ro_x_co_x_st[!, fr_]), ro_x_co_x_st[!, to])
+    for (fr_, to) in zip(
+        eachrow(ro_x_co_x_st[!, fr_]),
+        ro_x_co_x_st[!, findfirst(co == to for co in names(ro_x_co_x_st))],
+    )
 
         if ismissing(to)
 
@@ -150,15 +147,16 @@ function map_to(ro_x_co_x_st, ho, fr_, to; de = "")
 
             if isempty(de)
 
-                fr_ = [fr]
+                fr2_ = [fr]
 
             else
 
-                fr_ = split(fr, de)
+                fr2_ = split(fr, de)
 
             end
 
-            for fr in fr_
+            # TODO: Check if `fr` collision matters.
+            for fr in fr2_
 
                 ho(fr_to, fr, to)
 
