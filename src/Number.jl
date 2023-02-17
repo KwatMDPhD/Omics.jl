@@ -1,3 +1,19 @@
+module Number
+
+using Printf: @sprintf
+
+function format(nu)
+
+    if nu == -0.0
+
+        nu = 0.0
+
+    end
+
+    return @sprintf("%.4g", nu)
+
+end
+
 function rank_in_fraction(it)
 
     fr = 0.0
@@ -15,5 +31,7 @@ function rank_in_fraction(it)
     fr += (it % 9) * 10.0^-de
 
     return round(fr; digits = de)
+
+end
 
 end

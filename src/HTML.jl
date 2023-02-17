@@ -1,4 +1,10 @@
-function write(di, so_, sc; ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html"), he = 800)
+module HTML
+
+using DefaultApplication: open as _open
+
+using ..BioLab
+
+function write(di, so_, sc; ht = "", he = 800)
 
     st = "display: flex; justify-content: center; align-items: center;"
 
@@ -17,9 +23,15 @@ function write(di, so_, sc; ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).htm
 
     jo = join(li_, '\n')
 
+    if isempty(ht)
+
+        ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html")
+
+    end
+
     open(ht, "w") do io
 
-        write(io, jo)
+        Base.write(io, jo)
 
     end
 
@@ -35,7 +47,7 @@ function write(di, so_, sc; ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).htm
 
         try
 
-            DefaultApplication_open(ht)
+            _open(ht)
 
             println(".")
 
@@ -48,5 +60,7 @@ function write(di, so_, sc; ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).htm
     end
 
     return nothing
+
+end
 
 end
