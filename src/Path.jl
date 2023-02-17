@@ -1,6 +1,6 @@
 module Path
 
-#using ..BioLab
+using ..BioLab
 
 function make_absolute(pa)
 
@@ -35,7 +35,7 @@ end
 
 function clean(pa)
 
-    cl = replace(lowercase(pa), r"[^_.0-9a-z]" => '_')
+    cl = replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
 
     println("$pa 🧼 $cl")
 
