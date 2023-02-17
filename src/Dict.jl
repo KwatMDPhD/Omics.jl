@@ -42,7 +42,11 @@ function set_with_first!(ke_va, ke, va)
 
         vac = ke_va[ke]
 
-        if vac != va
+        if vac == va
+
+            println("👯‍♀️ $ke ➡️ $va")
+
+        else
 
             println("$ke ➡️ $vac (🙅 $va)")
 
@@ -64,7 +68,11 @@ function set_with_last!(ke_va, ke, va)
 
         vac = ke_va[ke]
 
-        if vac != va
+        if vac == va
+
+            println("👯‍♀️ $ke ➡️ $va")
+
+        else
 
             println("$ke ➡️ (🙅 $vac) $va")
 
