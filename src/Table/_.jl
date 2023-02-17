@@ -2,7 +2,7 @@ module Table
 
 using CodecZlib: GzipDecompressor, transcode
 
-using CSV: read as CSV_read, write as CSV_write
+using CSV: read as _read, write as _write
 
 using DataFrames: DataFrame
 

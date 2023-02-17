@@ -1,6 +1,6 @@
 module HTML
 
-using DefaultApplication: open as DefaultApplication_open
+using DefaultApplication: open as _open
 
 using ..BioLab
 

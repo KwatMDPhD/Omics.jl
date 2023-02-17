@@ -26,7 +26,7 @@ function count_noun(n, st)
 
     if n <= 1
 
-        return st
+        return "$n $st"
 
     end
 
@@ -34,7 +34,7 @@ function count_noun(n, st)
 
         if si == "ex" && length(st) <= 3
 
-            return st * "es"
+            return "$n $(st)es"
 
         end
 
@@ -42,13 +42,13 @@ function count_noun(n, st)
 
         if contains(st, sir)
 
-            return replace(st, sir => pl)
+            return "$n $(replace(st, sir => pl))"
 
         end
 
     end
 
-    return st * "s"
+    return "$n $(st)s"
 
 end
 
