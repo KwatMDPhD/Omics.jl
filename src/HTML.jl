@@ -29,13 +29,9 @@ function write(di, so_, sc; ht = "", he = 800)
 
     end
 
-    open(ht, "w") do io
+    Base.write(ht, jo)
 
-        Base.write(io, jo)
-
-    end
-
-    println("🖼️ Wrote $ht.")
+    println("🖼️ Created $ht.")
 
     if displayable("html")
 

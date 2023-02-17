@@ -4,7 +4,7 @@ using Printf: @sprintf
 
 function format(nu)
 
-    if nu == -0.0
+    if nu === -0.0
 
         nu = 0.0
 

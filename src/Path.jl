@@ -1,5 +1,7 @@
 module Path
 
+#using ..BioLab
+
 function list(di; jo = false, ig_ = (r"^\.",), ke_ = ())
 
     pa_ = Vector{String}()
