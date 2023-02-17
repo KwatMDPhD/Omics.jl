@@ -40,7 +40,7 @@ function _print_unique(na_, an__)
 
         println("🔦 $na")
 
-        BioLab.Dict.print(sort(countmap(an_); byvalue = true); so = false)
+        BioLab.Dict.print(sort(countmap(an_); byvalue = true))
 
     end
 

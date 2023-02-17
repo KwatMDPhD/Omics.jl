@@ -1,3 +1,7 @@
+module IPYNB
+
+using ..BioLab
+
 function run(nb)
 
     Base.run(
@@ -31,5 +35,7 @@ function run(di, ig_)
     end
 
     return nothing
+
+end
 
 end

@@ -1,3 +1,93 @@
+module FeatureSetEnrichment
+
+using DataFrames: DataFrame
+
+using StatsBase: mean, sample
+
+using ..BioLab
+
+struct KS end
+
+struct KSa end
+
+struct KLi end
+
+struct KLiop end
+
+struct KLiom end
+
+function _get_absolute_raise(sc_, id, ex)
+
+    abe = sc_[id]
+
+    if abe < 0.0
+
+        abe = -abe
+
+    end
+
+    if ex != 1.0
+
+        abe ^= ex
+
+    end
+
+    return abe
+
+end
+
+function _sum_1_and_0(sc_, bo_, ex)
+
+    n = length(sc_)
+
+    su1 = 0.0
+
+    su0 = 0.0
+
+    for id in 1:n
+
+        if bo_[id]
+
+            su1 += _get_absolute_raise(sc_, id, ex)
+
+        else
+
+            su0 += 1.0
+
+        end
+
+    end
+
+    return n, su1, su0
+
+end
+
+function _sum_all_and_1(sc_, bo_, ex)
+
+    n = length(sc_)
+
+    su = 0.0
+
+    su1 = 0.0
+
+    for id in 1:n
+
+        abe = _get_absolute_raise(sc_, id, ex)
+
+        su += abe
+
+        if bo_[id]
+
+            su1 += abe
+
+        end
+
+    end
+
+    return n, su, su1
+
+end
+
 function _range(di_)
 
     return di_[2] - di_[1]
@@ -174,5 +264,7 @@ function _plot_mountain(
     )
 
     return BioLab.Plot.plot(trace_, layout; ht)
+
+end
 
 end
