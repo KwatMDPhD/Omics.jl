@@ -80,4 +80,53 @@ function sort_recursively(an)
 
 end
 
+function get_common_start(an__)
+
+    le_ = [length(an_) for an_ in an__]
+
+    mi = minimum(le_)
+
+    sh = an__[findfirst(le == mi for le in le_)]
+
+    id = 1
+
+    while id <= mi
+
+        an = sh[id]
+
+        if any(an_[id] != an for an_ in an__)
+
+            break
+
+        end
+
+        id += 1
+
+    end
+
+    return sh[1:(id - 1)]
+
+end
+
+function pair_index(an_)
+
+    ty = eltype(an_)
+
+    an_id = Dict{ty, Int}()
+
+    id_an = Dict{Int, ty}()
+
+    # TODO: Speed up.
+    for (id, an) in enumerate(an_)
+
+        an_id[an] = id
+
+        id_an[id] = an
+
+    end
+
+    return an_id, id_an
+
+end
+
 end

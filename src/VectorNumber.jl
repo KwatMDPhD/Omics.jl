@@ -36,6 +36,58 @@ function get_extreme(nu_)
 
 end
 
+function get_area(nu_)
+
+    return sum(nu_) / length(nu_)
+
+end
+
+function force_increasing_with_min!(nu_)
+
+    accumulate!(min, nu_, reverse!(nu_))
+
+    reverse!(nu_)
+
+    return nothing
+
+end
+
+function force_increasing_with_max!(nu_)
+
+    accumulate!(max, nu_, nu_)
+
+    return nothing
+
+end
+
+function skip_nan_and_apply!!(nu_, fu!)
+
+    go_ = [!isnan(nu) for nu in nu_]
+
+    if any(go_)
+
+        fu!(view(nu_, go_))
+
+    end
+
+    return nothing
+
+end
+
+function skip_nan_and_apply!(nu_, fu)
+
+    go_ = [!isnan(nu) for nu in nu_]
+
+    if any(go_)
+
+        nu_[go_] = fu(nu_[go_])
+
+    end
+
+    return nothing
+
+end
+
 # TODO: Multiple-dispatch.
 function simulate(n; ra = BioLab.RA, di = Normal(), ho = "", re = true)
 

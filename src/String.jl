@@ -22,6 +22,20 @@ function print_header(st)
 
 end
 
+function limit(st, n)
+
+    if n < length(st)
+
+        return "$(st[1:n])..."
+
+    else
+
+        return st
+
+    end
+
+end
+
 function count_noun(n, st)
 
     if n <= 1
@@ -52,17 +66,86 @@ function count_noun(n, st)
 
 end
 
-function limit(st, n)
+function title(st)
 
-    if n < length(st)
+    ti = ""
 
-        return "$(st[1:n])..."
+    for (up, ch) in zip((isuppercase(ch) for ch in st), titlecase(replace(st, '_' => ' ')))
 
-    else
+        if up
 
-        return st
+            ch = uppercase(ch)
+
+        end
+
+        ti *= ch
 
     end
+
+    for lo in (
+        "a",
+        "an",
+        "the",
+        "and",
+        "but",
+        "or",
+        "nor",
+        "at",
+        "by",
+        "for",
+        "from",
+        "in",
+        "into",
+        "of",
+        "off",
+        "on",
+        "onto",
+        "out",
+        "over",
+        "to",
+        "up",
+        "with",
+        "as",
+        "vs",
+    )
+
+        ti = replace(ti, " $(titlecase(lo)) " => " $lo ")
+
+    end
+
+    for sh in ("m", "re", "s", "ve", "d")
+
+        ti = replace(ti, "'$(titlecase(sh)) " => "'$sh ")
+
+    end
+
+    return strip(ti)
+
+end
+
+function split_and_get(st, de, id)
+
+    return split(st, de; limit = id + 1)[id]
+
+end
+
+function remove_common_prefix(st_)
+
+    n = length(BioLab.Vector.get_common_start(st_))
+
+    return [st[(n + 1):end] for st in st_]
+
+end
+
+function transplant(st1, st2, de, id_)
+
+    sp1_ = split(st1, de)
+
+    sp2_ = split(st2, de)
+
+    BioLab.Array.error_size(sp1_, sp2_)
+
+    return join(((sp1, sp2)[id] for (sp1, sp2, id) in zip(sp1_, sp2_, id_)), de)
 
 end
 
