@@ -1,3 +1,11 @@
+module MatrixFactorization
+
+using LinearAlgebra: pinv
+
+using NMF: nnmf
+
+using ..BioLab
+
 function plot(
     ro_x_fa_x_po_,
     fa_x_co_x_po_;
@@ -106,5 +114,33 @@ function plot(
     end
 
     return nothing
+
+end
+
+function factorize(ro_x_co_x_po, n; ke_ar...)
+
+    mf = nnmf(ro_x_co_x_po, n; init = :random, alg = :multmse, tol = 10^-6, maxiter = 10^6)
+
+    if !mf.converged
+
+        error()
+
+    end
+
+    println("♻️ Iterations: $(mf.niters)")
+
+    println("🏁 Objective value: $(BioLab.Number.format(mf.objvalue))")
+
+    plot((mf.W,), (mf.H,); ke_ar...)
+
+    return mf.W, mf.H
+
+end
+
+function solve_h(ro_x_co_x_po, ro_x_fa_x_po)
+
+    return pinv(ro_x_fa_x_po) * ro_x_co_x_po
+
+end
 
 end

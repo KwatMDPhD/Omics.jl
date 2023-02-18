@@ -1,3 +1,7 @@
+module Normalization
+
+using StatsBase: competerank, denserank, mean, ordinalrank, std, tiedrank
+
 function normalize_with_01!(te)
 
     mi = minimum(te)
@@ -71,5 +75,7 @@ end
 function normalize_with_125254(te)
 
     return tiedrank(te)
+
+end
 
 end

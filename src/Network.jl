@@ -1,3 +1,35 @@
+module Network
+
+using JSON3: write
+
+using ..BioLab
+
+function position!(ke_va_, id_kec_vac::AbstractDict)
+
+    for ke_va in ke_va_
+
+        po = "position"
+
+        ke_va[po] = id_kec_vac[ke_va["data"]["id"]][po]
+
+    end
+
+    return nothing
+
+end
+
+function position!(ke_va_, js)
+
+    return position!(
+        ke_va_,
+        Dict(
+            pop!(kec_vac["data"], "id") => kec_vac for
+            kec_vac in BioLab.Dict.read(js)["elements"]["nodes"]
+        ),
+    )
+
+end
+
 function plot(el_, st_, la; ht = "", he = 800, wr = "", sc = 1.0, bg = "#fdfdfd")
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
@@ -71,5 +103,7 @@ function plot(el_, st_, la; ht = "", he = 800, wr = "", sc = 1.0, bg = "#fdfdfd"
         ht,
         he,
     )
+
+end
 
 end

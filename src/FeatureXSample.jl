@@ -1,3 +1,9 @@
+module FeatureXSample
+
+using StatsBase: mean, median
+
+using ..BioLab
+
 function _aim(nu1_, nu2_)
 
     BioLab.Array.error_size(nu1_, nu2_)
@@ -25,5 +31,7 @@ end
 function target(nu1_, fe_x_sa_x_nu2, fu)
 
     return [_trigger(fu, nu1_, nu2_) for nu2_ in eachrow(fe_x_sa_x_nu2)]
+
+end
 
 end
