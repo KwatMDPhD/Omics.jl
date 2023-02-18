@@ -4,7 +4,7 @@ using BioLab
 
 macro check_error(ex)
 
-    quote
+    return quote
 
         try
 

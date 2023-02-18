@@ -47,7 +47,7 @@ end
 
 function _make_color_scheme(he_)
 
-    return ColorScheme((parse(Colorant, he) for he in he_))
+    return ColorScheme([parse(Colorant, he) for he in he_])
 
 end
 
