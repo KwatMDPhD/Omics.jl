@@ -75,7 +75,7 @@ function _fractionate(co)
 
 end
 
-function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ht = "")
+function plot(data, layout = Dict{String, Any}(), config = Dict{String, Any}(); ht = "")
 
     axis = Dict("automargin" => true)
 
@@ -97,8 +97,6 @@ function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), 
                 Dict(
                     "modebarbuttonstoremove" => ("select", "lasso", "resetscale"),
                     "displaylogo" => false,
-                    "responsive" => true,
-                    "editable" => false,
                 ),
                 config,
                 BioLab.Dict.set_with_last!,
@@ -199,7 +197,7 @@ function plot_bar(
                 "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(Dict("barmode" => "stack"), layout, BioLab.Dict.merge.set_with_last!);
+        BioLab.Dict.merge(Dict("barmode" => "stack"), layout, BioLab.Dict.set_with_last!);
         ht,
     )
 
@@ -291,7 +289,7 @@ function plot_histogram(
                         "y" => fill(id, length(x_[id])),
                         "text" => text_[id],
                         "mode" => "markers",
-                        "marker" => Dict("symbol" => "line-ns-open", "size" => 16.0),
+                        "marker" => Dict("symbol" => "line-ns-open", "size" => 16),
                         "hoverinfo" => "x+text",
                     ),
                     BioLab.Dict.set_with_last!,
@@ -321,17 +319,15 @@ function plot_heat_map(
 
     n_ro, n_co = size(z)
 
-    axis = Dict("domain" => (0.0, 0.95), "automargin" => true)
+    axis = Dict("domain" => (0.0, 0.95))
 
     axis2 = Dict("domain" => (0.96, 1.0), "tickvals" => ())
 
     layout = BioLab.Dict.merge(
         Dict(
             "title" => Dict("text" => "Heat Map"),
-            "yaxis" =>
-                BioLab.Dict.merge(axis, Dict("title" => Dict("text" => "$nar (n=$n_ro)"))),
-            "xaxis" =>
-                BioLab.Dict.merge(axis, Dict("title" => Dict("text" => "$nac (n=$n_co)"))),
+            "yaxis" => merge(axis, Dict("title" => Dict("text" => "$nar (n=$n_ro)"))),
+            "xaxis" => merge(axis, Dict("title" => Dict("text" => "$nac (n=$n_co)"))),
             "yaxis2" => axis2,
             "xaxis2" => axis2,
         ),
@@ -339,7 +335,7 @@ function plot_heat_map(
         BioLab.Dict.set_with_last!,
     )
 
-    data = []
+    data = Vector{Dict{String, Any}}()
 
     # TODO: Cluster within a group.
 

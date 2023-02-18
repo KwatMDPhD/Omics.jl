@@ -45,7 +45,7 @@ function write(di, so_, sc; ht = "", he = 800)
 
             _open(ht)
 
-            println(".")
+            println('.')
 
         catch
 
