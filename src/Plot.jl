@@ -16,9 +16,9 @@ function _make_color_scheme(he_)
 
 end
 
-const COPL = plasma
+const COPLA = plasma
 
-const COP3 = _make_color_scheme((
+const COPL3 = _make_color_scheme((
     "#0508b8",
     "#1910d8",
     "#3c19f0",
@@ -34,7 +34,7 @@ const COP3 = _make_color_scheme((
     "#fec3fe",
 ))
 
-const COPO = _make_color_scheme((
+const COPLO = _make_color_scheme((
     "#636efa",
     "#ef553b",
     "#00cc96",
@@ -47,9 +47,9 @@ const COPO = _make_color_scheme((
     "#fecb52",
 ))
 
-const COBI = _make_color_scheme(("#006442", "#ffffff", "#ffb61e"))
+const COBIN = _make_color_scheme(("#006442", "#ffffff", "#ffb61e"))
 
-const COAS = _make_color_scheme((
+const COASP = _make_color_scheme((
     "#00936e",
     "#a4e2b4",
     "#e0f5e5",
@@ -59,9 +59,9 @@ const COAS = _make_color_scheme((
     "#ffd96a",
 ))
 
-const COHU = _make_color_scheme(("#4b3c39", "#ffffff", "#ffddca"))
+const COHUM = _make_color_scheme(("#4b3c39", "#ffffff", "#ffddca"))
 
-const COST = _make_color_scheme(("#ffffff", "#8c1515"))
+const COSTA = _make_color_scheme(("#ffffff", "#8c1515"))
 
 function color(co, nu)
 
@@ -71,11 +71,11 @@ end
 
 function _fractionate(co)
 
-    return collect(zip(0.0:(1 / (length(co) - 1)):1.0, "#$(hex(rg))" for rg in co))
+    return collect(zip(0:(1 / (length(co) - 1)):1, "#$(hex(rg))" for rg in co))
 
 end
 
-function plot(data, layout = Dict{String, Any}(), config = Dict{String, Any}(); ht = "")
+function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ht = "")
 
     axis = Dict("automargin" => true)
 
@@ -95,7 +95,6 @@ function plot(data, layout = Dict{String, Any}(), config = Dict{String, Any}(); 
             ))),
             $(write(BioLab.Dict.merge(
                 Dict(
-                    "modebarbuttonstoremove" => ("select", "lasso", "resetscale"),
                     "displaylogo" => false,
                 ),
                 config,
@@ -136,11 +135,11 @@ function _set_color(y_)
 
     else
 
-        nu_ = 0.0:(1 / n):1.0
+        nu_ = 0:(1 / n):1
 
     end
 
-    return [color(COPO, nu) for nu in nu_]
+    return [color(COPLO, nu) for nu in nu_]
 
 end
 
@@ -158,7 +157,7 @@ function plot_scatter(
     mode_ = _set_mode(y_),
     marker_color_ = _set_color(y_),
     layout = Dict{String, Any}(),
-    ht = "",
+    ke_ar...,
 )
 
     return plot(
@@ -173,7 +172,7 @@ function plot_scatter(
             ) for id in eachindex(y_)
         ],
         layout;
-        ht,
+        ke_ar...,
     )
 
 end
@@ -184,7 +183,7 @@ function plot_bar(
     name_ = _set_name(y_),
     marker_color_ = _set_color(y_),
     layout = Dict{String, Any}(),
-    ht = "",
+    ke_ar...,
 )
 
     return plot(
@@ -198,7 +197,7 @@ function plot_bar(
             ) for id in eachindex(y_)
         ],
         BioLab.Dict.merge(Dict("barmode" => "stack"), layout, BioLab.Dict.set_with_last!);
-        ht,
+        ke_ar...,
     )
 
 end
@@ -211,7 +210,7 @@ function plot_histogram(
     xbins_size = 0.0,
     marker_color_ = _set_color(x_),
     layout = Dict{String, Any}(),
-    ht = "",
+    ke_ar...,
 )
 
     ru = all(length(x) < 10^5 for x in x_)
@@ -300,7 +299,7 @@ function plot_histogram(
 
     end
 
-    return plot(data, layout; ht)
+    return plot(data, layout; ke_ar...)
 
 end
 
@@ -310,11 +309,11 @@ function plot_heat_map(
     x = ["* $id" for id in 1:size(z, 2)];
     nar = "Row",
     nac = "Column",
-    colorscale = _fractionate(COPL),
+    colorscale = _fractionate(COPLA),
     grr_ = [],
     grc_ = [],
     layout = Dict{String, Any}(),
-    ht = "",
+    ke_ar...,
 )
 
     n_ro, n_co = size(z)
@@ -379,6 +378,7 @@ function plot_heat_map(
 
     end
 
+    # TODO: Check if Plotly has an option for flipping y.
     fl_ = n_ro:-1:1
 
     push!(
@@ -395,8 +395,8 @@ function plot_heat_map(
 
     trace = Dict(
         "type" => "heatmap",
-        "colorscale" => _fractionate(COPO),
-        "colorbar" => Dict("x" => 1.15, "dtick" => 1.0),
+        "colorscale" => _fractionate(COPLO),
+        "colorbar" => Dict("x" => 1.15, "dtick" => 1),
     )
 
     if !isempty(grr_)
@@ -425,7 +425,7 @@ function plot_heat_map(
 
     end
 
-    return plot(data, layout; ht = ht)
+    return plot(data, layout; ke_ar...)
 
 end
 
@@ -436,13 +436,14 @@ function plot_heat_map(ro_x_co_x_nu; ke_ar...)
     return plot_heat_map(ro_x_co_x_nu, ro_, co_; nar = ro, ke_ar...)
 
 end
+
 function plot_radar(
     theta_,
     r__;
     name_ = _set_name(theta_),
     marker_color_ = _set_color(theta_),
     layout = Dict{String, Any}(),
-    ht = "",
+    ke_ar...,
 )
 
     axis = Dict(
@@ -461,8 +462,8 @@ function plot_radar(
                 "theta" => theta,
                 "r" => r_,
                 "opacity" => 0.64,
-                "marker" => Dict("symbol" => "diamond", "size" => 2.0, "color" => marker_color),
-                "line" => Dict("width" => 0.0),
+                "marker" => Dict("symbol" => "diamond", "size" => 2, "color" => marker_color),
+                "line" => Dict("width" => 0),
                 "fill" => "toself",
                 "fillcolor" => marker_color,
             ) for (theta, r_, name, marker_color) in zip(theta_, r__, name_, marker_color_)
@@ -474,7 +475,7 @@ function plot_radar(
                         axis,
                         Dict(
                             "direction" => "clockwise",
-                            "tickfont" => Dict("size" => 32.0, "family" => "Optima"),
+                            "tickfont" => Dict("size" => 32, "family" => "Optima"),
                         ),
                         BioLab.Dict.set_with_last!,
                     ),
@@ -482,7 +483,7 @@ function plot_radar(
                         axis,
                         Dict(
                             "nticks" => 8,
-                            "tickfont" => Dict("size" => 16.0, "family" => "Monospace"),
+                            "tickfont" => Dict("size" => 16, "family" => "Monospace"),
                         ),
                         BioLab.Dict.set_with_last!,
                     ),
@@ -491,7 +492,7 @@ function plot_radar(
                     "text" => "Radar",
                     "x" => 0.01,
                     "font" => Dict(
-                        "size" => 48.0,
+                        "size" => 48,
                         "family" => "Times New Roman",
                         "color" => "#27221f",
                     ),
@@ -500,7 +501,7 @@ function plot_radar(
             layout,
             BioLab.Dict.set_with_last!,
         );
-        ht,
+        ke_ar...,
     )
 
 end
