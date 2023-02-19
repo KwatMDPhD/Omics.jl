@@ -1,14 +1,14 @@
 module Vector
 
-function is_in(ne_, ha_)
+function is_in(an_, an1_)
 
-    n = length(ne_)
+    n = length(an_)
 
     bo_ = Base.Vector{Bool}(undef, n)
 
     for id in 1:n
 
-        bo_[id] = ne_[id] in ha_
+        bo_[id] = an_[id] in an1_
 
     end
 
@@ -16,15 +16,13 @@ function is_in(ne_, ha_)
 
 end
 
-function is_in(ne_id::AbstractDict, ha_)
+function is_in(an_id::AbstractDict, an1_)
 
-    bo_ = fill(false, length(ne_id))
+    bo_ = fill(false, length(an_id))
 
-    for ha in ha_
+    for an1 in an1_
 
-        # TODO: `haskey`.
-
-        id = get(ne_id, ha, nothing)
+        id = get(an_id, an1, nothing)
 
         if !isnothing(id)
 
@@ -38,45 +36,23 @@ function is_in(ne_id::AbstractDict, ha_)
 
 end
 
-function sort_like(an__; de = false)
+function pair_index(an_)
 
-    so_ = sortperm(an__[1]; rev = de)
+    ty = eltype(an_)
 
-    return [an_[so_] for an_ in an__]
+    an_id = Dict{ty, Int}()
 
-end
+    id_an = Dict{Int, ty}()
 
-function sort_recursively(an)
+    for (id, an) in enumerate(an_)
 
-    if an isa AbstractArray
+        an_id[an] = id
 
-        ans = [sort_recursively(an2) for an2 in an]
-
-    elseif an isa AbstractDict
-
-        ans = sort(OrderedDict(ke => sort_recursively(va) for (ke, va) in an))
-
-    else
-
-        ans = an
+        id_an[id] = an
 
     end
 
-    try
-
-        if ans isa Tuple
-
-            ans = Tuple(sort!(collect(ans)))
-
-        end
-
-        sort!(ans)
-
-    catch
-
-    end
-
-    return ans
+    return an_id, id_an
 
 end
 
@@ -94,6 +70,7 @@ function get_common_start(an__)
 
         an = sh[id]
 
+        # TODO: Do not check the shortest one.
         if any(an_[id] != an for an_ in an__)
 
             break
@@ -108,24 +85,46 @@ function get_common_start(an__)
 
 end
 
-function pair_index(an_)
+function sort_like(an__; de = false)
 
-    ty = eltype(an_)
+    so_ = sortperm(an__[1]; rev = de)
 
-    an_id = Dict{ty, Int}()
+    return [an_[so_] for an_ in an__]
 
-    id_an = Dict{Int, ty}()
+end
 
-    # TODO: Speed up.
-    for (id, an) in enumerate(an_)
+function sort_recursively(an)
 
-        an_id[an] = id
+    if an isa AbstractArray
 
-        id_an[id] = an
+        an = [sort_recursively(an2) for an2 in an]
+
+    elseif an isa AbstractDict
+
+        an = sort(Dict(ke => sort_recursively(va) for (ke, va) in an))
+
+    else
+
+        an = an
 
     end
 
-    return an_id, id_an
+    try
+
+        if an isa Tuple
+
+            an = Tuple(sort!(collect(an)))
+
+        end
+
+        # TODO: Check.
+        sort!(an)
+
+    catch
+
+    end
+
+    return an
 
 end
 
