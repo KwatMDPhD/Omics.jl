@@ -10,6 +10,8 @@ using Mmap: mmap
 
 using XLSX: readtable
 
+using ..BioLab
+
 function read(pa; xl = "", ke_ar...)
 
     ex = splitext(pa)[2]
@@ -35,6 +37,8 @@ function read(pa; xl = "", ke_ar...)
 end
 
 function write(ts, ro_x_co_x_an)
+
+    BioLab.Path.error_extension(ts, ".tsv")
 
     _write(ts, ro_x_co_x_an; delim = '\t')
 
