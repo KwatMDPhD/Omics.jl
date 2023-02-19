@@ -44,13 +44,13 @@ function count_noun(n, st)
 
     end
 
+    if length(st) == 3 && st[2:3] == "ex"
+
+        return "$n $(st)es"
+
+    end
+
     for (si, pl) in (("ex", "ices"), ("ry", "ries"), ("o", "oes"))
-
-        if si == "ex" && length(st) <= 3
-
-            return "$n $(st)es"
-
-        end
 
         sir = Regex("$si\$")
 
@@ -67,6 +67,8 @@ function count_noun(n, st)
 end
 
 function title(st)
+
+    st = strip(st)
 
     ti = ""
 
@@ -113,16 +115,18 @@ function title(st)
 
     end
 
+    # TODO: Time ''.
     for sh in ("m", "re", "s", "ve", "d")
 
         ti = replace(ti, "'$(titlecase(sh)) " => "'$sh ")
 
     end
 
-    return strip(ti)
+    return ti
 
 end
 
+# TODO: Time without `limit`.
 function split_and_get(st, de, id)
 
     return split(st, de; limit = id + 1)[id]
@@ -145,6 +149,7 @@ function transplant(st1, st2, de, id_)
 
     BioLab.Array.error_size(sp1_, sp2_)
 
+    # TODO: Time with `ifelse`.
     return join(((sp1, sp2)[id] for (sp1, sp2, id) in zip(sp1_, sp2_, id_)), de)
 
 end
