@@ -36,19 +36,23 @@ function symbolize(ke_va)
 
 end
 
-function set_with_first!(ke_va, ke, va)
+function set_with_first!(ke_va, ke, va; pr = true)
 
     if haskey(ke_va, ke)
 
-        vac = ke_va[ke]
+        if pr
 
-        if vac == va
+            vac = ke_va[ke]
 
-            println("👯‍♀️ $ke ➡️ $va")
+            if vac == va
 
-        else
+                #println("👯‍♀️ $ke ➡️ $va")
 
-            println("$ke ➡️ $vac (🙅 $va)")
+            else
+
+                println("$ke ➡️ $vac (🙅 $va)")
+
+            end
 
         end
 
@@ -62,15 +66,15 @@ function set_with_first!(ke_va, ke, va)
 
 end
 
-function set_with_last!(ke_va, ke, va)
+function set_with_last!(ke_va, ke, va; pr = true)
 
-    if haskey(ke_va, ke)
+    if haskey(ke_va, ke) && pr
 
         vac = ke_va[ke]
 
         if vac == va
 
-            println("👯‍♀️ $ke ➡️ $va")
+            #println("👯‍♀️ $ke ➡️ $va")
 
         else
 
@@ -86,7 +90,7 @@ function set_with_last!(ke_va, ke, va)
 
 end
 
-function set_with_suffix!(ke_va, ke, va)
+function set_with_suffix!(ke_va, ke, va; pr = true)
 
     if haskey(ke_va, ke)
 
@@ -106,7 +110,11 @@ function set_with_suffix!(ke_va, ke, va)
 
         end
 
-        println("(🙋 $kec) $ke ➡️ $va")
+        if pr
+
+            println("(🙋 $kec) $ke ➡️ $va")
+
+        end
 
     end
 
@@ -116,7 +124,7 @@ function set_with_suffix!(ke_va, ke, va)
 
 end
 
-function merge(ke1_va1, ke2_va2, ho)
+function merge(ke1_va1, ke2_va2, ho; pr = true)
 
     ke_va = Base.Dict()
 
@@ -130,13 +138,13 @@ function merge(ke1_va1, ke2_va2, ho)
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                ke_va[ke] = merge(va1, va2, ho)
+                ke_va[ke] = merge(va1, va2, ho; pr)
 
             else
 
-                ho(ke_va, ke, va1)
+                ho(ke_va, ke, va1; pr)
 
-                ho(ke_va, ke, va2)
+                ho(ke_va, ke, va2; pr)
 
             end
 

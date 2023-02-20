@@ -4,7 +4,7 @@ using ..BioLab
 
 function _path(fi)
 
-    return joinpath(@__DIR__, "data", fi)
+    return joinpath(@__DIR__, "Gene.data", fi)
 
 end
 
@@ -14,9 +14,7 @@ function read_mouse()
 
 end
 
-function map_mouse()
-
-    fe_x_in_x_an = read_mouse()
+function map_mouse(fe_x_in_x_an; pr = false)
 
     ke_va = Dict{String, String}()
 
@@ -28,7 +26,7 @@ function map_mouse()
 
         end
 
-        BioLab.Dict.set_with_last!(ke_va, ke, va)
+        BioLab.Dict.set_with_last!(ke_va, ke, va; pr)
 
     end
 
@@ -42,10 +40,11 @@ function read_ensembl()
 
 end
 
-function map_ensembl()
+function map_ensembl(fe_x_in_x_an; pr = false)
 
     return BioLab.DataFrame.map_to(
-        read_ensembl(),
+        fe_x_in_x_an,
+        BioLab.Dict.set_with_last!,
         [
             "Transcript stable ID version",
             "Transcript stable ID",
@@ -56,7 +55,7 @@ function map_ensembl()
         ],
         "Gene name";
         de = '|',
-        pr = false,
+        pr,
     )
 
 end
@@ -67,37 +66,26 @@ function read_hgnc()
 
 end
 
-function map_hgnc()
+function map_hgnc(fe_x_in_x_an; pr = false)
 
     return BioLab.DataFrame.map_to(
-        read_hgnc(),
+        fe_x_in_x_an,
+        BioLab.Dict.set_with_last!,
         ["prev_symbol", "alias_symbol"],
         "symbol";
         de = '|',
-        pr = false,
+        pr,
     )
 
 end
 
-function rename(st_; mo = true, en = true, hg = true)
+function rename(st_, st_na__...; pr = true)
 
     st_na = Dict{String, String}()
 
-    if mo
+    for st1_na1 in st_na__
 
-        merge!(st_na, map_mouse())
-
-    end
-
-    if en
-
-        merge!(st_na, map_ensemble())
-
-    end
-
-    if hg
-
-        merge!(st_na, map_hgnc())
+        st_na = BioLab.Dict.merge(st_na, st1_na1, BioLab.Dict.set_with_last!; pr)
 
     end
 
@@ -113,7 +101,7 @@ function rename(st_; mo = true, en = true, hg = true)
 
     n_3 = 0
 
-    for id in 1:n
+    for (id, st) in enumerate(st_)
 
         if haskey(st_na, st)
 
@@ -149,9 +137,13 @@ function rename(st_; mo = true, en = true, hg = true)
 
     end
 
-    for (n, em) in ((n_1, "👍"), (n_2, "✅"), (n_3, "❌"))
+    if pr
 
-        println("$em $n")
+        println("👍 $n_1 (kept)")
+
+        println("🤞 $n_2 (renamed)")
+
+        println("👎 $n_3 (failed to be rename)")
 
     end
 
@@ -165,17 +157,15 @@ function read_uniprot()
 
 end
 
-function map_uniprot()
+function map_uniprot(pr_x_in_x_an; pr = false)
 
-    pr_x_in_x_an = read_uniprot()
-
-    pr_io_an = Dict{String, Dict{String, Vector{String}}}()
+    pr_io_an = Dict{String, Dict{String, Any}}()
 
     in_ = names(pr_x_in_x_an)
 
     for an_ in eachrow(pr_x_in_x_an)
 
-        io_an = Dict{String, Vector{String}}()
+        io_an = Dict{String, Any}()
 
         # TODO: Use indexing to speed up.
         for (io, an) in zip(in_, an_)
@@ -185,7 +175,8 @@ function map_uniprot()
                 BioLab.Dict.set_with_last!(
                     pr_io_an,
                     BioLab.String.split_and_get(an, "_HUMAN", 1),
-                    io_an,
+                    io_an;
+                    pr,
                 )
 
             else
