@@ -8,23 +8,17 @@ function _path(fi)
 
 end
 
-function read_ensembl()
+function read_mouse()
 
-    return BioLab.Table.read(_path("ensembl.tsv.gz"))
-
-end
-
-function read_hgnc()
-
-    return BioLab.Table.read(_path("hgnc_complete_set.tsv.gz"))
+    return BioLab.Table.read(_path("ensembl.mouse_human.tsv.gz"))
 
 end
 
 function map_mouse()
 
-    ke_va = Dict{String, String}()
+    fe_x_in_x_an = read_mouse()
 
-    fe_x_in_x_an = BioLab.Table.read(_path("ensembl.mouse_human.tsv.gz"))
+    ke_va = Dict{String, String}()
 
     for (ke, va) in zip(fe_x_in_x_an[!, "Gene name"], fe_x_in_x_an[!, "Human gene name"])
 
@@ -42,15 +36,16 @@ function map_mouse()
 
 end
 
-function _map_to(wh)
+function read_ensembl()
 
-    return BioLab.DataFrame.map_to(read(wh), fr_, to; de = '|', pr = false)
+    return BioLab.Table.read(_path("ensembl.tsv.gz"))
 
 end
 
-function map_to_ensembl()
+function map_ensembl()
 
-    return _map_to(
+    return BioLab.DataFrame.map_to(
+        read_ensembl(),
         [
             "Transcript stable ID version",
             "Transcript stable ID",
@@ -59,65 +54,28 @@ function map_to_ensembl()
             "Gene stable ID",
             "Gene Synonym",
         ],
-        "Gene name",
+        "Gene name";
+        de = '|',
+        pr = false,
     )
 
 end
 
-function map_to_hgnc()
+function read_hgnc()
 
-    return _map_to(["prev_symbol", "alias_symbol"], "symbol")
+    return BioLab.Table.read(_path("hgnc_complete_set.tsv.gz"))
 
 end
 
-function map_protein()
+function map_hgnc()
 
-    pr_x_in_x_an = BioLab.Table.read(_path("uniprot.tsv.gz"))
-
-    pr_io_an = Dict{String, Dict{String, Vector{String}}}()
-
-    in_ = names(pr_x_in_x_an)
-
-    for an_ in eachrow(pr_x_in_x_an)
-
-        io_an = Dict{String, Vector{String}}()
-
-        # TODO: Use indexing to speed up.
-        for (io, an) in zip(in_, an_)
-
-            if io == "Entry Name"
-
-                BioLab.Dict.set_with_last!(
-                    pr_io_an,
-                    BioLab.String.split_and_get(an, "_HUMAN", 1),
-                    io_an,
-                )
-
-            else
-
-                if an isa AbstractString
-
-                    if io == "Gene Names"
-
-                        an = split(an, ' ')
-
-                    elseif io == "Interacts with"
-
-                        an = split(an, "; ")
-
-                    end
-
-                end
-
-                io_an[io] = an
-
-            end
-
-        end
-
-    end
-
-    return pr_io_an
+    return BioLab.DataFrame.map_to(
+        read_hgnc(),
+        ["prev_symbol", "alias_symbol"],
+        "symbol";
+        de = '|',
+        pr = false,
+    )
 
 end
 
@@ -198,6 +156,63 @@ function rename(st_; mo = true, en = true, hg = true)
     end
 
     return na_, ma_
+
+end
+
+function read_uniprot()
+
+    return BioLab.Table.read(_path("uniprot.tsv.gz"))
+
+end
+
+function map_uniprot()
+
+    pr_x_in_x_an = read_uniprot()
+
+    pr_io_an = Dict{String, Dict{String, Vector{String}}}()
+
+    in_ = names(pr_x_in_x_an)
+
+    for an_ in eachrow(pr_x_in_x_an)
+
+        io_an = Dict{String, Vector{String}}()
+
+        # TODO: Use indexing to speed up.
+        for (io, an) in zip(in_, an_)
+
+            if io == "Entry Name"
+
+                BioLab.Dict.set_with_last!(
+                    pr_io_an,
+                    BioLab.String.split_and_get(an, "_HUMAN", 1),
+                    io_an,
+                )
+
+            else
+
+                if an isa AbstractString
+
+                    if io == "Gene Names"
+
+                        an = split(an, ' ')
+
+                    elseif io == "Interacts with"
+
+                        an = split(an, "; ")
+
+                    end
+
+                end
+
+                io_an[io] = an
+
+            end
+
+        end
+
+    end
+
+    return pr_io_an
 
 end
 
