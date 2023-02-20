@@ -2,9 +2,11 @@ module Significance
 
 using StatsBase: std
 
-function get_margin_of_error(nu_, co = 0.95)
+using ..BioLab
 
-    return BioLab.Statistics.get_confidence_interval(co)[2] * std(nu_) / sqrt(length(nu_))
+function get_margin_of_error(nu_, er = 0.05)
+
+    return BioLab.Statistics.get_z_score(1.0 - er / 2.0) * std(nu_) / sqrt(length(nu_))
 
 end
 
