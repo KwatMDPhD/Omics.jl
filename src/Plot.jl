@@ -342,7 +342,7 @@ function plot_heat_map(
 
         if eltype(grr_) <: AbstractString
 
-            gr_id = BioLab.Vector.pair_index(unique(grr_))[1]
+            gr_id = BioLab.Collection.pair_index(unique(grr_))[1]
 
             grr_ = [gr_id[gr] for gr in grr_]
 
@@ -362,7 +362,7 @@ function plot_heat_map(
 
         if eltype(grc_) <: AbstractString
 
-            gr_id = BioLab.Vector.pair_index(unique(grc_))[1]
+            gr_id = BioLab.Collection.pair_index(unique(grc_))[1]
 
             grc_ = [gr_id[gr] for gr in grc_]
 

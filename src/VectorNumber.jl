@@ -7,9 +7,18 @@ using Random: seed!
 using ..BioLab
 
 # TODO: Multiple-dispatch.
-function simulate(n; ra = BioLab.RA, di = Normal(), ho = "", re = true)
+function simulate(n; ra = BioLab.RA, di = "Normal", ho = "", ev = true)
 
-    # TODO: Check correctness.
+    if di == "Normal"
+
+        di = Normal()
+
+    else
+
+        erorr()
+
+    end
+
     seed!(ra)
 
     ra_ = rand(di, n)
@@ -52,7 +61,7 @@ function simulate(n; ra = BioLab.RA, di = Normal(), ho = "", re = true)
 
     end
 
-    if !re
+    if !ev
 
         nem_ = nem_[1:(end - 1)]
 

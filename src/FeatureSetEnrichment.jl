@@ -274,7 +274,7 @@ function benchmark_random(n, n1)
 
     fe_ = ["Feature $id" for id in 1:n]
 
-    fe_, BioLab.VectorNumber.simulate(cld(n, 2); re = iseven(n)), sample(fe_, n1; replace = false)
+    fe_, BioLab.VectorNumber.simulate(cld(n, 2); ev = iseven(n)), sample(fe_, n1; replace = false)
 
 end
 
@@ -622,7 +622,7 @@ end
 
 function score_set(al, fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
 
-    return _score_set(al, fe_, sc_, BioLab.Vector.is_in(fe_, Set(fe1_)); ex, pl, ke_ar...)
+    return _score_set(al, fe_, sc_, BioLab.Collection.is_in(fe_, Set(fe1_)); ex, pl, ke_ar...)
 
 end
 
@@ -630,10 +630,10 @@ function score_set(al, fe_, sc_, se_fe_; ex = 1.0)
 
     ch = Dict(fe => id for (id, fe) in enumerate(fe_))
 
-    #sc_, fe_ = BioLab.Vector.sort_like((sc_, fe_); de=true)
+    #sc_, fe_ = BioLab.Collection.sort_like((sc_, fe_); de=true)
 
     return Dict(
-        se => _score_set(al, fe_, sc_, BioLab.Vector.is_in(ch, fe1_); ex, pl = false) for
+        se => _score_set(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for
         (se, fe1_) in se_fe_
     )
 
@@ -655,7 +655,7 @@ function score_set(al, fe_x_sa_x_sc, se_fe_; ex = 1.0, n_jo = 1)
 
         go_ = findall(!ismissing, fe_x_sa_x_sc[:, id])
 
-        sc_, fe_ = BioLab.Vector.sort_like((fe_x_sa_x_sc[go_, id], fe_[go_]); de = true)
+        sc_, fe_ = BioLab.Collection.sort_like((fe_x_sa_x_sc[go_, id], fe_[go_]); de = true)
 
         se_en = score_set(al, fe_, sc_, se_fe_; ex)
 
