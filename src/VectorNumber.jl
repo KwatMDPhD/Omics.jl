@@ -6,88 +6,6 @@ using Random: seed!
 
 using ..BioLab
 
-function get_extreme(nu_)
-
-    mi = minimum(nu_)
-
-    ma = maximum(nu_)
-
-    mia = abs(mi)
-
-    maa = abs(ma)
-
-    if isapprox(mia, maa)
-
-        return (mi, ma)
-
-    elseif maa < mia
-
-        return (mi,)
-
-    elseif mia < maa
-
-        return (ma,)
-
-    else
-
-        error()
-
-    end
-
-end
-
-function get_area(nu_)
-
-    return sum(nu_) / length(nu_)
-
-end
-
-function force_increasing_with_min!(nu_)
-
-    accumulate!(min, nu_, reverse!(nu_))
-
-    reverse!(nu_)
-
-    return nothing
-
-end
-
-function force_increasing_with_max!(nu_)
-
-    accumulate!(max, nu_, nu_)
-
-    return nothing
-
-end
-
-function skip_nan_and_apply!!(nu_, fu!)
-
-    go_ = [!isnan(nu) for nu in nu_]
-
-    if any(go_)
-
-        fu!(view(nu_, go_))
-
-    end
-
-    return nothing
-
-end
-
-function skip_nan_and_apply!(nu_, fu)
-
-    go_ = [!isnan(nu) for nu in nu_]
-
-    if any(go_)
-
-        nu_[go_] = fu(nu_[go_])
-
-    end
-
-    return nothing
-
-end
-
 # TODO: Multiple-dispatch.
 function simulate(n; ra = BioLab.RA, di = Normal(), ho = "", re = true)
 
@@ -145,6 +63,42 @@ function simulate(n; ra = BioLab.RA, di = Normal(), ho = "", re = true)
 
 end
 
+function get_area(nu_)
+
+    return sum(nu_) / length(nu_)
+
+end
+
+function get_extreme(nu_)
+
+    mi = minimum(nu_)
+
+    ma = maximum(nu_)
+
+    mia = abs(mi)
+
+    maa = abs(ma)
+
+    if isapprox(mia, maa)
+
+        return (mi, ma)
+
+    elseif maa < mia
+
+        return (mi,)
+
+    elseif mia < maa
+
+        return (ma,)
+
+    else
+
+        error()
+
+    end
+
+end
+
 function shift_minimum(nu_, mi::Real)
 
     sh = mi - minimum(nu_)
@@ -158,6 +112,52 @@ function shift_minimum(nu_, st)
     fl = parse(eltype(nu_), BioLab.String.split_and_get(st, '<', 1))
 
     return shift_minimum(nu_, minimum(nu_[[fl < nu for nu in nu_]]))
+
+end
+
+function force_increasing_with_min!(nu_)
+
+    accumulate!(min, nu_, reverse!(nu_))
+
+    reverse!(nu_)
+
+    return nothing
+
+end
+
+function force_increasing_with_max!(nu_)
+
+    accumulate!(max, nu_, nu_)
+
+    return nothing
+
+end
+
+function skip_nan_and_apply!!(nu_, fu!)
+
+    go_ = [!isnan(nu) for nu in nu_]
+
+    if any(go_)
+
+        fu!(view(nu_, go_))
+
+    end
+
+    return nothing
+
+end
+
+function skip_nan_and_apply!(nu_, fu)
+
+    go_ = [!isnan(nu) for nu in nu_]
+
+    if any(go_)
+
+        nu_[go_] = fu(nu_[go_])
+
+    end
+
+    return nothing
 
 end
 

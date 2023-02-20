@@ -1,10 +1,10 @@
-module Vector
+module Collection
 
 function is_in(an_, an1_)
 
     n = length(an_)
 
-    bo_ = Base.Vector{Bool}(undef, n)
+    bo_ = Vector{Bool}(undef, n)
 
     for id in 1:n
 
@@ -111,13 +111,6 @@ function sort_recursively(an)
 
     try
 
-        if an isa Tuple
-
-            an = Tuple(sort!(collect(an)))
-
-        end
-
-        # TODO: Check.
         sort!(an)
 
     catch
