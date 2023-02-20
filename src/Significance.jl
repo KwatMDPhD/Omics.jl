@@ -44,9 +44,7 @@ function adjust_p_value_with_benjamini_hochberg(pv_, n = length(pv_))
 
     so_ = sortperm(pv_)
 
-    nf = convert(Float64, n)
-
-    pvs_ = [pv_[so] * nf / convert(Float64, id) for (id, so) in enumerate(so_)]
+    pvs_ = [pv_[so] * n / id for (id, so) in enumerate(so_)]
 
     BioLab.VectorNumber.force_increasing_with_min!(pvs_)
 
@@ -58,18 +56,18 @@ function get_p_value_and_adjust(nu_, ra_, fu)
 
     pv_ = [fu(nu, ra_) for nu in nu_]
 
-    return pv_, adjust_p_value(pv_)
+    return pv_, adjust_p_value_with_benjamini_hochberg(pv_)
 
 end
 
 function get_p_value_and_adjust(nu_, ra_)
 
-    lp_, la_ = get_p_value_and_adjust(nu_, ra_, get_p_value_for_less)
+    pvl_, adl_ = get_p_value_and_adjust(nu_, ra_, get_p_value_for_less)
 
-    rp_, ra_ = get_p_value_and_adjust(nu_, ra_, get_p_value_for_more)
+    pvm_, adm_ = get_p_value_and_adjust(nu_, ra_, get_p_value_for_more)
 
-    return [ifelse(lp < rp, lp, rp) for (lp, rp) in zip(lp_, rp_)],
-    [ifelse(la < ra, la, ra) for (la, ra) in zip(la_, ra_)]
+    return [ifelse(pvl < pvm, pvl, pvm) for (pvl, pvm) in zip(pvl_, pvm_)],
+    [ifelse(adl < adm, adl, adm) for (adl, adm) in zip(adl_, adm_)]
 
 end
 
