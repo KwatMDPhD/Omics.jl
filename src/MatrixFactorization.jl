@@ -9,27 +9,21 @@ using ..BioLab
 function plot(
     ro_x_fa_x_po_,
     fa_x_co_x_po_;
-    nar_ = ["Rows $id" for id in 1:length(ro_x_fa_x_po_)],
-    nac_ = ["Columns $id" for id in 1:length(fa_x_co_x_po_)],
+    nar_ = ["Rows $id" for id in eachindex(ro_x_fa_x_po_)],
+    nac_ = ["Columns $id" for id in eachindex(fa_x_co_x_po_)],
     naf = "Factor",
-    ro__ = (
-        ["$na $id" for id in 1:size(ro_x_fa_x_po, 1)] for
-        (ro_x_fa_x_po, na) in zip(ro_x_fa_x_po_, nar_)
-    ),
-    co__ = (
-        ["$na $id" for id in 1:size(fa_x_co_x_po, 2)] for
-        (fa_x_co_x_po, na) in zip(fa_x_co_x_po_, nac_)
-    ),
+    ro__ = (["$na $id" for id in 1:size(ma, 1)] for (ma, na) in zip(ro_x_fa_x_po_, nar_)),
+    co__ = (["$na $id" for id in 1:size(ma, 2)] for (ma, na) in zip(fa_x_co_x_po_, nac_)),
     di = "",
 )
 
     fa_ = ["$naf $id" for id in 1:size(ro_x_fa_x_po_[1], 2)]
 
-    lo = 800.0
+    lo = 800
 
     sh = lo / MathConstants.golden
 
-    axis = Dict("dtick" => 1.0)
+    axis = Dict("dtick" => 1)
 
     for (id, (ro_x_fa_x_po, ro_, nar)) in enumerate(zip(ro_x_fa_x_po_, ro__, nar_))
 
@@ -52,7 +46,7 @@ function plot(
 
         di = 1
 
-        or_ = BioLab.Clustering.hierarchize(ro_x_fa_x_po; di).order
+        or_ = BioLab.Clustering.hierarchize(ro_x_fa_x_po, di).order
 
         BioLab.Plot.plot_heat_map(
             BioLab.Normalization.normalize(ro_x_fa_x_po[or_, :], "-0-"; di),

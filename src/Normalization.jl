@@ -66,27 +66,39 @@ function normalize_with_sum!(te)
 
 end
 
-function normalize_with_1234(te)
+function _!(nu1_, nu2_)
 
-    return ordinalrank(te)
+    for (id, nu2) in enumerate(nu2_)
 
-end
+        nu1_[id] = nu2
 
-function normalize_with_1223(te)
+    end
 
-    return denserank(te)
-
-end
-
-function normalize_with_1224(te)
-
-    return competerank(te)
+    return nothing
 
 end
 
-function normalize_with_125254(te)
+function normalize_with_1234!(te)
 
-    return tiedrank(te)
+    return _!(te, ordinalrank(te))
+
+end
+
+function normalize_with_1223!(te)
+
+    return _!(te, denserank(te))
+
+end
+
+function normalize_with_1224!(te)
+
+    return _!(te, competerank(te))
+
+end
+
+function normalize_with_125254!(te)
+
+    return _!(te, tiedrank(te))
 
 end
 
