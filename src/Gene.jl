@@ -141,7 +141,7 @@ function rename(st_, st_na__...; pr = true)
 
         println("👍 $n_1 (kept)")
 
-        println("🤞 $n_2 (renamed)")
+        println("✌️ $n_2 (renamed)")
 
         println("👎 $n_3 (failed to be rename)")
 

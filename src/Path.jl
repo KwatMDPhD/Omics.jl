@@ -10,7 +10,6 @@ end
 
 function shorten(pa, n::Int)
 
-    # TODO: Do not splat.
     return joinpath(splitpath(pa)[clamp(end - n, 1, end):end]...)
 
 end

@@ -93,9 +93,9 @@ function sort_like(an__; de = false)
 
 end
 
-function get_type(ar_...)
+function get_type(ar__...)
 
-    return eltype(vcat(ar_...))
+    return eltype(vcat(ar__...))
 
 end
 

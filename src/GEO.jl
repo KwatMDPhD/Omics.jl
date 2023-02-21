@@ -8,6 +8,20 @@ using OrderedCollections: OrderedDict
 
 using ..BioLab
 
+function _outerjoin(co_va____, on)
+
+    if isempty(co_va____)
+
+        return DataFrame()
+
+    else
+
+        return select!(outerjoin(DataFrame.(co_va____)...; on), on, :)
+
+    end
+
+end
+
 function read(gs; di = BioLab.TE, pr = true)
 
     fi = "$(gs)_family.soft.gz"
@@ -97,7 +111,7 @@ function read(gs; di = BioLab.TE, pr = true)
 
             ke, va = split(li, eq; limit = 2)
 
-            BioLab.Dict.set_with_suffix!(ke_va, ke, va)
+            BioLab.Dict.set_with_suffix!(ke_va, ke, va; pr)
 
         end
 
@@ -109,53 +123,47 @@ end
 
 function _name(pl, fe_x_in_x_an; pr = true)
 
-    pl = parse(Int, pl[4:end])
-
-    if pr
-
-        println("🚉 $pl")
-
-    end
+    pli = parse(Int, pl[4:end])
 
     ke = "ID"
 
-    if pl in (96, 97, 570, 13667)
+    if pli in (96, 97, 570, 13667)
 
         va = "Gene Symbol"
 
         fu = na -> BioLab.String.split_and_get(na, " /// ", 1)
 
-    elseif pl == 13534
+    elseif pli == 13534
 
         va = "UCSC_RefGene_Name"
 
         fu = na -> BioLab.String.split_and_get(na, ';', 1)
 
-    elseif pl in (5175, 6244, 11532, 17586)
+    elseif pli in (5175, 6244, 11532, 17586)
 
         va = "gene_assignment"
 
         fu = na -> BioLab.String.split_and_get(na, " // ", 2)
 
-    elseif pl in (2004, 2005, 3718, 3720)
+    elseif pli in (2004, 2005, 3718, 3720)
 
         va = "Associated Gene"
 
         fu = na -> BioLab.String.split_and_get(na, " // ", 1)
 
-    elseif pl in (6098, 6884, 6947, 10558, 14951)
+    elseif pli in (6098, 6884, 6947, 10558, 14951)
 
         va = "Symbol"
 
         fu = na -> na
 
-    elseif pl == 16686
+    elseif pli == 16686
 
         va = "GB_ACC"
 
         fu = na -> na
 
-    elseif pl == 10332
+    elseif pli == 10332
 
         va = "GENE_SYMBOL"
 
@@ -171,7 +179,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         println("🧭 Mapping platform features using the platform table ($ke ➡️ $va)")
 
-        println(first(fe_x_in_x_an, 2))
+        display(first(fe_x_in_x_an, 2))
 
     end
 
@@ -181,7 +189,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         if na isa AbstractString && !isempty(na) && na != "---"
 
-            BioLab.Dict.set_with_last!(fe_na, fe, fu(na))
+            BioLab.Dict.set_with_last!(fe_na, fe, fu(na); pr)
 
         end
 
@@ -189,7 +197,7 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
     if pr
 
-        BioLab.Dict.print(fe_na; n = 0)
+        BioLab.Dict.print(fe_na; n = 8)
 
     end
 
@@ -247,7 +255,11 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
     if pr
 
-        BioLab.DataFrame.print_unique(ch_x_sa_x_an; di = 1)
+        println("💾 Characteristics")
+
+        display(ch_x_sa_x_an)
+
+        BioLab.DataFrame.print_row(ch_x_sa_x_an)
 
     end
 
@@ -255,15 +267,19 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
     for (id, (pl, co_nu____)) in enumerate(pl_co_nu____)
 
-        fe_x_sa_x_nu = _outerjoin(co_nu____, pl)
+        if pr
 
-        # TODO: Type.
+            println("🚉 $pl")
+
+        end
+
+        fe_x_sa_x_nu = _outerjoin(co_nu____, pl)
 
         pl_ke_va = ty_bl["PLATFORM"]
 
         if haskey(pl_ke_va[pl], "fe_x_in_x_an")
 
-            fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"]; pr = pr)
+            fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"]; pr)
 
             fe_x_sa_x_nu[!, pl] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, pl]]
 
@@ -272,7 +288,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
             if pr
 
                 println(
-                    "📛 Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $n_fe $pl $(BioLab.String.count_noun(n_fe,"feature")).",
+                    "📛 Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $(BioLab.String.count_noun(n_fe,"feature")).",
                 )
 
             end
@@ -283,26 +299,19 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
         end
 
+        if pr
+
+            println("💽 ($id) $pl Features")
+
+            display(fe_x_sa_x_nu)
+
+        end
+
         fe_x_sa_x_nu_____[id] = fe_x_sa_x_nu
 
     end
 
-    # TODO: Do not splat.
     return ch_x_sa_x_an, fe_x_sa_x_nu_____...
-
-end
-
-function _outerjoin(co_va____, on)
-
-    if isempty(co_va____)
-
-        return DataFrame()
-
-    else
-
-        return select!(outerjoin(DataFrame.(co_va____)...; on = on), on, :)
-
-    end
 
 end
 
