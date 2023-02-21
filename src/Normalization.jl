@@ -8,6 +8,12 @@ function normalize_with_01!(te)
 
     ra = maximum(te) - mi
 
+    if ra == 0
+
+        error()
+
+    end
+
     for (id, nu) in enumerate(te)
 
         te[id] = (nu - mi) / ra
@@ -48,7 +54,13 @@ function normalize_with_sum!(te)
 
     end
 
-    te ./= sum(te)
+    su = sum(te)
+
+    for (id, nu) in enumerate(te)
+
+        te[id] = nu / su
+
+    end
 
     return nothing
 
