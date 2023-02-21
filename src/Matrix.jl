@@ -94,8 +94,7 @@ function make(an__)
 
     n_co = length(an__[1])
 
-    # TODO: Do not splat.
-    ro_x_co_x_an = Base.Matrix{eltype(vcat(an__...))}(undef, (n_ro, n_co))
+    ro_x_co_x_an = Base.Matrix{BioLab.Collection.get_type(an__...)}(undef, (n_ro, n_co))
 
     for idr in 1:n_ro, idc in 1:n_co
 
@@ -107,23 +106,21 @@ function make(an__)
 
 end
 
-function apply!(ma, di, fu!)
+function apply_by_column!(ro_x_co_x_an, fu!)
 
-    if di == 1
+    for ve in eachcol(ro_x_co_x_an)
 
-        ea = eachrow
-
-    elseif di == 2
-
-        ea = eachcol
-
-    else
-
-        error()
+        fu!(ve)
 
     end
 
-    for ve in ea(ma)
+    return nothing
+
+end
+
+function apply_by_row!(ro_x_co_x_an, fu!)
+
+    for ve in eachrow(ro_x_co_x_an)
 
         fu!(ve)
 
@@ -135,9 +132,9 @@ end
 
 function simulate(n_ro, n_co, ho)
 
-    if ho == "1:"
+    if ho == "1.0:"
 
-        return convert(Base.Matrix, reshape(1:(n_ro * n_co), (n_ro, n_co)))
+        return convert(Base.Matrix, reshape(1.0:(n_ro * n_co), (n_ro, n_co)))
 
     elseif ho == "rand"
 

@@ -93,6 +93,12 @@ function sort_like(an__; de = false)
 
 end
 
+function get_type(ar_...)
+
+    return eltype(vcat(ar_...))
+
+end
+
 function sort_recursively(an)
 
     if an isa AbstractArray
