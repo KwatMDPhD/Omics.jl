@@ -2,8 +2,6 @@ module Information
 
 using StatsBase: mean, std
 
-using ..BioLab
-
 function get_entropy(nu_)
 
     return 0.0

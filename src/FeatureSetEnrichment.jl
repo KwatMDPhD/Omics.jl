@@ -2,7 +2,7 @@ module FeatureSetEnrichment
 
 using DataFrames: DataFrame
 
-using StatsBase: mean, sample
+using StatsBase: sample
 
 using ..BioLab
 
@@ -94,6 +94,12 @@ function _range(di_)
 
 end
 
+function _mean(di_)
+
+    return (di_[1] + di_[2]) / 2
+
+end
+
 function _plot_mountain(
     fe_,
     sc_,
@@ -175,9 +181,9 @@ function _plot_mountain(
                     "borderpad" => 6.4,
                 ),
             ),
-            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>$sc</b>")),
-            merge(annotationy, Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
-            merge(annotationy, Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
+            merge(annotationy, Dict("y" => _mean(yaxis1_domain), "text" => "<b>$sc</b>")),
+            merge(annotationy, Dict("y" => _mean(yaxis2_domain), "text" => "<b>Set</b>")),
+            merge(annotationy, Dict("y" => _mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
             merge(
                 annotationx,
                 Dict(
