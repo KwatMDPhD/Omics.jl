@@ -1,7 +1,5 @@
 module FeatureXSample
 
-using StatsBase: mean, median
-
 using ..BioLab
 
 function _aim(nu1_, nu2_)

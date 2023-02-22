@@ -30,7 +30,16 @@ function position!(ke_va_, js)
 
 end
 
-function plot(el_, st_, la; ht = "", he = 800, wr = "", sc = 1.0, bg = "#fdfdfd")
+function plot(
+    el_;
+    st_ = (),
+    la = Dict{String, Any}(),
+    ht = "",
+    he = 800,
+    wr = "",
+    sc = 1.0,
+    bg = "#fdfdfd",
+)
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
 
