@@ -40,4 +40,28 @@ function __init__()
 
 end
 
+macro check_error(ex)
+
+    return quote
+
+        try
+
+            $(esc(ex))
+
+            false
+
+        catch er
+
+            println("🎣")
+
+            display(er)
+
+            true
+
+        end
+
+    end
+
+end
+
 end
