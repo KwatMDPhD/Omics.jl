@@ -85,9 +85,9 @@ function get_common_start(an__)
 
 end
 
-function sort_like(an__; de = false)
+function sort_like(an__; ic = true)
 
-    so_ = sortperm(an__[1]; rev = de)
+    so_ = sortperm(an__[1]; rev = !ic)
 
     return [an_[so_] for an_ in an__]
 

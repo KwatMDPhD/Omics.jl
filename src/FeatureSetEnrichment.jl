@@ -636,7 +636,7 @@ function score_set(al, fe_, sc_, se_fe_; ex = 1.0)
 
     ch = Dict(fe => id for (id, fe) in enumerate(fe_))
 
-    #sc_, fe_ = BioLab.Collection.sort_like((sc_, fe_); de=true)
+    #sc_, fe_ = BioLab.Collection.sort_like((sc_, fe_); ic=false)
 
     return Dict(
         se => _score_set(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for
@@ -661,7 +661,7 @@ function score_set(al, fe_x_sa_x_sc, se_fe_; ex = 1.0, n_jo = 1)
 
         go_ = findall(!ismissing, fe_x_sa_x_sc[:, id])
 
-        sc_, fe_ = BioLab.Collection.sort_like((fe_x_sa_x_sc[go_, id], fe_[go_]); de = true)
+        sc_, fe_ = BioLab.Collection.sort_like((fe_x_sa_x_sc[go_, id], fe_[go_]); ic = false)
 
         se_en = score_set(al, fe_, sc_, se_fe_; ex)
 
