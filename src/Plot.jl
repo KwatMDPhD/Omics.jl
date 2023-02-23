@@ -69,7 +69,7 @@ function color(co, nu)
 
 end
 
-function _fractionate(co)
+function fractionate(co)
 
     return collect(zip(0:(1 / (length(co) - 1)):1, "#$(hex(rg))" for rg in co))
 
@@ -309,7 +309,7 @@ function plot_heat_map(
     x = ["* $id" for id in 1:size(z, 2)];
     nar = "Row",
     nac = "Column",
-    colorscale = _fractionate(COPLA),
+    colorscale = fractionate(COPLA),
     grr_ = [],
     grc_ = [],
     layout = Dict{String, Any}(),
@@ -395,7 +395,7 @@ function plot_heat_map(
 
     trace = Dict(
         "type" => "heatmap",
-        "colorscale" => _fractionate(COPLO),
+        "colorscale" => fractionate(COPLO),
         "colorbar" => Dict("x" => 1.15, "dtick" => 1),
     )
 
