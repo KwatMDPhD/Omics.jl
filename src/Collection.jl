@@ -1,5 +1,25 @@
 module Collection
 
+function get_extreme_id(an_, n_ex)
+
+    if isempty(an_) || n_ex == 0
+
+        return Vector{Int}()
+
+    end
+
+    n = length(an_)
+
+    if n < n_ex
+
+        n_ex = n
+
+    end
+
+    return sortperm(an_)[unique(vcat(collect(1:n_ex), collect((n - n_ex + 1):n)))]
+
+end
+
 function is_in(an_, an1_)
 
     n = length(an_)
