@@ -4,32 +4,69 @@ using Printf: @sprintf
 
 using ..BioLab
 
-LAYOUT =
-    Dict("width" => 800, "margin" => Dict("l" => 200, "r" => 200), "title" => Dict("x" => 0.5))
+function _merge_for_reduce(ke1_va1, ke2_va2)
 
-ANNOTATION = Dict(
-    "yref" => "paper",
-    "xref" => "paper",
-    "yanchor" => "middle",
-    "font" => Dict("size" => 10),
-    "showarrow" => false,
-)
+    return BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!)
 
-ANNOTATIONL = BioLab.Dict.merge(
-    ANNOTATION,
-    Dict("x" => -0.024, "xanchor" => "right"),
-    BioLab.Dict.set_with_last!,
-)
+end
 
-HEATMAP = Dict("type" => "heatmap", "showscale" => false)
+function _reduce(ke_va, ke_va__...)
+
+    if isempty(ke_va__)
+
+        return ke_va
+
+    else
+
+        return reduce(_merge_for_reduce, ke_va__; init = ke_va)
+
+    end
+
+end
+
+function _merge_layout(ke_va__...)
+
+    return _reduce(
+        Dict(
+            "width" => 800,
+            "margin" => Dict("l" => 200, "r" => 200),
+            "title" => Dict("x" => 0.5),
+        ),
+        ke_va__...,
+    )
+
+end
+
+function _merge_annotation(ke_va__...)
+
+    return _reduce(
+        Dict(
+            "yref" => "paper",
+            "xref" => "paper",
+            "yanchor" => "middle",
+            "font" => Dict("size" => 10),
+            "showarrow" => false,
+        ),
+        ke_va__...,
+    )
+
+end
+
+function _merge_annotationl(ke_va__...)
+
+    return _merge_annotation(Dict("x" => -0.024, "xanchor" => "right"), ke_va__...)
+
+end
+
+function _merge_heatmap(ke_va__...)
+
+    return _reduce(Dict("type" => "heatmap", "showscale" => false), ke_va__...)
+
+end
 
 function _make_target_annotation(y, ro)
 
-    return BioLab.Dict.merge(
-        ANNOTATIONL,
-        Dict("y" => y, "text" => "<b>$ro</b>"),
-        BioLab.Dict.set_with_last!,
-    )
+    return _merge_annotationl(Dict("y" => y, "text" => "<b>$ro</b>"))
 
 end
 
@@ -49,15 +86,13 @@ function _make_data_annotation(y, la, he, ro_, st)
 
             push!(
                 annotations,
-                BioLab.Dict.merge(
-                    ANNOTATION,
+                _merge_annotation(
                     Dict(
                         "y" => y,
                         "x" => _get_x(id),
                         "xanchor" => "center",
                         "text" => "<b>$text</b>",
                     ),
-                    BioLab.Dict.set_with_last!,
                 ),
             )
 
@@ -67,15 +102,11 @@ function _make_data_annotation(y, la, he, ro_, st)
 
     y -= he
 
-    for idy in 1:length(ro_)
+    for idy in eachindex(ro_)
 
         push!(
             annotations,
-            BioLab.Dict.merge(
-                ANNOTATIONL,
-                Dict("y" => y, "text" => BioLab.String.limit(ro_[idy], 16)),
-                BioLab.Dict.set_with_last!,
-            ),
+            _merge_annotationl(Dict("y" => y, "text" => BioLab.String.limit(ro_[idy], 16))),
         )
 
         sc, ma, pv, ad = st[idy, :]
@@ -92,10 +123,8 @@ function _make_data_annotation(y, la, he, ro_, st)
 
             push!(
                 annotations,
-                BioLab.Dict.merge(
-                    ANNOTATION,
+                _merge_annotation(
                     Dict("y" => y, "x" => _get_x(idx), "xanchor" => "center", "text" => text),
-                    BioLab.Dict.set_with_last!,
                 ),
             )
 
@@ -109,9 +138,17 @@ function _make_data_annotation(y, la, he, ro_, st)
 
 end
 
-function make(nat, co_, ta, ro_, da, st; ht = "")
+function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(), ht = "")
 
     # Sort target and data columns.
+
+    id_ = sortperm(ta; rev = !ic)
+
+    co_ = co_[id_]
+
+    ta = ta[id_]
+
+    da = da[:, id_]
 
     # Get statistics.
 
@@ -137,6 +174,8 @@ function make(nat, co_, ta, ro_, da, st; ht = "")
 
     # Cluster within a group.
 
+    # Plot
+
     n_ro, n_co = size(da)
 
     n_ro += 2
@@ -145,8 +184,7 @@ function make(nat, co_, ta, ro_, da, st; ht = "")
 
     he2 = he / 2
 
-    layout = BioLab.Dict.merge(
-        LAYOUT,
+    layout = _merge_layout(
         Dict(
             "height" => max(640, 24 * n_ro),
             "title" => Dict("text" => "Match Panel"),
@@ -162,14 +200,14 @@ function make(nat, co_, ta, ro_, da, st; ht = "")
                 _make_data_annotation(1 - he2 * 3, true, he, ro_, st),
             ),
         ),
-        BioLab.Dict.set_with_last!,
+        layout,
     )
 
-    HEATMAP["x"] = co_
+    heatmapx = Dict("x" => co_)
 
     data = [
-        BioLab.Dict.merge(
-            HEATMAP,
+        _merge_heatmap(
+            heatmapx,
             Dict(
                 "yaxis" => "y2",
                 "z" => [tap],
@@ -179,10 +217,9 @@ function make(nat, co_, ta, ro_, da, st; ht = "")
                 "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.COPLA),
                 "hoverinfo" => "x+z+text",
             ),
-            BioLab.Dict.set_with_last!,
         ),
-        BioLab.Dict.merge(
-            HEATMAP,
+        _merge_heatmap(
+            heatmapx,
             Dict(
                 "yaxis" => "y",
                 "y" => ro_,
@@ -193,7 +230,6 @@ function make(nat, co_, ta, ro_, da, st; ht = "")
                 "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.COPLA),
                 "hoverinfo" => "x+y+z+text",
             ),
-            BioLab.Dict.set_with_last!,
         ),
     ]
 
