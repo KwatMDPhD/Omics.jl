@@ -4,6 +4,36 @@ using Printf: @sprintf
 
 using ..BioLab
 
+function _normalize_target!(ta, st)
+
+    BioLab.Normalization.normalize_with_0!(ta)
+
+    clamp!(ta, -st, st)
+
+    return -st, st
+
+end
+
+function _normalize_target!(ta::Vector{Int}, st)
+
+    return minimum(ta), maximum(ta)
+
+end
+
+function _normalize_data!(da, st)
+
+    BioLab.Matrix.apply_by_row!(da, (ro) -> _normalize_target!(ro, st))
+
+    return -st, st
+
+end
+
+function _normalize_data!(da::Matrix{Int}, st)
+
+    return minimum(da), maximum(da)
+
+end
+
 function _merge_for_reduce(ke1_va1, ke2_va2)
 
     return BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!)
@@ -58,12 +88,6 @@ function _merge_annotationl(ke_va__...)
 
 end
 
-function _merge_heatmap(ke_va__...)
-
-    return _reduce(Dict("type" => "heatmap", "showscale" => false), ke_va__...)
-
-end
-
 function _make_target_annotation(y, ro)
 
     return _merge_annotationl(Dict("y" => y, "text" => "<b>$ro</b>"))
@@ -76,7 +100,7 @@ function _get_x(id)
 
 end
 
-function _make_data_annotation(y, la, he, ro_, st)
+function _make_data_annotation(y, la, he, ro_, fu)
 
     annotations = Vector{Dict{String, Any}}()
 
@@ -109,7 +133,7 @@ function _make_data_annotation(y, la, he, ro_, st)
             _merge_annotationl(Dict("y" => y, "text" => BioLab.String.limit(ro_[idy], 16))),
         )
 
-        sc, ma, pv, ad = st[idy, :]
+        sc, ma, pv, ad = fu[idy, :]
 
         sc = @sprintf("%.2f", sc)
 
@@ -138,7 +162,38 @@ function _make_data_annotation(y, la, he, ro_, st)
 
 end
 
-function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(), ht = "")
+function _merge_heatmap(ke_va__...)
+
+    return _reduce(Dict("type" => "heatmap", "showscale" => false), ke_va__...)
+
+end
+
+function _get_colorscale(::AbstractArray{Int})
+
+    return BioLab.Plot.fractionate(BioLab.Plot.COPLO)
+
+end
+
+function _get_colorscale(::AbstractArray{Float64})
+
+    return BioLab.Plot.fractionate(BioLab.Plot.COPLA)
+
+end
+
+function make(
+    nat,
+    co_,
+    ta,
+    nar,
+    ro_,
+    da,
+    fu;
+    ic = true,
+    n_ex = 8,
+    st = 4.0,
+    layout = Dict{String, Any}(),
+    ht = "",
+)
 
     # Sort target and data columns.
 
@@ -158,29 +213,37 @@ function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(
 
     tap = copy(ta)
 
+    rop_ = copy(ro_)
+
     dap = copy(da)
 
-    stp = copy(st)
+    fup = copy(fu)
 
-    sortperm(stp[:, 1])
+    id_ = reverse!(BioLab.Collection.get_extreme_id(fup[:, 1], n_ex))
 
-    # Process target.
+    rop_ = rop_[id_]
 
-    mit = 10
+    dap = dap[id_, :]
 
-    mat = 20
+    fup = fup[id_, :]
 
-    # Process data.
+    # Normalize target.
 
-    mid = 10
+    tapn = copy(tap)
 
-    mad = 20
+    tai, taa = _normalize_target!(tapn, st)
+
+    # Normalize data.
+
+    dapn = copy(dap)
+
+    dai, daa = _normalize_data!(dapn, st)
 
     # Cluster within a group.
 
-    # Plot
+    # Plot.
 
-    n_ro, n_co = size(da)
+    n_ro = length(rop_)
 
     n_ro += 2
 
@@ -190,7 +253,7 @@ function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(
 
     layout = _merge_layout(
         Dict(
-            "height" => max(640, 24 * n_ro),
+            "height" => max(400, 40 * n_ro),
             "title" => Dict("text" => "Match Panel"),
             "yaxis2" =>
                 Dict("domain" => (1 - he, 1.0), "showticklabels" => false, "tickvals" => ()),
@@ -201,7 +264,7 @@ function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(
             ),
             "annotations" => vcat(
                 _make_target_annotation(1 - he2, nat),
-                _make_data_annotation(1 - he2 * 3, true, he, ro_, stp),
+                _make_data_annotation(1 - he2 * 3, true, he, rop_, fup),
             ),
         ),
         layout,
@@ -214,11 +277,11 @@ function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(
             heatmapx,
             Dict(
                 "yaxis" => "y2",
-                "z" => [tap],
-                "text" => [ta],
-                "zmin" => mit,
-                "zmax" => mat,
-                "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.COPLA),
+                "z" => [tapn],
+                "text" => [tap],
+                "zmin" => tai,
+                "zmax" => taa,
+                "colorscale" => _get_colorscale(tapn),
                 "hoverinfo" => "x+z+text",
             ),
         ),
@@ -226,12 +289,12 @@ function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(
             heatmapx,
             Dict(
                 "yaxis" => "y",
-                "y" => ro_,
-                "z" => collect(eachrow(dap)),
-                "text" => collect(eachrow(da)),
-                "zmin" => mid,
-                "zmax" => mad,
-                "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.COPLA),
+                "y" => rop_,
+                "z" => collect(eachrow(dapn)),
+                "text" => collect(eachrow(dap)),
+                "zmin" => dai,
+                "zmax" => daa,
+                "colorscale" => _get_colorscale(dapn),
                 "hoverinfo" => "x+y+z+text",
             ),
         ),
@@ -239,7 +302,12 @@ function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(
 
     BioLab.Plot.plot(data, layout; ht)
 
-    return nothing
+    return BioLab.DataFrame.make(
+        nar,
+        ro_,
+        ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
+        fu,
+    )
 
 end
 
