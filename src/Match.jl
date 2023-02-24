@@ -156,17 +156,21 @@ function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(
 
     # Select rows to plot.
 
-    # Process target.
+    tap = copy(ta)
 
-    tap = ta * 10
+    dap = copy(da)
+
+    stp = copy(st)
+
+    sortperm(stp[:, 1])
+
+    # Process target.
 
     mit = 10
 
     mat = 20
 
     # Process data.
-
-    dap = da * 10
 
     mid = 10
 
@@ -197,7 +201,7 @@ function make(nat, co_, ta, ro_, da, st; ic = false, layout = Dict{String, Any}(
             ),
             "annotations" => vcat(
                 _make_target_annotation(1 - he2, nat),
-                _make_data_annotation(1 - he2 * 3, true, he, ro_, st),
+                _make_data_annotation(1 - he2 * 3, true, he, ro_, stp),
             ),
         ),
         layout,
