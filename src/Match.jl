@@ -4,7 +4,7 @@ using Printf: @sprintf
 
 using ..BioLab
 
-function _normalize!(fl_::Vector{Float64}, st)
+function _normalize!(fl_::AbstractVector{Float64}, st)
 
     BioLab.Normalization.normalize_with_0!(fl_)
 
@@ -14,7 +14,7 @@ function _normalize!(fl_::Vector{Float64}, st)
 
 end
 
-function _normalize!(fe_x_sa_x_fl::Matrix{Float64}, st)
+function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
     BioLab.Matrix.apply_by_row!(fe_x_sa_x_fl, (fl_) -> _normalize!(fl_, st))
 
@@ -186,10 +186,11 @@ function make(
     fe_x_sa_x_nu = fe_x_sa_x_nu[:, id_]
 
     # Get statistics.
+    # TODO:
 
     fe_x_st_x_nu = fu
 
-    # Sort and select rows to copy-plot.
+    # Sort and select rows to copy and plot.
 
     id_ = reverse!(BioLab.Collection.get_extreme_id(fe_x_st_x_nu[:, 1], n_ex))
 
@@ -205,13 +206,18 @@ function make(
 
     tai, taa = _normalize!(tan_, st)
 
+    println("🌈 $tan colors can range frm $tai to $taa.")
+
     # Normalize features.
 
     fe_x_sa_x_nupn = copy(fe_x_sa_x_nup)
 
-    dai, daa = _normalize!(fe_x_sa_x_nupn, st)
+    fei, fea = _normalize!(fe_x_sa_x_nupn, st)
+
+    println("🌈 $fen colors can range frm $fei to $fea.")
 
     # Cluster within groups.
+    # TODO:
 
     # Make layout.
 
@@ -264,8 +270,8 @@ function make(
                 "y" => fep_,
                 "z" => collect(eachrow(fe_x_sa_x_nupn)),
                 "text" => collect(eachrow(fe_x_sa_x_nup)),
-                "zmin" => dai,
-                "zmax" => daa,
+                "zmin" => fei,
+                "zmax" => fea,
                 "colorscale" => _color(fe_x_sa_x_nupn),
                 "hoverinfo" => "x+y+z+text",
             ),
