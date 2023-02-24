@@ -4,80 +4,63 @@ using Printf: @sprintf
 
 using ..BioLab
 
-function _normalize_target!(ta, st)
+function _normalize!(fl_::Vector{Float64}, st)
 
-    BioLab.Normalization.normalize_with_0!(ta)
+    BioLab.Normalization.normalize_with_0!(fl_)
 
-    clamp!(ta, -st, st)
-
-    return -st, st
-
-end
-
-function _normalize_target!(ta::Vector{Int}, st)
-
-    return minimum(ta), maximum(ta)
-
-end
-
-function _normalize_data!(da, st)
-
-    BioLab.Matrix.apply_by_row!(da, (ro) -> _normalize_target!(ro, st))
+    clamp!(fl_, -st, st)
 
     return -st, st
 
 end
 
-function _normalize_data!(da::Matrix{Int}, st)
+function _normalize!(fe_x_sa_x_fl::Matrix{Float64}, st)
 
-    return minimum(da), maximum(da)
+    BioLab.Matrix.apply_by_row!(fe_x_sa_x_fl, (fl_) -> _normalize!(fl_, st))
+
+    return -st, st
 
 end
 
-function _merge_for_reduce(ke1_va1, ke2_va2)
+function _normalize!(it, st)
+
+    return minimum(it), maximum(it)
+
+end
+
+# TODO: Add to `Dict`.
+function _merge(ke1_va1, ke2_va2)
 
     return BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!)
 
 end
 
-function _reduce(ke_va, ke_va__...)
-
-    if isempty(ke_va__)
-
-        return ke_va
-
-    else
-
-        return reduce(_merge_for_reduce, ke_va__; init = ke_va)
-
-    end
-
-end
-
 function _merge_layout(ke_va__...)
 
-    return _reduce(
-        Dict(
+    return reduce(
+        _merge,
+        ke_va__;
+        init = Dict(
             "width" => 800,
             "margin" => Dict("l" => 200, "r" => 200),
             "title" => Dict("x" => 0.5),
         ),
-        ke_va__...,
     )
 
 end
 
 function _merge_annotation(ke_va__...)
 
-    return _reduce(
-        Dict(
+    return reduce(
+        _merge,
+        ke_va__;
+        init = Dict(
             "yref" => "paper",
             "xref" => "paper",
             "yanchor" => "middle",
             "font" => Dict("size" => 10),
             "showarrow" => false,
         ),
-        ke_va__...,
     )
 
 end
@@ -88,7 +71,7 @@ function _merge_annotationl(ke_va__...)
 
 end
 
-function _make_target_annotation(y, ro)
+function _annotate(y, ro)
 
     return _merge_annotationl(Dict("y" => y, "text" => "<b>$ro</b>"))
 
@@ -100,7 +83,7 @@ function _get_x(id)
 
 end
 
-function _make_data_annotation(y, la, he, ro_, fu)
+function _annotate(y, la, he, fe_, fe_x_st_x_nu)
 
     annotations = Vector{Dict{String, Any}}()
 
@@ -126,22 +109,14 @@ function _make_data_annotation(y, la, he, ro_, fu)
 
     y -= he
 
-    for idy in eachindex(ro_)
+    for idy in eachindex(fe_)
 
         push!(
             annotations,
-            _merge_annotationl(Dict("y" => y, "text" => BioLab.String.limit(ro_[idy], 16))),
+            _merge_annotationl(Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], 24))),
         )
 
-        sc, ma, pv, ad = fu[idy, :]
-
-        sc = @sprintf("%.2f", sc)
-
-        ma = @sprintf("%.2f", ma)
-
-        pv = @sprintf("%.2f", pv)
-
-        ad = @sprintf("%.2f", ad)
+        sc, ma, pv, ad = (@sprintf("%.2f", nu) for nu in fe_x_st_x_nu[idy, :])
 
         for (idx, text) in enumerate(("$sc ($ma)", pv, ad))
 
@@ -164,30 +139,35 @@ end
 
 function _merge_heatmap(ke_va__...)
 
-    return _reduce(Dict("type" => "heatmap", "showscale" => false), ke_va__...)
+    return reduce(_merge, ke_va__; init = Dict("type" => "heatmap", "showscale" => false))
 
 end
 
-function _get_colorscale(::AbstractArray{Int})
+function _color(::AbstractArray{Int})
 
     return BioLab.Plot.fractionate(BioLab.Plot.COPLO)
 
 end
 
-function _get_colorscale(::AbstractArray{Float64})
+function _color(::AbstractArray{Float64})
 
     return BioLab.Plot.fractionate(BioLab.Plot.COPLA)
 
 end
 
 function make(
-    nat,
-    co_,
-    ta,
-    nar,
-    ro_,
-    da,
+    # Target.
+    tan,
+    sa1_,
+    ta_,
+    # Features.
+    fen,
+    fe_,
+    #sa2_,
+    fe_x_sa_x_nu,
+    # Function.
     fu;
+    # Keyword arguments.
     ic = true,
     n_ex = 8,
     st = 4.0,
@@ -195,57 +175,47 @@ function make(
     ht = "",
 )
 
-    # Sort target and data columns.
+    # Sort samples.
 
-    id_ = sortperm(ta; rev = !ic)
+    id_ = sortperm(ta_; rev = !ic)
 
-    co_ = co_[id_]
+    sa1_ = sa1_[id_]
 
-    ta = ta[id_]
+    ta_ = ta_[id_]
 
-    da = da[:, id_]
+    fe_x_sa_x_nu = fe_x_sa_x_nu[:, id_]
 
     # Get statistics.
 
-    # Sort statistics.
+    fe_x_st_x_nu = fu
 
-    # Select rows to plot.
+    # Sort and select rows to copy-plot.
 
-    tap = copy(ta)
+    id_ = reverse!(BioLab.Collection.get_extreme_id(fe_x_st_x_nu[:, 1], n_ex))
 
-    rop_ = copy(ro_)
+    fep_ = fe_[id_]
 
-    dap = copy(da)
+    fe_x_sa_x_nup = fe_x_sa_x_nu[id_, :]
 
-    fup = copy(fu)
-
-    id_ = reverse!(BioLab.Collection.get_extreme_id(fup[:, 1], n_ex))
-
-    rop_ = rop_[id_]
-
-    dap = dap[id_, :]
-
-    fup = fup[id_, :]
+    fe_x_st_x_nup = fe_x_st_x_nu[id_, :]
 
     # Normalize target.
 
-    tapn = copy(tap)
+    tan_ = copy(ta_)
 
-    tai, taa = _normalize_target!(tapn, st)
+    tai, taa = _normalize!(tan_, st)
 
-    # Normalize data.
+    # Normalize features.
 
-    dapn = copy(dap)
+    fe_x_sa_x_nupn = copy(fe_x_sa_x_nup)
 
-    dai, daa = _normalize_data!(dapn, st)
+    dai, daa = _normalize!(fe_x_sa_x_nupn, st)
 
-    # Cluster within a group.
+    # Cluster within groups.
 
-    # Plot.
+    # Make layout.
 
-    n_ro = length(rop_)
-
-    n_ro += 2
+    n_ro = length(fep_) + 2
 
     he = 1 / n_ro
 
@@ -263,25 +233,27 @@ function make(
                 "tickvals" => (),
             ),
             "annotations" => vcat(
-                _make_target_annotation(1 - he2, nat),
-                _make_data_annotation(1 - he2 * 3, true, he, rop_, fup),
+                _annotate(1 - he2, tan),
+                _annotate(1 - he2 * 3, true, he, fep_, fe_x_st_x_nup),
             ),
         ),
         layout,
     )
 
-    heatmapx = Dict("x" => co_)
+    # Make traces.
+
+    heatmapx = Dict("x" => sa1_)
 
     data = [
         _merge_heatmap(
             heatmapx,
             Dict(
                 "yaxis" => "y2",
-                "z" => [tapn],
-                "text" => [tap],
+                "z" => [tan_],
+                "text" => [ta_],
                 "zmin" => tai,
                 "zmax" => taa,
-                "colorscale" => _get_colorscale(tapn),
+                "colorscale" => _color(tan_),
                 "hoverinfo" => "x+z+text",
             ),
         ),
@@ -289,24 +261,26 @@ function make(
             heatmapx,
             Dict(
                 "yaxis" => "y",
-                "y" => rop_,
-                "z" => collect(eachrow(dapn)),
-                "text" => collect(eachrow(dap)),
+                "y" => fep_,
+                "z" => collect(eachrow(fe_x_sa_x_nupn)),
+                "text" => collect(eachrow(fe_x_sa_x_nup)),
                 "zmin" => dai,
                 "zmax" => daa,
-                "colorscale" => _get_colorscale(dapn),
+                "colorscale" => _color(fe_x_sa_x_nupn),
                 "hoverinfo" => "x+y+z+text",
             ),
         ),
     ]
 
+    # Plot and return.
+
     BioLab.Plot.plot(data, layout; ht)
 
     return BioLab.DataFrame.make(
-        nar,
-        ro_,
+        fen,
+        fe_,
         ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
-        fu,
+        fe_x_st_x_nu,
     )
 
 end
