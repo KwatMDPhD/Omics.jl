@@ -140,6 +140,10 @@ function simulate(n_ro, n_co, ho)
 
         return rand(n_ro, n_co)
 
+    elseif ho == "randn" # TODO `@test`.
+
+        return randn(n_ro, n_co)
+
     else
 
         error()

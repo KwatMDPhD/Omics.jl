@@ -26,7 +26,7 @@ function _trigger(fu, nu1_, nu2_)
 
 end
 
-function target(nu1_, fe_x_sa_x_nu2, fu)
+function target(fu, nu1_, fe_x_sa_x_nu2)
 
     return [_trigger(fu, nu1_, nu2_) for nu2_ in eachrow(fe_x_sa_x_nu2)]
 

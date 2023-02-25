@@ -2,6 +2,10 @@ module Match
 
 using Printf: @sprintf
 
+using Random: seed!, shuffle!
+
+using StatsBase: sample
+
 using ..BioLab
 
 function _normalize!(fl_::AbstractVector{Float64}, st)
@@ -156,6 +160,7 @@ function _color(::AbstractArray{Float64})
 end
 
 function make(
+    fu,
     # Target.
     tan,
     sa1_,
@@ -164,16 +169,19 @@ function make(
     fen,
     fe_,
     #sa2_,
-    fe_x_sa_x_nu,
-    # Function.
-    fu;
+    fe_x_sa_x_nu;
     # Keyword arguments.
+    ra = 1,
+    n_sa = 10,
+    n_pe = 10,
     ic = true,
     n_ex = 8,
     st = 4.0,
     layout = Dict{String, Any}(),
     ht = "",
 )
+
+    n_fe = length(fe_)
 
     # Sort samples.
 
@@ -186,9 +194,75 @@ function make(
     fe_x_sa_x_nu = fe_x_sa_x_nu[:, id_]
 
     # Get statistics.
-    # TODO:
 
-    fe_x_st_x_nu = fu
+    seed!(ra)
+
+
+    println("🧮 Computing scores with $fu")
+
+    sc_ = [fu(ta_, fe_x_sa_x_nu[n_fe, :]) for id in 1:n_fe]
+
+    if 0 < n_sa
+
+        println("🎲 Computing margin of error with $n_sa samplings")
+
+        ma_ = Vector{Float64}(undef, n_fe)
+
+        for id in 1:n_fe
+
+            nu_ = fe_x_sa_x_nu[n_fe, :]
+
+            scs_ = Vector{Float64}(undef, n_sa)
+
+            for idr in 1:n_sa
+
+                sample
+
+                scs_[idr] = fu(ta_, nu_)
+
+            end
+
+            ma_[id] = BioLab.Significance.get_margin_of_error(scs_)
+
+        end
+
+    else
+
+        ma_ = Vector{Float64}(undef, n_fe)
+
+    end
+
+    if 0 < n_pe
+
+        println("🎰 Computing p-values with $n_pe permutations")
+
+        co = copy(ta_)
+
+        ra_ = Vector{Float64}(undef, n_fe * n_pe)
+
+        for id in 1:n_fe
+
+            nu_ = fe_x_sa_x_nu[n_fe, :]
+
+            for idr in 1:n_pe
+
+                shuffle!(co)
+
+                ra_[n_fe * (id - 1) + idr] = fu(co, nu_)
+
+            end
+
+        end
+
+        pv_, ad_ = BioLab.Significance.get_p_value_and_adjust(sc_, ra_)
+
+    else
+
+        pv_ = ad_ = Vector{Float64}(undef, n_fe)
+
+    end
+
+    fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
 
     # Sort and select rows to copy and plot.
 
@@ -221,7 +295,7 @@ function make(
 
     # Make layout.
 
-    n_ro = length(fep_) + 2
+    n_ro = n_fe + 2
 
     he = 1 / n_ro
 
