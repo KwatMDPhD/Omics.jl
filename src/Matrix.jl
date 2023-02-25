@@ -130,25 +130,47 @@ function apply_by_row!(ro_x_co_x_an, fu!)
 
 end
 
-function simulate(n_ro, n_co, ho)
+function simulate(n_ro, n_co, ho; re = 0)
 
     if ho == "1.0:"
 
-        return convert(Base.Matrix, reshape(1.0:(n_ro * n_co), (n_ro, n_co)))
+        ro_x_co_x_nu = convert(Base.Matrix, reshape(1.0:(n_ro * n_co), (n_ro, n_co)))
 
     elseif ho == "rand"
 
-        return rand(n_ro, n_co)
+        ro_x_co_x_nu = rand(n_ro, n_co)
 
     elseif ho == "randn" # TODO `@test`.
 
-        return randn(n_ro, n_co)
+        ro_x_co_x_nu = randn(n_ro, n_co)
 
     else
 
         error()
 
     end
+
+    # TODO: `@test`.
+
+    if re == 1
+
+        for id in 2:2:n_ro
+
+            reverse!(view(ro_x_co_x_nu, id, :))
+
+        end
+
+    elseif re == 2
+
+        for id in 2:2:n_co
+
+            reverse!(view(ro_x_co_x_nu, :, id))
+
+        end
+
+    end
+
+    return ro_x_co_x_nu
 
 end
 

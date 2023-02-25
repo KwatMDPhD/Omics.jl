@@ -163,7 +163,7 @@ function make(
     fu,
     # Target.
     tan,
-    sa1_,
+    sa_,
     ta_,
     # Features.
     fen,
@@ -171,7 +171,7 @@ function make(
     #sa2_,
     fe_x_sa_x_nu;
     # Keyword arguments.
-    ra = 1,
+    ra = BioLab.RA,
     n_sa = 10,
     n_pe = 10,
     ic = true,
@@ -187,7 +187,7 @@ function make(
 
     id_ = sortperm(ta_; rev = !ic)
 
-    sa1_ = sa1_[id_]
+    sa_ = sa_[id_]
 
     ta_ = ta_[id_]
 
@@ -197,10 +197,17 @@ function make(
 
     seed!(ra)
 
-
     println("🧮 Computing scores with $fu")
 
-    sc_ = [fu(ta_, fe_x_sa_x_nu[n_fe, :]) for id in 1:n_fe]
+    sc_ = Vector{Float64}(undef, n_fe)
+
+    for id in 1:n_fe
+
+        nu_ = fe_x_sa_x_nu[id, :]
+
+        sc_[id] = fu(ta_, nu_)
+
+    end
 
     if 0 < n_sa
 
@@ -210,14 +217,14 @@ function make(
 
         for id in 1:n_fe
 
-            nu_ = fe_x_sa_x_nu[n_fe, :]
+            nu_ = fe_x_sa_x_nu[id, :]
 
             scs_ = Vector{Float64}(undef, n_sa)
 
             for idr in 1:n_sa
 
+                # TODO:
                 sample
-
                 scs_[idr] = fu(ta_, nu_)
 
             end
@@ -242,13 +249,11 @@ function make(
 
         for id in 1:n_fe
 
-            nu_ = fe_x_sa_x_nu[n_fe, :]
+            nu_ = fe_x_sa_x_nu[id, :]
 
             for idr in 1:n_pe
 
-                shuffle!(co)
-
-                ra_[n_fe * (id - 1) + idr] = fu(co, nu_)
+                ra_[n_fe * (id - 1) + idr] = fu(shuffle!(co), nu_)
 
             end
 
@@ -295,7 +300,7 @@ function make(
 
     # Make layout.
 
-    n_ro = n_fe + 2
+    n_ro = length(fep_) + 2
 
     he = 1 / n_ro
 
@@ -306,11 +311,11 @@ function make(
             "height" => max(400, 40 * n_ro),
             "title" => Dict("text" => "Match Panel"),
             "yaxis2" =>
-                Dict("domain" => (1 - he, 1.0), "showticklabels" => false, "tickvals" => ()),
+                Dict("domain" => (1 - he, 1.0), "dtick" => 1, "showticklabels" => false),
             "yaxis" => Dict(
                 "domain" => (0.0, 1 - he * 2),
+                "autorange" => "reversed",
                 "showticklabels" => false,
-                "tickvals" => (),
             ),
             "annotations" => vcat(
                 _annotate(1 - he2, tan),
@@ -322,7 +327,7 @@ function make(
 
     # Make traces.
 
-    heatmapx = Dict("x" => sa1_)
+    heatmapx = Dict("x" => sa_)
 
     data = [
         _merge_heatmap(
