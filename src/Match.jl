@@ -120,7 +120,7 @@ function _annotate(y, la, he, fe_, fe_x_st_x_nu)
             _merge_annotationl(Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], 24))),
         )
 
-        sc, ma, pv, ad = (@sprintf("%.2f", nu) for nu in fe_x_st_x_nu[idy, :])
+        sc, ma, pv, ad = (@sprintf("%.2g", nu) for nu in fe_x_st_x_nu[idy, :])
 
         for (idx, text) in enumerate(("$sc ($ma)", pv, ad))
 
@@ -161,27 +161,21 @@ end
 
 function make(
     fu,
-    # Target.
     tan,
-    sa_,
-    ta_,
-    # Features.
     fen,
     fe_,
-    #sa2_,
+    sa_,
+    ta_,
     fe_x_sa_x_nu;
-    # Keyword arguments.
-    ra = BioLab.RA,
-    n_sa = 10,
-    n_pe = 10,
     ic = true,
+    ra = BioLab.RA,
+    n_ma = 10,
+    n_pv = 10,
     n_ex = 8,
     st = 4.0,
     layout = Dict{String, Any}(),
-    ht = "",
+    di = "",
 )
-
-    n_fe = length(fe_)
 
     # Sort samples.
 
@@ -197,63 +191,71 @@ function make(
 
     seed!(ra)
 
+    n_fe = length(fe_)
+
     println("🧮 Computing scores with $fu")
 
     sc_ = Vector{Float64}(undef, n_fe)
 
-    for id in 1:n_fe
+    for idf in 1:n_fe
 
-        nu_ = fe_x_sa_x_nu[id, :]
+        nu_ = fe_x_sa_x_nu[idf, :]
 
-        sc_[id] = fu(ta_, nu_)
+        sc_[idf] = fu(ta_, nu_)
 
     end
 
-    if 0 < n_sa
+    if 0 < n_ma
 
-        println("🎲 Computing margin of error with $n_sa samplings")
+        println("🎲 Computing margin of error with $(BioLab.String.count_noun(n_ma, "sampling"))")
+
+        n_sa = length(sa_)
+
+        id_ = 1:n_sa
+
+        n_sm = ceil(Int, n_sa * 0.632)
 
         ma_ = Vector{Float64}(undef, n_fe)
 
-        for id in 1:n_fe
+        for idf in 1:n_fe
 
-            nu_ = fe_x_sa_x_nu[id, :]
+            nu_ = fe_x_sa_x_nu[idf, :]
 
-            scs_ = Vector{Float64}(undef, n_sa)
+            ra_ = Vector{Float64}(undef, n_ma)
 
-            for idr in 1:n_sa
+            for idr in 1:n_ma
 
-                # TODO:
-                sample
-                scs_[idr] = fu(ta_, nu_)
+                ids_ = sample(id_, n_sm; replace = false)
+
+                ra_[idr] = fu(ta_[ids_], nu_[ids_])
 
             end
 
-            ma_[id] = BioLab.Significance.get_margin_of_error(scs_)
+            ma_[idf] = BioLab.Significance.get_margin_of_error(ra_)
 
         end
 
     else
 
-        ma_ = Vector{Float64}(undef, n_fe)
+        ma_ = fill(NaN, n_fe)
 
     end
 
-    if 0 < n_pe
+    if 0 < n_pv
 
-        println("🎰 Computing p-values with $n_pe permutations")
+        println("🎰 Computing p-values with $(BioLab.String.count_noun(n_pv, "permutation"))")
 
         co = copy(ta_)
 
-        ra_ = Vector{Float64}(undef, n_fe * n_pe)
+        ra_ = Vector{Float64}(undef, n_fe * n_pv)
 
-        for id in 1:n_fe
+        for idf in 1:n_fe
 
-            nu_ = fe_x_sa_x_nu[id, :]
+            nu_ = fe_x_sa_x_nu[idf, :]
 
-            for idr in 1:n_pe
+            for idr in 1:n_pv
 
-                ra_[(id - 1) * n_pe + idr] = fu(shuffle!(co), nu_)
+                ra_[(idf - 1) * n_pv + idr] = fu(shuffle!(co), nu_)
 
             end
 
@@ -263,7 +265,7 @@ function make(
 
     else
 
-        pv_ = ad_ = Vector{Float64}(undef, n_fe)
+        pv_ = ad_ = fill(NaN, n_fe)
 
     end
 
@@ -278,6 +280,9 @@ function make(
     fe_x_sa_x_nup = fe_x_sa_x_nu[id_, :]
 
     fe_x_st_x_nup = fe_x_st_x_nu[id_, :]
+
+    # Cluster within groups.
+    # TODO:
 
     # Normalize target.
 
@@ -294,9 +299,6 @@ function make(
     fei, fea = _normalize!(fe_x_sa_x_nupn, st)
 
     println("🌈 $fen colors can range frm $fei to $fea.")
-
-    # Cluster within groups.
-    # TODO:
 
     # Make layout.
 
@@ -357,16 +359,35 @@ function make(
         ),
     ]
 
-    # Plot and return.
+    # Plot, write, and return.
 
+    if isempty(di)
+
+        ht = ""
+
+    else
+
+        ht = joinpath(di, "match_panel.tsv")
+
+    end
+
+    # TODO: Resize HTML.
     BioLab.Plot.plot(data, layout; ht)
 
-    return BioLab.DataFrame.make(
+    fe2_x_st2_x_nu2 = BioLab.DataFrame.make(
         fen,
         fe_,
         ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
         fe_x_st_x_nu,
     )
+
+    if !isempty(di)
+
+        BioLab.Table.write(joinpath(di, "feature_x_statistic_x_humber.tsv"), fe2_x_st2_x_nu2)
+
+    end
+
+    return fe2_x_st2_x_nu2
 
 end
 
