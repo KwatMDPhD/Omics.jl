@@ -253,7 +253,7 @@ function make(
 
             for idr in 1:n_pe
 
-                ra_[n_fe * (id - 1) + idr] = fu(shuffle!(co), nu_)
+                ra_[(id - 1) * n_pe + idr] = fu(shuffle!(co), nu_)
 
             end
 
