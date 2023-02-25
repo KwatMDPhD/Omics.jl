@@ -318,17 +318,21 @@ function plot_heat_map(
 
     n_ro, n_co = size(z)
 
-    axis = Dict("domain" => (0.0, 0.95))
+    domain1 = (0.0, 0.95)
 
-    axis2 = Dict("domain" => (0.96, 1.0), "tickvals" => ())
+    domain2 = (0.96, 1.0)
 
     layout = BioLab.Dict.merge(
         Dict(
             "title" => Dict("text" => "Heat Map"),
-            "yaxis" => merge(axis, Dict("title" => Dict("text" => "$nar (n=$n_ro)"))),
-            "xaxis" => merge(axis, Dict("title" => Dict("text" => "$nac (n=$n_co)"))),
-            "yaxis2" => axis2,
-            "xaxis2" => axis2,
+            "yaxis" => Dict(
+                "domain" => domain1,
+                "autorange" => "reversed",
+                "title" => Dict("text" => "$nar (n=$n_ro)"),
+            ),
+            "xaxis" => Dict("domain" => domain1, "title" => Dict("text" => "$nac (n=$n_co)")),
+            "yaxis2" => Dict("domain" => domain2, "autorange" => "reversed", "tickvals" => ()),
+            "xaxis2" => Dict("domain" => domain2, "tickvals" => ()),
         ),
         layout,
         BioLab.Dict.set_with_last!,
@@ -378,15 +382,12 @@ function plot_heat_map(
 
     end
 
-    # TODO: Check if Plotly has an option for flipping y.
-    fl_ = n_ro:-1:1
-
     push!(
         data,
         Dict(
             "type" => "heatmap",
-            "z" => collect(eachrow(z))[fl_],
-            "y" => y[fl_],
+            "z" => collect(eachrow(z)),
+            "y" => y,
             "x" => x,
             "colorscale" => colorscale,
             "colorbar" => Dict("x" => 1.05),
@@ -405,7 +406,7 @@ function plot_heat_map(
             data,
             BioLab.Dict.merge(
                 trace,
-                Dict("xaxis" => "x2", "z" => [[grr] for grr in grr_][fl_], "hoverinfo" => "z+y"),
+                Dict("xaxis" => "x2", "z" => [[grr] for grr in grr_], "hoverinfo" => "z+y"),
                 BioLab.Dict.set_with_last!,
             ),
         )
