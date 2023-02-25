@@ -87,7 +87,7 @@ function _get_x(id)
 
 end
 
-function _annotate(y, la, he, fe_, fe_x_st_x_nu)
+function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
     annotations = Vector{Dict{String, Any}}()
 
@@ -111,7 +111,7 @@ function _annotate(y, la, he, fe_, fe_x_st_x_nu)
 
     end
 
-    y -= he
+    y -= th
 
     for idy in eachindex(fe_)
 
@@ -133,7 +133,7 @@ function _annotate(y, la, he, fe_, fe_x_st_x_nu)
 
         end
 
-        y -= he
+        y -= th
 
     end
 
@@ -304,24 +304,26 @@ function make(
 
     n_ro = length(fep_) + 2
 
-    he = 1 / n_ro
+    th = 1 / n_ro
 
-    he2 = he / 2
+    th2 = th / 2
+
+    height = max(400, 40 * n_ro)
 
     layout = _merge_layout(
         Dict(
-            "height" => max(400, 40 * n_ro),
+            "height" => height,
             "title" => Dict("text" => "Match Panel"),
             "yaxis2" =>
-                Dict("domain" => (1 - he, 1.0), "dtick" => 1, "showticklabels" => false),
+                Dict("domain" => (1 - th, 1.0), "dtick" => 1, "showticklabels" => false),
             "yaxis" => Dict(
-                "domain" => (0.0, 1 - he * 2),
+                "domain" => (0.0, 1 - th * 2),
                 "autorange" => "reversed",
                 "showticklabels" => false,
             ),
             "annotations" => vcat(
-                _annotate(1 - he2, tan),
-                _annotate(1 - he2 * 3, true, he, fep_, fe_x_st_x_nup),
+                _annotate(1 - th2, tan),
+                _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nup),
             ),
         ),
         layout,
@@ -372,7 +374,7 @@ function make(
     end
 
     # TODO: Resize HTML.
-    BioLab.Plot.plot(data, layout; ht)
+    BioLab.Plot.plot(data, layout; he = height + 80, ht)
 
     fe2_x_st2_x_nu2 = BioLab.DataFrame.make(
         fen,

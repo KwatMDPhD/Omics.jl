@@ -75,7 +75,7 @@ function fractionate(co)
 
 end
 
-function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ht = "")
+function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ke_ar...)
 
     axis = Dict("automargin" => true)
 
@@ -102,7 +102,7 @@ function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), 
             ))),
         )
         """;
-        ht,
+        ke_ar...,
     )
 
 end

@@ -4,7 +4,7 @@ using DefaultApplication: open as _open
 
 using ..BioLab
 
-function write(di, so_, sc; ht = "", he = 800)
+function write(di, so_, sc; he = 800, ht = "")
 
     st = "display: flex; justify-content: center; align-items: center;"
 
