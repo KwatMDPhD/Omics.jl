@@ -124,7 +124,7 @@ function set_with_suffix!(ke_va, ke, va; pr = true)
 
 end
 
-function merge(ke1_va1, ke2_va2, ho; pr = true)
+function merge(ke1_va1, ke2_va2, fu; pr = true)
 
     ke_va = Base.Dict()
 
@@ -138,13 +138,13 @@ function merge(ke1_va1, ke2_va2, ho; pr = true)
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                ke_va[ke] = merge(va1, va2, ho; pr)
+                ke_va[ke] = merge(va1, va2, fu; pr)
 
             else
 
-                ho(ke_va, ke, va1; pr)
+                fu(ke_va, ke, va1; pr)
 
-                ho(ke_va, ke, va2; pr)
+                fu(ke_va, ke, va2; pr)
 
             end
 

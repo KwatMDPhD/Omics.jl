@@ -106,7 +106,7 @@ function make(an__)
 
 end
 
-function apply_by_column!(ro_x_co_x_an, fu!)
+function apply_by_column!(fu!, ro_x_co_x_an)
 
     for ve in eachcol(ro_x_co_x_an)
 
@@ -118,7 +118,7 @@ function apply_by_column!(ro_x_co_x_an, fu!)
 
 end
 
-function apply_by_row!(ro_x_co_x_an, fu!)
+function apply_by_row!(fu!, ro_x_co_x_an)
 
     for ve in eachrow(ro_x_co_x_an)
 

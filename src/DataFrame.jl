@@ -129,7 +129,7 @@ function collapse(ro_x_co_x_nu; fu = mean, pr = true)
 
 end
 
-function map_to(ro_x_co_x_st, ho, fr_, to; de = "", pr = false)
+function map_to(ro_x_co_x_st, fu, fr_, to; de = "", pr = false)
 
     fr_to = Dict{String, String}()
 
@@ -141,7 +141,7 @@ function map_to(ro_x_co_x_st, ho, fr_, to; de = "", pr = false)
 
         end
 
-        ho(fr_to, to, to; pr)
+        fu(fr_to, to, to; pr)
 
         for fr in fr_
 
@@ -163,7 +163,7 @@ function map_to(ro_x_co_x_st, ho, fr_, to; de = "", pr = false)
 
             for fr in fr_
 
-                ho(fr_to, fr, to; pr)
+                fu(fr_to, fr, to; pr)
 
             end
 

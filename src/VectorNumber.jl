@@ -76,7 +76,7 @@ function force_increasing_with_max!(nu_)
 
 end
 
-function skip_nan_and_apply!!(nu_, fu!)
+function skip_nan_and_apply!!(fu!, nu_)
 
     go_ = [!isnan(nu) for nu in nu_]
 
@@ -90,7 +90,7 @@ function skip_nan_and_apply!!(nu_, fu!)
 
 end
 
-function skip_nan_and_apply!(nu_, fu)
+function skip_nan_and_apply!(fu, nu_)
 
     go_ = [!isnan(nu) for nu in nu_]
 
