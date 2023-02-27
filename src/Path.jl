@@ -32,11 +32,11 @@ function shorten(pa, di; sh = 0)
 
 end
 
-function clean(pa)
+function clean(pa; pr = true)
 
     cl = replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
 
-    println("$pa 🧼 $cl")
+    BioLab.check_print(pr, "$pa 🧼 $cl")
 
     return cl
 

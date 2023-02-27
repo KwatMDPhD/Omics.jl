@@ -1,6 +1,6 @@
 module Plot
 
-using ColorSchemes: ColorScheme, plasma
+using ColorSchemes: ColorScheme, bwr, plasma
 
 using Colors: Colorant, hex
 
@@ -15,6 +15,8 @@ function _make_color_scheme(he_)
     return ColorScheme([parse(Colorant, he) for he in he_])
 
 end
+
+const COBWR = bwr
 
 const COPLA = plasma
 
@@ -91,14 +93,12 @@ function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), 
             $(write(BioLab.Dict.merge(
                 Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis),
                 layout,
-                BioLab.Dict.set_with_last!,
             ))),
             $(write(BioLab.Dict.merge(
                 Dict(
                     "displaylogo" => false,
                 ),
                 config,
-                BioLab.Dict.set_with_last!,
             ))),
         )
         """;
@@ -196,7 +196,7 @@ function plot_bar(
                 "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(Dict("barmode" => "stack"), layout, BioLab.Dict.set_with_last!);
+        BioLab.Dict.merge(Dict("barmode" => "stack"), layout);
         ke_ar...,
     )
 
@@ -249,7 +249,6 @@ function plot_histogram(
             "xaxis" => Dict("anchor" => "y"),
         ),
         layout,
-        BioLab.Dict.set_with_last!,
     )
 
     data = Vector{Dict{String, Any}}()
@@ -273,7 +272,6 @@ function plot_histogram(
                     "histnorm" => histnorm,
                     "xbins" => Dict("size" => xbins_size),
                 ),
-                BioLab.Dict.set_with_last!,
             ),
         )
 
@@ -291,7 +289,6 @@ function plot_histogram(
                         "marker" => Dict("symbol" => "line-ns-open", "size" => 16),
                         "hoverinfo" => "x+text",
                     ),
-                    BioLab.Dict.set_with_last!,
                 ),
             )
 
@@ -303,13 +300,29 @@ function plot_histogram(
 
 end
 
+function merge_colorbar(ke_va__...)
+
+    return reduce(
+        BioLab.Dict.merge,
+        ke_va__;
+        init = Dict(
+            "thicknessmode" => "fraction",
+            "thickness" => 0.024,
+            "len" => 1 / 2,
+            "ticks" => "outside",
+            "tickfont" => Dict("size" => 8),
+        ),
+    )
+
+end
+
 function plot_heat_map(
     z::AbstractMatrix,
     y = ["$id *" for id in 1:size(z, 1)],
     x = ["* $id" for id in 1:size(z, 2)];
     nar = "Row",
     nac = "Column",
-    colorscale = fractionate(COPLA),
+    colorscale = fractionate(COBWR),
     grr_ = [],
     grc_ = [],
     layout = Dict{String, Any}(),
@@ -335,14 +348,17 @@ function plot_heat_map(
             "xaxis2" => Dict("domain" => domain2, "tickvals" => ()),
         ),
         layout,
-        BioLab.Dict.set_with_last!,
     )
 
     data = Vector{Dict{String, Any}}()
 
     # TODO: Cluster within a group.
 
+    colorbarx = 1.0
+
     if !isempty(grr_)
+
+        colorbarx += 0.04
 
         if eltype(grr_) <: AbstractString
 
@@ -390,37 +406,46 @@ function plot_heat_map(
             "y" => y,
             "x" => x,
             "colorscale" => colorscale,
-            "colorbar" => Dict("x" => 1.05),
+            "colorbar" => merge_colorbar(Dict("x" => colorbarx)),
         ),
     )
 
-    trace = Dict(
-        "type" => "heatmap",
-        "colorscale" => fractionate(COPLO),
-        "colorbar" => Dict("x" => 1.15, "dtick" => 1),
-    )
+    trace = Dict("type" => "heatmap", "colorscale" => fractionate(COPLO))
 
     if !isempty(grr_)
+
+        colorbarx += 0.06
 
         push!(
             data,
             BioLab.Dict.merge(
                 trace,
-                Dict("xaxis" => "x2", "z" => [[grr] for grr in grr_], "hoverinfo" => "z+y"),
-                BioLab.Dict.set_with_last!,
+                Dict(
+                    "xaxis" => "x2",
+                    "z" => [[grr] for grr in grr_],
+                    "hoverinfo" => "z+y",
+                    "colorbar" => merge_colorbar(Dict("x" => colorbarx)),
+                ),
             ),
         )
 
     end
 
+
     if !isempty(grc_)
+
+        colorbarx += 0.06
 
         push!(
             data,
             BioLab.Dict.merge(
                 trace,
-                Dict("yaxis" => "y2", "z" => [grc_], "hoverinfo" => "z+x"),
-                BioLab.Dict.set_with_last!,
+                Dict(
+                    "yaxis" => "y2",
+                    "z" => [grc_],
+                    "hoverinfo" => "z+x",
+                    "colorbar" => merge_colorbar(Dict("x" => colorbarx)),
+                ),
             ),
         )
 
@@ -478,7 +503,6 @@ function plot_radar(
                             "direction" => "clockwise",
                             "tickfont" => Dict("size" => 32, "family" => "Optima"),
                         ),
-                        BioLab.Dict.set_with_last!,
                     ),
                     "radialaxis" => BioLab.Dict.merge(
                         axis,
@@ -486,7 +510,6 @@ function plot_radar(
                             "nticks" => 8,
                             "tickfont" => Dict("size" => 16, "family" => "Monospace"),
                         ),
-                        BioLab.Dict.set_with_last!,
                     ),
                 ),
                 "title" => Dict(
@@ -500,7 +523,6 @@ function plot_radar(
                 ),
             ),
             layout,
-            BioLab.Dict.set_with_last!,
         );
         ke_ar...,
     )

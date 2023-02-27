@@ -65,11 +65,7 @@ end
 
 function collapse(ro_x_co_x_nu; fu = mean, pr = true)
 
-    if pr
-
-        println("📐 Before $(size(ro_x_co_x_nu))")
-
-    end
+    BioLab.check_print(pr, "📐 Before $(size(ro_x_co_x_nu))")
 
     ro_id_ = OrderedDict{String, Vector{Int}}()
 
@@ -85,11 +81,7 @@ function collapse(ro_x_co_x_nu; fu = mean, pr = true)
 
     if length(ro_) == n
 
-        if pr
-
-            println("🤭 There are no rows to collapse.")
-
-        end
+        BioLab.check_print(pr, "🤭 There are no rows to collapse.")
 
         return ro_x_co_x_nu
 
@@ -119,11 +111,7 @@ function collapse(ro_x_co_x_nu; fu = mean, pr = true)
 
     roc_x_co_x_nuc = BioLab.DataFrame.make(ro, roc_, co_, mac)
 
-    if pr
-
-        println("📐 After $(size(roc_x_co_x_nuc))")
-
-    end
+    BioLab.check_print(pr, "📐 After $(size(roc_x_co_x_nuc)).")
 
     return roc_x_co_x_nuc
 

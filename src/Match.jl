@@ -20,7 +20,7 @@ end
 
 function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
-    BioLab.Matrix.apply_by_row!(fe_x_sa_x_fl, (fl_) -> _normalize!(fl_, st))
+    BioLab.Matrix.apply_by_row!(fl_ -> _normalize!(fl_, st), fe_x_sa_x_fl)
 
     return -st, st
 
@@ -32,17 +32,10 @@ function _normalize!(it, st)
 
 end
 
-# TODO: Add to `Dict`.
-function _merge(ke1_va1, ke2_va2)
-
-    return BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!)
-
-end
-
 function _merge_layout(ke_va__...)
 
     return reduce(
-        _merge,
+        BioLab.Dict.merge,
         ke_va__;
         init = Dict(
             "width" => 800,
@@ -56,7 +49,7 @@ end
 function _merge_annotation(ke_va__...)
 
     return reduce(
-        _merge,
+        BioLab.Dict.merge,
         ke_va__;
         init = Dict(
             "yref" => "paper",
@@ -143,7 +136,11 @@ end
 
 function _merge_heatmap(ke_va__...)
 
-    return reduce(_merge, ke_va__; init = Dict("type" => "heatmap", "showscale" => false))
+    return reduce(
+        BioLab.Dict.merge,
+        ke_va__;
+        init = Dict("type" => "heatmap", "showscale" => false),
+    )
 
 end
 
@@ -155,7 +152,7 @@ end
 
 function _color(::AbstractArray{Float64})
 
-    return BioLab.Plot.fractionate(BioLab.Plot.COPLA)
+    return BioLab.Plot.fractionate(BioLab.Plot.COBWR)
 
 end
 

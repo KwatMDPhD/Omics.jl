@@ -50,7 +50,7 @@ function plot(
 
         co = copy(w)
 
-        BioLab.Matrix.apply_by_row!(co, no!)
+        BioLab.Matrix.apply_by_row!(no!, co)
 
         BioLab.Plot.plot_heat_map(
             co[or_, :],
@@ -93,7 +93,7 @@ function plot(
 
         co = copy(h)
 
-        BioLab.Matrix.apply_by_column!(co, no!)
+        BioLab.Matrix.apply_by_column!(no!, co)
 
         BioLab.Plot.plot_heat_map(
             co[:, or_],
@@ -129,9 +129,9 @@ function factorize(a, n; ve = true, ke_ar...)
 
     if ve
 
-        println("♻️ Iterations: $(mf.niters)")
+        println("♻️ Iterations $(mf.niters).")
 
-        println("🏁 Objective value: $(BioLab.Number.format(mf.objvalue))")
+        println("🏁 Objective value $(BioLab.Number.format(mf.objvalue)).")
 
         plot((mf.W,), (mf.H,); ke_ar...)
 

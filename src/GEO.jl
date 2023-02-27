@@ -30,11 +30,7 @@ function read(gs; di = BioLab.TE, pr = true)
 
     if ispath(gz)
 
-        if pr
-
-            println("🤞 Using $gz")
-
-        end
+        BioLab.check_print(pr, "🤞 Using $gz")
 
     else
 
@@ -56,11 +52,7 @@ function read(gs; di = BioLab.TE, pr = true)
 
         if startswith(li, '^')
 
-            if pr
-
-                println("📍 $li")
-
-            end
+            BioLab.check_print(pr, "📍 $li")
 
             ty, bl = split(li[2:end], eq; limit = 2)
 
@@ -229,7 +221,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
         else
 
-            println("⚠️ A $sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  "))")
+            println("⚠️ A $sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  ")).")
 
         end
 
@@ -267,11 +259,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
     for (id, (pl, co_nu____)) in enumerate(pl_co_nu____)
 
-        if pr
-
-            println("🚉 $pl")
-
-        end
+        BioLab.check_print(pr, "🚉 $pl")
 
         fe_x_sa_x_nu = _outerjoin(co_nu____, pl)
 
@@ -285,13 +273,10 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
             n_fe = size(fe_x_sa_x_nu, 1)
 
-            if pr
-
-                println(
-                    "📛 Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $(BioLab.String.count_noun(n_fe,"feature")).",
-                )
-
-            end
+            BioLab.check_print(
+                pr,
+                "📛 Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $(BioLab.String.count_noun(n_fe,"feature")).",
+            )
 
         else
 

@@ -15,7 +15,7 @@ function print(ke_va; n = length(ke_va))
     ty = typeof(ke_va)
 
     println(
-        "🔦 $ty with $(BioLab.String.count_noun(n_ke, "key")) ➡️ $(BioLab.String.count_noun(n_va, "value")) (unique)",
+        "🪔 $ty with $(BioLab.String.count_noun(n_ke, "key")) ➡️ $(BioLab.String.count_noun(n_va, "value")) (unique)",
     )
 
     display(collect(ke_va)[1:n])
@@ -40,19 +40,15 @@ function set_with_first!(ke_va, ke, va; pr = true)
 
     if haskey(ke_va, ke)
 
-        if pr
+        vac = ke_va[ke]
 
-            vac = ke_va[ke]
+        if vac == va
 
-            if vac == va
+            BioLab.check_print(pr, "👯‍♂️ $ke ➡️ $va.")
 
-                #println("👯‍♀️ $ke ➡️ $va")
+        else
 
-            else
-
-                println("$ke ➡️ $vac (🙅 $va)")
-
-            end
+            BioLab.check_print(pr, "$ke ➡️ $vac (🙅 $va).")
 
         end
 
@@ -68,23 +64,27 @@ end
 
 function set_with_last!(ke_va, ke, va; pr = true)
 
-    if haskey(ke_va, ke) && pr
+    if haskey(ke_va, ke)
 
         vac = ke_va[ke]
 
         if vac == va
 
-            #println("👯‍♀️ $ke ➡️ $va")
+            BioLab.check_print(pr, "👯‍♀️ $ke ➡️ $va.")
 
         else
 
-            println("$ke ➡️ (🙅 $vac) $va")
+            BioLab.check_print(pr, "$ke ➡️ (🙅 $vac) $va")
+
+            ke_va[ke] = va
 
         end
 
-    end
+    else
 
-    ke_va[ke] = va
+        ke_va[ke] = va
+
+    end
 
     return nothing
 
@@ -110,11 +110,7 @@ function set_with_suffix!(ke_va, ke, va; pr = true)
 
         end
 
-        if pr
-
-            println("(🙋 $kec) $ke ➡️ $va")
-
-        end
+        BioLab.check_print(pr, "(🙋 $kec) $ke ➡️ $va")
 
     end
 
@@ -164,6 +160,12 @@ function merge(ke1_va1, ke2_va2, fu; pr = true)
 
 end
 
+function merge(ke1_va1, ke2_va2; pr = true)
+
+    return merge(ke1_va1, ke2_va2, set_with_last!; pr)
+
+end
+
 function read(pa::AbstractString)::Base.Dict
 
     ex = splitext(pa)[2]
@@ -190,7 +192,7 @@ function read(pa_)
 
     for pa in pa_
 
-        ke_va = merge(ke_va, read(pa), set_with_last!)
+        ke_va = merge(ke_va, read(pa))
 
     end
 

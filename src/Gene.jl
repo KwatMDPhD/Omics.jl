@@ -85,7 +85,7 @@ function rename(st_, st_na__...; pr = true)
 
     for st1_na1 in st_na__
 
-        st_na = BioLab.Dict.merge(st_na, st1_na1, BioLab.Dict.set_with_last!; pr)
+        st_na = BioLab.Dict.merge(st_na, st1_na1; pr)
 
     end
 
@@ -137,15 +137,14 @@ function rename(st_, st_na__...; pr = true)
 
     end
 
-    if pr
-
-        println("👍 $n_1 (kept)")
-
-        println("✌️ $n_2 (renamed)")
-
-        println("👎 $n_3 (failed to be rename)")
-
-    end
+    BioLab.check_print(
+        pr,
+        "👍 $n_1 (kept).",
+        "\n",
+        "✌️ $n_2 (renamed).",
+        "\n",
+        "👎 $n_3 (failed to be rename).",
+    )
 
     return na_, ma_
 

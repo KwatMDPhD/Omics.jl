@@ -40,6 +40,38 @@ function __init__()
 
 end
 
+function check_print(pr, ar...)
+
+    if pr
+
+        println(ar...)
+
+    end
+
+    return nothing
+
+end
+
+function print_header()
+
+    println("❀"^99)
+
+    return nothing
+
+end
+
+function print_header(st)
+
+    println("●"^99)
+
+    println(st)
+
+    println("◦"^99)
+
+    return nothing
+
+end
+
 macro check_error(ex)
 
     return quote

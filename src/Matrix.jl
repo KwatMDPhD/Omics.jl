@@ -30,7 +30,9 @@ function print(ro_x_co_x_an; n_ro = 3, n_co = 3)
 
     for idr_ in idr__, idc_ in idc__
 
-        println("🕯️ $idr_ x $idc_\n$(view(ro_x_co_x_an, idr_, idc_))")
+        println("🕯️ $idr_ x $idc_")
+
+        display(view(ro_x_co_x_an, idr_, idc_))
 
     end
 

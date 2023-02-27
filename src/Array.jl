@@ -26,7 +26,7 @@ end
 
 function error_duplicate(an_)
 
-    if length(an_) != length(Set(an_))
+    if !allunique(an_)
 
         error()
 
