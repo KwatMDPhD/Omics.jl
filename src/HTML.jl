@@ -31,7 +31,7 @@ function write(di, so_, sc; he = 800, ht = "")
 
     Base.write(ht, jo)
 
-    println("🖼️ Created $ht.")
+    println("🖼️  $ht.")
 
     if displayable("html")
 
