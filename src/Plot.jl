@@ -398,19 +398,23 @@ function plot_heat_map(
 
     end
 
+    heatmap = Dict("type" => "heatmap")
+
     push!(
         data,
-        Dict(
-            "type" => "heatmap",
-            "z" => collect(eachrow(z)),
-            "y" => y,
-            "x" => x,
-            "colorscale" => colorscale,
-            "colorbar" => merge_colorbar(Dict("x" => colorbarx)),
+        BioLab.Dict.merge(
+            heatmap,
+            Dict(
+                "z" => collect(eachrow(z)),
+                "y" => y,
+                "x" => x,
+                "colorscale" => colorscale,
+                "colorbar" => merge_colorbar(Dict("x" => colorbarx)),
+            ),
         ),
     )
 
-    trace = Dict("type" => "heatmap", "colorscale" => fractionate(COPLO))
+    heatmapg = BioLab.Dict.merge(heatmap, Dict("colorscale" => fractionate(COPLO)))
 
     if !isempty(grr_)
 
@@ -419,7 +423,7 @@ function plot_heat_map(
         push!(
             data,
             BioLab.Dict.merge(
-                trace,
+                heatmapg,
                 Dict(
                     "xaxis" => "x2",
                     "z" => [[grr] for grr in grr_],
@@ -439,7 +443,7 @@ function plot_heat_map(
         push!(
             data,
             BioLab.Dict.merge(
-                trace,
+                heatmapg,
                 Dict(
                     "yaxis" => "y2",
                     "z" => [grc_],
