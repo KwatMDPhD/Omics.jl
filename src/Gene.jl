@@ -14,7 +14,8 @@ function read_mouse()
 
 end
 
-function map_mouse(fe_x_in_x_an; pr = false)
+# TODO: Test multiple dispatch.
+function map_mouse(fe_x_in_x_an = read_mouse(); pr = false)
 
     ke_va = Dict{String, String}()
 
@@ -40,7 +41,8 @@ function read_ensembl()
 
 end
 
-function map_ensembl(fe_x_in_x_an; pr = false)
+# TODO: Test multiple dispatch.
+function map_ensembl(fe_x_in_x_an = read_ensembl(); pr = false)
 
     return BioLab.DataFrame.map_to(
         fe_x_in_x_an,
@@ -66,7 +68,8 @@ function read_hgnc()
 
 end
 
-function map_hgnc(fe_x_in_x_an; pr = false)
+# TODO: Test multiple dispatch.
+function map_hgnc(fe_x_in_x_an = read_hgnc(); pr = false)
 
     return BioLab.DataFrame.map_to(
         fe_x_in_x_an,
@@ -79,13 +82,13 @@ function map_hgnc(fe_x_in_x_an; pr = false)
 
 end
 
-function rename(st_, st_na__...; pr = true)
+function rename(st_, st_na__...; prm = false, pr = true)
 
     st_na = Dict{String, String}()
 
     for st1_na1 in st_na__
 
-        st_na = BioLab.Dict.merge(st_na, st1_na1; pr)
+        st_na = BioLab.Dict.merge(st_na, st1_na1; pr = prm)
 
     end
 
@@ -143,7 +146,7 @@ function rename(st_, st_na__...; pr = true)
         "\n",
         "✌️ $n_2 (renamed).",
         "\n",
-        "👎 $n_3 (failed to be rename).",
+        "👎 $n_3 (failed to rename).",
     )
 
     return na_, ma_
@@ -156,7 +159,8 @@ function read_uniprot()
 
 end
 
-function map_uniprot(pr_x_in_x_an; pr = false)
+# TODO: Test multiple dispatch.
+function map_uniprot(pr_x_in_x_an = read_uniprot(); pr = false)
 
     pr_io_an = Dict{String, Dict{String, Any}}()
 

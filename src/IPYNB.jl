@@ -30,7 +30,7 @@ function run(di, ig_)
 
         println("🚆 Running $nb ($id)")
 
-        # run(nb)
+        run(nb)
 
     end
 

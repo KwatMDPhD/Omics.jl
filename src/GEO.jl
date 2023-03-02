@@ -207,7 +207,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
     co_st____ = Vector{Dict{String, Vector{String}}}()
 
-    pl_co_nu____ = Dict{String, Vector{Dict{String, Vector{String}}}}()
+    pl_co_nu____ = Dict{String, Vector{Dict{String, Vector{Any}}}}()
 
     for (sa, ke_va) in sa_ke_va
 
@@ -227,13 +227,19 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
         pl = ke_va["!Sample_platform_id"]
 
-        co_nu____ = get!(pl_co_nu____, pl, Vector{Dict{String, Vector{String}}}())
+        co_nu____ = get!(pl_co_nu____, pl, Vector{Dict{String, Vector{Any}}}())
 
         if haskey(ke_va, "fe_x_in_x_an")
 
             fe_x_in_x_an = ke_va["fe_x_in_x_an"]
 
-            push!(co_nu____, Dict(pl => fe_x_in_x_an[!, 1], sa => fe_x_in_x_an[!, "VALUE"]))
+            push!(
+                co_nu____,
+                Dict(
+                    pl => fe_x_in_x_an[!, 1],
+                    sa => [parse(Float64, va) for va in fe_x_in_x_an[!, "VALUE"]],
+                ),
+            )
 
         else
 
