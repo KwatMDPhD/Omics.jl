@@ -253,9 +253,12 @@ function plot_histogram(
 
     data = Vector{Dict{String, Any}}()
 
+    showlegend = 1 < length(x_)
+
     for id in 1:n
 
         le = Dict(
+            "showlegend" => showlegend,
             "legendgroup" => id,
             "name" => name_[id],
             "x" => x_[id],
