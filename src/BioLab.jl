@@ -72,7 +72,7 @@ function print_header(st)
 
 end
 
-macro check_error(ex)
+macro is_error(ex)
 
     return quote
 

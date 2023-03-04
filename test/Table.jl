@@ -40,7 +40,7 @@ ro_x_co_x_an = DataFrame(
 
 ts = joinpath(te, "write.csv")
 
-@test @check_error BioLab.Table.write(ts, ro_x_co_x_an)
+@test @is_error BioLab.Table.write(ts, ro_x_co_x_an)
 
 ts = replace(ts, ".csv" => ".tsv")
 

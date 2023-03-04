@@ -2,13 +2,13 @@ include("_.jl")
 
 for (ar1, ar2) in (([], ()), ([1, 2], [""]), ([3 4], ["a", "b"]))
 
-    @test @check_error BioLab.Array.error_size(ar1, ar2)
+    @test @is_error BioLab.Array.error_size(ar1, ar2)
 
 end
 
 for ar_ in (([], []), ([1, 2], ["", "a"]), ([3, 4], ["b", "c"], ['d', 'e']), ([], [], []))
 
-    @test !@check_error BioLab.Array.error_size(ar_)
+    @test !@is_error BioLab.Array.error_size(ar_)
 
 end
 
@@ -26,13 +26,13 @@ end
 
 for an_ in ([1.0, 1, 2.0], [1 1 2], ["a", "a", "b"], [1 2.0; 2 3])
 
-    @test @check_error BioLab.Array.error_duplicate(an_)
+    @test @is_error BioLab.Array.error_duplicate(an_)
 
 end
 
 for an_ in ((), [], [1, 2, 3], ['a', 'b', 'c'], [1 2; 3 4])
 
-    @test !@check_error BioLab.Array.error_duplicate(an_)
+    @test !@is_error BioLab.Array.error_duplicate(an_)
 
 end
 

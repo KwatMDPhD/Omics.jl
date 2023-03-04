@@ -2,9 +2,9 @@ include("_.jl")
 
 nu__ = ([0.0, 1, 2], [-1, 0, 1 / 3, 1])
 
-@test @check_error BioLab.Normalization.normalize_with_01!([])
+@test @is_error BioLab.Normalization.normalize_with_01!([])
 
-@test @check_error BioLab.Normalization.normalize_with_01!([1.0, 1])
+@test @is_error BioLab.Normalization.normalize_with_01!([1.0, 1])
 
 for (nu_, re) in zip(nu__, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1]))
 
@@ -24,9 +24,9 @@ for (nu_, re) in zip(nu__, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1]))
 
 end
 
-@test @check_error BioLab.Normalization.normalize_with_0!([])
+@test @is_error BioLab.Normalization.normalize_with_0!([])
 
-@test @check_error BioLab.Normalization.normalize_with_0!([1.0, 1])
+@test @is_error BioLab.Normalization.normalize_with_0!([1.0, 1])
 
 for (nu_, re) in zip(nu__, ([-1.0, 0, 1], [-1.3, -0.09999999999999999, 0.30000000000000004, 1.1]))
 
@@ -46,9 +46,9 @@ for (nu_, re) in zip(nu__, ([-1.0, 0, 1], [-1.3, -0.09999999999999999, 0.3000000
 
 end
 
-@test @check_error BioLab.Normalization.normalize_with_sum!([])
+@test @is_error BioLab.Normalization.normalize_with_sum!([])
 
-@test @check_error BioLab.Normalization.normalize_with_sum!([-1.0, 1])
+@test @is_error BioLab.Normalization.normalize_with_sum!([-1.0, 1])
 
 for (nu_, re) in zip(nu__, ([0, 0.3333333333333333, 0.6666666666666666], []))
 

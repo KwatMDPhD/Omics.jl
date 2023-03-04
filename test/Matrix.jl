@@ -1,6 +1,6 @@
 include("_.jl")
 
-@test @check_error BioLab.Matrix.print(Matrix())
+@test @is_error BioLab.Matrix.print(Matrix())
 
 for (n_ro, n_co) in ((2, 2), (4, 2), (2, 4), (4, 4), (6, 6), (10, 10))
 
@@ -14,15 +14,15 @@ for (n_ro, n_co) in ((2, 2), (4, 2), (2, 4), (4, 4), (6, 6), (10, 10))
 
 end
 
-@test !@check_error BioLab.Matrix.error_bad(["a" "b"; "c" "d"], String)
+@test !@is_error BioLab.Matrix.error_bad(["a" "b"; "c" "d"], String)
 
-@test !@check_error BioLab.Matrix.error_bad([1 2; 3 4], Real)
+@test !@is_error BioLab.Matrix.error_bad([1 2; 3 4], Real)
 
-@test @check_error BioLab.Matrix.error_bad(["a" ""; "c" "d"], String)
+@test @is_error BioLab.Matrix.error_bad(["a" ""; "c" "d"], String)
 
 for ba in (Inf, -Inf, NaN)
 
-    @test @check_error BioLab.Matrix.error_bad([1 ba; 3 4], Real)
+    @test @is_error BioLab.Matrix.error_bad([1 ba; 3 4], Real)
 
 end
 
@@ -37,11 +37,11 @@ ba__ = (
 
 ro_x_co_x_ba = BioLab.Matrix.make(ba__)
 
-@test @check_error BioLab.Matrix.error_bad(ro_x_co_x_ba, Real)
+@test @is_error BioLab.Matrix.error_bad(ro_x_co_x_ba, Real)
 
 # @code_warntype BioLab.Matrix.error_bad(ro_x_co_x_ba, Real)
 
-@test @check_error BioLab.Matrix.make(([1, 2], [3, 4, 5]))
+@test @is_error BioLab.Matrix.make(([1, 2], [3, 4, 5]))
 
 for an__ in (
     ([1, 2, 3], [4, 5, 6]),

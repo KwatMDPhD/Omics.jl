@@ -122,7 +122,7 @@ de = "--"
 
 id_ = (1, 2, 1)
 
-@test @check_error BioLab.String.transplant(st1, "a--bb", de, id_)
+@test @is_error BioLab.String.transplant(st1, "a--bb", de, id_)
 
 st2 = "a--bb--ccc"
 

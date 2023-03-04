@@ -46,6 +46,6 @@ BioLab.print_header(st)
 
 # @code_warntype BioLab.print_header(st)
 
-@test BioLab.@check_error error()
+@test BioLab.@is_error error()
 
 BioLab.JL.run(@__DIR__, (r"^runtests\.jl$",))

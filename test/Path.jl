@@ -29,7 +29,7 @@ end
 
 pa = @__DIR__
 
-@test @check_error BioLab.Path.shorten(pa, "Shanks")
+@test @is_error BioLab.Path.shorten(pa, "Shanks")
 
 for (n, re) in (
     (0, "test"),
@@ -80,13 +80,13 @@ fi = "file.extension"
 
 for ex in ("extension", ".another_extension")
 
-    @test @check_error BioLab.Path.error_extension(fi, ex)
+    @test @is_error BioLab.Path.error_extension(fi, ex)
 
 end
 
 ex = ".extension"
 
-@test !@check_error BioLab.Path.error_extension(fi, ex)
+@test !@is_error BioLab.Path.error_extension(fi, ex)
 
 # @code_warntype BioLab.Path.error_extension(fi, ex)
 
@@ -104,11 +104,11 @@ ex = "new_extension"
 
 di = dirname(@__DIR__)
 
-@test @check_error BioLab.Path.error_missing(di, (pr, "missing/file", "missing/directory/"))
+@test @is_error BioLab.Path.error_missing(di, (pr, "missing/file", "missing/directory/"))
 
 for pr in ("test/Path.jl", "test/path.jl")
 
-    @test !@check_error BioLab.Path.error_missing(di, pr)
+    @test !@is_error BioLab.Path.error_missing(di, pr)
 
 end
 
@@ -161,9 +161,9 @@ BioLab.Path.move(fi1, replace(fi1, "di1" => "di3"))
 # TODO: `@test`.
 run(`tree $te`)
 
-@test @check_error BioLab.Path.move(di2, di3)
+@test @is_error BioLab.Path.move(di2, di3)
 
-@test !@check_error BioLab.Path.move(di2, di3; force = true)
+@test !@is_error BioLab.Path.move(di2, di3; force = true)
 
 # TODO: `@test`.
 run(`tree $te`)

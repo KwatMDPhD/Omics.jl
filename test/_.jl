@@ -1,3 +1,3 @@
 using Test
 
-using BioLab: BioLab, @check_error
+using BioLab: BioLab, @is_error
