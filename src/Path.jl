@@ -133,7 +133,7 @@ function empty(di)
 
     if isdir(di)
 
-        println("🚮 $di")
+        println("🗑️ $di")
 
         rm(di; recursive = true)
 
@@ -141,7 +141,7 @@ function empty(di)
 
     else
 
-        error()
+        @warn "$di is already empty."
 
     end
 
