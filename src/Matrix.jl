@@ -88,19 +88,19 @@ function error_bad(ro_x_co_x_an, ty)
 
 end
 
-function make(an__)
+function make(an___)
 
-    BioLab.Array.error_size(an__)
+    BioLab.Array.error_size(an___)
 
-    n_ro = length(an__)
+    n_ro = length(an___)
 
-    n_co = length(an__[1])
+    n_co = length(an___[1])
 
-    ro_x_co_x_an = Base.Matrix{BioLab.Collection.get_type(an__...)}(undef, (n_ro, n_co))
+    ro_x_co_x_an = Base.Matrix{BioLab.Collection.get_type(an___...)}(undef, (n_ro, n_co))
 
     for idr in 1:n_ro, idc in 1:n_co
 
-        ro_x_co_x_an[idr, idc] = an__[idr][idc]
+        ro_x_co_x_an[idr, idc] = an___[idr][idc]
 
     end
 
