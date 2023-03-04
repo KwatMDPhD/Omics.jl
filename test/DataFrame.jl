@@ -2,7 +2,7 @@ using DataFrames
 
 include("_.jl")
 
-an__ = (
+an___ = (
     vcat("Row Name", ["Column $id" for id in 1:5]),
     ["Row 1", 1, 2, 3, 4, 5.0],
     ["Row 2", 'A', 'B', 'C', 44, 55.0],
@@ -10,12 +10,12 @@ an__ = (
 )
 
 # TODO: `@test`.
-display(BioLab.DataFrame.make(an__))
+display(BioLab.DataFrame.make(an___))
 
-# @code_warntype BioLab.DataFrame.make(an__)
+# @code_warntype BioLab.DataFrame.make(an___)
 
 # 3.266 μs (43 allocations: 3.20 KiB)
-# @btime BioLab.DataFrame.make($an__)
+# @btime BioLab.DataFrame.make($an___)
 
 n_ro = 3
 
@@ -54,11 +54,11 @@ BioLab.DataFrame.separate(ro_x_co_x_an)[2][1] = st
 
 na_ = ("Name 1", "Name 2")
 
-an__ = ([1, 1.0, 2], [3, 3.0, 4, 4.0, 5])
+an___ = ([1, 1.0, 2], [3, 3.0, 4, 4.0, 5])
 
-BioLab.DataFrame._print_unique(na_, an__)
+BioLab.DataFrame._print_unique(na_, an___)
 
-# @code_warntype BioLab.DataFrame._print_unique(na_, an__)
+# @code_warntype BioLab.DataFrame._print_unique(na_, an___)
 
 ro_x_co_x_an = DataFrame(
     "Row Name" => ["Row $id" for id in 1:3],
@@ -75,7 +75,7 @@ BioLab.DataFrame.print_row(ro_x_co_x_an)
 
 # @code_warntype BioLab.DataFrame.print_row(ro_x_co_x_an)
 
-for an__ in (
+for an___ in (
     (
         ["Row Name", "Column 1", "Column 2"],
         ["Row 1", 1, 2],
@@ -96,7 +96,7 @@ for an__ in (
     ),
 )
 
-    ro_x_co_x_nu = BioLab.DataFrame.make(an__)
+    ro_x_co_x_nu = BioLab.DataFrame.make(an___)
 
     BioLab.print_header(ro_x_co_x_nu)
 

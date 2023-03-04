@@ -223,12 +223,12 @@ theta60 = collect(0:60:360)
 
 theta_ = [theta30, theta45, theta60]
 
-r__ = [theta30, theta45, theta60]
+r___ = [theta30, theta45, theta60]
 
 name_ = [30, 45, 60]
 
 ht = joinpath(te, "radar.html")
 
-BioLab.Plot.plot_radar(theta_, r__; name_, ht)
+BioLab.Plot.plot_radar(theta_, r___; name_, ht)
 
-# @code_warntype BioLab.Plot.plot_radar(theta_, r__; name_, ht)
+# @code_warntype BioLab.Plot.plot_radar(theta_, r___; name_, ht)

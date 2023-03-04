@@ -122,16 +122,16 @@ ve2 = ["a", "K", "t", "w"]
 @test BioLab.Collection.sort_like(([3, 1, 4, 2], ve1, ve2)) ==
       [[1, 2, 3, 4], ['e', 't', 'a', 'K'], ["K", "w", "a", "t"]]
 
-an__ = ([1, 3, 5, 6, 4, 2], "acefdb")
+an___ = ([1, 3, 5, 6, 4, 2], "acefdb")
 
-@test BioLab.Collection.sort_like(an__) == [[1, 2, 3, 4, 5, 6], "abcdef"]
+@test BioLab.Collection.sort_like(an___) == [[1, 2, 3, 4, 5, 6], "abcdef"]
 
-@test BioLab.Collection.sort_like(an__; ic = false) == [[6, 5, 4, 3, 2, 1], "fedcba"]
+@test BioLab.Collection.sort_like(an___; ic = false) == [[6, 5, 4, 3, 2, 1], "fedcba"]
 
-# @code_warntype BioLab.Collection.sort_like(an__)
+# @code_warntype BioLab.Collection.sort_like(an___)
 
 # 408.955 ns (9 allocations: 552 bytes)
-# @btime BioLab.Collection.sort_like($an__)
+# @btime BioLab.Collection.sort_like($an___)
 
 for (ar_, re) in (
     ((1, 2), Int),

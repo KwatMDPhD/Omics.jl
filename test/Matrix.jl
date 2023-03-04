@@ -26,7 +26,7 @@ for ba in (Inf, -Inf, NaN)
 
 end
 
-ba__ = (
+ba___ = (
     [missing, 1, 2, 3],
     [nothing, 2, 3, 4],
     [Inf, 3, 4, 5],
@@ -35,7 +35,7 @@ ba__ = (
     ["a", "b", "c", "d"],
 )
 
-ro_x_co_x_ba = BioLab.Matrix.make(ba__)
+ro_x_co_x_ba = BioLab.Matrix.make(ba___)
 
 @test @is_error BioLab.Matrix.error_bad(ro_x_co_x_ba, Real)
 
@@ -43,7 +43,7 @@ ro_x_co_x_ba = BioLab.Matrix.make(ba__)
 
 @test @is_error BioLab.Matrix.make(([1, 2], [3, 4, 5]))
 
-for an__ in (
+for an___ in (
     ([1, 2, 3], [4, 5, 6]),
     ([1, 2.0, 3], [4, 5, 6]),
     ([1, NaN, 3], [4, 5, 6]),
@@ -51,15 +51,15 @@ for an__ in (
     ([1, missing, 3], [4, 5, 6]),
     ([1, nothing, 3], [missing, 4, 5], [7, 8, NaN]),
     (['1', '2', '3'], ['4', '5', '6']),
-    ba__,
+    ba___,
 )
 
-    BioLab.print_header(an__)
+    BioLab.print_header(an___)
 
     # TODO: `@test`.
-    display(BioLab.Matrix.make(an__))
+    display(BioLab.Matrix.make(an___))
 
-    # @code_warntype BioLab.Matrix.make(an__)
+    # @code_warntype BioLab.Matrix.make(an___)
 
     # 78.479 ns (2 allocations: 224 bytes)
     # 90.300 ns (2 allocations: 224 bytes)
@@ -69,7 +69,7 @@ for an__ in (
     # 2.787 μs (9 allocations: 400 bytes)
     # 76.411 ns (2 allocations: 160 bytes)
     # 1.995 μs (28 allocations: 992 bytes)
-    # @btime BioLab.Matrix.make($an__)
+    # @btime BioLab.Matrix.make($an___)
 
 end
 
