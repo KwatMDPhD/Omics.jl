@@ -8,13 +8,13 @@ using StatsBase: countmap, mean
 
 using ..BioLab
 
-function make(an__)
+function make(an___)
 
-    BioLab.Array.error_size(an__)
+    BioLab.Array.error_size(an___)
 
-    co_ = an__[1]
+    co_ = an___[1]
 
-    return _DataFrame([[an_[id] for an_ in an__[2:end]] for id in eachindex(co_)], co_)
+    return _DataFrame([[an_[id] for an_ in an___[2:end]] for id in eachindex(co_)], co_)
 
 end
 
@@ -37,9 +37,9 @@ function separate(ro_x_co_x_an)
 
 end
 
-function _print_unique(na_, an__)
+function _print_unique(na_, an___)
 
-    for (na, an_) in zip(na_, an__)
+    for (na, an_) in zip(na_, an___)
 
         println("🔦 $na")
 

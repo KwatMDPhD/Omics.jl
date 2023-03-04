@@ -12,8 +12,8 @@ function plot(
     nar_ = ["Rows $id" for id in eachindex(w_)],
     nac_ = ["Columns $id" for id in eachindex(h_)],
     naf = "Factor",
-    ro__ = (["$na $id" for id in 1:size(ma, 1)] for (ma, na) in zip(w_, nar_)),
-    co__ = (["$na $id" for id in 1:size(ma, 2)] for (ma, na) in zip(h_, nac_)),
+    ro___ = (["$na $id" for id in 1:size(ma, 1)] for (ma, na) in zip(w_, nar_)),
+    co___ = (["$na $id" for id in 1:size(ma, 2)] for (ma, na) in zip(h_, nac_)),
     di = "",
 )
 
@@ -27,7 +27,7 @@ function plot(
 
     no! = BioLab.Normalization.normalize_with_0!
 
-    for (id, (w, ro_, nar)) in enumerate(zip(w_, ro__, nar_))
+    for (id, (w, ro_, nar)) in enumerate(zip(w_, ro___, nar_))
 
         title_text = "row$(id)_x_factor_x_positive"
 
@@ -70,7 +70,7 @@ function plot(
 
     end
 
-    for (id, (h, co_, nac)) in enumerate(zip(h_, co__, nac_))
+    for (id, (h, co_, nac)) in enumerate(zip(h_, co___, nac_))
 
         title_text = "factor_x_column$(id)_x_positive"
 

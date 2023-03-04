@@ -472,7 +472,7 @@ end
 
 function plot_radar(
     theta_,
-    r__;
+    r___;
     name_ = _set_name(theta_),
     marker_color_ = _set_color(theta_),
     layout = Dict{String, Any}(),
@@ -499,7 +499,7 @@ function plot_radar(
                 "line" => Dict("width" => 0),
                 "fill" => "toself",
                 "fillcolor" => marker_color,
-            ) for (theta, r_, name, marker_color) in zip(theta_, r__, name_, marker_color_)
+            ) for (theta, r_, name, marker_color) in zip(theta_, r___, name_, marker_color_)
         ],
         BioLab.Dict.merge(
             Dict(

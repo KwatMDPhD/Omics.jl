@@ -76,13 +76,13 @@ function pair_index(an_)
 
 end
 
-function get_common_start(an__)
+function get_common_start(an___)
 
-    le_ = [length(an_) for an_ in an__]
+    le_ = [length(an_) for an_ in an___]
 
     mi = minimum(le_)
 
-    sh = an__[findfirst(le == mi for le in le_)]
+    sh = an___[findfirst(le == mi for le in le_)]
 
     id = 1
 
@@ -91,7 +91,7 @@ function get_common_start(an__)
         an = sh[id]
 
         # TODO: Do not check the shortest one.
-        if any(an_[id] != an for an_ in an__)
+        if any(an_[id] != an for an_ in an___)
 
             break
 
@@ -105,17 +105,17 @@ function get_common_start(an__)
 
 end
 
-function sort_like(an__; ic = true)
+function sort_like(an___; ic = true)
 
-    so_ = sortperm(an__[1]; rev = !ic)
+    so_ = sortperm(an___[1]; rev = !ic)
 
-    return [an_[so_] for an_ in an__]
+    return [an_[so_] for an_ in an___]
 
 end
 
-function get_type(ar__...)
+function get_type(ar___...)
 
-    return eltype(vcat(ar__...))
+    return eltype(vcat(ar___...))
 
 end
 
