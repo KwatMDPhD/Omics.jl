@@ -109,17 +109,41 @@ function list(di; jo = false, ig_ = (r"^\.",), ke_ = ())
 
 end
 
-function make_temporary(pa)
+# TODO: Remove.
+function make_temporary(na)
 
-    pat = joinpath(tempdir(), pa)
+    pa = joinpath(tempdir(), na)
 
-    if ispath(pat)
+    if isdir(pa)
 
-        rm(pat; recursive = true)
+        empty(pa)
+
+    else
+
+        mkdir(pa)
 
     end
 
-    return mkdir(pat)
+    return pa
+
+end
+
+# TODO: `@test`.
+function empty(di)
+
+    if isdir(di)
+
+        println("🚮 $di")
+
+        rm(di; recursive = true)
+
+        mkdir(di)
+
+    else
+
+        error()
+
+    end
 
 end
 

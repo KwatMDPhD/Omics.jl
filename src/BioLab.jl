@@ -34,7 +34,7 @@ function __init__()
 
     ENV["COLUMNS"] = 80
 
-    mkpath(TE)
+    BioLab.Path.empty(TE)
 
     return nothing
 

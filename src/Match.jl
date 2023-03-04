@@ -366,7 +366,7 @@ function make(
 
     else
 
-        ht = joinpath(di, "match_panel.tsv")
+        ht = joinpath(di, "match_panel.html")
 
     end
 
