@@ -4,7 +4,9 @@ include("_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
 
-te = BioLab.Path.make_temporary("BioLab.Match.test")
+te = joinpath(tempdir(), "BioLab.test.Match")
+
+BioLab.Path.reset(te)
 
 fu = cor
 

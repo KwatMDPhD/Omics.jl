@@ -109,27 +109,7 @@ function list(di; jo = false, ig_ = (r"^\.",), ke_ = ())
 
 end
 
-# TODO: Remove.
-function make_temporary(na)
-
-    pa = joinpath(tempdir(), na)
-
-    if isdir(pa)
-
-        empty(pa)
-
-    else
-
-        mkdir(pa)
-
-    end
-
-    return pa
-
-end
-
-# TODO: `@test`.
-function empty(di)
+function reset(di)
 
     if isdir(di)
 
@@ -137,13 +117,15 @@ function empty(di)
 
         rm(di; recursive = true)
 
-        mkdir(di)
-
     else
 
-        @warn "$di is already empty."
+        @warn "$di is not a directory."
 
     end
+
+    mkdir(di)
+
+    return nothing
 
 end
 

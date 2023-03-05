@@ -26,7 +26,7 @@ const RA = 20121020
 
 const CA_ = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
 
-const TE = BioLab.Path.make_temporary("BioLab")
+const TE = joinpath(tempdir(), string(@__MODULE__))
 
 function __init__()
 
@@ -34,7 +34,7 @@ function __init__()
 
     ENV["COLUMNS"] = 80
 
-    BioLab.Path.empty(TE)
+    BioLab.Path.reset(TE)
 
     return nothing
 

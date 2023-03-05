@@ -8,7 +8,11 @@ so_ = ("SOURCE1", "SOURCE2")
 
 sc = "SCRIPT"
 
-ht = joinpath(BioLab.Path.make_temporary("BioLab.test.HTML"), "name.html")
+te = joinpath(tempdir(), "BioLab.test.HTML")
+
+BioLab.Path.reset(te)
+
+ht = joinpath(te, "name.html")
 
 display(displayable("html"))
 

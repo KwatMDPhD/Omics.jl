@@ -4,7 +4,9 @@ include("_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
 
-te = BioLab.Path.make_temporary("BioLab.test.FeatureSetEnrichment")
+te = joinpath(tempdir(), "BioLab.test.FeatureSetEnrichment")
+
+BioLab.Path.reset(te)
 
 sc_ = [-2.0, -1, 0, 0, 1, 2]
 

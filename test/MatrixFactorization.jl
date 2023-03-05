@@ -2,7 +2,9 @@ include("_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
 
-te = BioLab.Path.make_temporary("BioLab.test.MatrixFactorization")
+te = joinpath(tempdir(), "BioLab.test.MatrixFactorization")
+
+BioLab.Path.reset(te)
 
 function is_all_positive(ma)
 

@@ -155,14 +155,9 @@ display(BioLab.Path.list(ho; ke_))
 
 # ----------------------------------------------------------------------------------------------- #
 
-pa = "BioLab.test.Path"
+te = joinpath(tempdir(), "BioLab.test.Path")
 
-te = BioLab.Path.make_temporary(pa)
-
-# TODO: `@test`.
-display(te)
-
-# @code_warntype BioLab.Path.make_temporary(pa)
+BioLab.Path.reset(te)
 
 # ----------------------------------------------------------------------------------------------- #
 

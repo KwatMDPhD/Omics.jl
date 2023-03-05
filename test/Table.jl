@@ -4,7 +4,9 @@ include("_.jl")
 
 using DataFrames
 
-te = BioLab.Path.make_temporary("BioLab.test.Table")
+te = joinpath(tempdir(), "BioLab.test.Table")
+
+BioLab.Path.reset(te)
 
 di = joinpath(@__DIR__, "Table.data")
 

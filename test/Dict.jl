@@ -188,7 +188,11 @@ ke_va = Dict(
     "episode" => 1030,
 )
 
-js = joinpath(BioLab.Path.make_temporary("BioLab.test.Dict"), "write.json")
+te = joinpath(tempdir(), "BioLab.test.Dict")
+
+BioLab.Path.reset(te)
+
+js = joinpath(te, "write.json")
 
 BioLab.Dict.write(js, ke_va)
 
