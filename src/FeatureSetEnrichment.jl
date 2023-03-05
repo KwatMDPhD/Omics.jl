@@ -286,7 +286,7 @@ end
 
 function benchmark_myc()::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
 
-    di = joinpath(pkgdir(BioLab), "test", "FeatureSetEnrichment.data")
+    di = pkgdir(BioLab, "test", "FeatureSetEnrichment.data")
 
     da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 
