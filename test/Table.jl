@@ -1,5 +1,7 @@
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 using DataFrames
 
 te = BioLab.Path.make_temporary("BioLab.test.Table")
@@ -19,6 +21,8 @@ for na in ("titanic.tsv", "enst_gene.tsv.gz")
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 pa = joinpath(di, "12859_2019_2886_MOESM2_ESM.xlsx")
 
 xl = "HumanSpecific Genes"
@@ -26,6 +30,8 @@ xl = "HumanSpecific Genes"
 BioLab.Table.read(pa; xl)
 
 # @code_warntype BioLab.Table.read(pa; xl)
+
+# ----------------------------------------------------------------------------------------------- #
 
 co1 = 1:4
 

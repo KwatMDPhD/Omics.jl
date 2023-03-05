@@ -2,6 +2,8 @@ using OrderedCollections
 
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 for ty in (Dict, OrderedDict)
 
     BioLab.print_header(ty)
@@ -32,6 +34,8 @@ for ke_va in (Dict('a' => 1), Dict('a' => 1, "a" => 2), Dict('a' => 1, "a" => 2,
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 ke_va = Dict("k1" => "v1", "k2" => "v2", 3 => 4)
 
 @test BioLab.Dict.symbolize(ke_va) == Dict(:k1 => "v1", :k2 => "v2", Symbol(3) => 4)
@@ -40,6 +44,8 @@ ke_va = Dict("k1" => "v1", "k2" => "v2", 3 => 4)
 
 # 1.188 μs (9 allocations: 696 bytes) 
 # @btime BioLab.Dict.symbolize($ke_va)
+
+# ----------------------------------------------------------------------------------------------- #
 
 ke_va = Dict("Existing" => 1)
 
@@ -63,6 +69,8 @@ for (ke, va) in (("Existing", 1), ("Existing", 2), ("New", 3))
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 for (ke, va) in (("Existing", 1), ("Existing", 2), ("New", 3))
 
     BioLab.print_header("$ke ➡️ $va")
@@ -82,6 +90,8 @@ for (ke, va) in (("Existing", 1), ("Existing", 2), ("New", 3))
     # @btime BioLab.Dict.set_with_last!($co, $ke, $va; pr = $false) setup = (co = copy($ke_va))
 
 end
+
+# ----------------------------------------------------------------------------------------------- #
 
 for (ke, va) in (("Existing", 1), ("Existing", 2), ("New", 3))
 
@@ -103,6 +113,8 @@ for (ke, va) in (("Existing", 1), ("Existing", 2), ("New", 3))
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 ke1_va1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 
 ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
@@ -121,6 +133,8 @@ ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 # 1.658 μs (22 allocations: 2.03 KiB)
 # @btime BioLab.Dict.merge($ke1_va1, $ke2_va2, $BioLab.Dict.set_with_last!; pr = $false)
 
+# ----------------------------------------------------------------------------------------------- #
+
 ke1_va1 = Dict("Aa" => 1, 'b' => 2)
 
 ke2_va2 = Dict("Aa" => 3, 'b' => 2, 4 => 5)
@@ -128,6 +142,8 @@ ke2_va2 = Dict("Aa" => 3, 'b' => 2, 4 => 5)
 BioLab.Dict.merge(ke1_va1, ke2_va2)
 
 # @code_warntype BioLab.Dict.merge(ke1_va1, ke2_va2)
+
+# ----------------------------------------------------------------------------------------------- #
 
 da = joinpath(@__DIR__, "dict.data")
 
@@ -152,6 +168,8 @@ pa_ = (js1, js2, to)
 BioLab.Dict.print(BioLab.Dict.read(pa_))
 
 # @code_warntype BioLab.Dict.read(pa_)
+
+# ----------------------------------------------------------------------------------------------- #
 
 ke_va = Dict(
     "Luffy" => "Pirate King",

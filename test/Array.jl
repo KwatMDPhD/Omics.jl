@@ -1,5 +1,7 @@
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 for (ar1, ar2) in (([], ()), ([1, 2], [""]), ([3 4], ["a", "b"]))
 
     @test @is_error BioLab.Array.error_size(ar1, ar2)
@@ -23,6 +25,8 @@ for ar_ in (([1], [2.0], [3]), ([1], [2.0], ['a']))
     # @btime BioLab.Array.error_size($ar_)
 
 end
+
+# ----------------------------------------------------------------------------------------------- #
 
 for an_ in ([1.0, 1, 2.0], [1 1 2], ["a", "a", "b"], [1 2.0; 2 3])
 
@@ -62,6 +66,8 @@ for an_ in (
     # @btime BioLab.Array.error_duplicate($an_)
 
 end
+
+# ----------------------------------------------------------------------------------------------- #
 
 # TODO: Add to Julia.pro.
 # Using `Set` in the function is faster and allocates less than using `unique`.

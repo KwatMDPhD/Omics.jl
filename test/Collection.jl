@@ -1,5 +1,7 @@
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 for an_ in ([], [20, 40, 60, 50, 30, 10], collect("bdfhjlnprtvxzywusqomkigeca"))
 
     BioLab.print_header()
@@ -31,6 +33,8 @@ for an_ in ([], [20, 40, 60, 50, 30, 10], collect("bdfhjlnprtvxzywusqomkigeca"))
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 an_ = BioLab.CA_
 
 an1_ = ['1', '2', 'K']
@@ -41,6 +45,8 @@ an1_ = ['1', '2', 'K']
 an_id = Dict('A' => 1, '2' => 2, '3' => 3, 'Q' => 4, 'K' => 5)
 
 @test BioLab.Collection.is_in(an_id, an1_) == [false, true, false, false, true]
+
+# ----------------------------------------------------------------------------------------------- #
 
 fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_myc()
 
@@ -71,6 +77,8 @@ fe_id = Dict(fe => id for (id, fe) in enumerate(fe_))
 # 1.367 μs (2 allocations: 19.67 KiB) 
 # @btime BioLab.Collection.is_in($fe_id, $fe1_)
 
+# ----------------------------------------------------------------------------------------------- #
+
 an_ = ("Aa", "Ii", "Uu", "Ee", "Oo")
 
 @test BioLab.Collection.pair_index(an_) == (
@@ -82,6 +90,8 @@ an_ = ("Aa", "Ii", "Uu", "Ee", "Oo")
 
 # 197.218 ns (8 allocations: 1.03 KiB)
 # @btime BioLab.Collection.pair_index($an_)
+
+# ----------------------------------------------------------------------------------------------- #
 
 for (an_, re) in (
     (((), ()), ()),
@@ -112,6 +122,8 @@ for (an_, re) in (
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 ve1 = ['a', 'e', 'K', 't']
 
 ve2 = ["a", "K", "t", "w"]
@@ -132,6 +144,8 @@ an___ = ([1, 3, 5, 6, 4, 2], "acefdb")
 
 # 408.955 ns (9 allocations: 552 bytes)
 # @btime BioLab.Collection.sort_like($an___)
+
+# ----------------------------------------------------------------------------------------------- #
 
 for (ar_, re) in (
     ((1, 2), Int),
@@ -176,6 +190,8 @@ an = Dict(
     "2tu" => (2, 3, 1),
     "1ve" => [2, 3, 1],
 )
+
+# ----------------------------------------------------------------------------------------------- #
 
 # TODO: `@test`.
 BioLab.Dict.print(BioLab.Collection.sort_recursively(an))

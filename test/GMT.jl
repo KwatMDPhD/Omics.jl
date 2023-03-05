@@ -1,5 +1,7 @@
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 da = joinpath(@__DIR__, "gmt.data")
 
 gm1 = joinpath(da, "h.all.v7.1.symbols.gmt")
@@ -18,6 +20,8 @@ for gm in (gm1, gm2)
     # @code_warntype BioLab.GMT.read(gm)
 
 end
+
+# ----------------------------------------------------------------------------------------------- #
 
 # TODO: `@test`.
 BioLab.Dict.print(BioLab.GMT.read((gm1, gm1)); n)

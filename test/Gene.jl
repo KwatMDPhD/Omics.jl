@@ -1,5 +1,7 @@
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 n = 4
 
 fi = "Vegapunk.tsv"
@@ -12,12 +14,16 @@ println(BioLab.Gene._path(fi))
 # 70.526 ns (4 allocations: 200 bytes)
 # @btime BioLab.Gene._path($fi)
 
+# ----------------------------------------------------------------------------------------------- #
+
 mo = BioLab.Gene.read_mouse()
 
 # TODO: `@test`.
 display(mo)
 
 # @code_warntype BioLab.Gene.read_mouse()
+
+# ----------------------------------------------------------------------------------------------- #
 
 mo_na = BioLab.Gene.map_mouse(mo)
 
@@ -29,12 +35,16 @@ BioLab.Dict.print(mo_na; n)
 # 21.200 ms (672292 allocations: 31.57 MiB)
 # @btime BioLab.Gene.map_mouse($mo)
 
+# ----------------------------------------------------------------------------------------------- #
+
 en = BioLab.Gene.read_ensembl()
 
 # TODO: `@test`.
 display(en)
 
 # @code_warntype BioLab.Gene.read_ensembl()
+
+# ----------------------------------------------------------------------------------------------- #
 
 en_na = BioLab.Gene.map_ensembl(en)
 
@@ -46,12 +56,16 @@ BioLab.Dict.print(en_na; n)
 # 5.494 s (77690449 allocations: 4.40 GiB)
 # @btime BioLab.Gene.map_ensembl($en)
 
+# ----------------------------------------------------------------------------------------------- #
+
 hg = BioLab.Gene.read_hgnc()
 
 # TODO: `@test`.
 display(hg)
 
 # @code_warntype BioLab.Gene.read_hgnc()
+
+# ----------------------------------------------------------------------------------------------- #
 
 hg_na = BioLab.Gene.map_hgnc(hg)
 
@@ -62,6 +76,8 @@ BioLab.Dict.print(hg_na; n)
 
 # 58.506 ms (1032576 allocations: 45.22 MiB)
 # @btime BioLab.Gene.map_hgnc($hg)
+
+# ----------------------------------------------------------------------------------------------- #
 
 na_, ma_ = BioLab.Gene.rename(unique(skipmissing(en[!, "Gene name"])), mo_na, hg_na)
 
@@ -83,12 +99,16 @@ st_ = unique(skipmissing(en[!, "Gene name"]))
 # 660.254 ms (3464004 allocations: 152.50 MiB) 
 # @btime BioLab.Gene.rename($st_, $mo_na, $hg_na, $en_na; pr = $false)
 
+# ----------------------------------------------------------------------------------------------- #
+
 un = BioLab.Gene.read_uniprot()
 
 # TODO: `@test`.
 display(un)
 
 # @code_warntype BioLab.Gene.read_uniprot()
+
+# ----------------------------------------------------------------------------------------------- #
 
 pr_io_an = BioLab.Gene.map_uniprot(un)
 

@@ -2,6 +2,8 @@ using DataFrames
 
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 an___ = (
     vcat("Row Name", ["Column $id" for id in 1:5]),
     ["Row 1", 1, 2, 3, 4, 5.0],
@@ -39,6 +41,8 @@ display(ro_x_co_x_an)
 # 1.171 μs (26 allocations: 2.27 KiB)
 # @btime BioLab.DataFrame.make($ro, $ro_, $co_, $_x_co_x_an)
 
+# ----------------------------------------------------------------------------------------------- #
+
 @test BioLab.DataFrame.separate(ro_x_co_x_an) == (ro, ro_, co_, _x_co_x_an)
 
 st = ":("
@@ -52,6 +56,8 @@ BioLab.DataFrame.separate(ro_x_co_x_an)[2][1] = st
 # 2.245 μs (28 allocations: 2.09 KiB)
 # @btime BioLab.DataFrame.separate($ro_x_co_x_an)
 
+# ----------------------------------------------------------------------------------------------- #
+
 na_ = ("Name 1", "Name 2")
 
 an___ = ([1, 1.0, 2], [3, 3.0, 4, 4.0, 5])
@@ -60,6 +66,8 @@ BioLab.DataFrame._print_unique(na_, an___)
 
 # @code_warntype BioLab.DataFrame._print_unique(na_, an___)
 
+# ----------------------------------------------------------------------------------------------- #
+
 ro_x_co_x_an = DataFrame(
     "Row Name" => ["Row $id" for id in 1:3],
     "Column 1" => [1, 'A', ":)"],
@@ -67,13 +75,19 @@ ro_x_co_x_an = DataFrame(
     "Column 3" => [3, 'C', ":D"],
 )
 
+# ----------------------------------------------------------------------------------------------- #
+
 BioLab.DataFrame.print_column(ro_x_co_x_an)
 
 # @code_warntype BioLab.DataFrame.print_column(ro_x_co_x_an)
 
+# ----------------------------------------------------------------------------------------------- #
+
 BioLab.DataFrame.print_row(ro_x_co_x_an)
 
 # @code_warntype BioLab.DataFrame.print_row(ro_x_co_x_an)
+
+# ----------------------------------------------------------------------------------------------- #
 
 for an___ in (
     (
@@ -113,6 +127,8 @@ for an___ in (
     # @btime BioLab.DataFrame.collapse($ro_x_co_x_nu; pr = $pr)
 
 end
+
+# ----------------------------------------------------------------------------------------------- #
 
 ro_x_co_x_st = DataFrame(
     "M1" => ["M11", "M12", "M13", "M14"],

@@ -1,5 +1,7 @@
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 gs = "GSE122404"
 
 # TODO: `@test`.
@@ -9,6 +11,8 @@ ty_bl = BioLab.GEO.read(gs)
 
 # 897.817 ms (10424941 allocations: 814.04 MiB)
 # @btime BioLab.GEO.read($gs; pr = $false)
+
+# ----------------------------------------------------------------------------------------------- #
 
 pl_ke_va = ty_bl["PLATFORM"]
 
@@ -27,6 +31,8 @@ fe_na = BioLab.GEO._name(pl, fe_x_in_x_an)
 # 13.012 ms (287563 allocations: 10.75 MiB)
 # @btime BioLab.GEO._name($pl, $fe_x_in_x_an; pr = $false)
 
+# ----------------------------------------------------------------------------------------------- #
+
 # TODO: `@test`.
 fe_x_sa_x_an, fe_x_sa_x_nu_____... = BioLab.GEO.tabulate(ty_bl)
 
@@ -34,6 +40,8 @@ fe_x_sa_x_an, fe_x_sa_x_nu_____... = BioLab.GEO.tabulate(ty_bl)
 
 # 162.249 ms (360569 allocations: 139.39 MiB)
 # @btime BioLab.GEO.tabulate($ty_bl; pr = $false)
+
+# ----------------------------------------------------------------------------------------------- #
 
 pr = false
 

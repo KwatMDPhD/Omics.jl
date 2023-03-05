@@ -1,5 +1,7 @@
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 te = BioLab.Path.make_temporary("BioLab.test.MatrixFactorization")
 
 function is_all_positive(ma)
@@ -7,6 +9,8 @@ function is_all_positive(ma)
     return all(0 <= nu for nu in ma)
 
 end
+
+# ----------------------------------------------------------------------------------------------- #
 
 for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
@@ -41,6 +45,8 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
     # @btime BioLab.MatrixFactorization.factorize($ama, $n_fa; ve = $false)
 
 end
+
+# ----------------------------------------------------------------------------------------------- #
 
 n_ro = 7
 

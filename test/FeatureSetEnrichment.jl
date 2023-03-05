@@ -2,9 +2,13 @@ using DataFrames
 
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 te = BioLab.Path.make_temporary("BioLab.test.FeatureSetEnrichment")
 
 sc_ = [-2.0, -1, 0, 0, 1, 2]
+
+# ----------------------------------------------------------------------------------------------- #
 
 id = 1
 
@@ -25,6 +29,8 @@ for ex in (0.9, 1.0, 1.1, 2.0)
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 bo_ = [true, true, false, true, false, true]
 
 for (ex, re) in ((1.0, (6, 5.0, 2.0)), (2.0, (6, 9.0, 2.0)))
@@ -41,6 +47,8 @@ for (ex, re) in ((1.0, (6, 5.0, 2.0)), (2.0, (6, 9.0, 2.0)))
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 for (ex, re) in ((1.0, (6, 6.0, 5.0)), (2.0, (6, 10.0, 9.0)))
 
     BioLab.print_header(ex)
@@ -54,6 +62,8 @@ for (ex, re) in ((1.0, (6, 6.0, 5.0)), (2.0, (6, 10.0, 9.0)))
     # @btime BioLab.FeatureSetEnrichment._sum_all_and_1($sc_, $bo_, $ex)
 
 end
+
+# ----------------------------------------------------------------------------------------------- #
 
 BioLab.FeatureSetEnrichment._plot_mountain(
     ["Black Beard", "Law"],
@@ -77,6 +87,8 @@ BioLab.FeatureSetEnrichment._plot_mountain(
 #     sc = "Power",
 # )
 
+# ----------------------------------------------------------------------------------------------- #
+
 ca1 = "A2K"
 
 # TODO: `@test`.
@@ -86,6 +98,8 @@ display(BioLab.FeatureSetEnrichment.benchmark_card(ca1))
 
 # 46.970 ns (2 allocations: 240 bytes)
 # @btime BioLab.FeatureSetEnrichment.benchmark_card($ca1)
+
+# ----------------------------------------------------------------------------------------------- #
 
 for (n, n1) in ((3, 2), (4, 2), (5, 3))
 
@@ -103,6 +117,8 @@ for (n, n1) in ((3, 2), (4, 2), (5, 3))
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 # TODO: `@test`.
 display(BioLab.FeatureSetEnrichment.benchmark_myc())
 
@@ -110,6 +126,8 @@ display(BioLab.FeatureSetEnrichment.benchmark_myc())
 
 # 34.414 ms (580131 allocations: 96.05 MiB)
 # @btime BioLab.FeatureSetEnrichment.benchmark_myc()
+
+# ----------------------------------------------------------------------------------------------- #
 
 fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_card("AK")
 
@@ -126,6 +144,8 @@ for al in (BioLab.FeatureSetEnrichment.KS(), BioLab.FeatureSetEnrichment.KLioM()
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_myc()
 
 bo_ = BioLab.Collection.is_in(fe_, fe1_)
@@ -138,6 +158,8 @@ fe_x_sa_x_sc = DataFrame(
 )
 
 se_fe_ = BioLab.GMT.read(joinpath(@__DIR__, "FeatureSetEnrichment.data", "h.all.v7.1.symbols.gmt"))
+
+# ----------------------------------------------------------------------------------------------- #
 
 al = BioLab.FeatureSetEnrichment.KS()
 
@@ -153,6 +175,8 @@ al = BioLab.FeatureSetEnrichment.KS()
 # 11.463 ms (489 allocations: 8.62 MiB)
 # @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_x_sa_x_sc, $se_fe_)
 
+# ----------------------------------------------------------------------------------------------- #
+
 al = BioLab.FeatureSetEnrichment.KLi()
 
 # 222.208 μs (0 allocations: 0 bytes)
@@ -166,6 +190,8 @@ al = BioLab.FeatureSetEnrichment.KLi()
 
 # 38.171 ms (489 allocations: 8.62 MiB)
 # @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_x_sa_x_sc, $se_fe_)
+
+# ----------------------------------------------------------------------------------------------- #
 
 al = BioLab.FeatureSetEnrichment.KLioM()
 

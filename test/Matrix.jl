@@ -1,5 +1,7 @@
 include("_.jl")
 
+# ----------------------------------------------------------------------------------------------- #
+
 @test @is_error BioLab.Matrix.print(Matrix())
 
 for (n_ro, n_co) in ((2, 2), (4, 2), (2, 4), (4, 4), (6, 6), (10, 10))
@@ -13,6 +15,8 @@ for (n_ro, n_co) in ((2, 2), (4, 2), (2, 4), (4, 4), (6, 6), (10, 10))
     # @code_warntype BioLab.Matrix.print(ro_x_co_x_an)
 
 end
+
+# ----------------------------------------------------------------------------------------------- #
 
 @test !@is_error BioLab.Matrix.error_bad(["a" "b"; "c" "d"], String)
 
@@ -40,6 +44,8 @@ ro_x_co_x_ba = BioLab.Matrix.make(ba___)
 @test @is_error BioLab.Matrix.error_bad(ro_x_co_x_ba, Real)
 
 # @code_warntype BioLab.Matrix.error_bad(ro_x_co_x_ba, Real)
+
+# ----------------------------------------------------------------------------------------------- #
 
 @test @is_error BioLab.Matrix.make(([1, 2], [3, 4, 5]))
 
@@ -73,6 +79,8 @@ for an___ in (
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 ro_x_co_x_an = [
     1.0 10 100
     2 20 200
@@ -95,6 +103,8 @@ function fu!(nu_)
 
 end
 
+# ----------------------------------------------------------------------------------------------- #
+
 co = copy(ro_x_co_x_an)
 
 BioLab.Matrix.apply_by_column!(fu!, co)
@@ -113,6 +123,8 @@ BioLab.Matrix.apply_by_column!(fu!, co)
 # 54.078 ns (0 allocations: 0 bytes)
 # @btime BioLab.Matrix.apply_by_column!($fu!, $co) setup = (co = copy($ro_x_co_x_an))
 
+# ----------------------------------------------------------------------------------------------- #
+
 co = copy(ro_x_co_x_an)
 
 BioLab.Matrix.apply_by_row!(fu!, co)
@@ -130,6 +142,8 @@ BioLab.Matrix.apply_by_row!(fu!, co)
 
 # 53.963 ns (0 allocations: 0 bytes)
 # @btime BioLab.Matrix.apply_by_row!($fu!, $co) setup = (co = copy($ro_x_co_x_an))
+
+# ----------------------------------------------------------------------------------------------- #
 
 n_ro = 2
 
