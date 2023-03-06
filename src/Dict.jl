@@ -15,7 +15,7 @@ function print(ke_va; n = length(ke_va))
     ty = typeof(ke_va)
 
     println(
-        "🪔 $ty with $(BioLab.String.count_noun(n_ke, "key")) ➡️ $(BioLab.String.count_noun(n_va, "value")) (unique)",
+        "🗾 $ty with $(BioLab.String.count_noun(n_ke, "key")) ➡️ $(BioLab.String.count_noun(n_va, "value")) (unique)",
     )
 
     display(collect(ke_va)[1:n])

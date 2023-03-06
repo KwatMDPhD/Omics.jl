@@ -255,7 +255,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
         println("💾 Characteristics")
 
-        display(ch_x_sa_x_an)
+        BioLab.Matrix.print(ch_x_sa_x_an)
 
         BioLab.DataFrame.print_row(ch_x_sa_x_an)
 
@@ -294,7 +294,7 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
             println("💽 ($id) $pl Features")
 
-            display(fe_x_sa_x_nu)
+            BioLab.Matrix.print(fe_x_sa_x_nu)
 
         end
 
