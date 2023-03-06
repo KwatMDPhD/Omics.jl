@@ -54,7 +54,7 @@ end
 
 function print_header()
 
-    println("❀"^99)
+    println('❀'^99)
 
     return nothing
 
@@ -62,13 +62,29 @@ end
 
 function print_header(st)
 
-    println("●"^99)
+    println('●'^99)
 
     println(st)
 
-    println("◦"^99)
+    println('◦'^99)
 
     return nothing
+
+end
+
+# TODO: Test.
+function print_divider()
+
+    println('_'^99)
+
+    return nothing
+
+end
+
+# TODO: Test.
+macro __________________________________________________________________________________________________()
+
+    return :(print_divider())
 
 end
 
