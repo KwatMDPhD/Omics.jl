@@ -4,7 +4,7 @@ using ..BioLab
 
 function run(jl)
 
-    println("🚆 Running $jl")
+    BioLab.print_header("🚆 Running $jl")
 
     Base.run(`julia --project $jl`)
 
