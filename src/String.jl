@@ -18,7 +18,12 @@ end
 
 function count_noun(n, st)
 
-    if n <= 1
+    # TODO: Test.
+    if n < 0
+
+        error()
+
+    elseif n == 1
 
         return "$n $st"
 

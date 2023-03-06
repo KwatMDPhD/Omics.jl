@@ -1,5 +1,3 @@
-using Statistics
-
 include("_.jl")
 
 # ----------------------------------------------------------------------------------------------- #
@@ -8,7 +6,7 @@ te = joinpath(tempdir(), "BioLab.test.Match")
 
 BioLab.Path.reset(te)
 
-fu = cor
+fu = BioLab.Match._get_pearson_correlation
 
 # ----------------------------------------------------------------------------------------------- #
 

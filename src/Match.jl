@@ -4,6 +4,8 @@ using Printf: @sprintf
 
 using Random: seed!, shuffle!
 
+using Statistics: cor
+
 using StatsBase: sample
 
 using ..BioLab
@@ -20,7 +22,10 @@ end
 
 function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
-    BioLab.Matrix.apply_by_row!(fl_ -> _normalize!(fl_, st), fe_x_sa_x_fl)
+    # TODO: Test.
+    va_ = [!allequal(fl_) for fl_ in eachrow(fe_x_sa_x_fl)]
+
+    BioLab.Matrix.apply_by_row!(fl_ -> _normalize!(fl_, st), view(fe_x_sa_x_fl, va_, :))
 
     return -st, st
 
@@ -156,6 +161,13 @@ function _color(::AbstractArray{Float64})
 
 end
 
+# TODO: Test.
+function _get_pearson_correlation(nu1_, nu2_)
+
+    return cor(nu1_, nu2_)
+
+end
+
 function make(
     fu,
     tan,
@@ -168,11 +180,14 @@ function make(
     ra = BioLab.RA,
     n_ma = 10,
     n_pv = 10,
+    pl = true,
     n_ex = 8,
     st = 4.0,
     layout = Dict{String, Any}(),
     di = "",
 )
+
+    println("🎎 $tan and $fen")
 
     # Sort samples.
 
@@ -189,6 +204,8 @@ function make(
     seed!(ra)
 
     n_fe = length(fe_)
+
+    println("💎 $(BioLab.String.count_noun(n_fe, fen)).")
 
     println("🧮 Computing scores with $fu")
 
@@ -268,112 +285,11 @@ function make(
 
     fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
 
-    # Sort and select rows to copy and plot.
+    ba_ = [isnan(sc) for sc in sc_]
 
-    id_ = reverse!(BioLab.Collection.get_extreme_id(fe_x_st_x_nu[:, 1], n_ex))
+    println("💩 $(BioLab.String.count_noun(sum(ba_), "bad score")).")
 
-    fep_ = fe_[id_]
-
-    fe_x_sa_x_nup = fe_x_sa_x_nu[id_, :]
-
-    fe_x_st_x_nup = fe_x_st_x_nu[id_, :]
-
-    # Cluster within groups.
-    # TODO:
-
-    # Normalize target.
-
-    tan_ = copy(ta_)
-
-    tai, taa = _normalize!(tan_, st)
-
-    println("🌈 $tan colors can range frm $tai to $taa.")
-
-    # Normalize features.
-
-    fe_x_sa_x_nupn = copy(fe_x_sa_x_nup)
-
-    fei, fea = _normalize!(fe_x_sa_x_nupn, st)
-
-    println("🌈 $fen colors can range frm $fei to $fea.")
-
-    # Make layout.
-
-    n_ro = length(fep_) + 2
-
-    th = 1 / n_ro
-
-    th2 = th / 2
-
-    height = max(400, 40 * n_ro)
-
-    layout = _merge_layout(
-        Dict(
-            "height" => height,
-            "title" => Dict("text" => "Match Panel"),
-            "yaxis2" =>
-                Dict("domain" => (1 - th, 1.0), "dtick" => 1, "showticklabels" => false),
-            "yaxis" => Dict(
-                "domain" => (0.0, 1 - th * 2),
-                "autorange" => "reversed",
-                "showticklabels" => false,
-            ),
-            "annotations" => vcat(
-                _annotate(1 - th2, tan),
-                _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nup),
-            ),
-        ),
-        layout,
-    )
-
-    # Make traces.
-
-    heatmapx = Dict("x" => sa_)
-
-    data = [
-        _merge_heatmap(
-            heatmapx,
-            Dict(
-                "yaxis" => "y2",
-                "z" => [tan_],
-                "text" => [ta_],
-                "zmin" => tai,
-                "zmax" => taa,
-                "colorscale" => _color(tan_),
-                "hoverinfo" => "x+z+text",
-            ),
-        ),
-        _merge_heatmap(
-            heatmapx,
-            Dict(
-                "yaxis" => "y",
-                "y" => fep_,
-                "z" => collect(eachrow(fe_x_sa_x_nupn)),
-                "text" => collect(eachrow(fe_x_sa_x_nup)),
-                "zmin" => fei,
-                "zmax" => fea,
-                "colorscale" => _color(fe_x_sa_x_nupn),
-                "hoverinfo" => "x+y+z+text",
-            ),
-        ),
-    ]
-
-    # Plot, write, and return.
-
-    if isempty(di)
-
-        ht = ""
-
-    else
-
-        ht = joinpath(di, "match_panel.html")
-
-    end
-
-    # TODO: Resize HTML.
-    BioLab.Plot.plot(data, layout; he = height + 80, ht)
-
-    fe2_x_st2_x_nu2 = BioLab.DataFrame.make(
+    feature_x_statistic_x_humber = BioLab.DataFrame.make(
         fen,
         fe_,
         ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
@@ -382,11 +298,133 @@ function make(
 
     if !isempty(di)
 
-        BioLab.Table.write(joinpath(di, "feature_x_statistic_x_humber.tsv"), fe2_x_st2_x_nu2)
+        BioLab.Table.write(
+            joinpath(di, "feature_x_statistic_x_humber.tsv"),
+            feature_x_statistic_x_humber,
+        )
 
     end
 
-    return fe2_x_st2_x_nu2
+    # TODO: Test.
+    if pl
+
+        # Select not-NaN scored to plot
+
+        go_ = [!ba for ba in ba_]
+
+        fep_ = fe_[go_]
+
+        fe_x_sa_x_nup = fe_x_sa_x_nu[go_, :]
+
+        fe_x_st_x_nup = fe_x_st_x_nu[go_, :]
+
+        # Sort and select rows to copy and plot.
+
+        ex_ = reverse!(BioLab.Collection.get_extreme_id(fe_x_st_x_nup[:, 1], n_ex))
+
+        fep_ = fep_[ex_]
+
+        fe_x_sa_x_nup = fe_x_sa_x_nup[ex_, :]
+
+        fe_x_st_x_nup = fe_x_st_x_nup[ex_, :]
+
+        # Cluster within groups.
+        # TODO:
+
+        # Normalize target.
+
+        tan_ = copy(ta_)
+
+        tai, taa = _normalize!(tan_, st)
+
+        println("🌈 $tan colors can range frm $tai to $taa.")
+
+        # Normalize features.
+
+        fe_x_sa_x_nupn = copy(fe_x_sa_x_nup)
+
+        fei, fea = _normalize!(fe_x_sa_x_nupn, st)
+
+        println("🌈 $fen colors can range frm $fei to $fea.")
+
+        # Make layout.
+
+        n_ro = length(fep_) + 2
+
+        th = 1 / n_ro
+
+        th2 = th / 2
+
+        height = max(400, 40 * n_ro)
+
+        layout = _merge_layout(
+            Dict(
+                "height" => height,
+                "title" => Dict("text" => "Match Panel"),
+                "yaxis2" =>
+                    Dict("domain" => (1 - th, 1.0), "dtick" => 1, "showticklabels" => false),
+                "yaxis" => Dict(
+                    "domain" => (0.0, 1 - th * 2),
+                    "autorange" => "reversed",
+                    "showticklabels" => false,
+                ),
+                "annotations" => vcat(
+                    _annotate(1 - th2, tan),
+                    _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nup),
+                ),
+            ),
+            layout,
+        )
+
+        # Make traces.
+
+        heatmapx = Dict("x" => sa_)
+
+        data = [
+            _merge_heatmap(
+                heatmapx,
+                Dict(
+                    "yaxis" => "y2",
+                    "z" => [tan_],
+                    "text" => [ta_],
+                    "zmin" => tai,
+                    "zmax" => taa,
+                    "colorscale" => _color(tan_),
+                    "hoverinfo" => "x+z+text",
+                ),
+            ),
+            _merge_heatmap(
+                heatmapx,
+                Dict(
+                    "yaxis" => "y",
+                    "y" => fep_,
+                    "z" => collect(eachrow(fe_x_sa_x_nupn)),
+                    "text" => collect(eachrow(fe_x_sa_x_nup)),
+                    "zmin" => fei,
+                    "zmax" => fea,
+                    "colorscale" => _color(fe_x_sa_x_nupn),
+                    "hoverinfo" => "x+y+z+text",
+                ),
+            ),
+        ]
+
+        # Plot, write, and return.
+
+        if isempty(di)
+
+            ht = ""
+
+        else
+
+            ht = joinpath(di, "match_panel.html")
+
+        end
+
+        BioLab.Plot.plot(data, layout; he = height + 80, ht)
+
+    end
+
+    return feature_x_statistic_x_humber
 
 end
 
