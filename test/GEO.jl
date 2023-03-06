@@ -20,16 +20,16 @@ pl = collect(keys(pl_ke_va))[1]
 
 println(pl)
 
-fe_x_in_x_an = pl_ke_va[pl]["fe_x_in_x_an"]
+fe_x_io_x_an = pl_ke_va[pl]["fe_x_io_x_an"]
 
-fe_na = BioLab.GEO._name(pl, fe_x_in_x_an)
+fe_na = BioLab.GEO._name(pl, fe_x_io_x_an)
 
 @test fe_na["16657485"] == "XR_132471"
 
-# @code_warntype BioLab.GEO._name(pl, fe_x_in_x_an)
+# @code_warntype BioLab.GEO._name(pl, fe_x_io_x_an)
 
 # 13.012 ms (287563 allocations: 10.75 MiB)
-# @btime BioLab.GEO._name($pl, $fe_x_in_x_an; pr = $false)
+# @btime BioLab.GEO._name($pl, $fe_x_io_x_an; pr = $false)
 
 # ----------------------------------------------------------------------------------------------- #
 

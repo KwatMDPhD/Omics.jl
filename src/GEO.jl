@@ -74,16 +74,16 @@ function read(gs; di = BioLab.TE, pr = true)
 
             elseif endswith(li, "end")
 
-                fe_x_in_x_an = BioLab.DataFrame.make(pop!(ke_va, ket))
+                fe_x_io_x_an = BioLab.DataFrame.make(pop!(ke_va, ket))
 
-                if size(fe_x_in_x_an, 1) !=
+                if size(fe_x_io_x_an, 1) !=
                    parse(Int, pop!(ke_va, "!$(titlecase(ty))_data_row_count"))
 
                     error()
 
                 end
 
-                ke_va["fe_x_in_x_an"] = fe_x_in_x_an
+                ke_va["fe_x_io_x_an"] = fe_x_io_x_an
 
             else
 
@@ -113,7 +113,7 @@ function read(gs; di = BioLab.TE, pr = true)
 
 end
 
-function _name(pl, fe_x_in_x_an; pr = true)
+function _name(pl, fe_x_io_x_an; pr = true)
 
     pli = parse(Int, pl[4:end])
 
@@ -171,13 +171,13 @@ function _name(pl, fe_x_in_x_an; pr = true)
 
         println("🧭 Mapping platform features using the platform table ($ke ➡️ $va)")
 
-        display(first(fe_x_in_x_an, 2))
+        display(first(fe_x_io_x_an, 2))
 
     end
 
     fe_na = Dict{String, String}()
 
-    for (fe, na) in zip(fe_x_in_x_an[!, ke], fe_x_in_x_an[!, va])
+    for (fe, na) in zip(fe_x_io_x_an[!, ke], fe_x_io_x_an[!, va])
 
         if na isa AbstractString && !isempty(na) && na != "---"
 
@@ -229,15 +229,15 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
         co_nu____ = get!(pl_co_nu____, pl, Vector{Dict{String, Vector{Any}}}())
 
-        if haskey(ke_va, "fe_x_in_x_an")
+        if haskey(ke_va, "fe_x_io_x_an")
 
-            fe_x_in_x_an = ke_va["fe_x_in_x_an"]
+            fe_x_io_x_an = ke_va["fe_x_io_x_an"]
 
             push!(
                 co_nu____,
                 Dict(
-                    pl => fe_x_in_x_an[!, 1],
-                    sa => [parse(Float64, va) for va in fe_x_in_x_an[!, "VALUE"]],
+                    pl => fe_x_io_x_an[!, 1],
+                    sa => [parse(Float64, va) for va in fe_x_io_x_an[!, "VALUE"]],
                 ),
             )
 
@@ -271,9 +271,9 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
 
         pl_ke_va = ty_bl["PLATFORM"]
 
-        if haskey(pl_ke_va[pl], "fe_x_in_x_an")
+        if haskey(pl_ke_va[pl], "fe_x_io_x_an")
 
-            fe_na = _name(pl, pl_ke_va[pl]["fe_x_in_x_an"]; pr)
+            fe_na = _name(pl, pl_ke_va[pl]["fe_x_io_x_an"]; pr)
 
             fe_x_sa_x_nu[!, pl] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, pl]]
 

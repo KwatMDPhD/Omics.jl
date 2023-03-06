@@ -94,13 +94,13 @@ tan, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(n_fe, n_sa, "1.0:")
 
 tai_ = convert(Vector{Int}, ta_)
 
-fe_x_sa_x_in = convert(Matrix{Int}, fe_x_sa_x_nu)
+fe_x_sa_x_it = convert(Matrix{Int}, fe_x_sa_x_nu)
 
 for (ta_, fe_x_sa_x_nu, title_text) in (
     (ta_, fe_x_sa_x_nu, "Float x Float"),
     (tai_, fe_x_sa_x_nu, "Int x Float"),
-    (ta_, fe_x_sa_x_in, "Float x Int"),
-    (tai_, fe_x_sa_x_in, "Int x Int"),
+    (ta_, fe_x_sa_x_it, "Float x Int"),
+    (tai_, fe_x_sa_x_it, "Int x Int"),
 )
 
     layout = Dict("title" => Dict("text" => title_text))

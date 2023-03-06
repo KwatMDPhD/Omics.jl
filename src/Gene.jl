@@ -15,11 +15,11 @@ function read_mouse()
 end
 
 # TODO: Test multiple dispatch.
-function map_mouse(fe_x_in_x_an = read_mouse(); pr = false)
+function map_mouse(fe_x_io_an = read_mouse(); pr = false)
 
     ke_va = Dict{String, String}()
 
-    for (ke, va) in zip(fe_x_in_x_an[!, "Gene name"], fe_x_in_x_an[!, "Human gene name"])
+    for (ke, va) in zip(fe_x_io_an[!, "Gene name"], fe_x_io_an[!, "Human gene name"])
 
         if ismissing(ke) || ismissing(va)
 
@@ -42,10 +42,10 @@ function read_ensembl()
 end
 
 # TODO: Test multiple dispatch.
-function map_ensembl(fe_x_in_x_an = read_ensembl(); pr = false)
+function map_ensembl(fe_x_io_an = read_ensembl(); pr = false)
 
     return BioLab.DataFrame.map_to(
-        fe_x_in_x_an,
+        fe_x_io_an,
         BioLab.Dict.set_with_last!,
         [
             "Transcript stable ID version",
@@ -69,10 +69,10 @@ function read_hgnc()
 end
 
 # TODO: Test multiple dispatch.
-function map_hgnc(fe_x_in_x_an = read_hgnc(); pr = false)
+function map_hgnc(fe_x_io_an = read_hgnc(); pr = false)
 
     return BioLab.DataFrame.map_to(
-        fe_x_in_x_an,
+        fe_x_io_an,
         BioLab.Dict.set_with_last!,
         ["prev_symbol", "alias_symbol"],
         "symbol";
@@ -160,18 +160,18 @@ function read_uniprot()
 end
 
 # TODO: Test multiple dispatch.
-function map_uniprot(pr_x_in_x_an = read_uniprot(); pr = false)
+function map_uniprot(pr_x_io_x_an = read_uniprot(); pr = false)
 
     pr_io_an = Dict{String, Dict{String, Any}}()
 
-    in_ = names(pr_x_in_x_an)
+    io_ = names(pr_x_io_x_an)
 
-    for an_ in eachrow(pr_x_in_x_an)
+    for an_ in eachrow(pr_x_io_x_an)
 
         io_an = Dict{String, Any}()
 
         # TODO: Use indexing to speed up.
-        for (io, an) in zip(in_, an_)
+        for (io, an) in zip(io_, an_)
 
             if io == "Entry Name"
 
