@@ -6,7 +6,7 @@ using DataFrames
 
 te = joinpath(tempdir(), "BioLab.test.Table")
 
-BioLab.Path.reset(te)
+BioLab.Path.empty(te)
 
 di = joinpath(@__DIR__, "Table.data")
 

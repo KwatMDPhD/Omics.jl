@@ -10,7 +10,7 @@ sc = "SCRIPT"
 
 te = joinpath(tempdir(), "BioLab.test.HTML")
 
-BioLab.Path.reset(te)
+BioLab.Path.empty(te)
 
 ht = joinpath(te, "name.html")
 

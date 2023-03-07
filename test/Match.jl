@@ -4,7 +4,7 @@ include("_.jl")
 
 te = joinpath(tempdir(), "BioLab.test.Match")
 
-BioLab.Path.reset(te)
+BioLab.Path.empty(te)
 
 fu = BioLab.Match._get_pearson_correlation
 

@@ -190,7 +190,7 @@ ke_va = Dict(
 
 te = joinpath(tempdir(), "BioLab.test.Dict")
 
-BioLab.Path.reset(te)
+BioLab.Path.empty(te)
 
 js = joinpath(te, "write.json")
 

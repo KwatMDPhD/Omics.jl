@@ -109,7 +109,7 @@ function list(di; jo = false, ig_ = (r"^\.",), ke_ = ())
 
 end
 
-function reset(di)
+function empty(di)
 
     if isdir(di)
 

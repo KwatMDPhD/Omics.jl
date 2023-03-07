@@ -157,7 +157,7 @@ display(BioLab.Path.list(ho; ke_))
 
 te = joinpath(tempdir(), "BioLab.test.Path")
 
-BioLab.Path.reset(te)
+BioLab.Path.empty(te)
 
 # ----------------------------------------------------------------------------------------------- #
 

@@ -4,7 +4,7 @@ include("_.jl")
 
 te = joinpath(tempdir(), "BioLab.test.MatrixFactorization")
 
-BioLab.Path.reset(te)
+BioLab.Path.empty(te)
 
 function is_all_positive(ma)
 

@@ -4,7 +4,7 @@ include("_.jl")
 
 te = joinpath(tempdir(), "BioLab.test.Network")
 
-BioLab.Path.reset(te)
+BioLab.Path.empty(te)
 
 # ----------------------------------------------------------------------------------------------- #
 

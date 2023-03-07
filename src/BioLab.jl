@@ -36,7 +36,7 @@ function __init__()
 
     ENV["JULIA_STACKTRACE_ABBREVIATED"] = true
 
-    BioLab.Path.reset(TE)
+    BioLab.Path.empty(TE)
 
     return nothing
 
