@@ -360,7 +360,7 @@ function make(
         layout = _merge_layout(
             Dict(
                 "height" => height,
-                "title" => Dict("text" => "Match Panel"),
+                "title" => Dict("text" => "<b>$tan</b> and <b>$fen</b>"),
                 "yaxis2" =>
                     Dict("domain" => (1 - th, 1.0), "dtick" => 1, "showticklabels" => false),
                 "yaxis" => Dict(
