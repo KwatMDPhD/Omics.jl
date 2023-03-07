@@ -176,6 +176,7 @@ function make(
     sa_,
     ta_,
     fe_x_sa_x_nu;
+    pr = true,
     ic = true,
     ra = BioLab.RA,
     n_ma = 10,
@@ -187,7 +188,7 @@ function make(
     di = "",
 )
 
-    println("🎎 $tan and $fen")
+    BioLab.check_print(pr, "🎎 $tan and $fen")
 
     # Sort samples.
 
@@ -205,9 +206,9 @@ function make(
 
     n_fe = length(fe_)
 
-    println("💎 $(BioLab.String.count_noun(n_fe, fen)).")
+    BioLab.check_print(pr, "💎 $(BioLab.String.count_noun(n_fe, fen)).")
 
-    println("🧮 Computing scores with $fu")
+    BioLab.check_print(pr, "🧮 Computing scores with $fu")
 
     sc_ = Vector{Float64}(undef, n_fe)
 
@@ -221,7 +222,10 @@ function make(
 
     if 0 < n_ma
 
-        println("🎲 Computing margin of error with $(BioLab.String.count_noun(n_ma, "sampling"))")
+        BioLab.check_print(
+            pr,
+            "🎲 Computing margin of error with $(BioLab.String.count_noun(n_ma, "sampling"))",
+        )
 
         n_sa = length(sa_)
 
@@ -257,7 +261,10 @@ function make(
 
     if 0 < n_pv
 
-        println("🎰 Computing p-values with $(BioLab.String.count_noun(n_pv, "permutation"))")
+        BioLab.check_print(
+            pr,
+            "🎰 Computing p-values with $(BioLab.String.count_noun(n_pv, "permutation"))",
+        )
 
         co = copy(ta_)
 
@@ -287,7 +294,7 @@ function make(
 
     ba_ = [isnan(sc) for sc in sc_]
 
-    println("💩 $(BioLab.String.count_noun(sum(ba_), "bad score")).")
+    BioLab.check_print(pr, "💩 $(BioLab.String.count_noun(sum(ba_), "bad score")).")
 
     feature_x_statistic_x_humber = BioLab.DataFrame.make(
         fen,
@@ -337,7 +344,7 @@ function make(
 
         tai, taa = _normalize!(tan_, st)
 
-        println("🌈 $tan colors can range frm $tai to $taa.")
+        BioLab.check_print(pr, "🌈 $tan colors can range frm $tai to $taa.")
 
         # Normalize features.
 
@@ -345,7 +352,7 @@ function make(
 
         fei, fea = _normalize!(fe_x_sa_x_nupn, st)
 
-        println("🌈 $fen colors can range frm $fei to $fea.")
+        BioLab.check_print(pr, "🌈 $fen colors can range frm $fei to $fea.")
 
         # Make layout.
 
