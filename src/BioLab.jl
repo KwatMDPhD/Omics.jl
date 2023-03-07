@@ -72,22 +72,6 @@ function print_header(st)
 
 end
 
-# TODO: Test.
-function print_divider()
-
-    println('_'^99)
-
-    return nothing
-
-end
-
-# TODO: Test.
-macro __________________________________________________________________________________________________()
-
-    return :(print_divider())
-
-end
-
 macro is_error(ex)
 
     return quote
