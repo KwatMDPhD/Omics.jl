@@ -30,12 +30,6 @@ const TE = joinpath(tempdir(), string(@__MODULE__))
 
 function __init__()
 
-    ENV["LINES"] = 40
-
-    ENV["COLUMNS"] = 80
-
-    ENV["JULIA_STACKTRACE_ABBREVIATED"] = true
-
     BioLab.Path.empty(TE)
 
     return nothing
