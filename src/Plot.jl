@@ -61,6 +61,8 @@ const COASP = _make_color_scheme((
     "#ffd96a",
 ))
 
+const COGUA = _make_color_scheme(("#4e40d8", "#9017e6", "#20d9ba", "#ff1968"))
+
 const COHUM = _make_color_scheme(("#4b3c39", "#ffffff", "#ffddca"))
 
 const COSTA = _make_color_scheme(("#ffffff", "#8c1515"))
