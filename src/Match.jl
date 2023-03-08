@@ -149,9 +149,21 @@ function _merge_heatmap(ke_va__...)
 
 end
 
-function _color(::AbstractArray{Int})
+function _color(nu_::AbstractArray{Int})
 
-    return BioLab.Plot.fractionate(BioLab.Plot.COPLO)
+    # TODO: Test.
+
+    if length(unique(nu_)) < 3
+
+        co = BioLab.Plot.COBIN
+
+    else
+
+        co = BioLab.Plot.COPLO
+
+    end
+
+    return BioLab.Plot.fractionate(co)
 
 end
 
