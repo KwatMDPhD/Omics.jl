@@ -8,20 +8,24 @@ function write(di, so_, sc; he = 800, ht = "")
 
     st = "display: flex; justify-content: center; align-items: center;"
 
-    li_ = vcat(
-        "<!doctype html>",
-        """
-        <div style="$st height: $(he)px; width: 99%; background: #203838; margin: auto;">
-            <div id="$di" style="$st height: 99%; width: 99%; background: #f8f8f8;"></div>
-        </div>""",
-        ["<script src=\"$so\"></script>" for so in so_],
-        """
-        <script>
-        $sc
-        </script>""",
+    jo = join(
+        vcat(
+            "<!DOCTYPE html>",
+            "<html>",
+            "<head>",
+            "<meta charset=\"UTF-8\">",
+            "</head>",
+            "<div style=\"$st height: $(he)px; width: 99%; background: #203838; margin: auto;\">",
+            "<div id=\"$di\" style=\"$st height: 99%; width: 99%; background: #f8f8f8;\"></div>",
+            "</div>",
+            ["<script src=\"$so\"></script>" for so in so_],
+            "<script>",
+            sc,
+            "</script>",
+            "</html>",
+        ),
+        '\n',
     )
-
-    jo = join(li_, '\n')
 
     if isempty(ht)
 
@@ -33,25 +37,13 @@ function write(di, so_, sc; he = 800, ht = "")
 
     println("🖼️ $ht.")
 
-    if displayable("html")
+    try
 
-        display(Base.HTML(jo))
+        _open(ht)
 
-    else
+    catch
 
-        print("💥 HTML is not displayable")
-
-        try
-
-            _open(ht)
-
-            println('.')
-
-        catch
-
-            println(" nor openable.")
-
-        end
+        @warn "👺 Could not open $ht."
 
     end
 
