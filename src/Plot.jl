@@ -305,7 +305,13 @@ function plot_histogram(
 
 end
 
-function merge_colorbar(ke_va__...)
+function merge_colorbar(z, ke_va__...)
+
+    mi = minimum(z)
+
+    ma = maximum(z)
+
+    ti_ = mi:((ma - mi) / 8):ma
 
     return reduce(
         BioLab.Dict.merge,
@@ -314,6 +320,7 @@ function merge_colorbar(ke_va__...)
             "thicknessmode" => "fraction",
             "thickness" => 0.024,
             "len" => 1 / 2,
+            "tickvalues" => ti_,
             "ticks" => "outside",
             "tickfont" => Dict("size" => 8),
         ),
@@ -414,7 +421,7 @@ function plot_heat_map(
                 "y" => y,
                 "x" => x,
                 "colorscale" => colorscale,
-                "colorbar" => merge_colorbar(Dict("x" => colorbarx)),
+                "colorbar" => merge_colorbar(z, Dict("x" => colorbarx)),
             ),
         ),
     )
@@ -433,7 +440,7 @@ function plot_heat_map(
                     "xaxis" => "x2",
                     "z" => [[grr] for grr in grr_],
                     "hoverinfo" => "z+y",
-                    "colorbar" => merge_colorbar(Dict("x" => colorbarx)),
+                    "colorbar" => merge_colorbar(grr_, Dict("x" => colorbarx)),
                 ),
             ),
         )
@@ -453,7 +460,7 @@ function plot_heat_map(
                     "yaxis" => "y2",
                     "z" => [grc_],
                     "hoverinfo" => "z+x",
-                    "colorbar" => merge_colorbar(Dict("x" => colorbarx)),
+                    "colorbar" => merge_colorbar(grc_, Dict("x" => colorbarx)),
                 ),
             ),
         )
