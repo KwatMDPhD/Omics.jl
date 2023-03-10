@@ -8,6 +8,8 @@ using DataFrames: DataFrame
 
 using JSON3: write
 
+using Printf: @sprintf
+
 using ..BioLab
 
 function _make_color_scheme(he_)
@@ -305,13 +307,33 @@ function plot_histogram(
 
 end
 
+# TODO: Move elsewhere.
+function _range(ar, n)
+
+    mi = minimum(ar)
+
+    ma = maximum(ar)
+
+    return collect(mi:((ma - mi) / n):ma)
+
+end
+
+# TODO: Move elsewhere.
+function _range(ar::AbstractArray{Int}, n)
+
+    mi = minimum(ar)
+
+    ma = maximum(ar)
+
+    return collect(mi:cld(ma - mi, n):ma)
+
+end
+
 function merge_colorbar(z, ke_va__...)
 
-    mi = minimum(z)
+    tickvals = _range(z, 10)
 
-    ma = maximum(z)
-
-    ti_ = mi:((ma - mi) / 8):ma
+    ticktext = [@sprintf("%.2g", ti) for ti in tickvals]
 
     return reduce(
         BioLab.Dict.merge,
@@ -320,9 +342,11 @@ function merge_colorbar(z, ke_va__...)
             "thicknessmode" => "fraction",
             "thickness" => 0.024,
             "len" => 1 / 2,
-            "tickvalues" => ti_,
+            "tickvmode" => "array",
+            "tickvals" => tickvals,
+            "ticktext" => ticktext,
             "ticks" => "outside",
-            "tickfont" => Dict("size" => 8),
+            "tickfont" => Dict("size" => 10),
         ),
     )
 

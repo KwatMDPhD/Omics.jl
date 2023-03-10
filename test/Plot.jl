@@ -6,7 +6,6 @@ include("_.jl")
 
 # --------------------------------------------- #
 
-
 te = joinpath(tempdir(), "BioLab.test.Plot")
 
 BioLab.Path.empty(te)
@@ -33,7 +32,7 @@ co_ = (
     BioLab.Plot.COASP,
     BioLab.Plot.COHUM,
     BioLab.Plot.COSTA,
-    #BioLab.Plot.COGUA,
+    BioLab.Plot.COGUA,
     #BioLab.Plot.COAYA,
 )
 
@@ -196,7 +195,7 @@ n_ro = 2
 
 n_co = 4
 
-ro1_x_co1_x_nu = BioLab.Matrix.simulate(n_ro, n_co, "1.0:")
+ro1_x_co1_x_nu = convert(Matrix{Int}, BioLab.Matrix.simulate(n_ro, n_co, "1.0:"))
 
 BioLab.Plot.plot_heat_map(ro1_x_co1_x_nu)
 
