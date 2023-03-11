@@ -348,21 +348,44 @@ function make(
         fe_x_st_x_nup = fe_x_st_x_nup[ex_, :]
 
         # Cluster within groups.
-        # TODO:
+
+        if ta_ isa AbstractVector{Int}
+
+            println("🫂 Clustering within groups")
+
+            id_ = Vector{Int}()
+
+            for ta in unique(ta_)
+
+                idg_ = findall((ta2 == ta for ta2 in ta_))
+
+                or_ = BioLab.Clustering.hierarchize(fe_x_sa_x_nup[:, idg_], 2).order
+
+                append!(id_, idg_[or_])
+
+            end
+
+            sa_ = sa_[id_]
+
+            ta_ = ta_[id_]
+
+            fe_x_sa_x_nup = fe_x_sa_x_nup[:, id_]
+
+        end
 
         # Normalize target.
 
-        tan_ = copy(ta_)
+        tac_ = copy(ta_)
 
-        tai, taa = _normalize!(tan_, st)
+        tai, taa = _normalize!(tac_, st)
 
         BioLab.check_print(pr, "🌈 $tan colors can range frm $tai to $taa.")
 
         # Normalize features.
 
-        fe_x_sa_x_nupn = copy(fe_x_sa_x_nup)
+        fe_x_sa_x_nupc = copy(fe_x_sa_x_nup)
 
-        fei, fea = _normalize!(fe_x_sa_x_nupn, st)
+        fei, fea = _normalize!(fe_x_sa_x_nupc, st)
 
         BioLab.check_print(pr, "🌈 $fen colors can range frm $fei to $fea.")
 
@@ -404,11 +427,11 @@ function make(
                 heatmapx,
                 Dict(
                     "yaxis" => "y2",
-                    "z" => [tan_],
+                    "z" => [tac_],
                     "text" => [ta_],
                     "zmin" => tai,
                     "zmax" => taa,
-                    "colorscale" => _color(tan_),
+                    "colorscale" => _color(tac_),
                     "hoverinfo" => "x+z+text",
                 ),
             ),
@@ -417,11 +440,11 @@ function make(
                 Dict(
                     "yaxis" => "y",
                     "y" => fep_,
-                    "z" => collect(eachrow(fe_x_sa_x_nupn)),
+                    "z" => collect(eachrow(fe_x_sa_x_nupc)),
                     "text" => collect(eachrow(fe_x_sa_x_nup)),
                     "zmin" => fei,
                     "zmax" => fea,
-                    "colorscale" => _color(fe_x_sa_x_nupn),
+                    "colorscale" => _color(fe_x_sa_x_nupc),
                     "hoverinfo" => "x+y+z+text",
                 ),
             ),

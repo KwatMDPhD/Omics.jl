@@ -62,7 +62,7 @@ tan, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(n_fe, n_sa, "randn")
 
 for (n_ma, n_pv) in ((0, 10), (10, 0), (0, 0), (10, 10), (100, 100))
 
-    layout = Dict("title" => Dict("text" => "$n_ma & $n_pv"))
+    layout = Dict("title" => Dict("text" => "$n_ma and $n_pv"))
 
     fe_x_st_x_nu = BioLab.Match.make(fu, tan, fen, fe_, sa_, ta_, fe_x_sa_x_nu; n_ma, n_pv, layout)
 
@@ -127,12 +127,41 @@ for (n_fe, n_sa) in ((2, 2), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 
 
     tan, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(n_fe, n_sa, "randn")
 
-    ti = "$(n_fe) x $(n_sa)"
+    layout = Dict("title" => Dict("text" => "$(n_fe) by $(n_sa)"))
 
-    layout = Dict("title" => Dict("text" => ti))
+    BioLab.Match.make(fu, tan, fen, fe_, sa_, ta_, fe_x_sa_x_nu; n_ex = 32, layout)
 
-    di = te
+end
 
-    BioLab.Match.make(fu, tan, fen, fe_, sa_, ta_, fe_x_sa_x_nu; n_ex = 32, layout, di)
+# --------------------------------------------- #
+
+n_gr = 3
+
+n_sa = 6
+
+n_fe = 4
+
+tan = "Group"
+
+fen = "Feature"
+
+fe_ = ["Feature $id" for id in 1:n_fe]
+
+sa_ = vec(["$gr$ch" for gr in 1:n_gr, ch in ('A':'Z')[1:n_sa]])
+
+ta_ = repeat(1:n_gr, n_sa)
+
+for ic in (true, false)
+
+    for po_ in ((0, 0, 1, 1, 2, 3), (0, 1, 2, 3, 1, 0))
+
+        fe_x_sa_x_nu =
+            [ro^po for ro in fill(2, n_fe), po in vcat((fill(po, n_gr) for po in po_)...)]
+
+        layout = Dict("title" => Dict("text" => "$(ifelse(ic, "Increasing", "Decreasing")) $po_"))
+
+        BioLab.Match.make(fu, tan, fen, fe_, sa_, ta_, fe_x_sa_x_nu; ic, layout)
+
+    end
 
 end
