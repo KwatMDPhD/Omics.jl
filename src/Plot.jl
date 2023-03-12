@@ -310,30 +310,24 @@ end
 # TODO: Move elsewhere.
 function _range(ar, n)
 
-    mi = minimum(ar)
-
-    ma = maximum(ar)
-
-    return collect(mi:((ma - mi) / n):ma)
+    return range(minimum(ar), maximum(ar), n)
 
 end
 
 # TODO: Move elsewhere.
 function _range(ar::AbstractArray{Int}, n)
 
-    mi = minimum(ar)
-
-    ma = maximum(ar)
-
-    return collect(mi:cld(ma - mi, n):ma)
+    return range(minimum(ar), maximum(ar), 1)
 
 end
 
 function merge_colorbar(z, ke_va__...)
 
+    tickmode = "array"
+
     tickvals = _range(z, 10)
 
-    ticktext = [@sprintf("%.2g", ti) for ti in tickvals]
+    ticktext = [@sprintf("%.3g", ti) for ti in tickvals]
 
     return reduce(
         BioLab.Dict.merge,
@@ -341,8 +335,8 @@ function merge_colorbar(z, ke_va__...)
         init = Dict(
             "thicknessmode" => "fraction",
             "thickness" => 0.024,
-            "len" => 1 / 2,
-            "tickvmode" => "array",
+            "len" => 0.5,
+            "tickvmode" => tickmode,
             "tickvals" => tickvals,
             "ticktext" => ticktext,
             "ticks" => "outside",
@@ -373,7 +367,6 @@ function plot_heat_map(
 
     layout = BioLab.Dict.merge(
         Dict(
-            "title" => Dict("text" => "Heat Map"),
             "yaxis" => Dict(
                 "domain" => domain1,
                 "autorange" => "reversed",
@@ -553,7 +546,6 @@ function plot_radar(
                     ),
                 ),
                 "title" => Dict(
-                    "text" => "Radar",
                     "x" => 0.01,
                     "font" => Dict(
                         "size" => 48,

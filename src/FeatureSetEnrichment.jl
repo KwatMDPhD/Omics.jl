@@ -106,7 +106,7 @@ function _plot_mountain(
     bo_,
     en_,
     en;
-    title_text = "Mountain Plot",
+    title_text = "",
     fe = "Feature",
     sc = "Score",
     title_font_size = 24,
