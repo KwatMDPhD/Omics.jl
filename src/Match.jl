@@ -306,7 +306,9 @@ function make(
 
     ba_ = [isnan(sc) for sc in sc_]
 
-    BioLab.check_print(pr, "💩 $(BioLab.String.count_noun(sum(ba_), "bad score")).")
+    n_ba = sum(ba_)
+
+    BioLab.check_print(pr && 0 < n_ba, "💩 $(BioLab.String.count_noun(n_ba, "bad score")).")
 
     feature_x_statistic_x_humber = BioLab.DataFrame.make(
         fen,
