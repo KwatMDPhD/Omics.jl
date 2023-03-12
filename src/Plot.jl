@@ -317,7 +317,7 @@ end
 # TODO: Move elsewhere.
 function _range(ar::AbstractArray{Int}, n)
 
-    return range(minimum(ar), maximum(ar), 1)
+    return collect(minimum(ar):maximum(ar))
 
 end
 
