@@ -353,13 +353,16 @@ function make(
 
             println("🫂 Clustering within groups")
 
+            # TODO: Use correlation.
+            fu = BioLab.Clustering.Euclidean()
+
             id_ = Vector{Int}()
 
             for ta in unique(ta_)
 
                 idg_ = findall((ta2 == ta for ta2 in ta_))
 
-                or_ = BioLab.Clustering.hierarchize(fe_x_sa_x_nup[:, idg_], 2).order
+                or_ = BioLab.Clustering.hierarchize(fe_x_sa_x_nup[:, idg_], 2; fu).order
 
                 append!(id_, idg_[or_])
 
