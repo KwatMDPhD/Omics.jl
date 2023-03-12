@@ -161,9 +161,13 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
         fu = na -> na
 
+    elseif pli in (7566, 7567)
+
+        error("Bad platform - avoid it.")
+
     else
 
-        error(pl)
+        error("New platform - map column.")
 
     end
 
@@ -197,7 +201,7 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
 end
 
-function tabulate(ty_bl; sa = "!Sample_title", pr = true)
+function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl["SAMPLE"]))
 
@@ -212,6 +216,8 @@ function tabulate(ty_bl; sa = "!Sample_title", pr = true)
     for (sa, ke_va) in sa_ke_va
 
         ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
+
+        ch_ = [ch for ch in ch_ if isempty(ig_) || !any(contains(ch, ig) for ig in ig_)]
 
         if all(contains(ch, de) for ch in ch_)
 
