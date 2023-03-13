@@ -1,7 +1,5 @@
 module HTML
 
-using DefaultApplication: open as _open
-
 using ..BioLab
 
 function write(di, so_, sc; he = 800, ht = "")
@@ -39,7 +37,7 @@ function write(di, so_, sc; he = 800, ht = "")
 
     try
 
-        _open(ht)
+        run(`open --background $ht`)
 
     catch
 
