@@ -6,9 +6,16 @@ using NMF: nnmf
 
 using ..BioLab
 
+function _do_not_normalize(ar...)
+
+    return nothing
+
+end
+
 function plot(
     w_,
     h_;
+    fu = _do_not_normalize,
     nar_ = ["Rows $id" for id in eachindex(w_)],
     nac_ = ["Columns $id" for id in eachindex(h_)],
     naf = "Factor",
@@ -25,11 +32,7 @@ function plot(
 
     axis = Dict("dtick" => 1)
 
-    no! = BioLab.Normalization.normalize_with_0!
-
     for (id, (w, ro_, nar)) in enumerate(zip(w_, ro___, nar_))
-
-        title_text = "row$(id)_x_factor_x_positive"
 
         if isempty(di)
 
@@ -37,12 +40,11 @@ function plot(
 
         else
 
-            ht = joinpath(di, "$title_text.html")
+            ts = joinpath(di, "row$(id)_x_factor_x_positive.tsv")
 
-            BioLab.Table.write(
-                joinpath(di, "$title_text.tsv"),
-                BioLab.DataFrame.make(nar, ro_, fa_, w),
-            )
+            BioLab.Table.write(ts, BioLab.DataFrame.make(nar, ro_, fa_, w))
+
+            ht = BioLab.Path.replace_extension(ts, "html")
 
         end
 
@@ -50,7 +52,7 @@ function plot(
 
         co = copy(w)
 
-        BioLab.Matrix.apply_by_row!(no!, co)
+        BioLab.Matrix.apply_by_row!(fu, co)
 
         BioLab.Plot.plot_heat_map(
             co[or_, :],
@@ -61,8 +63,7 @@ function plot(
             layout = Dict(
                 "height" => lo,
                 "width" => sh,
-                "title" =>
-                    Dict("text" => BioLab.String.title(replace(title_text, "_x_" => "_by_"))),
+                "title" => Dict("text" => "W$id"),
                 "xaxis" => axis,
             ),
             ht,
@@ -93,7 +94,7 @@ function plot(
 
         co = copy(h)
 
-        BioLab.Matrix.apply_by_column!(no!, co)
+        BioLab.Matrix.apply_by_column!(fu, co)
 
         BioLab.Plot.plot_heat_map(
             co[:, or_],
@@ -104,8 +105,7 @@ function plot(
             layout = Dict(
                 "height" => sh,
                 "width" => lo,
-                "title" =>
-                    Dict("text" => BioLab.String.title(replace(title_text, "_x_" => "_by_"))),
+                "title" => Dict("text" => "H$id"),
                 "yaxis" => axis,
             ),
             ht,
@@ -119,7 +119,7 @@ end
 
 function factorize(a, n; ve = true, ke_ar...)
 
-    mf = nnmf(a, n; init = :random, alg = :multmse, tol = 10^-6, maxiter = 10^6)
+    mf = nnmf(a, n; init = :random, alg = :multmse, maxiter = 10^6, tol = 10^-5)
 
     if !mf.converged
 
@@ -129,7 +129,7 @@ function factorize(a, n; ve = true, ke_ar...)
 
     if ve
 
-        println("♻️ Iterations $(mf.niters).")
+        println("♻️ $(mf.niters) iterations.")
 
         println("🏁 Objective value $(BioLab.Number.format(mf.objvalue)).")
 

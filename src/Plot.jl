@@ -497,10 +497,10 @@ function plot_heat_map(ro_x_co_x_nu; ke_ar...)
 end
 
 function plot_radar(
-    theta_,
+    theta___,
     r___;
-    name_ = _set_name(theta_),
-    marker_color_ = _set_color(theta_),
+    name_ = _set_name(theta___),
+    marker_color_ = _set_color(theta___),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -525,7 +525,7 @@ function plot_radar(
                 "line" => Dict("width" => 0),
                 "fill" => "toself",
                 "fillcolor" => marker_color,
-            ) for (theta, r_, name, marker_color) in zip(theta_, r___, name_, marker_color_)
+            ) for (theta, r_, name, marker_color) in zip(theta___, r___, name_, marker_color_)
         ],
         BioLab.Dict.merge(
             Dict(
