@@ -119,11 +119,11 @@ end
 
 function factorize(a, n; ve = true, ke_ar...)
 
-    mf = nnmf(a, n; init = :random, alg = :multmse, maxiter = 10^6, tol = 10^-5)
+    mf = nnmf(a, n; init = :nndsvd, alg = :multmse, maxiter = 10^6, tol = 10^-5)
 
     if !mf.converged
 
-        error()
+        @warn "Did not converge." mf.objvalue
 
     end
 
