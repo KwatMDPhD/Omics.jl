@@ -12,7 +12,7 @@ using XLSX: readtable
 
 using ..BioLab
 
-function read(pa; xl = "", ke_ar...)
+function read(pa; xl = "", delim = '\t', ke_ar...)
 
     ex = splitext(pa)[2]
 
@@ -30,7 +30,7 @@ function read(pa; xl = "", ke_ar...)
 
         end
 
-        return _read(it_, DataFrame; ke_ar...)
+        return _read(it_, DataFrame; delim, ke_ar...)
 
     end
 
