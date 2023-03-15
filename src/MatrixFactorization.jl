@@ -119,7 +119,7 @@ end
 
 function factorize(a, n; ve = true, ke_ar...)
 
-    mf = nnmf(a, n; init = :nndsvd, alg = :multmse, maxiter = 10^6, tol = 10^-5)
+    mf = nnmf(a, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 10^-4)
 
     if !mf.converged
 

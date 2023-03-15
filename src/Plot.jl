@@ -497,52 +497,57 @@ function plot_heat_map(ro_x_co_x_nu; ke_ar...)
 end
 
 function plot_radar(
-    theta___,
-    r___;
-    name_ = _set_name(theta___),
-    marker_color_ = _set_color(theta___),
+    theta_,
+    r_;
+    name_ = _set_name(theta_),
+    marker_color_ = _set_color(theta_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
 
-    axis = Dict(
-        "linewidth" => 1.6,
-        "linecolor" => "#48929b",
-        "gridwidth" => 1.2,
-        "gridcolor" => "#ebf6f7",
-        "tickfont" => Dict("color" => "#1f4788"),
-    )
+    cofai = "#ebf6f7"
 
     return plot(
         [
             Dict(
                 "type" => "scatterpolar",
                 "name" => name,
-                "theta" => theta,
-                "r" => r_,
-                "opacity" => 0.64,
-                "marker" => Dict("symbol" => "diamond", "size" => 2, "color" => marker_color),
-                "line" => Dict("width" => 0),
+                "theta" => vcat(theta, theta[1]),
+                "r" => vcat(r, r[1]),
+                "opacity" => 0.92,
+                "marker" => Dict("size" => 2, "color" => marker_color),
+                "line" =>
+                    Dict("shape" => "spline", "smoothing" => 0, "width" => 1, "color" => cofai),
                 "fill" => "toself",
                 "fillcolor" => marker_color,
-            ) for (theta, r_, name, marker_color) in zip(theta___, r___, name_, marker_color_)
+            ) for (theta, r, name, marker_color) in zip(theta_, r_, name_, marker_color_)
         ],
         BioLab.Dict.merge(
             Dict(
                 "polar" => Dict(
-                    "angularaxis" => BioLab.Dict.merge(
-                        axis,
-                        Dict(
-                            "direction" => "clockwise",
-                            "tickfont" => Dict("size" => 32, "family" => "Optima"),
-                        ),
+                    "angularaxis" => Dict(
+                        "direction" => "clockwise",
+                        "linewidth" => 4,
+                        "linecolor" => "#b83a4b",
+                        "ticks" => "",
+                        "tickfont" =>
+                            Dict("size" => 32, "family" => "Optima", "color" => "#23191e"),
+                        "gridwidth" => 2,
+                        "gridcolor" => cofai,
                     ),
-                    "radialaxis" => BioLab.Dict.merge(
-                        axis,
-                        Dict(
-                            "nticks" => 8,
-                            "tickfont" => Dict("size" => 16, "family" => "Monospace"),
+                    "radialaxis" => Dict(
+                        "linewidth" => 2,
+                        "linecolor" => cofai,
+                        "nticks" => 4,
+                        "tickcolor" => "#8c1515",
+                        "tickangle" => 90,
+                        "tickfont" => Dict(
+                            "size" => 12,
+                            "family" => "Monospace",
+                            "color" => "#1f4788",
                         ),
+                        "gridwidth" => 1.2,
+                        "gridcolor" => cofai,
                     ),
                 ),
                 "title" => Dict(
