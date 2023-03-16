@@ -499,11 +499,15 @@ end
 function plot_radar(
     theta_,
     r_;
+    radialaxis_range = (0, maximum(r_...)),
     name_ = _set_name(theta_),
-    marker_color_ = _set_color(theta_),
+    line_color_ = _set_color(theta_),
+    fillcolor_ = line_color_,
     layout = Dict{String, Any}(),
     ke_ar...,
 )
+
+    costa = "#b83a4b"
 
     cofai = "#ebf6f7"
 
@@ -515,12 +519,17 @@ function plot_radar(
                 "theta" => vcat(theta, theta[1]),
                 "r" => vcat(r, r[1]),
                 "opacity" => 0.92,
-                "marker" => Dict("size" => 2, "color" => marker_color),
-                "line" =>
-                    Dict("shape" => "spline", "smoothing" => 0, "width" => 1, "color" => cofai),
+                "line" => Dict(
+                    "shape" => "spline",
+                    "smoothing" => 0,
+                    "width" => 1,
+                    "color" => line_color,
+                ),
+                "marker" => Dict("size" => 4, "color" => line_color),
                 "fill" => "toself",
-                "fillcolor" => marker_color,
-            ) for (theta, r, name, marker_color) in zip(theta_, r_, name_, marker_color_)
+                "fillcolor" => fillcolor,
+            ) for (theta, r, name, line_color, fillcolor) in
+            zip(theta_, r_, name_, line_color_, fillcolor_)
         ],
         BioLab.Dict.merge(
             Dict(
@@ -528,7 +537,7 @@ function plot_radar(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
                         "linewidth" => 4,
-                        "linecolor" => "#b83a4b",
+                        "linecolor" => costa,
                         "ticks" => "",
                         "tickfont" =>
                             Dict("size" => 32, "family" => "Optima", "color" => "#23191e"),
@@ -536,10 +545,11 @@ function plot_radar(
                         "gridcolor" => cofai,
                     ),
                     "radialaxis" => Dict(
-                        "linewidth" => 2,
-                        "linecolor" => cofai,
-                        "nticks" => 4,
-                        "tickcolor" => "#8c1515",
+                        "range" => radialaxis_range,
+                        "linewidth" => 0.8,
+                        "linecolor" => costa,
+                        "nticks" => 10,
+                        "tickcolor" => costa,
                         "tickangle" => 90,
                         "tickfont" => Dict(
                             "size" => 12,
