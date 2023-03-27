@@ -109,6 +109,8 @@ function _plot_mountain(
     title_text = "",
     fe = "Feature Rank",
     sc = "Score",
+    low_text = "Low",
+    high_text = "High",
     title_font_size = 24,
     statistic_font_size = 16,
     axis_title_font_size = 12,
@@ -139,6 +141,17 @@ function _plot_mountain(
     )
 
     annotationx = merge(annotation, Dict("xanchor" => "center", "x" => 0.5))
+
+    annotationl = merge(
+        annotation,
+        Dict(
+            "y" => _mean(yaxis1_domain),
+            "font" => Dict("size" => 10),
+            "bgcolor" => "#ffffff",
+            "borderwidth" => 2,
+            "borderpad" => 2,
+        ),
+    )
 
     title_text = BioLab.String.limit(title_text, 32)
 
@@ -202,6 +215,26 @@ function _plot_mountain(
                     "font" => Dict("size" => axis_title_font_size),
                 ),
             ),
+            merge(
+                annotationl,
+                Dict(
+                    "y" => _mean((yaxis1_domain[2], _mean(yaxis1_domain))),
+                    "x" => 0.998,
+                    "text" => low_text,
+                    "font" => Dict("color" => "#1993ff"),
+                    "bordercolor" => "#86aba5",
+                ),
+            ),
+            merge(
+                annotationl,
+                Dict(
+                    "y" => _mean((yaxis1_domain[1], _mean(yaxis1_domain))),
+                    "x" => 0.002,
+                    "text" => high_text,
+                    "font" => Dict("color" => "#ff1992"),
+                    "bordercolor" => "#fcc9b9",
+                ),
+            ),
         ),
     )
 
@@ -213,7 +246,7 @@ function _plot_mountain(
             "x" => x,
             "text" => fe_,
             "mode" => "lines",
-            "line" => Dict("width" => 1.6, "color" => "#000000"),
+            "line" => Dict("width" => 1.6, "color" => "#351e1c"),
             "fill" => "tozeroy",
             "fillcolor" => "#c0c0c0",
             "hoverinfo" => "x+y+text",
@@ -235,7 +268,7 @@ function _plot_mountain(
             "marker" => Dict(
                 "symbol" => "line-ns",
                 "size" => height * _range(yaxis2_domain) * 0.48,
-                "line" => Dict("width" => 1.6, "color" => "#000000"),
+                "line" => Dict("width" => 1.08, "color" => "#000000"),
             ),
             "hoverinfo" => "x+text",
         ),

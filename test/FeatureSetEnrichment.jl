@@ -152,6 +152,10 @@ end
 
 fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_myc()
 
+reverse!(fe_)
+
+reverse!(sc_)
+
 bo_ = BioLab.Collection.is_in(fe_, fe1_)
 
 fe_x_sa_x_sc = DataFrame(
@@ -167,7 +171,15 @@ se_fe_ = BioLab.GMT.read(joinpath(@__DIR__, "FeatureSetEnrichment.data", "h.all.
 
 al = BioLab.FeatureSetEnrichment.KS()
 
-BioLab.FeatureSetEnrichment._score_set(al, fe_, sc_, bo_; title_text = "MYC Gene Set")
+BioLab.FeatureSetEnrichment._score_set(
+    al,
+    fe_,
+    sc_,
+    bo_;
+    title_text = "MYC Gene Set",
+    low_text = "Low Phenotype",
+    high_text = "High Phenotype",
+)
 
 # 45.584 μs (0 allocations: 0 bytes)
 # @btime BioLab.FeatureSetEnrichment._score_set($al, $fe_, $sc_, $bo_; pl = $false)
