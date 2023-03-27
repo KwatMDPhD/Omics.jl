@@ -8,6 +8,8 @@ te = joinpath(tempdir(), "BioLab.test.FeatureSetEnrichment")
 
 BioLab.Path.empty(te)
 
+# --------------------------------------------- #
+
 sc_ = [-2.0, -1, 0, 0, 1, 2]
 
 # --------------------------------------------- #

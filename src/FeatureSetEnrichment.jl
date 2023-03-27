@@ -107,7 +107,7 @@ function _plot_mountain(
     en_,
     en;
     title_text = "",
-    fe = "Feature",
+    fe = "Feature Rank",
     sc = "Score",
     title_font_size = 24,
     statistic_font_size = 16,
@@ -144,10 +144,6 @@ function _plot_mountain(
 
     n = length(fe_)
 
-    enrichmentwidth = 3.2
-
-    enrichmentcolor = "#07fa07"
-
     layout = Dict(
         "height" => height,
         "width" => width,
@@ -156,20 +152,18 @@ function _plot_mountain(
             "b" => round(height * 0.088),
             "l" => round(width * 0.19),
         ),
-        "plot_bgcolor" => "#ffffff",
         "paper_bgcolor" => "#ece9d8",
         "showlegend" => false,
-        "yaxis" => Dict("domain" => yaxis1_domain, "showline" => true, "showgrid" => false),
+        "yaxis" => Dict("domain" => yaxis1_domain, "showline" => true),
         "yaxis2" => Dict(
             "domain" => yaxis2_domain,
             "ticks" => "",
             "showticklabels" => false,
             "zeroline" => false,
         ),
-        "yaxis3" => Dict("domain" => yaxis3_domain, "showline" => true, "showgrid" => false),
+        "yaxis3" => Dict("domain" => yaxis3_domain, "showline" => true),
         "xaxis" => Dict(
             "range" => (0, n),
-            "showgrid" => false,
             "showspikes" => true,
             "spikethickness" => 0.8,
             "spikecolor" => "#ffb61e",
@@ -188,12 +182,12 @@ function _plot_mountain(
             merge(
                 annotationx,
                 Dict(
-                    "y" => 1.16,
+                    "y" => 1.129,
                     "text" => "Enrichment: <b>$(BioLab.Number.format(en))</b>",
                     "font" => Dict("size" => statistic_font_size, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
-                    "bordercolor" => enrichmentcolor,
-                    "borderwidth" => enrichmentwidth,
+                    "bordercolor" => "#a5ba93",
+                    "borderwidth" => 2,
                     "borderpad" => 8,
                 ),
             ),
@@ -219,7 +213,7 @@ function _plot_mountain(
             "x" => x,
             "text" => fe_,
             "mode" => "lines",
-            "line" => Dict("width" => 1.6, "color" => "black"),
+            "line" => Dict("width" => 1.6, "color" => "#000000"),
             "fill" => "tozeroy",
             "fillcolor" => "#c0c0c0",
             "hoverinfo" => "x+y+text",
@@ -247,27 +241,6 @@ function _plot_mountain(
         ),
     ]
 
-    # le_ = (en < 0.0 for en in en_)
-
-    # for (is_, fillcolor) in ((le_, "#1992ff"), ((!le for le in le_), "#ff1993"))
-
-    #     push!(
-    #         trace_,
-    #         Dict(
-    #             "yaxis" => "y3",
-    #             "y" => [ifelse(is, en, 0.0) for (is, en) in zip(is_, en_)],
-    #             "x" => x,
-    #             "text" => fe_,
-    #             "mode" => "lines",
-    #             "line" => Dict("width" => 0),
-    #             "fill" => "tozeroy",
-    #             "fillcolor" => fillcolor,
-    #             "hoverinfo" => "x+y+text",
-    #         ),
-    #     )
-
-    # end
-
     push!(
         trace_,
         Dict(
@@ -276,33 +249,11 @@ function _plot_mountain(
             "x" => x,
             "text" => fe_,
             "mode" => "lines",
-            "line" => Dict("width" => enrichmentwidth, "color" => enrichmentcolor),
+            "line" => Dict("width" => 3.2, "color" => "#07fa07"),
             "fill" => "tozeroy",
             "hoverinfo" => "x+y+text",
         ),
     )
-
-    # ex_ = BioLab.VectorNumber.get_extreme(en_)
-
-    # id_ = findall(en in ex_ for en in en_)
-
-    # push!(
-    #     trace_,
-    #     Dict(
-    #         "yaxis" => "y3",
-    #         "y" => en_[id_],
-    #         "x" => x[id_],
-    #         "mode" => "markers",
-    #         "marker" => Dict(
-    #             "symbol" => "circle",
-    #             "size" => height * _range(yaxis3_domain) * 0.04,
-    #             "color" => "#ebf6f7",
-    #             "opacity" => 0.72,
-    #             "line" => Dict("width" => 2, "color" => "#404ed8", "opacity" => 0.88),
-    #         ),
-    #         "hoverinfo" => "y",
-    #     ),
-    # )
 
     return BioLab.Plot.plot(trace_, layout; ht)
 
