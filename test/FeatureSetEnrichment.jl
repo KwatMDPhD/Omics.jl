@@ -165,6 +165,8 @@ se_fe_ = BioLab.GMT.read(joinpath(@__DIR__, "FeatureSetEnrichment.data", "h.all.
 
 al = BioLab.FeatureSetEnrichment.KS()
 
+BioLab.FeatureSetEnrichment._score_set(al, fe_, sc_, bo_; title_text = "MYC Gene Set")
+
 # 45.584 μs (0 allocations: 0 bytes)
 # @btime BioLab.FeatureSetEnrichment._score_set($al, $fe_, $sc_, $bo_; pl = $false)
 
