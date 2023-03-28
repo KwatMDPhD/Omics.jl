@@ -123,7 +123,7 @@ function _plot_mountain(
 
     yaxis1_domain = (0.0, 0.24)
 
-    yaxis2_domain = (0.24, 0.32)
+    yaxis2_domain = (0.248, 0.312)
 
     yaxis3_domain = (0.32, 1.0)
 
@@ -157,26 +157,25 @@ function _plot_mountain(
 
     n = length(fe_)
 
+    enrichmentfillcolor = "rgba(7, 250, 7, 0.24)"
+
     layout = Dict(
         "height" => height,
         "width" => width,
-        "margin" => Dict(
-            "t" => round(height * 0.24),
-            "b" => round(height * 0.088),
-            "l" => round(width * 0.19),
-        ),
-        "paper_bgcolor" => "#ece9d8",
+        "paper_bgcolor" => "#fcfcfc",
         "showlegend" => false,
-        "yaxis" => Dict("domain" => yaxis1_domain, "showline" => true),
+        "yaxis" => Dict("domain" => yaxis1_domain, "ticks" => "outside", "showgrid" => false),
         "yaxis2" => Dict(
             "domain" => yaxis2_domain,
             "ticks" => "",
             "showticklabels" => false,
             "zeroline" => false,
+            "showgrid" => false,
         ),
-        "yaxis3" => Dict("domain" => yaxis3_domain, "showline" => true),
+        "yaxis3" => Dict("domain" => yaxis3_domain, "ticks" => "outside", "showgrid" => false),
         "xaxis" => Dict(
-            "range" => (0, n),
+            "range" => (-2, n + 1),
+            "showgrid" => false,
             "showspikes" => true,
             "spikethickness" => 0.8,
             "spikecolor" => "#ffb61e",
@@ -187,7 +186,7 @@ function _plot_mountain(
             merge(
                 annotationx,
                 Dict(
-                    "y" => 1.29,
+                    "y" => 1.24,
                     "text" => "<b>$title_text</b>",
                     "font" => Dict("size" => title_font_size, "color" => "#2b2028"),
                 ),
@@ -195,12 +194,12 @@ function _plot_mountain(
             merge(
                 annotationx,
                 Dict(
-                    "y" => 1.129,
+                    "y" => 1.088,
                     "text" => "Enrichment: <b>$(BioLab.Number.format(en))</b>",
                     "font" => Dict("size" => statistic_font_size, "color" => "#181b26"),
                     "bgcolor" => "#ebf6f7",
-                    "bordercolor" => "#a5ba93",
-                    "borderwidth" => 2,
+                    "bordercolor" => enrichmentfillcolor,
+                    "borderwidth" => 4,
                     "borderpad" => 8,
                 ),
             ),
@@ -210,7 +209,7 @@ function _plot_mountain(
             merge(
                 annotationx,
                 Dict(
-                    "y" => -0.088,
+                    "y" => -0.132,
                     "text" => "<b>$fe (n=$n)</b>",
                     "font" => Dict("size" => axis_title_font_size),
                 ),
@@ -222,7 +221,7 @@ function _plot_mountain(
                     "x" => 0.998,
                     "text" => low_text,
                     "font" => Dict("color" => "#1993ff"),
-                    "bordercolor" => "#86aba5",
+                    "bordercolor" => "#b9c9fc",
                 ),
             ),
             merge(
@@ -267,7 +266,7 @@ function _plot_mountain(
             "mode" => "markers",
             "marker" => Dict(
                 "symbol" => "line-ns",
-                "size" => height * _range(yaxis2_domain) * 0.48,
+                "size" => height * _range(yaxis2_domain),
                 "line" => Dict("width" => 1.08, "color" => "#000000"),
             ),
             "hoverinfo" => "x+text",
@@ -284,6 +283,7 @@ function _plot_mountain(
             "mode" => "lines",
             "line" => Dict("width" => 3.2, "color" => "#07fa07"),
             "fill" => "tozeroy",
+            "fillcolor" => enrichmentfillcolor,
             "hoverinfo" => "x+y+text",
         ),
     )
