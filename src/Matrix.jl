@@ -142,7 +142,9 @@ function simulate(n_ro, n_co, ho; re = 0)
 
         ro_x_co_x_nu = rand(n_ro, n_co)
 
-    elseif ho == "randn" # TODO `@test`.
+    elseif ho == "randn"
+
+        # TODO `@test`.
 
         ro_x_co_x_nu = randn(n_ro, n_co)
 

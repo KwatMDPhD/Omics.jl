@@ -1,12 +1,14 @@
 using DataFrames
 
+# using InteractiveUtils
+
 include("_.jl")
 
 # --------------------------------------------- #
 
-te = joinpath(tempdir(), "BioLab.test.FeatureSetEnrichment")
+TE = joinpath(tempdir(), "BioLab.test.FeatureSetEnrichment")
 
-BioLab.Path.empty(te)
+BioLab.Path.empty(TE)
 
 # --------------------------------------------- #
 
@@ -74,10 +76,7 @@ BioLab.FeatureSetEnrichment._plot_mountain(
     [-1.0, 1.0],
     [true, false],
     [-0.2, 0.1],
-    1129;
-    title_text = "Winner",
-    fe = "Character",
-    sc = "Power",
+    11.29;
 )
 
 # @code_warntype BioLab.FeatureSetEnrichment._plot_mountain(
@@ -143,7 +142,7 @@ for al in (BioLab.FeatureSetEnrichment.KS(), BioLab.FeatureSetEnrichment.KLioM()
         sc_,
         fe1_;
         title_text = string(al),
-        ht = joinpath(te, "mountain.$al.html"),
+        ht = joinpath(TE, "mountain.$al.html"),
     )
 
 end

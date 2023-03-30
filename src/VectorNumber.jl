@@ -42,6 +42,20 @@ function get_extreme(nu_)
 
 end
 
+# TODO: Test.
+
+function range(ar, n)
+
+    return range(minimum(ar), maximum(ar), n)
+
+end
+
+function range(ar::AbstractArray{Int}, n)
+
+    return collect(minimum(ar):maximum(ar))
+
+end
+
 function shift_minimum(nu_, mi::Real)
 
     sh = mi - minimum(nu_)

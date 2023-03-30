@@ -307,20 +307,6 @@ function plot_histogram(
 
 end
 
-# TODO: Move elsewhere.
-function _range(ar, n)
-
-    return range(minimum(ar), maximum(ar), n)
-
-end
-
-# TODO: Move elsewhere.
-function _range(ar::AbstractArray{Int}, n)
-
-    return collect(minimum(ar):maximum(ar))
-
-end
-
 function merge_colorbar(z, ke_va__...)
 
     tickmode = "array"

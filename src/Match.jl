@@ -173,13 +173,6 @@ function _color(::AbstractArray{Float64})
 
 end
 
-# TODO: Test.
-function _get_pearson_correlation(nu1_, nu2_)
-
-    return cor(nu1_, nu2_)
-
-end
-
 function make(
     fu,
     tan,

@@ -106,14 +106,11 @@ function _plot_mountain(
     bo_,
     en_,
     en;
-    title_text = "",
+    title_text = "Gene-Set Enrichment",
     fe = "Feature Rank",
     sc = "Score",
     low_text = "Low",
     high_text = "High",
-    title_font_size = 24,
-    statistic_font_size = 16,
-    axis_title_font_size = 12,
     ht = "",
 )
 
@@ -123,72 +120,79 @@ function _plot_mountain(
 
     yaxis1_domain = (0.0, 0.24)
 
-    yaxis2_domain = (0.248, 0.312)
+    yaxis2_domain = (0.25, 0.31)
 
     yaxis3_domain = (0.32, 1.0)
+
+    axis_title_font_size = 12
+
+    borderwidth = 2
+
+    enrichment_color = "#07fa07"
+
+    enrichment_color_fainter = "rgba(7, 250, 7, 0.24)"
+
+    enrichment_color_faintest = "rgba(7, 250, 7, 0.08)"
 
     annotation =
         Dict("yref" => "paper", "xref" => "paper", "yanchor" => "middle", "showarrow" => false)
 
     annotationy = merge(
         annotation,
-        Dict(
-            "xanchor" => "right",
-            "x" => -0.064,
-            "textangle" => -90,
-            "font" => Dict("size" => axis_title_font_size),
-        ),
+        Dict("x" => -0.1, "textangle" => -90, "font" => Dict("size" => axis_title_font_size)),
     )
 
-    annotationx = merge(annotation, Dict("xanchor" => "center", "x" => 0.5))
+    annotationx =
+        merge(annotation, Dict("x" => 0.5, "font" => Dict("size" => axis_title_font_size)))
 
-    annotationl = merge(
+    annotations = merge(
         annotation,
         Dict(
             "y" => _mean(yaxis1_domain),
             "font" => Dict("size" => 10),
             "bgcolor" => "#ffffff",
-            "borderwidth" => 2,
+            "borderwidth" => borderwidth,
             "borderpad" => 2,
         ),
     )
 
-    title_text = BioLab.String.limit(title_text, 32)
+    side_margin = 0.01
 
     n = length(fe_)
 
-    enrichmentfillcolor = "rgba(7, 250, 7, 0.24)"
+    range_margin = n * side_margin
+
+    axis = Dict("zeroline" => false, "showgrid" => false)
 
     layout = Dict(
         "height" => height,
         "width" => width,
         "paper_bgcolor" => "#fcfcfc",
         "showlegend" => false,
-        "yaxis" => Dict("domain" => yaxis1_domain, "ticks" => "outside", "showgrid" => false),
-        "yaxis2" => Dict(
-            "domain" => yaxis2_domain,
-            "ticks" => "",
-            "showticklabels" => false,
-            "zeroline" => false,
-            "showgrid" => false,
+        "yaxis" => merge(axis, Dict("domain" => yaxis1_domain, "ticks" => "outside")),
+        "yaxis2" => merge(
+            axis,
+            Dict("domain" => yaxis2_domain, "ticks" => "", "showticklabels" => false),
         ),
-        "yaxis3" => Dict("domain" => yaxis3_domain, "ticks" => "outside", "showgrid" => false),
-        "xaxis" => Dict(
-            "range" => (-2, n + 1),
-            "showgrid" => false,
-            "showspikes" => true,
-            "spikethickness" => 0.8,
-            "spikecolor" => "#ffb61e",
-            "spikedash" => "solid",
-            "spikemode" => "across",
+        "yaxis3" => merge(axis, Dict("domain" => yaxis3_domain, "ticks" => "outside")),
+        "xaxis" => merge(
+            axis,
+            Dict(
+                "range" => (1 - range_margin, n + range_margin),
+                "showspikes" => true,
+                "spikemode" => "across",
+                "spikedash" => "solid",
+                "spikethickness" => 0.8,
+                "spikecolor" => "#ffb61e",
+            ),
         ),
         "annotations" => (
             merge(
                 annotationx,
                 Dict(
                     "y" => 1.24,
-                    "text" => "<b>$title_text</b>",
-                    "font" => Dict("size" => title_font_size, "color" => "#2b2028"),
+                    "text" => "<b>$(BioLab.String.limit(title_text, 32))</b>",
+                    "font" => Dict("size" => 24, "color" => "#2b2028"),
                 ),
             ),
             merge(
@@ -196,11 +200,11 @@ function _plot_mountain(
                 Dict(
                     "y" => 1.088,
                     "text" => "Enrichment: <b>$(BioLab.Number.format(en))</b>",
-                    "font" => Dict("size" => statistic_font_size, "color" => "#181b26"),
-                    "bgcolor" => "#ebf6f7",
-                    "bordercolor" => enrichmentfillcolor,
-                    "borderwidth" => 4,
-                    "borderpad" => 8,
+                    "font" => Dict("size" => 16, "color" => "#181b26"),
+                    "borderpad" => 6.4,
+                    "bgcolor" => enrichment_color_faintest,
+                    "borderwidth" => borderwidth,
+                    "bordercolor" => enrichment_color_fainter,
                 ),
             ),
             merge(annotationy, Dict("y" => _mean(yaxis1_domain), "text" => "<b>$sc</b>")),
@@ -215,20 +219,20 @@ function _plot_mountain(
                 ),
             ),
             merge(
-                annotationl,
+                annotations,
                 Dict(
                     "y" => _mean((yaxis1_domain[2], _mean(yaxis1_domain))),
-                    "x" => 0.998,
+                    "x" => 1 - side_margin,
                     "text" => low_text,
                     "font" => Dict("color" => "#1993ff"),
                     "bordercolor" => "#b9c9fc",
                 ),
             ),
             merge(
-                annotationl,
+                annotations,
                 Dict(
                     "y" => _mean((yaxis1_domain[1], _mean(yaxis1_domain))),
-                    "x" => 0.002,
+                    "x" => side_margin,
                     "text" => high_text,
                     "font" => Dict("color" => "#ff1992"),
                     "bordercolor" => "#fcc9b9",
@@ -248,16 +252,17 @@ function _plot_mountain(
             "line" => Dict("width" => 1.6, "color" => "#351e1c"),
             "fill" => "tozeroy",
             "fillcolor" => "#c0c0c0",
-            "hoverinfo" => "x+y+text",
         ),
-        Dict(
-            "yaxis" => "y2",
-            "type" => "heatmap",
-            "z" => [sc_],
-            "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.COBWR),
-            "opacity" => 0.8,
-            "showscale" => false,
-        ),
+        # # TODO: Clip.
+        # Dict(
+        #     "yaxis" => "y2",
+        #     "type" => "heatmap",
+        #     "z" => [sc_],
+        #     "x"=>x,
+        #     "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.COBWR),
+        #     "opacity" => 0.8,
+        #     "showscale" => false,
+        # ),
         Dict(
             "yaxis" => "y2",
             "y" => fill(0, sum(bo_)),
@@ -267,7 +272,10 @@ function _plot_mountain(
             "marker" => Dict(
                 "symbol" => "line-ns",
                 "size" => height * _range(yaxis2_domain),
-                "line" => Dict("width" => 1.08, "color" => "#000000"),
+                "line" => Dict(
+                    "width" => 1.08,
+                    "color" => [BioLab.Plot.color(BioLab.Plot.COBWR, sc) for sc in sc_[bo_]],
+                ),
             ),
             "hoverinfo" => "x+text",
         ),
@@ -281,10 +289,9 @@ function _plot_mountain(
             "x" => x,
             "text" => fe_,
             "mode" => "lines",
-            "line" => Dict("width" => 3.2, "color" => "#07fa07"),
+            "line" => Dict("width" => 3.2, "color" => enrichment_color),
             "fill" => "tozeroy",
-            "fillcolor" => enrichmentfillcolor,
-            "hoverinfo" => "x+y+text",
+            "fillcolor" => enrichment_color_fainter,
         ),
     )
 
