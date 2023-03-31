@@ -253,16 +253,6 @@ function _plot_mountain(
             "fill" => "tozeroy",
             "fillcolor" => "#c0c0c0",
         ),
-        # # TODO: Clip.
-        # Dict(
-        #     "yaxis" => "y2",
-        #     "type" => "heatmap",
-        #     "z" => [sc_],
-        #     "x"=>x,
-        #     "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.COBWR),
-        #     "opacity" => 0.8,
-        #     "showscale" => false,
-        # ),
         Dict(
             "yaxis" => "y2",
             "y" => fill(0, sum(bo_)),
@@ -670,8 +660,6 @@ function score_set(al, fe_, sc_, se_fe_; ex = 1.0)
 
     ch = Dict(fe => id for (id, fe) in enumerate(fe_))
 
-    #sc_, fe_ = BioLab.Collection.sort_like((sc_, fe_); ic=false)
-
     return Dict(
         se => _score_set(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for
         (se, fe1_) in se_fe_
@@ -685,8 +673,6 @@ function score_set(al, fe_x_sa_x_sc, se_fe_; ex = 1.0, n_jo = 1)
         BioLab.DataFrame.separate(fe_x_sa_x_sc)[[2, 3, 4]]
 
     BioLab.Array.error_duplicate(fe_)
-
-    #BioLab.Matrix.error_bad(fe_x_sa_x_sc, Float64)
 
     se_x_sa_x_en = DataFrame("Set" => collect(keys(se_fe_)))
 

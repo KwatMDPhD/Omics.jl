@@ -14,8 +14,6 @@ BioLab.Path.empty(TE)
 
 sc_ = [-2.0, -1, 0, 0, 1, 2]
 
-# --------------------------------------------- #
-
 id = 1
 
 for ex in (0.9, 1.0, 1.1, 2.0)
@@ -37,6 +35,8 @@ end
 
 # --------------------------------------------- #
 
+sc_ = [-2.0, -1, 0, 0, 1, 2]
+
 bo_ = [true, true, false, true, false, true]
 
 for (ex, re) in ((1.0, (6, 5.0, 2.0)), (2.0, (6, 9.0, 2.0)))
@@ -54,6 +54,8 @@ for (ex, re) in ((1.0, (6, 5.0, 2.0)), (2.0, (6, 9.0, 2.0)))
 end
 
 # --------------------------------------------- #
+
+sc_ = [-2.0, -1, 0, 0, 1, 2]
 
 for (ex, re) in ((1.0, (6, 6.0, 5.0)), (2.0, (6, 10.0, 9.0)))
 
@@ -161,17 +163,27 @@ se_fe_ = BioLab.GMT.read(joinpath(@__DIR__, "FeatureSetEnrichment.data", "h.all.
 
 # --------------------------------------------- #
 
-al = BioLab.FeatureSetEnrichment.KS()
-
-BioLab.FeatureSetEnrichment._score_set(
-    al,
-    fe_,
-    sc_,
-    bo_;
-    title_text = "MYC Gene Set",
-    low_text = "Low Phenotype",
-    high_text = "High Phenotype",
+for al in (
+    BioLab.FeatureSetEnrichment.KS(),
+    BioLab.FeatureSetEnrichment.KLi(),
+    BioLab.FeatureSetEnrichment.KLioM(),
 )
+
+    BioLab.FeatureSetEnrichment._score_set(
+        al,
+        fe_,
+        sc_,
+        bo_;
+        title_text = BioLab.String.split_and_get(string(al), '.', 3)[1:(end - 2)],
+        low_text = "Low Phenotype",
+        high_text = "High Phenotype",
+    )
+
+end
+
+# --------------------------------------------- #
+
+al = BioLab.FeatureSetEnrichment.KS()
 
 # 45.584 μs (0 allocations: 0 bytes)
 # @btime BioLab.FeatureSetEnrichment._score_set($al, $fe_, $sc_, $bo_; pl = $false)
