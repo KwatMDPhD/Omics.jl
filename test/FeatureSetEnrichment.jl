@@ -73,7 +73,7 @@ end
 
 BioLab.FeatureSetEnrichment._plot_mountain(
     ["Black Beard", "Law"],
-    [-1.0, 1.0],
+    [1.0, -1.0],
     [true, false],
     [-0.2, 0.1],
     11.29;
@@ -150,10 +150,6 @@ end
 # --------------------------------------------- #
 
 fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_myc()
-
-reverse!(fe_)
-
-reverse!(sc_)
 
 bo_ = BioLab.Collection.is_in(fe_, fe1_)
 

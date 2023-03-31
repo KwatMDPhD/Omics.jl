@@ -274,7 +274,10 @@ function _plot_mountain(
                 "size" => height * _range(yaxis2_domain),
                 "line" => Dict(
                     "width" => 1.08,
-                    "color" => [BioLab.Plot.color(BioLab.Plot.COBWR, sc) for sc in sc_[bo_]],
+                    "color" => [
+                        BioLab.Plot.color(BioLab.Plot.COBWR, convert(Float64, sc))
+                        for sc in sc_[bo_]
+                    ],
                 ),
             ),
             "hoverinfo" => "x+text",
@@ -301,7 +304,7 @@ end
 
 function benchmark_card(ca1)
 
-    return BioLab.CA_, collect(-6:6), collect(ca1)
+    return reverse!(BioLab.CA_), reverse!(collect(-6:6)), collect(ca1)
 
 end
 
@@ -309,7 +312,9 @@ function benchmark_random(n, n1)
 
     fe_ = ["Feature $id" for id in 1:n]
 
-    fe_, BioLab.VectorNumber.simulate(cld(n, 2); ev = iseven(n)), sample(fe_, n1; replace = false)
+    return reverse!(fe_),
+    reverse!(BioLab.VectorNumber.simulate(cld(n, 2); ev = iseven(n))),
+    sample(fe_, n1; replace = false)
 
 end
 
@@ -319,8 +324,8 @@ function benchmark_myc()::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
 
     da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 
-    da[!, 1],
-    da[!, 2],
+    return reverse!(da[!, 1]),
+    reverse!(da[!, 2]),
     BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 end
