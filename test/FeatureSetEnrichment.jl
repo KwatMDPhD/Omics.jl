@@ -72,22 +72,19 @@ end
 # --------------------------------------------- #
 
 BioLab.FeatureSetEnrichment._plot_mountain(
-    ["Black Beard", "Law"],
+    ["Law", "Black Beard"],
     [1.0, -1.0],
-    [true, false],
-    [-0.2, 0.1],
+    [true, true],
+    [0.1, -0.1],
     11.29;
 )
 
 # @code_warntype BioLab.FeatureSetEnrichment._plot_mountain(
-#     ["Black Beard", "Law"],
-#     [-1.0, 1.0],
-#     [true, false],
-#     [-0.2, 0.1],
-#     1129;
-#     title_text = "Winner",
-#     fe = "Character",
-#     sc = "Power",
+#     ["Law", "Black Beard"],
+#     [1.0, -1.0],
+#     [true, true],
+#     [0.1, -0.1],
+#     11.29;
 # )
 
 # --------------------------------------------- #
