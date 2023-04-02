@@ -31,7 +31,8 @@ function separate(ro_x_co_x_an)
     id_ = 2:length(co_)
 
     return co_[1],
-    ro_x_co_x_an[:, 1]::Vector{<:AbstractString},
+    # TODO: Check if removing ::Vector{<:AbstractString} was bad.
+    convert(Vector{String}, ro_x_co_x_an[:, 1]),
     co_[id_],
     Matrix(ro_x_co_x_an[!, id_])
 
