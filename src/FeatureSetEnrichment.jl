@@ -109,8 +109,8 @@ function _plot_mountain(
     title_text = "Gene-Set Enrichment",
     fe = "Feature Rank",
     sc = "Score",
-    low_text = "Low",
-    high_text = "High",
+    lo = "Low",
+    hi = "High",
     ht = "",
 )
 
@@ -223,7 +223,7 @@ function _plot_mountain(
                 Dict(
                     "y" => _mean((yaxis1_domain[2], _mean(yaxis1_domain))),
                     "x" => 1 - side_margin,
-                    "text" => low_text,
+                    "text" => lo,
                     "font" => Dict("color" => "#1993ff"),
                     "bordercolor" => "#b9c9fc",
                 ),
@@ -233,7 +233,7 @@ function _plot_mountain(
                 Dict(
                     "y" => _mean((yaxis1_domain[1], _mean(yaxis1_domain))),
                     "x" => side_margin,
-                    "text" => high_text,
+                    "text" => hi,
                     "font" => Dict("color" => "#ff1992"),
                     "bordercolor" => "#fcc9b9",
                 ),
