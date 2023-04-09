@@ -14,6 +14,12 @@ using ..BioLab
 
 function read(pa; xl = "", delim = '\t', ke_ar...)
 
+    if !ispath(pa)
+
+        error()
+
+    end
+
     ex = splitext(pa)[2]
 
     if ex == ".xlsx"
