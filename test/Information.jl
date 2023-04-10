@@ -18,32 +18,6 @@ end
 
 # --------------------------------------------- #
 
-for (nu1_, nu2_) in (
-    (collect(1:3), collect(10:10:30)),
-    (fill(0, 3), fill(0, 3)),
-    (fill(1, 3), fill(0.001, 3)),
-    (fill(0.001, 3), fill(1, 3)),
-    (fill(0.001, 3), fill(10, 3)),
-)
-
-    BioLab.print_header("$nu1_\n$nu2_")
-
-    # TODO: `@test`.
-    println(BioLab.Information.get_signal_to_noise_ratio(nu1_, nu2_))
-
-    # @code_warntype BioLab.Information.get_signal_to_noise_ratio(nu1_, nu2_)
-
-    # 22.130 ns (0 allocations: 0 bytes)
-    # 10.301 ns (0 allocations: 0 bytes)
-    # 28.960 ns (0 allocations: 0 bytes)
-    # 28.668 ns (0 allocations: 0 bytes)
-    # 28.256 ns (0 allocations: 0 bytes)
-    # @btime BioLab.Information.get_signal_to_noise_ratio($nu1_, $nu2_)
-
-end
-
-# --------------------------------------------- #
-
 n = 10
 
 nu1_ = BioLab.VectorNumber.shift_minimum(randn(n), "0<")
