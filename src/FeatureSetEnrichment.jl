@@ -18,21 +18,21 @@ struct KLioM end
 
 function _get_absolute_raise(sc_, id, ex)
 
-    abe = sc_[id]
+    ab = sc_[id]
 
-    if abe < 0.0
+    if ab < 0.0
 
-        abe = -abe
+        ab = -ab
 
     end
 
     if ex != 1.0
 
-        abe ^= ex
+        ab ^= ex
 
     end
 
-    return abe
+    return ab
 
 end
 
@@ -72,13 +72,13 @@ function _sum_all_and_1(sc_, bo_, ex)
 
     for id in 1:n
 
-        abe = _get_absolute_raise(sc_, id, ex)
+        ab = _get_absolute_raise(sc_, id, ex)
 
-        su += abe
+        su += ab
 
         if bo_[id]
 
-            su1 += abe
+            su1 += ab
 
         end
 
@@ -88,35 +88,27 @@ function _sum_all_and_1(sc_, bo_, ex)
 
 end
 
-function _range(di_)
-
-    return di_[2] - di_[1]
-
-end
-
-function _mean(di_)
-
-    return (di_[1] + di_[2]) / 2
-
-end
-
 function _plot_mountain(
     fe_,
     sc_,
     bo_,
     en_,
     en;
-    title_text = "Gene-Set Enrichment",
-    fe = "Feature Rank",
+    title_text = "Set Enrichment",
+    fe = "Feature",
     sc = "Score",
     lo = "Low",
     hi = "High",
     ht = "",
 )
 
+    n = length(fe_)
+
     width = 800
 
     height = width / MathConstants.golden
+
+    axis = Dict("zeroline" => false, "showgrid" => false)
 
     yaxis1_domain = (0.0, 0.24)
 
@@ -124,18 +116,19 @@ function _plot_mountain(
 
     yaxis3_domain = (0.32, 1.0)
 
+    xaxis_range_margin = n * 0.01
+
     axis_title_font_size = 12
 
     borderwidth = 2
 
-    enrichment_color = "#07fa07"
-
-    enrichment_color_fainter = "rgba(7, 250, 7, 0.24)"
-
-    enrichment_color_faintest = "rgba(7, 250, 7, 0.08)"
-
-    annotation =
-        Dict("yref" => "paper", "xref" => "paper", "yanchor" => "middle", "showarrow" => false)
+    annotation = Dict(
+        "yref" => "paper",
+        "xref" => "paper",
+        # TODO:
+        #"yanchor" => "middle",
+        "showarrow" => false,
+    )
 
     annotationy = merge(
         annotation,
@@ -148,21 +141,15 @@ function _plot_mountain(
     annotations = merge(
         annotation,
         Dict(
-            "y" => _mean(yaxis1_domain),
+            "y" => mean(yaxis1_domain),
             "font" => Dict("size" => 10),
             "bgcolor" => "#ffffff",
-            "borderwidth" => borderwidth,
             "borderpad" => 2,
+            "borderwidth" => borderwidth,
         ),
     )
 
-    side_margin = 0.01
-
-    n = length(fe_)
-
-    range_margin = n * side_margin
-
-    axis = Dict("zeroline" => false, "showgrid" => false)
+    annotations_margin = 0.01
 
     layout = Dict(
         "height" => height,
@@ -178,11 +165,12 @@ function _plot_mountain(
         "xaxis" => merge(
             axis,
             Dict(
-                "range" => (1 - range_margin, n + range_margin),
+                "range" => (1 - xaxis_range_margin, n + xaxis_range_margin),
                 "showspikes" => true,
                 "spikemode" => "across",
                 "spikedash" => "solid",
-                "spikethickness" => 0.8,
+                # TODO: Check.
+                # "spikethickness" => 0.8,
                 "spikecolor" => "#ffb61e",
             ),
         ),
@@ -201,15 +189,15 @@ function _plot_mountain(
                     "y" => 1.088,
                     "text" => "Enrichment: <b>$(BioLab.Number.format(en))</b>",
                     "font" => Dict("size" => 16, "color" => "#181b26"),
+                    "bgcolor" => "rgba(7, 250, 7, 0.08)",
                     "borderpad" => 6.4,
-                    "bgcolor" => enrichment_color_faintest,
                     "borderwidth" => borderwidth,
-                    "bordercolor" => enrichment_color_fainter,
+                    "bordercolor" => "rgba(7, 250, 7, 0.24)",
                 ),
             ),
-            merge(annotationy, Dict("y" => _mean(yaxis1_domain), "text" => "<b>$sc</b>")),
-            merge(annotationy, Dict("y" => _mean(yaxis2_domain), "text" => "<b>Set</b>")),
-            merge(annotationy, Dict("y" => _mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>$sc</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
+            merge(annotationy, Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
             merge(
                 annotationx,
                 Dict(
@@ -221,21 +209,21 @@ function _plot_mountain(
             merge(
                 annotations,
                 Dict(
-                    "y" => _mean((yaxis1_domain[2], _mean(yaxis1_domain))),
-                    "x" => 1 - side_margin,
-                    "text" => lo,
-                    "font" => Dict("color" => "#1993ff"),
-                    "bordercolor" => "#b9c9fc",
-                ),
-            ),
-            merge(
-                annotations,
-                Dict(
-                    "y" => _mean((yaxis1_domain[1], _mean(yaxis1_domain))),
-                    "x" => side_margin,
+                    "y" => yaxis1_domain[2] * 1 / 4,
+                    "x" => annotations_margin,
                     "text" => hi,
                     "font" => Dict("color" => "#ff1992"),
                     "bordercolor" => "#fcc9b9",
+                ),
+                merge(
+                    annotations,
+                    Dict(
+                        "y" => yaxis1_domain[2] * 3 / 4,
+                        "x" => 1 - annotations_margin,
+                        "text" => lo,
+                        "font" => Dict("color" => "#1993ff"),
+                        "bordercolor" => "#b9c9fc",
+                    ),
                 ),
             ),
         ),
@@ -261,7 +249,7 @@ function _plot_mountain(
             "mode" => "markers",
             "marker" => Dict(
                 "symbol" => "line-ns",
-                "size" => height * _range(yaxis2_domain),
+                "size" => height * (_yaxis2_domain[2] - _yaxis2_domain[1]),
                 "line" => Dict(
                     "width" => 1.08,
                     "color" => [
@@ -272,51 +260,19 @@ function _plot_mountain(
             ),
             "hoverinfo" => "x+text",
         ),
-    ]
-
-    push!(
-        trace_,
         Dict(
             "yaxis" => "y3",
             "y" => en_,
             "x" => x,
             "text" => fe_,
             "mode" => "lines",
-            "line" => Dict("width" => 3.2, "color" => enrichment_color),
+            "line" => Dict("width" => 3.2, "color" => "#07fa07"),
             "fill" => "tozeroy",
-            "fillcolor" => enrichment_color_fainter,
+            "fillcolor" => coe2,
         ),
-    )
+    ]
 
     return BioLab.Plot.plot(trace_, layout; ht)
-
-end
-
-function benchmark_card(ca1)
-
-    return reverse!(BioLab.CA_), reverse!(collect(-6:6)), collect(ca1)
-
-end
-
-function benchmark_random(n, n1)
-
-    fe_ = ["Feature $id" for id in 1:n]
-
-    return reverse!(fe_),
-    reverse!(BioLab.VectorNumber.simulate(cld(n, 2); ev = iseven(n))),
-    sample(fe_, n1; replace = false)
-
-end
-
-function benchmark_myc()::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
-
-    di = pkgdir(BioLab, "test", "FeatureSetEnrichment.data")
-
-    da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
-
-    return reverse!(da[!, 1]),
-    reverse!(da[!, 2]),
-    BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 end
 
@@ -669,8 +625,8 @@ end
 
 function score_set(al, fe_x_sa_x_sc, se_fe_; ex = 1.0, n_jo = 1)
 
-    fe_::Vector{String}, sa_::Vector{String}, fe_x_sa_x_sc::Matrix{Float64} =
-        BioLab.DataFrame.separate(fe_x_sa_x_sc)[[2, 3, 4]]
+    _fen, fe_::Vector{String}, sa_::Vector{String}, fe_x_sa_x_sc::Matrix{Float64} =
+        BioLab.DataFrame.separate(fe_x_sa_x_sc)
 
     BioLab.Array.error_duplicate(fe_)
 
@@ -690,6 +646,34 @@ function score_set(al, fe_x_sa_x_sc, se_fe_; ex = 1.0, n_jo = 1)
     end
 
     return se_x_sa_x_en
+
+end
+
+function benchmark_card(ca1)
+
+    return reverse!(BioLab.CA_), reverse!(collect(-6:6)), collect(ca1)
+
+end
+
+function benchmark_random(n, n1)
+
+    fe_ = ["Feature $id" for id in 1:n]
+
+    return reverse!(fe_),
+    reverse!(BioLab.VectorNumber.simulate(cld(n, 2); ev = iseven(n))),
+    sample(fe_, n1; replace = false)
+
+end
+
+function benchmark_myc()::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
+
+    di = pkgdir(BioLab, "test", "FeatureSetEnrichment.data")
+
+    da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
+
+    return reverse!(da[!, 1]),
+    reverse!(da[!, 2]),
+    BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 end
 
