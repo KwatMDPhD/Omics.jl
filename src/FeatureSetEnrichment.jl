@@ -616,10 +616,10 @@ function score_set(al, fe_, sc_, se_fe_; ex = 1.0)
 
     ch = Dict(fe => id for (id, fe) in enumerate(fe_))
 
-    return Dict(
-        se => _score_set(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for
-        (se, fe1_) in se_fe_
-    )
+    return [
+        _score_set(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for
+        fe1_ in values(se_fe_)
+    ]
 
 end
 
