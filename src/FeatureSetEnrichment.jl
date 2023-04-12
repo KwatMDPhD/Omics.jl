@@ -637,6 +637,7 @@ function score_set(al, feature_x_sample_x_score::DataFrame, se_, fe1___; ex = 1.
 
     BioLab.Array.error_duplicate(fe_)
 
+    # TODO: Use `Matrix`.
     se_x_sa_x_en = DataFrame("Set" => se_)
 
     # TODO: Parallelize.
