@@ -133,7 +133,7 @@ fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_card("AK")
 for al in (BioLab.FeatureSetEnrichment.KS(), BioLab.FeatureSetEnrichment.KLioM())
 
     display(
-        BioLab.FeatureSetEnrichment.score_set(
+        BioLab.FeatureSetEnrichment.enrich(
             al,
             fe_,
             sc_,
@@ -160,7 +160,7 @@ for al in (
 )
 
     display(
-        BioLab.FeatureSetEnrichment._score_set(
+        BioLab.FeatureSetEnrichment._enrich(
             al,
             fe_,
             sc_,
@@ -202,21 +202,21 @@ for al in (
     # 45.583 μs (0 allocations: 0 bytes)
     # 220.875 μs (0 allocations: 0 bytes)
     # 364.458 μs (0 allocations: 0 bytes)
-    # @btime BioLab.FeatureSetEnrichment._score_set($al, $fe_, $sc_, $bo_; pl = $false)
+    # @btime BioLab.FeatureSetEnrichment._enrich($al, $fe_, $sc_, $bo_; pl = $false)
 
     # 570.000 μs (9 allocations: 20.80 KiB)
     # 745.625 μs (9 allocations: 20.80 KiB)
     # 891.041 μs (9 allocations: 20.80 KiB)
-    # @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $fe1_; pl = $false)
+    # @btime BioLab.FeatureSetEnrichment.enrich($al, $fe_, $sc_, $fe1_; pl = $false)
 
     # 3.240 ms (108 allocations: 1.49 MiB)
     # 12.069 ms (108 allocations: 1.49 MiB)
     # 19.324 ms (108 allocations: 1.49 MiB)
-    # @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $fe1___)
+    # @btime BioLab.FeatureSetEnrichment.enrich($al, $fe_, $sc_, $fe1___)
 
     # # 11.463 ms (463 allocations: 8.66 MiB)
     # # 37.931 ms (463 allocations: 8.66 MiB)
     # # 59.793 ms (463 allocations: 8.66 MiB)
-    # @btime BioLab.FeatureSetEnrichment.score_set($al, $feature_x_sample_x_score, $se_, $fe1___)
+    # @btime BioLab.FeatureSetEnrichment.enrich($al, $feature_x_sample_x_score, $se_, $fe1___)
 
 end

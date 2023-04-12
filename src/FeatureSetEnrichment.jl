@@ -1,7 +1,5 @@
 module FeatureSetEnrichment
 
-using DataFrames: DataFrame
-
 using StatsBase: mean, sample
 
 using ..BioLab
@@ -275,7 +273,7 @@ function _plot_mountain(
 
 end
 
-function _score_set(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     n, su1, su0 = _sum_1_and_0(sc_, bo_, ex)
 
@@ -341,7 +339,7 @@ function _score_set(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function _score_set(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function _enrich(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     n, su1, su0 = _sum_1_and_0(sc_, bo_, ex)
 
@@ -405,7 +403,7 @@ function _clip(le, pr, mi)
 
 end
 
-function _score_set(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     n, su, su1 = _sum_all_and_1(sc_, bo_, ex)
 
@@ -489,7 +487,7 @@ function _score_set(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function _score_set_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
+function _enrich_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
     n, su, su1 = _sum_all_and_1(sc_, bo_, ex)
 
@@ -593,19 +591,19 @@ function _score_set_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function _score_set(al::KLioP, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function _enrich(al::KLioP, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    return _score_set_klio(fe_, sc_, bo_, (_1, _0) -> _1 + _0; ex, pl, ke_ar...)
-
-end
-
-function _score_set(al::KLioM, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
-
-    return _score_set_klio(fe_, sc_, bo_, (_1, _0) -> _1 - _0; ex, pl, ke_ar...)
+    return _enrich_klio(fe_, sc_, bo_, (_1, _0) -> _1 + _0; ex, pl, ke_ar...)
 
 end
 
-function score_set(
+function _enrich(al::KLioM, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+
+    return _enrich_klio(fe_, sc_, bo_, (_1, _0) -> _1 - _0; ex, pl, ke_ar...)
+
+end
+
+function enrich(
     al,
     fe_,
     sc_,
@@ -615,39 +613,33 @@ function score_set(
     ke_ar...,
 )
 
-    return _score_set(al, fe_, sc_, BioLab.Collection.is_in(fe_, Set(fe1_)); ex, pl, ke_ar...)
+    return _enrich(al, fe_, sc_, BioLab.Collection.is_in(fe_, Set(fe1_)); ex, pl, ke_ar...)
 
 end
 
-function score_set(al, fe_, sc_, fe1___; ex = 1.0)
+# TODO: Parallelize.
+
+function enrich(al, fe_, sc_, fe1___; ex = 1.0)
 
     ch = Dict(fe => id for (id, fe) in enumerate(fe_))
 
     return [
-        _score_set(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for
-        fe1_ in fe1___
+        _enrich(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for fe1_ in fe1___
     ]
 
 end
 
-function score_set(al, feature_x_sample_x_score::DataFrame, se_, fe1___; ex = 1.0, n_jo = 1)
+function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0, n_jo = 1)
 
-    _fen, fe_::Vector{String}, sa_::Vector{String}, fe_x_sa_x_sc::Matrix{Float64} =
-        BioLab.DataFrame.separate(feature_x_sample_x_score)
+    se_x_sa_x_en = Matrix{Float64}(undef, length(se_), lenght(sa_))
 
-    BioLab.Array.error_duplicate(fe_)
-
-    # TODO: Use `Matrix`.
-    se_x_sa_x_en = DataFrame("Set" => se_)
-
-    # TODO: Parallelize.
     for (id, sa) in enumerate(sa_)
 
         go_ = findall(!ismissing, fe_x_sa_x_sc[:, id])
 
         sc_, fe_ = BioLab.Collection.sort_like((fe_x_sa_x_sc[go_, id], fe_[go_]); ic = false)
 
-        se_x_sa_x_en[!, sa] = score_set(al, fe_, sc_, fe1___; ex)
+        se_x_sa_x_en[:, sa] = enrich(al, fe_, sc_, fe1___; ex)
 
     end
 
@@ -667,7 +659,7 @@ function benchmark_random(n, n1)
 
     fe_ = ["Feature $id" for id in 1:n]
 
-    # TODO: Check.
+    # TODO
     return reverse!(fe_),
     reverse!(BioLab.VectorNumber.simulate(cld(n, 2); ev = iseven(n))),
     sample(fe_, n1; replace = false)
