@@ -2,7 +2,7 @@ module FeatureSetEnrichment
 
 using DataFrames: DataFrame
 
-using StatsBase: sample
+using StatsBase: mean, sample
 
 using ..BioLab
 
@@ -122,13 +122,8 @@ function _plot_mountain(
 
     borderwidth = 2
 
-    annotation = Dict(
-        "yref" => "paper",
-        "xref" => "paper",
-        # TODO:
-        #"yanchor" => "middle",
-        "showarrow" => false,
-    )
+    annotation =
+        Dict("yref" => "paper", "xref" => "paper", "yanchor" => "middle", "showarrow" => false)
 
     annotationy = merge(
         annotation,
@@ -149,12 +144,17 @@ function _plot_mountain(
         ),
     )
 
-    annotations_margin = 0.01
+    annotations_margin = 0.02
+
+    coe1 = "#07fa07"
+
+    coe2 = "rgba(7, 250, 7, 0.32)"
+
+    coe3 = "rgba(7, 250, 7, 0.08)"
 
     layout = Dict(
         "height" => height,
         "width" => width,
-        "paper_bgcolor" => "#fcfcfc",
         "showlegend" => false,
         "yaxis" => merge(axis, Dict("domain" => yaxis1_domain, "ticks" => "outside")),
         "yaxis2" => merge(
@@ -169,8 +169,7 @@ function _plot_mountain(
                 "showspikes" => true,
                 "spikemode" => "across",
                 "spikedash" => "solid",
-                # TODO: Check.
-                # "spikethickness" => 0.8,
+                "spikethickness" => 0.69,
                 "spikecolor" => "#ffb61e",
             ),
         ),
@@ -180,19 +179,19 @@ function _plot_mountain(
                 Dict(
                     "y" => 1.24,
                     "text" => "<b>$(BioLab.String.limit(title_text, 32))</b>",
-                    "font" => Dict("size" => 24, "color" => "#2b2028"),
+                    "font" => Dict("size" => 32, "family" => "Relaway", "color" => "#2b2028"),
                 ),
             ),
             merge(
                 annotationx,
                 Dict(
-                    "y" => 1.088,
+                    "y" => 1.08,
                     "text" => "Enrichment: <b>$(BioLab.Number.format(en))</b>",
                     "font" => Dict("size" => 16, "color" => "#181b26"),
-                    "bgcolor" => "rgba(7, 250, 7, 0.08)",
-                    "borderpad" => 6.4,
+                    "bgcolor" => coe3,
+                    "borderpad" => 8,
                     "borderwidth" => borderwidth,
-                    "bordercolor" => "rgba(7, 250, 7, 0.24)",
+                    "bordercolor" => coe2,
                 ),
             ),
             merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>$sc</b>")),
@@ -215,15 +214,15 @@ function _plot_mountain(
                     "font" => Dict("color" => "#ff1992"),
                     "bordercolor" => "#fcc9b9",
                 ),
-                merge(
-                    annotations,
-                    Dict(
-                        "y" => yaxis1_domain[2] * 3 / 4,
-                        "x" => 1 - annotations_margin,
-                        "text" => lo,
-                        "font" => Dict("color" => "#1993ff"),
-                        "bordercolor" => "#b9c9fc",
-                    ),
+            ),
+            merge(
+                annotations,
+                Dict(
+                    "y" => yaxis1_domain[2] * 3 / 4,
+                    "x" => 1 - annotations_margin,
+                    "text" => lo,
+                    "font" => Dict("color" => "#1993ff"),
+                    "bordercolor" => "#b9c9fc",
                 ),
             ),
         ),
@@ -249,7 +248,7 @@ function _plot_mountain(
             "mode" => "markers",
             "marker" => Dict(
                 "symbol" => "line-ns",
-                "size" => height * (_yaxis2_domain[2] - _yaxis2_domain[1]),
+                "size" => height * (yaxis2_domain[2] - yaxis2_domain[1]),
                 "line" => Dict(
                     "width" => 1.08,
                     "color" => [
@@ -266,7 +265,7 @@ function _plot_mountain(
             "x" => x,
             "text" => fe_,
             "mode" => "lines",
-            "line" => Dict("width" => 3.2, "color" => "#07fa07"),
+            "line" => Dict("width" => 3.2, "color" => coe1),
             "fill" => "tozeroy",
             "fillcolor" => coe2,
         ),
@@ -606,31 +605,39 @@ function _score_set(al::KLioM, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function score_set(al, fe_, sc_, fe1_::AbstractVector; ex = 1.0, pl = true, ke_ar...)
+function score_set(
+    al,
+    fe_,
+    sc_,
+    fe1_::AbstractVector{<:AbstractString};
+    ex = 1.0,
+    pl = true,
+    ke_ar...,
+)
 
     return _score_set(al, fe_, sc_, BioLab.Collection.is_in(fe_, Set(fe1_)); ex, pl, ke_ar...)
 
 end
 
-function score_set(al, fe_, sc_, se_fe_; ex = 1.0)
+function score_set(al, fe_, sc_, fe1___; ex = 1.0)
 
     ch = Dict(fe => id for (id, fe) in enumerate(fe_))
 
     return [
         _score_set(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for
-        fe1_ in values(se_fe_)
+        fe1_ in fe1___
     ]
 
 end
 
-function score_set(al, fe_x_sa_x_sc, se_fe_; ex = 1.0, n_jo = 1)
+function score_set(al, feature_x_sample_x_score::DataFrame, se_, fe1___; ex = 1.0, n_jo = 1)
 
     _fen, fe_::Vector{String}, sa_::Vector{String}, fe_x_sa_x_sc::Matrix{Float64} =
-        BioLab.DataFrame.separate(fe_x_sa_x_sc)
+        BioLab.DataFrame.separate(feature_x_sample_x_score)
 
     BioLab.Array.error_duplicate(fe_)
 
-    se_x_sa_x_en = DataFrame("Set" => collect(keys(se_fe_)))
+    se_x_sa_x_en = DataFrame("Set" => se_)
 
     # TODO: Parallelize.
     for (id, sa) in enumerate(sa_)
@@ -639,9 +646,7 @@ function score_set(al, fe_x_sa_x_sc, se_fe_; ex = 1.0, n_jo = 1)
 
         sc_, fe_ = BioLab.Collection.sort_like((fe_x_sa_x_sc[go_, id], fe_[go_]); ic = false)
 
-        se_en = score_set(al, fe_, sc_, se_fe_; ex)
-
-        se_x_sa_x_en[!, sa] = [se_en[se] for se in se_x_sa_x_en[!, "Set"]]
+        se_x_sa_x_en[!, sa] = score_set(al, fe_, sc_, fe1___; ex)
 
     end
 
@@ -651,7 +656,9 @@ end
 
 function benchmark_card(ca1)
 
-    return reverse!(BioLab.CA_), reverse!(collect(-6:6)), collect(ca1)
+    return reverse!([string(ca) for ca in BioLab.CA_]),
+    reverse!(collect(-6:6)),
+    [string(ca) for ca in ca1]
 
 end
 
@@ -659,6 +666,7 @@ function benchmark_random(n, n1)
 
     fe_ = ["Feature $id" for id in 1:n]
 
+    # TODO: Check.
     return reverse!(fe_),
     reverse!(BioLab.VectorNumber.simulate(cld(n, 2); ev = iseven(n))),
     sample(fe_, n1; replace = false)

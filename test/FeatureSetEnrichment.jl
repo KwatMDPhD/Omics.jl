@@ -1,7 +1,5 @@
 using DataFrames
 
-# using InteractiveUtils
-
 include("_.jl")
 
 # --------------------------------------------- #
@@ -16,12 +14,11 @@ sc_ = [-2.0, -1, 0, 0, 1, 2]
 
 id = 1
 
-for ex in (0.9, 1.0, 1.1, 2.0)
+for (ex, re) in ((-1.0, 0.5), (1.0, 2.0), (2.0, 4.0), (3.0, 8.0))
 
     BioLab.print_header(ex)
 
-    # TODO: `@test`.
-    println(BioLab.FeatureSetEnrichment._get_absolute_raise(sc_, id, ex))
+    @test BioLab.FeatureSetEnrichment._get_absolute_raise(sc_, id, ex) == re
 
     # @code_warntype BioLab.FeatureSetEnrichment._get_absolute_raise(sc_, id, ex)
 
@@ -78,7 +75,7 @@ BioLab.FeatureSetEnrichment._plot_mountain(
     [1.0, -1.0],
     [true, true],
     [0.1, -0.1],
-    11.29;
+    11.29,
 )
 
 # @code_warntype BioLab.FeatureSetEnrichment._plot_mountain(
@@ -135,13 +132,15 @@ fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_card("AK")
 
 for al in (BioLab.FeatureSetEnrichment.KS(), BioLab.FeatureSetEnrichment.KLioM())
 
-    BioLab.FeatureSetEnrichment.score_set(
-        al,
-        fe_,
-        sc_,
-        fe1_;
-        title_text = string(al),
-        ht = joinpath(TE, "mountain.$al.html"),
+    display(
+        BioLab.FeatureSetEnrichment.score_set(
+            al,
+            fe_,
+            sc_,
+            fe1_;
+            title_text = string(al),
+            ht = joinpath(TE, "mountain.$al.html"),
+        ),
     )
 
 end
@@ -152,14 +151,43 @@ fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_myc()
 
 bo_ = BioLab.Collection.is_in(fe_, fe1_)
 
-fe_x_sa_x_sc = DataFrame(
+# --------------------------------------------- #
+
+for al in (
+    BioLab.FeatureSetEnrichment.KS(),
+    BioLab.FeatureSetEnrichment.KLi(),
+    BioLab.FeatureSetEnrichment.KLioM(),
+)
+
+    display(
+        BioLab.FeatureSetEnrichment._score_set(
+            al,
+            fe_,
+            sc_,
+            bo_;
+            title_text = BioLab.String.split_and_get(string(al), '.', 3)[1:(end - 2)],
+            lo = "Low Phenotype",
+            hi = "High Phenotype",
+        ),
+    )
+
+end
+
+# --------------------------------------------- #
+
+feature_x_sample_x_score = DataFrame(
     "Feature" => fe_,
     "Score" => sc_,
     "Score x 10" => sc_ * 10.0,
     "Constant" => fill(0.8, length(fe_)),
 )
 
-se_fe_ = BioLab.GMT.read(joinpath(@__DIR__, "FeatureSetEnrichment.data", "h.all.v7.1.symbols.gmt"))
+se_fe1_ =
+    BioLab.GMT.read(joinpath(@__DIR__, "FeatureSetEnrichment.data", "h.all.v7.1.symbols.gmt"))
+
+se_ = collect(keys(se_fe1_))
+
+fe1___ = collect(values(se_fe1_))
 
 # --------------------------------------------- #
 
@@ -169,62 +197,26 @@ for al in (
     BioLab.FeatureSetEnrichment.KLioM(),
 )
 
-    BioLab.FeatureSetEnrichment._score_set(
-        al,
-        fe_,
-        sc_,
-        bo_;
-        title_text = BioLab.String.split_and_get(string(al), '.', 3)[1:(end - 2)],
-        low_text = "Low Phenotype",
-        high_text = "High Phenotype",
-    )
+    BioLab.print_header(al)
+
+    # 45.583 μs (0 allocations: 0 bytes)
+    # 220.875 μs (0 allocations: 0 bytes)
+    # 364.458 μs (0 allocations: 0 bytes)
+    # @btime BioLab.FeatureSetEnrichment._score_set($al, $fe_, $sc_, $bo_; pl = $false)
+
+    # 570.000 μs (9 allocations: 20.80 KiB)
+    # 745.625 μs (9 allocations: 20.80 KiB)
+    # 891.041 μs (9 allocations: 20.80 KiB)
+    # @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $fe1_; pl = $false)
+
+    # 3.240 ms (108 allocations: 1.49 MiB)
+    # 12.069 ms (108 allocations: 1.49 MiB)
+    # 19.324 ms (108 allocations: 1.49 MiB)
+    # @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $fe1___)
+
+    # # 11.463 ms (463 allocations: 8.66 MiB)
+    # # 37.931 ms (463 allocations: 8.66 MiB)
+    # # 59.793 ms (463 allocations: 8.66 MiB)
+    # @btime BioLab.FeatureSetEnrichment.score_set($al, $feature_x_sample_x_score, $se_, $fe1___)
 
 end
-
-# --------------------------------------------- #
-
-al = BioLab.FeatureSetEnrichment.KS()
-
-# 45.584 μs (0 allocations: 0 bytes)
-# @btime BioLab.FeatureSetEnrichment._score_set($al, $fe_, $sc_, $bo_; pl = $false)
-
-# 331.875 μs (6 allocations: 19.95 KiB)
-# @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $bo_; pl = $false)
-
-# 3.240 ms (114 allocations: 1.50 MiB)
-# @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $se_fe_)
-
-# 11.463 ms (489 allocations: 8.62 MiB)
-# @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_x_sa_x_sc, $se_fe_)
-
-# --------------------------------------------- #
-
-al = BioLab.FeatureSetEnrichment.KLi()
-
-# 222.208 μs (0 allocations: 0 bytes)
-# @btime BioLab.FeatureSetEnrichment._score_set($al, $fe_, $sc_, $bo_; pl = $false)
-
-# 745.625 μs (9 allocations: 20.80 KiB)
-# @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $fe1_; pl = $false)
-
-# 12.131 ms (114 allocations: 1.50 MiB)
-# @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $se_fe_)
-
-# 38.171 ms (489 allocations: 8.62 MiB)
-# @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_x_sa_x_sc, $se_fe_)
-
-# --------------------------------------------- #
-
-al = BioLab.FeatureSetEnrichment.KLioM()
-
-# 364.458 μs (0 allocations: 0 bytes)
-# @btime BioLab.FeatureSetEnrichment._score_set($al, $fe_, $sc_, $bo_; pl = $false)
-
-# 891.125 μs (9 allocations: 20.80 KiB)
-# @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $fe1_; pl = $false)
-
-# 19.248 ms (114 allocations: 1.50 MiB)
-# @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_, $sc_, $se_fe_)
-
-# 59.793 ms (489 allocations: 8.62 MiB)
-# @btime BioLab.FeatureSetEnrichment.score_set($al, $fe_x_sa_x_sc, $se_fe_)
