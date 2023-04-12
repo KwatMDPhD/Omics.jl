@@ -1,5 +1,49 @@
 module Collection
 
+function _error_bad(an, ba_)
+
+    for ba in ba_
+
+        if isequal(an, ba)
+
+            error(ba)
+
+        end
+
+    end
+
+end
+
+function error_bad(co, ty)
+
+    for an in co
+
+        if !(an isa ty)
+
+            error()
+
+        end
+
+        if ty <: Real
+
+            ba_ = (-Inf, Inf, NaN)
+
+        elseif ty <: AbstractString
+
+            ba_ = ("",)
+
+        else
+
+            ba_ = ()
+
+        end
+
+        _error_bad(an, ba_)
+
+    end
+
+end
+
 function get_extreme_id(an_, n_ex)
 
     if isempty(an_) || n_ex == 0

@@ -631,15 +631,17 @@ end
 
 function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0, n_jo = 1)
 
-    se_x_sa_x_en = Matrix{Float64}(undef, length(se_), lenght(sa_))
+    se_x_sa_x_en = Matrix{Float64}(undef, length(se_), length(sa_))
 
     for (id, sa) in enumerate(sa_)
 
-        go_ = findall(!ismissing, fe_x_sa_x_sc[:, id])
+        sc_ = fe_x_sa_x_sc[:, id]
 
-        sc_, fe_ = BioLab.Collection.sort_like((fe_x_sa_x_sc[go_, id], fe_[go_]); ic = false)
+        go_ = findall(!ismissing, sc_)
 
-        se_x_sa_x_en[:, sa] = enrich(al, fe_, sc_, fe1___; ex)
+        sc_, fe_ = BioLab.Collection.sort_like((sc_[go_], fe_[go_]); ic = false)
+
+        se_x_sa_x_en[:, id] = enrich(al, fe_, sc_, fe1___; ex)
 
     end
 
