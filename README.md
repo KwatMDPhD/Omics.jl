@@ -1,4 +1,4 @@
-🧬 Package for bioinformatics.
+🧬 For bioinformatics.
 
 ---
 
