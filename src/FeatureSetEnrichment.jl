@@ -1,5 +1,7 @@
 module FeatureSetEnrichment
 
+using ProgressMeter: @showprogress
+
 using StatsBase: mean, sample
 
 using ..BioLab
@@ -631,9 +633,11 @@ end
 
 function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0, n_jo = 1)
 
-    se_x_sa_x_en = Matrix{Float64}(undef, length(se_), length(sa_))
+    n = length(sa_)
 
-    for (id, sa) in enumerate(sa_)
+    se_x_sa_x_en = Matrix{Float64}(undef, length(se_), n)
+
+    @showprogress for id in 1:n
 
         sc_ = fe_x_sa_x_sc[:, id]
 
