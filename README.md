@@ -1,5 +1,3 @@
-🧬 For bioinformatics.
-
 ---
 
 ## 👋 🤠 Howdy
