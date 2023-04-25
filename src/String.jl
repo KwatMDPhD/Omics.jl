@@ -121,6 +121,25 @@ function title(st)
 
 end
 
+# TODO: Test.
+function try_parse(an)
+
+    try
+
+        an = parse(Float64, an)
+
+        an = convert(Int, an)
+
+    catch
+
+        @warn "Can not parse as number." an
+
+    end
+
+    return an
+
+end
+
 function split_and_get(st, de, id)
 
     return split(st, de; limit = id + 1)[id]
