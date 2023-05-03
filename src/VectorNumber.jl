@@ -44,13 +44,13 @@ end
 
 # TODO: Test.
 
-function range(ar, n)
+function step(ar, n)
 
     return range(minimum(ar), maximum(ar), n)
 
 end
 
-function range(ar::AbstractArray{Int}, n)
+function step(ar::AbstractArray{Int}, n)
 
     return collect(minimum(ar):maximum(ar))
 
