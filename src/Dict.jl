@@ -15,7 +15,7 @@ function print(ke_va; n = length(ke_va))
     ty = typeof(ke_va)
 
     println(
-        "🗾 $ty with $(BioLab.String.count_noun(n_ke, "key")) ➡️ $(BioLab.String.count_noun(n_va, "value")) (unique)",
+        "🗾 $ty with $(BioLab.String.count_noun(n_ke, "key")) ➡️  $(BioLab.String.count_noun(n_va, "value")) (unique)",
     )
 
     display(collect(ke_va)[1:n])
@@ -44,11 +44,11 @@ function set_with_first!(ke_va, ke, va; pr = true)
 
         if vac == va
 
-            BioLab.check_print(pr, "👯‍♂️ $ke ➡️ $va.")
+            BioLab.check_print(pr, "👯‍♂️ $ke ➡️  $va.")
 
         else
 
-            BioLab.check_print(pr, "$ke ➡️ $vac (🙅 $va).")
+            BioLab.check_print(pr, "$ke ➡️  $vac (🙅 $va).")
 
         end
 
@@ -70,11 +70,11 @@ function set_with_last!(ke_va, ke, va; pr = true)
 
         if vac == va
 
-            BioLab.check_print(pr, "👯‍♀️ $ke ➡️ $va.")
+            BioLab.check_print(pr, "👯‍♀️ $ke ➡️  $va.")
 
         else
 
-            BioLab.check_print(pr, "$ke ➡️ (🙅 $vac) $va")
+            BioLab.check_print(pr, "$ke ➡️  (🙅 $vac) $va")
 
             ke_va[ke] = va
 
@@ -110,7 +110,7 @@ function set_with_suffix!(ke_va, ke, va; pr = true)
 
         end
 
-        BioLab.check_print(pr, "(🙋 $kec) $ke ➡️ $va")
+        BioLab.check_print(pr, "(🙋 $kec) $ke ➡️  $va")
 
     end
 

@@ -173,7 +173,7 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
     if pr
 
-        println("🧭 Mapping platform features using the platform table ($ke ➡️ $va)")
+        println("🧭 Mapping platform features using the platform table ($ke ➡️  $va)")
 
         display(first(fe_x_io_x_an, 2))
 
@@ -227,7 +227,7 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
         else
 
-            println("⚠️ A $sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  ")).")
+            println("⚠️  A $sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  ")).")
 
         end
 
@@ -249,7 +249,7 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
         else
 
-            println("⚠️ $sa table is empty.")
+            println("⚠️  $sa table is empty.")
 
         end
 
@@ -292,7 +292,7 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
         else
 
-            println("⚠️ $pl table is empty.")
+            println("⚠️  $pl table is empty.")
 
         end
 

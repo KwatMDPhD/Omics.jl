@@ -129,7 +129,7 @@ function factorize(a, n; ve = true, ke_ar...)
 
     if ve
 
-        println("♻️ $(mf.niters) iterations.")
+        println("♻️  $(mf.niters) iterations.")
 
         println("🏁 Objective value $(BioLab.Number.format(mf.objvalue)).")
 

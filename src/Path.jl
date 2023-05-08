@@ -113,7 +113,7 @@ function empty(di)
 
     if isdir(di)
 
-        println("🗑️ Emptying $di")
+        println("🗑️  Emptying $di")
 
         rm(di; recursive = true)
 
