@@ -4,15 +4,21 @@ using ProgressMeter
 
 # ---- #
 
-di = "/Users/kwat/Desktop/ferreira_treg"
+ro = "/Users/kwat/Desktop/ferreira"
 
 # ---- #
 
-dis = joinpath(di, "star")
+al = joinpath(ro, "star")
 
-id_sa = BioLab.Dict.read(joinpath(di, "id_sample.json"))
+id_sa = BioLab.Dict.read(joinpath(ro, "id_sample.json"))
 
 # ---- #
+
+println("💾 Reading")
+
+fe_ = Vector{String}()
+
+ba_ = Vector{String}()
 
 id1_ = Vector{Int}()
 
@@ -20,48 +26,20 @@ id2_ = Vector{Int}()
 
 n_ = Vector{Int}()
 
-fe_ = Vector{String}()
-
-ba_ = Vector{String}()
-
 # TODO: Rename `list`.
-for na in BioLab.Path.list(dis)
+for na in BioLab.Path.list(al)
 
     sa = id_sa[na]
 
-    BioLab.print_header(sa)
-
-    #
-
-    da = BioLab.Table.read(
-        joinpath(dis, na, "Solo.out", "Gene", "filtered", "matrix.mtx");
-        header = 3,
-        delim = " ",
-    )
-
-    na1, na2, na3 = (parse(Int, na) for na in names(da))
-
-    #
-
-    append!(id1_, da[!, 1])
-
-    n_ba = length(ba_)
-
-    append!(id2_, [n_ba + id for id in da[!, 2]])
-
-    append!(n_, da[!, 3])
-
-    #
+    println("👽 $sa")
 
     fes_ = BioLab.Table.read(
-        joinpath(dis, na, "Solo.out", "Gene", "filtered", "features.tsv");
+        joinpath(al, na, "Solo.out", "Gene", "filtered", "features.tsv");
         header = false,
     )[
         !,
         2,
     ]
-
-    @assert na1 == length(fes_)
 
     if isempty(fe_)
 
@@ -73,48 +51,70 @@ for na in BioLab.Path.list(dis)
 
     end
 
-    #
-
     bas_ = BioLab.Table.read(
-        joinpath(dis, na, "Solo.out", "Gene", "filtered", "barcodes.tsv");
+        joinpath(al, na, "Solo.out", "Gene", "filtered", "barcodes.tsv");
         header = false,
     )[
         !,
         1,
     ]
 
-    @assert na2 == length(bas_)
+    n_ba = length(ba_)
 
     append!(ba_, ["$sa.$ba" for ba in bas_])
 
-    #
+    da = BioLab.Table.read(
+        joinpath(al, na, "Solo.out", "Gene", "filtered", "matrix.mtx");
+        header = 3,
+        delim = " ",
+    )
 
-    println(na3)
+    na1, na2, na3 = (parse(Int, na) for na in names(da))
+
+    @assert length(fes_) == na1
+
+    @assert length(bas_) == na2
+
+    println("$na1 x $na2 x $na3")
+
+    append!(id1_, da[!, 1])
+
+    append!(id2_, [n_ba + id for id in da[!, 2]])
+
+    append!(n_, da[!, 3])
 
 end
 
 # ---- #
 
-n_fe = length(fe_)
+id1u_ = unique(id1_)
+
+id1_id1ui = Dict(un => id for (id, un) in enumerate(id1u_))
+
+feu_ = fe_[id1u_]
+
+n_feu = length(feu_)
+
+println("👍 Keeping $n_feu features with a nonzero")
+
+# ---- #
 
 n_ba = length(ba_)
 
-fe_x_ba_x_n = fill(0, (n_fe, n_ba))
+println("👍 Keeping all $n_ba barcodes")
+
+fe_x_ba_x_n = fill(0, (n_feu, n_ba))
 
 @showprogress for (id1, id2, n) in zip(id1_, id2_, n_)
 
-    fe_x_ba_x_n[id1, id2] = n
+    fe_x_ba_x_n[id1_id1ui[id1], id2] = n
 
 end
 
-
 # ---- #
 
-BioLab.Table.write(
-    joinpath(di, "feature_x_barcode_x_n.tsv"),
-    BioLab.DataFrame.make("Gene", fe_, ba_, fe_x_ba_x_n),
-)
+su_ = [sum(n_) for n_ in eachcol(fe_x_ba_x_n)]
+
+BioLab.Plot.plot_histogram((su_,))
 
 # ---- #
-
-da = BioLab.Table.read(joinpath(di, "feature_x_barcode_x_n.tsv"))
