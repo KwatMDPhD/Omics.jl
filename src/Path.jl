@@ -88,6 +88,7 @@ function error_missing(di, pa_)
 
 end
 
+# TODO: Rename.
 function list(di; jo = false, ig_ = (r"^\.",), ke_ = ())
 
     pa_ = Vector{String}()

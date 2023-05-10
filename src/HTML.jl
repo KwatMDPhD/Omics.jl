@@ -33,7 +33,7 @@ function write(di, so_, sc; he = 800, ht = "")
 
     Base.write(ht, jo)
 
-    println("🖼️ $ht.")
+    println("🖼️  $ht.")
 
     try
 
