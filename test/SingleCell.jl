@@ -10,7 +10,7 @@ ro = "/Users/kwat/Desktop/ferreira"
 
 al = joinpath(ro, "star")
 
-id_sa = BioLab.Dict.read(joinpath(ro, "id_sample.json"))
+na_sa = BioLab.Dict.read(joinpath(ro, "name_sample.json"))
 
 # ---- #
 
@@ -20,16 +20,18 @@ fe_ = Vector{String}()
 
 ba_ = Vector{String}()
 
-id1_ = Vector{Int}()
+n_ba = 0
 
-id2_ = Vector{Int}()
+idf_ = Vector{Int}()
 
-n_ = Vector{Int}()
+idb_ = Vector{Int}()
+
+co_ = Vector{Int}()
 
 # TODO: Rename `list`.
 for na in BioLab.Path.list(al)
 
-    sa = id_sa[na]
+    sa = na_sa[na]
 
     println("👽 $sa")
 
@@ -43,7 +45,7 @@ for na in BioLab.Path.list(al)
 
     if isempty(fe_)
 
-        fe_ = fes_
+        global fe_ = fes_
 
     else
 
@@ -59,8 +61,6 @@ for na in BioLab.Path.list(al)
         1,
     ]
 
-    n_ba = length(ba_)
-
     append!(ba_, ["$sa.$ba" for ba in bas_])
 
     da = BioLab.Table.read(
@@ -69,52 +69,77 @@ for na in BioLab.Path.list(al)
         delim = " ",
     )
 
-    na1, na2, na3 = (parse(Int, na) for na in names(da))
+    n_fes, n_bas, n_cos = (parse(Int, na) for na in names(da))
 
-    @assert length(fes_) == na1
+    @assert length(fes_) == n_fes
 
-    @assert length(bas_) == na2
+    @assert length(bas_) == n_bas
 
-    println("$na1 x $na2 x $na3")
+    println("$n_fes x $n_bas x $n_cos")
 
-    append!(id1_, da[!, 1])
+    append!(idf_, da[!, 1])
 
-    append!(id2_, [n_ba + id for id in da[!, 2]])
+    append!(idb_, [n_ba + id for id in da[!, 2]])
 
-    append!(n_, da[!, 3])
+    global n_ba += n_bas
+
+    append!(co_, da[!, 3])
 
 end
 
 # ---- #
 
-id1u_ = unique(id1_)
+un_ = unique(idf_)
 
-id1_id1ui = Dict(un => id for (id, un) in enumerate(id1u_))
+idf_idf2 = Dict(un => id for (id, un) in enumerate(un_))
 
-feu_ = fe_[id1u_]
+fe_ = fe_[un_]
 
-n_feu = length(feu_)
+n_fe = length(fe_)
 
-println("👍 Keeping $n_feu features with a nonzero")
+println("⬇️  There are $n_fe nonzero features.")
 
 # ---- #
 
 n_ba = length(ba_)
 
-println("👍 Keeping all $n_ba barcodes")
+println("➡️  There are $n_ba barcodes.")
 
-fe_x_ba_x_n = fill(0, (n_feu, n_ba))
+fe_x_ba_x_co = fill(0, (n_fe, n_ba))
 
-@showprogress for (id1, id2, n) in zip(id1_, id2_, n_)
+@showprogress for (idf, idb, co) in zip(idf_, idb_, co_)
 
-    fe_x_ba_x_n[id1_id1ui[id1], id2] = n
+    fe_x_ba_x_co[idf_idf2[idf], idb] = co
 
 end
 
 # ---- #
 
-su_ = [sum(n_) for n_ in eachcol(fe_x_ba_x_n)]
+println("🚮 Removing barcodes")
 
-BioLab.Plot.plot_histogram((su_,))
+cof_ = [sum(co_) / n_fe for co_ in eachcol(fe_x_ba_x_co)]
+
+xaxis = Dict("title" => Dict("text" => "Count per Feature"))
+
+BioLab.Plot.plot_histogram((cof_,); layout = Dict("title" => "All", "xaxis" => xaxis))
+
+mi = 0.1
+
+ma = 1.0
+
+ke_ = [mi <= cof <= ma for cof in cof_]
+
+BioLab.Plot.plot_histogram(
+    (cof_[ke_],);
+    layout = Dict("title" => "$(sum(ke_)) Selected ($mi <= CpF <= $ma)", "xaxis" => xaxis),
+)
+
+# ---- #
+
+println("🚮 Removing barcodes using features")
+
+# ---- #
+
+println("🩰 Normalizing barcodes")
 
 # ---- #
