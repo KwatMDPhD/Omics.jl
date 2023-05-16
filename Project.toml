@@ -1,7 +1,7 @@
 name = "BioLab"
 uuid = "1fe83854-81c0-42f7-afc9-71ba9af673ca"
 authors = ["KwatMDPhD <kwat.me@icloud.com>"]
-version = "0.18.0"
+version = "0.12.0"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -50,6 +50,7 @@ KernelDensity = "0.6"
 NMF = "1.0"
 NetworkLayout = "0.4"
 OrderedCollections = "1.4"
+ProgressMeter = "1.7.2"
 StatsBase = "<v0.34.0"
 XLSX = "0.9"
 julia = "1.9"
