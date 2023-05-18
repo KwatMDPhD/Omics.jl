@@ -35,15 +35,11 @@ n_ba = 0
 # TODO: Rename `list`.
 for na in BioLab.Path.list(al)
 
-    #
-
     sa = na_sa[na]
 
     println("👽 $sa")
 
     push!(sa_, sa)
-
-    #
 
     fes_ = BioLab.Table.read(
         joinpath(al, na, "Solo.out", "Gene", "filtered", "features.tsv");
@@ -55,8 +51,6 @@ for na in BioLab.Path.list(al)
 
     n_fes = length(fes_)
 
-    #
-
     bas_ = BioLab.Table.read(
         joinpath(al, na, "Solo.out", "Gene", "filtered", "barcodes.tsv");
         header = false,
@@ -67,8 +61,6 @@ for na in BioLab.Path.list(al)
 
     n_bas = length(bas_)
 
-    #
-
     da = BioLab.Table.read(
         joinpath(al, na, "Solo.out", "Gene", "filtered", "matrix.mtx");
         header = 3,
@@ -77,13 +69,11 @@ for na in BioLab.Path.list(al)
 
     na1, na2, na3 = (parse(Int, na) for na in names(da))
 
-    @assert na1 == n_fes
+    @assert n_fes == na1
 
-    @assert na2 == n_bas
+    @assert n_bas == na2
 
     println("$na1 x $na2 x $na3")
-
-    #
 
     if isempty(fe_)
 
@@ -111,48 +101,45 @@ end
 
 # ---- #
 
-un_ = unique(idf_)
-
-fe2_ = fe_[un_]
-
-n_fe2 = length(fe2_)
-
-println("⬇️  There are $n_fe2 nonzero features.")
-
-idf_idf2 = Dict(un => id for (id, un) in enumerate(un_))
-
-# ---- #
+n_fe = length(fe_)
 
 @assert n_ba == length(ba_)
 
+println("⬇️  There are $n_fe features.")
+
 println("➡️  There are $n_ba barcodes.")
 
-fe2_x_ba_x_co = fill(0, (n_fe2, n_ba))
+fe_x_ba_x_co = fill(0, (n_fe, n_ba))
 
 @showprogress for (idf, idb, co) in zip(idf_, idb_, co_)
 
-    fe2_x_ba_x_co[idf_idf2[idf], idb] = co
+    fe_x_ba_x_co[idf, idb] = co
 
 end
 
 # ---- #
 
+ta_ = (
+    "T Ef - No vs TCR",
+    "T Re - No vs TCR",
+    "T Ef - No vs CAR",
+    "T Re - No vs CAR",
+    "No vs TCR",
+    "No vs CAR",
+)
+
 re___ = (
     (r"^.*\.Teff\.No$", r"^.*\.Teff\.TCR$"),
+    (r"^.*\.Treg\.No$", r"^.*\.Treg\.TCR$"),
+    (r"^.*\.Teff\.No$", r"^.*\.Teff\.CAR$"),
     (r"^.*\.Treg\.No$", r"^.*\.Treg\.CAR$"),
     (r"^.*\.No$", r"^.*\.TCR$"),
     (r"^.*\.No$", r"^.*\.CAR$"),
 )
 
-n_ta = length(re___)
-
-ta_x_ba_x_nu = fill(NaN, n_ta, n_ba)
-
-ta_ = Vector{String}(undef, n_ta)
+ta_x_ba_x_nu = fill(NaN, (length(ta_), n_ba))
 
 for (idt, re_) in enumerate(re___)
-
-    st_ = Vector{String}()
 
     for (nu, re) in zip((0, 1), re_)
 
@@ -166,11 +153,7 @@ for (idt, re_) in enumerate(re___)
 
         end
 
-        push!(st_, replace(BioLab.Path.clean(string(re)[2:end]), '_' => "", r"\." => ""))
-
     end
-
-    ta_[idt] = join(st_, '.')
 
 end
 
@@ -178,43 +161,81 @@ end
 
 println("🚮 Removing barcodes")
 
-cop_ = [sum(co_) / n_fe2 for co_ in eachcol(fe2_x_ba_x_co)]
+su_ = Vector{Int}(undef, n_ba)
 
-yaxis = Dict("title" => Dict("text" => "N"))
+no_ = Vector{Int}(undef, n_ba)
 
-xaxis = Dict("title" => Dict("text" => "Count per Feature"))
+@showprogress for (id, co_) in enumerate(eachcol(fe_x_ba_x_co))
+
+    su_[id] = sum(co_)
+
+    no_[id] = sum(co != 0 for co in co_)
+
+end
+
+title_text = "All $n_ba"
+
+xaxiss = Dict("title" => Dict("text" => "Sum of Count"))
+
+xaxisn = Dict("title" => Dict("text" => "Number of Nonzero"))
 
 BioLab.Plot.plot_histogram(
-    (cop_,);
-    # [cop_[id_] for id_ in ids___];
-    # name_ = sa_,
-    layout = Dict("title" => "All $n_ba", "yaxis" => yaxis, "xaxis" => xaxis),
+    (su_,);
+    layout = Dict("title" => Dict("text" => title_text), "xaxis" => xaxiss),
 )
 
-mi = 0.1
+BioLab.Plot.plot_histogram(
+    (no_,);
+    layout = Dict("title" => Dict("text" => title_text), "xaxis" => xaxisn),
+)
 
-ma = 1.0
+# ---- #
 
-ke_ = [mi < cop < ma for cop in cop_]
+mi = n_fe * 0.1
 
-n_ba2 = sum(ke_)
+ma = n_fe
+
+kes_ = [mi < su < ma for su in su_]
+
+n_ke = sum(kes_)
 
 BioLab.Plot.plot_histogram(
-    (cop_[ke_],);
-    # [cop_[id_][ke_[id_]] for id_ in ids___];
-    # name_ = sa_,
+    (su_[kes_],);
     layout = Dict(
-        "title" => "($mi < CpF < $ma) Selected $n_ba2 ($(BioLab.Number.format(n_ba2 / n_ba * 100))%)",
-        "yaxis" => yaxis,
-        "xaxis" => xaxis,
+        "title" => Dict(
+            "text" => "($mi to $ma) Selected $n_ke ($(BioLab.Number.format(n_ke / n_ba * 100))%)",
+        ),
+        "xaxis" => xaxiss,
     ),
 )
 
-ba2_ = ba_[ke_]
+# ---- #
 
-ta_x_ba2_x_nu = ta_x_ba_x_nu[:, ke_]
+mi = n_fe * 0.02
 
-fe2_x_ba2_x_co = fe2_x_ba_x_co[:, ke_]
+ma = n_fe * 0.15
+
+ken_ = [mi < no < ma for no in no_]
+
+n_ke = sum(ken_)
+
+BioLab.Plot.plot_histogram(
+    (no_[ken_],);
+    layout = Dict(
+        "title" => Dict(
+            "text" => "($mi to $ma) Selected $n_ke ($(BioLab.Number.format(n_ke / n_ba * 100))%)",
+        ),
+        "xaxis" => xaxisn,
+    ),
+)
+
+# ---- #
+
+keb_ = [kes && ken for (kes, ken) in zip(kes_, ken_)]
+
+n_ke = sum(keb_)
+
+println("👍 Selected $n_ke ($(BioLab.Number.format(n_ke / n_ba * 100))%)")
 
 # ---- #
 
@@ -222,16 +243,102 @@ println("🚮 Removing barcodes using features")
 
 # ---- #
 
-println("🩰 Normalizing barcodes")
+println("🚮 Removing features")
+
+su_ = Vector{Int}(undef, n_fe)
+
+no_ = Vector{Int}(undef, n_fe)
+
+@showprogress for (id, co_) in enumerate(eachrow(fe_x_ba_x_co))
+
+    su_[id] = sum(co_)
+
+    no_[id] = sum(co != 0 for co in co_)
+
+end
+
+title_text = "All $n_fe"
+
+xaxiss = Dict("title" => Dict("text" => "Sum of Count"))
+
+xaxisn = Dict("title" => Dict("text" => "Number of Nonzero"))
+
+BioLab.Plot.plot_histogram(
+    (su_,);
+    layout = Dict("title" => Dict("text" => title_text), "xaxis" => xaxiss),
+)
+
+BioLab.Plot.plot_histogram(
+    (no_,);
+    layout = Dict("title" => Dict("text" => title_text), "xaxis" => xaxisn),
+)
+
+# ---- #
+
+mi = n_ba * 0.1
+
+ma = n_ba
+
+kes_ = [mi < su < ma for su in su_]
+
+n_ke = sum(kes_)
+
+BioLab.Plot.plot_histogram(
+    (su_[kes_],);
+    layout = Dict(
+        "title" => Dict(
+            "text" => "($mi to $ma) Selected $n_ke ($(BioLab.Number.format(n_ke / n_fe * 100))%)",
+        ),
+        "xaxis" => xaxiss,
+    ),
+)
+
+# ---- #
+
+mi = n_ba * 0.1
+
+ma = n_ba
+
+ken_ = [mi < no < ma for no in no_]
+
+n_ke = sum(ken_)
+
+BioLab.Plot.plot_histogram(
+    (no_[ken_],);
+    layout = Dict(
+        "title" => Dict(
+            "text" => "($mi to $ma) Selected $n_ke ($(BioLab.Number.format(n_ke / n_fe * 100))%)",
+        ),
+        "xaxis" => xaxisn,
+    ),
+)
+
+# ---- #
+
+kef_ = [kes && ken for (kes, ken) in zip(kes_, ken_)]
+
+n_ke = sum(kef_)
+
+println("👍 Selected $n_ke ($(BioLab.Number.format(n_ke / n_fe * 100))%)")
+
+# ---- #
+
+println("🩰 Normalizing")
 
 # ---- #
 
 BioLab.Table.write(
     joinpath(ro, "target_x_barcode_x_number.tsv"),
-    BioLab.DataFrame.make("Target", ta_, ba2_, ta_x_ba2_x_nu),
+    BioLab.DataFrame.make("Target", ta_, ba_[keb_], ta_x_ba_x_nu[:, keb_]),
 )
 
 BioLab.Table.write(
     joinpath(ro, "feature_x_barcode_x_count.tsv"),
-    BioLab.DataFrame.make("Feature", fe2_, ba2_, fe2_x_ba2_x_co),
+    BioLab.DataFrame.make("Feature", fe_[kef_], ba_[keb_], fe_x_ba_x_co[kef_, keb_]),
 )
+
+# ---- #
+
+target_x_barcode_x_number = BioLab.Table.read(joinpath(ro, "target_x_barcode_x_number.tsv"))
+
+feature_x_barcode_x_count = BioLab.Table.read(joinpath(ro, "feature_x_barcode_x_count.tsv"))
