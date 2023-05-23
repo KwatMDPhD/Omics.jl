@@ -1,10 +1,10 @@
 include("_.jl")
 
-# --------------------------------------------- #
+# ---- #
 
 ho = homedir()
 
-# --------------------------------------------- #
+# ---- #
 
 for (pa, re) in (
     ("~/file", "$ho/file"),
@@ -31,7 +31,7 @@ for (pa, re) in (
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 pa = @__DIR__
 
@@ -55,7 +55,7 @@ n = 2
 # 1.767 μs (75 allocations: 3.30 KiB)
 # @btime BioLab.Path.shorten($pa, $n)
 
-# --------------------------------------------- #
+# ---- #
 
 for di in ("BioLab.jl", "test", "BioLab.jl/test")
 
@@ -75,7 +75,7 @@ end
 # 3.432 μs (144 allocations: 6.36 KiB)
 # @btime BioLab.Path.shorten($pa, $ho)
 
-# --------------------------------------------- #
+# ---- #
 
 pa = "d/a_b.c-d+e!f%g%h]iJK"
 
@@ -86,7 +86,7 @@ pa = "d/a_b.c-d+e!f%g%h]iJK"
 # TODO: Time.
 # @btime BioLab.Path.clean($pa; pr = $false)
 
-# --------------------------------------------- #
+# ---- #
 
 fi = "file.extension"
 
@@ -105,7 +105,7 @@ ex = ".extension"
 # TODO: Time.
 # @btime BioLab.Path.error_extension($fi, $ex)
 
-# --------------------------------------------- #
+# ---- #
 
 ex = "new_extension"
 
@@ -116,7 +116,7 @@ ex = "new_extension"
 # 243.240 ns (12 allocations: 528 bytes)
 # @btime BioLab.Path.replace_extension($fi, $ex)
 
-# --------------------------------------------- #
+# ---- #
 
 di = dirname(@__DIR__)
 
@@ -135,7 +135,7 @@ pa_ = ("Project.toml", "Manifest.toml")
 # 3.146 μs (6 allocations: 640 bytes)
 # @btime BioLab.Path.error_missing($di, $pa_)
 
-# --------------------------------------------- #
+# ---- #
 
 # TODO: `@test`.
 display(BioLab.Path.list(ho))
@@ -153,13 +153,13 @@ display(BioLab.Path.list(ho; ke_))
 # 20.750 μs (37 allocations: 1.56 KiB)
 # @btime BioLab.Path.list($ho; ke_ = $ke_)
 
-# --------------------------------------------- #
+# ---- #
 
 te = joinpath(tempdir(), "BioLab.test.Path")
 
 BioLab.Path.empty(te)
 
-# --------------------------------------------- #
+# ---- #
 
 di1 = mkpath(joinpath(te, "di1"))
 
@@ -187,7 +187,7 @@ run(`tree $te`)
 
 # @code_warntype BioLab.Path.move(di2, di3; force = true)
 
-# --------------------------------------------- #
+# ---- #
 
 ra = mkdir(joinpath(te, "rank"))
 
@@ -206,7 +206,7 @@ run(`tree $ra`)
 
 # @code_warntype BioLab.Path.rank(ra)
 
-# --------------------------------------------- #
+# ---- #
 
 fi1 = touch(joinpath(te, "fi1"))
 
@@ -223,7 +223,7 @@ run(`tree $te`)
 
 # @code_warntype BioLab.Path.rename_recursively(te, pa_)
 
-# --------------------------------------------- #
+# ---- #
 
 fi1 = touch(joinpath(te, "fi1"))
 

@@ -2,13 +2,13 @@ using DataFrames
 
 include("_.jl")
 
-# --------------------------------------------- #
+# ---- #
 
 TE = joinpath(tempdir(), "BioLab.test.FeatureSetEnrichment")
 
 BioLab.Path.empty(TE)
 
-# --------------------------------------------- #
+# ---- #
 
 sc_ = [-2.0, -1, 0, 0, 1, 2]
 
@@ -30,7 +30,7 @@ for (ex, re) in ((-1.0, 0.5), (1.0, 2.0), (2.0, 4.0), (3.0, 8.0))
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 sc_ = [-2.0, -1, 0, 0, 1, 2]
 
@@ -50,7 +50,7 @@ for (ex, re) in ((1.0, (6, 5.0, 2.0)), (2.0, (6, 9.0, 2.0)))
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 sc_ = [-2.0, -1, 0, 0, 1, 2]
 
@@ -68,7 +68,7 @@ for (ex, re) in ((1.0, (6, 6.0, 5.0)), (2.0, (6, 10.0, 9.0)))
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 BioLab.FeatureSetEnrichment._plot_mountain(
     ["Law", "Black Beard"],
@@ -86,7 +86,7 @@ BioLab.FeatureSetEnrichment._plot_mountain(
 #     11.29;
 # )
 
-# --------------------------------------------- #
+# ---- #
 
 ca1 = "A2K"
 
@@ -98,7 +98,7 @@ display(BioLab.FeatureSetEnrichment.benchmark_card(ca1))
 # 46.970 ns (2 allocations: 240 bytes)
 # @btime BioLab.FeatureSetEnrichment.benchmark_card($ca1)
 
-# --------------------------------------------- #
+# ---- #
 
 for (n, n1) in ((3, 2), (4, 2), (5, 3))
 
@@ -116,7 +116,7 @@ for (n, n1) in ((3, 2), (4, 2), (5, 3))
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 # TODO: `@test`.
 display(BioLab.FeatureSetEnrichment.benchmark_myc())
@@ -126,7 +126,7 @@ display(BioLab.FeatureSetEnrichment.benchmark_myc())
 # 34.414 ms (580131 allocations: 96.05 MiB)
 # @btime BioLab.FeatureSetEnrichment.benchmark_myc()
 
-# --------------------------------------------- #
+# ---- #
 
 fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_card("AK")
 
@@ -145,13 +145,13 @@ for al in (BioLab.FeatureSetEnrichment.KS(), BioLab.FeatureSetEnrichment.KLioM()
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_myc()
 
 bo_ = BioLab.Collection.is_in(fe_, fe1_)
 
-# --------------------------------------------- #
+# ---- #
 
 for al in (
     BioLab.FeatureSetEnrichment.KS(),
@@ -173,7 +173,7 @@ for al in (
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 feature_x_sample_x_score = DataFrame(
     "Feature" => fe_,
@@ -189,7 +189,7 @@ se_ = collect(keys(se_fe1_))
 
 fe1___ = collect(values(se_fe1_))
 
-# --------------------------------------------- #
+# ---- #
 
 for al in (
     BioLab.FeatureSetEnrichment.KS(),

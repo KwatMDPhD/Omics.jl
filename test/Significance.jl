@@ -1,6 +1,6 @@
 include("_.jl")
 
-# --------------------------------------------- #
+# ---- #
 
 for po in 0:5
 
@@ -25,7 +25,7 @@ for po in 0:5
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 ra_ = collect(1:10)
 
@@ -40,7 +40,7 @@ n = 2
 # 2.083 ns (0 allocations: 0 bytes)
 # @btime BioLab.Significance._get_p_value($n, $ra_)
 
-# --------------------------------------------- #
+# ---- #
 
 n_ = (1, 2, 9, 10)
 
@@ -62,7 +62,7 @@ for (va, re) in zip(n_, re_)
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 for (va, re) in zip(n_, reverse(re_))
 
@@ -80,7 +80,7 @@ for (va, re) in zip(n_, reverse(re_))
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 pv1_ = [0.001, 0.01, 0.03, 0.5]
 
@@ -101,7 +101,7 @@ end
 # 35.917 ns (1 allocation: 96 bytes)
 # @btime BioLab.Significance.adjust_p_value_with_bonferroni($pv2_)
 
-# --------------------------------------------- #
+# ---- #
 
 for n in n_
 
@@ -130,7 +130,7 @@ end
 # 483.680 ns (6 allocations: 416 bytes)
 # @btime BioLab.Significance.adjust_p_value_with_benjamini_hochberg($pv2_)
 
-# --------------------------------------------- #
+# ---- #
 
 nu_ = [0.0, 1, 8, 9]
 
@@ -157,7 +157,7 @@ BioLab.print_header("Less")
 #     $ra_,
 # )
 
-# --------------------------------------------- #
+# ---- #
 
 BioLab.print_header("More")
 
@@ -180,7 +180,7 @@ BioLab.print_header("More")
 #     $ra_,
 # )
 
-# --------------------------------------------- #
+# ---- #
 
 BioLab.print_header("Less and More")
 

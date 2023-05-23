@@ -2,11 +2,11 @@ using StatsBase
 
 include("_.jl")
 
-# --------------------------------------------- #
+# ---- #
 
 nu_ = [2, 3, 4, 5]
 
-# --------------------------------------------- #
+# ---- #
 
 co_ = [0, 0, 1, 1]
 
@@ -19,7 +19,7 @@ BioLab.print_header(co_)
 # 2.125 ns (0 allocations: 0 bytes)
 # @btime BioLab.FeatureXSample._aim($co_, $nu_)
 
-# --------------------------------------------- #
+# ---- #
 
 bo_ = convert(Vector{Bool}, co_)
 
@@ -32,7 +32,7 @@ BioLab.print_header(bo_)
 # 116.703 ns (3 allocations: 224 bytes)
 # @btime BioLab.FeatureXSample._aim($bo_, $nu_)
 
-# --------------------------------------------- #
+# ---- #
 
 function fu(nu1_, nu2_)
 
@@ -40,13 +40,13 @@ function fu(nu1_, nu2_)
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 n_co = 4
 
 nu_ = [10^(id - 1) for id in 1:n_co]
 
-# --------------------------------------------- #
+# ---- #
 
 co_ = [co + 1 for co in nu_]
 
@@ -59,7 +59,7 @@ BioLab.print_header(co_)
 # 4.875 ns (0 allocations: 0 bytes)
 # @btime BioLab.FeatureXSample._trigger($fu, $co_, $nu_)
 
-# --------------------------------------------- #
+# ---- #
 
 n_ze = div(n_co, 2)
 
@@ -74,7 +74,7 @@ BioLab.print_header(bo_)
 # 112.206 ns (3 allocations: 224 bytes)
 # @btime BioLab.FeatureXSample._trigger($fu, $bo_, $nu_)
 
-# --------------------------------------------- #
+# ---- #
 
 n_ro = 2
 
@@ -97,7 +97,7 @@ BioLab.print_header(co_)
 # 74.373 ns (1 allocation: 80 bytes)
 # @btime BioLab.FeatureXSample.target($fut, $co_, $fe_x_sa_x_nu)
 
-# --------------------------------------------- #
+# ---- #
 
 n_ze = div(n_co, 2)
 

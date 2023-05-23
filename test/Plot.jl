@@ -4,13 +4,13 @@ using Colors
 
 include("_.jl")
 
-# --------------------------------------------- #
+# ---- #
 
 te = joinpath(tempdir(), "BioLab.test.Plot")
 
 BioLab.Path.empty(te)
 
-# --------------------------------------------- #
+# ---- #
 
 he_ = ("#ff71fb", "#fcc9b9", "#c91f37")
 
@@ -22,7 +22,7 @@ display(BioLab.Plot._make_color_scheme(he_))
 # 1.025 μs (21 allocations: 992 bytes)
 # @btime BioLab.Plot._make_color_scheme($he_)
 
-# --------------------------------------------- #
+# ---- #
 
 co_ = (
     BioLab.Plot.COPLA,
@@ -60,7 +60,7 @@ for nu in (-10.0^3, -1.0, -1, 0.0, 0, 0.5, 1.0, 1, 2.0, 2, 3.0, 3, 256.0, 256, 2
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 for nu in (0.0, 0.3, 0.6, 1, 2, 4, 8, 16, 32, 64, 128, 256)
 
@@ -88,7 +88,7 @@ for nu in (0.2, 20)
 
 end
 
-# --------------------------------------------- #
+# ---- #
 
 for co in co_
 
@@ -104,7 +104,7 @@ end
 # 19.334 μs (769 allocations: 32.12 KiB)
 # @btime BioLab.Plot.fractionate($co)
 
-# --------------------------------------------- #
+# ---- #
 
 data = [Dict()]
 
@@ -126,7 +126,7 @@ BioLab.Plot.plot(data, layout; config, ht)
 
 # @code_warntype BioLab.Plot.plot(data, layout; config, ht)
 
-# --------------------------------------------- #
+# ---- #
 
 y1 = [-1, 0, 2]
 
@@ -144,7 +144,7 @@ BioLab.Plot.plot_scatter(y_, x_; ht)
 
 # @code_warntype BioLab.Plot.plot_scatter(y_, x_; ht)
 
-# --------------------------------------------- #
+# ---- #
 
 y1 = [-1, 2, 5]
 
@@ -168,7 +168,7 @@ BioLab.Plot.plot_bar(y_, x_; name_, layout, ht)
 
 # @code_warntype BioLab.Plot.plot_bar(y_, x_; name_, layout, ht)
 
-# --------------------------------------------- #
+# ---- #
 
 x_ = [[-1], [0, 1], [2, 3, 4]]
 
@@ -189,7 +189,7 @@ end
 
 # @code_warntype BioLab.Plot.plot_histogram(x_, text_; ht = joinpath(te, "histogram.html"))
 
-# --------------------------------------------- #
+# ---- #
 
 n_ro = 2
 
@@ -229,7 +229,7 @@ BioLab.Plot.plot_heat_map(ro_x_co_x_nu, y, x; grr_, grc_, ht)
 
 # @code_warntype BioLab.Plot.plot_heat_map(ro_x_co_x_nu, y, x; grr_, grc_, ht)
 
-# --------------------------------------------- #
+# ---- #
 
 da = BioLab.DataFrame.make("Row name", ro_, co_, ro1_x_co1_x_nu)
 
@@ -239,7 +239,7 @@ BioLab.Plot.plot_heat_map(da; ht)
 
 # @code_warntype BioLab.Plot.plot_heat_map(da; ht)
 
-# --------------------------------------------- #
+# ---- #
 
 theta30 = collect(0:30:360)
 
@@ -259,4 +259,4 @@ BioLab.Plot.plot_radar(theta_, r_; name_, ht)
 
 # @code_warntype BioLab.Plot.plot_radar(theta_, r_; name_, ht)
 
-# --------------------------------------------- #
+# ---- #
