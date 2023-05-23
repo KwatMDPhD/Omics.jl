@@ -147,6 +147,12 @@ function _set_color(y_)
 
 end
 
+function _set_opacity(y_)
+
+    return fill(0.8, length(y_))
+
+end
+
 function _set_mode(y_)
 
     return [ifelse(length(y) < 10^3, "markers+lines", "lines") for y in y_]
@@ -160,6 +166,7 @@ function plot_scatter(
     name_ = _set_name(y_),
     mode_ = _set_mode(y_),
     marker_color_ = _set_color(y_),
+    opacity_ = _set_opacity(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -172,7 +179,7 @@ function plot_scatter(
                 "x" => x_[id],
                 "text" => text_[id],
                 "mode" => mode_[id],
-                "marker" => Dict("color" => marker_color_[id], "opacity" => 0.8),
+                "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
             ) for id in eachindex(y_)
         ],
         layout;

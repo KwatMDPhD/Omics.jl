@@ -641,12 +641,11 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0, n_jo = 1)
 
         sc_ = fe_x_sa_x_sc[:, id]
 
-        # TODO: Find `NaN`.
-        go_ = findall(!ismissing, sc_)
+        go_ = findall(!isnan, sc_)
 
-        sc_, fe_ = BioLab.Collection.sort_like((sc_[go_], fe_[go_]); ic = false)
+        sc_, feg_ = BioLab.Collection.sort_like((sc_[go_], fe_[go_]); ic = false)
 
-        se_x_sa_x_en[:, id] = enrich(al, fe_, sc_, fe1___; ex)
+        se_x_sa_x_en[:, id] = enrich(al, feg_, sc_, fe1___; ex)
 
     end
 
