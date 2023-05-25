@@ -1,42 +1,22 @@
 module BioLab
 
-macro include()
+for na in readdir(@__DIR__)
 
-    di, fi = splitdir(string(__source__.file))
+    if na != "BioLab.jl"
 
-    return esc(quote
+        include(na)
 
-        for na in readdir($di)
-
-            if (na != $fi) && endswith(na, ".jl")
-
-                include(na)
-
-            end
-
-        end
-
-    end)
+    end
 
 end
-
-@include
-
-const RA = 20121020
-
-const CA_ = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
-
-const TE = joinpath(tempdir(), string(@__MODULE__))
 
 function __init__()
 
-    BioLab.Path.empty(TE)
-
-    return nothing
+    BioLab.Path.empty(Constant.TE)
 
 end
 
-function check_print(pr, ar...)
+function check_println(pr, ar...)
 
     if pr
 
@@ -44,15 +24,11 @@ function check_print(pr, ar...)
 
     end
 
-    return nothing
-
 end
 
 function print_header()
 
     println('❀'^99)
-
-    return nothing
 
 end
 
@@ -64,13 +40,11 @@ function print_header(st)
 
     println('◦'^99)
 
-    return nothing
-
 end
 
 macro is_error(ex)
 
-    return quote
+    quote
 
         try
 
@@ -80,9 +54,7 @@ macro is_error(ex)
 
         catch er
 
-            println("🎣")
-
-            display(er)
+            println(er)
 
             true
 
