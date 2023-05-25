@@ -4,9 +4,9 @@ using Clustering: Hclust, cutree, hclust
 
 using Distances: CorrDist, Euclidean, pairwise
 
-function hierarchize(ro_x_co_x_nu, dims; fu = Euclidean(), linkage = :ward)
+function hierarchize(ma, dims; fu = Euclidean(), linkage = :ward)
 
-    return hclust(pairwise(fu, ro_x_co_x_nu; dims); linkage)
+    return hclust(pairwise(fu, ma; dims); linkage)
 
 end
 

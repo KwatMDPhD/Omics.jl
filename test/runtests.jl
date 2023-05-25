@@ -21,6 +21,10 @@ using BioLab
 
 # ---- #
 
+BioLab.print_header("Testing BioLab.jl")
+
+# ---- #
+
 for pr in (true, false)
 
     BioLab.check_println(
@@ -52,6 +56,14 @@ BioLab.print_header("I Got a Woman")
 
 # ---- #
 
-include("Array.jl")
+for na in readdir(@__DIR__)
 
-include("Constant.jl")
+    if !startswith(na, '_') && na != "runtests.jl"
+
+        BioLab.print_header("Testing $na")
+
+        include(na)
+
+    end
+
+end

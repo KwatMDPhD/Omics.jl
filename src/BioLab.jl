@@ -2,7 +2,7 @@ module BioLab
 
 for na in readdir(@__DIR__)
 
-    if na != "BioLab.jl"
+    if !startswith(na, '_') && na != "BioLab.jl"
 
         include(na)
 
@@ -12,7 +12,9 @@ end
 
 function __init__()
 
-    BioLab.Path.empty(Constant.TE)
+    rm(Constant.TE; force = true, recursive = true)
+
+    mkdir(Constant.TE)
 
 end
 
