@@ -1,6 +1,6 @@
 module Constant
 
-const TE = joinpath(tempdir(), "BioLab.jl")
+const TE = joinpath(tempdir(), "BioLab")
 
 const RA = 20121020
 

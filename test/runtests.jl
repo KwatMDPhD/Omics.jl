@@ -2,22 +2,18 @@ using Test
 
 # ---- #
 
-te = @__DIR__
-
-sr = joinpath(dirname(te), "src")
+sr = joinpath(dirname(@__DIR__), "src")
 
 function is_jl(na)
 
-    return endswith(na, r"\.jl$")
+    endswith(na, ".jl")
 
 end
 
-display(
-    symdiff(
-        (na for na in readdir(sr) if is_jl(na) && na != "BioLab.jl"),
-        (na for na in readdir(te) if is_jl(na) && na != "runtests.jl"),
-    ),
-)
+@test symdiff(
+    (na for na in readdir(sr) if is_jl(na) && na != "BioLab.jl"),
+    (na for na in readdir(@__DIR__) if is_jl(na) && na != "runtests.jl"),
+) == ["environment.jl"]
 
 # ---- #
 
@@ -25,44 +21,37 @@ using BioLab
 
 # ---- #
 
-@test BioLab.RA == 20121020
-
-# ---- #
-
-@test BioLab.CA_ == ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
-
-# ---- #
-
-@test basename(BioLab.TE) == "BioLab" && isdir(BioLab.TE) && isempty(readdir(BioLab.TE))
-
-# ---- #
-
-# TODO: `@test`.
-
 for pr in (true, false)
 
-    BioLab.check_print(pr, "Aa", 2)
+    BioLab.check_println(
+        pr,
+        1972,
+        '.',
+        0,
+        4,
+        '.',
+        0,
+        9,
+        ' ',
+        "Elvis Presley Performs at Hampton Roads Coliseum, VA",
+    )
 
 end
 
-# @code_warntype BioLab.check_print(true, "Aa", 2)
-
 # ---- #
-
-# TODO: `@test`.
 
 BioLab.print_header()
 
-st = "Hello World!"
+# ---- #
 
-BioLab.print_header(st)
-
-# @code_warntype BioLab.print_header(st)
+BioLab.print_header("I Got a Woman")
 
 # ---- #
 
-@test BioLab.@is_error error()
+@test BioLab.@is_error error("Amen")
 
 # ---- #
 
-BioLab.JL.run(@__DIR__, (r"^runtests\.jl$",))
+include("Array.jl")
+
+include("Constant.jl")

@@ -4,15 +4,15 @@ using Clustering: Hclust, cutree, hclust
 
 using Distances: CorrDist, Euclidean, pairwise
 
-function hierarchize(ro_x_co_x_nu, di; fu = Euclidean(), li = :ward)
+function hierarchize(ro_x_co_x_nu, dims; fu = Euclidean(), linkage = :ward)
 
-    return hclust(pairwise(fu, ro_x_co_x_nu; dims = di); linkage = li)
+    return hclust(pairwise(fu, ro_x_co_x_nu; dims); linkage)
 
 end
 
-function cluster(hi::Hclust, n)
+function cluster(hi::Hclust, k)
 
-    return cutree(hi; k = n)
+    return cutree(hi; k)
 
 end
 
