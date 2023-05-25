@@ -1,0 +1,21 @@
+@st Increase "noh" "in"
+@st Decrease "noh" "de"
+
+@st Molecule "mo"
+@st Protein "pr"
+@st Chemotaxin "ch"
+@st Medication "me"
+
+@st Receptor "re"
+@st Adhesive "ad"
+@st Immunoglobulin "ig"
+@st Cascade "ca"
+
+@st Cell "ce"
+@st RedBloodCell "rd"
+@st Platelet "pl"
+@st Granulocyte "gr"
+@st Monocyte "mn"
+@st NaturalKiller "na"
+@st TCell "tc"
+@st BCell "bc"

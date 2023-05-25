@@ -1,0 +1,15 @@
+{
+  "nas": "Population",
+  "los_": [
+    "DZQV_Progenitor",
+    "DZQV_C_mono",
+    "DZQV_CD8_naive",
+    "DZQV_CD4_naive",
+    "DZQV_Th1",
+    "DZQV_Th2"
+  ],
+  "tsi": "/Users/kwat/craft/pro/ImmunePopulation.pro/output/GSE107011/characteristic_x_population_x_anything.tsv",
+  "iop": "cell type",
+  "tsf": "/Users/kwat/craft/pro/ImmunePopulation.pro/output/GSE107011/ensggene_x_population_x_tpmcollapsed+1log.tsv",
+  "lof_": ["IL4", "CD4", "CD8A"]
+}

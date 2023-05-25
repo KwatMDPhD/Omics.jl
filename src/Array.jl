@@ -8,8 +8,6 @@ function error_size(ar1, ar2)
 
     end
 
-    return nothing
-
 end
 
 function error_size(ar_)
@@ -20,19 +18,15 @@ function error_size(ar_)
 
     end
 
-    return nothing
-
 end
 
-function error_duplicate(an_)
+function error_duplicate(ar)
 
-    if !allunique(an_)
+    if !allunique(ar)
 
         error()
 
     end
-
-    return nothing
 
 end
 

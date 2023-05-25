@@ -1,4 +1,9 @@
 {
-  "update": "julia --project --eval 'using Pkg; Pkg.instantiate(); Pkg.update()'",
-  "run": "julia --project --eval 'using Pkg; Pkg.test()'"
+  "download": {
+    "data": "https://"
+  },
+  "call": {
+    "update": "julia --project --eval 'using Pkg; Pkg.update()'",
+    "run": "julia --project --eval 'using Pkg; Pkg.test()'"
+  }
 }

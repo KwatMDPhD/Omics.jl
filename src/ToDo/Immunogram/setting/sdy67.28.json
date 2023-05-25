@@ -1,0 +1,19 @@
+{
+  "nas": "Sample",
+  "los_": [
+    "SUB113470.67.28",
+    "SUB113456.67.28",
+    "SUB113542.67.28",
+    "SUB113551.67.28",
+    "SUB113552.67.28",
+    "SUB113580.67.28",
+    "SUB113592.67.28",
+    "SUB113597.67.28",
+    "SUB113600.67.28",
+    "SUB113602.67.28"
+  ],
+  "tsi": "/Users/kwat/craft/pro/VaccineResponse.pro/output/SDY67/information_x_sample28_x_anything.tsv",
+  "iop": "Antibody Titer",
+  "tsf": "/Users/kwat/craft/pro/VaccineResponse.pro/output/SDY67/gene_x_sample28_x_numbercollapsed.tsv",
+  "lof_": ["IL4", "CD4", "CD8A"]
+}

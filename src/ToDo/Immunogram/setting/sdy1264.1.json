@@ -1,0 +1,8 @@
+{
+  "nas": "Sample",
+  "los_": ["SUB188642.1264.1"],
+  "tsi": "/Users/kwat/craft/pro/VaccineResponse.pro/output/SDY1264/information_x_sample1_x_anything.tsv",
+  "iop": "Antibody Titer",
+  "tsf": "/Users/kwat/craft/pro/VaccineResponse.pro/output/SDY1264/gene_x_sample1_x_numbercollapsed.tsv",
+  "lof_": ["IL4", "CD4", "CD8A"]
+}
