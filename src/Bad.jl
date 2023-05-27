@@ -1,5 +1,11 @@
 module Bad
 
+function _get_bad(::Any)
+
+    ()
+
+end
+
 function _get_bad(::Type{Float64})
 
     (-Inf, Inf, NaN)
@@ -12,13 +18,7 @@ function _get_bad(::Type{<:AbstractString})
 
 end
 
-function _get_bad(::Type)
-
-    ()
-
-end
-
-function error_bad(an, ty)
+function error_type(an, ty)
 
     if !(an isa ty)
 

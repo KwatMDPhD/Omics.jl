@@ -2,12 +2,6 @@ module GMT
 
 using ..BioLab
 
-function read(gm::AbstractString)
-
-    return read((gm,))
-
-end
-
 function read(gm_)
 
     se_ge_ = Dict{String, Vector{String}}()
@@ -25,6 +19,12 @@ function read(gm_)
     end
 
     return se_ge_
+
+end
+
+function read(gm::AbstractString)
+
+    return read((gm,))
 
 end
 

@@ -13,8 +13,9 @@ end
 # ---- #
 
 for (an, ty) in (
-    (1, Float64),
+    (nothing, Float64),
     (missing, Float64),
+    (1, Float64),
     (-Inf, Float64),
     (Inf, Float64),
     (NaN, Float64),
@@ -22,7 +23,7 @@ for (an, ty) in (
     ("", String),
 )
 
-    @test @is_error BioLab.Bad.error_bad(an, ty)
+    @test @is_error BioLab.Bad.error_type(an, ty)
 
 end
 
@@ -30,6 +31,6 @@ end
 
 for (an, ty) in ((1.0, Float64), ("a", String), (0, Int))
 
-    @test !@is_error BioLab.Bad.error_bad(an, ty)
+    @test !@is_error BioLab.Bad.error_type(an, ty)
 
 end

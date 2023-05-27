@@ -6,13 +6,13 @@ using Distances: CorrDist, Euclidean, pairwise
 
 function hierarchize(ma, dims; fu = Euclidean(), linkage = :ward)
 
-    return hclust(pairwise(fu, ma; dims); linkage)
+    hclust(pairwise(fu, ma; dims); linkage)
 
 end
 
 function cluster(hi::Hclust, k)
 
-    return cutree(hi; k)
+    cutree(hi; k)
 
 end
 
