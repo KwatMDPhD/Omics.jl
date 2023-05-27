@@ -6,7 +6,7 @@ sr = joinpath(dirname(@__DIR__), "src")
 
 function is_jl(na)
 
-    endswith(na, ".jl")
+    !startswith(na, '_') && endswith(na, ".jl")
 
 end
 
