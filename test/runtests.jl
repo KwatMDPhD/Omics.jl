@@ -27,7 +27,7 @@ BioLab.print_header("Testing BioLab.jl")
 
 for pr in (true, false)
 
-    BioLab.check_println(
+    BioLab.check_print(
         pr,
         1972,
         '.',

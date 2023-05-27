@@ -8,31 +8,29 @@ using ..BioLab
 
 function print(ke_va; n = length(ke_va))
 
-    n_ke = length(keys(ke_va))
+    n_ke = length(ke_va)
 
     n_va = length(Set(values(ke_va)))
 
     ty = typeof(ke_va)
 
     println(
-        "🗾 $ty with $(BioLab.String.count_noun(n_ke, "key")) ➡️  $(BioLab.String.count_noun(n_va, "value")) (unique)",
+        "$ty ($(BioLab.String.count_noun(n_ke, "key")) => $(BioLab.String.count_noun(n_va, "unique value")))",
     )
 
-    display(collect(ke_va)[1:n])
+    for (id, (ke, va)) in enumerate(ke_va)
 
-    if n < length(ke_va)
+        if n < id
 
-        println("  ...")
+            println("  ", "...")
+
+            break
+
+        end
+
+        println("  ", ke => va)
 
     end
-
-    return nothing
-
-end
-
-function symbolize(ke_va)
-
-    return Base.Dict{Symbol, Any}(Symbol(ke) => va for (ke, va) in ke_va)
 
 end
 
@@ -44,11 +42,11 @@ function set_with_first!(ke_va, ke, va; pr = true)
 
         if vac == va
 
-            BioLab.check_print(pr, "👯‍♂️ $ke ➡️  $va.")
+            BioLab.check_print(pr, "($ke => $va).")
 
         else
 
-            BioLab.check_print(pr, "$ke ➡️  $vac (🙅 $va).")
+            BioLab.check_print(pr, "$ke => $vac ($va).")
 
         end
 
@@ -57,8 +55,6 @@ function set_with_first!(ke_va, ke, va; pr = true)
         ke_va[ke] = va
 
     end
-
-    return nothing
 
 end
 
@@ -70,11 +66,11 @@ function set_with_last!(ke_va, ke, va; pr = true)
 
         if vac == va
 
-            BioLab.check_print(pr, "👯‍♀️ $ke ➡️  $va.")
+            BioLab.check_print(pr, "($ke => $va).")
 
         else
 
-            BioLab.check_print(pr, "$ke ➡️  (🙅 $vac) $va")
+            BioLab.check_print(pr, "$ke => ($vac) $va.")
 
             ke_va[ke] = va
 
@@ -85,8 +81,6 @@ function set_with_last!(ke_va, ke, va; pr = true)
         ke_va[ke] = va
 
     end
-
-    return nothing
 
 end
 
@@ -106,21 +100,19 @@ function set_with_suffix!(ke_va, ke, va; pr = true)
 
             end
 
-            ke = replace(ke, Regex(".$n\$") => ".$(n+=1)")
+            ke = "$(split(ke, '.')[1]).$(n+=1)"
 
         end
 
-        BioLab.check_print(pr, "(🙋 $kec) $ke ➡️  $va")
+        BioLab.check_print(pr, "($kec) $ke => $va.")
 
     end
 
     ke_va[ke] = va
 
-    return nothing
-
 end
 
-function merge(ke1_va1, ke2_va2, fu; pr = true)
+function merge(ke1_va1, ke2_va2, fu!; pr = true)
 
     ke_va = Base.Dict()
 
@@ -134,13 +126,13 @@ function merge(ke1_va1, ke2_va2, fu; pr = true)
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                ke_va[ke] = merge(va1, va2, fu; pr)
+                ke_va[ke] = merge(va1, va2, fu!; pr)
 
             else
 
-                fu(ke_va, ke, va1; pr)
+                fu!(ke_va, ke, va1; pr)
 
-                fu(ke_va, ke, va2; pr)
+                fu!(ke_va, ke, va2; pr)
 
             end
 
@@ -156,27 +148,27 @@ function merge(ke1_va1, ke2_va2, fu; pr = true)
 
     end
 
-    return ke_va
+    ke_va
 
 end
 
 function merge(ke1_va1, ke2_va2; pr = true)
 
-    return merge(ke1_va1, ke2_va2, set_with_last!; pr)
+    merge(ke1_va1, ke2_va2, set_with_last!; pr)
 
 end
 
-function read(pa::AbstractString)::Base.Dict
+function read(pa::AbstractString)
 
     ex = splitext(pa)[2]
 
     if ex in (".json", ".ipynb")
 
-        return parse(open(pa))
+        parse(open(pa))
 
     elseif ex == ".toml"
 
-        return parsefile(pa)
+        parsefile(pa)
 
     else
 
@@ -196,7 +188,7 @@ function read(pa_)
 
     end
 
-    return ke_va
+    ke_va
 
 end
 
@@ -207,8 +199,6 @@ function write(js, ke_va; id = 2)
         _print(io, ke_va, id)
 
     end
-
-    return nothing
 
 end
 

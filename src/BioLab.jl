@@ -18,7 +18,7 @@ function __init__()
 
 end
 
-function check_println(pr, ar...)
+function check_print(pr, ar...)
 
     if pr
 
