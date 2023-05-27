@@ -1,34 +1,37 @@
-include("_.jl")
+include("environment.jl")
 
 # ---- #
 
-da = joinpath(@__DIR__, "gmt.data")
+da = joinpath(pkgdir(BioLab), "data", "GMT")
 
 gm1 = joinpath(da, "h.all.v7.1.symbols.gmt")
 
+le1 = 50
+
 gm2 = joinpath(da, "c2.all.v7.1.symbols.gmt")
+
+le2 = 5529
 
 n = 2
 
-for gm in (gm1, gm2)
+# ---- #
+
+for (gm, re) in ((gm1, le1), (gm2, le2))
 
     BioLab.print_header(gm)
 
-    # TODO: `@test`.
-    BioLab.Dict.print(BioLab.GMT.read(gm); n)
+    se_ge_ = BioLab.GMT.read(gm)
 
-    # @code_warntype BioLab.GMT.read(gm)
+    BioLab.Dict.print(se_ge_; n)
+
+    @test length(se_ge_) == re
 
 end
 
 # ---- #
 
-# TODO: `@test`.
-BioLab.Dict.print(BioLab.GMT.read((gm1, gm1)); n)
+@test length(BioLab.GMT.read((gm1, gm1))) == le1
 
-gm_ = (gm1, gm2)
+# ---- #
 
-# TODO: `@test`.
-BioLab.Dict.print(BioLab.GMT.read(gm_); n)
-
-# @code_warntype BioLab.GMT.read(gm_)
+@test length(BioLab.GMT.read((gm1, gm2))) == le1 + le2

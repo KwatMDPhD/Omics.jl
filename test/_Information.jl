@@ -1,6 +1,6 @@
 using KernelDensity
 
-include("_.jl")
+include("environment.jl")
 
 # ---- #
 

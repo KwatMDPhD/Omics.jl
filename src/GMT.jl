@@ -18,13 +18,13 @@ function read(gm_)
 
     end
 
-    return se_ge_
+    se_ge_
 
 end
 
 function read(gm::AbstractString)
 
-    return read((gm,))
+    read((gm,))
 
 end
 
