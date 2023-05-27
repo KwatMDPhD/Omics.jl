@@ -24,35 +24,25 @@ function shorten(pa, di; sh = 0)
 
 end
 
-function print_move(paf, pat)
+function print_move(so, de)
 
-    spf_ = splitpath(paf)
+    sos_ = splitpath(so)
 
-    spt_ = splitpath(pat)
+    des_ = splitpath(de)
 
-    n = length(BioLab.Collection.get_common_start((spf_, spt_)))
+    n = length(BioLab.Collection.get_common_start((sos_, des_)))
 
-    println("$(shorten(paf, n-length(spf_))) ==> $(shorten(pat, n-length(spt_)))")
-
-end
-
-function clean(pa; pr = true)
-
-    cl = replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
-
-    BioLab.check_print(pr, "$pa ==> $cl")
-
-    cl
+    println("$(shorten(so, n-length(sos_))) ==> $(shorten(de, n-length(des_)))")
 
 end
 
 function error_extension(pa, ex)
 
-    pae = splitext(pa)[2]
+    ex2 = splitext(pa)[2]
 
-    if pae != ex
+    if ex2 != ex
 
-        error(pae)
+        error(ex2)
 
     end
 
@@ -61,6 +51,16 @@ end
 function replace_extension(pa, ex)
 
     "$(splitext(pa)[1]).$ex"
+
+end
+
+function clean(pa)
+
+    cl = replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
+
+    println("$pa ==> $cl")
+
+    cl
 
 end
 
@@ -76,11 +76,11 @@ function error_missing(di, re::AbstractString)
 
 end
 
-function read(di; jo = false, ig_ = (r"^\.",), ke_ = ())
+function read(di; join = false, ig_ = (r"^\.",), ke_ = ())
 
     pa_ = Vector{String}()
 
-    for pa in readdir(di; join = jo)
+    for pa in readdir(di; join)
 
         ba = basename(pa)
 
@@ -97,6 +97,13 @@ function read(di; jo = false, ig_ = (r"^\.",), ke_ = ())
 
 end
 
+function reset(di)
+
+    rm(di; force = true, recursive = true)
+
+    mkdir(di)
+
+end
 
 function rank(di)
 
