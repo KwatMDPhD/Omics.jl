@@ -8,22 +8,15 @@ function limit(st, n)
 
         return "$(st[1:n])..."
 
-    else
-
-        return st
-
     end
+
+    st
 
 end
 
 function count_noun(n, st)
 
-    # TODO: Test.
-    if n < 0
-
-        error()
-
-    elseif n == 1
+    if n <= 1
 
         return "$n $st"
 
@@ -37,39 +30,25 @@ function count_noun(n, st)
 
     for (si, pl) in (("ex", "ices"), ("ry", "ries"), ("o", "oes"))
 
-        sir = Regex("$si\$")
+        if endswith(st, si)
 
-        if contains(st, sir)
-
-            return "$n $(replace(st, sir => pl))"
+            return "$n $(st[1:end-length(si)])$pl"
 
         end
 
     end
 
-    return "$n $(st)s"
-
-end
-
-function _replace(st, be, af)
-
-    if contains(st, be)
-
-        st = replace(st, be => af)
-
-    end
-
-    return st
+    "$n $(st)s"
 
 end
 
 function title(st)
 
-    st = string(strip(st))
-
     ti = ""
 
-    for (up, ch) in zip((isuppercase(ch) for ch in st), titlecase(_replace(st, '_', ' ')))
+    sts = strip(st)
+
+    for (up, ch) in zip((isuppercase(ch) for ch in sts), titlecase(replace(sts, '_' => ' ')))
 
         if up
 
@@ -113,15 +92,14 @@ function title(st)
         " vs ",
     )
 
-        ti = _replace(ti, titlecase(lo), lo)
+        ti = replace(ti, titlecase(lo) => lo)
 
     end
 
-    return ti
+    ti
 
 end
 
-# TODO: Test.
 function try_parse(an)
 
     try
@@ -132,25 +110,23 @@ function try_parse(an)
 
     catch
 
-        @warn "Can not parse as number." an
-
     end
 
-    return an
+    an
 
 end
 
-function split_and_get(st, de, id)
+function split_get(st, de, id)
 
-    return split(st, de; limit = id + 1)[id]
+    split(st, de; limit = id + 1)[id]
 
 end
 
 function remove_common_prefix(st_)
 
-    n = length(BioLab.Collection.get_common_start(st_))
+    be = length(BioLab.Collection.get_common_start(st_)) + 1
 
-    return [st[(n + 1):end] for st in st_]
+    (st[be:end] for st in st_)
 
 end
 
@@ -160,7 +136,9 @@ function transplant(st1, st2, de, id_)
 
     sp2_ = split(st2, de)
 
-    return join(ifelse.((id == 1 for id in id_), sp1_, sp2_), de)
+    BioLab.Array.error_size(sp1_, sp2_)
+
+    join((ifelse(id == 1, sp1, sp2) for (id, sp1, sp2) in zip(id_, sp1_, sp2_)), de)
 
 end
 

@@ -12,9 +12,8 @@ using XLSX: readtable
 
 using ..BioLab
 
-function read(pa; xl = "", delim = '\t', ke_ar...)
+function read(pa; xl = "", ke_ar...)
 
-    # TODO: Check what line is making an empty file.
     if !ispath(pa)
 
         error()
@@ -25,7 +24,7 @@ function read(pa; xl = "", delim = '\t', ke_ar...)
 
     if ex == ".xlsx"
 
-        return DataFrame(readtable(pa, xl))
+        DataFrame(readtable(pa, xl))
 
     else
 
@@ -37,7 +36,7 @@ function read(pa; xl = "", delim = '\t', ke_ar...)
 
         end
 
-        return _read(it_, DataFrame; delim, ke_ar...)
+        _read(it_, DataFrame; ke_ar...)
 
     end
 
@@ -48,8 +47,6 @@ function write(ts, ro_x_co_x_an)
     BioLab.Path.error_extension(ts, ".tsv")
 
     _write(ts, ro_x_co_x_an; delim = '\t')
-
-    return nothing
 
 end
 

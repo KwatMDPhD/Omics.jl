@@ -10,13 +10,15 @@ ho = homedir()
 
 # ---- #
 
+wo = pwd()
+
 for (pa, re) in (
     ("~/file", "$ho/file"),
     ("~/directory/", "$ho/directory"),
     ("~/path/directory/", "$ho/path/directory"),
-    (".", @__DIR__),
-    ("..", bi),
-    ("../..", dirname(bi)),
+    (".", wo),
+    ("..", dirname(wo)),
+    ("../..", dirname(dirname(wo))),
 )
 
     BioLab.print_header(pa)

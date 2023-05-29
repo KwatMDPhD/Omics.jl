@@ -6,9 +6,13 @@ using DataFrames
 
 te = joinpath(tempdir(), "BioLab.test.Table")
 
-BioLab.Path.empty(te)
+BioLab.Path.reset(te)
 
-di = joinpath(@__DIR__, "Table.data")
+# ---- #
+
+di = joinpath(pkgdir(BioLab), "data", "Table")
+
+# ---- #
 
 for na in ("titanic.tsv", "enst_gene.tsv.gz")
 
@@ -16,10 +20,7 @@ for na in ("titanic.tsv", "enst_gene.tsv.gz")
 
     pa = joinpath(di, na)
 
-    # TODO: `@test`.
     display(BioLab.Table.read(pa))
-
-    # @code_warntype BioLab.Table.read(pa)
 
 end
 
@@ -30,8 +31,6 @@ pa = joinpath(di, "12859_2019_2886_MOESM2_ESM.xlsx")
 xl = "HumanSpecific Genes"
 
 BioLab.Table.read(pa; xl)
-
-# @code_warntype BioLab.Table.read(pa; xl)
 
 # ---- #
 
@@ -49,6 +48,8 @@ ro_x_co_x_an = DataFrame(
 ts = joinpath(te, "write.csv")
 
 @test @is_error BioLab.Table.write(ts, ro_x_co_x_an)
+
+# ---- #
 
 ts = replace(ts, ".csv" => ".tsv")
 
