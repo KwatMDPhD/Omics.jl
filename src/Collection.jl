@@ -1,5 +1,17 @@
 module Collection
 
+function print_unique(an___, na_ = eachindex(an___))
+
+    for (na, an_) in zip(na_, an___)
+
+        BioLab.print_header(na)
+
+        BioLab.Dict.print(sort(countmap(an_); byvalue = true))
+
+    end
+
+end
+
 function get_extreme(n::Int, n_ex)
 
     if n < n_ex

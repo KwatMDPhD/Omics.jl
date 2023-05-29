@@ -14,10 +14,7 @@ an___ = (
 # TODO: `@test`.
 display(BioLab.DataFrame.make(an___))
 
-# @code_warntype BioLab.DataFrame.make(an___)
-
-# 3.266 μs (43 allocations: 3.20 KiB)
-# @btime BioLab.DataFrame.make($an___)
+# ---- #
 
 n_ro = 3
 
@@ -29,32 +26,29 @@ ro_ = ["Row $id" for id in 1:n_ro]
 
 co_ = ["Column $id" for id in 1:n_co]
 
-_x_co_x_an = rand(n_ro, n_co)
+ma = rand(n_ro, n_co)
 
-ro_x_co_x_an = BioLab.DataFrame.make(ro, ro_, co_, _x_co_x_an)
+row_x_column_x_anything = BioLab.DataFrame.make(ro, ro_, co_, ma)
 
 # TODO: `@test`.
-display(ro_x_co_x_an)
-
-# @code_warntype BioLab.DataFrame.make(ro, ro_, co_, _x_co_x_an)
-
-# 1.171 μs (26 allocations: 2.27 KiB)
-# @btime BioLab.DataFrame.make($ro, $ro_, $co_, $_x_co_x_an)
+display(row_x_column_x_anything)
 
 # ---- #
 
-@test BioLab.DataFrame.separate(ro_x_co_x_an) == (ro, ro_, co_, _x_co_x_an)
+@test BioLab.DataFrame.separate(row_x_column_x_anything) == (ro, ro_, co_, ma)
+
+# ---- #
 
 st = ":("
 
-BioLab.DataFrame.separate(ro_x_co_x_an)[2][1] = st
+BioLab.DataFrame.separate(row_x_column_x_anything)[2][1] = st
 
-@test ro_x_co_x_an[1, 1] != st
+@test row_x_column_x_anything[1, 1] != st
 
-# @code_warntype BioLab.DataFrame.separate(ro_x_co_x_an)
+@code_warntype BioLab.DataFrame.separate(ro_x_co_x_an)
 
 # 2.245 μs (28 allocations: 2.09 KiB)
-# @btime BioLab.DataFrame.separate($ro_x_co_x_an)
+@btime BioLab.DataFrame.separate($row_x_column_x_anything)
 
 # ---- #
 
