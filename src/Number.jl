@@ -4,33 +4,33 @@ using Printf: @sprintf
 
 function format(nu)
 
-    if nu === -0.0
+    if isequal(nu, -0.0)
 
         nu = 0.0
 
     end
 
-    return @sprintf("%.4g", nu)
+    @sprintf "%.4g" nu
 
 end
 
-function rank_in_fraction(it)
+function rank_in_fraction(ra)
 
     fr = 0.0
 
-    n = fld(it, 9)
+    n = fld(ra, 9)
 
-    for de in 1:n
+    for digits in 1:n
 
-        fr += 9.0 * 10.0^-de
+        fr += 9.0 * 10.0^-digits
 
     end
 
-    de = n + 1
+    digits = n + 1
 
-    fr += (it % 9) * 10.0^-de
+    fr += (ra % 9) * 10.0^-digits
 
-    return round(fr; digits = de)
+    round(fr; digits)
 
 end
 
