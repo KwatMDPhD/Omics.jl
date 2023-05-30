@@ -10,6 +10,15 @@ ho = homedir()
 
 # ---- #
 
+for (paf, pat) in
+    (("a/b", "a"), ("a", "a/b"), ("a/b/c", "a/b/c/d"), ("a/b/c", "a/b/C/d"), ("a/b", "x/y"))
+
+    BioLab.Path.print_change(paf, pat)
+
+end
+
+# ---- #
+
 wo = pwd()
 
 for (pa, re) in (
@@ -20,8 +29,6 @@ for (pa, re) in (
     ("..", dirname(wo)),
     ("../..", dirname(dirname(wo))),
 )
-
-    BioLab.print_header(pa)
 
     @test BioLab.Path.make_absolute(pa) == re
 
@@ -35,8 +42,6 @@ end
 
 for (sh, re) in
     ((-1, "BioLab.jl/test"), (0, "test"), (1, "test"), (-count('/', @__DIR__), @__DIR__))
-
-    BioLab.print_header(sh)
 
     @test BioLab.Path.shorten(@__DIR__, sh) == re
 
@@ -56,18 +61,7 @@ for (di, sh, re) in (
     ("BioLab.jl/test", 1, "test"),
 )
 
-    BioLab.print_header("$di $sh")
-
     @test BioLab.Path.shorten(@__DIR__, di; sh) == re
-
-end
-
-# ---- #
-
-for (paf, pat) in
-    (("a/b", "a"), ("a", "a/b"), ("a/b/c", "a/b/c/d"), ("a/b/c", "a/b/C/d"), ("a/b", "x/y"))
-
-    BioLab.Path.print_change(paf, pat)
 
 end
 
@@ -103,9 +97,9 @@ ex = "new_extension"
 
 # ---- #
 
-for pr in ("test/Path.jl", "test/path.jl")
+for re in ("test/Path.jl", "test/path.jl")
 
-    @test !@is_error BioLab.Path.error_missing(bi, pr)
+    @test !@is_error BioLab.Path.error_missing(bi, re)
 
 end
 
@@ -139,9 +133,9 @@ ra = mkdir(joinpath(te, "rank"))
 
 ex = "extension"
 
-for (pr, ch) in zip((0.7, 1, 1.1, 3, 10, 12, 24), 'a':'z')
+for (nu, ch) in zip((0.7, 1, 1.1, 3, 10, 12, 24), 'a':'z')
 
-    touch(joinpath(ra, "$pr.$ch.$ex"))
+    touch(joinpath(ra, "$nu.$ch.$ex"))
 
 end
 

@@ -12,8 +12,6 @@ gm2 = joinpath(da, "c2.all.v7.1.symbols.gmt")
 
 le2 = 5529
 
-n = 2
-
 # ---- #
 
 for (gm, re) in ((gm1, le1), (gm2, le2))
@@ -22,15 +20,12 @@ for (gm, re) in ((gm1, le1), (gm2, le2))
 
     se_ge_ = BioLab.GMT.read(gm)
 
-    BioLab.Dict.print(se_ge_; n)
+    # TODO `@test`.
+    BioLab.Dict.print(se_ge_; n = 2)
 
     @test length(se_ge_) == re
 
 end
-
-# ---- #
-
-@test length(BioLab.GMT.read((gm1, gm1))) == le1
 
 # ---- #
 

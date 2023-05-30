@@ -16,21 +16,25 @@ di = joinpath(pkgdir(BioLab), "data", "Table")
 
 for na in ("titanic.tsv", "enst_gene.tsv.gz")
 
-    BioLab.print_header(na)
+    # TODO: `@test`.
 
-    pa = joinpath(di, na)
+    da = BioLab.Table.read(joinpath(di, na))
 
-    display(BioLab.Table.read(pa))
+    println(first(da, 2))
+
+    println(last(da, 2))
 
 end
 
 # ---- #
 
-pa = joinpath(di, "12859_2019_2886_MOESM2_ESM.xlsx")
+# TODO: `@test`.
 
-xl = "HumanSpecific Genes"
+da = BioLab.Table.read(joinpath(di, "12859_2019_2886_MOESM2_ESM.xlsx"); xl = "HumanSpecific Genes")
 
-BioLab.Table.read(pa; xl)
+println(first(da, 2))
+
+println(last(da, 2))
 
 # ---- #
 
@@ -45,6 +49,8 @@ ro_x_co_x_an = DataFrame(
     "Column 4" => [string(an) for an in co2],
 )
 
+# ---- #
+
 ts = joinpath(te, "write.csv")
 
 @test @is_error BioLab.Table.write(ts, ro_x_co_x_an)
@@ -55,6 +61,4 @@ ts = replace(ts, ".csv" => ".tsv")
 
 BioLab.Table.write(ts, ro_x_co_x_an)
 
-ro_x_co_x_an2 = BioLab.Table.read(ts)
-
-@test ro_x_co_x_an != ro_x_co_x_an2
+@test ro_x_co_x_an != BioLab.Table.read(ts)

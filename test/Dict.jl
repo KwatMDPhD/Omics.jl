@@ -6,8 +6,6 @@ include("environment.jl")
 
 for ty in (Dict, OrderedDict)
 
-    BioLab.print_header(ty)
-
     BioLab.Dict.print(ty())
 
 end
@@ -22,8 +20,6 @@ BioLab.Dict.print(ke_va)
 
 for n in 1:6
 
-    BioLab.print_header(n)
-
     BioLab.Dict.print(ke_va; n)
 
 end
@@ -31,8 +27,6 @@ end
 # ---- #
 
 for ke_va in (Dict('a' => 1), Dict('a' => 1, "a" => 2), Dict('a' => 1, "a" => 2, 3 => 2))
-
-    BioLab.print_header(ke_va)
 
     BioLab.Dict.print(ke_va)
 
@@ -46,8 +40,6 @@ ke_va = Dict("Existing" => 1)
 
 for (ke, va, re) in
     (("Existing", 1, ke_va), ("Existing", 2, ke_va), ("New", 3, Dict("Existing" => 1, "New" => 3)))
-
-    BioLab.print_header(ke => va)
 
     co = copy(ke_va)
 
@@ -65,8 +57,6 @@ for (ke, va, re) in (
     ("New", 3, Dict("Existing" => 1, "New" => 3)),
 )
 
-    BioLab.print_header(ke => va)
-
     co = copy(ke_va)
 
     BioLab.Dict.set_with_last!(co, ke, va)
@@ -82,8 +72,6 @@ for (ke, va, re) in (
     ("Existing", 2, Dict("Existing" => 1, "Existing.2" => 2)),
     ("New", 3, Dict("Existing" => 1, "New" => 3)),
 )
-
-    BioLab.print_header(ke => va)
 
     co = copy(ke_va)
 
@@ -124,22 +112,26 @@ da = joinpath(pkgdir(BioLab), "data", "Dict")
 
 js1 = joinpath(da, "example_1.json")
 
+# TODO: `@test`.
 BioLab.Dict.print(BioLab.Dict.read(js1))
 
 # ---- #
 
 js2 = joinpath(da, "example_2.json")
 
+# TODO: `@test`.
 BioLab.Dict.print(BioLab.Dict.read(js2))
 
 # ---- #
 
 to = joinpath(da, "example.toml")
 
+# TODO: `@test`.
 BioLab.Dict.print(BioLab.Dict.read(to))
 
 # ---- #
 
+# TODO: `@test`.
 BioLab.Dict.print(BioLab.Dict.read((js1, js2, to)))
 
 # ---- #

@@ -2,9 +2,13 @@ module Array
 
 function error_size(ar1, ar2)
 
-    if size(ar1) != size(ar2)
+    si1 = size(ar1)
 
-        error()
+    si2 = size(ar2)
+
+    if si1 != si2
+
+        error("Array sizes, $si1 and $si2, differ.")
 
     end
 
@@ -24,7 +28,7 @@ function error_duplicate(ar)
 
     if !allunique(ar)
 
-        error()
+        error("Array has duplicates.")
 
     end
 

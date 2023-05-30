@@ -4,15 +4,9 @@ using StatsBase: countmap
 
 using ..BioLab
 
-function print_unique(an___, na_ = eachindex(an___))
+function print_unique(an_)
 
-    for (na, an_) in zip(na_, an___)
-
-        BioLab.print_header(na)
-
-        BioLab.Dict.print(sort(countmap(an_); byvalue = true))
-
-    end
+    BioLab.Dict.print(sort(countmap(an_); byvalue = true))
 
 end
 

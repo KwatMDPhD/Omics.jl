@@ -2,11 +2,9 @@ include("environment.jl")
 
 # ---- #
 
-for ty in (Float64, String)
+for (ty, re) in ((Float64, (-Inf, Inf, NaN)), (String, ("",)))
 
-    BioLab.print_header(ty)
-
-    println(BioLab.Bad._get_bad(ty))
+    @test isequal(BioLab.Bad._get_bad(ty), re)
 
 end
 

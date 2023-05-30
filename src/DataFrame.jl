@@ -39,16 +39,25 @@ end
 
 function print_column(row_x_column_x_anything)
 
-    BioLab.Collection.print_unique(
-        eachcol(row_x_column_x_anything),
-        names(row_x_column_x_anything),
-    )
+    for (na, an_) in zip(names(row_x_column_x_anything), eachcol(row_x_column_x_anything))
+
+        BioLab.print_header(na)
+
+        BioLab.Collection.print_unique(an_)
+
+    end
 
 end
 
 function print_row(row_x_column_x_anything)
 
-    BioLab.Collection.print_unique(eachrow(row_x_column_x_anything), row_x_column_x_anything[!, 1])
+    for (na, an_) in zip(eachrow(row_x_column_x_anything), row_x_column_x_anything[!, 1])
+
+        BioLab.print_header(na)
+
+        BioLab.Collection.print_unique(an_)
+
+    end
 
 end
 

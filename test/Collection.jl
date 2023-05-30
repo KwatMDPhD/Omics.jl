@@ -2,11 +2,11 @@ include("environment.jl")
 
 # ---- #
 
-BioLab.Collection.print_unique(([1, 2, 2.0], [3, 3, 4, 4], ['a', 'a', "a", "a"]))
+for an_ in ([1, 2, 2.0], [3, 3, 4, 4], ['a', 'a', "a", "a"])
 
-# ---- #
+    BioLab.Collection.print_unique(an_)
 
-BioLab.Collection.print_unique((([1, 1.0, 2], [3, 3.0, 4, 4.0, 5])), ("Name 1", "Name 2"))
+end
 
 # ---- #
 
@@ -76,8 +76,6 @@ fe1_ = BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARG
 
 # ---- #
 
-BioLab.print_header("Set")
-
 fe1s_ = Set(fe1_)
 
 # 462.167 μs (2 allocations: 19.67 KiB)
@@ -85,14 +83,10 @@ fe1s_ = Set(fe1_)
 
 # ---- #
 
-BioLab.print_header("Vector")
-
 # 743.000 μs (2 allocations: 19.67 KiB)
 # @btime BioLab.Collection.is_in($fe_, $fe1_);
 
 # ---- #
-
-BioLab.print_header("Dict")
 
 fe_id = Dict(fe => id for (id, fe) in enumerate(fe_))
 
@@ -120,8 +114,6 @@ for (an_, re) in (
     (((1, 2, 3), (1, 4, 5)), (1,)),
     (("aiueo", "aiue", "aiu"), "aiu"),
 )
-
-    BioLab.print_header(an_)
 
     @test BioLab.Collection.get_common_start(an_) == re
 
@@ -163,8 +155,6 @@ for (ar_, re) in (
     ((Float64[], []), Any),
     ((Float64[], Int[]), Float64),
 )
-
-    BioLab.print_header(ar_)
 
     @test BioLab.Collection.get_type(ar_) == re
 

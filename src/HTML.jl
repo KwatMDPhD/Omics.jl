@@ -31,8 +31,6 @@ function write(di, so_, sc; he = 800, wi = 1200, ht = "")
 
     Base.write(ht, jo)
 
-    println("Wrote $ht.")
-
     try
 
         run(`open --background $ht`)

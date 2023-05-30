@@ -12,10 +12,10 @@ function print(ke_va; n = length(ke_va))
 
     n_va = length(Set(values(ke_va)))
 
-    ty = typeof(ke_va)
+    tyk, tyv = eltype(ke_va).types
 
     println(
-        "$ty ($(BioLab.String.count_noun(n_ke, "key")) => $(BioLab.String.count_noun(n_va, "unique value")))",
+        "$(BioLab.String.count_noun(n_ke, "$tyk key")) => $(BioLab.String.count_noun(n_va, "unique $tyv value"))",
     )
 
     sp = "  "

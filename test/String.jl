@@ -6,8 +6,6 @@ st = "Can"
 
 for (n, re) in ((1, "C..."), (2, "Ca..."), (3, "Can"), (4, "Can"))
 
-    BioLab.print_header(n)
-
     @test BioLab.String.limit(st, n) == re
 
 end
@@ -23,8 +21,6 @@ for (si, pl) in (
 )
 
     for (n, re) in ((-1, "-1 $si"), (0, "0 $si"), (1, "1 $si"), (2, "2 $pl"))
-
-        BioLab.print_header("$n $si")
 
         @test BioLab.String.count_noun(n, si) == re
 
@@ -43,8 +39,6 @@ for (st, re) in (
     ("i'm a man", "I'm a Man"),
 )
 
-    BioLab.print_header(st)
-
     @test BioLab.String.title(st) == re
 
 end
@@ -56,8 +50,6 @@ st = join('a':'z', '.')
 de = '.'
 
 for (id, re) in ((1, "a"), (16, "p"), (26, "z"))
-
-    BioLab.print_header(id)
 
     @test BioLab.String.split_get(st, de, id) == re
 
@@ -74,8 +66,6 @@ for (st_, re) in (
     [("a", "ab", "abc"), ("", "b", "bc")],
     [("abc", "ab", "a"), ("bc", "b", "")],
 )
-
-    BioLab.print_header(st_)
 
     @test Tuple(BioLab.String.remove_common_prefix(st_)) == re
 
