@@ -2,9 +2,7 @@ module HTML
 
 using ..BioLab
 
-function write(di, so_, sc; he = 800, ht = "")
-
-    st = "display: flex; justify-content: center; align-items: center;"
+function write(di, so_, sc; he = 800, wi = 1200, ht = "")
 
     jo = join(
         vcat(
@@ -13,8 +11,8 @@ function write(di, so_, sc; he = 800, ht = "")
             "<head>",
             "<meta charset=\"UTF-8\">",
             "</head>",
-            "<div style=\"$st height: $(he)px; width: 99%; background: #203838; margin: auto;\">",
-            "<div id=\"$di\" style=\"$st height: 99%; width: 99%; background: #f8f8f8;\"></div>",
+            "<div style=\"margin: auto; height: $(he)px; width: $(wi)px; display: flex; justify-content: center; align-items: center; background: #203838;\">",
+            "<div id=\"$di\" style=\"height: 97%; width:97%; background: #f8f8f8;\"></div>",
             "</div>",
             ["<script src=\"$so\"></script>" for so in so_],
             "<script>",
@@ -27,13 +25,13 @@ function write(di, so_, sc; he = 800, ht = "")
 
     if isempty(ht)
 
-        ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html")
+        ht = joinpath(BioLab.Constant.TE, "$(BioLab.Time.stamp()).html")
 
     end
 
     Base.write(ht, jo)
 
-    println("🖼️  $ht.")
+    println("Wrote $ht.")
 
     try
 
@@ -41,11 +39,9 @@ function write(di, so_, sc; he = 800, ht = "")
 
     catch
 
-        @warn "👺 Could not open $ht."
+        @warn "Could not open $ht."
 
     end
-
-    return nothing
 
 end
 
