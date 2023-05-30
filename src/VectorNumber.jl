@@ -8,7 +8,7 @@ using ..BioLab
 
 function get_area(nu_)
 
-    return sum(nu_) / length(nu_)
+    sum(nu_) / length(nu_)
 
 end
 
@@ -24,15 +24,15 @@ function get_extreme(nu_)
 
     if isapprox(mia, maa)
 
-        return (mi, ma)
+        (mi, ma)
 
     elseif maa < mia
 
-        return (mi,)
+        (mi,)
 
     elseif mia < maa
 
-        return (ma,)
+        (ma,)
 
     else
 
@@ -42,17 +42,15 @@ function get_extreme(nu_)
 
 end
 
-# TODO: Test.
+function range(nu_, n)
 
-function step(ar, n)
-
-    return range(minimum(ar), maximum(ar), n)
+    minimum(nu_):n:maximum(nu_)
 
 end
 
-function step(ar::AbstractArray{Int}, n)
+function range(nu_::AbstractArray{Int}, n)
 
-    return collect(minimum(ar):maximum(ar))
+    minimum(nu_):maximum(nu_)
 
 end
 
@@ -60,15 +58,15 @@ function shift_minimum(nu_, mi::Real)
 
     sh = mi - minimum(nu_)
 
-    return [nu + sh for nu in nu_]
+    [nu + sh for nu in nu_]
 
 end
 
 function shift_minimum(nu_, st)
 
-    fl = parse(eltype(nu_), BioLab.String.splitget(st, '<', 1))
+    fl = parse(eltype(nu_), BioLab.String.split_get(st, '<', 1))
 
-    return shift_minimum(nu_, minimum(nu_[[fl < nu for nu in nu_]]))
+    shift_minimum(nu_, minimum(filter(>(fl), nu_)))
 
 end
 

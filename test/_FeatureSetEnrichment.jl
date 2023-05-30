@@ -165,7 +165,7 @@ for al in (
             fe_,
             sc_,
             bo_;
-            title_text = BioLab.String.splitget(string(al), '.', 3)[1:(end - 2)],
+            title_text = BioLab.String.split_get(string(al), '.', 3)[1:(end - 2)],
             lo = "Low Phenotype",
             hi = "High Phenotype",
         ),
