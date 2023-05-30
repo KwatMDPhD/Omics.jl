@@ -18,7 +18,7 @@ for na in ("titanic.tsv", "enst_gene.tsv.gz")
 
     # TODO: `@test`.
 
-    da = BioLab.Table.read(joinpath(di, na))
+    local da = BioLab.Table.read(joinpath(di, na))
 
     println(first(da, 2))
 

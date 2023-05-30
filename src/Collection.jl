@@ -1,12 +1,14 @@
 module Collection
 
+using OrderedCollections: OrderedDict
+
 using StatsBase: countmap
 
 using ..BioLab
 
 function print_unique(an_)
 
-    BioLab.Dict.print(sort(countmap(an_); byvalue = true))
+    BioLab.Dict.print(sort!(OrderedDict(countmap(an_)); byvalue = true))
 
 end
 
@@ -148,7 +150,7 @@ function sort_recursively(co)
 
     elseif co isa AbstractDict
 
-        co = sort(Dict(ke => sort_recursively(va) for (ke, va) in co))
+        co = sort!(OrderedDict(ke => sort_recursively(va) for (ke, va) in co))
 
     end
 
