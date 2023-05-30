@@ -4,7 +4,7 @@ using DataFrames: DataFrame as _DataFrame, insertcols!
 
 using OrderedCollections: OrderedDict
 
-using StatsBase: countmap, mean
+using StatsBase: mean
 
 using ..BioLab
 
@@ -24,15 +24,16 @@ function make(ro, ro_, co_, _x_co_x_an)
 
 end
 
-function separate(
-    row_x_column_x_anything,
-)::Tuple{String, Vector{<:String}, Vector{<:String}, Matrix}
+function separate(row_x_column_x_anything)
 
     co_ = names(row_x_column_x_anything)
 
     id_ = 2:length(co_)
 
-    co_[1], row_x_column_x_anything[:, 1], co_[id_], Matrix(row_x_column_x_anything[!, id_])
+    co_[1],
+    row_x_column_x_anything[:, 1]::Vector{String},
+    co_[id_]::Vector{String},
+    Matrix(row_x_column_x_anything[!, id_])
 
 end
 
@@ -51,9 +52,9 @@ function print_row(row_x_column_x_anything)
 
 end
 
-function collapse(row_x_column_x_anything; fu = mean, pr = true)
+function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
 
-    BioLab.check_print(pr, "Before $(size(row_x_column_x_anything)).")
+    println("Before $(size(row_x_column_x_anything)).")
 
     ro_id_ = OrderedDict{String, Vector{Int}}()
 
@@ -69,15 +70,13 @@ function collapse(row_x_column_x_anything; fu = mean, pr = true)
 
     if length(ro_) == n
 
-        @warn "There are no rows to collapse."
-
         return row_x_column_x_anything
 
     end
 
     roc_ = Vector{String}(undef, n)
 
-    mac = Matrix{eltype(ma)}(undef, (n, length(co_)))
+    mac = Matrix{ty}(undef, (n, length(co_)))
 
     for (id, (ro, id_)) in enumerate(ro_id_)
 
@@ -99,7 +98,7 @@ function collapse(row_x_column_x_anything; fu = mean, pr = true)
 
     collapsed_x_column_x_anything = BioLab.DataFrame.make(ro, roc_, co_, mac)
 
-    BioLab.check_print(pr, "After $(size(collapsed_x_column_x_anything)).")
+    println("After $(size(collapsed_x_column_x_anything)).")
 
     collapsed_x_column_x_anything
 

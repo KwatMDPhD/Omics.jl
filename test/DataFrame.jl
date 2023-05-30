@@ -45,20 +45,13 @@ BioLab.DataFrame.separate(row_x_column_x_anything)[2][1] = st
 
 @test row_x_column_x_anything[1, 1] != st
 
-@code_warntype BioLab.DataFrame.separate(ro_x_co_x_an)
-
-# 2.245 μs (28 allocations: 2.09 KiB)
-@btime BioLab.DataFrame.separate($row_x_column_x_anything)
-
 # ---- #
 
-na_ = ("Name 1", "Name 2")
+@test BioLab.DataFrame.separate(row_x_column_x_anything) isa
+      Tuple{String, Vector{String}, Vector{String}, Matrix}
 
-an___ = ([1, 1.0, 2], [3, 3.0, 4, 4.0, 5])
-
-BioLab.DataFrame._print_unique(na_, an___)
-
-# @code_warntype BioLab.DataFrame._print_unique(na_, an___)
+# 2.245 μs (28 allocations: 2.09 KiB)
+# @btime BioLab.DataFrame.separate($row_x_column_x_anything)
 
 # ---- #
 
@@ -73,13 +66,9 @@ ro_x_co_x_an = DataFrame(
 
 BioLab.DataFrame.print_column(ro_x_co_x_an)
 
-# @code_warntype BioLab.DataFrame.print_column(ro_x_co_x_an)
-
 # ---- #
 
 BioLab.DataFrame.print_row(ro_x_co_x_an)
-
-# @code_warntype BioLab.DataFrame.print_row(ro_x_co_x_an)
 
 # ---- #
 
@@ -104,21 +93,12 @@ for an___ in (
     ),
 )
 
-    ro_x_co_x_nu = BioLab.DataFrame.make(an___)
+    local row_x_column_x_anything = BioLab.DataFrame.make(an___)
 
-    BioLab.print_header(ro_x_co_x_nu)
+    BioLab.print_header(row_x_column_x_anything)
 
     # TODO: `@test`.
-    display(BioLab.DataFrame.collapse(ro_x_co_x_nu))
-
-    pr = false
-
-    # @code_warntype BioLab.DataFrame.collapse(ro_x_co_x_nu; pr)
-
-    # 2.106 μs (39 allocations: 2.94 KiB)
-    # 3.172 μs (67 allocations: 5.30 KiB) 
-    # 3.130 μs (65 allocations: 5.11 KiB)
-    # @btime BioLab.DataFrame.collapse($ro_x_co_x_nu; pr = $pr)
+    display(BioLab.DataFrame.collapse(row_x_column_x_anything))
 
 end
 
@@ -134,15 +114,9 @@ to = "F"
 
 for fr_ in (["M1"], ["M1", "M2"])
 
-    BioLab.print_header("$fr_ ➡️ $to")
+    BioLab.print_header(fr_ => to)
 
     # TODO: `@test`.
     BioLab.Dict.print(BioLab.DataFrame.map_to(ro_x_co_x_st, BioLab.Dict.set_with_first!, fr_, to))
-
-    # @code_warntype BioLab.DataFrame.map_to(ro_x_co_x_st, BioLab.Dict.set_with_first!, fr_, to)
-
-    # 3.927 μs (79 allocations: 4.45 KiB)
-    # 5.458 μs (88 allocations: 4.79 KiB)
-    # @btime BioLab.DataFrame.map_to($ro_x_co_x_st, $BioLab.Dict.set_with_first!, $fr_, $to)
 
 end

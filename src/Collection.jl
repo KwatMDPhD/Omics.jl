@@ -1,5 +1,9 @@
 module Collection
 
+using StatsBase: countmap
+
+using ..BioLab
+
 function print_unique(an___, na_ = eachindex(an___))
 
     for (na, an_) in zip(na_, an___)
