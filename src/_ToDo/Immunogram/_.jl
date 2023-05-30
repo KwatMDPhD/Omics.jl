@@ -213,7 +213,7 @@ const COS = "#2a603b"
 # ---- #
 
 # TODO: Decouple reporting.
-function alias_and_report(fe_)
+function aliasreport(fe_)
 
     no_ma_ =
         convert(Dict{String, Vector{String}}, BioLab.Dict.read(joinpath(IN, "node_genes.json")))
@@ -307,7 +307,7 @@ end
 
 function heat(fe_, fe_x_sa_x_nu, fu)
 
-    no_al_ = alias_and_report(fe_)
+    no_al_ = aliasreport(fe_)
 
     no_x_sa_x_he = Kumo.heat(fe_, fe_x_sa_x_nu; no_al_)
 

@@ -54,7 +54,7 @@ end
 
 function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
 
-    println("Before $(size(row_x_column_x_anything)).")
+    println("Size before collapsing = $(size(row_x_column_x_anything)).")
 
     ro_id_ = OrderedDict{String, Vector{Int}}()
 
@@ -69,6 +69,8 @@ function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
     n = length(ro_id_)
 
     if length(ro_) == n
+
+        @warn "There are no rows to collapse."
 
         return row_x_column_x_anything
 

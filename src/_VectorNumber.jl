@@ -66,7 +66,7 @@ end
 
 function shift_minimum(nu_, st)
 
-    fl = parse(eltype(nu_), BioLab.String.split_and_get(st, '<', 1))
+    fl = parse(eltype(nu_), BioLab.String.splitget(st, '<', 1))
 
     return shift_minimum(nu_, minimum(nu_[[fl < nu for nu in nu_]]))
 
@@ -90,7 +90,7 @@ function force_increasing_with_max!(nu_)
 
 end
 
-function skip_nan_and_apply!!(fu!, nu_)
+function skip_nanapply!!(fu!, nu_)
 
     go_ = [!isnan(nu) for nu in nu_]
 
@@ -104,7 +104,7 @@ function skip_nan_and_apply!!(fu!, nu_)
 
 end
 
-function skip_nan_and_apply!(fu, nu_)
+function skip_nanapply!(fu, nu_)
 
     go_ = [!isnan(nu) for nu in nu_]
 

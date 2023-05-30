@@ -40,13 +40,13 @@ for (ex, re) in ((1.0, (6, 5.0, 2.0)), (2.0, (6, 9.0, 2.0)))
 
     BioLab.print_header(ex)
 
-    @test BioLab.FeatureSetEnrichment._sum_1_and_0(sc_, bo_, ex) == re
+    @test BioLab.FeatureSetEnrichment._sum_10(sc_, bo_, ex) == re
 
-    # @code_warntype BioLab.FeatureSetEnrichment._sum_1_and_0(sc_, bo_, ex)
+    # @code_warntype BioLab.FeatureSetEnrichment._sum_10(sc_, bo_, ex)
 
     # 6.417 ns (0 allocations: 0 bytes)
     # 19.121 ns (0 allocations: 0 bytes)    
-    # @btime BioLab.FeatureSetEnrichment._sum_1_and_0($sc_, $bo_, $ex)
+    # @btime BioLab.FeatureSetEnrichment._sum_10($sc_, $bo_, $ex)
 
 end
 
@@ -58,13 +58,13 @@ for (ex, re) in ((1.0, (6, 6.0, 5.0)), (2.0, (6, 10.0, 9.0)))
 
     BioLab.print_header(ex)
 
-    @test BioLab.FeatureSetEnrichment._sum_all_and_1(sc_, bo_, ex) == re
+    @test BioLab.FeatureSetEnrichment._sum_all1(sc_, bo_, ex) == re
 
-    # @code_warntype BioLab.FeatureSetEnrichment._sum_all_and_1(sc_, bo_, ex)
+    # @code_warntype BioLab.FeatureSetEnrichment._sum_all1(sc_, bo_, ex)
 
     # 7.791 ns (0 allocations: 0 bytes)
     # 22.233 ns (0 allocations: 0 bytes)
-    # @btime BioLab.FeatureSetEnrichment._sum_all_and_1($sc_, $bo_, $ex)
+    # @btime BioLab.FeatureSetEnrichment._sum_all1($sc_, $bo_, $ex)
 
 end
 
@@ -165,7 +165,7 @@ for al in (
             fe_,
             sc_,
             bo_;
-            title_text = BioLab.String.split_and_get(string(al), '.', 3)[1:(end - 2)],
+            title_text = BioLab.String.splitget(string(al), '.', 3)[1:(end - 2)],
             lo = "Low Phenotype",
             hi = "High Phenotype",
         ),

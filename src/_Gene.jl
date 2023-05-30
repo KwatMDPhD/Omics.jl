@@ -177,7 +177,7 @@ function map_uniprot(pr_x_io_x_an = read_uniprot(); pr = false)
 
                 BioLab.Dict.set_with_last!(
                     pr_io_an,
-                    BioLab.String.split_and_get(an, "_HUMAN", 1),
+                    BioLab.String.splitget(an, "_HUMAN", 1),
                     io_an;
                     pr,
                 )

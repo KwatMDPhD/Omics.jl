@@ -52,7 +52,7 @@ function adjust_p_value_with_benjamini_hochberg(pv_, n = length(pv_))
 
 end
 
-function get_p_value_and_adjust(fu, nu_, ra_)
+function get_p_valueadjust(fu, nu_, ra_)
 
     pv_ = [fu(nu, ra_) for nu in nu_]
 
@@ -60,11 +60,11 @@ function get_p_value_and_adjust(fu, nu_, ra_)
 
 end
 
-function get_p_value_and_adjust(nu_, ra_)
+function get_p_valueadjust(nu_, ra_)
 
-    pvl_, adl_ = get_p_value_and_adjust(get_p_value_for_less, nu_, ra_)
+    pvl_, adl_ = get_p_valueadjust(get_p_value_for_less, nu_, ra_)
 
-    pvm_, adm_ = get_p_value_and_adjust(get_p_value_for_more, nu_, ra_)
+    pvm_, adm_ = get_p_valueadjust(get_p_value_for_more, nu_, ra_)
 
     return [ifelse(pvl < pvm, pvl, pvm) for (pvl, pvm) in zip(pvl_, pvm_)],
     [ifelse(adl < adm, adl, adm) for (adl, adm) in zip(adl_, adm_)]

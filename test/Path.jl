@@ -67,7 +67,7 @@ end
 for (paf, pat) in
     (("a/b", "a"), ("a", "a/b"), ("a/b/c", "a/b/c/d"), ("a/b/c", "a/b/C/d"), ("a/b", "x/y"))
 
-    BioLab.Path.print_move(paf, pat)
+    BioLab.Path.print_change(paf, pat)
 
 end
 

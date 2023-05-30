@@ -144,7 +144,7 @@ end
 
 co_ = copy(nu_)
 
-BioLab.VectorNumber.skip_nan_and_apply!!(fu!, co_)
+BioLab.VectorNumber.skip_nanapply!!(fu!, co_)
 
 println(co_)
 
@@ -152,10 +152,10 @@ println(co_)
 
 co_ = copy(nu_)
 
-# @code_warntype BioLab.VectorNumber.skip_nan_and_apply!!(fu!, co_)
+# @code_warntype BioLab.VectorNumber.skip_nanapply!!(fu!, co_)
 
 # 64.479 ns (2 allocations: 144 bytes)
-# @btime BioLab.VectorNumber.skip_nan_and_apply!!($fu!, $co_) setup = (co_ = copy($nu_))
+# @btime BioLab.VectorNumber.skip_nanapply!!($fu!, $co_) setup = (co_ = copy($nu_))
 
 # ---- #
 
@@ -169,7 +169,7 @@ end
 
 co_ = copy(nu_)
 
-BioLab.VectorNumber.skip_nan_and_apply!(fu, co_)
+BioLab.VectorNumber.skip_nanapply!(fu, co_)
 
 println(co_)
 
@@ -177,10 +177,10 @@ println(co_)
 
 co_ = copy(nu_)
 
-# @code_warntype BioLab.VectorNumber.skip_nan_and_apply!(fu, co_)
+# @code_warntype BioLab.VectorNumber.skip_nanapply!(fu, co_)
 
 # 92.714 ns (3 allocations: 224 bytes)
-# @btime BioLab.VectorNumber.skip_nan_and_apply!($fu, $co_) setup = (co_ = copy($nu_))
+# @btime BioLab.VectorNumber.skip_nanapply!($fu, $co_) setup = (co_ = copy($nu_))
 
 # ---- #
 

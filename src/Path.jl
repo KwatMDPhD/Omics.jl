@@ -24,7 +24,7 @@ function shorten(pa, di; sh = 0)
 
 end
 
-function print_move(so, de)
+function print_change(so, de)
 
     sos_ = splitpath(so)
 
@@ -58,7 +58,7 @@ function clean(pa)
 
     cl = replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
 
-    println("$pa ==> $cl")
+    print_change(pa, cl)
 
     cl
 
@@ -121,7 +121,7 @@ function rank(di)
 
             mv(sr, de)
 
-            print_move(sr, de)
+            print_change(sr, de)
 
         end
 

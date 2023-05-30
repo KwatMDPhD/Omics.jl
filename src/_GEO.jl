@@ -123,25 +123,25 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
         va = "Gene Symbol"
 
-        fu = na -> BioLab.String.split_and_get(na, " /// ", 1)
+        fu = na -> BioLab.String.splitget(na, " /// ", 1)
 
     elseif pli == 13534
 
         va = "UCSC_RefGene_Name"
 
-        fu = na -> BioLab.String.split_and_get(na, ';', 1)
+        fu = na -> BioLab.String.splitget(na, ';', 1)
 
     elseif pli in (5175, 6244, 11532, 17586)
 
         va = "gene_assignment"
 
-        fu = na -> BioLab.String.split_and_get(na, " // ", 2)
+        fu = na -> BioLab.String.splitget(na, " // ", 2)
 
     elseif pli in (2004, 2005, 3718, 3720)
 
         va = "Associated Gene"
 
-        fu = na -> BioLab.String.split_and_get(na, " // ", 1)
+        fu = na -> BioLab.String.splitget(na, " // ", 1)
 
     elseif pli in (6098, 6884, 6947, 10558, 14951)
 

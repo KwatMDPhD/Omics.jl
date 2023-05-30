@@ -18,17 +18,19 @@ function print(ke_va; n = length(ke_va))
         "$ty ($(BioLab.String.count_noun(n_ke, "key")) => $(BioLab.String.count_noun(n_va, "unique value")))",
     )
 
+    sp = "  "
+
     for (id, (ke, va)) in enumerate(ke_va)
 
         if n < id
 
-            println("  ", "...")
+            println(sp, "...")
 
             break
 
         end
 
-        println("  ", ke => va)
+        println(sp, ke => va)
 
     end
 

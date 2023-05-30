@@ -36,7 +36,7 @@ function _get_absolute_raise(sc_, id, ex)
 
 end
 
-function _sum_1_and_0(sc_, bo_, ex)
+function _sum_10(sc_, bo_, ex)
 
     n = length(sc_)
 
@@ -62,7 +62,7 @@ function _sum_1_and_0(sc_, bo_, ex)
 
 end
 
-function _sum_all_and_1(sc_, bo_, ex)
+function _sum_all1(sc_, bo_, ex)
 
     n = length(sc_)
 
@@ -277,7 +277,7 @@ end
 
 function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    n, su1, su0 = _sum_1_and_0(sc_, bo_, ex)
+    n, su1, su0 = _sum_10(sc_, bo_, ex)
 
     cu = 0.0
 
@@ -343,7 +343,7 @@ end
 
 function _enrich(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    n, su1, su0 = _sum_1_and_0(sc_, bo_, ex)
+    n, su1, su0 = _sum_10(sc_, bo_, ex)
 
     cu = 0.0
 
@@ -407,7 +407,7 @@ end
 
 function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    n, su, su1 = _sum_all_and_1(sc_, bo_, ex)
+    n, su, su1 = _sum_all1(sc_, bo_, ex)
 
     ep = eps()
 
@@ -491,7 +491,7 @@ end
 
 function _enrich_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
-    n, su, su1 = _sum_all_and_1(sc_, bo_, ex)
+    n, su, su1 = _sum_all1(sc_, bo_, ex)
 
     su0 = su - su1
 

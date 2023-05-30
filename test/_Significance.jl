@@ -138,20 +138,17 @@ ra_ = collect(0.0:9)
 
 BioLab.print_header("Less")
 
-@test BioLab.Significance.get_p_value_and_adjust(
-    BioLab.Significance.get_p_value_for_less,
-    nu_,
-    ra_,
-) == ([0.1, 0.2, 0.9, 1.0], [0.4, 0.4, 1.0, 1.0])
+@test BioLab.Significance.get_p_valueadjust(BioLab.Significance.get_p_value_for_less, nu_, ra_) ==
+      ([0.1, 0.2, 0.9, 1.0], [0.4, 0.4, 1.0, 1.0])
 
-# @code_warntype BioLab.Significance.get_p_value_and_adjust(
+# @code_warntype BioLab.Significance.get_p_valueadjust(
 #     BioLab.Significance.get_p_value_for_less,
 #     nu_,
 #     ra_,
 # )
 
 # 636.548 ns (8 allocations: 544 bytes)
-# @btime BioLab.Significance.get_p_value_and_adjust(
+# @btime BioLab.Significance.get_p_valueadjust(
 #     $BioLab.Significance.get_p_value_for_less,
 #     $nu_,
 #     $ra_,
@@ -161,20 +158,17 @@ BioLab.print_header("Less")
 
 BioLab.print_header("More")
 
-@test BioLab.Significance.get_p_value_and_adjust(
-    BioLab.Significance.get_p_value_for_more,
-    nu_,
-    ra_,
-) == ([1.0, 0.9, 0.2, 0.1], [1.0, 1.0, 0.4, 0.4])
+@test BioLab.Significance.get_p_valueadjust(BioLab.Significance.get_p_value_for_more, nu_, ra_) ==
+      ([1.0, 0.9, 0.2, 0.1], [1.0, 1.0, 0.4, 0.4])
 
-# @code_warntype BioLab.Significance.get_p_value_and_adjust(
+# @code_warntype BioLab.Significance.get_p_valueadjust(
 #     BioLab.Significance.get_p_value_for_more,
 #     nu_,
 #     ra_,
 # )
 
 # 649.245 ns (8 allocations: 544 bytes)
-# @btime BioLab.Significance.get_p_value_and_adjust(
+# @btime BioLab.Significance.get_p_valueadjust(
 #     $BioLab.Significance.get_p_value_for_more,
 #     $nu_,
 #     $ra_,
@@ -184,10 +178,10 @@ BioLab.print_header("More")
 
 BioLab.print_header("Less and More")
 
-@test BioLab.Significance.get_p_value_and_adjust(nu_, ra_) ==
+@test BioLab.Significance.get_p_valueadjust(nu_, ra_) ==
       ([0.1, 0.2, 0.2, 0.1], [0.4, 0.4, 0.4, 0.4])
 
-# @code_warntype BioLab.Significance.get_p_value_and_adjust(nu_, ra_)
+# @code_warntype BioLab.Significance.get_p_valueadjust(nu_, ra_)
 
 # 1.142 μs (16 allocations: 1.19 KiB)
-# @btime BioLab.Significance.get_p_value_and_adjust($nu_, $ra_)
+# @btime BioLab.Significance.get_p_valueadjust($nu_, $ra_)

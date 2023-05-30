@@ -287,7 +287,7 @@ function make(
 
         end
 
-        pv_, ad_ = BioLab.Significance.get_p_value_and_adjust(sc_, ra_)
+        pv_, ad_ = BioLab.Significance.get_p_valueadjust(sc_, ra_)
 
     else
 
