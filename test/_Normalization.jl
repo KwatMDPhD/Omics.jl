@@ -196,11 +196,11 @@ for (no!, re) in zip(
 
     co = copy(nu_)
 
-    BioLab.VectorNumber.skip_nanapply!!(no!, co)
+    BioLab.VectorNumber.skip_nan_apply!!(no!, co)
 
     @test isequal(co, re)
 
-    # @code_warntype BioLab.VectorNumber.skip_nanapply!!(no!, co)
+    # @code_warntype BioLab.VectorNumber.skip_nan_apply!!(no!, co)
 
     # 104.723 ns (2 allocations: 160 bytes)
     # 110.019 ns (2 allocations: 160 bytes)
@@ -209,7 +209,7 @@ for (no!, re) in zip(
     # 612.717 ns (8 allocations: 544 bytes)
     # 603.107 ns (8 allocations: 544 bytes)
     # 585.650 ns (8 allocations: 544 bytes)
-    # @btime BioLab.VectorNumber.skip_nanapply!!($no!, $co) setup = (co = copy($nu_))
+    # @btime BioLab.VectorNumber.skip_nan_apply!!($no!, $co) setup = (co = copy($nu_))
 
 end
 

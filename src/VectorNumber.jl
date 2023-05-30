@@ -2,8 +2,6 @@ module VectorNumber
 
 using Distributions: Normal
 
-using Random: seed!
-
 using ..BioLab
 
 function get_area(nu_)
@@ -72,11 +70,7 @@ end
 
 function force_increasing_with_min!(nu_)
 
-    accumulate!(min, nu_, reverse!(nu_))
-
-    reverse!(nu_)
-
-    return nothing
+    reverse!(accumulate!(min, nu_, reverse!(nu_)))
 
 end
 
@@ -84,11 +78,9 @@ function force_increasing_with_max!(nu_)
 
     accumulate!(max, nu_, nu_)
 
-    return nothing
-
 end
 
-function skip_nanapply!!(fu!, nu_)
+function skip_nan_apply!!(fu!, nu_)
 
     go_ = [!isnan(nu) for nu in nu_]
 
@@ -98,11 +90,9 @@ function skip_nanapply!!(fu!, nu_)
 
     end
 
-    return nothing
-
 end
 
-function skip_nanapply!(fu, nu_)
+function skip_nan_apply!(fu, nu_)
 
     go_ = [!isnan(nu) for nu in nu_]
 
@@ -112,26 +102,17 @@ function skip_nanapply!(fu, nu_)
 
     end
 
-    return nothing
-
 end
 
-# TODO: Multiple-dispatch.
-function simulate(n; ra = BioLab.RA, di = "Normal", ho = "", ev = true)
+struct Original end
 
-    if di == "Normal"
+struct Deep end
 
-        di = Normal()
+struct Wide end
 
-    else
+function simulate(n, ty; ze = true)
 
-        erorr()
-
-    end
-
-    seed!(ra)
-
-    ra_ = rand(di, n)
+    ra_ = rand(Normal(), n)
 
     po_ = shift_minimum(ra_, 0.0)
 
@@ -139,46 +120,51 @@ function simulate(n; ra = BioLab.RA, di = "Normal", ho = "", ev = true)
 
     ne_ = reverse(-po_)
 
-    if isempty(ho)
+    nem_ = simulate(ne_, ty)
 
-        nem_ = ne_
-
-    elseif ho == "deep"
-
-        nem_ = ne_ * 2.0
-
-    elseif ho == "long"
-
-        nem_ = Vector{Float64}(undef, n * 2 - 1)
-
-        for (id, ne) in enumerate(ne_)
-
-            id2 = id * 2
-
-            nem_[id2 - 1] = ne
-
-            if id < n
-
-                nem_[id2] = (ne + ne_[id + 1]) / 2.0
-
-            end
-
-        end
-
-    else
-
-        error()
-
-    end
-
-    if !ev
+    if !ze
 
         nem_ = nem_[1:(end - 1)]
 
     end
 
-    # TODO: Preallocate.
-    return vcat(nem_, po_)
+    vcat(nem_, po_)
+
+end
+
+function simulate(ne_, ::Type{Original})
+
+    ne_
+
+end
+
+function simulate(ne_, ::Type{Deep})
+
+    ne_ * 2.0
+
+end
+
+function simulate(ne_, ::Type{Wide})
+
+    n = length(ne_)
+
+    nem_ = Vector{Float64}(undef, n * 2 - 1)
+
+    for (id, ne) in enumerate(ne_)
+
+        id2 = id * 2
+
+        nem_[id2 - 1] = ne
+
+        if id < n
+
+            nem_[id2] = (ne + ne_[id + 1]) / 2.0
+
+        end
+
+    end
+
+    nem_
 
 end
 
