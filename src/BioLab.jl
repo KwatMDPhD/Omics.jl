@@ -12,9 +12,7 @@ end
 
 function __init__()
 
-    rm(Constant.TE; force = true, recursive = true)
-
-    mkdir(Constant.TE)
+    BioLab.Path.reset(Constant.TE)
 
 end
 
@@ -28,12 +26,6 @@ function check_print(pr, ar...)
 
 end
 
-function print_header()
-
-    println('❀'^99)
-
-end
-
 function print_header(st)
 
     println('●'^99)
@@ -41,6 +33,12 @@ function print_header(st)
     println(st)
 
     println('◦'^99)
+
+end
+
+function print_header()
+
+    println('❀'^99)
 
 end
 
