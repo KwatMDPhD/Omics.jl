@@ -4,28 +4,21 @@ using JSON3: write
 
 using ..BioLab
 
-function position!(ke_va_, id_kec_vac::AbstractDict)
+function position!(ke_va_, id_no::AbstractDict)
 
     for ke_va in ke_va_
 
-        po = "position"
-
-        ke_va[po] = id_kec_vac[ke_va["data"]["id"]][po]
+        ke_va["position"] = id_no[ke_va["data"]["id"]]["position"]
 
     end
-
-    return nothing
 
 end
 
 function position!(ke_va_, js)
 
-    return position!(
+    position!(
         ke_va_,
-        Dict(
-            pop!(kec_vac["data"], "id") => kec_vac for
-            kec_vac in BioLab.Dict.read(js)["elements"]["nodes"]
-        ),
+        Dict(no["data"]["id"] => no for no in BioLab.Dict.read(js)["elements"]["nodes"]),
     )
 
 end
@@ -33,12 +26,12 @@ end
 function plot(
     el_;
     st_ = (),
-    la = Dict{String, Any}(),
+    la = Dict{String, Any}("name" => "preset"),
+    ex = "",
+    pns = 1.0,
+    pnb = "#fdfdfd",
     ht = "",
-    he = 800,
-    wr = "",
-    sc = 1.0,
-    bg = "#fdfdfd",
+    ke_ar...,
 )
 
     di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
@@ -53,19 +46,19 @@ function plot(
 
     end
 
-    if isempty(wr)
+    if isempty(ex)
 
         re = ""
 
     else
 
-        if wr == "json"
+        if ex == "json"
 
-            bl = """new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"})"""
+            bl = "new Blob([JSON.stringify(cy.json(), null, 2)], {type: \"application/json\"})"
 
-        elseif wr == "png"
+        elseif ex == "png"
 
-            bl = """cy.png({"full": true, "scale": $sc, "bg": "$bg"})"""
+            bl = "cy.png({\"full\": true, \"scale\": $pns, \"bg\": \"$pnb\"})"
 
         else
 
@@ -73,19 +66,18 @@ function plot(
 
         end
 
-        re = """cy.ready(function() {saveAs($bl, "$pr.$wr");});"""
+        re = "cy.ready(function() {saveAs($bl, \"$pr.$ex\");});"
 
     end
 
-    return BioLab.HTML.write(
+    BioLab.HTML.write(
         di,
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
             "https://cdn.rawgit.com/eligrey/FileSaver.js/master/dist/FileSaver.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.1/cytoscape.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.25.0/cytoscape.min.js",
         ),
-        """
-        var cy = cytoscape({
+        """var cy = cytoscape({
             container: document.getElementById("$di"),
             elements: $(write(el_)),
             style: $(write(st_)),
@@ -109,8 +101,7 @@ function plot(
         });
 
         $re""";
-        ht,
-        he,
+        ke_ar...,
     )
 
 end

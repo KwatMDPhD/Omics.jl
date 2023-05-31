@@ -4,62 +4,77 @@ include("environment.jl")
 
 te = joinpath(tempdir(), "BioLab.test.Network")
 
-BioLab.Path.empty(te)
+BioLab.Path.reset(te)
 
 # ---- #
 
 el_ = (
     Dict(
-        "data" => Dict("id" => "V1"),
-        "style" => Dict("background-color" => "red"),
+        "data" => Dict("id" => "A"),
         "position" => Dict("x" => 0, "y" => 0),
+        "style" => Dict("background-color" => "#ff0000"),
     ),
     Dict(
-        "data" => Dict("id" => "V2"),
-        "style" => Dict("background-color" => "yellow"),
-        "position" => Dict("x" => 100, "y" => 0),
+        "data" => Dict("id" => "B"),
+        "position" => Dict("x" => 20, "y" => 20),
+        "style" => Dict("background-color" => "#00ff00"),
     ),
     Dict(
-        "data" => Dict("id" => "V3"),
-        "style" => Dict("background-color" => "green"),
-        "position" => Dict("x" => 100, "y" => 100),
+        "data" => Dict("id" => "C"),
+        "position" => Dict("x" => 40, "y" => 40),
+        "style" => Dict("background-color" => "#0000ff"),
     ),
     Dict(
-        "data" => Dict("id" => "V4"),
-        "style" => Dict("background-color" => "blue"),
-        "position" => Dict("x" => 0, "y" => 100),
+        "data" => Dict("id" => "D"),
+        "position" => Dict("x" => 80, "y" => 80),
+        "style" => Dict("background-color" => "#f0f000"),
     ),
     Dict(
-        "data" => Dict("id" => "V1_V2", "source" => "V1", "target" => "V2"),
-        "style" => Dict("line-color" => "purple"),
+        "data" => Dict("id" => "E"),
+        "position" => Dict("x" => 160, "y" => 160),
+        "style" => Dict("background-color" => "#0f0f00"),
+    ),
+    Dict(
+        "data" => Dict("id" => "F"),
+        "position" => Dict("x" => 320, "y" => 320),
+        "style" => Dict("background-color" => "#00f0f0"),
+    ),
+    Dict(
+        "data" => Dict("id" => "G"),
+        "position" => Dict("x" => 640, "y" => 640),
+        "style" => Dict("background-color" => "#000f0f"),
+    ),
+    Dict(
+        "data" => Dict("id" => "H", "source" => "F", "target" => "G"),
+        "style" => Dict("line-color" => "#000000"),
     ),
 )
 
 BioLab.Network.plot(el_)
 
-la = Dict("name" => "cose", "animate" => false)
+# ---- #
+
+la = Dict("name" => "cose", "animate" => true)
 
 ht = joinpath(te, "cose.html")
 
-wr = "json"
-
-BioLab.Network.plot(el_; la, ht, wr)
-
-# @code_warntype BioLab.Network.plot(el_; la, ht, wr)
-
-# ---- #
+ex = "json"
 
 js = joinpath(homedir(), "Downloads", "cose.json")
+
+rm(js; force = true)
+
+BioLab.Network.plot(el_; la, ex, ht)
+
+# ---- #
 
 if ispath(js)
 
     BioLab.Network.position!(el_[1:(end - 1)], js)
 
-    # @code_warntype BioLab.Network.position!(el_[1:(end - 1)], js)
-
 else
 
-    println("🫥 $js is missing.")
+    println("Missing $js.")
 
 end
 
