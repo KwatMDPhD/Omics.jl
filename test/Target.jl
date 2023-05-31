@@ -20,7 +20,7 @@ BioLab.print_header(bo_)
 
 @test BioLab.FeatureXSample._aim(bo_, nu_) == ([2, 3], [4, 5])
 
-@btime BioLab.FeatureXSample._aim($bo_, $nu_)
+# @btime BioLab.FeatureXSample._aim($bo_, $nu_)
 
 # ---- #
 
@@ -52,7 +52,7 @@ BioLab.print_header(bo_)
 
 @test BioLab.FeatureXSample._trigger(fu, bo_, nu_) == -1089
 
-@btime BioLab.FeatureXSample._trigger($fu, $bo_, $nu_)
+# @btime BioLab.FeatureXSample._trigger($fu, $bo_, $nu_)
 
 # ---- #
 
@@ -70,7 +70,7 @@ co_ = [10^(id - 1) for id in 1:n_co]
 
 @test BioLab.FeatureXSample.target(fut, co_, fe_x_sa_x_nu) == [18512.5, 18511.5]
 
-@btime BioLab.FeatureXSample.target($fut, $co_, $fe_x_sa_x_nu)
+# @btime BioLab.FeatureXSample.target($fut, $co_, $fe_x_sa_x_nu)
 
 # ---- #
 
@@ -80,4 +80,4 @@ bo_ = vcat(fill(false, n_ze), fill(true, n_co - n_ze))
 
 @test BioLab.FeatureXSample.target(fut, bo_, fe_x_sa_x_nu) == [-6.0, -6]
 
-@btime BioLab.FeatureXSample.target($fut, $bo_, $fe_x_sa_x_nu)
+# @btime BioLab.FeatureXSample.target($fut, $bo_, $fe_x_sa_x_nu)

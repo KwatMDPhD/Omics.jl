@@ -8,9 +8,9 @@ function normalize_with_01!(te)
 
     ra = maximum(te) - mi
 
-    if ra == 0
+    if iszero(ra)
 
-        error()
+        error("Can not 0-1-normalize numbers that are all equal.")
 
     end
 
@@ -20,8 +20,6 @@ function normalize_with_01!(te)
 
     end
 
-    return nothing
-
 end
 
 function normalize_with_0!(te)
@@ -30,9 +28,9 @@ function normalize_with_0!(te)
 
     st = std(te)
 
-    if st == 0
+    if iszero(st)
 
-        error()
+        error("Can not -0-normalize numbers with 0 standard deviation.")
 
     end
 
@@ -42,15 +40,13 @@ function normalize_with_0!(te)
 
     end
 
-    return nothing
-
 end
 
 function normalize_with_sum!(te)
 
     if any(nu < 0.0 for nu in te)
 
-        error()
+        error("Can not sum-normalize numbers with any negative.")
 
     end
 
@@ -62,43 +58,45 @@ function normalize_with_sum!(te)
 
     end
 
-    return nothing
-
 end
 
-function _!(nu1_, nu2_)
+function _normalize_with_rank!(te, fu)
 
-    for (id, nu2) in enumerate(nu2_)
+    if allequal(te)
 
-        nu1_[id] = nu2
+        error("Can not rank-normalize numbers that are all equal.")
 
     end
 
-    return nothing
+    for (id, nu) in enumerate(fu(te))
+
+        te[id] = nu
+
+    end
 
 end
 
 function normalize_with_1234!(te)
 
-    return _!(te, ordinalrank(te))
+    _normalize_with_rank!(te, ordinalrank)
 
 end
 
 function normalize_with_1223!(te)
 
-    return _!(te, denserank(te))
+    _normalize_with_rank!(te, denserank)
 
 end
 
 function normalize_with_1224!(te)
 
-    return _!(te, competerank(te))
+    _normalize_with_rank!(te, competerank)
 
 end
 
 function normalize_with_125254!(te)
 
-    return _!(te, tiedrank(te))
+    _normalize_with_rank!(te, tiedrank)
 
 end
 

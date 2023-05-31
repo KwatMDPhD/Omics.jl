@@ -66,7 +66,7 @@ for na in readdir(@__DIR__)
 
         BioLab.print_header("Testing $na")
 
-        include(na)
+        run(`julia --project $na`)
 
     end
 
