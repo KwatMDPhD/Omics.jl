@@ -40,9 +40,15 @@ function get_extreme(nu_)
 
 end
 
+# TODO: Test.
+
 function range(nu_, n)
 
-    minimum(nu_):n:maximum(nu_)
+    mi = minimum(nu_)
+
+    ma = maximum(nu_)
+
+    mi:((ma - mi) / n):ma
 
 end
 
@@ -114,7 +120,7 @@ function simulate(n, ty; ze = true)
 
     ra_ = rand(Normal(), n)
 
-    po_ = shift_minimum(ra_, 0.0)
+    po_ = shift_minimum(ra_, 0)
 
     sort!(po_)
 
@@ -140,7 +146,7 @@ end
 
 function simulate(ne_, ::Type{Deep})
 
-    ne_ * 2.0
+    ne_ * 2
 
 end
 
@@ -158,7 +164,7 @@ function simulate(ne_, ::Type{Wide})
 
         if id < n
 
-            nem_[id2] = (ne + ne_[id + 1]) / 2.0
+            nem_[id2] = (ne + ne_[id + 1]) / 2
 
         end
 

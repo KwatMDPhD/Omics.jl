@@ -318,7 +318,7 @@ function merge_colorbar(z, ke_va__...)
 
     tickmode = "array"
 
-    tickvals = BioLab.VectorNumber.step(z, 10)
+    tickvals = BioLab.VectorNumber.range(z, 10)
 
     ticktext = [@sprintf("%.3g", ti) for ti in tickvals]
 
