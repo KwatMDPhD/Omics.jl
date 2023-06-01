@@ -12,7 +12,7 @@ function write(di, so_, sc; he = 800, wi = 1200, ht = "")
             "<meta charset=\"UTF-8\">",
             "</head>",
             "<div style=\"margin: auto; height: $(he)px; width: $(wi)px; display: flex; justify-content: center; align-items: center; background: #203838;\">",
-            "<div id=\"$di\" style=\"height: 97%; width:97%; background: #f8f8f8;\"></div>",
+            "<div id=\"$di\" style=\"height: $(he-2)px; width: $(wi-2)px; background: #f8f8f8;\"></div>",
             "</div>",
             ["<script src=\"$so\"></script>" for so in so_],
             "<script>",

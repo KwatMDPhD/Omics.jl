@@ -8,53 +8,51 @@ include("environment.jl")
 
 te = joinpath(tempdir(), "BioLab.test.Plot")
 
-BioLab.Path.empty(te)
+BioLab.Path.reset(te)
 
 # ---- #
 
-he_ = ("#ff71fb", "#fcc9b9", "#c91f37")
-
 # TODO: `@test`.
-display(BioLab.Plot._make_color_scheme(he_))
-
-# @code_warntype BioLab.Plot._make_color_scheme(he_)
-
-# 1.025 μs (21 allocations: 992 bytes)
-# @btime BioLab.Plot._make_color_scheme($he_)
+println(BioLab.Plot._make_color_scheme(("#ff71fb", "#fcc9b9", "#c91f37")))
 
 # ---- #
 
 co_ = (
+    BioLab.Plot.COBWR,
     BioLab.Plot.COPLA,
     BioLab.Plot.COPL3,
     BioLab.Plot.COPLO,
     BioLab.Plot.COBIN,
     BioLab.Plot.COASP,
+    BioLab.Plot.COGUA,
     BioLab.Plot.COHUM,
     BioLab.Plot.COSTA,
-    BioLab.Plot.COGUA,
     #BioLab.Plot.COAYA,
 )
 
 for co in co_
 
+    # TODO: Plot.
     display(co)
 
 end
 
-co = co_[1]
+co = BioLab.Plot.COPLA
+
+# ---- #
 
 for nu in (-10.0^3, -1.0, -1, 0.0, 0, 0.5, 1.0, 1, 2.0, 2, 3.0, 3, 256.0, 256, 257)
 
-    display(nu)
+    println(nu)
 
     try
 
+        # TODO: Plot.
         display(co[nu])
 
     catch er
 
-        display(er)
+        println(er)
 
     end
 
@@ -64,8 +62,6 @@ end
 
 for nu in (0.0, 0.3, 0.6, 1, 2, 4, 8, 16, 32, 64, 128, 256)
 
-    BioLab.print_header(nu)
-
     co1 = ColorSchemes.plasma[nu]
 
     co2 = parse(Colorant, BioLab.Plot.color(co, nu))
@@ -74,17 +70,8 @@ for nu in (0.0, 0.3, 0.6, 1, 2, 4, 8, 16, 32, 64, 128, 256)
 
     println(co2)
 
+    # TODO: Plot.
     display([co1, co2])
-
-end
-
-for nu in (0.2, 20)
-
-    # @code_warntype BioLab.Plot.color(co, nu)
-
-    # 95.671 ns (3 allocations: 112 bytes)
-    # 87.760 ns (3 allocations: 112 bytes)
-    # @btime BioLab.Plot.color($co, $nu)
 
 end
 
@@ -92,23 +79,18 @@ end
 
 for co in co_
 
-    BioLab.print_header()
-
     # TODO: `@test`.
-    display(BioLab.Plot.fractionate(co))
+    println(BioLab.Plot.fractionate(co))
 
 end
-
-# @code_warntype BioLab.Plot.fractionate(co)
-
-# 19.334 μs (769 allocations: 32.12 KiB)
-# @btime BioLab.Plot.fractionate($co)
 
 # ---- #
 
 data = [Dict()]
 
 BioLab.Plot.plot(data)
+
+# ---- #
 
 layout = Dict(
     "title" => "Title",
@@ -118,13 +100,9 @@ layout = Dict(
 
 BioLab.Plot.plot(data, layout)
 
-config = Dict("editable" => true)
+# ---- #
 
-ht = joinpath(te, "plot.html")
-
-BioLab.Plot.plot(data, layout; config, ht)
-
-# @code_warntype BioLab.Plot.plot(data, layout; config, ht)
+BioLab.Plot.plot(data, layout; config = Dict("editable" => true), ht = joinpath(te, "plot.html"))
 
 # ---- #
 
