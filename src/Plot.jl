@@ -14,7 +14,7 @@ using ..BioLab
 
 function _make_color_scheme(he_)
 
-    return ColorScheme([parse(Colorant, he) for he in he_])
+    ColorScheme([parse(Colorant, he) for he in he_])
 
 end
 
@@ -69,15 +69,21 @@ const COHUM = _make_color_scheme(("#4b3c39", "#ffffff", "#ffddca"))
 
 const COSTA = _make_color_scheme(("#ffffff", "#8c1515"))
 
+function _make_hex(rg)
+
+    "#$(hex(rg))"
+
+end
+
 function color(co, nu)
 
-    return "#$(hex(co[nu]))"
+    _make_hex(co[nu])
 
 end
 
 function fractionate(co)
 
-    return collect(zip(0:(1 / (length(co) - 1)):1, "#$(hex(rg))" for rg in co))
+    collect(zip(0:(1 / (length(co) - 1)):1, _make_hex(rg) for rg in co))
 
 end
 
@@ -87,7 +93,7 @@ function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), 
 
     di = "BioLab.Plot.plot.$(BioLab.Time.stamp())"
 
-    return BioLab.HTML.write(
+    BioLab.HTML.write(
         di,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
         """
@@ -113,27 +119,27 @@ end
 
 function _set_x(y_)
 
-    return [collect(eachindex(y)) for y in y_]
+    [collect(eachindex(y)) for y in y_]
 
 end
 
 function _set_text(y_)
 
-    return fill(Vector{String}(), length(y_))
+    fill(Vector{String}(), length(y_))
 
 end
 
 function _set_name(y_)
 
-    return ["Name $id" for id in eachindex(y_)]
+    ["Name $id" for id in eachindex(y_)]
 
 end
 
-function _set_color(y_)
+function _set_color(y_, co = COPLO)
 
     n = length(y_) - 1
 
-    if n == 0
+    if iszero(n)
 
         nu_ = 1:1
 
@@ -143,19 +149,19 @@ function _set_color(y_)
 
     end
 
-    return [color(COPLO, nu) for nu in nu_]
+    [color(co, nu) for nu in nu_]
 
 end
 
 function _set_opacity(y_)
 
-    return fill(0.8, length(y_))
+    fill(0.8, length(y_))
 
 end
 
 function _set_mode(y_)
 
-    return [ifelse(length(y) < 10^3, "markers+lines", "lines") for y in y_]
+    [ifelse(length(y) < 10^3, "markers+lines", "lines") for y in y_]
 
 end
 
@@ -171,7 +177,7 @@ function plot_scatter(
     ke_ar...,
 )
 
-    return plot(
+    plot(
         [
             Dict(
                 "name" => name_[id],
@@ -197,7 +203,7 @@ function plot_bar(
     ke_ar...,
 )
 
-    return plot(
+    plot(
         [
             Dict(
                 "type" => "bar",
@@ -310,7 +316,7 @@ function plot_histogram(
 
     end
 
-    return plot(data, layout; ke_ar...)
+    plot(data, layout; ke_ar...)
 
 end
 
@@ -322,7 +328,7 @@ function merge_colorbar(z, ke_va__...)
 
     ticktext = [@sprintf("%.3g", ti) for ti in tickvals]
 
-    return reduce(
+    reduce(
         BioLab.Dict.merge,
         ke_va__;
         init = Dict(
@@ -477,7 +483,7 @@ function plot_heat_map(
 
     end
 
-    return plot(data, layout; ke_ar...)
+    plot(data, layout; ke_ar...)
 
 end
 
@@ -485,7 +491,7 @@ function plot_heat_map(ro_x_co_x_nu; ke_ar...)
 
     ro, ro_, co_, ro_x_co_x_nu = BioLab.DataFrame.separate(ro_x_co_x_nu)
 
-    return plot_heat_map(ro_x_co_x_nu, ro_, co_; nar = ro, ke_ar...)
+    plot_heat_map(ro_x_co_x_nu, ro_, co_; nar = ro, ke_ar...)
 
 end
 
@@ -504,7 +510,7 @@ function plot_radar(
 
     cofai = "#ebf6f7"
 
-    return plot(
+    plot(
         [
             Dict(
                 "type" => "scatterpolar",
