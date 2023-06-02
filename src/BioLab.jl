@@ -16,16 +16,6 @@ function __init__()
 
 end
 
-function check_print(pr, ar...)
-
-    if pr
-
-        println(ar...)
-
-    end
-
-end
-
 function print_header(st)
 
     println('●'^99)
@@ -42,7 +32,18 @@ function print_header()
 
 end
 
-macro is_error(ex)
+function check_print(pr, ar...)
+
+    if pr
+
+        println(ar...)
+
+    end
+
+end
+
+
+macro is_error(ex, pr = true)
 
     quote
 
@@ -54,7 +55,7 @@ macro is_error(ex)
 
         catch er
 
-            println(er)
+            check_print($pr, er)
 
             true
 

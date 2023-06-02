@@ -10,7 +10,13 @@ using BioLab
 
 # Aqua.test_ambiguities(BioLab)
 
+# ---- #
+
 # ----------------------------------------------------------------------------------------------- #
+
+sr = joinpath(dirname(@__DIR__), "src")
+
+# ---- #
 
 function is_jl(na)
 
@@ -19,13 +25,29 @@ function is_jl(na)
 end
 
 @test symdiff(
-    (na for na in readdir(joinpath(dirname(@__DIR__), "src")) if is_jl(na) && na != "BioLab.jl"),
+    (na for na in readdir(sr) if is_jl(na) && na != "BioLab.jl"),
     (na for na in readdir(@__DIR__) if is_jl(na) && na != "runtests.jl"),
 ) == ["environment.jl"]
 
 # ---- #
 
+for na in readdir(sr)
+
+    if !startswith(na, '_')
+
+        @test splitext(na)[1] == split(readline(joinpath(sr, na)))[2]
+
+    end
+
+end
+
+# ---- #
+
 BioLab.print_header("Testing BioLab.jl")
+
+# ---- #
+
+BioLab.print_header()
 
 # ---- #
 
@@ -45,14 +67,6 @@ for pr in (true, false)
     )
 
 end
-
-# ---- #
-
-BioLab.print_header("I Got a Woman")
-
-# ---- #
-
-BioLab.print_header()
 
 # ---- #
 

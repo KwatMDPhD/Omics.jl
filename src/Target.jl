@@ -1,4 +1,4 @@
-module FeatureXSample
+module Target
 
 using ..BioLab
 

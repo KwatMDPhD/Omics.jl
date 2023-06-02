@@ -2,7 +2,7 @@
 
 julia_version = "1.9.0"
 manifest_format = "2.0"
-project_hash = "ff49f8a5aec9a34f49b13b44d9bf8bc50485605d"
+project_hash = "cd4f853785bb35e2c7d4ba7357b1c1a51bc35a98"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -23,6 +23,12 @@ weakdeps = ["StaticArrays"]
 
     [deps.Adapt.extensions]
     AdaptStaticArraysExt = "StaticArrays"
+
+[[deps.Aqua]]
+deps = ["Compat", "Pkg", "Test"]
+git-tree-sha1 = "5034b40e179731fd8aba2b2882c56feac05c3be3"
+uuid = "4c88cf16-eb10-579e-8560-4a9242c79595"
+version = "0.6.2"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"

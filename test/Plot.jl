@@ -12,12 +12,21 @@ BioLab.Path.reset(te)
 
 # ---- #
 
-# TODO: `@test`.
-println(BioLab.Plot._make_color_scheme(("#ff71fb", "#fcc9b9", "#c91f37")))
+@test BioLab.Plot.COBWR == ColorSchemes.bwr
+
+@test BioLab.Plot.COPLA == ColorSchemes.plasma
 
 # ---- #
 
-co_ = (
+@test @is_error BioLab.Plot._make_color_scheme(("#000000",)) false
+
+# ---- #
+
+@test length(BioLab.Plot._make_color_scheme(("#ff71fb", "#fcc9b9", "#c91f37"))) == 3
+
+# ---- #
+
+for co in (
     BioLab.Plot.COBWR,
     BioLab.Plot.COPLA,
     BioLab.Plot.COPL3,
@@ -30,57 +39,55 @@ co_ = (
     #BioLab.Plot.COAYA,
 )
 
-for co in co_
-
     # TODO: Plot.
-    display(co)
-
-end
-
-co = BioLab.Plot.COPLA
-
-# ---- #
-
-for nu in (-10.0^3, -1.0, -1, 0.0, 0, 0.5, 1.0, 1, 2.0, 2, 3.0, 3, 256.0, 256, 257)
-
-    println(nu)
-
-    try
-
-        # TODO: Plot.
-        display(co[nu])
-
-    catch er
-
-        println(er)
-
-    end
 
 end
 
 # ---- #
 
-for nu in (0.0, 0.3, 0.6, 1, 2, 4, 8, 16, 32, 64, 128, 256)
+n = length(BioLab.Plot.COBWR)
 
-    co1 = ColorSchemes.plasma[nu]
+# ---- #
 
-    co2 = parse(Colorant, BioLab.Plot.color(co, nu))
+for nu in (NaN, -1, 0, n + 1)
 
-    println(co1)
-
-    println(co2)
-
-    # TODO: Plot.
-    display([co1, co2])
+    @test @is_error BioLab.Plot.COBWR[nu] false
 
 end
 
 # ---- #
 
-for co in co_
+for nu in (-Inf, -1.0, 0.0, 0.5, 1.0, 1, 2.0, 2, 3.0, 3, n, convert(Float64, n + 1), Inf)
 
-    # TODO: `@test`.
-    println(BioLab.Plot.fractionate(co))
+    BioLab.Plot.COBWR[nu]
+
+end
+
+# ---- #
+
+for (rg, re) in ((RGB(1, 0, 0), "#FF0000"), (RGB(0, 1, 0), "#00FF00"), (RGB(0, 0, 1), "#0000FF"))
+
+    @test BioLab.Plot._make_hex(rg) == re
+
+end
+
+# ---- #
+
+for (he_, re) in (
+    (("#000000", "#ffffff"), (0.0, 1.0)),
+    (("#ff0000", "#00ff00", "#0000ff"), (0.0, 0.5, 1.0)),
+    (("#ff0000", "#00ff00", "#0000ff", "#f0000f"), (0.0, 1 / 3, 2 / 3, 1.0)),
+    (("#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0"), (0.0, 0.25, 0.5, 0.75, 1.0)),
+    (
+        ("#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0", "#00ff00"),
+        (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
+    ),
+)
+
+    @test all(
+        fr == re[id] && he == uppercase(he_[id]) for
+        (id, (fr, he)) in enumerate(BioLab.Plot.fractionate(BioLab.Plot._make_color_scheme(he_)))
+    )
 
 end
 
@@ -112,15 +119,13 @@ y2 = [3, 4]
 
 y_ = [y1, y2]
 
+# ---- #
+
 BioLab.Plot.plot_scatter(y_)
 
-x_ = [y1 * 10, y2 * 20]
+# ---- #
 
-ht = joinpath(te, "scatter.html")
-
-BioLab.Plot.plot_scatter(y_, x_; ht)
-
-# @code_warntype BioLab.Plot.plot_scatter(y_, x_; ht)
+BioLab.Plot.plot_scatter(y_, [y1 * 10, y2 * 10])
 
 # ---- #
 
@@ -128,23 +133,20 @@ y1 = [-1, 2, 5]
 
 y_ = [y1, reverse(y1), [8]]
 
+# ---- #
+
 BioLab.Plot.plot_bar(y_)
+
+# ---- #
 
 x1 = [-2, -1, 0]
 
-x_ = [x1, -x1, [0]]
-
-name_ = ["Jonathan", "Joseph", "Jotaro"]
-
-barmode = "group"
-
-layout = Dict("barmode" => barmode, "title" => Dict("text" => titlecase(barmode)))
-
-ht = joinpath(te, "bar.$barmode.html")
-
-BioLab.Plot.plot_bar(y_, x_; name_, layout, ht)
-
-# @code_warntype BioLab.Plot.plot_bar(y_, x_; name_, layout, ht)
+BioLab.Plot.plot_bar(
+    y_,
+    [x1, -x1, [0]];
+    name_ = ["Jonathan", "Joseph", "Jotaro"],
+    layout = Dict("barmode" => "group", "title" => Dict("text" => "barmode = group")),
+)
 
 # ---- #
 
@@ -152,20 +154,18 @@ x_ = [[-1], [0, 1], [2, 3, 4]]
 
 BioLab.Plot.plot_histogram(x_)
 
-text_ = [["1A"], ["2A", "2B"], ["3A", "3B", "3C"]]
+# ---- #
 
 for xbins_size in (0.0, 1.0)
 
     BioLab.Plot.plot_histogram(
         x_,
-        text_;
+        [["1A"], ["2A", "2B"], ["3A", "3B", "3C"]];
         xbins_size,
-        layout = Dict("title" => Dict("text" => xbins_size)),
+        layout = Dict("title" => Dict("text" => "xbins_size = $xbins_size")),
     )
 
 end
-
-# @code_warntype BioLab.Plot.plot_histogram(x_, text_; ht = joinpath(te, "histogram.html"))
 
 # ---- #
 
@@ -173,49 +173,56 @@ n_ro = 2
 
 n_co = 4
 
-ro1_x_co1_x_nu = convert(Matrix{Int}, BioLab.Matrix.simulate(n_ro, n_co, "1.0:"))
-
-BioLab.Plot.plot_heat_map(ro1_x_co1_x_nu)
+ro1_x_co1_x_nu = convert(Matrix, reshape(1:(n_ro * n_co), n_ro, n_co))
 
 ro_ = ["Row$id" for id in 1:n_ro]
 
 co_ = ["Column$id" for id in 1:n_co]
 
+# ---- #
+
+BioLab.Plot.plot_heat_map(ro1_x_co1_x_nu)
+
+# ---- #
+
 BioLab.Plot.plot_heat_map(ro1_x_co1_x_nu, ro_, co_)
+
+# ---- #
+
+BioLab.Plot.plot_heat_map(
+    BioLab.DataFrame.make("Row Name", ro_, co_, ro1_x_co1_x_nu);
+    layout = Dict("xaxis" => Dict("title" => Dict("text" => "Column Name"))),
+)
+
+# ---- #
 
 y = [-1, 1, -2, 2]
 
 x = [1, 4, 2, 5, 3, 6]
 
-ro_x_co_x_nu = [la1 * la2 for la1 in y, la2 in x]
+ro2_x_co2_x_nu = [la1 * la2 for la1 in y, la2 in x]
 
 grr_ = [1, 2, 1, 2]
 
-BioLab.Plot.plot_heat_map(ro_x_co_x_nu; grr_)
-
 grc_ = [1, 2, 1, 2, 1, 2]
-
-BioLab.Plot.plot_heat_map(ro_x_co_x_nu; grc_)
-
-y = ["*$nu" for nu in y]
-
-x = ["*$nu" for nu in x]
-
-ht = joinpath(te, "heat_map.html")
-
-BioLab.Plot.plot_heat_map(ro_x_co_x_nu, y, x; grr_, grc_, ht)
-
-# @code_warntype BioLab.Plot.plot_heat_map(ro_x_co_x_nu, y, x; grr_, grc_, ht)
 
 # ---- #
 
-da = BioLab.DataFrame.make("Row name", ro_, co_, ro1_x_co1_x_nu)
+BioLab.Plot.plot_heat_map(ro2_x_co2_x_nu; grr_)
 
-ht = joinpath(te, "heat_map.data_frame.html")
+# ---- #
 
-BioLab.Plot.plot_heat_map(da; ht)
+BioLab.Plot.plot_heat_map(ro2_x_co2_x_nu; grc_)
 
-# @code_warntype BioLab.Plot.plot_heat_map(da; ht)
+# ---- #
+
+BioLab.Plot.plot_heat_map(
+    ro2_x_co2_x_nu,
+    ["Y = $nu" for nu in y],
+    ["X = $nu" for nu in x];
+    grr_,
+    grc_,
+)
 
 # ---- #
 
@@ -225,16 +232,8 @@ theta45 = collect(0:45:360)
 
 theta60 = collect(0:60:360)
 
-theta_ = [theta30, theta45, theta60]
-
-r_ = [theta30, theta45, theta60]
-
-name_ = [30, 45, 60]
-
-ht = joinpath(te, "radar.html")
-
-BioLab.Plot.plot_radar(theta_, r_; name_, ht)
-
-# @code_warntype BioLab.Plot.plot_radar(theta_, r_; name_, ht)
-
-# ---- #
+BioLab.Plot.plot_radar(
+    [theta30, theta45, theta60],
+    [theta30, theta45, theta60];
+    name_ = [30, 45, 60],
+)

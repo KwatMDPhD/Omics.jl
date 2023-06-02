@@ -2,7 +2,7 @@ module HTML
 
 using ..BioLab
 
-function write(di, so_, sc; he = 800, wi = 1200, ht = "")
+function write(di, so_, sc; he = 800, wi = 1280, ht = "")
 
     jo = join(
         vcat(
