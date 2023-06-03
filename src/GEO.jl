@@ -22,7 +22,7 @@ function _outerjoin(co_va____, on)
 
 end
 
-function read(gs; di = BioLab.TE, pr = true)
+function read(gs; di = BioLab.Constant.TE, pr = true)
 
     fi = "$(gs)_family.soft.gz"
 

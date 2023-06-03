@@ -121,7 +121,10 @@ function map_to(row_x_column_x_anything, fu!, fr_, to; de = "", pr = false)
 
     to_ = row_x_column_x_anything[!, to]
 
-    fr_to = Dict{typejoin((eltype(co) for co in eachcol(row_x_from_x_anything))...), eltype(to_)}()
+    fr_to = Dict{
+        typejoin((eltype(skipmissing(co)) for co in eachcol(row_x_from_x_anything))...),
+        eltype(skipmissing(to_)),
+    }()
 
     for (fr_, to) in zip(eachrow(row_x_from_x_anything), to_)
 
