@@ -31,7 +31,7 @@ function separate(row_x_column_x_anything)
     id_ = 2:length(co_)
 
     co_[1],
-    row_x_column_x_anything[:, 1]::Vector{String},
+    row_x_column_x_anything[:, 1]::Vector{<:AbstractString},
     co_[id_]::Vector{String},
     Matrix(row_x_column_x_anything[!, id_])
 

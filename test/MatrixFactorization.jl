@@ -32,15 +32,13 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
     BioLab.MatrixFactorization.write((wma,), (hma,); di)
 
-    # TODO:
+    @test wma == BioLab.DataFrame.separate(
+        BioLab.Table.read(joinpath(di, "row1_x_factor_x_positive.tsv")),
+    )[4]
 
-    # @test wma == BioLab.DataFrame.separate(
-    #     BioLab.Table.read(joinpath(di, "row1_x_factor_x_positive.tsv")),
-    # )[4]
-
-    # @test hma == BioLab.DataFrame.separate(
-    #     BioLab.Table.read(joinpath(di, "factor_x_column1_x_positive.tsv")),
-    # )[4]
+    @test hma == BioLab.DataFrame.separate(
+        BioLab.Table.read(joinpath(di, "factor_x_column1_x_positive.tsv")),
+    )[4]
 
     # @btime BioLab.MatrixFactorization.factorize($ama, $n_fa; pr = $false)
 
