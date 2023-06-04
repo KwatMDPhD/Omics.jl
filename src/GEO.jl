@@ -8,15 +8,15 @@ using OrderedCollections: OrderedDict
 
 using ..BioLab
 
-function _outerjoin(co_va____, on)
+function _outerjoin_select(co_va____, on)
 
     if isempty(co_va____)
 
-        return DataFrame()
+        DataFrame()
 
     else
 
-        return select!(outerjoin(DataFrame.(co_va____)...; on), on, :)
+        select!(outerjoin((DataFrame(co_va_) for co_va_ in co_va____)...; on), on, :)
 
     end
 
@@ -109,7 +109,7 @@ function read(gs; di = BioLab.Constant.TE, pr = true)
 
     end
 
-    return ty_bl
+    ty_bl
 
 end
 
@@ -197,7 +197,7 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
     end
 
-    return fe_na
+    fe_na
 
 end
 
@@ -255,7 +255,7 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
     end
 
-    ch_x_sa_x_an = _outerjoin(co_st____, ch)
+    ch_x_sa_x_an = _outerjoin_select(co_st____, ch)
 
     if pr
 
@@ -273,7 +273,7 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
         BioLab.check_print(pr, "🚉 $pl")
 
-        fe_x_sa_x_nu = _outerjoin(co_nu____, pl)
+        fe_x_sa_x_nu = _outerjoin_select(co_nu____, pl)
 
         pl_ke_va = ty_bl["PLATFORM"]
 
@@ -308,7 +308,7 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
     end
 
-    return ch_x_sa_x_an, fe_x_sa_x_nu_____...
+    ch_x_sa_x_an, fe_x_sa_x_nu_____...
 
 end
 
