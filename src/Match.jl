@@ -10,7 +10,7 @@ using StatsBase: sample
 
 using ..BioLab
 
-function _normalize!(fl_::AbstractVector{Float64}, st)
+function _normalize!(fl_::AbstractVector{Real}, st)
 
     BioLab.Normalization.normalize_with_0!(fl_)
 
@@ -20,7 +20,7 @@ function _normalize!(fl_::AbstractVector{Float64}, st)
 
 end
 
-function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
+function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Real}, st)
 
     # TODO: Test.
     va_ = [!allequal(fl_) for fl_ in eachrow(fe_x_sa_x_fl)]
