@@ -8,17 +8,9 @@ using OrderedCollections: OrderedDict
 
 using ..BioLab
 
-function _outerjoin_select(co_va____, on)
+function _readline(st)
 
-    if isempty(co_va____)
-
-        DataFrame()
-
-    else
-
-        select!(outerjoin((DataFrame(co_va_) for co_va_ in co_va____)...; on), on, :)
-
-    end
+    readline(st; keep = false)
 
 end
 
@@ -30,7 +22,7 @@ function read(gs; di = BioLab.Constant.TE, pr = true)
 
     if ispath(gz)
 
-        BioLab.check_print(pr, "🤞 Using $gz")
+        BioLab.check_print(pr, "Using $gz")
 
     else
 
@@ -38,78 +30,62 @@ function read(gs; di = BioLab.Constant.TE, pr = true)
 
     end
 
-    ty = nothing
+    ty_bl_ke_va = Dict(
+        ty => OrderedDict{String, OrderedDict{String, String}}() for
+        ty in ("DATABASE", "SERIES", "PLATFORM", "SAMPLE")
+    )
 
-    bl = nothing
+    ty = ""
 
-    ty_bl = Dict{String, OrderedDict{String, OrderedDict{String, Any}}}()
+    bl = ""
 
     eq = " = "
 
-    ket = "an_"
+    st = open(gz)
 
-    for li in split(Base.read(open(gz, "r"), String), '\n')[1:(end - 1)]
+    while !eof(st)
+
+        li = _readline(st)
 
         if startswith(li, '^')
 
-            BioLab.check_print(pr, "📍 $li")
+            BioLab.check_print(pr, li)
 
             ty, bl = split(li[2:end], eq; limit = 2)
 
-            get!(ty_bl, ty, OrderedDict{String, OrderedDict{String, Any}}())[bl] =
-                OrderedDict{String, Any}()
+            ty_bl_ke_va[ty][bl] = OrderedDict{String, String}()
 
             continue
 
         end
 
-        ke_va = ty_bl[ty][bl]
+        ta = "!$(lowercase(ty))_table_"
 
-        # TODO: Use `_data_row_count`.
-        if startswith(li, "!$(lowercase(ty))_table_")
+        if startswith(li, "$(ta)begin")
 
-            if endswith(li, "begin")
+            ty_bl_ke_va[ty][bl]["table"] = join(
+                (
+                    _readline(st) for _ in
+                    1:(1 + parse(Int, ty_bl_ke_va[ty][bl]["!$(titlecase(ty))_data_row_count"]))
+                ),
+                '\n',
+            )
 
-                ke_va[ket] = Vector{Vector{String}}()
-
-            elseif endswith(li, "end")
-
-                fe_x_io_x_an = BioLab.DataFrame.make(pop!(ke_va, ket))
-
-                if size(fe_x_io_x_an, 1) !=
-                   parse(Int, pop!(ke_va, "!$(titlecase(ty))_data_row_count"))
-
-                    error()
-
-                end
-
-                ke_va["fe_x_io_x_an"] = fe_x_io_x_an
-
-            else
-
-                error()
-
-            end
+            _readline(st)
 
             continue
 
         end
 
-        if haskey(ke_va, ket)
+        ke, va = split(li, eq; limit = 2)
 
-            push!(ke_va[ket], split(li, '\t'))
-
-        else
-
-            ke, va = split(li, eq; limit = 2)
-
-            BioLab.Dict.set_with_suffix!(ke_va, ke, va; pr)
-
-        end
+        BioLab.Dict.set_with_suffix!(ty_bl_ke_va[ty][bl], ke, va; pr)
 
     end
 
-    ty_bl
+    close(st)
+
+    ty_bl_ke_va
 
 end
 
@@ -163,17 +139,17 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
     elseif pli in (7566, 7567)
 
-        error("Bad platform - avoid it.")
+        error("$pli is a bad platform - avoid it.")
 
     else
 
-        error("New platform - map column.")
+        error("$pli is an unknown platform - add it.")
 
     end
 
     if pr
 
-        println("🧭 Mapping platform features using the platform table ($ke ➡️  $va)")
+        println("Mapping platform features using the platform table ($ke => $va)")
 
         display(first(fe_x_io_x_an, 2))
 
@@ -193,7 +169,7 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
     if pr
 
-        BioLab.Dict.print(fe_na; n = 8)
+        BioLab.Dict.print(fe_na; n = 4)
 
     end
 
@@ -201,9 +177,23 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
 end
 
-function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
+function _data_frame_outerjoin_select(co_va____, on)
 
-    sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl["SAMPLE"]))
+    if isempty(co_va____)
+
+        DataFrame()
+
+    else
+
+        select!(outerjoin((DataFrame(co_va_) for co_va_ in co_va____)...; on), on, :)
+
+    end
+
+end
+
+function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = (), pr = true)
+
+    sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl_ke_va["SAMPLE"]))
 
     ch = "Characteristic"
 
@@ -215,9 +205,10 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
     for (sa, ke_va) in sa_ke_va
 
-        ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
-
-        ch_ = [ch for ch in ch_ if isempty(ig_) || !any(contains(ch, ig) for ig in ig_)]
+        ch_ = [
+            va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics") &&
+            (isempty(ig_) || !any(contains(va, ig) for ig in ig_))
+        ]
 
         if all(contains(ch, de) for ch in ch_)
 
@@ -227,7 +218,7 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
         else
 
-            println("⚠️  A $sa characteristic lacks \"$de\":\n  $(join(ch_, "\n  ")).")
+            @warn "A $sa characteristic lacks \"$de\"." ch_
 
         end
 
@@ -235,9 +226,9 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
         co_nu____ = get!(pl_co_nu____, pl, Vector{Dict{String, Vector{Any}}}())
 
-        if haskey(ke_va, "fe_x_io_x_an")
+        if haskey(ke_va, "table")
 
-            fe_x_io_x_an = ke_va["fe_x_io_x_an"]
+            fe_x_io_x_an = BioLab.DataFrame.make(ke_va["table"])
 
             push!(
                 co_nu____,
@@ -249,17 +240,17 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
         else
 
-            println("⚠️  $sa table is empty.")
+            @warn "$sa table is empty."
 
         end
 
     end
 
-    ch_x_sa_x_an = _outerjoin_select(co_st____, ch)
+    ch_x_sa_x_an = _data_frame_outerjoin_select(co_st____, ch)
 
     if pr
 
-        println("💾 Characteristics")
+        println("Characteristics")
 
         BioLab.Matrix.print(ch_x_sa_x_an)
 
@@ -271,34 +262,34 @@ function tabulate(ty_bl; sa = "!Sample_title", ig_ = (), pr = true)
 
     for (id, (pl, co_nu____)) in enumerate(pl_co_nu____)
 
-        BioLab.check_print(pr, "🚉 $pl")
+        BioLab.check_print(pr, pl)
 
-        fe_x_sa_x_nu = _outerjoin_select(co_nu____, pl)
+        fe_x_sa_x_nu = _data_frame_outerjoin_select(co_nu____, pl)
 
-        pl_ke_va = ty_bl["PLATFORM"]
+        pl_ke_va = ty_bl_ke_va["PLATFORM"]
 
-        if haskey(pl_ke_va[pl], "fe_x_io_x_an")
+        if haskey(pl_ke_va[pl], "table")
 
-            fe_na = _name(pl, pl_ke_va[pl]["fe_x_io_x_an"]; pr)
+            fe_na = _name(pl, BioLab.DataFrame.make(pl_ke_va[pl]["table"]); pr)
 
-            fe_x_sa_x_nu[!, pl] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, pl]]
+            fe_x_sa_x_nu[!, 1] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, 1]]
 
             n_fe = size(fe_x_sa_x_nu, 1)
 
             BioLab.check_print(
                 pr,
-                "📛 Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $(BioLab.String.count_noun(n_fe,"feature")).",
+                "Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $n_fe.",
             )
 
         else
 
-            println("⚠️  $pl table is empty.")
+            @warn "$pl table is empty."
 
         end
 
         if pr
 
-            println("💽 ($id) $pl Features")
+            println("($id) $pl features")
 
             BioLab.Matrix.print(fe_x_sa_x_nu)
 

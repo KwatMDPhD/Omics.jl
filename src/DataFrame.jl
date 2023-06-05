@@ -18,6 +18,13 @@ function make(an___)
 
 end
 
+# TODO: Test.
+function make(st::AbstractString)
+
+    make([split(li, '\t') for li in split(st, "\n")])
+
+end
+
 function make(ro, ro_, co_, _x_co_x_an)
 
     insertcols!(_DataFrame(_x_co_x_an, co_), 1, ro => ro_)
@@ -51,7 +58,7 @@ end
 
 function print_row(row_x_column_x_anything)
 
-    for (na, an_) in zip(eachrow(row_x_column_x_anything), row_x_column_x_anything[!, 1])
+    for (na, an_) in zip(row_x_column_x_anything[!, 1], eachrow(row_x_column_x_anything[!, 2:end]))
 
         BioLab.print_header(na)
 
@@ -107,7 +114,7 @@ function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
 
     end
 
-    collapsed_x_column_x_anything = BioLab.DataFrame.make(ro, roc_, co_, mac)
+    collapsed_x_column_x_anything = make(ro, roc_, co_, mac)
 
     println("After $(size(collapsed_x_column_x_anything)).")
 
