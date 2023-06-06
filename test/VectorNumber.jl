@@ -4,7 +4,7 @@ include("environment.jl")
 
 # ---- #
 
-for (nu_, re) in (([-1, 0, 1, 2], 0.5), ([-2, -1, 0, 0, 1, 2], 0.0))
+for (nu_, re) in (([-1, 0, 1, 2], 0.5), ([-2, -1, 0, 0, 1, 2], 0))
 
     @test BioLab.VectorNumber.get_area(nu_) == re
 
@@ -74,7 +74,7 @@ end
 
 nu_ = [1, NaN, 2, NaN, 3, NaN]
 
-re = [11.0, NaN, 12.0, NaN, 13.0, NaN]
+re = [11, NaN, 12, NaN, 13, NaN]
 
 # ---- #
 
@@ -112,10 +112,10 @@ for ty in (BioLab.VectorNumber.Original, BioLab.VectorNumber.Deep, BioLab.Vector
 
     for ze in (false, true)
 
-        Random.seed!(BioLab.Constant.RA)
+        Random.seed!(20230606)
 
         # TODO: Test.
-        println(BioLab.VectorNumber.simulate(n, ty; ze))
+        BioLab.VectorNumber.simulate(n, ty; ze)
 
     end
 

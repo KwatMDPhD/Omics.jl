@@ -4,7 +4,7 @@ using KernelDensity: kde
 
 function get_entropy(nu_)
 
-    0.0
+    0
 
 end
 
@@ -40,7 +40,7 @@ end
 
 function get_mutual_information(nu1_, nu2_)
 
-    0.0
+    0
 
 end
 

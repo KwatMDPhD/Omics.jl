@@ -2,10 +2,6 @@ include("environment.jl")
 
 # ---- #
 
-da = BioLab.GCT.read(joinpath(DA, "GCT", "a.gct"))
+feature_x_sample_x_number = BioLab.GCT.read(joinpath(DA, "GCT", "a.gct"))
 
-println(first(da, 2))
-
-println(last(da, 2))
-
-@test size(da) == (13321, 190)
+@test size(feature_x_sample_x_number) == (13321, 190)

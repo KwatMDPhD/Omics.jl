@@ -16,7 +16,7 @@ function read(pa; xl = "", ke_ar...)
 
     if !ispath(pa)
 
-        error()
+        error("$pa does not exist.")
 
     end
 

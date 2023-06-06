@@ -9,7 +9,7 @@ for po in 0:5
     nu_ = randn(n)
 
     # TODO: Test.
-    println(BioLab.Significance.get_margin_of_error(nu_))
+    BioLab.Significance.get_margin_of_error(nu_)
 
 end
 
@@ -29,7 +29,7 @@ n = 2
 
 n_ = (1, 2, 9, 10)
 
-re_ = (0.1, 0.2, 0.9, 1.0)
+re_ = (0.1, 0.2, 0.9, 1)
 
 # ---- #
 
@@ -56,10 +56,10 @@ n_ = (length(pv1_), 40, 100, 1000)
 for n in n_
 
     # TODO: Test.
-    println(BioLab.Significance.adjust_p_value_with_bonferroni(pv1_, n))
+    BioLab.Significance.adjust_p_value_with_bonferroni(pv1_, n)
 
     # TODO: Test.
-    println(BioLab.Significance.adjust_p_value_with_benjamini_hochberg(pv1_, n))
+    BioLab.Significance.adjust_p_value_with_benjamini_hochberg(pv1_, n)
 
 end
 
@@ -83,19 +83,19 @@ end
 
 # ---- #
 
-nu_ = [0.0, 1, 8, 9]
+nu_ = [0, 1, 8, 9]
 
-ra_ = collect(0.0:9)
+ra_ = collect(0:9)
 
 # ---- #
 
 @test BioLab.Significance.get_p_value_adjust(BioLab.Significance.get_p_value_for_less, nu_, ra_) ==
-      ([0.1, 0.2, 0.9, 1.0], [0.4, 0.4, 1.0, 1.0])
+      ([0.1, 0.2, 0.9, 1], [0.4, 0.4, 1, 1])
 
 # ---- #
 
 @test BioLab.Significance.get_p_value_adjust(BioLab.Significance.get_p_value_for_more, nu_, ra_) ==
-      ([1.0, 0.9, 0.2, 0.1], [1.0, 1.0, 0.4, 0.4])
+      ([1, 0.9, 0.2, 0.1], [1, 1, 0.4, 0.4])
 
 # ---- #
 

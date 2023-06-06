@@ -228,7 +228,7 @@ function plot_histogram(
     marker_color_ = _set_color(x_),
     opacity_ = _set_opacity(x_),
     histnorm = "",
-    xbins_size = 0.0,
+    xbins_size = 0,
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -241,7 +241,7 @@ function plot_histogram(
 
     else
 
-        fr = 0.0
+        fr = 0
 
     end
 
@@ -258,13 +258,13 @@ function plot_histogram(
     layout = BioLab.Dict.merge(
         Dict(
             "yaxis" => Dict(
-                "domain" => (0.0, fr),
+                "domain" => (0, fr),
                 "zeroline" => false,
                 "dtick" => 1,
                 "showticklabels" => false,
             ),
             "yaxis2" =>
-                Dict("domain" => (fr, 1.0), "title" => Dict("text" => yaxis2_title_text)),
+                Dict("domain" => (fr, 1), "title" => Dict("text" => yaxis2_title_text)),
             "xaxis" => Dict("anchor" => "y"),
         ),
         layout,
@@ -359,9 +359,9 @@ function plot_heat_map(
 
     n_ro, n_co = size(z)
 
-    domain1 = (0.0, 0.95)
+    domain1 = (0, 0.95)
 
-    axis2 = Dict("domain" => (0.96, 1.0), "tickvals" => ())
+    axis2 = Dict("domain" => (0.96, 1), "tickvals" => ())
 
     layout = BioLab.Dict.merge(
         Dict(
@@ -381,7 +381,7 @@ function plot_heat_map(
 
     # TODO: Cluster within a group.
 
-    colorbarx = 1.0
+    colorbarx = 1
 
     if !isempty(grr_)
 

@@ -4,7 +4,7 @@ using DataFrames: DataFrame as _DataFrame, insertcols!
 
 using OrderedCollections: OrderedDict
 
-using StatsBase: mean
+using StatsBase: countmap, mean
 
 using ..BioLab
 
@@ -44,13 +44,19 @@ function separate(row_x_column_x_anything)
 
 end
 
+function _print_unique(an_)
+
+    BioLab.Dict.print(sort(countmap(an_); byvalue = true))
+
+end
+
 function print_column(row_x_column_x_anything)
 
     for (na, an_) in zip(names(row_x_column_x_anything), eachcol(row_x_column_x_anything))
 
-        BioLab.print_header(na)
+        println(na)
 
-        BioLab.Collection.print_unique(an_)
+        _print_unique(an_)
 
     end
 
@@ -60,9 +66,9 @@ function print_row(row_x_column_x_anything)
 
     for (na, an_) in zip(row_x_column_x_anything[!, 1], eachrow(row_x_column_x_anything[!, 2:end]))
 
-        BioLab.print_header(na)
+        println(na)
 
-        BioLab.Collection.print_unique(an_)
+        _print_unique(an_)
 
     end
 

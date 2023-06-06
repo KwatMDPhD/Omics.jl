@@ -74,7 +74,7 @@ if ispath(js)
 
 else
 
-    println("Missing $js.")
+    @warn "$js does not exist."
 
 end
 

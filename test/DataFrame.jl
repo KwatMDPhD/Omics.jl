@@ -11,8 +11,8 @@ an___ = (
     ["Row 3", ":)", ";)", ":D", 444, 555.0],
 )
 
-# TODO: `@test`.
-println(BioLab.DataFrame.make(an___))
+# TODO: Test
+BioLab.DataFrame.make(an___)
 
 # ---- #
 
@@ -28,10 +28,8 @@ co_ = ["Column $id" for id in 1:n_co]
 
 ma = rand(n_ro, n_co)
 
+# TODO: Test
 row_x_column_x_anything = BioLab.DataFrame.make(ro, ro_, co_, ma)
-
-# TODO: `@test`.
-println(row_x_column_x_anything)
 
 # ---- #
 
@@ -64,6 +62,10 @@ ro_x_co_x_an = DataFrame(
 
 # ---- #
 
+foreach(BioLab.DataFrame._print_unique, ([1, 2, 2.0], [3, 3, 4, 4], ['a', 'a', "a", "a"]))
+
+# ---- #
+
 BioLab.DataFrame.print_column(ro_x_co_x_an)
 
 # ---- #
@@ -93,10 +95,8 @@ for an___ in (
     ),
 )
 
-    local row_x_column_x_anything = BioLab.DataFrame.make(an___)
-
-    # TODO: `@test`.
-    println(BioLab.DataFrame.collapse(row_x_column_x_anything))
+    # TODO: Test.
+    BioLab.DataFrame.collapse(BioLab.DataFrame.make(an___))
 
 end
 
@@ -110,7 +110,7 @@ ro_x_co_x_st = DataFrame(
 
 for fr_ in (["M1"], ["M1", "M2"])
 
-    # TODO: `@test`.
-    BioLab.Dict.print(BioLab.DataFrame.map_to(ro_x_co_x_st, BioLab.Dict.set_with_first!, fr_, "F"))
+    # TODO: Test.
+    BioLab.DataFrame.map_to(ro_x_co_x_st, BioLab.Dict.set_with_first!, fr_, "F")
 
 end

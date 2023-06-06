@@ -2,14 +2,6 @@ include("environment.jl")
 
 # ---- #
 
-for an_ in ([1, 2, 2.0], [3, 3, 4, 4], ['a', 'a', "a", "a"])
-
-    BioLab.Collection.print_unique(an_)
-
-end
-
-# ---- #
-
 for (n, n_ex) in ((0, 0), (0, 1), (1, 0))
 
     @test BioLab.Collection.get_extreme(n, n_ex) == Vector{Int}()
@@ -53,7 +45,7 @@ end
 
 an1_ = ['1', '2', 'K']
 
-@test BioLab.Collection.is_in(BioLab.Constant.CA_, an1_) ==
+@test BioLab.Collection.is_in(BioLab.CA_, an1_) ==
       [false, true, false, false, false, false, false, false, false, false, false, false, true]
 
 @test BioLab.Collection.is_in(Dict('A' => 1, '2' => 2, '3' => 3, 'Q' => 4, 'K' => 5), an1_) ==

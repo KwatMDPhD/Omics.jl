@@ -16,14 +16,10 @@ le2 = 5529
 
 for (gm, re) in ((gm1, le1), (gm2, le2))
 
-    BioLab.print_header(gm)
-
-    se_ge_ = BioLab.GMT.read(gm)
-
-    @test length(se_ge_) == re
+    @test length(BioLab.GMT.read(gm)) == re
 
 end
 
 # ---- #
 
-@test length(BioLab.GMT.read((gm1, gm2))) == le1 + le2
+@test length(merge((BioLab.GMT.read(gm) for gm in (gm1, gm2))...)) == le1 + le2

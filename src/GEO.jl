@@ -14,7 +14,7 @@ function _readline(st)
 
 end
 
-function read(gs; di = BioLab.Constant.TE, pr = true)
+function read(gs; di = BioLab.TE, pr = true)
 
     fi = "$(gs)_family.soft.gz"
 
@@ -143,13 +143,13 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
     else
 
-        error("$pli is an unknown platform - add it.")
+        error("$pli is a new platform - add it.")
 
     end
 
     if pr
 
-        println("Mapping platform features using the platform table ($ke => $va)")
+        println("Mapping $ke to $va")
 
         display(first(fe_x_io_x_an, 2))
 
@@ -218,7 +218,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = (), pr = true)
 
         else
 
-            @warn "A $sa characteristic lacks \"$de\"." ch_
+            @warn "A $sa characteristic lacks $de." ch_
 
         end
 
@@ -251,8 +251,6 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = (), pr = true)
     if pr
 
         println("Characteristics")
-
-        BioLab.Matrix.print(ch_x_sa_x_an)
 
         BioLab.DataFrame.print_row(ch_x_sa_x_an)
 
@@ -289,7 +287,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = (), pr = true)
 
         if pr
 
-            println("($id) $pl features")
+            println("($id) $pl")
 
             BioLab.Matrix.print(fe_x_sa_x_nu)
 

@@ -106,8 +106,6 @@ Kumo.clear!()
 
 for ((so, ho), re) in ((("Ka", "de"), "Ka.de"), ((("Ka", "Kw"), "in"), "Ka_Kw.in"))
 
-    BioLab.print_header()
-
     @test Kumo._make_how_node(so, ho) == re
 
 end
@@ -126,8 +124,6 @@ for (so, ho, ta) in (
     ("Kw", "de", ("Code", "Complexity")),
     (("Ka", "Kw"), "in", ("Ay", "Zo")),
 )
-
-    BioLab.print_header()
 
     Kumo._add!(so, ho, ta)
 
@@ -151,7 +147,7 @@ Kumo.clear!()
 
 # ---- #
 
-display(@macroexpand @st Node)
+@macroexpand @st Node
 
 @st Node
 
@@ -159,7 +155,7 @@ display(@macroexpand @st Node)
 
 # ---- #
 
-display(@macroexpand @st _2Guns DEA Navy)
+@macroexpand @st _2Guns DEA Navy
 
 @st _2Guns DEA Navy
 
@@ -178,8 +174,6 @@ function az()
         eval(:(@st $(Symbol(ch))))
 
     end
-
-    return nothing
 
 end
 
@@ -255,13 +249,13 @@ end
 
 # ---- #
 
-fe_sc = Dict(no => 1.0 for no in no_)
+fe_sc = Dict(no => 1 for no in no_)
 
-fe_sc["Other feature"] = 0.0
+fe_sc["Other feature"] = 0
 
 he_ = Kumo.heat(fe_sc)
 
-re = [1.0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0.0]
+re = [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
 
 @test he_ == re
 
@@ -270,7 +264,7 @@ re = [1.0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0.0]
 
 # ---- #
 
-fe_x_sa_x_sc = repeat([1.0 10], length(no_) + 1)
+fe_x_sa_x_sc = repeat([1 10], length(no_) + 1)
 
 no_x_sa_x_he = Kumo.heat(no_, fe_x_sa_x_sc)
 
@@ -284,8 +278,6 @@ re = hcat(re, re * 10)
 # ---- #
 
 so_x_ta_x_ed = Kumo.make_edge_matrix()
-
-display(so_x_ta_x_ed)
 
 @test sum(so_x_ta_x_ed) == length(Kumo.ED_)
 

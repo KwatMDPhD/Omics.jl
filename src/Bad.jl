@@ -1,6 +1,6 @@
 module Bad
 
-# TODO: Use more.
+# TODO: Consider removing.
 
 function _get_bad(::Any)
 

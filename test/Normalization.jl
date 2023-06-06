@@ -6,7 +6,7 @@ nu___ = ([0.0, 1, 2], [-1, 0, 1 / 3, 1])
 
 # ---- #
 
-@test @is_error BioLab.Normalization.normalize_with_01!([1.0, 1])
+@test @is_error BioLab.Normalization.normalize_with_01!([1, 1])
 
 # ---- #
 
@@ -25,11 +25,11 @@ end
 
 # ---- #
 
-@test @is_error BioLab.Normalization.normalize_with_0!([1.0, 1])
+@test @is_error BioLab.Normalization.normalize_with_0!([1, 1])
 
 # ---- #
 
-for (nu_, re) in zip(nu___, ([-1.0, 0, 1], [-1.3, -0.09999999999999999, 0.30000000000000004, 1.1]))
+for (nu_, re) in zip(nu___, ([-1, 0, 1], [-1.3, -0.09999999999999999, 0.30000000000000004, 1.1]))
 
     co = copy(nu_)
 
@@ -44,7 +44,7 @@ end
 
 # ---- #
 
-@test @is_error BioLab.Normalization.normalize_with_sum!([-1.0, 1])
+@test @is_error BioLab.Normalization.normalize_with_sum!([-1, 1])
 
 # ---- #
 
@@ -63,11 +63,11 @@ end
 
 # ---- #
 
-nu___ = ([-1.0, 0, 0, 1, 1, 1, 2],)
+nu___ = ([-1, 0, 0, 1, 1, 1, 2],)
 
 # ---- #
 
-for (nu_, re) in zip(nu___, ([1.0, 2, 3, 4, 5, 6, 7],))
+for (nu_, re) in zip(nu___, ([1, 2, 3, 4, 5, 6, 7],))
 
     co = copy(nu_)
 
@@ -82,7 +82,7 @@ end
 
 # ---- #
 
-for (nu_, re) in zip(nu___, ([1.0, 2, 2, 3, 3, 3, 4],))
+for (nu_, re) in zip(nu___, ([1, 2, 2, 3, 3, 3, 4],))
 
     co = copy(nu_)
 
@@ -97,7 +97,7 @@ end
 
 # ---- #
 
-for (nu_, re) in zip(nu___, ([1.0, 2, 2, 4, 4, 4, 7],))
+for (nu_, re) in zip(nu___, ([1, 2, 2, 4, 4, 4, 7],))
 
     co = copy(nu_)
 
@@ -112,9 +112,9 @@ end
 
 # ---- #
 
-for (nu_, re) in zip(nu___, ([1.0, 2.5, 2.5, 5, 5, 5, 7],))
+for (nu_, re) in zip(nu___, ([1, 2.5, 2.5, 5, 5, 5, 7],))
 
-    co = copy(nu_)
+    co = convert(Vector{Float64}, nu_)
 
     BioLab.Normalization.normalize_with_125254!(co)
 
@@ -141,7 +141,7 @@ no!_ = (
 
 for no! in no!_
 
-    @is_error no!([1.0, 1, 1])
+    @is_error no!([1, 1, 1])
 
 end
 
@@ -206,19 +206,19 @@ for (no!, re) in zip(
             0.333333  0.333333  0.333333  0.333333
         ],
         [
-            1.0  1  1  1
+            1  1  1  1
             2  2  2  2
             3  3  3  3
             4  4  4  4
         ],
         [
-            1.0  1  1  1
+            1  1  1  1
             2  2  2  2
             3  3  3  3
             3  3  3  3
         ],
         [
-            1.0  1  1  1
+            1  1  1  1
             2  2  2  2
             3  3  3  3
             3  3  3  3
@@ -267,19 +267,19 @@ for (no!, re) in zip(
             0.00473934  0.0473934  0.473934  0.473934
         ],
         [
-            1.0  2  3  4
+            1  2  3  4
             1  2  3  4
             1  2  3  4
             1  2  3  4
         ],
         [
-            1.0  2  3  3
+            1  2  3  3
             1  2  3  3
             1  2  3  3
             1  2  3  3
         ],
         [
-            1.0  2  3  3
+            1  2  3  3
             1  2  3  3
             1  2  3  3
             1  2  3  3

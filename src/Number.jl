@@ -6,7 +6,7 @@ function format(nu)
 
     if isequal(nu, -0.0)
 
-        nu = 0.0
+        nu = 0
 
     end
 
@@ -16,13 +16,13 @@ end
 
 function rank_in_fraction(ra)
 
-    fr = 0.0
+    fr = 0
 
     n = fld(ra, 9)
 
     for digits in 1:n
 
-        fr += 9.0 * 10.0^-digits
+        fr += 9 * 10.0^-digits
 
     end
 

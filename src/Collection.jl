@@ -2,15 +2,7 @@ module Collection
 
 using OrderedCollections: OrderedDict
 
-using StatsBase: countmap
-
 using ..BioLab
-
-function print_unique(an_)
-
-    BioLab.Dict.print(sort!(OrderedDict(countmap(an_)); byvalue = true))
-
-end
 
 function get_extreme(n::Int, n_ex)
 

@@ -16,8 +16,6 @@ co_ = [0, 0, 1, 1]
 
 bo_ = convert(Vector{Bool}, co_)
 
-BioLab.print_header(bo_)
-
 @test BioLab.Target._aim(bo_, nu_) == ([2, 3], [4, 5])
 
 # ---- #
@@ -45,8 +43,6 @@ co_ = [co + 1 for co in nu_]
 n_ze = div(n_co, 2)
 
 bo_ = vcat(fill(false, n_ze), fill(true, n_co - n_ze))
-
-BioLab.print_header(bo_)
 
 @test BioLab.Target._trigger(fu, bo_, nu_) == -1089
 

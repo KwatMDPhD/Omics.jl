@@ -28,7 +28,7 @@ function plot(
     st_ = (),
     la = Dict{String, Any}("name" => "preset"),
     ex = "",
-    pns = 1.0,
+    pns = 1,
     pnb = "#fdfdfd",
     ht = "",
     ke_ar...,
@@ -62,7 +62,7 @@ function plot(
 
         else
 
-            error()
+            error("Can not write $ex.")
 
         end
 
@@ -72,6 +72,7 @@ function plot(
 
     BioLab.HTML.write(
         di,
+        # TODO: Use the latest.
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
             "https://cdn.rawgit.com/eligrey/FileSaver.js/master/dist/FileSaver.js",

@@ -180,21 +180,19 @@ function make(
     sa_,
     ta_,
     fe_x_sa_x_nu;
-    # TODO: Use pl to control printing and plotting.
-    pr = true,
     rev = false,
     n_ma = 10,
     n_pv = 10,
     pl = true,
     n_ex = 8,
-    st = 4.0,
+    st = 4,
     layout = Dict{String, Any}(),
     di = "",
 )
 
     n_fe = length(fe_)
 
-    BioLab.check_print(pr, "Matching $tan and $(BioLab.String.count_noun(n_fe, fen))")
+    BioLab.check_print(pl, "Matching $tan and $(BioLab.String.count_noun(n_fe, fen))")
 
     # Sort samples.
 
@@ -208,14 +206,14 @@ function make(
 
     # Get statistics.
 
-    BioLab.check_print(pr, "Scoring with $fu")
+    BioLab.check_print(pl, "Scoring with $fu")
 
     sc_ = [fu(ta_, nu_) for nu_ in eachrow(fe_x_sa_x_nu)]
 
     if 0 < n_ma
 
         BioLab.check_print(
-            pr,
+            pl,
             "Computing margin of error with $(BioLab.String.count_noun(n_ma, "sampling"))",
         )
 
@@ -254,7 +252,7 @@ function make(
     if 0 < n_pv
 
         BioLab.check_print(
-            pr,
+            pl,
             "Computing p-values with $(BioLab.String.count_noun(n_pv, "permutation"))",
         )
 
@@ -286,9 +284,7 @@ function make(
 
     ba_ = map(isnan, sc_)
 
-    n_ba = sum(ba_)
-
-    BioLab.check_print(pr && 0 < n_ba, "$(BioLab.String.count_noun(n_ba, "bad score")).")
+    BioLab.check_print(pl, "Number of bad scores = $(sum(ba_)).")
 
     feature_x_statistic_x_number = BioLab.DataFrame.make(
         fen,
@@ -362,7 +358,7 @@ function make(
 
         tai, taa = _normalize!(tac_, st)
 
-        BioLab.check_print(pr, "$tan colors can range from $tai to $taa.")
+        BioLab.check_print(pl, "$tan colors can range from $tai to $taa.")
 
         # Normalize features.
 
@@ -370,7 +366,7 @@ function make(
 
         fei, fea = _normalize!(fe_x_sa_x_nupc, st)
 
-        BioLab.check_print(pr, "$fen colors can range from $fei to $fea.")
+        BioLab.check_print(pl, "$fen colors can range from $fei to $fea.")
 
         # Make layout.
 
@@ -387,9 +383,9 @@ function make(
                 "height" => height,
                 "title" => Dict("text" => "<b>$tan</b> and <b>$fen</b>"),
                 "yaxis2" =>
-                    Dict("domain" => (1 - th, 1.0), "dtick" => 1, "showticklabels" => false),
+                    Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
                 "yaxis" => Dict(
-                    "domain" => (0.0, 1 - th * 2),
+                    "domain" => (0, 1 - th * 2),
                     "autorange" => "reversed",
                     "showticklabels" => false,
                 ),

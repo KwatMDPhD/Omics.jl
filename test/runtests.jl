@@ -43,30 +43,19 @@ end
 
 # ---- #
 
-BioLab.print_header("Testing BioLab.jl")
+@test isconst(BioLab, :CA_)
+
+@test BioLab.CA_ == ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
 
 # ---- #
 
-BioLab.print_header()
+@test isconst(BioLab, :TE)
 
-# ---- #
+@test basename(BioLab.TE) == "BioLab"
 
-for pr in (true, false)
+@test isdir(BioLab.TE)
 
-    BioLab.check_print(
-        pr,
-        1972,
-        '.',
-        0,
-        4,
-        '.',
-        0,
-        9,
-        ' ',
-        "Elvis Presley Performs at Hampton Roads Coliseum, VA",
-    )
-
-end
+@test isempty(readdir(BioLab.TE))
 
 # ---- #
 
@@ -74,11 +63,13 @@ end
 
 # ---- #
 
+@test BioLab.@is_error error("I Got a Woman") false
+
+# ---- #
+
 for na in readdir(@__DIR__)
 
     if !startswith(na, '_') && na != "runtests.jl"
-
-        BioLab.print_header("Testing $na")
 
         run(`julia --project $na`)
 

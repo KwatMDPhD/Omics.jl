@@ -112,27 +112,27 @@ da = joinpath(pkgdir(BioLab), "data", "Dict")
 
 js1 = joinpath(da, "example_1.json")
 
-# TODO: `@test`.
-BioLab.Dict.print(BioLab.Dict.read(js1))
+# TODO: Test.
+BioLab.Dict.read(js1)
 
 # ---- #
 
 js2 = joinpath(da, "example_2.json")
 
-# TODO: `@test`.
-BioLab.Dict.print(BioLab.Dict.read(js2))
+# TODO: Test.
+BioLab.Dict.read(js2)
 
 # ---- #
 
 to = joinpath(da, "example.toml")
 
-# TODO: `@test`.
-BioLab.Dict.print(BioLab.Dict.read(to))
+# TODO: Test.
+BioLab.Dict.read(to)
 
 # ---- #
 
-# TODO: `@test`.
-BioLab.Dict.print(BioLab.Dict.read((js1, js2, to)))
+# TODO: Test.
+BioLab.Dict.read((js1, js2, to))
 
 # ---- #
 

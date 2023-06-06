@@ -248,7 +248,7 @@ function plot(;
 
     nohs = nos * 0.64
 
-    tri_ = (0.866, 0.5, -0.866, 0.5, 0.0, -1.0)
+    tri_ = (0.866, 0.5, -0.866, 0.5, 0, -1)
 
     di = nos * 0.16
 
@@ -489,7 +489,7 @@ end
 
 function heat(fe_sc; no_al_ = Dict{String, Tuple}(), pr = true)
 
-    he_ = fill(0.0, length(NO_))
+    he_ = fill(0, length(NO_))
 
     n_tr = 0
 
@@ -564,7 +564,7 @@ end
 
 function heat(fe_, fe_x_sa_x_sc; no_al_ = Dict{String, Tuple}())
 
-    no_x_sa_x_he = fill(0.0, length(NO_), size(fe_x_sa_x_sc, 2))
+    no_x_sa_x_he = fill(0, length(NO_), size(fe_x_sa_x_sc, 2))
 
     for (id, sc_) in enumerate(eachcol(fe_x_sa_x_sc))
 
@@ -588,7 +588,7 @@ function _get_norm(he_, pr)
 
         for (he, no) in zip(BioLab.Collection.sort_like((he_, NO_); ic = false)...)
 
-            BioLab.check_print(he != 0.0, "  $(rpad(no, n))$(BioLab.Number.format(he)).")
+            BioLab.check_print(!iszero(he), "  $(rpad(no, n))$(BioLab.Number.format(he)).")
 
         end
 
@@ -637,9 +637,9 @@ function anneal(
 
             if contains(ta, '.')
 
-                if any(he == 0.0 for he in hes_)
+                if any(iszero, hes_)
 
-                    he2_[idt] = 0.0
+                    he2_[idt] = 0
 
                     continue
 
@@ -663,7 +663,7 @@ function anneal(
 
             else
 
-                he2_[idt] = max(0.0, cu + mean(hes_) * ex)
+                he2_[idt] = max(0, cu + mean(hes_) * ex)
 
             end
 

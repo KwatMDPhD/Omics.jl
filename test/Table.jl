@@ -17,24 +17,14 @@ di = joinpath(DA, "Table")
 for na in ("titanic.tsv", "enst_gene.tsv.gz")
 
     # TODO: Test.
-
     da = BioLab.Table.read(joinpath(di, na))
-
-    println(first(da, 2))
-
-    println(last(da, 2))
 
 end
 
 # ---- #
 
 # TODO: Test.
-
 da = BioLab.Table.read(joinpath(di, "12859_2019_2886_MOESM2_ESM.xlsx"); xl = "HumanSpecific Genes")
-
-println(first(da, 2))
-
-println(last(da, 2))
 
 # ---- #
 

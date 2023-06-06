@@ -1,12 +1,10 @@
 module GCT
 
-using DataFrames: DataFrame, Not
-
 using ..BioLab
 
 function read(gc)
 
-    BioLab.Table.read(gc; header = 3, delim = '\t')[!, Not("Description")]
+    BioLab.Table.read(gc; header = 3, delim = '\t', drop = ["Description"])
 
 end
 

@@ -25,7 +25,7 @@ function write(di, so_, sc; he = 800, wi = 1280, ht = "")
 
     if isempty(ht)
 
-        ht = joinpath(BioLab.Constant.TE, "$(BioLab.Time.stamp()).html")
+        ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html")
 
     end
 

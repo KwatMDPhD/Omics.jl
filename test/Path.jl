@@ -95,21 +95,24 @@ BioLab.Path.error_extension(fi, ".extension")
 
 for re in ("test/Path.jl", "test/path.jl")
 
-    @test !@is_error BioLab.Path.error_missing(bi, re)
+    BioLab.Path.error_missing(bi, re)
 
 end
 
 # ---- #
 
-display(BioLab.Path.read(ho))
+# TODO: Test.
+BioLab.Path.read(ho)
 
 # ---- #
 
-display(BioLab.Path.read(ho; join = false, ig_ = (), ke_ = (r"^\.",)))
+# TODO: Test.
+BioLab.Path.read(ho; join = false, ig_ = (), ke_ = (r"^\.",))
 
 # ---- #
 
-display(BioLab.Path.read(ho; ke_ = (r"^[A-Z]",)))
+# TODO: Test.
+BioLab.Path.read(ho; ke_ = (r"^[A-Z]",))
 
 # ---- #
 

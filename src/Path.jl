@@ -42,7 +42,7 @@ function error_extension(pa, ex)
 
     if ex2 != ex
 
-        error("Extension ($ex2) is not $ex.")
+        error("$ex2 != $ex.")
 
     end
 
@@ -70,7 +70,7 @@ function error_missing(di, re::AbstractString)
 
     if !ispath(pa)
 
-        error("$pa is missing.")
+        error("$pa does not exist.")
 
     end
 

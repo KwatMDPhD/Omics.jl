@@ -44,7 +44,7 @@ end
 
 function normalize_with_sum!(te)
 
-    if any(nu < 0.0 for nu in te)
+    if any(nu < 0 for nu in te)
 
         error("Can not sum-normalize numbers with any negative.")
 
