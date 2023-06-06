@@ -6,25 +6,15 @@ te = joinpath(tempdir(), "BioLab.test.Match")
 
 BioLab.Path.reset(te)
 
-fu = BioLab.Match.cor
-
 # ---- #
 
 function benchmark(n_fe, n_sa, ho)
-
-    trn = "Target"
-
-    fen = "Feature"
-
-    fe_ = ["Feature $id" for id in 1:n_fe]
-
-    sa_ = ["Sample $id" for id in 1:n_sa]
 
     if ho == "1.0:"
 
         ta_ = collect(1.0:n_sa)
 
-        fe_x_sa_x_nu = reshape(1.0:(n_fe * n_sa), (n_fe, n_sa))
+        fe_x_sa_x_nu = Matrix(reshape(1.0:(n_fe * n_sa), (n_fe, n_sa)))
 
     elseif ho == "randn"
 
@@ -32,65 +22,58 @@ function benchmark(n_fe, n_sa, ho)
 
         fe_x_sa_x_nu = randn((n_fe, n_sa))
 
-    else
-
-        error()
-
     end
 
-    trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu
+    BioLab.Match.cor,
+    "Target",
+    "Feature",
+    ["Feature $id" for id in 1:n_fe],
+    ["Sample $id" for id in 1:n_sa],
+    ta_,
+    fe_x_sa_x_nu
 
 end
 
 # ---- #
 
-n_fe, n_sa = (2, 4)
+ar = benchmark(2, 4, "1.0:")
 
 for rev in (false, true)
 
-    trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(n_fe, n_sa, "1.0:")
-
-    layout = Dict("title" => Dict("text" => "$(ifelse(rev, "Increasing", "Decreasing")) Target"))
-
-    BioLab.Match.make(fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu; rev, layout)
+    BioLab.Match.make(ar...; rev, layout = Dict("title" => Dict("text" => "rev = $rev")))
 
 end
 
 # ---- #
 
-n_fe, n_sa = (1000, 100)
+ar = benchmark(1000, 100, "randn")
 
-trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(n_fe, n_sa, "randn")
+for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10), (100, 100))
 
-for (n_ma, n_pv) in ((0, 10), (10, 0), (0, 0), (10, 10), (100, 100))
-
-    layout = Dict("title" => Dict("text" => "$n_ma and $n_pv"))
-
-    fe_x_st_x_nu = BioLab.Match.make(fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu; n_ma, n_pv, layout)
-
-    display(sort(fe_x_st_x_nu, "Score"; rev = true))
+    BioLab.Match.make(
+        ar...;
+        n_ma,
+        n_pv,
+        layout = Dict("title" => Dict("text" => "n_ma = $n_ma, n_pv = $n_pv")),
+    )
 
 end
 
 # ---- #
 
-n_fe, n_sa = (5, 2)
+n_fe = 5
+
+ar = benchmark(n_fe, 2, "1.0:")
 
 for n_ex in 0:(n_fe + 1)
 
-    trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(n_fe, n_sa, "1.0:")
-
-    layout = Dict("title" => Dict("text" => BioLab.String.count_noun(n_ex, "Extreme")))
-
-    BioLab.Match.make(fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu; n_ex, layout)
+    BioLab.Match.make(ar...; n_ex, layout = Dict("title" => Dict("text" => "n_ex = $n_ex")))
 
 end
 
 # ---- #
 
-n_fe, n_sa = (2, 4)
-
-trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(n_fe, n_sa, "1.0:")
+fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(2, 4, "1.0:")
 
 tai_ = convert(Vector{Int}, ta_)
 
@@ -103,23 +86,26 @@ for (ta_, fe_x_sa_x_nu, title_text) in (
     (tai_, fe_x_sa_x_it, "Int x Int"),
 )
 
-    layout = Dict("title" => Dict("text" => title_text))
-
-    BioLab.Match.make(fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu; layout)
+    BioLab.Match.make(
+        fu,
+        trn,
+        fen,
+        fe_,
+        sa_,
+        ta_,
+        fe_x_sa_x_nu;
+        layout = Dict("title" => Dict("text" => title_text)),
+    )
 
 end
 
 # ---- #
 
-n_fe, n_sa = (2, 4)
+ar = fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(2, 4, "randn")
 
 for st in (0, 0.1, 1, 2, 4, 8)
 
-    trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(n_fe, n_sa, "randn")
-
-    layout = Dict("title" => Dict("text" => BioLab.String.count_noun(st, "Standard Deviation")))
-
-    BioLab.Match.make(fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu; st, layout)
+    BioLab.Match.make(ar...; st, layout = Dict("title" => Dict("text" => "st = $st")))
 
 end
 
@@ -127,42 +113,44 @@ end
 
 for (n_fe, n_sa) in ((2, 2), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000))
 
-    trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(n_fe, n_sa, "randn")
-
-    layout = Dict("title" => Dict("text" => "$(n_fe) by $(n_sa)"))
-
-    BioLab.Match.make(fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu; n_ex = 32, layout)
+    BioLab.Match.make(
+        benchmark(n_fe, n_sa, "randn")...;
+        n_ex = 32,
+        layout = Dict("title" => Dict("text" => "$(n_fe) x $(n_sa)")),
+    )
 
 end
 
 # ---- #
 
+n_fe = 4
+
+fe_ = ["Feature $id" for id in 1:n_fe]
+
 n_gr = 3
 
 n_sa = 6
 
-n_fe = 4
-
-trn = "Group"
-
-fen = "Feature"
-
-fe_ = ["Feature $id" for id in 1:n_fe]
-
-sa_ = vec(["$gr$ch" for gr in 1:n_gr, ch in ('A':'Z')[1:n_sa]])
-
 ta_ = repeat(1:n_gr, n_sa)
 
-for rev in (true, false)
+# TODO: Improve.
+sa_ = vec(["$gr$ch" for gr in 1:n_gr, ch in ('A':'Z')[1:n_sa]])
+
+for rev in (false, true)
 
     for po_ in ((0, 0, 1, 1, 2, 3), (0, 1, 2, 3, 1, 0))
 
-        fe_x_sa_x_nu =
-            [ro^po for ro in fill(2, n_fe), po in vcat((fill(po, n_gr) for po in po_)...)]
-
-        layout = Dict("title" => Dict("text" => "$(ifelse(rev, "Increasing", "Decreasing")) $po_"))
-
-        BioLab.Match.make(fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu; rev, layout)
+        BioLab.Match.make(
+            fu,
+            "Group",
+            "Feature",
+            fe_,
+            sa_,
+            ta_,
+            [ro^po for ro in fill(2, n_fe), po in vcat((fill(po, n_gr) for po in po_)...)];
+            rev,
+            layout = Dict("title" => Dict("text" => "rev = $rev, $po_")),
+        )
 
     end
 
