@@ -2,7 +2,7 @@ module Match
 
 using Printf: @sprintf
 
-using Random: seed!, shuffle!
+using Random: shuffle!
 
 using Statistics: cor
 
@@ -10,41 +10,46 @@ using StatsBase: sample
 
 using ..BioLab
 
-function _normalize!(fl_::AbstractVector{Real}, st)
+function _normalize!(fl_::AbstractVector{Float64}, st)
 
     BioLab.Normalization.normalize_with_0!(fl_)
 
     clamp!(fl_, -st, st)
 
-    return -st, st
+    -st, st
 
 end
 
-function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Real}, st)
+function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
-    # TODO: Test.
-    va_ = [!allequal(fl_) for fl_ in eachrow(fe_x_sa_x_fl)]
+    for fl_ in eachrow(fe_x_sa_x_fl)
 
-    BioLab.Matrix.apply_by_row!(fl_ -> _normalize!(fl_, st), view(fe_x_sa_x_fl, va_, :))
+        if !allequal(fl_)
 
-    return -st, st
+            _normalize!(fl_, st)
+
+        end
+
+    end
+
+    -st, st
 
 end
 
 function _normalize!(it, st)
 
-    return minimum(it), maximum(it)
+    minimum(it), maximum(it)
 
 end
 
 function _merge_layout(ke_va__...)
 
-    return reduce(
+    reduce(
         BioLab.Dict.merge,
         ke_va__;
         init = Dict(
-            "width" => 800,
             "margin" => Dict("l" => 200, "r" => 200),
+            "width" => 800,
             "title" => Dict("x" => 0.5),
         ),
     )
@@ -53,7 +58,7 @@ end
 
 function _merge_annotation(ke_va__...)
 
-    return reduce(
+    reduce(
         BioLab.Dict.merge,
         ke_va__;
         init = Dict(
@@ -69,19 +74,19 @@ end
 
 function _merge_annotationl(ke_va__...)
 
-    return _merge_annotation(Dict("x" => -0.024, "xanchor" => "right"), ke_va__...)
+    _merge_annotation(Dict("x" => -0.024, "xanchor" => "right"), ke_va__...)
 
 end
 
 function _annotate(y, ro)
 
-    return _merge_annotationl(Dict("y" => y, "text" => "<b>$ro</b>"))
+    _merge_annotationl(Dict("y" => y, "text" => "<b>$ro</b>"))
 
 end
 
 function _get_x(id)
 
-    return 0.97 + id / 7
+    0.97 + id / 7
 
 end
 
@@ -135,23 +140,17 @@ function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
     end
 
-    return annotations
+    annotations
 
 end
 
 function _merge_heatmap(ke_va__...)
 
-    return reduce(
-        BioLab.Dict.merge,
-        ke_va__;
-        init = Dict("type" => "heatmap", "showscale" => false),
-    )
+    reduce(BioLab.Dict.merge, ke_va__; init = Dict("type" => "heatmap", "showscale" => false))
 
 end
 
 function _color(nu_::AbstractArray{Int})
-
-    # TODO: Test.
 
     if length(unique(nu_)) < 3
 
@@ -163,13 +162,13 @@ function _color(nu_::AbstractArray{Int})
 
     end
 
-    return BioLab.Plot.fractionate(co)
+    BioLab.Plot.fractionate(co)
 
 end
 
 function _color(::AbstractArray{Float64})
 
-    return BioLab.Plot.fractionate(BioLab.Plot.COBWR)
+    BioLab.Plot.fractionate(BioLab.Plot.COBWR)
 
 end
 
@@ -182,8 +181,7 @@ function make(
     ta_,
     fe_x_sa_x_nu;
     pr = true,
-    ic = true,
-    ra = BioLab.RA,
+    rev = false,
     n_ma = 10,
     n_pv = 10,
     pl = true,
@@ -193,11 +191,13 @@ function make(
     di = "",
 )
 
-    BioLab.check_print(pr, "🎎 $tan and $fen")
+    n_fe = length(fe_)
+
+    BioLab.check_print(pr, "Matching $tan and $(BioLab.String.count_noun(n_fe, fen))")
 
     # Sort samples.
 
-    id_ = sortperm(ta_; rev = !ic)
+    id_ = sortperm(ta_; rev)
 
     sa_ = sa_[id_]
 
@@ -207,29 +207,15 @@ function make(
 
     # Get statistics.
 
-    seed!(ra)
+    BioLab.check_print(pr, "Scoring with $fu")
 
-    n_fe = length(fe_)
-
-    BioLab.check_print(pr, "💎 $(BioLab.String.count_noun(n_fe, fen)).")
-
-    BioLab.check_print(pr, "🧮 Computing scores with $fu")
-
-    sc_ = Vector{Float64}(undef, n_fe)
-
-    for idf in 1:n_fe
-
-        nu_ = fe_x_sa_x_nu[idf, :]
-
-        sc_[idf] = fu(ta_, nu_)
-
-    end
+    sc_ = [fu(ta_, nu_) for nu_ in eachrow(fe_x_sa_x_nu)]
 
     if 0 < n_ma
 
         BioLab.check_print(
             pr,
-            "🎲 Computing margin of error with $(BioLab.String.count_noun(n_ma, "sampling"))",
+            "Computing margin of error with $(BioLab.String.count_noun(n_ma, "sampling"))",
         )
 
         n_sa = length(sa_)
@@ -268,7 +254,7 @@ function make(
 
         BioLab.check_print(
             pr,
-            "🎰 Computing p-values with $(BioLab.String.count_noun(n_pv, "permutation"))",
+            "Computing p-values with $(BioLab.String.count_noun(n_pv, "permutation"))",
         )
 
         co = copy(ta_)
@@ -297,13 +283,13 @@ function make(
 
     fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
 
-    ba_ = [isnan(sc) for sc in sc_]
+    ba_ = map(isnan, sc_)
 
     n_ba = sum(ba_)
 
-    BioLab.check_print(pr && 0 < n_ba, "💩 $(BioLab.String.count_noun(n_ba, "bad score")).")
+    BioLab.check_print(pr && 0 < n_ba, "$(BioLab.String.count_noun(n_ba, "bad score")).")
 
-    feature_x_statistic_x_humber = BioLab.DataFrame.make(
+    feature_x_statistic_x_number = BioLab.DataFrame.make(
         fen,
         fe_,
         ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
@@ -313,18 +299,17 @@ function make(
     if !isempty(di)
 
         BioLab.Table.write(
-            joinpath(di, "feature_x_statistic_x_humber.tsv"),
-            feature_x_statistic_x_humber,
+            joinpath(di, "feature_x_statistic_x_number.tsv"),
+            feature_x_statistic_x_number,
         )
 
     end
 
-    # TODO: Test.
     if pl
 
-        # Select not-NaN scored to plot
+        # Select not-NaNs to plot.
 
-        go_ = [!ba for ba in ba_]
+        go_ = map(!, ba_)
 
         fep_ = fe_[go_]
 
@@ -334,7 +319,7 @@ function make(
 
         # Sort and select rows to copy and plot.
 
-        ex_ = reverse!(BioLab.Collection.get_extreme_id(fe_x_st_x_nup[:, 1], n_ex))
+        ex_ = reverse!(BioLab.Collection.get_extreme(fe_x_st_x_nup[:, 1], n_ex))
 
         fep_ = fep_[ex_]
 
@@ -346,16 +331,15 @@ function make(
 
         if ta_ isa AbstractVector{Int}
 
-            println("🫂 Clustering within groups")
+            println("Clustering within groups")
 
-            # TODO: Use correlation.
             fu = BioLab.Clustering.Euclidean()
 
             id_ = Vector{Int}()
 
             for ta in unique(ta_)
 
-                idg_ = findall((ta2 == ta for ta2 in ta_))
+                idg_ = findall(==(ta), ta_)
 
                 or_ = BioLab.Clustering.hierarchize(fe_x_sa_x_nup[:, idg_], 2; fu).order
 
@@ -377,7 +361,7 @@ function make(
 
         tai, taa = _normalize!(tac_, st)
 
-        BioLab.check_print(pr, "🌈 $tan colors can range frm $tai to $taa.")
+        BioLab.check_print(pr, "$tan colors can range from $tai to $taa.")
 
         # Normalize features.
 
@@ -385,7 +369,7 @@ function make(
 
         fei, fea = _normalize!(fe_x_sa_x_nupc, st)
 
-        BioLab.check_print(pr, "🌈 $fen colors can range frm $fei to $fea.")
+        BioLab.check_print(pr, "$fen colors can range from $fei to $fea.")
 
         # Make layout.
 
@@ -418,13 +402,13 @@ function make(
 
         # Make traces.
 
-        heatmapx = Dict("x" => sa_)
+        heatmapx = Dict()
 
         data = [
             _merge_heatmap(
-                heatmapx,
                 Dict(
                     "yaxis" => "y2",
+                    "x" => sa_,
                     "z" => [tac_],
                     "text" => [ta_],
                     "zmin" => tai,
@@ -434,10 +418,10 @@ function make(
                 ),
             ),
             _merge_heatmap(
-                heatmapx,
                 Dict(
                     "yaxis" => "y",
                     "y" => fep_,
+                    "x" => sa_,
                     "z" => collect(eachrow(fe_x_sa_x_nupc)),
                     "text" => collect(eachrow(fe_x_sa_x_nup)),
                     "zmin" => fei,
@@ -464,7 +448,7 @@ function make(
 
     end
 
-    return feature_x_statistic_x_humber
+    feature_x_statistic_x_number
 
 end
 
