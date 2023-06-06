@@ -2,8 +2,6 @@ include("environment.jl")
 
 # ---- #
 
-# TODO: `@test`.
-
 da = BioLab.GCT.read(joinpath(DA, "GCT", "a.gct"))
 
 println(first(da, 2))

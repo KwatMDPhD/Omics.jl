@@ -20,9 +20,6 @@ for (gm, re) in ((gm1, le1), (gm2, le2))
 
     se_ge_ = BioLab.GMT.read(gm)
 
-    # TODO `@test`.
-    BioLab.Dict.print(se_ge_; n = 2)
-
     @test length(se_ge_) == re
 
 end

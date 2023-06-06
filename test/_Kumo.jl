@@ -1,8 +1,4 @@
-using Test
-
-using BioLab
-
-using Kumo: Kumo, @st, <<, >>
+using BioLab.Kumo: Kumo, @st, <<, >>
 
 # ---- #
 
@@ -34,8 +30,6 @@ Kumo._add!("Nami")
 
 # no = "Node"
 
-# @code_warntype Kumo._add!(no)
-
 # ---- #
 
 @test BioLab.@is_error Kumo._add!("Kaido", "BigMaMa")
@@ -52,8 +46,6 @@ Kumo._add!("Zoro", "Nami")
 
 # ta = "Target"
 
-# @code_warntype Kumo._add!(so, ta)
-
 # ---- #
 
 Kumo._add!("Crew")
@@ -66,8 +58,6 @@ Kumo._add!(("Luffy", "Zoro", "Nami"), "Crew")
 # so_ = ("Source1", "Source2")
 
 # ta = "Target"
-
-# @code_warntype Kumo._add!(so_, ta)
 
 # ---- #
 
@@ -94,19 +84,13 @@ Kumo._add!("Zoro", ("和道一文字", "三代鬼徹", "閻魔"))
 
 # ta_ = ("Target1", "Target2")
 
-# @code_warntype Kumo._add!(so, ta_)
-
 # ---- #
 
 Kumo.print()
 
-# @code_warntype Kumo.print()
-
 # ---- #
 
 Kumo.plot()
-
-# @code_warntype Kumo.plot()
 
 # ---- #
 
@@ -118,8 +102,6 @@ Kumo.clear!()
 
 @test Kumo.ED_ isa Vector{Tuple{String, String}} && isempty(Kumo.ED_)
 
-# @code_warntype Kumo.clear!()
-
 # ---- #
 
 for ((so, ho), re) in ((("Ka", "de"), "Ka.de"), ((("Ka", "Kw"), "in"), "Ka_Kw.in"))
@@ -127,8 +109,6 @@ for ((so, ho), re) in ((("Ka", "de"), "Ka.de"), ((("Ka", "Kw"), "in"), "Ka_Kw.in
     BioLab.print_header()
 
     @test Kumo._make_how_node(so, ho) == re
-
-    # @code_warntype Kumo._make_how_node(so, ho)
 
 end
 
@@ -150,8 +130,6 @@ for (so, ho, ta) in (
     BioLab.print_header()
 
     Kumo._add!(so, ho, ta)
-
-    # @code_warntype Kumo._add!(so, ho, ta)
 
 end
 
@@ -179,8 +157,6 @@ display(@macroexpand @st Node)
 
 @test Kumo.NO_ == ["Node"]
 
-# @code_warntype @st Node
-
 # ---- #
 
 display(@macroexpand @st _2Guns DEA Navy)
@@ -190,8 +166,6 @@ display(@macroexpand @st _2Guns DEA Navy)
 @test Kumo.NO_ == ["Node", "_2Guns"]
 
 @test Kumo.NO_CL_ == Dict("_2Guns" => ("DEA", "Navy"))
-
-# @code_warntype @st _2Guns DEA Navy
 
 # ---- #
 
@@ -223,8 +197,6 @@ F << (G, H)
 
 Kumo.plot()
 
-# @code_warntype A << B
-
 # ---- #
 
 az()
@@ -238,8 +210,6 @@ F >> (G, H)
 (I, J) >> (K, L)
 
 Kumo.plot()
-
-# @code_warntype A >> B
 
 # ---- #
 
@@ -295,8 +265,6 @@ re = [1.0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0.0]
 
 @test he_ == re
 
-# @code_warntype Kumo.heat(fe_sc)
-
 # 477.349 ns (5 allocations: 672 bytes)
 # @btime Kumo.heat($fe_sc)
 
@@ -310,8 +278,6 @@ re = hcat(re, re * 10)
 
 @test no_x_sa_x_he == re
 
-# @code_warntype Kumo.heat(no_, fe_x_sa_x_sc)
-
 # 1.413 μs (15 allocations: 2.09 KiB)
 # @btime Kumo.heat($no_, $fe_x_sa_x_sc)
 
@@ -323,8 +289,6 @@ display(so_x_ta_x_ed)
 
 @test sum(so_x_ta_x_ed) == length(Kumo.ED_)
 
-# @code_warntype Kumo.make_edge_matrix()
-
 # 1.200 μs (15 allocations: 3.73 KiB)
 # @btime Kumo.make_edge_matrix()
 
@@ -334,8 +298,6 @@ he___ = Kumo.anneal(he_)
 
 @test all(length(he_) == 12 for he_ in he___)
 
-# @code_warntype Kumo.anneal(he_)
-
 # 43.541 μs (939 allocations: 92.45 KiB)
 # @btime Kumo.anneal($he_; pr = false)
 
@@ -344,8 +306,6 @@ he___ = Kumo.anneal(he_)
 no_x_sa_x_an = Kumo.anneal(no_x_sa_x_he)
 
 @test size(no_x_sa_x_an) == size(no_x_sa_x_he)
-
-# @code_warntype Kumo.anneal(no_x_sa_x_he)
 
 # 92.958 μs (2006 allocations: 195.16 KiB)
 # @btime Kumo.anneal($no_x_sa_x_he; pr = false)
@@ -357,7 +317,5 @@ for pe in (0, 0.5, 1)
     di = mkpath(joinpath(te, "animate.$pe"))
 
     Kumo.animate(js, he___, di; pe)
-
-    # @code_warntype Kumo.animate(js, he___, di; pe)
 
 end

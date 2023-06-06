@@ -114,7 +114,7 @@ for ty in (BioLab.VectorNumber.Original, BioLab.VectorNumber.Deep, BioLab.Vector
 
         Random.seed!(BioLab.Constant.RA)
 
-        # TODO: `@test`.
+        # TODO: Test.
         println(BioLab.VectorNumber.simulate(n, ty; ze))
 
     end

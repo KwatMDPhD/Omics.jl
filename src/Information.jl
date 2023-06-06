@@ -1,5 +1,7 @@
 module Information
 
+using KernelDensity: kde
+
 function get_entropy(nu_)
 
     0.0

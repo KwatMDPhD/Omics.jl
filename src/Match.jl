@@ -403,8 +403,6 @@ function make(
 
         # Make traces.
 
-        heatmapx = Dict()
-
         data = [
             _merge_heatmap(
                 Dict(

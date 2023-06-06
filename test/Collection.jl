@@ -64,7 +64,7 @@ an1_ = ['1', '2', 'K']
 
 # ---- #
 
-di = pkgdir(BioLab, "data", "FeatureSetEnrichment")
+di = joinpath(DA, "FeatureSetEnrichment")
 
 da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 
@@ -76,10 +76,8 @@ fe1_ = BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARG
 
 # ---- #
 
-fe1s_ = Set(fe1_)
-
 # 462.167 μs (2 allocations: 19.67 KiB)
-# @btime BioLab.Collection.is_in($fe_, $fe1s_);
+# @btime BioLab.Collection.is_in($fe_, $(Set(fe1_)));
 
 # ---- #
 
@@ -88,10 +86,8 @@ fe1s_ = Set(fe1_)
 
 # ---- #
 
-fe_id = Dict(fe => id for (id, fe) in enumerate(fe_))
-
-# 912.263 ns (2 allocations: 19.67 KiB)
-# @btime BioLab.Collection.is_in($fe_id, $fe1_);
+# 620.066 ns (2 allocations: 19.67 KiB)
+# @btime BioLab.Collection.is_in($(Dict(fe => id for (id, fe) in enumerate(fe_))), $fe1_);
 
 # ---- #
 
@@ -162,15 +158,15 @@ end
 
 # ---- #
 
-an = Dict(
-    "8ved" => [Dict("e2" => 4, "e1" => 3), Dict("e2" => 6, "e1" => 5)],
-    "7tuhd" => (2, 3, 1, Dict("d2" => 2, "d1" => 1)),
-    "6vehd" => [2, 3, 1, Dict("d2" => 2, "d1" => 1)],
-    "5veh" => [1, "a"],
-    "4di" => Dict("c" => 1, "b" => 2, "a" => 3),
-    "3di" => Dict(),
-    "2tu" => (2, 3, 1),
-    "1ve" => [2, 3, 1],
+BioLab.Collection.sort_recursively(
+    Dict(
+        "8ved" => [Dict("e2" => 4, "e1" => 3), Dict("e2" => 6, "e1" => 5)],
+        "7tuhd" => (2, 3, 1, Dict("d2" => 2, "d1" => 1)),
+        "6vehd" => [2, 3, 1, Dict("d2" => 2, "d1" => 1)],
+        "5veh" => [1, "a"],
+        "4di" => Dict("c" => 1, "b" => 2, "a" => 3),
+        "3di" => Dict(),
+        "2tu" => (2, 3, 1),
+        "1ve" => [2, 3, 1],
+    ),
 )
-
-BioLab.Collection.sort_recursively(an)

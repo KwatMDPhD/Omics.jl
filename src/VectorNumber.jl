@@ -28,13 +28,9 @@ function get_extreme(nu_)
 
         (mi,)
 
-    elseif mia < maa
+    else#if mia < maa
 
         (ma,)
-
-    else
-
-        error()
 
     end
 

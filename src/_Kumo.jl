@@ -26,8 +26,6 @@ function _add!(no)
 
     end
 
-    return nothing
-
 end
 
 function _add!(so, ta)
@@ -54,8 +52,6 @@ function _add!(so, ta)
 
     end
 
-    return nothing
-
 end
 
 function _add!(so_::Tuple, ta)
@@ -65,8 +61,6 @@ function _add!(so_::Tuple, ta)
         _add!(so, ta)
 
     end
-
-    return nothing
 
 end
 
@@ -78,19 +72,17 @@ function _add!(so, ta_::Tuple)
 
     end
 
-    return nothing
-
 end
 
 function _make_how_node(so, ho)
 
-    return "$so.$ho"
+    "$so.$ho"
 
 end
 
 function _make_how_node(so_::Tuple, ho)
 
-    return _make_how_node(join(so_, '_'), ho)
+    _make_how_node(join(so_, '_'), ho)
 
 end
 
@@ -104,15 +96,13 @@ function _add!(so, ho, ta)
 
     _add!(no, ta)
 
-    return nothing
-
 end
 
 macro st(sy)
 
     sy = esc(sy)
 
-    return quote
+    quote
 
         struct $sy end
 
@@ -126,7 +116,7 @@ macro st(sy, cl_...)
 
     sy = esc(sy)
 
-    return quote
+    quote
 
         @st $sy
 
@@ -140,7 +130,7 @@ function <<(so, ta)
 
     _add!(so, "de", ta)
 
-    return ta
+    ta
 
 end
 
@@ -148,7 +138,7 @@ function >>(so, ta)
 
     _add!(so, "in", ta)
 
-    return ta
+    ta
 
 end
 
@@ -159,8 +149,6 @@ function clear!()
     empty!(ED_)
 
     empty!(NO_CL_)
-
-    return nothing
 
 end
 
@@ -202,8 +190,6 @@ function print()
 
     println("🕸️  $(rpad(n_ed, n_pa)) Edges")
 
-    return nothing
-
 end
 
 function _elementize(no::String)
@@ -218,13 +204,13 @@ function _elementize(no::String)
 
     end
 
-    return Dict("data" => Dict("id" => no, "weight" => 0), "classes" => cl_)
+    Dict("data" => Dict("id" => no, "weight" => 0), "classes" => cl_)
 
 end
 
 function _elementize(tu)
 
-    return Dict("data" => Dict("source" => tu[1], "target" => tu[2]))
+    Dict("data" => Dict("source" => tu[1], "target" => tu[2]))
 
 end
 
@@ -392,8 +378,6 @@ function plot(;
         wr,
     )
 
-    return nothing
-
 end
 
 function animate(js, he___, di; pe = 1, st_ = Vector{Dict}())
@@ -481,7 +465,7 @@ function animate(js, he___, di; pe = 1, st_ = Vector{Dict}())
 
     println("🎞️  $gi.")
 
-    return gi
+    gi
 
 end
 
@@ -499,7 +483,7 @@ function make_edge_matrix()
 
     end
 
-    return so_x_ta_x_ed
+    so_x_ta_x_ed
 
 end
 
@@ -574,7 +558,7 @@ function heat(fe_sc; no_al_ = Dict{String, Tuple}(), pr = true)
 
     end
 
-    return he_
+    he_
 
 end
 
@@ -588,7 +572,7 @@ function heat(fe_, fe_x_sa_x_sc; no_al_ = Dict{String, Tuple}())
 
     end
 
-    return no_x_sa_x_he
+    no_x_sa_x_he
 
 end
 
@@ -610,7 +594,7 @@ function _get_norm(he_, pr)
 
     end
 
-    return no
+    no
 
 end
 
@@ -711,7 +695,7 @@ function anneal(
 
     end
 
-    return he___
+    he___
 
 end
 
@@ -726,7 +710,7 @@ function anneal(no_x_sa_x_he, so_x_ta_x_ed = make_edge_matrix(); ke_ar...)
 
     end
 
-    return no_x_sa_x_an
+    no_x_sa_x_an
 
 end
 

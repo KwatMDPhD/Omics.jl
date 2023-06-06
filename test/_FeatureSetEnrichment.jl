@@ -4,9 +4,9 @@ include("environment.jl")
 
 # ---- #
 
-TE = joinpath(tempdir(), "BioLab.test.FeatureSetEnrichment")
+te = joinpath(tempdir(), "BioLab.test.FeatureSetEnrichment")
 
-BioLab.Path.empty(TE)
+BioLab.Path.empty(te)
 
 # ---- #
 
@@ -19,8 +19,6 @@ for (ex, re) in ((-1.0, 0.5), (1.0, 2.0), (2.0, 4.0), (3.0, 8.0))
     BioLab.print_header(ex)
 
     @test BioLab.FeatureSetEnrichment._get_absolute_raise(sc_, id, ex) == re
-
-    # @code_warntype BioLab.FeatureSetEnrichment._get_absolute_raise(sc_, id, ex)
 
     # 16.784 ns (0 allocations: 0 bytes)
     # 2.458 ns (0 allocations: 0 bytes)
@@ -42,8 +40,6 @@ for (ex, re) in ((1.0, (6, 5.0, 2.0)), (2.0, (6, 9.0, 2.0)))
 
     @test BioLab.FeatureSetEnrichment._sum_10(sc_, bo_, ex) == re
 
-    # @code_warntype BioLab.FeatureSetEnrichment._sum_10(sc_, bo_, ex)
-
     # 6.417 ns (0 allocations: 0 bytes)
     # 19.121 ns (0 allocations: 0 bytes)    
     # @btime BioLab.FeatureSetEnrichment._sum_10($sc_, $bo_, $ex)
@@ -59,8 +55,6 @@ for (ex, re) in ((1.0, (6, 6.0, 5.0)), (2.0, (6, 10.0, 9.0)))
     BioLab.print_header(ex)
 
     @test BioLab.FeatureSetEnrichment._sum_all1(sc_, bo_, ex) == re
-
-    # @code_warntype BioLab.FeatureSetEnrichment._sum_all1(sc_, bo_, ex)
 
     # 7.791 ns (0 allocations: 0 bytes)
     # 22.233 ns (0 allocations: 0 bytes)
@@ -78,22 +72,12 @@ BioLab.FeatureSetEnrichment._plot_mountain(
     11.29,
 )
 
-# @code_warntype BioLab.FeatureSetEnrichment._plot_mountain(
-#     ["Law", "Black Beard"],
-#     [1.0, -1.0],
-#     [true, true],
-#     [0.1, -0.1],
-#     11.29;
-# )
-
 # ---- #
 
 ca1 = "A2K"
 
-# TODO: `@test`.
-display(BioLab.FeatureSetEnrichment.benchmark_card(ca1))
-
-# @code_warntype BioLab.FeatureSetEnrichment.benchmark_card(ca1)
+# TODO: Test.
+println(BioLab.FeatureSetEnrichment.benchmark_card(ca1))
 
 # 46.970 ns (2 allocations: 240 bytes)
 # @btime BioLab.FeatureSetEnrichment.benchmark_card($ca1)
@@ -104,10 +88,8 @@ for (n, n1) in ((3, 2), (4, 2), (5, 3))
 
     BioLab.print_header("$n $n1")
 
-    # TODO: `@test`.
-    display(BioLab.FeatureSetEnrichment.benchmark_random(n, n1))
-
-    # @code_warntype BioLab.FeatureSetEnrichment.benchmark_random(n, n1)
+    # TODO: Test.
+    println(BioLab.FeatureSetEnrichment.benchmark_random(n, n1))
 
     # 1.083 μs (30 allocations: 1.81 KiB)
     # 1.142 μs (34 allocations: 2.02 KiB)    
@@ -118,10 +100,8 @@ end
 
 # ---- #
 
-# TODO: `@test`.
-display(BioLab.FeatureSetEnrichment.benchmark_myc())
-
-# @code_warntype BioLab.FeatureSetEnrichment.benchmark_myc()
+# TODO: Test.
+println(BioLab.FeatureSetEnrichment.benchmark_myc())
 
 # 34.414 ms (580131 allocations: 96.05 MiB)
 # @btime BioLab.FeatureSetEnrichment.benchmark_myc()
@@ -139,7 +119,7 @@ for al in (BioLab.FeatureSetEnrichment.KS(), BioLab.FeatureSetEnrichment.KLioM()
             sc_,
             fe1_;
             title_text = string(al),
-            ht = joinpath(TE, "mountain.$al.html"),
+            ht = joinpath(te, "mountain.$al.html"),
         ),
     )
 
@@ -159,7 +139,7 @@ for al in (
     BioLab.FeatureSetEnrichment.KLioM(),
 )
 
-    display(
+    println(
         BioLab.FeatureSetEnrichment._enrich(
             al,
             fe_,
@@ -214,9 +194,9 @@ for al in (
     # 19.324 ms (108 allocations: 1.49 MiB)
     # @btime BioLab.FeatureSetEnrichment.enrich($al, $fe_, $sc_, $fe1___)
 
-    # # 11.463 ms (463 allocations: 8.66 MiB)
-    # # 37.931 ms (463 allocations: 8.66 MiB)
-    # # 59.793 ms (463 allocations: 8.66 MiB)
+    # 11.463 ms (463 allocations: 8.66 MiB)
+    # 37.931 ms (463 allocations: 8.66 MiB)
+    # 59.793 ms (463 allocations: 8.66 MiB)
     # @btime BioLab.FeatureSetEnrichment.enrich($al, $feature_x_sample_x_score, $se_, $fe1___)
 
 end

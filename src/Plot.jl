@@ -342,7 +342,6 @@ function make_colorbar(z)
         "tickfont" => Dict("size" => 10),
     )
 
-
 end
 
 function plot_heat_map(

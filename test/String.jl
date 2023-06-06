@@ -2,11 +2,9 @@ include("environment.jl")
 
 # ---- #
 
-st = "Can"
-
 for (n, re) in ((1, "C..."), (2, "Ca..."), (3, "Can"), (4, "Can"))
 
-    @test BioLab.String.limit(st, n) == re
+    @test BioLab.String.limit("Can", n) == re
 
 end
 

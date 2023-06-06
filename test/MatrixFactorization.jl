@@ -40,8 +40,6 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
         BioLab.Table.read(joinpath(di, "factor_x_column1_x_positive.tsv")),
     )[4]
 
-    # @btime BioLab.MatrixFactorization.factorize($ama, $n_fa; pr = $false)
-
 end
 
 # ---- #
@@ -60,7 +58,7 @@ wma, hma = BioLab.MatrixFactorization.factorize(ama, n_fa)
 
 hma2 = BioLab.MatrixFactorization.solve_h(ama, wma)
 
-# TODO:
+# TODO: Solve better.
 @test isapprox(hma, hma2; rtol = 1)
 
 # ---- #

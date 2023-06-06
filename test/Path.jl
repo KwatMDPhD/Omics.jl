@@ -77,15 +77,11 @@ end
 
 # ---- #
 
-ex = ".extension"
-
-@test !@is_error BioLab.Path.error_extension(fi, ex)
+BioLab.Path.error_extension(fi, ".extension")
 
 # ---- #
 
-ex = "new_extension"
-
-@test BioLab.Path.replace_extension(fi, ex) == "file.new_extension"
+@test BioLab.Path.replace_extension(fi, "new_extension") == "file.new_extension"
 
 # ---- #
 
@@ -113,9 +109,7 @@ display(BioLab.Path.read(ho; join = false, ig_ = (), ke_ = (r"^\.",)))
 
 # ---- #
 
-ke_ = (r"^[A-Z]",)
-
-display(BioLab.Path.read(ho; ke_))
+display(BioLab.Path.read(ho; ke_ = (r"^[A-Z]",)))
 
 # ---- #
 

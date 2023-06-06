@@ -1,6 +1,6 @@
-using Test
-
 using Aqua
+
+using Test
 
 using BioLab
 
@@ -8,7 +8,7 @@ using BioLab
 
 # Aqua.test_all(BioLab; ambiguities = false)
 
-# Aqua.test_ambiguities(BioLab)
+Aqua.test_ambiguities(BioLab)
 
 # ---- #
 

@@ -2,4 +2,4 @@ using Test
 
 using BioLab: BioLab, @is_error
 
-DA = joinpath(pkgdir(BioLab), "data")
+DA = joinpath(dirname(@__DIR__), "data")

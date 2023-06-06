@@ -32,7 +32,7 @@ function _get_absolute_raise(sc_, id, ex)
 
     end
 
-    return ab
+    ab
 
 end
 
@@ -58,7 +58,7 @@ function _sum_10(sc_, bo_, ex)
 
     end
 
-    return n, su1, su0
+    n, su1, su0
 
 end
 
@@ -84,7 +84,7 @@ function _sum_all1(sc_, bo_, ex)
 
     end
 
-    return n, su, su1
+    su, su1
 
 end
 
@@ -271,7 +271,7 @@ function _plot_mountain(
         ),
     ]
 
-    return BioLab.Plot.plot(trace_, layout; ht)
+    BioLab.Plot.plot(trace_, layout; ht)
 
 end
 
@@ -337,7 +337,7 @@ function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    return et
+    et
 
 end
 
@@ -387,7 +387,7 @@ function _enrich(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    return ar
+    ar
 
 end
 
@@ -401,7 +401,7 @@ function _clip(le, pr, mi)
 
     end
 
-    return le
+    le
 
 end
 
@@ -485,7 +485,7 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    return ar
+    ar
 
 end
 
@@ -589,19 +589,19 @@ function _enrich_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    return ar
+    ar
 
 end
 
 function _enrich(al::KLioP, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    return _enrich_klio(fe_, sc_, bo_, (_1, _0) -> _1 + _0; ex, pl, ke_ar...)
+    _enrich_klio(fe_, sc_, bo_, (_1, _0) -> _1 + _0; ex, pl, ke_ar...)
 
 end
 
 function _enrich(al::KLioM, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    return _enrich_klio(fe_, sc_, bo_, (_1, _0) -> _1 - _0; ex, pl, ke_ar...)
+    _enrich_klio(fe_, sc_, bo_, (_1, _0) -> _1 - _0; ex, pl, ke_ar...)
 
 end
 
@@ -615,7 +615,7 @@ function enrich(
     ke_ar...,
 )
 
-    return _enrich(al, fe_, sc_, BioLab.Collection.is_in(fe_, Set(fe1_)); ex, pl, ke_ar...)
+    _enrich(al, fe_, sc_, BioLab.Collection.is_in(fe_, Set(fe1_)); ex, pl, ke_ar...)
 
 end
 
@@ -625,9 +625,7 @@ function enrich(al, fe_, sc_, fe1___; ex = 1.0)
 
     ch = Dict(fe => id for (id, fe) in enumerate(fe_))
 
-    return [
-        _enrich(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for fe1_ in fe1___
-    ]
+    [_enrich(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for fe1_ in fe1___]
 
 end
 
@@ -649,13 +647,13 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0, n_jo = 1)
 
     end
 
-    return se_x_sa_x_en
+    se_x_sa_x_en
 
 end
 
 function benchmark_card(ca1)
 
-    return reverse!([string(ca) for ca in BioLab.CA_]),
+    reverse!([string(ca) for ca in BioLab.CA_]),
     reverse!(collect(-6:6)),
     [string(ca) for ca in ca1]
 
@@ -665,8 +663,7 @@ function benchmark_random(n, n1)
 
     fe_ = ["Feature $id" for id in 1:n]
 
-    # TODO
-    return reverse!(fe_),
+    reverse!(fe_),
     reverse!(BioLab.VectorNumber.simulate(cld(n, 2); ev = iseven(n))),
     sample(fe_, n1; replace = false)
 
@@ -678,7 +675,7 @@ function benchmark_myc()::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
 
     da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 
-    return reverse!(da[!, 1]),
+    reverse!(da[!, 1]),
     reverse!(da[!, 2]),
     BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 

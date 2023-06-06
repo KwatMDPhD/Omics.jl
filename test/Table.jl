@@ -1,8 +1,8 @@
+using DataFrames
+
 include("environment.jl")
 
 # ---- #
-
-using DataFrames
 
 te = joinpath(tempdir(), "BioLab.test.Table")
 
@@ -10,15 +10,15 @@ BioLab.Path.reset(te)
 
 # ---- #
 
-di = joinpath(pkgdir(BioLab), "data", "Table")
+di = joinpath(DA, "Table")
 
 # ---- #
 
 for na in ("titanic.tsv", "enst_gene.tsv.gz")
 
-    # TODO: `@test`.
+    # TODO: Test.
 
-    local da = BioLab.Table.read(joinpath(di, na))
+    da = BioLab.Table.read(joinpath(di, na))
 
     println(first(da, 2))
 
@@ -28,7 +28,7 @@ end
 
 # ---- #
 
-# TODO: `@test`.
+# TODO: Test.
 
 da = BioLab.Table.read(joinpath(di, "12859_2019_2886_MOESM2_ESM.xlsx"); xl = "HumanSpecific Genes")
 
@@ -45,8 +45,8 @@ co2 = 1.0:4
 ro_x_co_x_an = DataFrame(
     "Column 1" => co1,
     "Column 2" => co2,
-    "Column 3" => [string(an) for an in co1],
-    "Column 4" => [string(an) for an in co2],
+    "Column 3" => map(string, co1),
+    "Column 4" => map(string, co2),
 )
 
 # ---- #

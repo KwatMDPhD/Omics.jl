@@ -8,7 +8,7 @@ for po in 0:5
 
     nu_ = randn(n)
 
-    # TODO: `@test`.
+    # TODO: Test.
     println(BioLab.Significance.get_margin_of_error(nu_))
 
 end
@@ -53,14 +53,12 @@ pv1_ = [0.001, 0.01, 0.03, 0.5]
 
 n_ = (length(pv1_), 40, 100, 1000)
 
-# ---- #
-
 for n in n_
 
-    # TODO: `@test`.
+    # TODO: Test.
     println(BioLab.Significance.adjust_p_value_with_bonferroni(pv1_, n))
 
-    # TODO: `@test`.
+    # TODO: Test.
     println(BioLab.Significance.adjust_p_value_with_benjamini_hochberg(pv1_, n))
 
 end

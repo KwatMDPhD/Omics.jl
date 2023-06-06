@@ -51,7 +51,7 @@ n = length(BioLab.Plot.COBWR)
 
 for nu in (NaN, -1, 0, n + 1)
 
-    @test @is_error BioLab.Plot.COBWR[nu] false
+    @test @is_error BioLab.Plot.COBWR[nu]
 
 end
 
