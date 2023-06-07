@@ -14,9 +14,10 @@ using ..BioLab
 
 function read(pa; xl = "", ke_ar...)
 
+    # TODO: Consider implementing error_missing.
     if !ispath(pa)
 
-        error()
+        error("$pa does not exist.")
 
     end
 

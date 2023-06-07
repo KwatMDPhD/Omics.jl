@@ -30,7 +30,7 @@ function error_extension(pa, ex)
 
     if ex2 != ex
 
-        error()
+        error("$ex2 != $ex")
 
     end
 
@@ -54,7 +54,7 @@ function error_missing(di, re::AbstractString)
 
     if !ispath(pa)
 
-        error()
+        error("$pa does not exist.")
 
     end
 

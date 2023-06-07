@@ -1,5 +1,15 @@
 module Array
 
+function error_duplicate(ar)
+
+    if !allunique(ar)
+
+        error()
+
+    end
+
+end
+
 function error_size(ar_)
 
     n = length(ar_)
@@ -17,16 +27,6 @@ function error_size(ar_)
             error()
 
         end
-
-    end
-
-end
-
-function error_duplicate(ar)
-
-    if !allunique(ar)
-
-        error()
 
     end
 

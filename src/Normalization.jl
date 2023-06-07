@@ -2,6 +2,8 @@ module Normalization
 
 using StatsBase: competerank, denserank, mean, ordinalrank, std, tiedrank
 
+# TODO: Consider implementing error_constant.
+
 function normalize_with_01!(te)
 
     mi = minimum(te)
@@ -10,7 +12,7 @@ function normalize_with_01!(te)
 
     if iszero(ra)
 
-        error()
+        error("0-1 can not normalize numbers that are all equal.")
 
     end
 
@@ -30,7 +32,7 @@ function normalize_with_0!(te)
 
     if iszero(st)
 
-        error()
+        error("-0- can not normalize numbers that are all equal.")
 
     end
 
@@ -46,7 +48,7 @@ function normalize_with_sum!(te)
 
     if any(nu < 0 for nu in te)
 
-        error()
+        error("Sum can not normalize numbers containing any negative.")
 
     end
 
@@ -64,7 +66,7 @@ function _normalize_with_rank!(te, fu)
 
     if allequal(te)
 
-        error()
+        error("Rank can not normalize numbers that are all equal.")
 
     end
 

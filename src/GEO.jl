@@ -137,7 +137,7 @@ function _name(pl, fe_x_io_x_an)
 
     else
 
-        error("$pli is a new platform - add it.")
+        error("$pli is a new platform - implement it.")
 
     end
 
@@ -198,7 +198,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         else
 
-            @warn "" ch_
+            @warn "A $sa characteristic lacks $de." ch_
 
         end
 
@@ -220,7 +220,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         else
 
-            @warn "Empty table" sa
+            @warn "$sa table is empty."
 
         end
 
@@ -244,7 +244,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         else
 
-            @warn "Empty table" pl
+            @warn "$pl table is empty."
 
         end
 

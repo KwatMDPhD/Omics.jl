@@ -12,11 +12,13 @@ function factorize(a, n)
 
     if mf.converged
 
-        @info "" mf.niters mf.objvalue
+        @info "Converged." mf.niters mf.objvalue
 
     else
 
-        @warn "" mf.niters mf.objvalue
+        error(
+            "Factorization iterated $(BioLab.String.count(mf.iters, "time")) to achieve $(mf.objvalue), but did not converge.",
+        )
 
     end
 

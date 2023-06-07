@@ -272,7 +272,7 @@ function make(
 
     if any(ba_)
 
-        @warn "" sum(n_ba)
+        @warn "Score has $(BioLab.String.count(sum(n_ba), "bad value"))."
 
     end
 

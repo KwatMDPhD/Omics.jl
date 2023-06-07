@@ -1,6 +1,6 @@
 module Dict
 
-using JSON: parse, print as _print
+using JSON: parse, print
 
 using TOML: parsefile
 
@@ -168,7 +168,7 @@ function write(js, ke_va; id = 2)
 
     open(js, "w") do io
 
-        _print(io, ke_va, id)
+        print(io, ke_va, id)
 
     end
 

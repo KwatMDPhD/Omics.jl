@@ -96,7 +96,7 @@ function map_uniprot(pr_x_io_x_an = read_uniprot())
 
                 if !endswith(an, "_HUMAN")
 
-                    error()
+                    error("$an lacks _HUMAN suffix.")
 
                 end
 

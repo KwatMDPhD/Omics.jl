@@ -37,7 +37,7 @@ function write(di, so_, sc; he = 800, wi = 1280, ht = "")
 
     catch
 
-        @warn "" ht
+        @warn "Can not open $ht."
 
     end
 
