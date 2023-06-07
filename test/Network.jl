@@ -74,7 +74,7 @@ if ispath(js)
 
 else
 
-    @warn "$js does not exist."
+    @warn "" js
 
 end
 

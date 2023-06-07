@@ -272,7 +272,7 @@ function make(
 
     if any(ba_)
 
-        @warn "Number of bad scores = $(sum(n_ba))."
+        @warn "" sum(n_ba)
 
     end
 

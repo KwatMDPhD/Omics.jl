@@ -1,24 +1,22 @@
 module Array
 
-function error_size(ar1, ar2)
+function error_size(ar_)
 
-    si1 = size(ar1)
+    n = length(ar_)
 
-    si2 = size(ar2)
-
-    if si1 != si2
+    if n < 2
 
         error()
 
     end
 
-end
+    for id in 1:(n - 1)
 
-function error_size(ar_)
+        if size(ar_[id]) != size(ar_[id + 1])
 
-    for id in 1:(length(ar_) - 1)
+            error()
 
-        error_size(ar_[id], ar_[id + 1])
+        end
 
     end
 

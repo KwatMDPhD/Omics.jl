@@ -4,7 +4,7 @@ using ..BioLab
 
 function _aim(nu1_, nu2_)
 
-    BioLab.Array.error_size(nu1_, nu2_)
+    BioLab.Array.error_size((nu1_, nu2_))
 
     nu1_, nu2_
 
@@ -12,7 +12,7 @@ end
 
 function _aim(bo_::AbstractVector{Bool}, nu_)
 
-    BioLab.Array.error_size(bo_, nu_)
+    BioLab.Array.error_size((bo_, nu_))
 
     nu_[[!bo for bo in bo_]], nu_[bo_]
 

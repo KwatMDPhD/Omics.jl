@@ -10,15 +10,15 @@ function factorize(a, n)
 
     mf = nnmf(a, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 10^-4)
 
-    if !mf.converged
+    if mf.converged
 
-        @warn "Does not converge."
+        @info "" mf.niters mf.objvalue
+
+    else
+
+        @warn "" mf.niters mf.objvalue
 
     end
-
-    println("Number of iterations = $(mf.niters).")
-
-    println("Objective value = $(BioLab.Number.format(mf.objvalue)).")
 
     mf.W, mf.H
 

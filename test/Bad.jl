@@ -29,6 +29,6 @@ end
 
 for (an, ty) in ((1.0, Float64), ("a", String), (0, Int))
 
-    BioLab.Bad.error_type(an, ty)
+    @test !@is_error BioLab.Bad.error_type(an, ty)
 
 end

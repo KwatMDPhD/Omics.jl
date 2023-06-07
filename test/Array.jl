@@ -12,7 +12,7 @@ end
 
 for ar_ in (([], []), ([1, 2], ["", "a"]), ([3, 4], ["b", "c"], ['d', 'e']), ([], [], []))
 
-    BioLab.Array.error_size(ar_)
+    @test !@is_error BioLab.Array.error_size(ar_)
 
 end
 
@@ -28,6 +28,6 @@ end
 
 for an_ in ((), [], [1, 2, 3], ['a', 'b', 'c'], [1 2; 3 4])
 
-    BioLab.Array.error_duplicate(an_)
+    @test !@is_error BioLab.Array.error_duplicate(an_)
 
 end

@@ -68,7 +68,7 @@ end
 
 # ---- #
 
-BioLab.Path.error_extension(fi, ".extension")
+@test !@is_error BioLab.Path.error_extension(fi, ".extension")
 
 # ---- #
 
@@ -86,7 +86,7 @@ BioLab.Path.error_extension(fi, ".extension")
 
 for re in ("test/Path.jl", "test/path.jl")
 
-    BioLab.Path.error_missing(bi, re)
+    @test !@is_error BioLab.Path.error_missing(bi, re)
 
 end
 

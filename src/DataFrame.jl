@@ -44,33 +44,33 @@ function separate(row_x_column_x_anything)
 
 end
 
-function print_column(row_x_column_x_anything)
+function _print_slice(na_, an_)
 
-    for (na, an_) in zip(names(row_x_column_x_anything), eachcol(row_x_column_x_anything))
+    for (na, an_) in zip(na_, an_)
 
         println(na)
 
         BioLab.Collection.print_unique(an_)
 
     end
+
+end
+
+function print_column(row_x_column_x_anything)
+
+    _print_slice(names(row_x_column_x_anything), eachcol(row_x_column_x_anything))
 
 end
 
 function print_row(row_x_column_x_anything)
 
-    for (na, an_) in zip(row_x_column_x_anything[!, 1], eachrow(row_x_column_x_anything[!, 2:end]))
-
-        println(na)
-
-        BioLab.Collection.print_unique(an_)
-
-    end
+    _print_slice(row_x_column_x_anything[!, 1], eachrow(row_x_column_x_anything[!, 2:end]))
 
 end
 
 function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
 
-    println("Size before collapsing = $(size(row_x_column_x_anything)).")
+    @info "Before collapsing" size(row_x_column_x_anything)
 
     ro_id_ = OrderedDict{String, Vector{Int}}()
 
@@ -86,7 +86,7 @@ function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
 
     if length(ro_) == n
 
-        @warn "There are no rows to collapse."
+        @warn "Nothing to collapse."
 
         return row_x_column_x_anything
 
@@ -116,7 +116,7 @@ function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
 
     collapsed_x_column_x_anything = make(ro, roc_, co_, mac)
 
-    println("After = $(size(collapsed_x_column_x_anything)).")
+    @info "After" size(collapsed_x_column_x_anything)
 
     collapsed_x_column_x_anything
 

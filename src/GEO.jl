@@ -20,11 +20,7 @@ function read(gs; di = BioLab.TE)
 
     gz = joinpath(di, fi)
 
-    if ispath(gz)
-
-        @warn "Using $gz"
-
-    else
+    if !ispath(gz)
 
         download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:end-3])nnn/$gs/soft/$fi", gz)
 
@@ -48,8 +44,6 @@ function read(gs; di = BioLab.TE)
         li = _readline(st)
 
         if startswith(li, '^')
-
-            println(li)
 
             ty, bl = split(li[2:end], eq; limit = 2)
 
@@ -204,7 +198,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         else
 
-            @warn "A $sa characteristic lacks $de." ch_
+            @warn "" ch_
 
         end
 
@@ -226,7 +220,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         else
 
-            @warn "$sa table is empty."
+            @warn "Empty table" sa
 
         end
 
@@ -250,7 +244,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         else
 
-            @warn "$pl table is empty."
+            @warn "Empty table" pl
 
         end
 
