@@ -8,29 +8,23 @@ function make_absolute(pa)
 
 end
 
-function shorten(pa, sh::Int)
+function error_missing(pa)
 
-    joinpath(splitpath(pa)[clamp(end + sh, 1, end):end]...)
+    if !ispath(pa)
 
-end
+        error("$pa does not exist.")
 
-function shorten(pa, di; sh = 0)
-
-    sp_ = splitpath(pa)
-
-    ba = basename(di)
-
-    shorten(pa, findlast(sp == ba for sp in sp_) - length(sp_) + sh)
+    end
 
 end
 
-function error_extension(pa, ex)
+function error_extension_difference(pa, ex)
 
     ex2 = splitext(pa)[2]
 
     if ex2 != ex
 
-        error("$ex2 != $ex")
+        error("$ex2 != $ex.")
 
     end
 
@@ -48,17 +42,6 @@ function clean(pa)
 
 end
 
-function error_missing(di, re::AbstractString)
-
-    pa = joinpath(di, re)
-
-    if !ispath(pa)
-
-        error("$pa does not exist.")
-
-    end
-
-end
 
 function read(di; join = false, ig_ = (r"^\.",), ke_ = ())
 

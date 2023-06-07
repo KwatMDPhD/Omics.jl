@@ -14,12 +14,7 @@ using ..BioLab
 
 function read(pa; xl = "", ke_ar...)
 
-    # TODO: Consider implementing error_missing.
-    if !ispath(pa)
-
-        error("$pa does not exist.")
-
-    end
+    BioLab.Path.error_missing(pa)
 
     ex = splitext(pa)[2]
 

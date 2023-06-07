@@ -6,7 +6,7 @@ using StatsBase: countmap
 
 using ..BioLab
 
-function count_sort(an_; rev = false)
+function count_sort(an_; rev = true)
 
     sort(countmap(an_); byvalue = true, rev)
 

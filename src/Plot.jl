@@ -18,11 +18,7 @@ const COPLA = plasma
 
 function _make_color_scheme(he_)
 
-    # if length(he_) < 2
-
-    #     error("Can not make a color scheme with less than two colors.")
-
-    # end
+    BioLab.Array.error_no_change(he_)
 
     ColorScheme([parse(Colorant{Float64}, he) for he in he_])
 

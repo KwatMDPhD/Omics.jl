@@ -30,7 +30,9 @@ macro is_error(ex)
 
             false
 
-        catch
+        catch er
+
+            er
 
             true
 

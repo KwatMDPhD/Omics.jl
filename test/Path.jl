@@ -80,13 +80,13 @@ BioLab.Path.error_extension(fi, ".extension")
 
 # ---- #
 
-@test @is_error BioLab.Path.error_missing(bi, "missing/file")
+@test @is_error BioLab.Path.error_missing("missing/file")
 
 # ---- #
 
 for re in ("test/Path.jl", "test/path.jl")
 
-    BioLab.Path.error_missing(bi, re)
+    BioLab.Path.error_missing(joinpath(bi, re))
 
 end
 

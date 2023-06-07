@@ -144,7 +144,7 @@ function read(pa::AbstractString)
 
     else
 
-        error()
+        error("Can not read $ex.")
 
     end
 

@@ -2,19 +2,15 @@ module Normalization
 
 using StatsBase: competerank, denserank, mean, ordinalrank, std, tiedrank
 
-# TODO: Consider implementing error_constant.
+using ..BioLab
 
 function normalize_with_01!(te)
+
+    BioLab.Array.error_no_change(te)
 
     mi = minimum(te)
 
     ra = maximum(te) - mi
-
-    if iszero(ra)
-
-        error("0-1 can not normalize numbers that are all equal.")
-
-    end
 
     for (id, nu) in enumerate(te)
 
@@ -26,15 +22,11 @@ end
 
 function normalize_with_0!(te)
 
+    BioLab.Array.error_no_change(te)
+
     me = mean(te)
 
     st = std(te)
-
-    if iszero(st)
-
-        error("-0- can not normalize numbers that are all equal.")
-
-    end
 
     for (id, nu) in enumerate(te)
 
@@ -48,7 +40,7 @@ function normalize_with_sum!(te)
 
     if any(nu < 0 for nu in te)
 
-        error("Sum can not normalize numbers containing any negative.")
+        error("Numbers have a negative.")
 
     end
 
@@ -64,11 +56,7 @@ end
 
 function _normalize_with_rank!(te, fu)
 
-    if allequal(te)
-
-        error("Rank can not normalize numbers that are all equal.")
-
-    end
+    BioLab.Array.error_no_change(te)
 
     for (id, nu) in enumerate(fu(te))
 
