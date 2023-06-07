@@ -62,13 +62,13 @@ fi = "file.extension"
 
 for ex in ("extension", ".another_extension")
 
-    @test @is_error BioLab.Path.error_extension(fi, ex)
+    @test @is_error BioLab.Path.error_extension_difference(fi, ex)
 
 end
 
 # ---- #
 
-BioLab.Path.error_extension(fi, ".extension")
+BioLab.Path.error_extension_difference(fi, ".extension")
 
 # ---- #
 

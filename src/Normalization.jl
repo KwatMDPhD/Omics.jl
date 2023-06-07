@@ -40,7 +40,7 @@ function normalize_with_sum!(te)
 
     if any(nu < 0 for nu in te)
 
-        error("Numbers have a negative.")
+        error("There is a negative.")
 
     end
 

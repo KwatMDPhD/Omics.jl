@@ -68,14 +68,14 @@ BioLab.Network.plot(el_; la, ex, ht)
 
 # ---- #
 
-if ispath(js)
+while !ispath(js)
 
-    BioLab.Network.position!(el_[1:(end - 1)], js)
+    sleep(1)
 
-else
-
-    @error "" js
+    @info "Waiting for $js"
 
 end
+
+BioLab.Network.position!(el_[1:(end - 1)], js)
 
 BioLab.Network.plot(el_; la = Dict("name" => "preset"), ht = joinpath(te, "json_preset.html"))

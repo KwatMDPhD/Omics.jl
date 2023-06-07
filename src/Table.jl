@@ -40,7 +40,7 @@ end
 
 function write(ts, ro_x_co_x_an)
 
-    BioLab.Path.error_extension(ts, ".tsv")
+    BioLab.Path.error_extension_difference(ts, ".tsv")
 
     _write(ts, ro_x_co_x_an; delim = '\t')
 

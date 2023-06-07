@@ -4,7 +4,7 @@ using ..BioLab
 
 function make(an___)
 
-    BioLab.Array.error_size(an___)
+    BioLab.Array.error_size_difference(an___)
 
     n_ro = length(an___)
 

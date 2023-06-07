@@ -20,11 +20,11 @@ function _get_bad(::Type{<:AbstractString})
 
 end
 
-function error_type(an, ty)
+function error_bad_type(an, ty)
 
     if !(an isa ty)
 
-        error("$an is not a $ty.")
+        error("There is a bad type; $an is not a $ty.")
 
     end
 
@@ -32,7 +32,7 @@ function error_type(an, ty)
 
         if isequal(an, ba)
 
-            error("$an is a bad $ty.")
+            error("There is a bad type; $an is a bad $ty.")
 
         end
 

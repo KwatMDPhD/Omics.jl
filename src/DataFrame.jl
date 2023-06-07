@@ -10,7 +10,7 @@ using ..BioLab
 
 function make(an___)
 
-    BioLab.Array.error_size(an___)
+    BioLab.Array.error_size_difference(an___)
 
     co_ = an___[1]
 
