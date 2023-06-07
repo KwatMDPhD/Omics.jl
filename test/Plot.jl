@@ -59,7 +59,7 @@ end
 
 for nu in (-Inf, -1.0, 0.0, 0.5, 1.0, 1, 2.0, 2, 3.0, 3, n, convert(Float64, n + 1), Inf)
 
-    @test !@is_error BioLab.Plot.COBWR[nu]
+    BioLab.Plot.COBWR[nu]
 
 end
 

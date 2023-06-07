@@ -57,8 +57,6 @@ fe_x_sa_x_an, fe_x_sa_x_nu_____... = BioLab.GEO.tabulate(ty_bl)
 
 for gs in ("GSE13534", "GSE107011", "GSE168204", "GSE141484")
 
-    ty_bl = BioLab.GEO.read(gs)
-
-    fe_x_sa_x_an, fe_x_sa_x_nu_____... = BioLab.GEO.tabulate(ty_bl)
+    BioLab.GEO.tabulate(BioLab.GEO.read(gs))
 
 end

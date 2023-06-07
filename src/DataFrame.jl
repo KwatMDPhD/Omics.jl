@@ -44,30 +44,6 @@ function separate(row_x_column_x_anything)
 
 end
 
-function _print_slice(na_, an_)
-
-    for (na, an_) in zip(na_, an_)
-
-        println(na)
-
-        BioLab.Collection.print_unique(an_)
-
-    end
-
-end
-
-function print_column(row_x_column_x_anything)
-
-    _print_slice(names(row_x_column_x_anything), eachcol(row_x_column_x_anything))
-
-end
-
-function print_row(row_x_column_x_anything)
-
-    _print_slice(row_x_column_x_anything[!, 1], eachrow(row_x_column_x_anything[!, 2:end]))
-
-end
-
 function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
 
     @info "Before collapsing" size(row_x_column_x_anything)

@@ -86,6 +86,7 @@ Kumo._add!("Zoro", ("和道一文字", "三代鬼徹", "閻魔"))
 
 # ---- #
 
+# TODO: Implement show.
 Kumo.print()
 
 # ---- #

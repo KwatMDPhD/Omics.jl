@@ -2,14 +2,6 @@ include("environment.jl")
 
 # ---- #
 
-for (n_ro, n_co) in ((2, 2), (4, 2), (2, 4), (4, 4), (6, 6), (7, 7))
-
-    BioLab.Matrix.print(reshape(1:(n_ro * n_co), (n_ro, n_co)))
-
-end
-
-# ---- #
-
 @test @is_error BioLab.Matrix.make(([1, 2], [3, 4, 5]))
 
 # ---- #

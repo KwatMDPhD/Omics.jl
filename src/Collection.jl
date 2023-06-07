@@ -6,9 +6,9 @@ using StatsBase: countmap
 
 using ..BioLab
 
-function print_unique(an_)
+function count_sort(an_; rev = false)
 
-    BioLab.Dict.print(sort(countmap(an_); byvalue = true))
+    sort(countmap(an_); byvalue = true, rev)
 
 end
 

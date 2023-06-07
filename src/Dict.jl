@@ -6,36 +6,6 @@ using TOML: parsefile
 
 using ..BioLab
 
-function print(ke_va; n = length(ke_va))
-
-    n_ke = length(ke_va)
-
-    n_va = length(Set(values(ke_va)))
-
-    tyk, tyv = eltype(ke_va).types
-
-    println(
-        "$(BioLab.String.count_noun(n_ke, "$tyk key")) => $(BioLab.String.count_noun(n_va, "unique $tyv value"))",
-    )
-
-    sp = "  "
-
-    for (id, (ke, va)) in enumerate(ke_va)
-
-        if n < id
-
-            println(sp, "...")
-
-            break
-
-        end
-
-        println(sp, ke => va)
-
-    end
-
-end
-
 function set_with_first!(ke_va, ke, va)
 
     if haskey(ke_va, ke)

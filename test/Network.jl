@@ -74,7 +74,7 @@ if ispath(js)
 
 else
 
-    @warn "" js
+    @error "" js
 
 end
 

@@ -62,14 +62,6 @@ ro_x_co_x_an = DataFrame(
 
 # ---- #
 
-BioLab.DataFrame.print_column(ro_x_co_x_an)
-
-# ---- #
-
-BioLab.DataFrame.print_row(ro_x_co_x_an)
-
-# ---- #
-
 for an___ in (
     (
         ["Row Name", "Column 1", "Column 2"],

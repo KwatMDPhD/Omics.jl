@@ -4,36 +4,6 @@ include("environment.jl")
 
 # ---- #
 
-for ty in (Dict, OrderedDict)
-
-    BioLab.Dict.print(ty())
-
-end
-
-# ---- #
-
-ke_va = Dict(1 => "a", 2 => "a", 3 => "b", '4' => nothing, "5" => nothing, 6 => NaN)
-
-BioLab.Dict.print(ke_va)
-
-# ---- #
-
-for n in 1:6
-
-    BioLab.Dict.print(ke_va; n)
-
-end
-
-# ---- #
-
-for ke_va in (Dict('a' => 1), Dict('a' => 1, "a" => 2), Dict('a' => 1, "a" => 2, 3 => 2))
-
-    BioLab.Dict.print(ke_va)
-
-end
-
-# ---- #
-
 ke_va = Dict("Existing" => 1)
 
 # ---- #
