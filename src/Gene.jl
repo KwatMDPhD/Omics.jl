@@ -32,19 +32,18 @@ function read_uniprot()
 
 end
 
-function map_mouse(fe_x_io_x_an = read_mouse(); pr = false)
+function map_mouse(fe_x_io_x_an = read_mouse())
 
     BioLab.DataFrame.map_to(
         fe_x_io_x_an,
         BioLab.Dict.set_with_last!,
         ["Gene name"],
-        "Human gene name";
-        pr,
+        "Human gene name",
     )
 
 end
 
-function map_ensembl(fe_x_io_x_an = read_ensembl(); pr = false)
+function map_ensembl(fe_x_io_x_an = read_ensembl())
 
     BioLab.DataFrame.map_to(
         fe_x_io_x_an,
@@ -59,12 +58,11 @@ function map_ensembl(fe_x_io_x_an = read_ensembl(); pr = false)
         ],
         "Gene name";
         de = '|',
-        pr,
     )
 
 end
 
-function map_hgnc(fe_x_io_x_an = read_hgnc(); pr = false)
+function map_hgnc(fe_x_io_x_an = read_hgnc())
 
     BioLab.DataFrame.map_to(
         fe_x_io_x_an,
@@ -72,12 +70,11 @@ function map_hgnc(fe_x_io_x_an = read_hgnc(); pr = false)
         ["prev_symbol", "alias_symbol"],
         "symbol";
         de = '|',
-        pr,
     )
 
 end
 
-function map_uniprot(pr_x_io_x_an = read_uniprot(); pr = false)
+function map_uniprot(pr_x_io_x_an = read_uniprot())
 
     pr_io_an = Dict{String, Dict{String, Any}}()
 
@@ -99,11 +96,11 @@ function map_uniprot(pr_x_io_x_an = read_uniprot(); pr = false)
 
                 if !endswith(an, "_HUMAN")
 
-                    error("$an does not end with _HUMAN.")
+                    error()
 
                 end
 
-                BioLab.Dict.set_with_last!(pr_io_an, an[1:(end - 6)], io_an; pr)
+                BioLab.Dict.set_with_last!(pr_io_an, an[1:(end - 6)], io_an)
 
             else
 
@@ -129,13 +126,13 @@ function map_uniprot(pr_x_io_x_an = read_uniprot(); pr = false)
 
 end
 
-function rename(st_, st_na__...; prm = false, pr = true)
+function rename(st_, st_na__...)
 
     st_na = Dict{String, String}()
 
     for st1_na1 in st_na__
 
-        st_na = BioLab.Dict.merge(st_na, st1_na1; pr = prm)
+        st_na = BioLab.Dict.merge(st_na, st1_na1)
 
     end
 
@@ -144,12 +141,6 @@ function rename(st_, st_na__...; prm = false, pr = true)
     na_ = Vector{String}(undef, n)
 
     ma_ = Vector{Int}(undef, n)
-
-    n1 = 0
-
-    n2 = 0
-
-    n3 = 0
 
     for (id, st) in enumerate(st_)
 
@@ -161,13 +152,9 @@ function rename(st_, st_na__...; prm = false, pr = true)
 
                 ma = 1
 
-                n1 += 1
-
             else
 
                 ma = 2
-
-                n2 += 1
 
             end
 
@@ -177,8 +164,6 @@ function rename(st_, st_na__...; prm = false, pr = true)
 
             ma = 3
 
-            n3 += 1
-
         end
 
         na_[id] = na
@@ -186,8 +171,6 @@ function rename(st_, st_na__...; prm = false, pr = true)
         ma_[id] = ma
 
     end
-
-    BioLab.check_print(pr, "Kept $n1.", '\n', "Renamed $n2.", '\n', "Failed to rename $n3.")
 
     na_, ma_
 

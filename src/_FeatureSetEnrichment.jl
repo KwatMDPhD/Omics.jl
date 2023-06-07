@@ -619,8 +619,6 @@ function enrich(
 
 end
 
-# TODO: Parallelize.
-
 function enrich(al, fe_, sc_, fe1___; ex = 1.0)
 
     ch = Dict(fe => id for (id, fe) in enumerate(fe_))

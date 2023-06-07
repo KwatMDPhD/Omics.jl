@@ -62,10 +62,6 @@ ro_x_co_x_an = DataFrame(
 
 # ---- #
 
-foreach(BioLab.DataFrame._print_unique, ([1, 2, 2.0], [3, 3, 4, 4], ['a', 'a', "a", "a"]))
-
-# ---- #
-
 BioLab.DataFrame.print_column(ro_x_co_x_an)
 
 # ---- #

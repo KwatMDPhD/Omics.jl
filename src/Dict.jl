@@ -36,7 +36,7 @@ function print(ke_va; n = length(ke_va))
 
 end
 
-function set_with_first!(ke_va, ke, va; pr = true)
+function set_with_first!(ke_va, ke, va)
 
     if haskey(ke_va, ke)
 
@@ -44,11 +44,11 @@ function set_with_first!(ke_va, ke, va; pr = true)
 
         if vac == va
 
-            BioLab.check_print(pr, "($ke => $va).")
+            @warn "($ke => $va)."
 
         else
 
-            BioLab.check_print(pr, "$ke => $vac ($va).")
+            @warn "$ke => $vac ($va)."
 
         end
 
@@ -60,7 +60,7 @@ function set_with_first!(ke_va, ke, va; pr = true)
 
 end
 
-function set_with_last!(ke_va, ke, va; pr = true)
+function set_with_last!(ke_va, ke, va)
 
     if haskey(ke_va, ke)
 
@@ -68,11 +68,11 @@ function set_with_last!(ke_va, ke, va; pr = true)
 
         if vac == va
 
-            BioLab.check_print(pr, "($ke => $va).")
+            @warn "($ke => $va)."
 
         else
 
-            BioLab.check_print(pr, "$ke => ($vac) $va.")
+            @warn "$ke => ($vac) $va."
 
             ke_va[ke] = va
 
@@ -86,7 +86,7 @@ function set_with_last!(ke_va, ke, va; pr = true)
 
 end
 
-function set_with_suffix!(ke_va, ke, va; pr = true)
+function set_with_suffix!(ke_va, ke, va)
 
     if haskey(ke_va, ke)
 
@@ -106,7 +106,7 @@ function set_with_suffix!(ke_va, ke, va; pr = true)
 
         end
 
-        BioLab.check_print(pr, "($kec) $ke => $va.")
+        @warn "($kec) $ke => $va."
 
     end
 
@@ -114,7 +114,7 @@ function set_with_suffix!(ke_va, ke, va; pr = true)
 
 end
 
-function merge(ke1_va1, ke2_va2, fu!; pr = true)
+function merge(ke1_va1, ke2_va2, fu!)
 
     ke_va = Base.Dict()
 
@@ -128,13 +128,13 @@ function merge(ke1_va1, ke2_va2, fu!; pr = true)
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                ke_va[ke] = merge(va1, va2, fu!; pr)
+                ke_va[ke] = merge(va1, va2, fu!)
 
             else
 
-                fu!(ke_va, ke, va1; pr)
+                fu!(ke_va, ke, va1)
 
-                fu!(ke_va, ke, va2; pr)
+                fu!(ke_va, ke, va2)
 
             end
 
@@ -154,9 +154,9 @@ function merge(ke1_va1, ke2_va2, fu!; pr = true)
 
 end
 
-function merge(ke1_va1, ke2_va2; pr = true)
+function merge(ke1_va1, ke2_va2)
 
-    merge(ke1_va1, ke2_va2, set_with_last!; pr)
+    merge(ke1_va1, ke2_va2, set_with_last!)
 
 end
 
@@ -174,7 +174,7 @@ function read(pa::AbstractString)
 
     else
 
-        error("Can not read $ex.")
+        error()
 
     end
 

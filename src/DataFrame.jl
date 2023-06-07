@@ -4,7 +4,7 @@ using DataFrames: DataFrame as _DataFrame, insertcols!
 
 using OrderedCollections: OrderedDict
 
-using StatsBase: countmap, mean
+using StatsBase: mean
 
 using ..BioLab
 
@@ -44,19 +44,13 @@ function separate(row_x_column_x_anything)
 
 end
 
-function _print_unique(an_)
-
-    BioLab.Dict.print(sort(countmap(an_); byvalue = true))
-
-end
-
 function print_column(row_x_column_x_anything)
 
     for (na, an_) in zip(names(row_x_column_x_anything), eachcol(row_x_column_x_anything))
 
         println(na)
 
-        _print_unique(an_)
+        BioLab.Collection.print_unique(an_)
 
     end
 
@@ -68,7 +62,7 @@ function print_row(row_x_column_x_anything)
 
         println(na)
 
-        _print_unique(an_)
+        BioLab.Collection.print_unique(an_)
 
     end
 
@@ -122,13 +116,13 @@ function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
 
     collapsed_x_column_x_anything = make(ro, roc_, co_, mac)
 
-    println("After $(size(collapsed_x_column_x_anything)).")
+    println("After = $(size(collapsed_x_column_x_anything)).")
 
     collapsed_x_column_x_anything
 
 end
 
-function map_to(row_x_column_x_anything, fu!, fr_, to; de = "", pr = false)
+function map_to(row_x_column_x_anything, fu!, fr_, to; de = "")
 
     row_x_from_x_anything = row_x_column_x_anything[!, fr_]
 
@@ -147,7 +141,7 @@ function map_to(row_x_column_x_anything, fu!, fr_, to; de = "", pr = false)
 
         end
 
-        fu!(fr_to, to, to; pr)
+        fu!(fr_to, to, to)
 
         for fr in fr_
 
@@ -169,7 +163,7 @@ function map_to(row_x_column_x_anything, fu!, fr_, to; de = "", pr = false)
 
             for fr in fr_
 
-                fu!(fr_to, fr, to; pr)
+                fu!(fr_to, fr, to)
 
             end
 

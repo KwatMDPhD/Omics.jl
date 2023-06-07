@@ -291,7 +291,7 @@ he___ = Kumo.anneal(he_)
 @test all(length(he_) == 12 for he_ in he___)
 
 # 43.541 μs (939 allocations: 92.45 KiB)
-# @btime Kumo.anneal($he_; pr = false)
+# @btime Kumo.anneal($he_);
 
 # ---- #
 
@@ -300,7 +300,7 @@ no_x_sa_x_an = Kumo.anneal(no_x_sa_x_he)
 @test size(no_x_sa_x_an) == size(no_x_sa_x_he)
 
 # 92.958 μs (2006 allocations: 195.16 KiB)
-# @btime Kumo.anneal($no_x_sa_x_he; pr = false)
+# @btime Kumo.anneal($no_x_sa_x_he);
 
 # ---- #
 

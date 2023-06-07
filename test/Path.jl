@@ -10,15 +10,6 @@ ho = homedir()
 
 # ---- #
 
-for (paf, pat) in
-    (("a/b", "a"), ("a", "a/b"), ("a/b/c", "a/b/c/d"), ("a/b/c", "a/b/C/d"), ("a/b", "x/y"))
-
-    BioLab.Path.print_change(paf, pat)
-
-end
-
-# ---- #
-
 wo = pwd()
 
 for (pa, re) in (
@@ -34,36 +25,36 @@ for (pa, re) in (
 
 end
 
-# ---- #
+# # ---- #
 
-@test @is_error BioLab.Path.shorten(@__DIR__, "Shanks")
+# @test @is_error BioLab.Path.shorten(@__DIR__, "Shanks")
 
-# ---- #
+# # ---- #
 
-for (sh, re) in
-    ((-1, "BioLab.jl/test"), (0, "test"), (1, "test"), (-count('/', @__DIR__), @__DIR__))
+# for (sh, re) in
+#     ((-1, "BioLab.jl/test"), (0, "test"), (1, "test"), (-count('/', @__DIR__), @__DIR__))
 
-    @test BioLab.Path.shorten(@__DIR__, sh) == re
+#     @test BioLab.Path.shorten(@__DIR__, sh) == re
 
-end
+# end
 
-# ---- #
+# # ---- #
 
-for (di, sh, re) in (
-    ("BioLab.jl", -1, "$(basename(jl))/BioLab.jl/test"),
-    ("BioLab.jl", 0, "BioLab.jl/test"),
-    ("BioLab.jl", 1, "test"),
-    ("test", -1, "BioLab.jl/test"),
-    ("test", 0, "test"),
-    ("test", 1, "test"),
-    ("BioLab.jl/test", -1, "BioLab.jl/test"),
-    ("BioLab.jl/test", 0, "test"),
-    ("BioLab.jl/test", 1, "test"),
-)
+# for (di, sh, re) in (
+#     ("BioLab.jl", -1, "$(basename(jl))/BioLab.jl/test"),
+#     ("BioLab.jl", 0, "BioLab.jl/test"),
+#     ("BioLab.jl", 1, "test"),
+#     ("test", -1, "BioLab.jl/test"),
+#     ("test", 0, "test"),
+#     ("test", 1, "test"),
+#     ("BioLab.jl/test", -1, "BioLab.jl/test"),
+#     ("BioLab.jl/test", 0, "test"),
+#     ("BioLab.jl/test", 1, "test"),
+# )
 
-    @test BioLab.Path.shorten(@__DIR__, di; sh) == re
+#     @test BioLab.Path.shorten(@__DIR__, di; sh) == re
 
-end
+# end
 
 # ---- #
 

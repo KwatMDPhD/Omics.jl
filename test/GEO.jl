@@ -29,7 +29,7 @@ ty_bl = BioLab.GEO.read(gs)
 @test size(BioLab.DataFrame.make(ty_bl["PLATFORM"]["GPL16686"]["table"])) == (53981, 8)
 
 # 639.308 ms (3441196 allocations: 208.36 MiB)
-# @btime BioLab.GEO.read($gs; pr = false);
+# @btime BioLab.GEO.read($gs);
 
 # ---- #
 
@@ -44,23 +44,21 @@ fe_na = BioLab.GEO._name(pl, fe_x_io_x_an)
 @test fe_na["16657485"] == "XR_132471"
 
 # 9.955 ms (448393 allocations: 18.95 MiB)
-# @btime fe_na = BioLab.GEO._name($pl, $fe_x_io_x_an; pr = false);
+# @btime fe_na = BioLab.GEO._name($pl, $fe_x_io_x_an);
 
 # ---- #
 
 fe_x_sa_x_an, fe_x_sa_x_nu_____... = BioLab.GEO.tabulate(ty_bl)
 
 # 641.084 ms (9242747 allocations: 892.22 MiB)
-# @btime BioLab.GEO.tabulate($ty_bl; pr = false);
+# @btime BioLab.GEO.tabulate($ty_bl);
 
 # ---- #
 
-pr = false
-
 for gs in ("GSE13534", "GSE107011", "GSE168204", "GSE141484")
 
-    ty_bl = BioLab.GEO.read(gs; pr)
+    ty_bl = BioLab.GEO.read(gs)
 
-    fe_x_sa_x_an, fe_x_sa_x_nu_____... = BioLab.GEO.tabulate(ty_bl; pr)
+    fe_x_sa_x_an, fe_x_sa_x_nu_____... = BioLab.GEO.tabulate(ty_bl)
 
 end

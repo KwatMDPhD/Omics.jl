@@ -24,25 +24,13 @@ function shorten(pa, di; sh = 0)
 
 end
 
-function print_change(so, de)
-
-    sos_ = splitpath(so)
-
-    des_ = splitpath(de)
-
-    n = length(BioLab.Collection.get_common_start((sos_, des_)))
-
-    println("$(shorten(so, n-length(sos_))) ==> $(shorten(de, n-length(des_)))")
-
-end
-
 function error_extension(pa, ex)
 
     ex2 = splitext(pa)[2]
 
     if ex2 != ex
 
-        error("$ex2 != $ex.")
+        error()
 
     end
 
@@ -56,11 +44,7 @@ end
 
 function clean(pa)
 
-    cl = replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
-
-    print_change(pa, cl)
-
-    cl
+    replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
 
 end
 
@@ -70,7 +54,7 @@ function error_missing(di, re::AbstractString)
 
     if !ispath(pa)
 
-        error("$pa does not exist.")
+        error()
 
     end
 
@@ -120,8 +104,6 @@ function rank(di)
             de = joinpath(di, na2)
 
             mv(sr, de)
-
-            print_change(sr, de)
 
         end
 

@@ -6,19 +6,19 @@ using NMF: nnmf
 
 using ..BioLab
 
-function factorize(a, n; pr = true)
+function factorize(a, n)
 
     mf = nnmf(a, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 10^-4)
 
     if !mf.converged
 
-        @warn "Did not converge." mf.objvalue
+        @warn "Does not converge."
 
     end
 
-    BioLab.check_print(pr, "Number of iterations = $(mf.niters).")
+    println("Number of iterations = $(mf.niters).")
 
-    BioLab.check_print(pr, "Objective value = $(BioLab.Number.format(mf.objvalue)).")
+    println("Objective value = $(BioLab.Number.format(mf.objvalue)).")
 
     mf.W, mf.H
 

@@ -24,7 +24,7 @@ function error_type(an, ty)
 
     if !(an isa ty)
 
-        error("$an is not a $ty.")
+        error()
 
     end
 
@@ -32,7 +32,7 @@ function error_type(an, ty)
 
         if isequal(an, ba)
 
-            error("$an is a bad $ty.")
+            error()
 
         end
 

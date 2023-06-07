@@ -8,7 +8,7 @@ function error_size(ar1, ar2)
 
     if si1 != si2
 
-        error("Array sizes, $si1 and $si2, differ.")
+        error()
 
     end
 
@@ -28,7 +28,7 @@ function error_duplicate(ar)
 
     if !allunique(ar)
 
-        error("Array has duplicates.")
+        error()
 
     end
 

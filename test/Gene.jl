@@ -1,4 +1,10 @@
+using Logging
+
 include("environment.jl")
+
+# ---- #
+
+Logging.disable_logging(Warn)
 
 # ---- #
 

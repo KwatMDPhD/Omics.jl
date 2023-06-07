@@ -2,6 +2,10 @@ include("environment.jl")
 
 # ---- #
 
+foreach(BioLab.Collection.print_unique, ([1, 2, 2.0], [3, 3, 4, 4], ['a', 'a', "a", "a"]))
+
+# ---- #
+
 for (n, n_ex) in ((0, 0), (0, 1), (1, 0))
 
     @test BioLab.Collection.get_extreme(n, n_ex) == Vector{Int}()

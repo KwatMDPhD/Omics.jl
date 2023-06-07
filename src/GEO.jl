@@ -14,7 +14,7 @@ function _readline(st)
 
 end
 
-function read(gs; di = BioLab.TE, pr = true)
+function read(gs; di = BioLab.TE)
 
     fi = "$(gs)_family.soft.gz"
 
@@ -22,7 +22,7 @@ function read(gs; di = BioLab.TE, pr = true)
 
     if ispath(gz)
 
-        BioLab.check_print(pr, "Using $gz")
+        @warn "Using $gz"
 
     else
 
@@ -49,7 +49,7 @@ function read(gs; di = BioLab.TE, pr = true)
 
         if startswith(li, '^')
 
-            BioLab.check_print(pr, li)
+            println(li)
 
             ty, bl = split(li[2:end], eq; limit = 2)
 
@@ -79,7 +79,7 @@ function read(gs; di = BioLab.TE, pr = true)
 
         ke, va = split(li, eq; limit = 2)
 
-        BioLab.Dict.set_with_suffix!(ty_bl_ke_va[ty][bl], ke, va; pr)
+        BioLab.Dict.set_with_suffix!(ty_bl_ke_va[ty][bl], ke, va)
 
     end
 
@@ -89,7 +89,7 @@ function read(gs; di = BioLab.TE, pr = true)
 
 end
 
-function _name(pl, fe_x_io_x_an; pr = true)
+function _name(pl, fe_x_io_x_an)
 
     pli = parse(Int, pl[4:end])
 
@@ -147,29 +147,15 @@ function _name(pl, fe_x_io_x_an; pr = true)
 
     end
 
-    if pr
-
-        println("Mapping $ke to $va")
-
-        display(first(fe_x_io_x_an, 2))
-
-    end
-
     fe_na = Dict{String, String}()
 
     for (fe, na) in zip(fe_x_io_x_an[!, ke], fe_x_io_x_an[!, va])
 
         if na isa AbstractString && !isempty(na) && na != "---"
 
-            BioLab.Dict.set_with_last!(fe_na, fe, fu(na); pr)
+            BioLab.Dict.set_with_last!(fe_na, fe, fu(na))
 
         end
-
-    end
-
-    if pr
-
-        BioLab.Dict.print(fe_na; n = 4)
 
     end
 
@@ -191,7 +177,7 @@ function _data_frame_outerjoin_select(co_va____, on)
 
 end
 
-function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = (), pr = true)
+function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl_ke_va["SAMPLE"]))
 
@@ -248,19 +234,9 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = (), pr = true)
 
     ch_x_sa_x_an = _data_frame_outerjoin_select(co_st____, ch)
 
-    if pr
-
-        println("Characteristics")
-
-        BioLab.DataFrame.print_row(ch_x_sa_x_an)
-
-    end
-
     fe_x_sa_x_nu_____ = Vector{DataFrame}(undef, length(pl_co_nu____))
 
     for (id, (pl, co_nu____)) in enumerate(pl_co_nu____)
-
-        BioLab.check_print(pr, pl)
 
         fe_x_sa_x_nu = _data_frame_outerjoin_select(co_nu____, pl)
 
@@ -268,28 +244,13 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = (), pr = true)
 
         if haskey(pl_ke_va[pl], "table")
 
-            fe_na = _name(pl, BioLab.DataFrame.make(pl_ke_va[pl]["table"]); pr)
+            fe_na = _name(pl, BioLab.DataFrame.make(pl_ke_va[pl]["table"]))
 
             fe_x_sa_x_nu[!, 1] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, 1]]
-
-            n_fe = size(fe_x_sa_x_nu, 1)
-
-            BioLab.check_print(
-                pr,
-                "Renamed $(n_fe - count(startswith('_'), fe_x_sa_x_nu[!, 1])) / $n_fe.",
-            )
 
         else
 
             @warn "$pl table is empty."
-
-        end
-
-        if pr
-
-            println("($id) $pl")
-
-            BioLab.Matrix.print(fe_x_sa_x_nu)
 
         end
 

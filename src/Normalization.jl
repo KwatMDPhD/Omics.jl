@@ -10,7 +10,7 @@ function normalize_with_01!(te)
 
     if iszero(ra)
 
-        error("Can not 0-1-normalize numbers that are all equal.")
+        error()
 
     end
 
@@ -30,7 +30,7 @@ function normalize_with_0!(te)
 
     if iszero(st)
 
-        error("Can not -0-normalize numbers with 0 standard deviation.")
+        error()
 
     end
 
@@ -46,7 +46,7 @@ function normalize_with_sum!(te)
 
     if any(nu < 0 for nu in te)
 
-        error("Can not sum-normalize numbers with any negative.")
+        error()
 
     end
 
@@ -64,7 +64,7 @@ function _normalize_with_rank!(te, fu)
 
     if allequal(te)
 
-        error("Can not rank-normalize numbers that are all equal.")
+        error()
 
     end
 

@@ -18,7 +18,7 @@ BioLab.Path.reset(te)
 
 # ---- #
 
-@test @is_error BioLab.Plot._make_color_scheme(("#000000",)) false
+@test @is_error BioLab.Plot._make_color_scheme(("#000000",))
 
 # ---- #
 

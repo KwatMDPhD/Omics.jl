@@ -6,7 +6,7 @@ include("environment.jl")
 
 for nu_ in (fill(0, 10), fill(1, 10))
 
-    # TODO: `@test`.
+    # TODO: Test.
     BioLab.Information.get_entropy(nu_)
 
 end
@@ -42,7 +42,7 @@ for (nu1_, nu2_) in ar_
         BioLab.Information.get_thermodynamic_depth,
     )
 
-        # TODO: `@test`.
+        # TODO: Test.
         re_ = map(fu, nu1_, nu2_)
 
         BioLab.Plot.plot_scatter(
@@ -66,7 +66,7 @@ for (nu1_, nu2_) in ar_
 
         nu3_ = (nu1_ + nu2_) / 2
 
-        # TODO: `@test`.
+        # TODO: Test.
         re_ = map(fu, nu1_, nu2_, nu3_)
 
         BioLab.Plot.plot_scatter(

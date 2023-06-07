@@ -20,34 +20,7 @@ function __init__()
 
 end
 
-function print_header(st)
-
-    println('●'^99)
-
-    println(st)
-
-    println('◦'^99)
-
-end
-
-function print_header()
-
-    println('❀'^99)
-
-end
-
-function check_print(pr, ar...)
-
-    if pr
-
-        println(ar...)
-
-    end
-
-end
-
-
-macro is_error(ex, pr = true)
+macro is_error(ex)
 
     quote
 
@@ -57,9 +30,7 @@ macro is_error(ex, pr = true)
 
             false
 
-        catch er
-
-            check_print($pr, er)
+        catch
 
             true
 

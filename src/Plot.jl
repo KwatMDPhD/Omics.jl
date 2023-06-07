@@ -20,7 +20,7 @@ function _make_color_scheme(he_)
 
     if length(he_) < 2
 
-        error("ColorSchemes should have more than two colors.")
+        error()
 
     end
 

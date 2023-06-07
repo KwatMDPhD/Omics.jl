@@ -6,8 +6,6 @@ function print(ro_x_co_x_an; n_ro = 3, n_co = 3)
 
     sir, sic = size(ro_x_co_x_an)
 
-    BioLab.print_header("$sir x $sic")
-
     if sir <= n_ro
 
         idr___ = (1:sir,)

@@ -192,8 +192,6 @@ function make(
 
     n_fe = length(fe_)
 
-    BioLab.check_print(pl, "Matching $tan and $(BioLab.String.count_noun(n_fe, fen))")
-
     # Sort samples.
 
     id_ = sortperm(ta_; rev)
@@ -206,16 +204,9 @@ function make(
 
     # Get statistics.
 
-    BioLab.check_print(pl, "Scoring with $fu")
-
     sc_ = [fu(ta_, nu_) for nu_ in eachrow(fe_x_sa_x_nu)]
 
     if 0 < n_ma
-
-        BioLab.check_print(
-            pl,
-            "Computing margin of error with $(BioLab.String.count_noun(n_ma, "sampling"))",
-        )
 
         n_sa = length(sa_)
 
@@ -251,11 +242,6 @@ function make(
 
     if 0 < n_pv
 
-        BioLab.check_print(
-            pl,
-            "Computing p-values with $(BioLab.String.count_noun(n_pv, "permutation"))",
-        )
-
         co = copy(ta_)
 
         ra_ = Vector{Float64}(undef, n_fe * n_pv)
@@ -284,7 +270,11 @@ function make(
 
     ba_ = map(isnan, sc_)
 
-    BioLab.check_print(pl, "Number of bad scores = $(sum(ba_)).")
+    if any(ba_)
+
+        @warn "Number of bad scores = $(sum(n_ba))."
+
+    end
 
     feature_x_statistic_x_number = BioLab.DataFrame.make(
         fen,
@@ -328,8 +318,6 @@ function make(
 
         if ta_ isa AbstractVector{Int}
 
-            println("Clustering within groups")
-
             fu = BioLab.Clustering.Euclidean()
 
             id_ = Vector{Int}()
@@ -358,15 +346,11 @@ function make(
 
         tai, taa = _normalize!(tac_, st)
 
-        BioLab.check_print(pl, "$tan colors can range from $tai to $taa.")
-
         # Normalize features.
 
         fe_x_sa_x_nupc = copy(fe_x_sa_x_nup)
 
         fei, fea = _normalize!(fe_x_sa_x_nupc, st)
-
-        BioLab.check_print(pl, "$fen colors can range from $fei to $fea.")
 
         # Make layout.
 

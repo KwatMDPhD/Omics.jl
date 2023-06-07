@@ -63,13 +63,11 @@ end
 
 # ---- #
 
-@test BioLab.@is_error error("I Got a Woman") false
-
-# ---- #
-
 for na in readdir(@__DIR__)
 
     if !startswith(na, '_') && na != "runtests.jl"
+
+        @info "Testing $na"
 
         run(`julia --project $na`)
 
