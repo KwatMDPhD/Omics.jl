@@ -2,6 +2,92 @@ include("environment.jl")
 
 # ---- #
 
+for an_ in (
+    (1, 1),
+    [1, 1],
+    [1, 2, 2],
+    [1 1; 2 2],
+    [1 2; 1 2],
+    [1 2; 3 1],
+    [nothing, nothing],
+    [missing, missing],
+    [NaN, NaN],
+    [Inf, Inf],
+    [0.5, 1 / 2, 1 // 2],
+    ['a', 'b', 'b'],
+)
+
+    @test @is_error BioLab.Collection.error_duplicate(an_)
+
+end
+
+# ---- #
+
+for an_ in (
+    (),
+    (1, 2),
+    [],
+    [1, 2],
+    [1, 2, 3],
+    [1 2; 3 4],
+    [nothing, missing, NaN, -Inf, Inf, -0.0, 0.0],
+    [1.0, 2],
+    ['a', 'b', 'c'],
+    ['a', 'b', 'c', "c"],
+)
+
+    BioLab.Collection.error_duplicate(an_)
+
+end
+
+# ---- #
+
+for an_ in (
+    (1, 1),
+    [1, 1],
+    [1, 1, 1],
+    [1 1],
+    [1 1; 1 1],
+    [nothing, nothing],
+    [missing, missing],
+    [NaN, NaN],
+    [-Inf, -Inf],
+    [Inf, Inf],
+    ['a', 'a'],
+    ["a", "a"],
+)
+
+    @test @is_error BioLab.Collection.error_no_change(an_)
+
+end
+
+# ---- #
+
+for an_ in (
+    (),
+    (1, 2),
+    [],
+    [1, 2],
+    [1, 2, 3],
+    [1 2],
+    [1 1; 1 2],
+    [1.0, 2],
+    [nothing, missing],
+    [nothing, NaN],
+    [missing, NaN],
+    [-Inf, Inf],
+    [-0.0, 0.0],
+    ['a', 'b'],
+    ['a', "a"],
+)
+
+    BioLab.Collection.error_no_change(an_)
+
+end
+
+
+# ---- #
+
 for (n, n_ex) in ((0, 0), (0, 1), (1, 0))
 
     @test BioLab.Collection.get_extreme(n, n_ex) == Vector{Int}()

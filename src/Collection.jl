@@ -6,6 +6,44 @@ using StatsBase: countmap
 
 using ..BioLab
 
+function error_duplicate(an_)
+
+    if isempty(an_)
+
+        @warn "Collection is empty."
+
+        return
+
+    end
+
+    if !allunique(an_)
+
+        error(
+            "Collection has a duplicate. $(join(("$va $ke" for (ke, va) in count_sort(an_) if 1<va), ". ")).",
+        )
+
+    end
+
+end
+
+function error_no_change(an_)
+
+    if isempty(an_)
+
+        @warn "Collection is empty."
+
+        return
+
+    end
+
+    if allequal(an_)
+
+        error("Collection has only $(an_[1]).")
+
+    end
+
+end
+
 function count_sort(an_; rev = true)
 
     sort(countmap(an_); byvalue = true, rev)

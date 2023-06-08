@@ -32,7 +32,7 @@ macro is_error(ex)
 
         catch er
 
-            er
+            println(er.msg)
 
             true
 

@@ -2,7 +2,16 @@ include("environment.jl")
 
 # ---- #
 
-for ar_ in (([], ()), ([1, 2], [""]), ([3 4], ["a", "b"]))
+for ar_ in (
+    ([], [1]),
+    ([1], [2, 3]),
+    ([1, 2], [3 4]),
+    ([1 2], [3, 4]),
+    ([], [], [1]),
+    ([1], [2], [3, 4]),
+    ([1, 2], [3, 4], [5 6]),
+    ([1 2], [3 4], [5, 6]),
+)
 
     @test @is_error BioLab.Array.error_size_difference(ar_)
 
@@ -10,24 +19,17 @@ end
 
 # ---- #
 
-for ar_ in (([], []), ([1, 2], ["", "a"]), ([3, 4], ["b", "c"], ['d', 'e']), ([], [], []))
+for ar_ in (
+    ([], []),
+    ([1], [2]),
+    ([1, 2], [3, 4]),
+    ([1 2], [3 4]),
+    ([], [], []),
+    ([1], [2], [3]),
+    ([1, 2], [3, 4], [5, 6]),
+    ([1 2], [3 4], [5 6]),
+)
 
     BioLab.Array.error_size_difference(ar_)
-
-end
-
-# ---- #
-
-for an_ in ([1.0, 1, 2.0], [1 1 2], ["a", "a", "b"], [1 2.0; 2 3])
-
-    @test @is_error BioLab.Array.error_duplicate(an_)
-
-end
-
-# ---- #
-
-for an_ in ((), [], [1, 2, 3], ['a', 'b', 'c'], [1 2; 3 4])
-
-    BioLab.Array.error_duplicate(an_)
 
 end

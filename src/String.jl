@@ -1,6 +1,20 @@
 module String
 
+using Printf: @sprintf
+
 using ..BioLab
+
+function format(nu)
+
+    if isequal(nu, -0.0)
+
+        nu = 0
+
+    end
+
+    @sprintf "%.4g" nu
+
+end
 
 function limit(st, n)
 

@@ -1,30 +1,12 @@
 module Array
 
-function error_duplicate(ar)
-
-    if !allunique(ar)
-
-        error("Array has a duplicate. $(BioLab.Collection.count_sort(ar)).")
-
-    end
-
-end
-
-function error_no_change(ar)
-
-    if allequal(ar)
-
-        error("Array has only $(ar[1]).")
-
-    end
-
-end
+using ..BioLab
 
 function error_size_difference(ar_)
 
     n = length(ar_)
 
-    if n == 1
+    if n < 2
 
         @warn "There are no arrays to compare."
 

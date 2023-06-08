@@ -1,19 +1,5 @@
 module Number
 
-using Printf: @sprintf
-
-function format(nu)
-
-    if isequal(nu, -0.0)
-
-        nu = 0
-
-    end
-
-    @sprintf "%.4g" nu
-
-end
-
 function rank_in_fraction(ra)
 
     fr = 0

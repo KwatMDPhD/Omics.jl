@@ -4,9 +4,9 @@ using StatsBase: competerank, denserank, mean, ordinalrank, std, tiedrank
 
 using ..BioLab
 
-function error_negative(te)
+function error_negative(ar)
 
-    if any(nu < 0 for nu in te)
+    if any(nu < 0 for nu in ar)
 
         error("There is a negative.")
 
@@ -15,85 +15,85 @@ function error_negative(te)
 end
 
 
-function normalize_with_01!(te)
+function normalize_with_01!(ar)
 
-    BioLab.Array.error_no_change(te)
+    BioLab.Collection.error_no_change(ar)
 
-    mi = minimum(te)
+    mi = minimum(ar)
 
-    ra = maximum(te) - mi
+    ra = maximum(ar) - mi
 
-    for (id, nu) in enumerate(te)
+    for (id, nu) in enumerate(ar)
 
-        te[id] = (nu - mi) / ra
-
-    end
-
-end
-
-function normalize_with_0!(te)
-
-    BioLab.Array.error_no_change(te)
-
-    me = mean(te)
-
-    st = std(te)
-
-    for (id, nu) in enumerate(te)
-
-        te[id] = (nu - me) / st
+        ar[id] = (nu - mi) / ra
 
     end
 
 end
 
-function normalize_with_sum!(te)
+function normalize_with_0!(ar)
 
-    error_negative(te)
+    BioLab.Collection.error_no_change(ar)
 
-    su = sum(te)
+    me = mean(ar)
 
-    for (id, nu) in enumerate(te)
+    st = std(ar)
 
-        te[id] = nu / su
+    for (id, nu) in enumerate(ar)
 
-    end
-
-end
-
-function _normalize_with_rank!(te, fu)
-
-    BioLab.Array.error_no_change(te)
-
-    for (id, nu) in enumerate(fu(te))
-
-        te[id] = nu
+        ar[id] = (nu - me) / st
 
     end
 
 end
 
-function normalize_with_1234!(te)
+function normalize_with_sum!(ar)
 
-    _normalize_with_rank!(te, ordinalrank)
+    error_negative(ar)
 
-end
+    su = sum(ar)
 
-function normalize_with_1223!(te)
+    for (id, nu) in enumerate(ar)
 
-    _normalize_with_rank!(te, denserank)
+        ar[id] = nu / su
 
-end
-
-function normalize_with_1224!(te)
-
-    _normalize_with_rank!(te, competerank)
+    end
 
 end
 
-function normalize_with_125254!(te)
+function _normalize_with_rank!(ar, fu)
 
-    _normalize_with_rank!(te, tiedrank)
+    BioLab.Collection.error_no_change(ar)
+
+    for (id, nu) in enumerate(fu(ar))
+
+        ar[id] = nu
+
+    end
+
+end
+
+function normalize_with_1234!(ar)
+
+    _normalize_with_rank!(ar, ordinalrank)
+
+end
+
+function normalize_with_1223!(ar)
+
+    _normalize_with_rank!(ar, denserank)
+
+end
+
+function normalize_with_1224!(ar)
+
+    _normalize_with_rank!(ar, competerank)
+
+end
+
+function normalize_with_125254!(ar)
+
+    _normalize_with_rank!(ar, tiedrank)
 
 end
 

@@ -18,7 +18,7 @@ const COPLA = plasma
 
 function _make_color_scheme(he_)
 
-    BioLab.Array.error_no_change(he_)
+    BioLab.Collection.error_no_change(he_)
 
     ColorScheme([parse(Colorant{Float64}, he) for he in he_])
 
