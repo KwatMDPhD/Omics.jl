@@ -1,8 +1,19 @@
-module Normalization
+module NumberArray
 
 using StatsBase: competerank, denserank, mean, ordinalrank, std, tiedrank
 
 using ..BioLab
+
+function error_negative(te)
+
+    if any(nu < 0 for nu in te)
+
+        error("There is a negative.")
+
+    end
+
+end
+
 
 function normalize_with_01!(te)
 
@@ -38,11 +49,7 @@ end
 
 function normalize_with_sum!(te)
 
-    if any(nu < 0 for nu in te)
-
-        error("There is a negative.")
-
-    end
+    error_negative(te)
 
     su = sum(te)
 

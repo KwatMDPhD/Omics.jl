@@ -133,11 +133,11 @@ function _name(pl, fe_x_io_x_an)
 
     elseif pli in (7566, 7567)
 
-        error("$pli is a bad platform; avoid it.")
+        error("$pli is a bad platform. Avoid it.")
 
     else
 
-        error("$pli is a new platform; implement it.")
+        error("$pli is a new platform. Implement it.")
 
     end
 

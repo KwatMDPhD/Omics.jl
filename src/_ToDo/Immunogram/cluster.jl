@@ -49,7 +49,7 @@ end
 
 # TODO: Understand the effect of normalization.
 
-BioLab.Matrix.apply_by_row!(BioLab.Normalization.normalize_with_0!, fe_x_sa_x_nu)
+BioLab.Matrix.apply_by_row!(BioLab.NumberArray.normalize_with_0!, fe_x_sa_x_nu)
 
 fe_x_sa_x_nu .-= minimum(fe_x_sa_x_nu) - 2.0
 

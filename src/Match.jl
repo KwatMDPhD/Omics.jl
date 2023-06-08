@@ -12,7 +12,7 @@ using ..BioLab
 
 function _normalize!(fl_::AbstractVector{Float64}, st)
 
-    BioLab.Normalization.normalize_with_0!(fl_)
+    BioLab.NumberArray.normalize_with_0!(fl_)
 
     clamp!(fl_, -st, st)
 
@@ -272,7 +272,7 @@ function make(
 
     if any(ba_)
 
-        @warn "Score has $(BioLab.String.count(sum(n_ba), "bad value"))."
+        @warn "Found $(BioLab.String.count(sum(n_ba), "bad value"))."
 
     end
 

@@ -6,7 +6,7 @@ nu___ = ([0.0, 1, 2], [-1, 0, 1 / 3, 1])
 
 # ---- #
 
-@test @is_error BioLab.Normalization.normalize_with_01!([1, 1])
+@test @is_error BioLab.NumberArray.normalize_with_01!([1, 1])
 
 # ---- #
 
@@ -14,18 +14,18 @@ for (nu_, re) in zip(nu___, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1]))
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_01!(co)
+    BioLab.NumberArray.normalize_with_01!(co)
 
     @test co == re
 
     # 
-    # @btime BioLab.Normalization.normalize_with_01!(co) setup = (co = copy($nu_))
+    # @btime BioLab.NumberArray.normalize_with_01!(co) setup = (co = copy($nu_))
 
 end
 
 # ---- #
 
-@test @is_error BioLab.Normalization.normalize_with_0!([1, 1])
+@test @is_error BioLab.NumberArray.normalize_with_0!([1, 1])
 
 # ---- #
 
@@ -33,18 +33,18 @@ for (nu_, re) in zip(nu___, ([-1, 0, 1], [-1.3, -0.09999999999999999, 0.30000000
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_0!(co)
+    BioLab.NumberArray.normalize_with_0!(co)
 
     @test co == re
 
     # 
-    # @btime BioLab.Normalization.normalize_with_0!(co) setup = (co = copy($nu_))
+    # @btime BioLab.NumberArray.normalize_with_0!(co) setup = (co = copy($nu_))
 
 end
 
 # ---- #
 
-@test @is_error BioLab.Normalization.normalize_with_sum!([-1, 1])
+@test @is_error BioLab.NumberArray.normalize_with_sum!([-1, 1])
 
 # ---- #
 
@@ -52,12 +52,12 @@ for (nu_, re) in zip(nu___[1:(end - 1)], ([0, 0.3333333333333333, 0.666666666666
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_sum!(co)
+    BioLab.NumberArray.normalize_with_sum!(co)
 
     @test co == re
 
     # 
-    # @btime BioLab.Normalization.normalize_with_sum!(co) setup = (co = copy($nu_))
+    # @btime BioLab.NumberArray.normalize_with_sum!(co) setup = (co = copy($nu_))
 
 end
 
@@ -71,12 +71,12 @@ for (nu_, re) in zip(nu___, ([1, 2, 3, 4, 5, 6, 7],))
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_1234!(co)
+    BioLab.NumberArray.normalize_with_1234!(co)
 
     @test co == re
 
     # 
-    # @btime BioLab.Normalization.normalize_with_1234!(co) setup = (co = copy($nu_))
+    # @btime BioLab.NumberArray.normalize_with_1234!(co) setup = (co = copy($nu_))
 
 end
 
@@ -86,12 +86,12 @@ for (nu_, re) in zip(nu___, ([1, 2, 2, 3, 3, 3, 4],))
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_1223!(co)
+    BioLab.NumberArray.normalize_with_1223!(co)
 
     @test co == re
 
     # 
-    # @btime BioLab.Normalization.normalize_with_1223!(co) setup = (co = copy($nu_))
+    # @btime BioLab.NumberArray.normalize_with_1223!(co) setup = (co = copy($nu_))
 
 end
 
@@ -101,12 +101,12 @@ for (nu_, re) in zip(nu___, ([1, 2, 2, 4, 4, 4, 7],))
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_1224!(co)
+    BioLab.NumberArray.normalize_with_1224!(co)
 
     @test co == re
 
     # 
-    # @btime BioLab.Normalization.normalize_with_1224!(co) setup = (co = copy($nu_))
+    # @btime BioLab.NumberArray.normalize_with_1224!(co) setup = (co = copy($nu_))
 
 end
 
@@ -116,25 +116,25 @@ for (nu_, re) in zip(nu___, ([1, 2.5, 2.5, 5, 5, 5, 7],))
 
     co = convert(Vector{Float64}, nu_)
 
-    BioLab.Normalization.normalize_with_125254!(co)
+    BioLab.NumberArray.normalize_with_125254!(co)
 
     @test co == re
 
     # 
-    # @btime BioLab.Normalization.normalize_with_125254!(co) setup = (co = copy($nu_))
+    # @btime BioLab.NumberArray.normalize_with_125254!(co) setup = (co = copy($nu_))
 
 end
 
 # ---- #
 
 no!_ = (
-    BioLab.Normalization.normalize_with_01!,
-    BioLab.Normalization.normalize_with_0!,
-    BioLab.Normalization.normalize_with_sum!,
-    BioLab.Normalization.normalize_with_1234!,
-    BioLab.Normalization.normalize_with_1223!,
-    BioLab.Normalization.normalize_with_1224!,
-    BioLab.Normalization.normalize_with_125254!,
+    BioLab.NumberArray.normalize_with_01!,
+    BioLab.NumberArray.normalize_with_0!,
+    BioLab.NumberArray.normalize_with_sum!,
+    BioLab.NumberArray.normalize_with_1234!,
+    BioLab.NumberArray.normalize_with_1223!,
+    BioLab.NumberArray.normalize_with_1224!,
+    BioLab.NumberArray.normalize_with_125254!,
 )
 
 # ---- #

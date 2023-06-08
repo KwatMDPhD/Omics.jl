@@ -12,7 +12,7 @@ function error_missing(pa)
 
     if !ispath(pa)
 
-        error("$pa does not exist.")
+        error("$pa is missing.")
 
     end
 
@@ -20,11 +20,11 @@ end
 
 function error_extension_difference(pa, ex)
 
-    ex2 = splitext(pa)[2]
+    pae = splitext(pa)[2][2:end]
 
-    if ex2 != ex
+    if pae != ex
 
-        error("$ex2 != $ex.")
+        error("Extensions differ. $pae != $ex.")
 
     end
 

@@ -62,7 +62,7 @@ function plot(
 
         else
 
-            error("Can not write $ex.")
+            error("Can not write a $ex.")
 
         end
 

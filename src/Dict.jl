@@ -132,19 +132,19 @@ end
 
 function read(pa::AbstractString)
 
-    ex = splitext(pa)[2]
+    ex = splitext(pa)[2][2:end]
 
-    if ex in (".json", ".ipynb")
+    if ex in ("json", "ipynb")
 
         parse(open(pa))
 
-    elseif ex == ".toml"
+    elseif ex == "toml"
 
         parsefile(pa)
 
     else
 
-        error("Can not read $ex.")
+        error("Can not read a $ex.")
 
     end
 

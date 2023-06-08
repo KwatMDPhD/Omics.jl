@@ -332,7 +332,7 @@ function plot(;
 
         co = copy(he_)
 
-        BioLab.Normalization.normalize_with_01!(co)
+        BioLab.NumberArray.normalize_with_01!(co)
 
         append!(
             st_,

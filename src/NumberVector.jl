@@ -1,4 +1,4 @@
-module VectorNumber
+module NumberVector
 
 using Distributions: Normal
 

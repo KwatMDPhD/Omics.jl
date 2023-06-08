@@ -108,7 +108,7 @@ no_x_sa_x_po = [abs(an) for an in no_x_sa_x_an]
 n_ = 3:5
 
 fu = BioLab.MatrixFactorization._do_not_normalize
-# fu = BioLab.Normalization.normalize_with_0!
+# fu = BioLab.NumberArray.normalize_with_0!
 
 nac = "Factor"
 
@@ -144,7 +144,7 @@ for n in n_
 
             he_ = no_x_fa_x_po[:, id]
 
-        elseif fu == BioLab.Normalization.normalize_with_0!
+        elseif fu == BioLab.NumberArray.normalize_with_0!
 
             he_ = [convert(Float64, fa == id) for fa in nof_]
 

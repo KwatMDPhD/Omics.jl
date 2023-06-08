@@ -103,7 +103,7 @@ function compare_match(ts1, ts2, ou)
 
     op_ = [sqrt(nu1^2 + nu2^2) for (nu1, nu2) in zip(nu1_, nu2_)]
 
-    BioLab.Normalization.normalize_with_01!(op_)
+    BioLab.NumberArray.normalize_with_01!(op_)
 
     na1 = basename(dirname(ts1))
 
