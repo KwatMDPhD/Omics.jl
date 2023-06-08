@@ -2,6 +2,10 @@ include("environment.jl")
 
 # ---- #
 
+fu = BioLab.Clustering.CorrDist()
+
+# ---- #
+
 ma = [
     0 0 0 0.1
     1 2 1 2
@@ -14,8 +18,7 @@ ma = [
 
 @test BioLab.Clustering.hierarchize(ma, 1).order == [4, 1, 2, 3, 7, 5, 6]
 
-@test BioLab.Clustering.hierarchize(ma, 1; fu = BioLab.Clustering.CorrDist()).order ==
-      [3, 6, 2, 5, 7, 1, 4]
+@test BioLab.Clustering.hierarchize(ma, 1; fu).order == [3, 6, 2, 5, 7, 1, 4]
 
 @test BioLab.Clustering.hierarchize(ma, 2).order == [1, 3, 2, 4]
 
@@ -34,7 +37,6 @@ ma = [
     30 30 30 30.1
 ]
 
-fu = BioLab.Clustering.CorrDist()
 
 for (k, gr_) in (
     (1, [1, 1, 1, 1, 1, 1, 1]),

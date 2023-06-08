@@ -1,7 +1,5 @@
 module Array
 
-using ..BioLab
-
 function error_size_difference(ar_)
 
     n = length(ar_)
