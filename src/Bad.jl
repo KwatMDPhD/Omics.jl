@@ -1,42 +1,32 @@
 module Bad
 
-# TODO: Consider removing.
+function is_bad(::Nothing)
 
-function _get_bad(::Any)
-
-    ()
+    true
 
 end
 
-function _get_bad(::Type{Float64})
+function is_bad(::Missing)
 
-    (-Inf, Inf, NaN)
-
-end
-
-function _get_bad(::Type{<:AbstractString})
-
-    ("",)
+    true
 
 end
 
-function error_bad_type(an, ty)
+function is_bad(fl::Float64)
 
-    if !(an isa ty)
+    !isfinite(fl) || isequal(fl, -0.0)
 
-        error("$an is not a $ty.")
+end
 
-    end
+function is_bad(st::AbstractString)
 
-    for ba in _get_bad(ty)
+    contains(st, r"^\s*$")
 
-        if isequal(an, ba)
+end
 
-            error("$an is a bad $ty.")
+function is_bad(::Any)
 
-        end
-
-    end
+    false
 
 end
 

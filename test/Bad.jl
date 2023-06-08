@@ -2,33 +2,16 @@ include("environment.jl")
 
 # ---- #
 
-for (ty, re) in ((Float64, (-Inf, Inf, NaN)), (String, ("",)))
+for an in (nothing, missing, NaN, -Inf, Inf, -0.0, "", " ", "  ")
 
-    @test isequal(BioLab.Bad._get_bad(ty), re)
-
-end
-
-# ---- #
-
-for (an, ty) in (
-    (nothing, Float64),
-    (missing, Float64),
-    (1, Float64),
-    (-Inf, Float64),
-    (Inf, Float64),
-    (NaN, Float64),
-    ('a', String),
-    ("", String),
-)
-
-    @test @is_error BioLab.Bad.error_bad_type(an, ty)
+    @test BioLab.Bad.is_bad(an)
 
 end
 
 # ---- #
 
-for (an, ty) in ((1.0, Float64), ("a", String), (0, Int))
+for an in (0.0, 1.0, " a ", 1, 'a')
 
-    BioLab.Bad.error_bad_type(an, ty)
+    @test !BioLab.Bad.is_bad(an)
 
 end
