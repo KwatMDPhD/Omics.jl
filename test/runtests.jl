@@ -16,36 +16,15 @@ Aqua.test_ambiguities(BioLab)
 
 sr = joinpath(dirname(@__DIR__), "src")
 
+mo_ = filter!(!startswith('_'), readdir(sr))
+
 # ---- #
 
-function is_jl(na)
+for mo in mo_
 
-    !startswith(na, '_') && endswith(na, ".jl")
+    @test splitext(mo)[1] == split(readline(joinpath(sr, mo)))[2]
 
 end
-
-@test symdiff(
-    (na for na in readdir(sr) if is_jl(na) && na != "BioLab.jl"),
-    (na for na in readdir(@__DIR__) if is_jl(na) && na != "runtests.jl"),
-) == ["environment.jl"]
-
-# ---- #
-
-for na in readdir(sr)
-
-    if !startswith(na, '_')
-
-        @test splitext(na)[1] == split(readline(joinpath(sr, na)))[2]
-
-    end
-
-end
-
-# ---- #
-
-@test isconst(BioLab, :CA_)
-
-@test BioLab.CA_ == ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
 
 # ---- #
 
@@ -59,17 +38,31 @@ end
 
 # ---- #
 
+@test isconst(BioLab, :CA_)
+
+@test BioLab.CA_ == ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
+
+# ---- #
+
 @test BioLab.@is_error error("Amen")
 
 # ---- #
 
-for na in readdir(@__DIR__)
+te_ = filter!(!startswith('_'), readdir(@__DIR__))
 
-    if !startswith(na, '_') && na != "runtests.jl"
+# ---- #
 
-        @info "Testing $na"
+@test symdiff(mo_, te_) == ["BioLab.jl", "environment.jl", "runtests.jl"]
 
-        run(`julia --project $na`)
+# ---- #
+
+for te in te_
+
+    if te != "runtests.jl"
+
+        @info "Testing $te"
+
+        run(`julia --project $te`)
 
     end
 
