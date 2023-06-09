@@ -1,10 +1,6 @@
 module Collection
 
-using OrderedCollections: OrderedDict
-
 using StatsBase: countmap
-
-using ..BioLab
 
 function error_duplicate(an_)
 
@@ -188,7 +184,7 @@ function sort_recursively(co)
 
     elseif co isa AbstractDict
 
-        co = sort!(OrderedDict(ke => sort_recursively(va) for (ke, va) in co))
+        co = sort(Dict(ke => sort_recursively(va) for (ke, va) in co))
 
     end
 

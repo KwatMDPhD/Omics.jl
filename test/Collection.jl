@@ -1,3 +1,5 @@
+using OrderedCollections
+
 include("environment.jl")
 
 # ---- #
@@ -85,6 +87,16 @@ for an_ in (
 
 end
 
+# ---- #
+
+for (an_, re) in (
+    ((1, 2, 2, 3, 3, 3, 4), sort(Dict(1 => 1, 2 => 2, 3 => 3, 4 => 1))),
+    (('a', 'b', 'b', 'c', 'c', 'c', 'd'), sort(Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 1))),
+)
+
+    @test BioLab.Collection.count_sort(an_) == re
+
+end
 
 # ---- #
 
@@ -140,6 +152,10 @@ an1_ = ['1', '2', 'K']
 @test BioLab.Collection.is_in(Dict('A' => 5, '2' => 4, '3' => 3, 'Q' => 2, 'K' => 1), an1_) ==
       [true, false, false, true, false]
 
+@test BioLab.Collection.is_in(BioLab.CA_, an1_) ==
+      BioLab.Collection.is_in(BioLab.CA_, Set(an1_)) ==
+      BioLab.Collection.is_in(Dict(ca => id for (id, ca) in enumerate(BioLab.CA_)), an1_)
+
 # ---- #
 
 di = joinpath(DA, "FeatureSetEnrichment")
@@ -148,48 +164,46 @@ da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 
 fe_ = reverse!(da[!, 1])
 
-sc_ = reverse!(da[!, 2])
-
 fe1_ = BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 # ---- #
 
-# 462.167 μs (2 allocations: 19.67 KiB)
+# 454.167 μs (2 allocations: 19.67 KiB)
 # @btime BioLab.Collection.is_in($fe_, $(Set(fe1_)));
 
 # ---- #
 
-# 743.000 μs (2 allocations: 19.67 KiB)
+# 740.875 μs (2 allocations: 19.67 KiB)
 # @btime BioLab.Collection.is_in($fe_, $fe1_);
 
 # ---- #
 
-# 620.066 ns (2 allocations: 19.67 KiB)
+# 616.616 ns (2 allocations: 19.67 KiB)
 # @btime BioLab.Collection.is_in($(Dict(fe => id for (id, fe) in enumerate(fe_))), $fe1_);
 
 # ---- #
 
-an_ = ("Aa", "Ii", "Uu", "Ee", "Oo")
-
-@test BioLab.Collection.index(an_) == (
+@test BioLab.Collection.index(("Aa", "Ii", "Uu", "Ee", "Oo")) == (
     Dict("Aa" => 1, "Ii" => 2, "Uu" => 3, "Ee" => 4, "Oo" => 5),
     Dict(1 => "Aa", 2 => "Ii", 3 => "Uu", 4 => "Ee", 5 => "Oo"),
 )
 
 # ---- #
 
-for (an_, re) in (
-    (((), ()), ()),
-    ((Vector{Int}(), Vector{Int}()), Vector{Int}()),
-    (((1,), (1, 2)), (1,)),
-    (((1.0,), (1.0, 2.0)), (1.0,)),
-    ((('a', 'b'), ('a',)), ('a',)),
-    ((("a", "b"), ("a",)), ("a",)),
-    (((1, 2, 3), (1, 4, 5)), (1,)),
-    (("aiueo", "aiue", "aiu"), "aiu"),
+for (ar_, re) in (
+    ((1, 2), Int),
+    ((1.0, 2.0), Float64),
+    ((1, 2.0), Float64),
+    (('a', 'b'), Char),
+    (("Aa", "Bb"), String),
+    (('a', "Aa"), Any),
+    (([], []), Any),
+    ((Int[], []), Any),
+    ((Float64[], []), Any),
+    ((Int[], Float64[]), Float64),
 )
 
-    @test BioLab.Collection.get_common_start(an_) == re
+    @test BioLab.Collection.get_type(ar_) == re
 
 end
 
@@ -217,26 +231,7 @@ end
 
 # ---- #
 
-for (ar_, re) in (
-    ((1, 2), Int),
-    ((3.0, 4.0), Float64),
-    ((5, 6.0), Float64),
-    (('a', 'b'), Char),
-    (("Cc", "Dd"), String),
-    (('e', "Ff"), Any),
-    (([], []), Any),
-    ((Int[], []), Any),
-    ((Float64[], []), Any),
-    ((Float64[], Int[]), Float64),
-)
-
-    @test BioLab.Collection.get_type(ar_) == re
-
-end
-
-# ---- #
-
-BioLab.Collection.sort_recursively(
+@test BioLab.Collection.sort_recursively(
     Dict(
         "8ved" => [Dict("e2" => 4, "e1" => 3), Dict("e2" => 6, "e1" => 5)],
         "7tuhd" => (2, 3, 1, Dict("d2" => 2, "d1" => 1)),
@@ -247,4 +242,13 @@ BioLab.Collection.sort_recursively(
         "2tu" => (2, 3, 1),
         "1ve" => [2, 3, 1],
     ),
+) == OrderedDict(
+    "1ve" => [1, 2, 3],
+    "2tu" => (2, 3, 1),
+    "3di" => OrderedDict(),
+    "4di" => OrderedDict("a" => 3, "b" => 2, "c" => 1),
+    "5veh" => [1, "a"],
+    "6vehd" => [1, 2, 3, OrderedDict("d1" => 1, "d2" => 2)],
+    "7tuhd" => (2, 3, 1, Dict("d1" => 1, "d2" => 2)),
+    "8ved" => [OrderedDict("e1" => 3, "e2" => 4), OrderedDict("e1" => 5, "e2" => 6)],
 )
