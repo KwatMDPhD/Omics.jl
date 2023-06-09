@@ -160,9 +160,7 @@ an1_ = ['1', '2', 'K']
 
 di = joinpath(DA, "FeatureSetEnrichment")
 
-da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
-
-fe_ = reverse!(da[!, 1])
+fe_ = reverse!(BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))[!, 1])
 
 fe1_ = BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
@@ -233,22 +231,22 @@ end
 
 @test BioLab.Collection.sort_recursively(
     Dict(
-        "8ved" => [Dict("e2" => 4, "e1" => 3), Dict("e2" => 6, "e1" => 5)],
-        "7tuhd" => (2, 3, 1, Dict("d2" => 2, "d1" => 1)),
-        "6vehd" => [2, 3, 1, Dict("d2" => 2, "d1" => 1)],
-        "5veh" => [1, "a"],
-        "4di" => Dict("c" => 1, "b" => 2, "a" => 3),
-        "3di" => Dict(),
-        "2tu" => (2, 3, 1),
-        "1ve" => [2, 3, 1],
+        8 => [Dict('a' => 2, 'b' => 1), Dict("b" => 1, "a" => 2)],
+        7 => (3, 2, 1, Dict('b' => 1, 'a' => 2)),
+        6 => [3, 2, 1, Dict('b' => 1, 'a' => 2)],
+        5 => [1, 'a'],
+        4 => Dict('c' => 1, 'b' => 2, 'a' => 3),
+        3 => Dict(),
+        2 => (3, 2, 1),
+        1 => [3, 2, 1],
     ),
 ) == OrderedDict(
-    "1ve" => [1, 2, 3],
-    "2tu" => (2, 3, 1),
-    "3di" => OrderedDict(),
-    "4di" => OrderedDict("a" => 3, "b" => 2, "c" => 1),
-    "5veh" => [1, "a"],
-    "6vehd" => [1, 2, 3, OrderedDict("d1" => 1, "d2" => 2)],
-    "7tuhd" => (2, 3, 1, Dict("d1" => 1, "d2" => 2)),
-    "8ved" => [OrderedDict("e1" => 3, "e2" => 4), OrderedDict("e1" => 5, "e2" => 6)],
+    1 => [1, 2, 3],
+    2 => (3, 2, 1),
+    3 => OrderedDict(),
+    4 => OrderedDict('a' => 3, 'b' => 2, 'c' => 1),
+    5 => [1, 'a'],
+    6 => [1, 2, 3, OrderedDict('a' => 2, 'b' => 1)],
+    7 => (3, 2, 1, Dict('a' => 2, 'b' => 1)),
+    8 => [OrderedDict('a' => 2, 'b' => 1), OrderedDict("a" => 2, "b" => 1)],
 )

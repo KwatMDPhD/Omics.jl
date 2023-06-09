@@ -18,7 +18,6 @@ function make(an___)
 
 end
 
-# TODO: Test.
 function make(st::AbstractString)
 
     make([split(li, '\t') for li in split(st, "\n")])
@@ -95,59 +94,6 @@ function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
     @info "Size after is $(size(collapsed_x_column_x_anything))."
 
     collapsed_x_column_x_anything
-
-end
-
-function map_to(row_x_column_x_anything, fu!, fr_, to; de = "")
-
-    row_x_from_x_anything = row_x_column_x_anything[!, fr_]
-
-    to_ = row_x_column_x_anything[!, to]
-
-    fr_to = Dict{
-        typejoin((eltype(skipmissing(co)) for co in eachcol(row_x_from_x_anything))...),
-        eltype(skipmissing(to_)),
-    }()
-
-    for (fr_, to) in zip(eachrow(row_x_from_x_anything), to_)
-
-        if ismissing(to)
-
-            continue
-
-        end
-
-        fu!(fr_to, to, to)
-
-        for fr in fr_
-
-            if ismissing(fr)
-
-                continue
-
-            end
-
-            if isempty(de)
-
-                fr_ = [fr]
-
-            else
-
-                fr_ = split(fr, de)
-
-            end
-
-            for fr in fr_
-
-                fu!(fr_to, fr, to)
-
-            end
-
-        end
-
-    end
-
-    fr_to
 
 end
 

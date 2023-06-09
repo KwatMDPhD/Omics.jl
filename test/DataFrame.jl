@@ -4,15 +4,31 @@ include("environment.jl")
 
 # ---- #
 
-an___ = (
+da = DataFrame(
+    "Row Name" => ["Row $id" for id in 1:3],
+    "Column 1" => [1, 'A', ":)"],
+    "Column 2" => [2, 'B', ";)"],
+    "Column 3" => [3, 'C', ":D"],
+    "Column 4" => [4, 44, 444],
+    "Column 5" => [5.0, 55.0, 555.0],
+)
+
+# ---- #
+
+@test BioLab.DataFrame.make((
     vcat("Row Name", ["Column $id" for id in 1:5]),
     ["Row 1", 1, 2, 3, 4, 5.0],
     ["Row 2", 'A', 'B', 'C', 44, 55.0],
     ["Row 3", ":)", ";)", ":D", 444, 555.0],
-)
+)) == da
 
-# TODO: Test
-BioLab.DataFrame.make(an___)
+# ---- #
+
+@test BioLab.DataFrame.make("""
+                      Row Name\tColumn 1\tColumn 2\tColumn 3\tColumn 4\tColumn 5
+                      Row 1\t1\t2\t3\t4\t5.0
+                      Row 2\tA\tB\tC\t44\t55.0
+                      Row 3\t:)\t;)\t:D\t444\t555.0""") == string.(da)
 
 # ---- #
 
@@ -28,7 +44,9 @@ co_ = ["Column $id" for id in 1:n_co]
 
 ma = rand(n_ro, n_co)
 
-# TODO: Test
+# ---- #
+
+# @test
 row_x_column_x_anything = BioLab.DataFrame.make(ro, ro_, co_, ma)
 
 # ---- #
@@ -37,19 +55,14 @@ row_x_column_x_anything = BioLab.DataFrame.make(ro, ro_, co_, ma)
 
 # ---- #
 
-st = ":("
-
-BioLab.DataFrame.separate(row_x_column_x_anything)[2][1] = st
-
-@test row_x_column_x_anything[1, 1] != st
-
-# ---- #
-
 @test BioLab.DataFrame.separate(row_x_column_x_anything) isa
       Tuple{String, Vector{String}, Vector{String}, Matrix}
 
-# 2.245 μs (28 allocations: 2.09 KiB)
-# @btime BioLab.DataFrame.separate($row_x_column_x_anything)
+# ---- #
+
+BioLab.DataFrame.separate(row_x_column_x_anything)[2][1] = ":("
+
+@test row_x_column_x_anything[1, 1] == ro
 
 # ---- #
 
