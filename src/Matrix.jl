@@ -10,7 +10,7 @@ function make(an___)
 
     n_co = length(an___[1])
 
-    ro_x_co_x_an = Base.Matrix{BioLab.Collection.get_type(an___)}(undef, (n_ro, n_co))
+    ro_x_co_x_an = Base.Matrix{eltype(vcat(an___...))}(undef, (n_ro, n_co))
 
     for idr in 1:n_ro, idc in 1:n_co
 

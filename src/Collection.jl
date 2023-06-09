@@ -46,6 +46,26 @@ function count_sort(an_; rev = true)
 
 end
 
+function index(an_)
+
+    ty = eltype(an_)
+
+    an_id = Dict{ty, Int}()
+
+    id_an = Dict{Int, ty}()
+
+    for (id, an) in enumerate(an_)
+
+        an_id[an] = id
+
+        id_an[id] = an
+
+    end
+
+    an_id, id_an
+
+end
+
 function get_extreme(n::Int, n_ex)
 
     if n < n_ex
@@ -105,32 +125,6 @@ function is_in(an_id::AbstractDict, an1_)
     end
 
     bo_
-
-end
-
-function index(an_)
-
-    ty = eltype(an_)
-
-    an_id = Dict{ty, Int}()
-
-    id_an = Dict{Int, ty}()
-
-    for (id, an) in enumerate(an_)
-
-        an_id[an] = id
-
-        id_an[id] = an
-
-    end
-
-    an_id, id_an
-
-end
-
-function get_type(an___)
-
-    eltype(vcat(an___...))
 
 end
 

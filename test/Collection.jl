@@ -100,6 +100,13 @@ end
 
 # ---- #
 
+@test BioLab.Collection.index(("Aa", "Ii", "Uu", "Ee", "Oo")) == (
+    Dict("Aa" => 1, "Ii" => 2, "Uu" => 3, "Ee" => 4, "Oo" => 5),
+    Dict(1 => "Aa", 2 => "Ii", 3 => "Uu", 4 => "Ee", 5 => "Oo"),
+)
+
+# ---- #
+
 for (n, n_ex) in ((0, 0), (0, 1), (1, 0))
 
     @test BioLab.Collection.get_extreme(n, n_ex) == Vector{Int}()
@@ -178,32 +185,6 @@ fe1_ = BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARG
 
 # 616.616 ns (2 allocations: 19.67 KiB)
 # @btime BioLab.Collection.is_in($(Dict(fe => id for (id, fe) in enumerate(fe_))), $fe1_);
-
-# ---- #
-
-@test BioLab.Collection.index(("Aa", "Ii", "Uu", "Ee", "Oo")) == (
-    Dict("Aa" => 1, "Ii" => 2, "Uu" => 3, "Ee" => 4, "Oo" => 5),
-    Dict(1 => "Aa", 2 => "Ii", 3 => "Uu", 4 => "Ee", 5 => "Oo"),
-)
-
-# ---- #
-
-for (ar_, re) in (
-    ((1, 2), Int),
-    ((1.0, 2.0), Float64),
-    ((1, 2.0), Float64),
-    (('a', 'b'), Char),
-    (("Aa", "Bb"), String),
-    (('a', "Aa"), Any),
-    (([], []), Any),
-    ((Int[], []), Any),
-    ((Float64[], []), Any),
-    ((Int[], Float64[]), Float64),
-)
-
-    @test BioLab.Collection.get_type(ar_) == re
-
-end
 
 # ---- #
 

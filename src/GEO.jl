@@ -1,6 +1,6 @@
 module GEO
 
-using DataFrames: DataFrame, outerjoin, select!
+using DataFrames: DataFrame
 
 using GZip: open
 
@@ -83,7 +83,7 @@ function read(gs; di = BioLab.TE)
 
 end
 
-function _name(pl, fe_x_io_x_an)
+function _name(pl, feature_x_information_x_anything)
 
     pli = parse(Int, pl[4:end])
 
@@ -143,7 +143,8 @@ function _name(pl, fe_x_io_x_an)
 
     fe_na = Dict{String, String}()
 
-    for (fe, na) in zip(fe_x_io_x_an[!, ke], fe_x_io_x_an[!, va])
+    for (fe, na) in
+        zip(feature_x_information_x_anything[!, ke], feature_x_information_x_anything[!, va])
 
         if na isa AbstractString && !isempty(na) && na != "---"
 
@@ -157,17 +158,17 @@ function _name(pl, fe_x_io_x_an)
 
 end
 
-function _data_frame_outerjoin_select(co_va____, on)
+function _make_data_frame(fe_an__, sa_, ty)
 
-    if isempty(co_va____)
+    if isempty(fe_an__)
 
-        DataFrame()
-
-    else
-
-        select!(outerjoin((DataFrame(co_va_) for co_va_ in co_va____)...; on), on, :)
+        return DataFrame()
 
     end
+
+    fe_ = unique!(sort!(vcat((collect(keys(fe_an)) for fe_an in fe_an__)...)))
+
+    BioLab.DataFrame.make(ty, fe_, sa_, [get(fe_an, fe, missing) for fe in fe_, fe_an in fe_an__])
 
 end
 
@@ -175,15 +176,19 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl_ke_va["SAMPLE"]))
 
-    ch = "Characteristic"
+    n_sa = length(sa_ke_va)
+
+    sa_ = Vector{String}(undef, n_sa)
 
     de = ": "
 
-    co_st____ = Vector{Dict{String, Vector{String}}}()
+    ch_st__ = fill(Dict{String, String}(), n_sa)
 
-    pl_co_nu____ = Dict{String, Vector{Dict{String, Vector{Any}}}}()
+    pl_fe_fl__ = Dict{String, Vector{Dict{String, Float64}}}()
 
-    for (sa, ke_va) in sa_ke_va
+    for (id, (sa, ke_va)) in enumerate(sa_ke_va)
+
+        sa_[id] = sa
 
         ch_ = [
             va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics") &&
@@ -192,9 +197,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         if all(contains(ch, de) for ch in ch_)
 
-            sp_ = [split(ch, de; limit = 2) for ch in ch_]
-
-            push!(co_st____, Dict(ch => [sp[1] for sp in sp_], sa => [sp[2] for sp in sp_]))
+            ch_st__[id] = Dict(split(ch, de; limit = 2) for ch in ch_)
 
         else
 
@@ -202,21 +205,20 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         end
 
-        pl = ke_va["!Sample_platform_id"]
-
-        co_nu____ = get!(pl_co_nu____, pl, Vector{Dict{String, Vector{Any}}}())
-
         if haskey(ke_va, "table")
 
-            fe_x_io_x_an = BioLab.DataFrame.make(ke_va["table"])
+            feature_x_information_x_anything = BioLab.DataFrame.make(ke_va["table"])
 
-            push!(
-                co_nu____,
+            get!(pl_fe_fl__, ke_va["!Sample_platform_id"], fill(Dict{String, Float64}(), n_sa))[id] =
                 Dict(
-                    pl => fe_x_io_x_an[!, 1],
-                    sa => [parse(Float64, va) for va in fe_x_io_x_an[!, "VALUE"]],
-                ),
-            )
+                    zip(
+                        feature_x_information_x_anything[!, 1],
+                        map(
+                            st -> parse(Float64, st),
+                            feature_x_information_x_anything[!, "VALUE"],
+                        ),
+                    ),
+                )
 
         else
 
@@ -226,21 +228,22 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     end
 
-    ch_x_sa_x_an = _data_frame_outerjoin_select(co_st____, ch)
+    characteristic_x_sample_x_string = _make_data_frame(ch_st__, sa_, "Characteristic")
 
-    fe_x_sa_x_nu_____ = Vector{DataFrame}(undef, length(pl_co_nu____))
+    feature_x_sample_x_float_____ = Vector{DataFrame}(undef, length(pl_fe_fl__))
 
-    for (id, (pl, co_nu____)) in enumerate(pl_co_nu____)
+    for (id, (pl, fe_fl__)) in enumerate(pl_fe_fl__)
 
-        fe_x_sa_x_nu = _data_frame_outerjoin_select(co_nu____, pl)
+        feature_x_sample_x_float = _make_data_frame(fe_fl__, sa_, pl)
 
-        pl_ke_va = ty_bl_ke_va["PLATFORM"]
+        ke_va = ty_bl_ke_va["PLATFORM"][pl]
 
-        if haskey(pl_ke_va[pl], "table")
+        if haskey(ke_va, "table")
 
-            fe_na = _name(pl, BioLab.DataFrame.make(pl_ke_va[pl]["table"]))
+            fe_na = _name(pl, BioLab.DataFrame.make(ke_va["table"]))
 
-            fe_x_sa_x_nu[!, 1] = [get(fe_na, fe, "_$fe") for fe in fe_x_sa_x_nu[!, 1]]
+            feature_x_sample_x_float[!, 1] =
+                [get(fe_na, fe, "_$fe") for fe in feature_x_sample_x_float[!, 1]]
 
         else
 
@@ -248,11 +251,11 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         end
 
-        fe_x_sa_x_nu_____[id] = fe_x_sa_x_nu
+        feature_x_sample_x_float_____[id] = feature_x_sample_x_float
 
     end
 
-    ch_x_sa_x_an, fe_x_sa_x_nu_____...
+    characteristic_x_sample_x_string, feature_x_sample_x_float_____...
 
 end
 

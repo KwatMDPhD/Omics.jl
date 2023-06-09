@@ -58,8 +58,8 @@ ke1_va1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
 @test BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
-      BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))
+
 
 @test BioLab.Dict.merge(ke2_va2, ke1_va1, BioLab.Dict.set_with_last!) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))
@@ -67,22 +67,21 @@ ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 @test BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
       BioLab.Dict.merge(ke2_va2, ke1_va1, BioLab.Dict.set_with_first!)
 
+@test BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
+      BioLab.Dict.merge(ke1_va1, ke2_va2)
+
 # ---- #
 
 da = joinpath(DA, "Dict")
 
 # ---- #
 
-js1 = joinpath(da, "example_1.json")
-
-@test BioLab.Dict.read(js1) ==
+@test BioLab.Dict.read(joinpath(da, "example_1.json")) ==
       Dict{String, Any}("fruit" => "Apple", "color" => "Red", "size" => "Large")
 
 # ---- #
 
-js2 = joinpath(da, "example_2.json")
-
-@test BioLab.Dict.read(js2) == Dict{String, Any}(
+@test BioLab.Dict.read(joinpath(da, "example_2.json")) == Dict{String, Any}(
     "quiz" => Dict{String, Any}(
         "sport" => Dict{String, Any}(
             "q1" => Dict{String, Any}(
@@ -113,9 +112,7 @@ js2 = joinpath(da, "example_2.json")
 
 # ---- #
 
-to = joinpath(da, "example.toml")
-
-@test BioLab.Dict.read(to) == Dict{String, Any}(
+@test BioLab.Dict.read(joinpath(da, "example.toml")o) == Dict{String, Any}(
     "servers" => Dict{String, Any}(
         "alpha" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.1"),
         "beta" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.2"),
@@ -136,10 +133,6 @@ to = joinpath(da, "example.toml")
 
 # ---- #
 
-reduce(BioLab.Dict.merge, (BioLab.Dict.read(fi) for fi in (js1, js2, to)))
-
-# ---- #
-
 ke_va = Dict(
     "Luffy" => "Pirate King",
     "Crews" => [
@@ -157,7 +150,7 @@ ke_va = Dict(
     "episode" => 1030,
 )
 
-js = joinpath(mkpath(joinpath(tempdir(), "BioLab.test.Dict")), "write.json")
+js = joinpath(mkpath(joinpath(tempdir(), "BioLab.test.Dict")), "write_read.json")
 
 # ---- #
 
