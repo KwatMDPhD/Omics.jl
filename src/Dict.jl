@@ -128,7 +128,7 @@ function merge(ke1_va1, ke2_va2)
 
 end
 
-function read(pa::AbstractString)
+function read(pa)
 
     ex = splitext(pa)[2][2:end]
 
@@ -145,20 +145,6 @@ function read(pa::AbstractString)
         error("Can not read a $ex.")
 
     end
-
-end
-
-function read(pa_)
-
-    ke_va = Base.Dict()
-
-    for pa in pa_
-
-        ke_va = merge(ke_va, read(pa))
-
-    end
-
-    ke_va
 
 end
 

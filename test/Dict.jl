@@ -75,15 +75,14 @@ da = joinpath(DA, "Dict")
 
 js1 = joinpath(da, "example_1.json")
 
-re1 = Dict{String, Any}("fruit" => "Apple", "color" => "Red", "size" => "Large")
-
-@test BioLab.Dict.read(js1) == re1
+@test BioLab.Dict.read(js1) ==
+      Dict{String, Any}("fruit" => "Apple", "color" => "Red", "size" => "Large")
 
 # ---- #
 
 js2 = joinpath(da, "example_2.json")
 
-re2 = Dict{String, Any}(
+@test BioLab.Dict.read(js2) == Dict{String, Any}(
     "quiz" => Dict{String, Any}(
         "sport" => Dict{String, Any}(
             "q1" => Dict{String, Any}(
@@ -112,13 +111,11 @@ re2 = Dict{String, Any}(
     ),
 )
 
-@test BioLab.Dict.read(js2) == re2
-
 # ---- #
 
 to = joinpath(da, "example.toml")
 
-re3 = Dict{String, Any}(
+@test BioLab.Dict.read(to) == Dict{String, Any}(
     "servers" => Dict{String, Any}(
         "alpha" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.1"),
         "beta" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.2"),
@@ -137,11 +134,9 @@ re3 = Dict{String, Any}(
     ),
 )
 
-@test BioLab.Dict.read(to) == re3
-
 # ---- #
 
-@test BioLab.Dict.read((js1, js2, to)) == reduce(BioLab.Dict.merge, (re1, re2, re3))
+reduce(BioLab.Dict.merge, (BioLab.Dict.read(fi) for fi in (js1, js2, to)))
 
 # ---- #
 
