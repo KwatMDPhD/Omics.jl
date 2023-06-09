@@ -4,7 +4,7 @@ include("environment.jl")
 
 # ---- #
 
-da = DataFrame(
+re = DataFrame(
     "Row Name" => ["Row $id" for id in 1:3],
     "Column 1" => [1, 'A', ":)"],
     "Column 2" => [2, 'B', ";)"],
@@ -20,7 +20,7 @@ da = DataFrame(
     ["Row 1", 1, 2, 3, 4, 5.0],
     ["Row 2", 'A', 'B', 'C', 44, 55.0],
     ["Row 3", ":)", ";)", ":D", 444, 555.0],
-)) == da
+)) == re
 
 # ---- #
 
@@ -28,7 +28,7 @@ da = DataFrame(
                       Row Name\tColumn 1\tColumn 2\tColumn 3\tColumn 4\tColumn 5
                       Row 1\t1\t2\t3\t4\t5.0
                       Row 2\tA\tB\tC\t44\t55.0
-                      Row 3\t:)\t;)\t:D\t444\t555.0""") == string.(da)
+                      Row 3\t:)\t;)\t:D\t444\t555.0""") == string.(re)
 
 # ---- #
 
@@ -42,27 +42,26 @@ ro_ = ["Row $id" for id in 1:n_ro]
 
 co_ = ["Column $id" for id in 1:n_co]
 
-ma = rand(n_ro, n_co)
+ro_x_co_x_fl = rand(n_ro, n_co)
 
 # ---- #
 
-# @test
-row_x_column_x_anything = BioLab.DataFrame.make(ro, ro_, co_, ma)
+row_x_column_x_anything = BioLab.DataFrame.make(ro, ro_, co_, ro_x_co_x_fl)
+
+@test size(row_x_column_x_anything) == (n_ro, n_co + 1)
+
+@test row_x_column_x_anything == DataFrame(
+    "Row Name" => ["Row $id" for id in 1:n_ro],
+    ("Column $id" => ro_x_co_x_fl[:, id] for id in 1:n_co)...,
+)
 
 # ---- #
 
-@test BioLab.DataFrame.separate(row_x_column_x_anything) == (ro, ro_, co_, ma)
-
-# ---- #
-
-@test BioLab.DataFrame.separate(row_x_column_x_anything) isa
-      Tuple{String, Vector{String}, Vector{String}, Matrix}
-
-# ---- #
+@test BioLab.DataFrame.separate(row_x_column_x_anything) == (ro, ro_, co_, ro_x_co_x_fl)
 
 BioLab.DataFrame.separate(row_x_column_x_anything)[2][1] = ":("
 
-@test row_x_column_x_anything[1, 1] == ro
+@test row_x_column_x_anything[1, 1] == "Row 1"
 
 # ---- #
 
@@ -75,43 +74,83 @@ ro_x_co_x_an = DataFrame(
 
 # ---- #
 
-for an___ in (
+for (an___, re) in (
     (
-        ["Row Name", "Column 1", "Column 2"],
-        ["Row 1", 1, 2],
-        ["Row 2", 10, 20],
-        ["Row 3", 100, 200],
+        (
+            ["Row Name", "Column 1", "Column 2"],
+            ["Row 1", 1, 2],
+            ["Row 2", 10, 20],
+            ["Row 3", 100, 200],
+        ),
+        DataFrame(
+            "Row Name" => ["Row 1", "Row 2", "Row 3"],
+            "Column 1" => [1.0, 10, 100],
+            "Column 2" => [2.0, 20, 200],
+        ),
     ),
     (
-        ["Row Name", "Column 1", "Column 2"],
-        ["Row 1", 1, 2],
-        ["Row 1", 10, 20],
-        ["Row 2", 100, 200],
+        (
+            ["Row Name", "Column 1", "Column 2"],
+            ["Row 1", 1, 2],
+            ["Row 1", 10, 20],
+            ["Row 2", 100, 200],
+        ),
+        DataFrame(
+            "Row Name" => ["Row 1", "Row 2"],
+            "Column 1" => [5.5, 100],
+            "Column 2" => [11.0, 200],
+        ),
     ),
     (
-        ["Row Name", "Column 1", "Column 2"],
-        ["Row 1", 1, 2],
-        ["Row 1", 10, 20],
-        ["Row 1", 100, 200],
+        (
+            ["Row Name", "Column 1", "Column 2"],
+            ["Row 1", 1, 2],
+            ["Row 1", 10, 20],
+            ["Row 1", 100, 200],
+        ),
+        DataFrame("Row Name" => ["Row 1"], "Column 1" => [37.0], "Column 2" => [74.0]),
     ),
 )
 
-    # TODO: Test.
-    BioLab.DataFrame.collapse(BioLab.DataFrame.make(an___))
+    @test BioLab.DataFrame.collapse(BioLab.DataFrame.make(an___)) == re
 
 end
 
 # ---- #
 
-ro_x_co_x_st = DataFrame(
-    "M1" => ["M11", "M12", "M13", "M14"],
-    "F" => ["F1", "F2", "F3", missing],
-    "M2" => ["M21", "M22", "M23", "M24"],
+row_x_column_x_string = DataFrame(
+    "M1" => [nothing, "M12", "M13", "M14"],
+    "F" => ["F1", missing, "F3", "F4"],
+    "M2" => ["M21", "M22", "", "M24"],
 )
 
-for fr_ in (["M1"], ["M1", "M2"])
+for (fr_, re) in (
+    (["M1"], Dict("F1" => "F1", "F3" => "F3", "M13" => "F3", "F4" => "F4", "M14" => "F4")),
+    (
+        ["M1", "M2"],
+        Dict(
+            "F1" => "F1",
+            "M21" => "F1",
+            "F3" => "F3",
+            "M13" => "F3",
+            "F4" => "F4",
+            "M14" => "F4",
+            "M24" => "F4",
+        ),
+    ),
+)
 
-    # TODO: Test.
-    BioLab.DataFrame.map_to(ro_x_co_x_st, BioLab.Dict.set_with_first!, fr_, "F")
+    @test BioLab.DataFrame.map_to(row_x_column_x_string, BioLab.Dict.set_with_first!, fr_, "F") ==
+          re
 
 end
+
+# ---- #
+
+@test BioLab.DataFrame.map_to(
+    DataFrame("From" => ["A B", "C D"], "To" => [1, 2]),
+    BioLab.Dict.set_with_first!,
+    ["From"],
+    "To";
+    de = " ",
+) == Dict(1 => 1, "A" => 1, "B" => 1, 2 => 2, "C" => 2, "D" => 2)
