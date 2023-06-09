@@ -58,6 +58,7 @@ ke1_va1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
 @test BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
+      BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))
 
 @test BioLab.Dict.merge(ke2_va2, ke1_va1, BioLab.Dict.set_with_last!) ==
@@ -68,41 +69,79 @@ ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
 # ---- #
 
-ke1_va1 = Dict("Aa" => 1, 'b' => 2)
-
-ke2_va2 = Dict("Aa" => 3, 'b' => 2, 4 => 5)
-
-@test BioLab.Dict.merge(ke1_va1, ke2_va2) == Dict("Aa" => 3, 'b' => 2, 4 => 5)
-
-# ---- #
-
-da = joinpath(pkgdir(BioLab), "data", "Dict")
+da = joinpath(DA, "Dict")
 
 # ---- #
 
 js1 = joinpath(da, "example_1.json")
 
-# TODO: Test.
-BioLab.Dict.read(js1)
+re1 = Dict{String, Any}("fruit" => "Apple", "color" => "Red", "size" => "Large")
+
+@test BioLab.Dict.read(js1) == re1
 
 # ---- #
 
 js2 = joinpath(da, "example_2.json")
 
-# TODO: Test.
-BioLab.Dict.read(js2)
+re2 = Dict{String, Any}(
+    "quiz" => Dict{String, Any}(
+        "sport" => Dict{String, Any}(
+            "q1" => Dict{String, Any}(
+                "options" => Any[
+                    "New York Bulls",
+                    "Los Angeles Kings",
+                    "Golden State Warriros",
+                    "Huston Rocket",
+                ],
+                "question" => "Which one is correct team name in NBA?",
+                "answer" => "Huston Rocket",
+            ),
+        ),
+        "maths" => Dict{String, Any}(
+            "q1" => Dict{String, Any}(
+                "options" => Any["10", "11", "12", "13"],
+                "question" => "5 + 7 = ?",
+                "answer" => "12",
+            ),
+            "q2" => Dict{String, Any}(
+                "options" => Any["1", "2", "3", "4"],
+                "question" => "12 - 8 = ?",
+                "answer" => "4",
+            ),
+        ),
+    ),
+)
+
+@test BioLab.Dict.read(js2) == re2
 
 # ---- #
 
 to = joinpath(da, "example.toml")
 
-# TODO: Test.
-BioLab.Dict.read(to)
+re3 = Dict{String, Any}(
+    "servers" => Dict{String, Any}(
+        "alpha" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.1"),
+        "beta" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.2"),
+    ),
+    "clients" => Dict{String, Any}(
+        "hosts" => ["alpha", "omega"],
+        "data" => Union{Vector{Int64}, Vector{String}}[["gamma", "delta"], [1, 2]],
+    ),
+    "owner" => Dict{String, Any}("name" => "Tom Preston-Werner"),
+    "title" => "TOML Example",
+    "database" => Dict{String, Any}(
+        "server" => "192.168.1.1",
+        "connection_max" => 5000,
+        "ports" => [8000, 8001, 8002],
+        "enabled" => true,
+    ),
+)
+
+@test BioLab.Dict.read(to) == re3
 
 # ---- #
 
-# TODO: Test.
-BioLab.Dict.read((js1, js2, to))
+@test BioLab.Dict.read((js1, js2, to)) == reduce(BioLab.Dict.merge, (re1, re2, re3))
 
 # ---- #
 
@@ -123,11 +162,9 @@ ke_va = Dict(
     "episode" => 1030,
 )
 
-te = mkpath(joinpath(tempdir(), "BioLab.test.Dict"))
+js = joinpath(mkpath(joinpath(tempdir(), "BioLab.test.Dict")), "write.json")
 
 # ---- #
-
-js = joinpath(te, "write.json")
 
 BioLab.Dict.write(js, ke_va)
 

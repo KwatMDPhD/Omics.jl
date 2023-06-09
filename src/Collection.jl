@@ -142,40 +142,6 @@ function sort_like(an___; rev = false)
 
 end
 
-function get_common_start(an___)
-
-    ans = an___[1]
-
-    les = length(ans)
-
-    for an_ in an___[2:end]
-
-        le = length(an_)
-
-        if le < les
-
-            ans = an_
-
-            les = le
-
-        end
-
-    end
-
-    for (id, an) in enumerate(ans)
-
-        if any(an_[id] != an for an_ in an___)
-
-            return ans[1:(id - 1)]
-
-        end
-
-    end
-
-    ans
-
-end
-
 function sort_recursively(co)
 
     if co isa AbstractArray
