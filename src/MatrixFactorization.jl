@@ -10,7 +10,7 @@ function factorize(a, n)
 
     mf = nnmf(a, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 10^-4)
 
-    me = " in $(mf.iters) iterations with $(mf.objvalue)."
+    me = " in $(mf.niters) iterations with $(mf.objvalue)."
 
     if mf.converged
 

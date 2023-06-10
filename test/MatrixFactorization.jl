@@ -8,14 +8,6 @@ BioLab.Path.reset(te)
 
 # ---- #
 
-function is_all_positive(ma)
-
-    all(0 <= nu for nu in ma)
-
-end
-
-# ---- #
-
 for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
     st = "$n_ro x $n_co ==> $n_fa"
@@ -24,9 +16,13 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
     wma, hma = BioLab.MatrixFactorization.factorize(ama, n_fa)
 
-    @test size(wma) == (n_ro, n_fa) && is_all_positive(wma)
+    @test size(wma) == (n_ro, n_fa)
 
-    @test size(hma) == (n_fa, n_co) && is_all_positive(hma)
+    @test size(hma) == (n_fa, n_co)
+
+    BioLab.NumberArray.error_negative(wma)
+
+    BioLab.NumberArray.error_negative(hma)
 
     di = mkdir(joinpath(te, st))
 

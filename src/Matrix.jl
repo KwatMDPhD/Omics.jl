@@ -12,7 +12,7 @@ function make(an___)
 
     ro_x_co_x_an = Base.Matrix{eltype(vcat(an___...))}(undef, (n_ro, n_co))
 
-    for idr in 1:n_ro, idc in 1:n_co
+    for idc in 1:n_co, idr in 1:n_ro
 
         ro_x_co_x_an[idr, idc] = an___[idr][idc]
 

@@ -325,7 +325,7 @@ end
 
 function make_colorbar(z)
 
-    tickvals = BioLab.VectorNumber.range(z, 10)
+    tickvals = BioLab.NumberVector.range(z, 10)
 
     Dict(
         "thicknessmode" => "fraction",
