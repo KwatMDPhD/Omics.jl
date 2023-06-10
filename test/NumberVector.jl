@@ -4,119 +4,65 @@ include("environment.jl")
 
 # ---- #
 
-for (nu_, re) in (([-1, 0, 1, 2], 0.5), ([-2, -1, 0, 0, 1, 2], 0))
-
-    @test BioLab.VectorNumber.get_area(nu_) == re
-
-end
-
-# ---- #
-
-nu_ = [-1, 0, 0, 1, 2]
-
-for (nu_, re) in ((nu_, (2,)), (vcat(-maximum(nu_), nu_), (-2, 2)))
-
-    @test BioLab.VectorNumber.get_extreme(nu_) == re
-
-end
-
-# ---- #
-
-nu_ = collect(-3:3)
-
-for (nu, re) in zip(
-    vcat(nu_, "0<"),
-    (
-        [-3, -2, -1, 0, 1, 2, 3],
-        [-2, -1, 0, 1, 2, 3, 4],
-        [-1, 0, 1, 2, 3, 4, 5],
-        [0, 1, 2, 3, 4, 5, 6],
-        [1, 2, 3, 4, 5, 6, 7],
-        [2, 3, 4, 5, 6, 7, 8],
-        [3, 4, 5, 6, 7, 8, 9],
-        [1, 2, 3, 4, 5, 6, 7],
-    ),
-)
-
-    @test BioLab.VectorNumber.shift_minimum(nu_, nu) == re
-
-end
-
-# ---- #
-
-for (nu_, re) in (
-    ([0, 1, 2], [0, 1, 2]),
-    ([0, 1, 2, 0], [0, 0, 0, 0]),
-    ([0, 1, 2, 2, 1, 0, 1, 2, 3], [0, 0, 0, 0, 0, 0, 1, 2, 3]),
-)
-
-    BioLab.VectorNumber.force_increasing_with_min!(nu_)
-
-    @test nu_ == re
-
-end
-
-# ---- #
-
-for (nu_, re) in (
-    ([0, 1, 2], [0, 1, 2]),
-    ([0, 1, 2, 0], [0, 1, 2, 2]),
-    ([0, 1, 2, 2, 1, 0, 1, 2, 3], [0, 1, 2, 2, 2, 2, 2, 2, 3]),
-)
-
-    BioLab.VectorNumber.force_increasing_with_max!(nu_)
-
-    @test nu_ == re
-
-end
-
-# ---- #
-
-nu_ = [1, NaN, 2, NaN, 3, NaN]
-
-re = [11, NaN, 12, NaN, 13, NaN]
-
-# ---- #
-
-function fu!(nu_)
-
-    nu_ .+= 10
-
-end
-
-co_ = copy(nu_)
-
-BioLab.VectorNumber.skip_nan_apply!!(fu!, co_)
-
-@test isequal(co_, re)
-
-# ---- #
-
-function fu(nu_)
-
-    [nu + 10 for nu in nu_]
-
-end
-
-co_ = copy(nu_)
-
-BioLab.VectorNumber.skip_nan_apply!(fu, co_)
-
-@test isequal(co_, re)
-
-# ---- #
+se = 20230610
 
 n = 3
 
-for ty in (BioLab.VectorNumber.Original, BioLab.VectorNumber.Deep, BioLab.VectorNumber.Wide)
+# ---- #
 
-    for ze in (false, true)
+Random.seed!(se)
 
-        Random.seed!(20230606)
+ne_, po_ = BioLab.NumberVector._simulate_negative_positive(n)
 
-        # TODO: Test.
-        BioLab.VectorNumber.simulate(n, ty; ze)
+ren = [-1.4897554994413376, -0.370149968439238, -0.0]
 
-    end
+rep = -reverse((ren))
+
+@test ne_ == ren
+
+@test po_ == rep
+
+# ---- #
+
+ref = vcat(ren[1:(end - 1)], rep)
+
+ret = vcat(ren, rep)
+
+for (ze, re) in ((false, ref), (true, ret))
+
+    @test BioLab.NumberVector._concatenate_negative_positive(ne_, ze, po_) == re
+
+end
+
+# ---- #
+
+for (ze, re) in ((false, ref), (true, ret))
+
+    Random.seed!(se)
+
+    @test BioLab.NumberVector.simulate(n; ze) == re
+
+end
+
+# ---- #
+
+for (ze, re) in ((false, vcat(ren[1:(end - 1)] * 2, rep)), (true, vcat(ren * 2, rep)))
+
+    Random.seed!(se)
+
+    @test BioLab.NumberVector.simulate_deep(n; ze) == re
+
+end
+
+# ---- #
+
+for (ze, re) in (
+    (false, vcat(-2.979510998882675, -0.740299936878476, rep)),
+    (true, vcat(-2.979510998882675, -0.740299936878476, -0.0, rep)),
+)
+
+    Random.seed!(se)
+
+    @test BioLab.NumberVector.simulate_wide(n; ze) == re
 
 end

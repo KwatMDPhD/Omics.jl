@@ -14,6 +14,105 @@ function error_negative(ar)
 
 end
 
+function get_area(nu_)
+
+    sum(nu_) / length(nu_)
+
+end
+
+function get_extreme(nu_)
+
+    mi = minimum(nu_)
+
+    ma = maximum(nu_)
+
+    mia = abs(mi)
+
+    maa = abs(ma)
+
+    if isapprox(mia, maa)
+
+        (mi, ma)
+
+    elseif maa < mia
+
+        (mi,)
+
+    else#if mia < maa
+
+        (ma,)
+
+    end
+
+end
+
+function range(nu_, n)
+
+    mi = minimum(nu_)
+
+    ma = maximum(nu_)
+
+    mi:((ma - mi) / n):ma
+
+end
+
+function range(nu_::AbstractArray{Int}, n)
+
+    minimum(nu_):maximum(nu_)
+
+end
+
+function shift_minimum(nu_, mi::Real)
+
+    sh = mi - minimum(nu_)
+
+    [nu + sh for nu in nu_]
+
+end
+
+function shift_minimum(nu_, st)
+
+    fl = parse(eltype(nu_), BioLab.String.split_get(st, '<', 1))
+
+    shift_minimum(nu_, minimum(filter(>(fl), nu_)))
+
+end
+
+function force_increasing_with_min!(nu_)
+
+    reverse!(accumulate!(min, nu_, reverse!(nu_)))
+
+end
+
+function force_increasing_with_max!(nu_)
+
+    accumulate!(max, nu_, nu_)
+
+end
+
+function skip_nan_apply!!(fu!, nu_)
+
+    go_ = [!isnan(nu) for nu in nu_]
+
+    if any(go_)
+
+        fu!(view(nu_, go_))
+
+    end
+
+end
+
+function skip_nan_apply!(fu, nu_)
+
+    go_ = [!isnan(nu) for nu in nu_]
+
+    if any(go_)
+
+        nu_[go_] = fu(nu_[go_])
+
+    end
+
+end
 
 function normalize_with_01!(ar)
 
