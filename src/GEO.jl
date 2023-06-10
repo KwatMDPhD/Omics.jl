@@ -22,6 +22,8 @@ function read(gs; di = BioLab.TE)
 
     if !ispath(gz)
 
+        @info "Downloading $gz"
+
         download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:end-3])nnn/$gs/soft/$fi", gz)
 
     end
@@ -65,7 +67,11 @@ function read(gs; di = BioLab.TE)
                 '\n',
             )
 
-            _readline(st)
+            if _readline(st) != "$(ta)end"
+
+                error("$ta did not end.")
+
+            end
 
             continue
 
@@ -176,9 +182,9 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl_ke_va["SAMPLE"]))
 
-    n_sa = length(sa_ke_va)
+    sa_ = collect(keys(sa_ke_va))
 
-    sa_ = Vector{String}(undef, n_sa)
+    n_sa = length(sa_)
 
     de = ": "
 
@@ -188,8 +194,6 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     for (id, (sa, ke_va)) in enumerate(sa_ke_va)
 
-        sa_[id] = sa
-
         ch_ = [
             va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics") &&
             (isempty(ig_) || !any(contains(va, ig) for ig in ig_))
@@ -197,7 +201,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         if all(contains(ch, de) for ch in ch_)
 
-            ch_st__[id] = Dict(split(ch, de; limit = 2) for ch in ch_)
+            merge!(ch_st__[id], Dict(split(ch, de; limit = 2) for ch in ch_))
 
         else
 
@@ -209,7 +213,12 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
             feature_x_information_x_anything = BioLab.DataFrame.make(ke_va["table"])
 
-            get!(pl_fe_fl__, ke_va["!Sample_platform_id"], fill(Dict{String, Float64}(), n_sa))[id] =
+            merge!(
+                get!(
+                    pl_fe_fl__,
+                    ke_va["!Sample_platform_id"],
+                    fill(Dict{String, Float64}(), n_sa),
+                )[id],
                 Dict(
                     zip(
                         feature_x_information_x_anything[!, 1],
@@ -218,17 +227,16 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
                             feature_x_information_x_anything[!, "VALUE"],
                         ),
                     ),
-                )
+                ),
+            )
 
         else
 
-            @warn "$sa table is empty."
+            @error "$sa table is empty."
 
         end
 
     end
-
-    characteristic_x_sample_x_string = _make_data_frame(ch_st__, sa_, "Characteristic")
 
     feature_x_sample_x_float_____ = Vector{DataFrame}(undef, length(pl_fe_fl__))
 
@@ -247,7 +255,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         else
 
-            @warn "$pl table is empty."
+            @error "$pl table is empty."
 
         end
 
@@ -255,7 +263,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     end
 
-    characteristic_x_sample_x_string, feature_x_sample_x_float_____...
+    _make_data_frame(ch_st__, sa_, "Characteristic"), feature_x_sample_x_float_____...
 
 end
 
