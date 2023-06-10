@@ -2,15 +2,30 @@ include("environment.jl")
 
 # ---- #
 
-nu___ = ([0.0, 1, 2], [-1, 0, 1 / 3, 1])
+for ar in ([-1, 1], [-1 1], [-1.0, 1])
+
+    @test @is_error BioLab.NumberArray.error_negative(ar)
+
+end
 
 # ---- #
 
-@test @is_error BioLab.NumberArray.normalize_with_01!([1, 1])
+ar_ = ([0.0, 1, 2], [-1, 0, 1 / 3, 1], Matrix(reshape(1.0:6, (2, 3))))
+
+ar2_ = ([1.0, 1], [1.0 1])
 
 # ---- #
 
-for (nu_, re) in zip(nu___, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1]))
+for ar in ar2_
+
+    @test @is_error BioLab.NumberArray.normalize_with_01!(copy(ar))
+
+end
+
+# ---- #
+
+for (nu_, re) in
+    zip(ar_, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1], [0.0 0.4 0.8; 0.2 0.6 1.0]))
 
     co = copy(nu_)
 
@@ -18,18 +33,29 @@ for (nu_, re) in zip(nu___, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1]))
 
     @test co == re
 
-    # 
-    # @btime BioLab.NumberArray.normalize_with_01!(co) setup = (co = copy($nu_))
+end
+
+# ---- #
+
+for ar in ar2_
+
+    @test @is_error BioLab.NumberArray.normalize_with_0!(copy(ar))
 
 end
 
 # ---- #
 
-@test @is_error BioLab.NumberArray.normalize_with_0!([1, 1])
-
-# ---- #
-
-for (nu_, re) in zip(nu___, ([-1, 0, 1], [-1.3, -0.09999999999999999, 0.30000000000000004, 1.1]))
+for (nu_, re) in zip(
+    ar_,
+    (
+        [-1, 0, 1],
+        [-1.3, -0.09999999999999999, 0.30000000000000004, 1.1],
+        [
+            -1.3363062095621219 -0.2672612419124244 0.8017837257372732
+            -0.8017837257372732 0.2672612419124244 1.3363062095621219
+        ],
+    ),
+)
 
     co = copy(nu_)
 
@@ -37,18 +63,20 @@ for (nu_, re) in zip(nu___, ([-1, 0, 1], [-1.3, -0.09999999999999999, 0.30000000
 
     @test co == re
 
-    # 
-    # @btime BioLab.NumberArray.normalize_with_0!(co) setup = (co = copy($nu_))
-
 end
 
 # ---- #
 
-@test @is_error BioLab.NumberArray.normalize_with_sum!([-1, 1])
-
-# ---- #
-
-for (nu_, re) in zip(nu___[1:(end - 1)], ([0, 0.3333333333333333, 0.6666666666666666],))
+for (nu_, re) in zip(
+    ar_[[1, 3]],
+    (
+        [0, 0.3333333333333333, 0.6666666666666666],
+        [
+            0.047619047619047616 0.14285714285714285 0.23809523809523808
+            0.09523809523809523 0.19047619047619047 0.2857142857142857
+        ],
+    ),
+)
 
     co = copy(nu_)
 
@@ -56,18 +84,23 @@ for (nu_, re) in zip(nu___[1:(end - 1)], ([0, 0.3333333333333333, 0.666666666666
 
     @test co == re
 
-    # 
-    # @btime BioLab.NumberArray.normalize_with_sum!(co) setup = (co = copy($nu_))
+end
+
+# ---- #
+
+ar_ = ([-1, 0, 0, 1, 1, 1, 2], [-1 0 1 2; 0 1 1 3])
+
+# ---- #
+
+for ar in ar2_
+
+    @test @is_error BioLab.NumberArray.normalize_with_1234!(-ar)
 
 end
 
 # ---- #
 
-nu___ = ([-1, 0, 0, 1, 1, 1, 2],)
-
-# ---- #
-
-for (nu_, re) in zip(nu___, ([1, 2, 3, 4, 5, 6, 7],))
+for (nu_, re) in zip(ar_, ([1, 2, 3, 4, 5, 6, 7], [1 3 5 7; 2 4 6 8]))
 
     co = copy(nu_)
 
@@ -75,14 +108,19 @@ for (nu_, re) in zip(nu___, ([1, 2, 3, 4, 5, 6, 7],))
 
     @test co == re
 
-    # 
-    # @btime BioLab.NumberArray.normalize_with_1234!(co) setup = (co = copy($nu_))
+end
+
+# ---- #
+
+for ar in ar2_
+
+    @test @is_error BioLab.NumberArray.normalize_with_1223!(-ar)
 
 end
 
 # ---- #
 
-for (nu_, re) in zip(nu___, ([1, 2, 2, 3, 3, 3, 4],))
+for (nu_, re) in zip(ar_, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
     co = copy(nu_)
 
@@ -90,14 +128,19 @@ for (nu_, re) in zip(nu___, ([1, 2, 2, 3, 3, 3, 4],))
 
     @test co == re
 
-    # 
-    # @btime BioLab.NumberArray.normalize_with_1223!(co) setup = (co = copy($nu_))
+end
+
+# ---- #
+
+for ar in ar2_
+
+    @test @is_error BioLab.NumberArray.normalize_with_1224!(-ar)
 
 end
 
 # ---- #
 
-for (nu_, re) in zip(nu___, ([1, 2, 2, 4, 4, 4, 7],))
+for (nu_, re) in zip(ar_, ([1, 2, 2, 4, 4, 4, 7], [1 2 4   7; 2 4 4 8]))
 
     co = copy(nu_)
 
@@ -105,23 +148,25 @@ for (nu_, re) in zip(nu___, ([1, 2, 2, 4, 4, 4, 7],))
 
     @test co == re
 
-    # 
-    # @btime BioLab.NumberArray.normalize_with_1224!(co) setup = (co = copy($nu_))
+end
+
+# ---- #
+
+for ar in ar2_
+
+    @test @is_error BioLab.NumberArray.normalize_with_125254!(-ar)
 
 end
 
 # ---- #
 
-for (nu_, re) in zip(nu___, ([1, 2.5, 2.5, 5, 5, 5, 7],))
+for (nu_, re) in zip(ar_, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
 
-    co = convert(Vector{Float64}, nu_)
+    co = float.(nu_)
 
     BioLab.NumberArray.normalize_with_125254!(co)
 
     @test co == re
-
-    # 
-    # @btime BioLab.NumberArray.normalize_with_125254!(co) setup = (co = copy($nu_))
 
 end
 
@@ -136,14 +181,6 @@ no!_ = (
     BioLab.NumberArray.normalize_with_1224!,
     BioLab.NumberArray.normalize_with_125254!,
 )
-
-# ---- #
-
-for no! in no!_
-
-    @is_error no!([1, 1, 1])
-
-end
 
 # ---- #
 
@@ -164,12 +201,9 @@ for (no!, re) in zip(
 
     co = copy(nu_)
 
-    BioLab.VectorNumber.skip_nan_apply!!(no!, co)
+    BioLab.NumberVector.skip_nan_apply!!(no!, co)
 
     @test isequal(co, re)
-
-    # 
-    # @btime BioLab.VectorNumber.skip_nan_apply!!($no!, co) setup = (co = copy($nu_))
 
 end
 
@@ -238,9 +272,6 @@ for (no!, re) in zip(
 
     @test isapprox(co, re; atol = 10^-5)
 
-    # 
-    # @btime foreach($no!, eachcol(co)) setup = (co = copy(ro_x_co_x_nu))
-
 end
 
 # ---- #
@@ -298,8 +329,5 @@ for (no!, re) in zip(
     foreach(no!, eachrow(co))
 
     @test isapprox(co, re; atol = 10^-5)
-
-    # 
-    # @btime foreach($no!, eachrow(co)) setup = (co = copy(ro_x_co_x_nu))
 
 end

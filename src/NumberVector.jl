@@ -82,6 +82,8 @@ function force_increasing_with_max!(nu_)
 
 end
 
+# TODO: Try with Matrix.
+
 function skip_nan_apply!!(fu!, nu_)
 
     go_ = [!isnan(nu) for nu in nu_]
