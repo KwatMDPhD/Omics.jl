@@ -112,7 +112,7 @@ da = joinpath(DA, "Dict")
 
 # ---- #
 
-@test BioLab.Dict.read(joinpath(da, "example.toml")o) == Dict{String, Any}(
+@test BioLab.Dict.read(joinpath(da, "example.toml")) == Dict{String, Any}(
     "servers" => Dict{String, Any}(
         "alpha" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.1"),
         "beta" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.2"),

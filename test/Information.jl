@@ -6,8 +6,7 @@ include("environment.jl")
 
 for nu_ in (fill(0, 10), fill(1, 10))
 
-    # TODO: Test.
-    BioLab.Information.get_entropy(nu_)
+    println(BioLab.Information.get_entropy(nu_))
 
 end
 
@@ -15,9 +14,9 @@ end
 
 n = 10
 
-nu1_ = BioLab.VectorNumber.shift_minimum(randn(n), "0<")
+nu1_ = BioLab.NumberVector.shift_minimum(randn(n), "0<")
 
-nu2_ = BioLab.VectorNumber.shift_minimum(randn(n), "0<")
+nu2_ = BioLab.NumberVector.shift_minimum(randn(n), "0<")
 
 nu1s_ = [nu + 1 for nu in nu1_]
 
@@ -42,7 +41,6 @@ for (nu1_, nu2_) in ar_
         BioLab.Information.get_thermodynamic_depth,
     )
 
-        # TODO: Test.
         re_ = map(fu, nu1_, nu2_)
 
         BioLab.Plot.plot_scatter(
@@ -66,7 +64,6 @@ for (nu1_, nu2_) in ar_
 
         nu3_ = (nu1_ + nu2_) / 2
 
-        # TODO: Test.
         re_ = map(fu, nu1_, nu2_, nu3_)
 
         BioLab.Plot.plot_scatter(
@@ -85,7 +82,8 @@ nu1_ = collect(0:10)
 
 nu2_ = collect(0:10:100)
 
-# TODO: Test.
+# ---- #
+
 BioLab.Information.get_mutual_information(nu1_, nu2_)
 
 # ---- #
@@ -100,8 +98,4 @@ z = bi.density
 
 BioLab.Plot.plot_heat_map(z, y, x)
 
-# TODO: Test.
 BioLab.Information.get_information_coefficient(nu1_, nu2_)
-
-# 
-# @btime BioLab.Information.get_information_coefficient($nu1_, $nu2_)
