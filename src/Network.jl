@@ -22,7 +22,7 @@ function plot(
     la = Dict{String, Any}(),
     ex = "",
     pns = 1,
-    pnb = "#fdfdfd",
+    ba = "#fcfcfc",
     ht = "",
     ke_ar...,
 )
@@ -59,8 +59,7 @@ function plot(
 
         elseif ex == "png"
 
-            bl = "cy.png({\"full\": true, \"scale\": $pns, \"bg\": \"$pnb\"})"
-
+            bl = "cy.png({\"full\": true, \"scale\": $pns, \"bg\": \"$ba\"})"
         else
 
             error("Can not write a $ex.")
@@ -105,6 +104,7 @@ function plot(
         });
 
         $re""";
+        ba,
         ke_ar...,
     )
 

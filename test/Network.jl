@@ -97,8 +97,6 @@ BioLab.Network.plot(el_; la = Dict("name" => "preset"), ex = ex3, ht = joinpath(
 
 fi3 = joinpath(dw, "$pr3.$ex3")
 
-# ---- #
-
 @test no1_ == read_element(fi3)
 
 # ---- #

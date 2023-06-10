@@ -18,4 +18,4 @@ te = joinpath(tempdir(), "BioLab.test.HTML")
 
 BioLab.Path.reset(te)
 
-BioLab.HTML.write(id, so_, sc; ht = joinpath(te, "name.html"))
+BioLab.HTML.write(id, so_, sc; ba = "#000000", ht = joinpath(te, "name.html"))
