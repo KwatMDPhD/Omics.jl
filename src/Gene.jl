@@ -32,21 +32,10 @@ function read_uniprot()
 
 end
 
-function map_mouse(fe_x_io_x_an = read_mouse())
+function map_ensembl(feature_x_information_x_anything = read_ensembl())
 
     BioLab.DataFrame.map_to(
-        fe_x_io_x_an,
-        BioLab.Dict.set_with_last!,
-        ["Gene name"],
-        "Human gene name",
-    )
-
-end
-
-function map_ensembl(fe_x_io_x_an = read_ensembl())
-
-    BioLab.DataFrame.map_to(
-        fe_x_io_x_an,
+        feature_x_information_x_anything,
         BioLab.Dict.set_with_last!,
         [
             "Transcript stable ID version",
@@ -54,7 +43,6 @@ function map_ensembl(fe_x_io_x_an = read_ensembl())
             "Transcript name",
             "Gene stable ID version",
             "Gene stable ID",
-            "Gene Synonym",
         ],
         "Gene name";
         de = '|',
@@ -62,25 +50,13 @@ function map_ensembl(fe_x_io_x_an = read_ensembl())
 
 end
 
-function map_hgnc(fe_x_io_x_an = read_hgnc())
-
-    BioLab.DataFrame.map_to(
-        fe_x_io_x_an,
-        BioLab.Dict.set_with_last!,
-        ["prev_symbol", "alias_symbol"],
-        "symbol";
-        de = '|',
-    )
-
-end
-
-function map_uniprot(pr_x_io_x_an = read_uniprot())
+function map_uniprot(protein_x_information_x_anything = read_uniprot())
 
     pr_io_an = Dict{String, Dict{String, Any}}()
 
-    io_ = names(pr_x_io_x_an)
+    io_ = names(protein_x_information_x_anything)
 
-    for an_ in eachrow(pr_x_io_x_an)
+    for an_ in eachrow(protein_x_information_x_anything)
 
         io_an = Dict{String, Any}()
 
@@ -126,53 +102,56 @@ function map_uniprot(pr_x_io_x_an = read_uniprot())
 
 end
 
-function rename(st_, st_na__...)
+# TODO: Move to Dict.
+function rename(na1_, na1_na2)
 
-    st_na = Dict{String, String}()
+    n = length(na1_)
 
-    for st1_na1 in st_na__
-
-        st_na = BioLab.Dict.merge(st_na, st1_na1)
-
-    end
-
-    n = length(st_)
-
-    na_ = Vector{String}(undef, n)
+    na2_ = Vector{String}(undef, n)
 
     ma_ = Vector{Int}(undef, n)
 
-    for (id, st) in enumerate(st_)
+    n1 = n2 = n3 = 0
 
-        if haskey(st_na, st)
+    for (id, na1) in enumerate(na1_)
 
-            na = st_na[st]
+        if haskey(na1_na2, na1)
 
-            if st == na
+            na2 = na1_na2[na1]
+
+            if na1 == na2
 
                 ma = 1
+
+                n1 += 1
 
             else
 
                 ma = 2
 
+                n2 += 1
+
             end
 
         else
 
-            na = st
+            na2 = na1
 
             ma = 3
 
+            n3 += 1
+
         end
 
-        na_[id] = na
+        na2_[id] = na2
 
         ma_[id] = ma
 
     end
 
-    na_, ma_
+    @info "Already renamed $n1. Renamed $n2. Failed $n3."
+
+    na2_, ma_
 
 end
 

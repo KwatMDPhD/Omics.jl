@@ -12,7 +12,7 @@ function set_with_first!(ke_va, ke, va)
 
         if vac == va
 
-            @warn "($ke => $va)."
+            @info "($ke => $va)."
 
         else
 
@@ -36,7 +36,7 @@ function set_with_last!(ke_va, ke, va)
 
         if vac == va
 
-            @warn "($ke => $va)."
+            @info "($ke => $va)."
 
         else
 
