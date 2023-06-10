@@ -4,29 +4,22 @@ using JSON3: write
 
 using ..BioLab
 
-function position!(ke_va_, id_no::AbstractDict)
+function position!(el_, el2_)
 
-    for ke_va in ke_va_
+    id_el2 = Dict(el["data"]["id"] => el for el in el2_)
 
-        ke_va["position"] = id_no[ke_va["data"]["id"]]["position"]
+    for el in el_
+
+        el["position"] = id_el2[el["data"]["id"]]["position"]
 
     end
-
-end
-
-function position!(ke_va_, js)
-
-    position!(
-        ke_va_,
-        Dict(no["data"]["id"] => no for no in BioLab.Dict.read(js)["elements"]["nodes"]),
-    )
 
 end
 
 function plot(
     el_;
     st_ = (),
-    la = Dict{String, Any}("name" => "preset"),
+    la = Dict{String, Any}(),
     ex = "",
     pns = 1,
     pnb = "#fdfdfd",
@@ -34,7 +27,7 @@ function plot(
     ke_ar...,
 )
 
-    di = "BioLab.Network.plot.$(BioLab.Time.stamp())"
+    id = "BioLab.Network.plot.$(BioLab.Time.stamp())"
 
     if isempty(ht)
 
@@ -48,9 +41,17 @@ function plot(
 
     if isempty(ex)
 
+        fi = ""
+
         re = ""
 
     else
+
+        na = "$pr.$ex"
+
+        fi = joinpath(homedir(), "Downloads", na)
+
+        rm(fi; force = true)
 
         if ex == "json"
 
@@ -66,12 +67,14 @@ function plot(
 
         end
 
-        re = "cy.ready(function() {saveAs($bl, \"$pr.$ex\");});"
+        re = "cy.ready(function() {saveAs($bl, \"$na\");});"
 
     end
 
+    la = merge(Dict("animate" => false), la)
+
     BioLab.HTML.write(
-        di,
+        id,
         # TODO: Use the latest.
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
@@ -79,7 +82,7 @@ function plot(
             "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.25.0/cytoscape.min.js",
         ),
         """var cy = cytoscape({
-            container: document.getElementById("$di"),
+            container: document.getElementById("$id"),
             elements: $(write(el_)),
             style: $(write(st_)),
             layout: $(write(la)),
@@ -104,6 +107,24 @@ function plot(
         $re""";
         ke_ar...,
     )
+
+    if !isempty(fi)
+
+        while !ispath(fi)
+
+            sleep(1)
+
+            @info "Waiting for $fi"
+
+        end
+
+        if ex == "png"
+
+            run(`open --background $fi`)
+
+        end
+
+    end
 
 end
 

@@ -6,76 +6,105 @@ te = joinpath(tempdir(), "BioLab.test.Network")
 
 BioLab.Path.reset(te)
 
+dw = joinpath(homedir(), "Downloads")
+
 # ---- #
 
-el_ = (
+el_ = Vector{Dict{String, Any}}([
     Dict(
         "data" => Dict("id" => "A"),
         "position" => Dict("x" => 0, "y" => 0),
-        "style" => Dict("background-color" => "#ff0000"),
+        "style" => Dict("background-color" => "#790505"),
     ),
     Dict(
         "data" => Dict("id" => "B"),
         "position" => Dict("x" => 20, "y" => 20),
-        "style" => Dict("background-color" => "#00ff00"),
+        "style" => Dict("background-color" => "#a40522"),
     ),
     Dict(
         "data" => Dict("id" => "C"),
         "position" => Dict("x" => 40, "y" => 40),
-        "style" => Dict("background-color" => "#0000ff"),
+        "style" => Dict("background-color" => "#e06351"),
     ),
     Dict(
         "data" => Dict("id" => "D"),
         "position" => Dict("x" => 80, "y" => 80),
-        "style" => Dict("background-color" => "#f0f000"),
+        "style" => Dict("background-color" => "#dd9159"),
     ),
     Dict(
         "data" => Dict("id" => "E"),
         "position" => Dict("x" => 160, "y" => 160),
-        "style" => Dict("background-color" => "#0f0f00"),
+        "style" => Dict("background-color" => "#fc7f31"),
     ),
     Dict(
         "data" => Dict("id" => "F"),
         "position" => Dict("x" => 320, "y" => 320),
-        "style" => Dict("background-color" => "#00f0f0"),
+        "style" => Dict("background-color" => "#fbb92d"),
+    ),
+    Dict(
+        "data" => Dict("id" => "H", "source" => "F", "target" => "G"),
+        "style" => Dict("line-color" => "#6c9956"),
     ),
     Dict(
         "data" => Dict("id" => "G"),
         "position" => Dict("x" => 640, "y" => 640),
-        "style" => Dict("background-color" => "#000f0f"),
+        "style" => Dict("background-color" => "#561649"),
     ),
-    Dict(
-        "data" => Dict("id" => "H", "source" => "F", "target" => "G"),
-        "style" => Dict("line-color" => "#000000"),
-    ),
-)
+])
 
-BioLab.Network.plot(el_)
+pr1 = "preset"
+
+ex1 = "png"
+
+# TODO: Understand why colors do not show up in HTML but in PNG.
+BioLab.Network.plot(el_; la = Dict("name" => pr1), ex = ex1, ht = joinpath(te, "$pr1.html"))
+
+fi1 = joinpath(dw, "$pr1.$ex1")
 
 # ---- #
 
-la = Dict("name" => "cose", "animate" => true)
+pr2 = "cose"
 
-ht = joinpath(te, "cose.html")
+ex2 = "json"
 
-ex = "json"
+BioLab.Network.plot(el_; la = Dict("name" => pr2), ex = ex2, ht = joinpath(te, "$pr2.html"))
 
-js = joinpath(homedir(), "Downloads", "cose.json")
-
-rm(js; force = true)
-
-BioLab.Network.plot(el_; la, ex, ht)
+fi2 = joinpath(dw, "$pr2.$ex2")
 
 # ---- #
 
-while !ispath(js)
+function read_element(js)
 
-    sleep(1)
+    ty_el_ = BioLab.Dict.read(js)["elements"]
 
-    @info "Waiting for $js"
+    vcat(ty_el_["nodes"], ty_el_["edges"])
 
 end
 
-BioLab.Network.position!(el_[1:(end - 1)], js)
+# ---- #
 
-BioLab.Network.plot(el_; la = Dict("name" => "preset"), ht = joinpath(te, "json_preset.html"))
+no1_ = read_element(fi2)
+
+BioLab.Network.position!(el_, no1_)
+
+# ---- #
+
+pr3 = "cose_preset"
+
+ex3 = "json"
+
+BioLab.Network.plot(el_; la = Dict("name" => "preset"), ex = ex3, ht = joinpath(te, "$pr3.html"))
+
+fi3 = joinpath(dw, "$pr3.$ex3")
+
+# ---- #
+
+@test no1_ == read_element(fi3)
+
+# ---- #
+
+for fi in (fi1, fi2, fi3)
+
+    rm(fi)
+
+end
