@@ -10,27 +10,19 @@ gs = "GSE122404"
 
 ty_bl = BioLab.GEO.read(gs)
 
-# ---- #
-
 @test length(ty_bl["DATABASE"]) == 1
 
 @test length(ty_bl["DATABASE"]["GeoMiame"]) == 4
 
-# ---- #
-
 @test length(ty_bl["SERIES"]) == 1
 
 @test length(ty_bl["SERIES"]["GSE122404"]) == 44
-
-# ---- #
 
 @test length(ty_bl["SAMPLE"]) == 20
 
 @test length(ty_bl["SAMPLE"]["GSM3466115"]) == 36
 
 @test size(BioLab.DataFrame.make(ty_bl["SAMPLE"]["GSM3466115"]["table"])) == (53617, 2)
-
-# ---- #
 
 pl_ke_va = ty_bl["PLATFORM"]
 
@@ -47,7 +39,7 @@ platform_table = pl_ke_va[pl]["table"]
 # ---- #
 
 disable_logging(Warn)
-# 634.461 ms (3441093 allocations: 208.35 MiB)
+# 687.734 ms (3441114 allocations: 208.35 MiB)
 @btime BioLab.GEO.read($gs);
 disable_logging(Debug)
 
