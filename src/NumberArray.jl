@@ -14,17 +14,17 @@ function error_negative(ar)
 
 end
 
-function get_area(nu_)
+function get_area(ar)
 
-    sum(nu_) / length(nu_)
+    sum(ar) / length(ar)
 
 end
 
-function get_extreme(nu_)
+function get_extreme(ar)
 
-    mi = minimum(nu_)
+    mi = minimum(ar)
 
-    ma = maximum(nu_)
+    ma = maximum(ar)
 
     mia = abs(mi)
 
@@ -46,71 +46,69 @@ function get_extreme(nu_)
 
 end
 
-function range(nu_, n)
+function range(ar, n)
 
-    mi = minimum(nu_)
+    mi = minimum(ar)
 
-    ma = maximum(nu_)
+    ma = maximum(ar)
 
     mi:((ma - mi) / n):ma
 
 end
 
-function range(nu_::AbstractArray{Int}, n)
+function range(ar::AbstractArray{Int}, n)
 
-    minimum(nu_):maximum(nu_)
-
-end
-
-function shift_minimum(nu_, mi::Real)
-
-    sh = mi - minimum(nu_)
-
-    [nu + sh for nu in nu_]
+    minimum(ar):maximum(ar)
 
 end
 
-function shift_minimum(nu_, st)
+function skip_nan_apply!!(fu!, ar)
 
-    fl = parse(eltype(nu_), BioLab.String.split_get(st, '<', 1))
-
-    shift_minimum(nu_, minimum(filter(>(fl), nu_)))
-
-end
-
-function force_increasing_with_min!(nu_)
-
-    reverse!(accumulate!(min, nu_, reverse!(nu_)))
-
-end
-
-function force_increasing_with_max!(nu_)
-
-    accumulate!(max, nu_, nu_)
-
-end
-
-function skip_nan_apply!!(fu!, nu_)
-
-    go_ = [!isnan(nu) for nu in nu_]
+    go_ = [!isnan(nu) for nu in ar]
 
     if any(go_)
 
-        fu!(view(nu_, go_))
+        fu!(view(ar, go_))
 
     end
 
 end
 
-function skip_nan_apply!(fu, nu_)
+function skip_nan_apply!(fu, ar)
 
-    go_ = [!isnan(nu) for nu in nu_]
+    go_ = [!isnan(nu) for nu in ar]
 
     if any(go_)
 
-        nu_[go_] = fu(nu_[go_])
+        ar[go_] = fu(ar[go_])
 
     end
+
+end
+
+function shift_minimum(ar, mi::Real)
+
+    sh = mi - minimum(ar)
+
+    [nu + sh for nu in ar]
+
+end
+
+function shift_minimum(ar, st)
+
+    shift_minimum(ar, minimum(filter(>(parse(Float64, BioLab.String.split_get(st, '<', 1))), ar)))
+
+end
+
+function force_increasing_with_min!(ar)
+
+    reverse!(accumulate!(min, ar, reverse!(ar)))
+
+end
+
+function force_increasing_with_max!(ar)
+
+    accumulate!(max, ar, ar)
 
 end
 
