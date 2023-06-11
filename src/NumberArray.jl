@@ -6,7 +6,7 @@ using ..BioLab
 
 function error_negative(ar)
 
-    if any(nu < 0 for nu in ar)
+    if any(<(0), ar)
 
         error("There is a negative.")
 

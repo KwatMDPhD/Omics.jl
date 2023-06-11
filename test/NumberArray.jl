@@ -2,7 +2,7 @@ include("environment.jl")
 
 # ---- #
 
-for ar in ([-1, 1], [-1 1], [-1.0, 1])
+for ar in ([-1, 1], [-1.0, 1], [-1 1])
 
     @test @is_error BioLab.NumberArray.error_negative(ar)
 
@@ -10,28 +10,32 @@ end
 
 # ---- #
 
-for (nu_, re) in (([-1, 0, 1, 2], 0.5), ([-2, -1, 0, 0, 1, 2], 0))
+for (ar, re) in
+    (([-1, 0, 1, 2], 0.5), ([-2, -1, 0, 0, 1, 2], 0), ([-1 1; 0 2], 0.5), ([-2 0 1; -1 0 2], 0))
 
-    @test BioLab.VectorNumber.get_area(nu_) == re
-
-end
-
-# ---- #
-
-nu_ = [-1, 0, 0, 1, 2]
-
-for (nu_, re) in ((nu_, (2,)), (vcat(-maximum(nu_), nu_), (-2, 2)))
-
-    @test BioLab.VectorNumber.get_extreme(nu_) == re
+    @test BioLab.NumberArray.get_area(ar) == re
 
 end
 
 # ---- #
 
-nu_ = collect(-3:3)
+for (ar, re) in (
+    ([-1, 0, 0, 1, 2], (2,)),
+    ([-2, -1, 0, 0, 1, 2], (-2, 2)),
+    ([-1 0 0; 1 2 3], (3,)),
+    ([-3 -1 0; 0 1 3], (-3, 3)),
+)
+
+    @test BioLab.NumberArray.get_extreme(ar) == re
+
+end
+
+# ---- #
+
+ar = collect(-3:3)
 
 for (nu, re) in zip(
-    vcat(nu_, "0<"),
+    vcat(ar, "0<"),
     (
         [-3, -2, -1, 0, 1, 2, 3],
         [-2, -1, 0, 1, 2, 3, 4],
@@ -44,69 +48,69 @@ for (nu, re) in zip(
     ),
 )
 
-    @test BioLab.VectorNumber.shift_minimum(nu_, nu) == re
+    @test BioLab.NumberArray.shift_minimum(ar, nu) == re
 
 end
 
 # ---- #
 
-for (nu_, re) in (
+for (ar, re) in (
     ([0, 1, 2], [0, 1, 2]),
     ([0, 1, 2, 0], [0, 0, 0, 0]),
     ([0, 1, 2, 2, 1, 0, 1, 2, 3], [0, 0, 0, 0, 0, 0, 1, 2, 3]),
 )
 
-    BioLab.VectorNumber.force_increasing_with_min!(nu_)
+    BioLab.NumberArray.force_increasing_with_min!(ar)
 
-    @test nu_ == re
+    @test ar == re
 
 end
 
 # ---- #
 
-for (nu_, re) in (
+for (ar, re) in (
     ([0, 1, 2], [0, 1, 2]),
     ([0, 1, 2, 0], [0, 1, 2, 2]),
     ([0, 1, 2, 2, 1, 0, 1, 2, 3], [0, 1, 2, 2, 2, 2, 2, 2, 3]),
 )
 
-    BioLab.VectorNumber.force_increasing_with_max!(nu_)
+    BioLab.NumberArray.force_increasing_with_max!(ar)
 
-    @test nu_ == re
+    @test ar == re
 
 end
 
 # ---- #
 
-nu_ = [1, NaN, 2, NaN, 3, NaN]
+ar = [1, NaN, 2, NaN, 3, NaN]
 
 re = [11, NaN, 12, NaN, 13, NaN]
 
 # ---- #
 
-function fu!(nu_)
+function fu!(ar)
 
-    nu_ .+= 10
+    ar .+= 10
 
 end
 
-co_ = copy(nu_)
+co_ = copy(ar)
 
-BioLab.VectorNumber.skip_nan_apply!!(fu!, co_)
+BioLab.NumberArray.skip_nan_apply!!(fu!, co_)
 
 @test isequal(co_, re)
 
 # ---- #
 
-function fu(nu_)
+function fu(ar)
 
-    [nu + 10 for nu in nu_]
+    [nu + 10 for nu in ar]
 
 end
 
-co_ = copy(nu_)
+co_ = copy(ar)
 
-BioLab.VectorNumber.skip_nan_apply!(fu, co_)
+BioLab.NumberArray.skip_nan_apply!(fu, co_)
 
 @test isequal(co_, re)
 # ---- #
@@ -125,10 +129,10 @@ end
 
 # ---- #
 
-for (nu_, re) in
+for (ar, re) in
     zip(ar_, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1], [0.0 0.4 0.8; 0.2 0.6 1.0]))
 
-    co = copy(nu_)
+    co = copy(ar)
 
     BioLab.NumberArray.normalize_with_01!(co)
 
@@ -146,7 +150,7 @@ end
 
 # ---- #
 
-for (nu_, re) in zip(
+for (ar, re) in zip(
     ar_,
     (
         [-1, 0, 1],
@@ -158,7 +162,7 @@ for (nu_, re) in zip(
     ),
 )
 
-    co = copy(nu_)
+    co = copy(ar)
 
     BioLab.NumberArray.normalize_with_0!(co)
 
@@ -172,7 +176,7 @@ end
 
 # ---- #
 
-for (nu_, re) in zip(
+for (ar, re) in zip(
     ar_[[1, 3]],
     (
         [0, 0.3333333333333333, 0.6666666666666666],
@@ -183,7 +187,7 @@ for (nu_, re) in zip(
     ),
 )
 
-    co = copy(nu_)
+    co = copy(ar)
 
     BioLab.NumberArray.normalize_with_sum!(co)
 
@@ -205,9 +209,9 @@ end
 
 # ---- #
 
-for (nu_, re) in zip(ar_, ([1, 2, 3, 4, 5, 6, 7], [1 3 5 7; 2 4 6 8]))
+for (ar, re) in zip(ar_, ([1, 2, 3, 4, 5, 6, 7], [1 3 5 7; 2 4 6 8]))
 
-    co = copy(nu_)
+    co = copy(ar)
 
     BioLab.NumberArray.normalize_with_1234!(co)
 
@@ -225,9 +229,9 @@ end
 
 # ---- #
 
-for (nu_, re) in zip(ar_, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
+for (ar, re) in zip(ar_, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
-    co = copy(nu_)
+    co = copy(ar)
 
     BioLab.NumberArray.normalize_with_1223!(co)
 
@@ -245,9 +249,9 @@ end
 
 # ---- #
 
-for (nu_, re) in zip(ar_, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
+for (ar, re) in zip(ar_, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
 
-    co = copy(nu_)
+    co = copy(ar)
 
     BioLab.NumberArray.normalize_with_1224!(co)
 
@@ -265,9 +269,9 @@ end
 
 # ---- #
 
-for (nu_, re) in zip(ar_, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
+for (ar, re) in zip(ar_, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
 
-    co = float.(nu_)
+    co = float.(ar)
 
     BioLab.NumberArray.normalize_with_125254!(co)
 
@@ -289,7 +293,7 @@ no!_ = (
 
 # ---- #
 
-nu_ = [NaN, 1, 2, 2, 3, NaN]
+ar = [NaN, 1, 2, 2, 3, NaN]
 
 for (no!, re) in zip(
     no!_,
@@ -304,7 +308,7 @@ for (no!, re) in zip(
     ),
 )
 
-    co = copy(nu_)
+    co = copy(ar)
 
     BioLab.NumberVector.skip_nan_apply!!(no!, co)
 
