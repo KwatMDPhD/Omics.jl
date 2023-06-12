@@ -2,14 +2,21 @@ include("environment.jl")
 
 # ---- #
 
-for po in 0:5
+for (po, re) in zip(
+    0:5,
+    (
+        NaN,
+        0.6189908521765288,
+        0.1900545163940193,
+        0.06362492851958153,
+        0.019426335022525613,
+        0.00620269175436949,
+    ),
+)
 
-    n = 10^po
+    Random.seed!(20230612)
 
-    nu_ = randn(n)
-
-    # TODO: Test.
-    BioLab.Significance.get_margin_of_error(nu_)
+    @test isequal(BioLab.Significance.get_margin_of_error(randn(10^po)), re)
 
 end
 
@@ -27,39 +34,23 @@ n = 2
 
 # ---- #
 
-n_ = (1, 2, 9, 10)
+nu_ = (1, 2, 9, 10)
 
 re_ = (0.1, 0.2, 0.9, 1)
 
 # ---- #
 
-for (va, re) in zip(n_, re_)
+for (nu, re) in zip(nu_, re_)
 
-    @test BioLab.Significance.get_p_value_for_less(va, ra_) == re
-
-end
-
-# ---- #
-
-for (va, re) in zip(n_, reverse(re_))
-
-    @test BioLab.Significance.get_p_value_for_more(va, ra_) == re
+    @test BioLab.Significance.get_p_value_for_less(nu, ra_) == re
 
 end
 
 # ---- #
 
-pv1_ = [0.001, 0.01, 0.03, 0.5]
+for (nu, re) in zip(nu_, reverse(re_))
 
-n_ = (length(pv1_), 40, 100, 1000)
-
-for n in n_
-
-    # TODO: Test.
-    BioLab.Significance.adjust_p_value_with_bonferroni(pv1_, n)
-
-    # TODO: Test.
-    BioLab.Significance.adjust_p_value_with_benjamini_hochberg(pv1_, n)
+    @test BioLab.Significance.get_p_value_for_more(nu, ra_) == re
 
 end
 
@@ -67,7 +58,7 @@ end
 
 @test all(
     isapprox(pv, re; atol = 0.01) for (pv, re) in zip(
-        BioLab.Significance.adjust_p_value_with_benjamini_hochberg([
+        BioLab.Significance.adjust_p_value([
             0.005,
             0.009,
             0.019,
@@ -89,13 +80,14 @@ ra_ = collect(0:9)
 
 # ---- #
 
-@test BioLab.Significance.get_p_value_adjust(BioLab.Significance.get_p_value_for_less, nu_, ra_) ==
-      ([0.1, 0.2, 0.9, 1], [0.4, 0.4, 1, 1])
+for (fu, re) in (
+    (BioLab.Significance.get_p_value_for_less, ([0.1, 0.2, 0.9, 1], [0.4, 0.4, 1, 1])),
+    (BioLab.Significance.get_p_value_for_more, ([1, 0.9, 0.2, 0.1], [1, 1, 0.4, 0.4])),
+)
 
-# ---- #
+    @test BioLab.Significance.get_p_value_adjust(fu, nu_, ra_) == re
 
-@test BioLab.Significance.get_p_value_adjust(BioLab.Significance.get_p_value_for_more, nu_, ra_) ==
-      ([1, 0.9, 0.2, 0.1], [1, 1, 0.4, 0.4])
+end
 
 # ---- #
 
