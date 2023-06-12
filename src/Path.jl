@@ -1,13 +1,5 @@
 module Path
 
-using ..BioLab
-
-function make_absolute(pa)
-
-    rstrip(abspath(expanduser(pa)), '/')
-
-end
-
 function error_missing(pa)
 
     if !ispath(pa)
@@ -36,12 +28,17 @@ function replace_extension(pa, ex)
 
 end
 
+function make_absolute(pa)
+
+    rstrip(abspath(expanduser(pa)), '/')
+
+end
+
 function clean(pa)
 
     replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
 
 end
-
 
 function read(di; join = false, ig_ = (r"^\.",), ke_ = ())
 

@@ -4,18 +4,6 @@ using JSON3: write
 
 using ..BioLab
 
-function position!(el_, el2_)
-
-    id_el2 = Dict(el["data"]["id"] => el for el in el2_)
-
-    for el in el_
-
-        el["position"] = id_el2[el["data"]["id"]]["position"]
-
-    end
-
-end
-
 function plot(
     el_;
     st_ = (),
@@ -123,6 +111,18 @@ function plot(
             run(`open --background $fi`)
 
         end
+
+    end
+
+end
+
+function position!(el_, el2_)
+
+    id_el2 = Dict(el["data"]["id"] => el for el in el2_)
+
+    for el in el_
+
+        el["position"] = id_el2[el["data"]["id"]]["position"]
 
     end
 

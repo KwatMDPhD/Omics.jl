@@ -1,5 +1,3 @@
-using Logging
-
 include("environment.jl")
 
 # ---- #

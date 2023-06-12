@@ -2,120 +2,120 @@ include("environment.jl")
 
 # ---- #
 
-bi = dirname(@__DIR__)
+for pa in ("file", joinpath(@__DIR__, "file"))
 
-jl = dirname(bi)
+    @test @is_error BioLab.Path.error_missing(pa)
 
-ho = homedir()
+end
 
 # ---- #
 
-wo = pwd()
+for pa in ("Path.jl", "path.jl", joinpath(@__DIR__, "Path.jl"), joinpath(@__DIR__, "path.jl"))
+
+    BioLab.Path.error_missing(pa)
+
+end
+
+# ---- #
+
+for pa in ("file.extension", joinpath(@__DIR__, "file.extension"))
+
+    for ex in (".extension", "another_extension")
+
+        @test @is_error BioLab.Path.error_extension_difference(pa, ex)
+
+    end
+
+    BioLab.Path.error_extension_difference(pa, "extension")
+
+end
+
+# ---- #
+
+ex2 = "new_extension"
 
 for (pa, re) in (
-    ("~/file", "$ho/file"),
-    ("~/directory/", "$ho/directory"),
-    ("~/path/directory/", "$ho/path/directory"),
-    (".", wo),
-    ("..", dirname(wo)),
-    ("../..", dirname(dirname(wo))),
+    ("file.extension", "file.$ex2"),
+    (joinpath(@__DIR__, "file.extension"), joinpath(@__DIR__, "file.$ex2")),
+)
+
+    @test BioLab.Path.replace_extension(pa, "new_extension") == re
+
+end
+
+# ---- #
+
+pk = dirname(@__DIR__)
+
+jl = dirname(pk)
+
+ho = homedir()
+
+for (pa, re) in (
+    (".", @__DIR__),
+    ("..", pk),
+    (joinpath("..", ".."), jl),
+    (joinpath("~", "name"), joinpath(ho, "name")),
+    (@__DIR__, @__DIR__),
+    ((@__DIR__)[2:end], joinpath(@__DIR__, (@__DIR__)[2:end])),
 )
 
     @test BioLab.Path.make_absolute(pa) == re
 
 end
 
-# # ---- #
-
-# @test @is_error BioLab.Path.shorten(@__DIR__, "Shanks")
-
-# # ---- #
-
-# for (sh, re) in
-#     ((-1, "BioLab.jl/test"), (0, "test"), (1, "test"), (-count('/', @__DIR__), @__DIR__))
-
-#     @test BioLab.Path.shorten(@__DIR__, sh) == re
-
-# end
-
-# # ---- #
-
-# for (di, sh, re) in (
-#     ("BioLab.jl", -1, "$(basename(jl))/BioLab.jl/test"),
-#     ("BioLab.jl", 0, "BioLab.jl/test"),
-#     ("BioLab.jl", 1, "test"),
-#     ("test", -1, "BioLab.jl/test"),
-#     ("test", 0, "test"),
-#     ("test", 1, "test"),
-#     ("BioLab.jl/test", -1, "BioLab.jl/test"),
-#     ("BioLab.jl/test", 0, "test"),
-#     ("BioLab.jl/test", 1, "test"),
-# )
-
-#     @test BioLab.Path.shorten(@__DIR__, di; sh) == re
-
-# end
-
 # ---- #
 
-fi = "file.extension"
+na = "a_b.c-d+e!f%g%h]iJK"
 
-for ex in ("extension", ".another_extension")
+nac = "a_b.c_d_e_f_g_h_ijk"
 
-    @test @is_error BioLab.Path.error_extension_difference(fi, ex)
+for (pa, re) in ((na, nac), (joinpath("\$", na), joinpath("_", nac)))
+
+    @test BioLab.Path.clean(pa) == re
 
 end
 
 # ---- #
 
-BioLab.Path.error_extension_difference(fi, ".extension")
+@test all(!startswith('.'), BioLab.Path.read(ho))
 
 # ---- #
 
-@test BioLab.Path.replace_extension(fi, "new_extension") == "file.new_extension"
+@test isempty(BioLab.Path.read(ho; ke_ = (r"^\.",)))
 
 # ---- #
 
-@test BioLab.Path.clean("d/a_b.c-d+e!f%g%h]iJK") == "d/a_b.c_d_e_f_g_h_ijk"
+@test all(startswith('.'), BioLab.Path.read(ho; ig_ = (), ke_ = (r"^\.",)))
 
 # ---- #
 
-@test @is_error BioLab.Path.error_missing("missing/file")
+@test all(na -> isuppercase(na[1]), BioLab.Path.read(ho; ke_ = (r"^[A-Z]",)))
 
 # ---- #
 
-for re in ("test/Path.jl", "test/path.jl")
-
-    BioLab.Path.error_missing(joinpath(bi, re))
-
-end
+@test BioLab.Path.read(ho; ke_ = (r"^Downloads$",)) == ["Downloads"]
 
 # ---- #
 
-# TODO: Test.
-BioLab.Path.read(ho)
-
-# ---- #
-
-# TODO: Test.
-BioLab.Path.read(ho; join = false, ig_ = (), ke_ = (r"^\.",))
-
-# ---- #
-
-# TODO: Test.
-BioLab.Path.read(ho; ke_ = (r"^[A-Z]",))
+@test BioLab.Path.read(ho; ke_ = (r"^[A-Z]", r"^Downloads$")) ==
+      BioLab.Path.read(ho; ke_ = (r"^[A-Z]",))
 
 # ---- #
 
 te = joinpath(tempdir(), "BioLab.test.Path")
 
+# ---- #
+
 BioLab.Path.reset(te)
 
 touch(joinpath(te, "touch"))
 
-@test BioLab.Path.read(BioLab.Path.reset(te)) == []
+@test isempty(BioLab.Path.read(BioLab.Path.reset(te)))
 
 # ---- #
+
+BioLab.Path.reset(te)
 
 ra = mkdir(joinpath(te, "rank"))
 
@@ -133,21 +133,25 @@ BioLab.Path.rank(ra)
 
 # ---- #
 
+BioLab.Path.reset(te)
+
 fi1 = touch(joinpath(te, "fi1"))
 
 fi2 = touch(joinpath(te, "fi2"))
 
 BioLab.Path.rename_recursively(te, ("fi" => "new",))
 
-@test BioLab.Path.read(te) == ["new1", "new2", "rank"]
+@test BioLab.Path.read(te) == ["new1", "new2"]
 
 # ---- #
 
+BioLab.Path.reset(te)
+
 fi1 = touch(joinpath(te, "fi1"))
 
-write(fi1, "Before")
-
 fi2 = touch(joinpath(te, "fi2"))
+
+write(fi1, "Before")
 
 write(fi2, "BeforeBefore")
 
