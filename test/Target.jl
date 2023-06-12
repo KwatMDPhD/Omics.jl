@@ -34,7 +34,7 @@ nu_ = [10^(id - 1) for id in 1:n_co]
 
 # ---- #
 
-co_ = [co + 1 for co in nu_]
+co_ = nu_ .+ 1
 
 @test BioLab.Target._trigger(fu, co_, nu_) == 4
 
@@ -48,22 +48,28 @@ bo_ = vcat(fill(false, n_ze), fill(true, n_co - n_ze))
 
 # ---- #
 
+function fu(nu1_, nu2_)
+
+    mean(nu1_) - mean(nu2_)
+
+end
+
+# ---- #
+
 n_ro = 2
 
 n_co = 6
 
-fe_x_sa_x_nu = reshape(1.0:(n_ro * n_co), (n_ro, n_co))
+ma = Matrix(reshape(1.0:(n_ro * n_co), (n_ro, n_co)))
 
 # ---- #
 
-fut = (nu1_, nu2_) -> mean(nu1_) - mean(nu2_)
-
 co_ = [10^(id - 1) for id in 1:n_co]
 
-@test BioLab.Target.target(fut, co_, fe_x_sa_x_nu) == [18512.5, 18511.5]
+@test BioLab.Target.target(fu, co_, ma) == [18512.5, 18511.5]
 
-# 
-# @btime BioLab.Target.target($fut, $co_, $fe_x_sa_x_nu)
+# 43.603 ns (1 allocation: 80 bytes) 
+@btime BioLab.Target.target($fu, $co_, $ma);
 
 # ---- #
 
@@ -71,7 +77,7 @@ n_ze = div(n_co, 2)
 
 bo_ = vcat(fill(false, n_ze), fill(true, n_co - n_ze))
 
-@test BioLab.Target.target(fut, bo_, fe_x_sa_x_nu) == [-6.0, -6]
+@test BioLab.Target.target(fu, bo_, ma) == [-6.0, -6]
 
-# 
-# @btime BioLab.Target.target($fut, $bo_, $fe_x_sa_x_nu)
+# 180.978 ns (7 allocations: 528 bytes) 
+@btime BioLab.Target.target($fu, $bo_, $ma)

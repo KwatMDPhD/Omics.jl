@@ -8,9 +8,15 @@ function try_parse(st)
 
     try
 
-        fl = parse(Float64, st)
+        return convert(Int, parse(Float64, st))
 
-        convert(Int, fl)
+    catch
+
+    end
+
+    try
+
+        return parse(Float64, st)
 
     catch
 
@@ -94,7 +100,7 @@ function limit(st, n)
 
     if n < length(st)
 
-        return "$(st[1:n-3])..."
+        return "$(st[1:n])..."
 
     end
 

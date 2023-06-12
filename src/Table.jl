@@ -42,6 +42,12 @@ function write(ts, ro_x_co_x_an)
 
     BioLab.Path.error_extension_difference(ts, "tsv")
 
+    if ispath(ts)
+
+        error("$ts exists.")
+
+    end
+
     _write(ts, ro_x_co_x_an; delim = '\t')
 
 end

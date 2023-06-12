@@ -14,7 +14,7 @@ function _aim(bo_::AbstractVector{Bool}, nu_)
 
     BioLab.Array.error_size_difference((bo_, nu_))
 
-    nu_[[!bo for bo in bo_]], nu_[bo_]
+    nu_[map(!, bo_)], nu_[bo_]
 
 end
 
@@ -28,7 +28,7 @@ end
 
 function target(fu, nu1_, fe_x_sa_x_nu2)
 
-    [_trigger(fu, nu1_, nu2_) for nu2_ in eachrow(fe_x_sa_x_nu2)]
+    map(nu2_ -> _trigger(fu, nu1_, nu2_), eachrow(fe_x_sa_x_nu2))
 
 end
 

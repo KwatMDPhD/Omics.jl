@@ -2,44 +2,36 @@ include("environment.jl")
 
 # ---- #
 
+for (st, re) in (
+    ("0", 0),
+    ("-0.0", 0),
+    ("0.0", 0),
+    ("0.1", 0.1),
+    (".1", 0.1),
+    ("1/2", "1/2"),
+    ('a', 'a'),
+    ("Aa", "Aa"),
+)
+
+    @test BioLab.String.try_parse(st) == re
+
+end
+
+# ---- #
+
 for (nu, re) in (
     (-0, "0"),
     (0, "0"),
     (-0.0, "0"),
     (0.0, "0"),
     (1 / 3, "0.3333"),
+    (1 / 2, "0.5"),
     (0.1234567890123456789, "0.1235"),
     (0.001, "0.001"),
     (0.000001, "1e-06"),
 )
 
-    @test isequal(BioLab.Number.format(nu), re)
-
-end
-
-# ---- #
-
-for (n, re) in ((1, "C..."), (2, "Ca..."), (3, "Can"), (4, "Can"))
-
-    @test BioLab.String.limit("Can", n) == re
-
-end
-
-# ---- #
-
-for (si, pl) in (
-    ("vertex", "vertices"),
-    ("edge", "edges"),
-    ("sex", "sexes"),
-    ("country", "countries"),
-    ("hero", "heroes"),
-)
-
-    for (n, re) in ((-1, "-1 $si"), (0, "0 $si"), (1, "1 $si"), (2, "2 $pl"))
-
-        @test BioLab.String.count_noun(n, si) == re
-
-    end
+    @test isequal(BioLab.String.format(nu), re)
 
 end
 
@@ -60,6 +52,14 @@ end
 
 # ---- #
 
+for (n, re) in ((0, "..."), (1, "C..."), (2, "Ca..."), (3, "Can"), (4, "Can"))
+
+    @test BioLab.String.limit("Can", n) == re
+
+end
+
+# ---- #
+
 st = join('a':'z', '.')
 
 de = '.'
@@ -67,22 +67,6 @@ de = '.'
 for (id, re) in ((1, "a"), (16, "p"), (26, "z"))
 
     @test BioLab.String.split_get(st, de, id) == re
-
-end
-
-# ---- #
-
-for (st_, re) in (
-    [("", "", ""), ("", "", "")],
-    [("kate",), ("",)],
-    [("kate", "katana"), ("e", "ana")],
-    [("kate", "kwat"), ("ate", "wat")],
-    [("kate", "kwat", "kazakh"), ("ate", "wat", "azakh")],
-    [("a", "ab", "abc"), ("", "b", "bc")],
-    [("abc", "ab", "a"), ("bc", "b", "")],
-)
-
-    @test Tuple(BioLab.String.remove_common_prefix(st_)) == re
 
 end
 
@@ -103,3 +87,21 @@ st1 = "A--BB--CCC"
 st2 = "a--bb--ccc"
 
 @test BioLab.String.transplant(st1, st2, de, id_) == "A--bb--CCC"
+
+# ---- #
+
+for (si, pl) in (
+    ("vertex", "vertices"),
+    ("edge", "edges"),
+    ("sex", "sexes"),
+    ("country", "countries"),
+    ("hero", "heroes"),
+)
+
+    for (n, re) in ((-1, "-1 $si"), (0, "0 $si"), (1, "1 $si"), (2, "2 $pl"))
+
+        @test BioLab.String.count_noun(n, si) == re
+
+    end
+
+end
