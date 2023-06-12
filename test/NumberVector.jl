@@ -4,6 +4,30 @@ include("environment.jl")
 
 # ---- #
 
+for (nu_, re) in (
+    ([0, 1, 2], [0, 1, 2]),
+    ([0, 1, 2, 0], [0, 0, 0, 0]),
+    ([0, 1, 2, 2, 1, 0, 1, 2, 3], [0, 0, 0, 0, 0, 0, 1, 2, 3]),
+)
+
+    @test BioLab.NumberVector.force_increasing_with_min!(nu_) == re
+
+end
+
+# ---- #
+
+for (nu_, re) in (
+    ([0, 1, 2], [0, 1, 2]),
+    ([0, 1, 2, 0], [0, 1, 2, 2]),
+    ([0, 1, 2, 2, 1, 0, 1, 2, 3], [0, 1, 2, 2, 2, 2, 2, 2, 3]),
+)
+
+    @test BioLab.NumberVector.force_increasing_with_max!(nu_) == re
+
+end
+
+# ---- #
+
 se = 20230610
 
 n = 3

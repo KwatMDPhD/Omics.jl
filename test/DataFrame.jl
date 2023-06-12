@@ -46,6 +46,49 @@ ro_x_co_x_fl = rand(n_ro, n_co)
 
 # ---- #
 
+ron = "Row Name"
+
+con_ = ["Column 1", "Column 2", "Column 3"]
+
+for (ro_an__, re) in (
+    (
+        (
+            Dict("Row 1" => 1, "Row 2" => 2),
+            Dict("Row 2" => 2, "Row 3" => 3),
+            Dict("Row 1" => 1, "Row 2" => 2, "Row 3" => 3),
+        ),
+        DataFrame(
+            ron => ["Row 1", "Row 2", "Row 3"],
+            "Column 1" => [1, 2, missing],
+            "Column 2" => [missing, 2, 3],
+            "Column 3" => [1, 2, 3],
+        ),
+    ),
+    (
+        (
+            Dict("Row 1" => 'a', "Row 2" => 'b'),
+            Dict("Row 2" => 'b', "Row 3" => 'c'),
+            Dict("Row 1" => 'a', "Row 2" => 'b', "Row 3" => 'c'),
+        ),
+        DataFrame(
+            "Row Name" => ["Row 1", "Row 2", "Row 3"],
+            "Column 1" => ['a', 'b', missing],
+            "Column 2" => [missing, 'b', 'c'],
+            "Column 3" => ['a', 'b', 'c'],
+        ),
+    ),
+)
+
+    @test isequal(BioLab.DataFrame.make(ron, con_, ro_an__), re)
+
+    # 3.594 μs (58 allocations: 4.11 KiB)
+    # 3.651 μs (58 allocations: 4.02 KiB)
+    # @btime BioLab.DataFrame.make($ron, $con_, $ro_an__);
+
+end
+
+# ---- #
+
 row_x_column_x_anything = BioLab.DataFrame.make(ro, ro_, co_, ro_x_co_x_fl)
 
 @test size(row_x_column_x_anything) == (n_ro, n_co + 1)

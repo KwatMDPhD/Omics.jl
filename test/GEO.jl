@@ -1,4 +1,4 @@
-using Logging
+# using Logging
 
 include("environment.jl")
 
@@ -38,10 +38,10 @@ platform_table = pl_ke_va[pl]["table"]
 
 # ---- #
 
-disable_logging(Warn)
+# disable_logging(Warn)
 # 687.734 ms (3441114 allocations: 208.35 MiB)
 # @btime BioLab.GEO.read($gs);
-disable_logging(Debug)
+# disable_logging(Debug)
 
 # ---- #
 
@@ -51,10 +51,10 @@ feature_x_information_x_anything = BioLab.DataFrame.make(platform_table)
 
 # ---- #
 
-disable_logging(Warn)
+# disable_logging(Warn)
 # 9.623 ms (430770 allocations: 18.68 MiB)
 # @btime BioLab.GEO._name($pl, $feature_x_information_x_anything);
-disable_logging(Debug)
+# disable_logging(Debug)
 
 # ---- #
 
@@ -70,10 +70,10 @@ characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabul
 
 # ---- #
 
-disable_logging(Warn)
-# 725.120 ms (3812073 allocations: 680.33 MiB)
+# disable_logging(Warn)
+# 536.426 ms (4991905 allocations: 708.66 MiB)
 # @btime BioLab.GEO.tabulate($ty_bl);
-disable_logging(Debug)
+# disable_logging(Debug)
 
 # ---- #
 

@@ -26,6 +26,12 @@ function get_extreme(ar)
 
     ma = maximum(ar)
 
+    if mi == ma
+
+        return (mi,)
+
+    end
+
     mia = abs(mi)
 
     maa = abs(ma)
@@ -46,6 +52,12 @@ function get_extreme(ar)
 
 end
 
+function range(ar::AbstractArray{Int}, ::Int)
+
+    minimum(ar):maximum(ar)
+
+end
+
 function range(ar, n)
 
     mi = minimum(ar)
@@ -53,12 +65,6 @@ function range(ar, n)
     ma = maximum(ar)
 
     mi:((ma - mi) / n):ma
-
-end
-
-function range(ar::AbstractArray{Int}, n)
-
-    minimum(ar):maximum(ar)
 
 end
 
@@ -97,18 +103,6 @@ end
 function shift_minimum(ar, st)
 
     shift_minimum(ar, minimum(filter(>(parse(Float64, BioLab.String.split_get(st, '<', 1))), ar)))
-
-end
-
-function force_increasing_with_min!(ar)
-
-    reverse!(accumulate!(min, ar, reverse!(ar)))
-
-end
-
-function force_increasing_with_max!(ar)
-
-    accumulate!(max, ar, ar)
 
 end
 

@@ -24,6 +24,32 @@ function make(st::AbstractString)
 
 end
 
+function make(ron, con_, ro_an__)
+
+    ro_ = sort!(collect(union(map(keys, ro_an__)...)))
+
+    an__ = [Vector{Any}(undef, 1 + length(con_)) for _ in 1:(1 + length(ro_))]
+
+    id = 1
+
+    an__[id][1] = ron
+
+    an__[id][2:end] = con_
+
+    for (id, ro) in enumerate(ro_)
+
+        id = 1 + id
+
+        an__[id][1] = ro
+
+        an__[id][2:end] = [get(ro_an, ro, missing) for ro_an in ro_an__]
+
+    end
+
+    make(an__)
+
+end
+
 function make(ro, ro_, co_, _x_co_x_an)
 
     insertcols!(_DataFrame(_x_co_x_an, co_), 1, ro => ro_)

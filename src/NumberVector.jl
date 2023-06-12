@@ -4,6 +4,18 @@ using Distributions: Normal
 
 using ..BioLab
 
+function force_increasing_with_min!(ar)
+
+    reverse!(accumulate!(min, ar, reverse!(ar)))
+
+end
+
+function force_increasing_with_max!(ar)
+
+    accumulate!(max, ar, ar)
+
+end
+
 function _simulate_negative_positive(n)
 
     ra_ = rand(Normal(), n)

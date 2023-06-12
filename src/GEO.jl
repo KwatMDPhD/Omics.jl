@@ -164,20 +164,6 @@ function _name(pl, feature_x_information_x_anything)
 
 end
 
-function _make_data_frame(fe_an__, sa_, ty)
-
-    if isempty(fe_an__)
-
-        return DataFrame()
-
-    end
-
-    fe_ = unique!(sort!(vcat((collect(keys(fe_an)) for fe_an in fe_an__)...)))
-
-    BioLab.DataFrame.make(ty, fe_, sa_, [get(fe_an, fe, missing) for fe in fe_, fe_an in fe_an__])
-
-end
-
 function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl_ke_va["SAMPLE"]))
@@ -242,7 +228,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     for (id, (pl, fe_fl__)) in enumerate(pl_fe_fl__)
 
-        feature_x_sample_x_float = _make_data_frame(fe_fl__, sa_, pl)
+        feature_x_sample_x_float = BioLab.DataFrame.make(pl, sa_, fe_fl__)
 
         ke_va = ty_bl_ke_va["PLATFORM"][pl]
 
@@ -263,7 +249,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     end
 
-    _make_data_frame(ch_st__, sa_, "Characteristic"), feature_x_sample_x_float_____...
+    BioLab.DataFrame.make("Characteristic", sa_, ch_st__), feature_x_sample_x_float_____...
 
 end
 

@@ -11,7 +11,7 @@ end
 # ---- #
 
 for (ar, re) in
-    (([-1, 0, 1, 2], 0.5), ([-2, -1, 0, 0, 1, 2], 0), ([-1 1; 0 2], 0.5), ([-2 0 1; -1 0 2], 0))
+    (([-1, 0], -0.5), ([0, 1], 0.5), ([-1, 0, 0, 1], 0), ([-1 0; 0 1], 0), ([-1 1; 0 2], 0.5))
 
     @test BioLab.NumberArray.get_area(ar) == re
 
@@ -20,10 +20,16 @@ end
 # ---- #
 
 for (ar, re) in (
-    ([-1, 0, 0, 1, 2], (2,)),
-    ([-2, -1, 0, 0, 1, 2], (-2, 2)),
-    ([-1 0 0; 1 2 3], (3,)),
-    ([-3 -1 0; 0 1 3], (-3, 3)),
+    ([0], (0,)),
+    ([0, 0], (0,)),
+    ([-1, -1], (-1,)),
+    ([1, 1], (1,)),
+    ([-1, 0, 1], (-1, 1)),
+    ([-1, 0, 2], (2,)),
+    ([-2, 0, 1], (-2,)),
+    ([-2, 0, 2], (-2, 2)),
+    ([0 0], (0,)),
+    ([-2 0; -1 1], (-2,)),
 )
 
     @test BioLab.NumberArray.get_extreme(ar) == re
@@ -32,51 +38,21 @@ end
 
 # ---- #
 
-ar = collect(-3:3)
+it_ = collect(-1:9)
 
-for (nu, re) in zip(
-    vcat(ar, "0<"),
-    (
-        [-3, -2, -1, 0, 1, 2, 3],
-        [-2, -1, 0, 1, 2, 3, 4],
-        [-1, 0, 1, 2, 3, 4, 5],
-        [0, 1, 2, 3, 4, 5, 6],
-        [1, 2, 3, 4, 5, 6, 7],
-        [2, 3, 4, 5, 6, 7, 8],
-        [3, 4, 5, 6, 7, 8, 9],
-        [1, 2, 3, 4, 5, 6, 7],
-    ),
-)
+for n in 1:3
 
-    @test BioLab.NumberArray.shift_minimum(ar, nu) == re
+    @test collect(BioLab.NumberArray.range(it_, n)) == collect(-1:9)
 
 end
 
 # ---- #
 
-for (ar, re) in (
-    ([0, 1, 2], [0, 1, 2]),
-    ([0, 1, 2, 0], [0, 0, 0, 0]),
-    ([0, 1, 2, 2, 1, 0, 1, 2, 3], [0, 0, 0, 0, 0, 0, 1, 2, 3]),
-)
+fl_ = convert(Vector{Float64}, it_)
 
-    BioLab.NumberArray.force_increasing_with_min!(ar)
+for (n, re) in ((1, [-1, 9]), (2, [-1, 4, 9]), (4, [-1, 1.5, 4, 6.5, 9]), (10, fl_))
 
-    @test ar == re
-
-end
-
-# ---- #
-
-for (ar, re) in (
-    ([0, 1, 2], [0, 1, 2]),
-    ([0, 1, 2, 0], [0, 1, 2, 2]),
-    ([0, 1, 2, 2, 1, 0, 1, 2, 3], [0, 1, 2, 2, 2, 2, 2, 2, 3]),
-)
-
-    BioLab.NumberArray.force_increasing_with_max!(ar)
-
-    @test ar == re
+    @test collect(BioLab.NumberArray.range(fl_, n)) == re
 
 end
 
@@ -94,11 +70,11 @@ function fu!(ar)
 
 end
 
-co_ = copy(ar)
+co = copy(ar)
 
-BioLab.NumberArray.skip_nan_apply!!(fu!, co_)
+BioLab.NumberArray.skip_nan_apply!!(fu!, co)
 
-@test isequal(co_, re)
+@test isequal(co, re)
 
 # ---- #
 
@@ -108,11 +84,38 @@ function fu(ar)
 
 end
 
-co_ = copy(ar)
+co = copy(ar)
 
-BioLab.NumberArray.skip_nan_apply!(fu, co_)
+BioLab.NumberArray.skip_nan_apply!(fu, co)
 
-@test isequal(co_, re)
+@test isequal(co, re)
+
+# ---- #
+
+ar = collect(-2:3)
+
+si = (2, 3)
+
+for (mi, re) in zip(
+    vcat(ar, "0<", "1.2<"),
+    (
+        [-2, -1, 0, 1, 2, 3],
+        [-1, 0, 1, 2, 3, 4],
+        [0, 1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5, 6],
+        [2, 3, 4, 5, 6, 7],
+        [3, 4, 5, 6, 7, 8],
+        [1, 2, 3, 4, 5, 6],
+        [2, 3, 4, 5, 6, 7],
+    ),
+)
+
+    @test BioLab.NumberArray.shift_minimum(ar, mi) == re
+
+    @test BioLab.NumberArray.shift_minimum(reshape(ar, si), mi) == reshape(re, si)
+
+end
+
 # ---- #
 
 ar2_ = ([1.0, 1], [1.0 1])
@@ -318,7 +321,7 @@ end
 
 # ---- #
 
-ro_x_co_x_nu = [
+ma = [
     1.0 10 100 100
     2 20 200 200
     3 30 300 300
@@ -375,7 +378,7 @@ for (no!, re) in zip(
     ),
 )
 
-    co = copy(ro_x_co_x_nu)
+    co = copy(ma)
 
     foreach(no!, eachcol(co))
 
@@ -433,7 +436,7 @@ for (no!, re) in zip(
     ),
 )
 
-    co = copy(ro_x_co_x_nu)
+    co = copy(ma)
 
     foreach(no!, eachrow(co))
 
