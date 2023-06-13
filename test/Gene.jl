@@ -2,15 +2,7 @@ include("environment.jl")
 
 # ---- #
 
-mo = BioLab.Gene.read_mouse()
-
-# ---- #
-
 en = BioLab.Gene.read_ensembl()
-
-# ---- #
-
-hg = BioLab.Gene.read_hgnc()
 
 # ---- #
 

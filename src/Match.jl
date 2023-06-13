@@ -36,7 +36,7 @@ function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
 end
 
-function _normalize!(it, st)
+function _normalize!(it, ::Any)
 
     minimum(it), maximum(it)
 

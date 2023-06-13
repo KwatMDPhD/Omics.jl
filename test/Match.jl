@@ -10,17 +10,19 @@ BioLab.Path.reset(te)
 
 function benchmark(n_fe, n_sa, ho)
 
+    si = (n_fe, n_sa)
+
     if ho == "1.0:"
 
         ta_ = collect(1.0:n_sa)
 
-        fe_x_sa_x_nu = Matrix(reshape(1.0:(n_fe * n_sa), (n_fe, n_sa)))
+        fe_x_sa_x_nu = Matrix(reshape(1.0:(n_fe * n_sa), si))
 
     elseif ho == "randn"
 
         ta_ = randn(n_sa)
 
-        fe_x_sa_x_nu = randn((n_fe, n_sa))
+        fe_x_sa_x_nu = randn(size)
 
     end
 

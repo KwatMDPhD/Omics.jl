@@ -8,21 +8,9 @@ function _read(fi)
 
 end
 
-function read_mouse()
-
-    _read("ensembl.mouse_human.tsv.gz")
-
-end
-
 function read_ensembl()
 
     _read("ensembl.tsv.gz")
-
-end
-
-function read_hgnc()
-
-    _read("hgnc_complete_set.tsv.gz")
 
 end
 
