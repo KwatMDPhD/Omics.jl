@@ -34,6 +34,12 @@ co = BioLab.Plot._make_color_scheme(he_, ca, no)
 
 # ---- #
 
+@test BioLab.Plot.COBWR.colors == ColorSchemes.bwr.colors
+
+@test BioLab.Plot.COPLA.colors == ColorSchemes.plasma.colors
+
+# ---- #
+
 for co in (
     BioLab.Plot.COBWR,
     BioLab.Plot.COPLA,
@@ -59,30 +65,6 @@ for co in (
 
 end
 
-@test BioLab.Plot.COBWR.colors == ColorSchemes.bwr.colors
-
-@test BioLab.Plot.COPLA.colors == ColorSchemes.plasma.colors
-
-# ---- #
-
-n = length(BioLab.Plot.COBWR)
-
-# ---- #
-
-for nu in (NaN, -1, 0, n + 1)
-
-    @test @is_error BioLab.Plot.COBWR[nu]
-
-end
-
-# ---- #
-
-for nu in (-Inf, -1.0, 0.0, 0.5, 1.0, 1, 2.0, 2, 3.0, 3, n, convert(Float64, n + 1), Inf)
-
-    BioLab.Plot.COBWR[nu]
-
-end
-
 # ---- #
 
 for (rg, re) in ((RGB(1, 0, 0), "#ff0000"), (RGB(0, 1, 0), "#00ff00"), (RGB(0, 0, 1), "#0000ff"))
@@ -95,9 +77,20 @@ end
 
 co = BioLab.Plot.COGUA
 
-@test @is_error BioLab.Plot.color(co, 0)
+n = length(co)
+
+# ---- #
+
+for nu in (NaN, -1, 0, n + 1)
+
+    @test @is_error co[nu]
+
+end
+
+# ---- #
 
 for (nu, re) in (
+    (-Inf, "#20d9ba"),
     (-0.1, "#20d9ba"),
     (0.0, "#20d9ba"),
     (1, "#20d9ba"),
@@ -105,16 +98,16 @@ for (nu, re) in (
     (2, "#9017e6"),
     (3, "#4e40d8"),
     (0.99, "#fa1a6b"),
-    (4, "#ff1968"),
+    (n, "#ff1968"),
     (1.0, "#ff1968"),
     (1.1, "#ff1968"),
+    (convert(Float64, n + 1), "#ff1968"),
+    (Inf, "#ff1968"),
 )
 
     @test BioLab.Plot.color(co, nu) == re
 
 end
-
-@test @is_error BioLab.Plot.color(co, 5)
 
 # ---- #
 
@@ -129,10 +122,14 @@ for (he_, re) in (
     ),
 )
 
-    @test all(
-        fr == re[id] && he == he_[id] for (id, (fr, he)) in
+    for (id, (fr, he)) in
         enumerate(BioLab.Plot.fractionate(BioLab.Plot._make_color_scheme(he_, ca, no)))
-    )
+
+        @test fr == re[id]
+
+        @test he == he_[id]
+
+    end
 
 end
 

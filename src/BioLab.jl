@@ -16,7 +16,7 @@ macro is_error(ex)
 
         catch er
 
-            @error er
+            @info "Caught an error." er
 
             true
 
