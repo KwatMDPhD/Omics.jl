@@ -6,9 +6,23 @@ include("environment.jl")
 
 # ---- #
 
-# te = joinpath(tempdir(), "BioLab.test.Plot")
-# 
-# BioLab.Path.reset(te)
+@test @is_error BioLab.Plot._make_color_scheme(("#012345",), "Category", "Notes")
+
+# ---- #
+
+he_ = ("#ff71fb", "#fcc9b9", "#c91f37")
+
+ca = "Category"
+
+no = "Notes"
+
+co = BioLab.Plot._make_color_scheme(he_, ca, no)
+
+@test length(co) == length(he_)
+
+@test co.category == ca
+
+@test co.notes == no
 
 # ---- #
 
@@ -17,30 +31,6 @@ include("environment.jl")
 @test BioLab.Plot._CA == "categorical"
 
 @test BioLab.Plot._BI == "binary"
-
-# ---- #
-
-@test @is_error BioLab.Plot._make_color_scheme(("#012345",), "Category", "Notes")
-
-# ---- #
-
-he_ = ("#ff71fb", "#fcc9b9", "#c91f37")
-
-no = "Ay"
-
-co = BioLab.Plot._make_color_scheme(he_, BioLab.Plot._CA, no)
-
-@test length(co) == length(he_)
-
-@test co.category == BioLab.Plot._CA
-
-@test co.notes == no
-
-# ---- #
-
-@test BioLab.Plot.COBWR.colors == ColorSchemes.bwr.colors
-
-@test BioLab.Plot.COPLA.colors == ColorSchemes.plasma.colors
 
 # ---- #
 
@@ -68,6 +58,10 @@ for co in (
     )
 
 end
+
+@test BioLab.Plot.COBWR.colors == ColorSchemes.bwr.colors
+
+@test BioLab.Plot.COPLA.colors == ColorSchemes.plasma.colors
 
 # ---- #
 
@@ -99,21 +93,45 @@ end
 
 # ---- #
 
+co = BioLab.Plot.COGUA
+
+@test @is_error BioLab.Plot.color(co, 0)
+
+for (nu, re) in (
+    (-0.1, "#20d9ba"),
+    (0.0, "#20d9ba"),
+    (1, "#20d9ba"),
+    (0.01, "#23d3bb"),
+    (2, "#9017e6"),
+    (3, "#4e40d8"),
+    (0.99, "#fa1a6b"),
+    (4, "#ff1968"),
+    (1.0, "#ff1968"),
+    (1.1, "#ff1968"),
+)
+
+    @test BioLab.Plot.color(co, nu) == re
+
+end
+
+@test @is_error BioLab.Plot.color(co, 5)
+
+# ---- #
+
 for (he_, re) in (
     (("#000000", "#ffffff"), (0, 1)),
-    (("#ff0000", "#00ff00", "#0000ff"), (0, 1 / 2, 1)),
+    (("#ff0000", "#00ff00", "#0000ff"), (0, 0.5, 1)),
     (("#ff0000", "#00ff00", "#0000ff", "#f0000f"), (0, 1 / 3, 2 / 3, 1)),
-    (("#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0"), (0, 1 / 4, 1 / 2, 3 / 4, 1)),
+    (("#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0"), (0, 0.25, 0.5, 0.75, 1)),
     (
         ("#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0", "#00ff00"),
-        (0, 1 / 5, 2 / 5, 3 / 5, 4 / 5, 1),
+        (0, 0.2, 0.4, 0.6, 0.8, 1),
     ),
 )
 
     @test all(
-        fr == re[id] && he == he_[id] for (id, (fr, he)) in enumerate(
-            BioLab.Plot.fractionate(BioLab.Plot._make_color_scheme(he_, "Category", "Notes")),
-        )
+        fr == re[id] && he == he_[id] for (id, (fr, he)) in
+        enumerate(BioLab.Plot.fractionate(BioLab.Plot._make_color_scheme(he_, ca, no)))
     )
 
 end
@@ -135,6 +153,10 @@ layout = Dict(
 BioLab.Plot.plot(data, layout)
 
 # ---- #
+
+te = joinpath(tempdir(), "BioLab.test.Plot")
+
+BioLab.Path.reset(te)
 
 BioLab.Plot.plot(data, layout; config = Dict("editable" => true), ht = joinpath(te, "plot.html"))
 
