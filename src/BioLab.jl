@@ -16,7 +16,7 @@ macro is_error(ex)
 
         catch er
 
-            println(er.msg)
+            @error er
 
             true
 

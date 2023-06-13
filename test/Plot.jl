@@ -6,23 +6,41 @@ include("environment.jl")
 
 # ---- #
 
-te = joinpath(tempdir(), "BioLab.test.Plot")
-
-BioLab.Path.reset(te)
-
-# ---- #
-
-@test BioLab.Plot.COBWR == ColorSchemes.bwr
-
-@test BioLab.Plot.COPLA == ColorSchemes.plasma
+# te = joinpath(tempdir(), "BioLab.test.Plot")
+# 
+# BioLab.Path.reset(te)
 
 # ---- #
 
-@test @is_error BioLab.Plot._make_color_scheme(("#000000",))
+@test BioLab.Plot._CO == "continuous"
+
+@test BioLab.Plot._CA == "categorical"
+
+@test BioLab.Plot._BI == "binary"
 
 # ---- #
 
-@test length(BioLab.Plot._make_color_scheme(("#ff71fb", "#fcc9b9", "#c91f37"))) == 3
+@test @is_error BioLab.Plot._make_color_scheme(("#012345",), "Category", "Notes")
+
+# ---- #
+
+he_ = ("#ff71fb", "#fcc9b9", "#c91f37")
+
+no = "Ay"
+
+co = BioLab.Plot._make_color_scheme(he_, BioLab.Plot._CA, no)
+
+@test length(co) == length(he_)
+
+@test co.category == BioLab.Plot._CA
+
+@test co.notes == no
+
+# ---- #
+
+@test BioLab.Plot.COBWR.colors == ColorSchemes.bwr.colors
+
+@test BioLab.Plot.COPLA.colors == ColorSchemes.plasma.colors
 
 # ---- #
 
@@ -30,16 +48,24 @@ for co in (
     BioLab.Plot.COBWR,
     BioLab.Plot.COPLA,
     BioLab.Plot.COPL3,
-    BioLab.Plot.COPLO,
-    BioLab.Plot.COBIN,
     BioLab.Plot.COASP,
+    BioLab.Plot.COPLO,
     BioLab.Plot.COGUA,
+    BioLab.Plot.COBIN,
     BioLab.Plot.COHUM,
     BioLab.Plot.COSTA,
-    #BioLab.Plot.COAYA,
 )
 
-    # TODO: Plot.
+    n = length(co)
+
+    BioLab.Plot.plot_heat_map(
+        permutedims(collect(1:n)),
+        [],
+        1:n,
+        permutedims(map(BioLab.Plot._make_hex, co.colors));
+        colorscale = BioLab.Plot.fractionate(co),
+        layout = Dict("title" => Dict("text" => "$(co.category) $(co.notes).")),
+    )
 
 end
 
@@ -65,7 +91,7 @@ end
 
 # ---- #
 
-for (rg, re) in ((RGB(1, 0, 0), "#FF0000"), (RGB(0, 1, 0), "#00FF00"), (RGB(0, 0, 1), "#0000FF"))
+for (rg, re) in ((RGB(1, 0, 0), "#ff0000"), (RGB(0, 1, 0), "#00ff00"), (RGB(0, 0, 1), "#0000ff"))
 
     @test BioLab.Plot._make_hex(rg) == re
 
@@ -85,8 +111,9 @@ for (he_, re) in (
 )
 
     @test all(
-        fr == re[id] && he == uppercase(he_[id]) for
-        (id, (fr, he)) in enumerate(BioLab.Plot.fractionate(BioLab.Plot._make_color_scheme(he_)))
+        fr == re[id] && he == he_[id] for (id, (fr, he)) in enumerate(
+            BioLab.Plot.fractionate(BioLab.Plot._make_color_scheme(he_, "Category", "Notes")),
+        )
     )
 
 end

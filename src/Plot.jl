@@ -2,7 +2,7 @@ module Plot
 
 using ColorSchemes: ColorScheme, bwr, plasma
 
-using Colors: Colorant, RGB, hex
+using Colors: Colorant, hex
 
 using DataFrames: DataFrame
 
@@ -12,68 +12,78 @@ using Printf: @sprintf
 
 using ..BioLab
 
-const COBWR = bwr
-
-const COPLA = plasma
-
-function _make_color_scheme(he_)
+function _make_color_scheme(he_, ca, no)
 
     BioLab.Collection.error_no_change(he_)
 
-    ColorScheme([parse(Colorant{Float64}, he) for he in he_])
+    ColorScheme([parse(Colorant{Float64}, he) for he in he_], ca, no)
 
 end
 
-const COPL3 = _make_color_scheme((
-    "#0508b8",
-    "#1910d8",
-    "#3c19f0",
-    "#6b1cfb",
-    "#981cfd",
-    "#bf1cfd",
-    "#dd2bfd",
-    "#f246fe",
-    "#fc67fd",
-    "#fe88fc",
-    "#fea5fd",
-    "#febefe",
-    "#fec3fe",
-))
+const _CO = "continuous"
 
-const COPLO = _make_color_scheme((
-    "#636efa",
-    "#ef553b",
-    "#00cc96",
-    "#ab63fa",
-    "#ffa15a",
-    "#19d3f3",
-    "#ff6692",
-    "#b6e880",
-    "#ff97ff",
-    "#fecb52",
-))
+const _CA = "categorical"
 
-const COBIN = _make_color_scheme(("#006442", "#ffffff", "#ffb61e"))
+const _BI = "binary"
 
-const COASP = _make_color_scheme((
-    "#00936e",
-    "#a4e2b4",
-    "#e0f5e5",
-    "#ffffff",
-    "#fff8d1",
-    "#ffec9f",
-    "#ffd96a",
-))
+const COBWR = ColorScheme(bwr.colors, _CO, "Blue White Red")
 
-const COGUA = _make_color_scheme(("#4e40d8", "#9017e6", "#20d9ba", "#ff1968"))
+const COPLA = ColorScheme(plasma.colors, _CO, "PLAsma")
 
-const COHUM = _make_color_scheme(("#4b3c39", "#ffffff", "#ffddca"))
+const COPL3 = _make_color_scheme(
+    (
+        "#0508b8",
+        "#1910d8",
+        "#3c19f0",
+        "#6b1cfb",
+        "#981cfd",
+        "#bf1cfd",
+        "#dd2bfd",
+        "#f246fe",
+        "#fc67fd",
+        "#fe88fc",
+        "#fea5fd",
+        "#febefe",
+        "#fec3fe",
+    ),
+    _CO,
+    "PLotly3",
+)
 
-const COSTA = _make_color_scheme(("#ffffff", "#8c1515"))
+const COASP = _make_color_scheme(
+    ("#00936e", "#a4e2b4", "#e0f5e5", "#ffffff", "#fff8d1", "#ffec9f", "#ffd96a"),
+    _CO,
+    "ASPen",
+)
+
+const COPLO = _make_color_scheme(
+    (
+        "#636efa",
+        "#ef553b",
+        "#00cc96",
+        "#ab63fa",
+        "#ffa15a",
+        "#19d3f3",
+        "#ff6692",
+        "#b6e880",
+        "#ff97ff",
+        "#fecb52",
+    ),
+    _CA,
+    "PLOtly",
+)
+
+const COGUA = _make_color_scheme(("#20d9ba", "#9017e6", "#4e40d8", "#ff1968"), _CA, "GUArdiome")
+
+const COBIN = _make_color_scheme(("#006442", "#ffffff", "#ffb61e"), _BI, "BINary")
+
+const COHUM = _make_color_scheme(("#4b3c39", "#ffffff", "#ffddca"), _BI, "HUMan")
+
+const COSTA = _make_color_scheme(("#8c1515", "#ffffff", "#175e54"), _BI, "STAnford")
 
 function _make_hex(rg)
 
-    "#$(hex(rg))"
+    "#$(lowercase(hex(rg)))"
 
 end
 
@@ -325,7 +335,7 @@ end
 
 function make_colorbar(z)
 
-    tickvals = BioLab.NumberVector.range(z, 10)
+    tickvals = BioLab.NumberArray.range(z, 10)
 
     Dict(
         "thicknessmode" => "fraction",
@@ -343,7 +353,8 @@ end
 function plot_heat_map(
     z::AbstractMatrix,
     y = ["$id *" for id in 1:size(z, 1)],
-    x = ["* $id" for id in 1:size(z, 2)];
+    x = ["* $id" for id in 1:size(z, 2)],
+    text = z;
     nar = "Row",
     nac = "Column",
     colorscale = fractionate(COBWR),
@@ -431,6 +442,8 @@ function plot_heat_map(
                 "z" => collect(eachrow(z)),
                 "y" => y,
                 "x" => x,
+                "text" => collect(eachrow(text)),
+                "hoverinfo" => "y+x+z+text",
                 "colorscale" => colorscale,
                 "colorbar" => merge(make_colorbar(z), Dict("x" => colorbarx)),
             ),
@@ -450,7 +463,7 @@ function plot_heat_map(
                 Dict(
                     "xaxis" => "x2",
                     "z" => [[grr] for grr in grr_],
-                    "hoverinfo" => "z+y",
+                    "hoverinfo" => "y+z",
                     "colorbar" => merge(make_colorbar(grr_), Dict("x" => colorbarx)),
                 ),
             ),
@@ -470,7 +483,7 @@ function plot_heat_map(
                 Dict(
                     "yaxis" => "y2",
                     "z" => [grc_],
-                    "hoverinfo" => "z+x",
+                    "hoverinfo" => "x+z",
                     "colorbar" => merge(make_colorbar(grc_), Dict("x" => colorbarx)),
                 ),
             ),
