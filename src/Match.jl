@@ -183,7 +183,6 @@ function make(
     rev = false,
     n_ma = 10,
     n_pv = 10,
-    pl = true,
     n_ex = 8,
     st = 4,
     layout = Dict{String, Any}(),
@@ -292,7 +291,7 @@ function make(
 
     end
 
-    if pl
+    if 0 < n_ex
 
         # Select not-NaNs to plot.
 
