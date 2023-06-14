@@ -1,6 +1,6 @@
-using ColorSchemes
+using ColorSchemes: bwr, plasma
 
-using Colors
+using Colors: RGB
 
 include("environment.jl")
 
@@ -34,9 +34,9 @@ co = BioLab.Plot._make_color_scheme(he_, ca, no)
 
 # ---- #
 
-@test BioLab.Plot.COBWR.colors == ColorSchemes.bwr.colors
+@test BioLab.Plot.COBWR.colors == bwr.colors
 
-@test BioLab.Plot.COPLA.colors == ColorSchemes.plasma.colors
+@test BioLab.Plot.COPLA.colors == plasma.colors
 
 # ---- #
 
@@ -56,11 +56,11 @@ for co in (
 
     BioLab.Plot.plot_heat_map(
         permutedims(collect(1:n)),
-        [],
+        Vector{String}(),
         1:n,
         permutedims(map(BioLab.Plot._make_hex, co.colors));
         colorscale = BioLab.Plot.fractionate(co),
-        layout = Dict("title" => Dict("text" => "$(co.category) $(co.notes).")),
+        layout = Dict("title" => Dict("text" => "$(titlecase(co.category)) $(co.notes)")),
     )
 
 end
@@ -111,7 +111,7 @@ end
 
 # ---- #
 
-for (he_, re) in (
+for (he_, fr_) in (
     (("#000000", "#ffffff"), (0, 1)),
     (("#ff0000", "#00ff00", "#0000ff"), (0, 0.5, 1)),
     (("#ff0000", "#00ff00", "#0000ff", "#f0000f"), (0, 1 / 3, 2 / 3, 1)),
@@ -122,20 +122,16 @@ for (he_, re) in (
     ),
 )
 
-    for (id, (fr, he)) in
-        enumerate(BioLab.Plot.fractionate(BioLab.Plot._make_color_scheme(he_, ca, no)))
-
-        @test fr == re[id]
-
-        @test he == he_[id]
-
-    end
+    @test BioLab.Plot.fractionate(BioLab.Plot._make_color_scheme(he_, ca, no)) ==
+          collect(zip(fr_, he_))
 
 end
 
 # ---- #
 
 data = [Dict()]
+
+# ---- #
 
 BioLab.Plot.plot(data)
 
@@ -146,6 +142,8 @@ layout = Dict(
     "yaxis" => Dict("title" => "Y-Axis Title"),
     "xaxis" => Dict("title" => "X-Axis Title"),
 )
+
+# ---- #
 
 BioLab.Plot.plot(data, layout)
 
@@ -171,7 +169,7 @@ BioLab.Plot.plot_scatter(y_)
 
 # ---- #
 
-BioLab.Plot.plot_scatter(y_, [y1 * 10, y2 * 10])
+BioLab.Plot.plot_scatter(y_, [y1 * 10, y2 * 10]; name_ = ("One", "Two"))
 
 # ---- #
 
@@ -198,6 +196,8 @@ BioLab.Plot.plot_bar(
 
 x_ = [[-1], [0, 1], [2, 3, 4]]
 
+# ---- #
+
 BioLab.Plot.plot_histogram(x_)
 
 # ---- #
@@ -221,9 +221,9 @@ n_co = 4
 
 ro1_x_co1_x_nu = convert(Matrix, reshape(1:(n_ro * n_co), n_ro, n_co))
 
-ro_ = ["Row$id" for id in 1:n_ro]
+ro_ = ["Row $id" for id in 1:n_ro]
 
-co_ = ["Column$id" for id in 1:n_co]
+co_ = ["Column $id" for id in 1:n_co]
 
 # ---- #
 
@@ -237,7 +237,10 @@ BioLab.Plot.plot_heat_map(ro1_x_co1_x_nu, ro_, co_)
 
 BioLab.Plot.plot_heat_map(
     BioLab.DataFrame.make("Row Name", ro_, co_, ro1_x_co1_x_nu);
-    layout = Dict("xaxis" => Dict("title" => Dict("text" => "Column Name"))),
+    layout = Dict(
+        "title" => Dict("text" => "Plotting DataFrame"),
+        "xaxis" => Dict("title" => Dict("text" => "Column Name")),
+    ),
 )
 
 # ---- #
@@ -278,8 +281,8 @@ theta45 = collect(0:45:360)
 
 theta60 = collect(0:60:360)
 
-BioLab.Plot.plot_radar(
-    [theta30, theta45, theta60],
-    [theta30, theta45, theta60];
-    name_ = [30, 45, 60],
-)
+theta_ = [theta30, theta45, theta60]
+
+r_ = [1:length(theta30), 1:length(theta45), 1:length(theta60)]
+
+BioLab.Plot.plot_radar(theta_, r_; name_ = [30, 45, 60])

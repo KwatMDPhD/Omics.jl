@@ -313,7 +313,7 @@ for (no!, re) in zip(
 
     co = copy(ar)
 
-    BioLab.NumberVector.skip_nan_apply!!(no!, co)
+    BioLab.NumberArray.skip_nan_apply!!(no!, co)
 
     @test isequal(co, re)
 

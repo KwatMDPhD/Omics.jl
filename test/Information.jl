@@ -1,5 +1,3 @@
-using KernelDensity
-
 include("environment.jl")
 
 # ---- #
@@ -14,9 +12,9 @@ end
 
 n = 10
 
-nu1_ = BioLab.NumberVector.shift_minimum(randn(n), "0<")
+nu1_ = BioLab.NumberArray.shift_minimum(randn(n), "0<")
 
-nu2_ = BioLab.NumberVector.shift_minimum(randn(n), "0<")
+nu2_ = BioLab.NumberArray.shift_minimum(randn(n), "0<")
 
 nu1s_ = [nu + 1 for nu in nu1_]
 
@@ -26,7 +24,7 @@ ar_ = (
     ([1, 1, 1], [1, 1, 1]),
     ([1, 2, 3], [10, 20, 30]),
     (
-        (kde(nu1_).density, kde(nu2_).density) for
+        (BioLab.Information.kde(nu1_).density, BioLab.Information.kde(nu2_).density) for
         (nu1_, nu2_) in ((nu1_, nu1_), (nu1_, nu2_), (nu1s_, nu2s_))
     )...,
 )
@@ -88,7 +86,7 @@ BioLab.Information.get_mutual_information(nu1_, nu2_)
 
 # ---- #
 
-bi = kde((nu1_, nu2_), npoints = (8, 8))
+bi = BioLab.Information.kde((nu1_, nu2_), npoints = (8, 8))
 
 y = collect(bi.y)
 

@@ -75,11 +75,11 @@ const COPLO = _make_color_scheme(
 
 const COGUA = _make_color_scheme(("#20d9ba", "#9017e6", "#4e40d8", "#ff1968"), _CA, "GUArdiome")
 
-const COBIN = _make_color_scheme(("#006442", "#ffffff", "#ffb61e"), _BI, "BINary")
+const COBIN = _make_color_scheme(("#006442", "#ffb61e"), _BI, "BINary")
 
-const COHUM = _make_color_scheme(("#4b3c39", "#ffffff", "#ffddca"), _BI, "HUMan")
+const COHUM = _make_color_scheme(("#4b3c39", "#ffddca"), _BI, "HUMan")
 
-const COSTA = _make_color_scheme(("#8c1515", "#ffffff", "#175e54"), _BI, "STAnford")
+const COSTA = _make_color_scheme(("#8c1515", "#175e54"), _BI, "STAnford")
 
 function _make_hex(rg)
 
@@ -333,7 +333,7 @@ function plot_histogram(
 
 end
 
-function make_colorbar(z)
+function _make_colorbar(z)
 
     tickvals = BioLab.NumberArray.range(z, 10)
 
@@ -445,7 +445,7 @@ function plot_heat_map(
                 "text" => collect(eachrow(text)),
                 "hoverinfo" => "y+x+z+text",
                 "colorscale" => colorscale,
-                "colorbar" => merge(make_colorbar(z), Dict("x" => colorbarx)),
+                "colorbar" => merge(_make_colorbar(z), Dict("x" => colorbarx)),
             ),
         ),
     )
@@ -464,7 +464,7 @@ function plot_heat_map(
                     "xaxis" => "x2",
                     "z" => [[grr] for grr in grr_],
                     "hoverinfo" => "y+z",
-                    "colorbar" => merge(make_colorbar(grr_), Dict("x" => colorbarx)),
+                    "colorbar" => merge(_make_colorbar(grr_), Dict("x" => colorbarx)),
                 ),
             ),
         )
@@ -484,7 +484,7 @@ function plot_heat_map(
                     "yaxis" => "y2",
                     "z" => [grc_],
                     "hoverinfo" => "x+z",
-                    "colorbar" => merge(make_colorbar(grc_), Dict("x" => colorbarx)),
+                    "colorbar" => merge(_make_colorbar(grc_), Dict("x" => colorbarx)),
                 ),
             ),
         )

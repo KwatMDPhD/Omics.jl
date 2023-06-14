@@ -1,4 +1,4 @@
-using Random
+using Random: seed!
 
 include("environment.jl")
 
@@ -34,7 +34,7 @@ n = 3
 
 # ---- #
 
-Random.seed!(se)
+seed!(se)
 
 ne_, po_ = BioLab.NumberVector._simulate_negative_positive(n)
 
@@ -62,7 +62,7 @@ end
 
 for (ze, re) in ((false, ref), (true, ret))
 
-    Random.seed!(se)
+    seed!(se)
 
     @test BioLab.NumberVector.simulate(n; ze) == re
 
@@ -72,7 +72,7 @@ end
 
 for (ze, re) in ((false, vcat(ren[1:(end - 1)] * 2, rep)), (true, vcat(ren * 2, rep)))
 
-    Random.seed!(se)
+    seed!(se)
 
     @test BioLab.NumberVector.simulate_deep(n; ze) == re
 
@@ -85,7 +85,7 @@ for (ze, re) in (
     (true, vcat(-2.979510998882675, -0.740299936878476, -0.0, rep)),
 )
 
-    Random.seed!(se)
+    seed!(se)
 
     @test BioLab.NumberVector.simulate_wide(n; ze) == re
 

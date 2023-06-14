@@ -63,6 +63,7 @@ function title(st)
         "'ve ",
         "'d ",
         " a ",
+        " an ",
         " st ",
         " the ",
         " and ",

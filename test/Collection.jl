@@ -1,4 +1,4 @@
-using OrderedCollections
+using OrderedCollections: OrderedDict
 
 include("environment.jl")
 

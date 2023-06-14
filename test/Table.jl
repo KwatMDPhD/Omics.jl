@@ -1,4 +1,4 @@
-using DataFrames
+using DataFrames: DataFrame
 
 include("environment.jl")
 
