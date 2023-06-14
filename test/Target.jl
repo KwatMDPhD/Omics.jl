@@ -1,4 +1,4 @@
-using StatsBase
+using StatsBase: mean
 
 include("environment.jl")
 

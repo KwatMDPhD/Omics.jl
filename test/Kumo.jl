@@ -1,4 +1,6 @@
-using BioLab.Kumo: Kumo, @st, <<, >>
+include("environment.jl")
+
+using BioLab.Kumo: @st, <<, >>
 
 # ---- #
 
