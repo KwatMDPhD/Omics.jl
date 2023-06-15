@@ -8,8 +8,7 @@ using BioLab
 
 const NO_ = Vector{String}()
 
-# TODO: VArgs?
-const NO_CL_ = Dict{String, Tuple}()
+const NO_CL_ = Dict{String, Tuple{Vararg{String}}}()
 
 const ED_ = Vector{Tuple{String, String}}()
 
@@ -81,7 +80,7 @@ end
 
 function _add!(::Tuple, ::Tuple)
 
-    error()
+    error("Can not add many-to-many edges.")
 
 end
 
@@ -111,7 +110,12 @@ end
 
 macro st(sy)
 
+    # TODO
+    println("BEFORE")
+    println(sy)
     sy = esc(sy)
+    println("AFTER")
+    println(sy)
 
     quote
 
@@ -125,13 +129,18 @@ end
 
 macro st(sy, cl_...)
 
+    # TODO
+    println("BEFORE")
+    println(sy)
     sy = esc(sy)
+    println("AFTER")
+    println(sy)
 
     quote
 
         @st $sy
 
-        NO_CL_[string($sy)] = Tuple(string(cl) for cl in $cl_)
+        NO_CL_[string($sy)] = map(string, $cl_)
 
     end
 
@@ -187,17 +196,7 @@ function print()
 
     n_ed = length(Kumo.ED_)
 
-    n_pa = 7
-
-    println("$(rpad(n_no, n_pa)) Nodes")
-
-    println("$(rpad(n_cl, n_pa))   with classes")
-
-    println("$(rpad(n_de, n_pa))   decreasing")
-
-    println("$(rpad(n_in, n_pa))   increasing")
-
-    println("$(rpad(n_ed, n_pa)) Edges")
+    "There are $n_no nodes ($n_cl classed, $n_de decreasing, and $n_in increasing) and $n_ed edges."
 
 end
 
