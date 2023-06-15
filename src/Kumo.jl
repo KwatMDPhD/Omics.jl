@@ -8,6 +8,7 @@ using BioLab
 
 const NO_ = Vector{String}()
 
+# TODO: VArgs?
 const NO_CL_ = Dict{String, Tuple}()
 
 const ED_ = Vector{Tuple{String, String}}()
@@ -18,7 +19,7 @@ function _add!(no)
 
     if nos in NO_
 
-        BioLab.check_print(!contains(nos, '.'), "‼️  $nos.")
+        @warn "$nos exists."
 
     else
 
@@ -36,13 +37,17 @@ function _add!(so, ta)
 
     ed = (sos, tas)
 
-    if !(ed in ED_)
+    if ed in ED_
+
+        @warn "$ed exists."
+
+    else
 
         for no in ed
 
             if !(no in NO_)
 
-                error("🫥 $no")
+                error("$no is missing.")
 
             end
 
@@ -146,9 +151,9 @@ function clear!()
 
     empty!(NO_)
 
-    empty!(ED_)
-
     empty!(NO_CL_)
+
+    empty!(ED_)
 
 end
 
@@ -178,17 +183,15 @@ function print()
 
     n_pa = 7
 
-    println("🕷️  💬")
+    println("$(rpad(n_no, n_pa)) Nodes")
 
-    println("🦋 $(rpad(n_no, n_pa)) Nodes")
+    println("$(rpad(n_cl, n_pa))   with classes")
 
-    println("🐝 $(rpad(n_cl, n_pa))   with classes")
+    println("$(rpad(n_de, n_pa))   decreasing")
 
-    println("🌚 $(rpad(n_de, n_pa))   decreases potential")
+    println("$(rpad(n_in, n_pa))   increasing")
 
-    println("🌝 $(rpad(n_in, n_pa))   increases potential")
-
-    println("🕸️  $(rpad(n_ed, n_pa)) Edges")
+    println("$(rpad(n_ed, n_pa)) Edges")
 
 end
 
@@ -204,7 +207,7 @@ function _elementize(no::String)
 
     end
 
-    Dict("data" => Dict("id" => no, "weight" => 0), "classes" => cl_)
+    Dict("data" => Dict("id" => no, "weight" => 0.0), "classes" => cl_)
 
 end
 
