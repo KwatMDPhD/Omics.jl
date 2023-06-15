@@ -127,7 +127,7 @@ function transplant(st1, st2, de, id_)
 
 end
 
-function count_noun(n, st)
+function count(n, st)
 
     if n <= 1
 

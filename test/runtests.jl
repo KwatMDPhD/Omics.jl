@@ -6,7 +6,7 @@ using BioLab
 
 # ---- #
 
-# Aqua.test_all(BioLab; ambiguities = false)
+Aqua.test_all(BioLab; ambiguities = false)
 
 Aqua.test_ambiguities(BioLab)
 

@@ -191,7 +191,7 @@ function make(
 
     n_fe = length(fe_)
 
-    # Sort samples.
+    @info "Matching $tan and $(BioLab.String.count(n_fe, fen)) with $fu"
 
     id_ = sortperm(ta_; rev)
 
@@ -201,11 +201,21 @@ function make(
 
     fe_x_sa_x_nu = fe_x_sa_x_nu[:, id_]
 
-    # Get statistics.
+    @info "Computing scores"
 
     sc_ = [fu(ta_, nu_) for nu_ in eachrow(fe_x_sa_x_nu)]
 
+    ba_ = map(BioLab.Bad.is_bad, sc_)
+
+    if any(ba_)
+
+        @warn "Found $(BioLab.String.count(sum(n_ba), "bad value"))."
+
+    end
+
     if 0 < n_ma
+
+        @info "Computing margin of error with $(BioLab.String.count(n_ma, "sampling"))"
 
         n_sa = length(sa_)
 
@@ -241,6 +251,8 @@ function make(
 
     if 0 < n_pv
 
+        @info "Computing p-values with $(BioLab.String.count(n_pv, "permutation"))"
+
         co = copy(ta_)
 
         ra_ = Vector{Float64}(undef, n_fe * n_pv)
@@ -267,14 +279,6 @@ function make(
 
     fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
 
-    ba_ = map(isnan, sc_)
-
-    if any(ba_)
-
-        @warn "Found $(BioLab.String.count(sum(n_ba), "bad value"))."
-
-    end
-
     feature_x_statistic_x_number = BioLab.DataFrame.make(
         fen,
         fe_,
@@ -293,8 +297,6 @@ function make(
 
     if 0 < n_ex
 
-        # Select not-NaNs to plot.
-
         go_ = map(!, ba_)
 
         fep_ = fe_[go_]
@@ -302,8 +304,6 @@ function make(
         fe_x_sa_x_nup = fe_x_sa_x_nu[go_, :]
 
         fe_x_st_x_nup = fe_x_st_x_nu[go_, :]
-
-        # Sort and select rows to copy and plot.
 
         ex_ = reverse!(BioLab.Collection.get_extreme(fe_x_st_x_nup[:, 1], n_ex))
 
@@ -313,9 +313,9 @@ function make(
 
         fe_x_st_x_nup = fe_x_st_x_nup[ex_, :]
 
-        # Cluster within groups.
-
         if ta_ isa AbstractVector{Int}
+
+            @info "Clustering within groups"
 
             fu = BioLab.Clustering.Euclidean()
 
@@ -339,19 +339,17 @@ function make(
 
         end
 
-        # Normalize target.
-
         tac_ = copy(ta_)
 
         tai, taa = _normalize!(tac_, st)
 
-        # Normalize features.
+        @info "$tan colors can range from $tai to $taa."
 
         fe_x_sa_x_nupc = copy(fe_x_sa_x_nup)
 
         fei, fea = _normalize!(fe_x_sa_x_nupc, st)
 
-        # Make layout.
+        @info "$fen colors can range from $fei to $fea."
 
         n_ro = length(fep_) + 2
 
@@ -380,8 +378,6 @@ function make(
             layout,
         )
 
-        # Make traces.
-
         data = [
             _merge_heatmap(
                 Dict(
@@ -409,8 +405,6 @@ function make(
                 ),
             ),
         ]
-
-        # Plot, write, and return.
 
         if isempty(di)
 

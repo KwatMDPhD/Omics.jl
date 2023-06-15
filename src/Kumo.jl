@@ -79,6 +79,12 @@ function _add!(so, ta_::Tuple)
 
 end
 
+function _add!(::Tuple, ::Tuple)
+
+    error()
+
+end
+
 function _make_how_node(so, ho)
 
     "$so.$ho"
@@ -246,7 +252,7 @@ function plot(;
     n_ed = length(ed_)
 
     println(
-        "🎨 Plotting $(BioLab.String.count_noun(n_no, "node")) and $(BioLab.String.count_noun(n_ed, "edge"))",
+        "🎨 Plotting $(BioLab.String.count(n_no, "node")) and $(BioLab.String.count(n_ed, "edge"))",
     )
 
     nohs = nos * 0.64

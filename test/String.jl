@@ -100,7 +100,7 @@ for (si, pl) in (
 
     for (n, re) in ((-1, "-1 $si"), (0, "0 $si"), (1, "1 $si"), (2, "2 $pl"))
 
-        @test BioLab.String.count_noun(n, si) == re
+        @test BioLab.String.count(n, si) == re
 
     end
 
