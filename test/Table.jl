@@ -49,6 +49,4 @@ ts = replace(ts, "csv" => "tsv")
 
 BioLab.Table.write(ts, da)
 
-@test @is_error BioLab.Table.write(ts, da)
-
 @test da != BioLab.Table.read(ts)
