@@ -90,6 +90,7 @@ function read(sa_di)
 
 end
 
+# TODO: Generalize and move elsewhere.
 function keep(fe_x_ba_x_co, di, mis, mas, min, man)
 
     n = size(fe_x_ba_x_co, di)

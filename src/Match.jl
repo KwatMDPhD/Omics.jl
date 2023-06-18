@@ -362,7 +362,7 @@ function make(
         layout = _merge_layout(
             Dict(
                 "height" => height,
-                "title" => Dict("text" => "<b>$tan</b> and <b>$fen</b>"),
+                "title" => Dict("text" => fen),
                 "yaxis2" =>
                     Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
                 "yaxis" => Dict(
@@ -421,6 +421,95 @@ function make(
     end
 
     feature_x_statistic_x_number
+
+end
+
+function make(tst, tsf, n_ma, n_pv, n_ex, di)
+
+    _tan, ta_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
+
+    fen, fe_, _saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
+
+    @assert sa_ == _saf_
+
+    for (ta, nu_) in zip(ta_, eachrow(ta_x_sa_x_nu))
+
+        go_ = map(!isnan, nu_)
+
+        sag_ = sa_[go_]
+
+        nug_ = nu_[go_]
+
+        try
+
+            nug_ = convert(Vector{Int}, nug_)
+
+        catch
+
+        end
+
+        make(
+            cor,
+            ta,
+            fen,
+            fe_,
+            sag_,
+            nug_,
+            fe_x_sa_x_nu[:, go_];
+            n_ma,
+            n_pv,
+            n_ex,
+            di = mkdir(joinpath(di, BioLab.Path.clean("$(ta)__vs__$fen"))),
+        )
+
+    end
+
+end
+
+function compare(ts1, ts2, di)
+
+    fen, fe1_, st_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
+
+    _fen, fe2_, _st_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
+
+    @assert fen == _fen
+
+    @assert fe1_ == fe2_
+
+    @assert st_ == _st_
+
+    nu1_, fe1_ = BioLab.Collection.sort_like((fe_x_st_x_nu1[:, 1], fe1_))
+
+    id_ = indexin(fe1_, fe2_)
+
+    fe2_ = fe2_[id_]
+
+    nu2_ = fe_x_st_x_nu2[id_, 1]
+
+    @assert fe1_ == fe2_
+
+    op_ = [sqrt(nu1^2 + nu2^2) for (nu1, nu2) in zip(nu1_, nu2_)]
+
+    BioLab.NumberArray.normalize_with_01!(op_)
+
+    na1 = basename(dirname(ts1))
+
+    na2 = basename(dirname(ts2))
+
+    BioLab.Plot.plot_scatter(
+        (nu2_,),
+        (nu1_,),
+        (fe1_,),
+        mode_ = ("markers",),
+        marker_color_ = ("#20d9ba",);
+        opacity_ = (op_,),
+        layout = Dict(
+            "title" => Dict("text" => "Comparing Match"),
+            "yaxis" => Dict("title" => Dict("text" => na2)),
+            "xaxis" => Dict("title" => Dict("text" => na1)),
+        ),
+        ht = joinpath(di, "$(na1)__vs__$na2.html"),
+    )
 
 end
 
