@@ -229,8 +229,8 @@ function plot(;
     he_ = Vector{Float64}(),
     hi = 800,
     wi = 800,
+    ex = "",
     ht = "",
-    wr = "",
 )
 
     # TODO: Do not access the global variable.
@@ -357,11 +357,11 @@ function plot(;
 
     if !isempty(js)
 
-        me = Dict("name" => "preset")
+        la = Dict("name" => "preset")
 
     elseif 1 < length(ed_)
 
-        me = Dict(
+        la = Dict(
             "name" => "cose",
             "padding" => 16,
             "boundingBox" => Dict("x1" => 0, "y1" => 0, "h" => hi, "w" => wi),
@@ -373,17 +373,17 @@ function plot(;
 
     else
 
-        me = Dict("name" => "grid")
+        la = Dict("name" => "grid")
 
     end
 
     BioLab.Network.plot(
         vcat(no_, ed_);
         st_,
-        la = merge(me, Dict("animate" => false)),
+        la,
+        ex,
         ht,
         he = hi,
-        wr,
     )
 
 end
@@ -444,7 +444,7 @@ function animate(js, he___, di; pe = 1, st_ = Vector{Dict}())
 
         end
 
-        plot(; js, st_, he_, ht = joinpath(di, "$pri.html"), wr = "png")
+        plot(; js, st_, he_, ex = "png", ht = joinpath(di, "$pri.html"))
 
         pn = joinpath(dw, "$pri.png")
 
@@ -471,9 +471,7 @@ function animate(js, he___, di; pe = 1, st_ = Vector{Dict}())
 
     run(`convert -delay 32 -loop 0 $pn_ $gi`)
 
-    println("🎞️  $gi.")
-
-    gi
+    run(`open --background $gi`)
 
 end
 

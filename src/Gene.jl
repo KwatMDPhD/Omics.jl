@@ -2,9 +2,9 @@ module Gene
 
 using ..BioLab
 
-function _read(fi)
+function _read(na)
 
-    BioLab.Table.read(joinpath(dirname(@__DIR__), "data", "Gene", fi))
+    BioLab.Table.read(joinpath(BioLab.DA, "Gene", na))
 
 end
 

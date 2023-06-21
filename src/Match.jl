@@ -286,12 +286,11 @@ function make(
         fe_x_st_x_nu,
     )
 
+    pr = joinpath(di, "feature_x_statistic_x_number")
+
     if !isempty(di)
 
-        BioLab.Table.write(
-            joinpath(di, "feature_x_statistic_x_number.tsv"),
-            feature_x_statistic_x_number,
-        )
+        BioLab.Table.write("$pr.tsv", feature_x_statistic_x_number)
 
     end
 
@@ -412,7 +411,7 @@ function make(
 
         else
 
-            ht = joinpath(di, "match_panel.html")
+            ht = "$pr.html"
 
         end
 

@@ -28,6 +28,14 @@ end
 
 # ---- #
 
+@test isconst(BioLab, :DA)
+
+@test basename(BioLab.DA) == "data"
+
+@test isdir(BioLab.DA)
+
+# ---- #
+
 @test isconst(BioLab, :TE)
 
 @test basename(BioLab.TE) == "BioLab"

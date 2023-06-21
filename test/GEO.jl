@@ -2,11 +2,17 @@ include("environment.jl")
 
 # ---- #
 
+te = joinpath(BioLab.TE, "test.GEO")
+
+BioLab.Path.reset(te)
+
+# ---- #
+
 gs = "GSE122404"
 
 # ---- #
 
-ty_bl = BioLab.GEO.read(gs)
+ty_bl = BioLab.GEO.read(gs, te)
 
 @test length(ty_bl["DATABASE"]) == 1
 
@@ -38,7 +44,7 @@ platform_table = pl_ke_va[pl]["table"]
 
 # disable_logging(Warn)
 # 687.734 ms (3441114 allocations: 208.35 MiB)
-# @btime BioLab.GEO.read($gs);
+# @btime BioLab.GEO.read($gs, $te);
 # disable_logging(Debug)
 
 # ---- #
@@ -75,7 +81,7 @@ characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabul
 
 # ---- #
 
-ty_bl = BioLab.GEO.read("GSE112")
+ty_bl = BioLab.GEO.read("GSE112", te)
 
 @test length(ty_bl["PLATFORM"]) == 2
 
@@ -83,7 +89,7 @@ ty_bl = BioLab.GEO.read("GSE112")
 
 # ---- #
 
-ty_bl = BioLab.GEO.read("GSE197763")
+ty_bl = BioLab.GEO.read("GSE197763", te)
 
 @test length(ty_bl["PLATFORM"]) == 2
 
@@ -97,7 +103,7 @@ characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabul
 
 # ---- #
 
-ty_bl = BioLab.GEO.read("GSE13534")
+ty_bl = BioLab.GEO.read("GSE13534", te)
 
 characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabulate(ty_bl)
 

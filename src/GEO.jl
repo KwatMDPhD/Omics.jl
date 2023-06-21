@@ -14,7 +14,7 @@ function _readline(st)
 
 end
 
-function read(gs; di = BioLab.TE)
+function read(gs, di)
 
     fi = "$(gs)_family.soft.gz"
 

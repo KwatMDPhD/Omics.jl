@@ -24,13 +24,13 @@ function read(sa_di)
 
     for (sa, di) in sa_di
 
-        @info "Reading $sa => $di"
+        @info "Reading $sa ($di)"
 
-        # TODO: Read only the column.
-        fes_ = BioLab.Table.read(joinpath(di, "features.tsv.gz"); header = false)[!, 2]
+        fes_ =
+            BioLab.Table.read(joinpath(di, "features.tsv.gz"); header = false, select = [2])[!, 1]
 
-        # TODO: Read only the column.
-        bas_ = BioLab.Table.read(joinpath(di, "barcodes.tsv.gz"); header = false)[!, 1]
+        bas_ =
+            BioLab.Table.read(joinpath(di, "barcodes.tsv.gz"); header = false, select = [1])[!, 1]
 
         da = BioLab.Table.read(joinpath(di, "matrix.mtx.gz"); header = 3, delim = " ")
 
@@ -167,7 +167,7 @@ function keep(fe_x_ba_x_co, di, mis, mas, min, man)
 
     @info "Selected $n_ke ($(BioLab.String.format(n_ke / n * 100))%)."
 
-    # TODO: Keep based on some features or barcodes.
+    # TODO: Keep based on some.
 
     ke_
 

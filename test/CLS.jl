@@ -4,7 +4,7 @@ include("environment.jl")
 
 # ---- #
 
-da = joinpath(DA, "CLS")
+da = joinpath(BioLab.DA, "CLS")
 
 for (na, ta, nu_) in (
     ("CCLE_mRNA_20Q2_no_haem_phen.cls", "HER2", []),

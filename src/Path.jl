@@ -40,6 +40,21 @@ function clean(pa)
 
 end
 
+# TODO: Test.
+function open(pa)
+
+    try
+
+        run(`open --background $pa`)
+
+    catch
+
+        @warn "Could not open $pa."
+
+    end
+
+end
+
 function read(di; join = false, ig_ = (r"^\.",), ke_ = ())
 
     pa_ = Vector{String}()
@@ -79,11 +94,7 @@ function rank(di)
 
         if na != na2
 
-            sr = joinpath(di, na)
-
-            de = joinpath(di, na2)
-
-            mv(sr, de)
+            mv(joinpath(di, na), joinpath(di, na2))
 
         end
 

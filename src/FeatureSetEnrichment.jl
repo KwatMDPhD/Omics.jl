@@ -627,7 +627,7 @@ function enrich(al, fe_, sc_, fe1___; ex = 1.0)
 
 end
 
-function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0, n_jo = 1)
+function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0)
 
     n = length(sa_)
 
@@ -649,6 +649,8 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0, n_jo = 1)
 
 end
 
+# TODO: Decouple benchmarks.
+
 function benchmark_card(ca1)
 
     reverse!([string(ca) for ca in BioLab.CA_]),
@@ -667,16 +669,15 @@ function benchmark_random(n, n1)
 
 end
 
-# TODO: Decouple benchmarks.
 function benchmark_myc()::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
 
-    di = pkgdir(BioLab, "test", "FeatureSetEnrichment.data")
+    da = joinpath(BioLab.DA, "FeatureSetEnrichment")
 
-    da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
+    gene_x_statistic_x_number = BioLab.Table.read(joinpath(da, "gene_x_statistic_x_number.tsv"))
 
-    reverse!(da[!, 1]),
-    reverse!(da[!, 2]),
-    BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+    reverse!(gene_x_statistic_x_number[!, 1]),
+    reverse!(gene_x_statistic_x_number[!, 2]),
+    BioLab.GMT.read(joinpath(da, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 end
 

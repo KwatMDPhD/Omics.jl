@@ -15,7 +15,7 @@ function plot(
     ke_ar...,
 )
 
-    id = "BioLab.Network.plot.$(BioLab.Time.stamp())"
+    id = "BioLab.Network.plot"
 
     if isempty(ht)
 
@@ -48,6 +48,7 @@ function plot(
         elseif ex == "png"
 
             bl = "cy.png({\"full\": true, \"scale\": $pns, \"bg\": \"$ba\"})"
+
         else
 
             error("Can not write a $ex.")
@@ -93,6 +94,7 @@ function plot(
 
         $re""";
         ba,
+        ht,
         ke_ar...,
     )
 
@@ -103,12 +105,6 @@ function plot(
             sleep(1)
 
             @info "Waiting for $fi"
-
-        end
-
-        if ex == "png"
-
-            run(`open --background $fi`)
 
         end
 

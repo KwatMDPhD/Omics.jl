@@ -78,6 +78,17 @@ end
 
 # ---- #
 
+for pa in (
+    joinpath(BioLab.DA, "CLS", "LPS_phen.cls"),
+    joinpath(BioLab.DA, "FeatureSetEnrichment", "genes.txt"),
+)
+
+    BioLab.Path.open(pa)
+
+end
+
+# ---- #
+
 @test all(!startswith('.'), BioLab.Path.read(ho))
 
 # ---- #

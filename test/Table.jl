@@ -4,7 +4,7 @@ include("environment.jl")
 
 # ---- #
 
-di = joinpath(DA, "Table")
+di = joinpath(BioLab.DA, "Table")
 
 # ---- #
 
