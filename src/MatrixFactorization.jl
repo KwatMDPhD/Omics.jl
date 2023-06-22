@@ -33,6 +33,7 @@ function solve_h(a, w)
 end
 
 function write(
+    di,
     w_,
     h_;
     fu = nothing,
@@ -41,7 +42,6 @@ function write(
     naf = "Factor",
     ro___ = (["$na $id" for id in 1:size(ma, 1)] for (ma, na) in zip(w_, nar_)),
     co___ = (["$na $id" for id in 1:size(ma, 2)] for (ma, na) in zip(h_, nac_)),
-    di = "",
 )
 
     fa_ = ["$naf $id" for id in 1:size(w_[1], 2)]
@@ -56,17 +56,9 @@ function write(
 
         pr = "row$(id)_x_factor_x_positive"
 
-        if isempty(di)
+        BioLab.Table.write(joinpath(di, "$pr.tsv"), BioLab.DataFrame.make(nar, ro_, fa_, w))
 
-            ht = ""
-
-        else
-
-            BioLab.Table.write(joinpath(di, "$pr.tsv"), BioLab.DataFrame.make(nar, ro_, fa_, w))
-
-            ht = joinpath(di, "$pr.html")
-
-        end
+        ht = joinpath(di, "$pr.html")
 
         or_ = BioLab.Clustering.hierarchize(w, 1).order
 
@@ -99,17 +91,9 @@ function write(
 
         pr = "factor_x_column$(id)_x_positive"
 
-        if isempty(di)
+        BioLab.Table.write(joinpath(di, "$pr.tsv"), BioLab.DataFrame.make(naf, fa_, co_, h))
 
-            ht = ""
-
-        else
-
-            BioLab.Table.write(joinpath(di, "$pr.tsv"), BioLab.DataFrame.make(naf, fa_, co_, h))
-
-            ht = joinpath(di, "$pr.html")
-
-        end
+        ht = joinpath(di, "$pr.html")
 
         or_ = BioLab.Clustering.hierarchize(h, 2).order
 

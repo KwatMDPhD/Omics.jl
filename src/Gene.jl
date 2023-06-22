@@ -2,9 +2,9 @@ module Gene
 
 using ..BioLab
 
-function _read(na)
+function _read(gz)
 
-    BioLab.Table.read(joinpath(BioLab.DA, "Gene", na))
+    BioLab.Table.read(joinpath(BioLab.DA, "Gene", gz))
 
 end
 

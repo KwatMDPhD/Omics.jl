@@ -38,13 +38,13 @@ function read(sa_di)
 
         n_bas = length(bas_)
 
-        na1, na2, na3 = (parse(Int, na) for na in names(da))
+        co1, co2, co3 = (parse(Int, co) for co in names(da))
 
-        @assert n_fes == na1
+        @assert n_fes == co1
 
-        @assert n_bas == na2
+        @assert n_bas == co2
 
-        @info "$na1 x $na2 x $na3."
+        @info "$co1 x $co2 x $co3."
 
         if isempty(fe_)
 

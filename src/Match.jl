@@ -173,6 +173,7 @@ function _color(::AbstractArray{Float64})
 end
 
 function make(
+    di,
     fu,
     tan,
     fen,
@@ -186,7 +187,6 @@ function make(
     n_ex = 8,
     st = 4,
     layout = Dict{String, Any}(),
-    di = "",
 )
 
     n_fe = length(fe_)
@@ -288,11 +288,7 @@ function make(
 
     pr = joinpath(di, "feature_x_statistic_x_number")
 
-    if !isempty(di)
-
-        BioLab.Table.write("$pr.tsv", feature_x_statistic_x_number)
-
-    end
+    BioLab.Table.write("$pr.tsv", feature_x_statistic_x_number)
 
     if 0 < n_ex
 
@@ -405,17 +401,7 @@ function make(
             ),
         ]
 
-        if isempty(di)
-
-            ht = ""
-
-        else
-
-            ht = "$pr.html"
-
-        end
-
-        BioLab.Plot.plot(data, layout; he = height + 80, ht)
+        BioLab.Plot.plot(data, layout; he = height + 80, "$pr.html")
 
     end
 
@@ -423,7 +409,7 @@ function make(
 
 end
 
-function make(tst, tsf, n_ma, n_pv, n_ex, di)
+function make(di, tst, tsf, n_ma, n_pv, n_ex)
 
     _tan, ta_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
 
@@ -448,6 +434,7 @@ function make(tst, tsf, n_ma, n_pv, n_ex, di)
         end
 
         make(
+            mkdir(joinpath(di, BioLab.Path.clean("$(ta)_vs_$fen"))),
             cor,
             ta,
             fen,
@@ -458,14 +445,13 @@ function make(tst, tsf, n_ma, n_pv, n_ex, di)
             n_ma,
             n_pv,
             n_ex,
-            di = mkdir(joinpath(di, BioLab.Path.clean("$(ta)__vs__$fen"))),
         )
 
     end
 
 end
 
-function compare(ts1, ts2, di)
+function compare(di, ts1, ts2)
 
     fen, fe1_, st_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
 
@@ -507,7 +493,7 @@ function compare(ts1, ts2, di)
             "yaxis" => Dict("title" => Dict("text" => na2)),
             "xaxis" => Dict("title" => Dict("text" => na1)),
         ),
-        ht = joinpath(di, "$(na1)__vs__$na2.html"),
+        ht = joinpath(di, "$(na1)_vs_$na2.html"),
     )
 
 end

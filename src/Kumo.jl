@@ -222,7 +222,8 @@ function _elementize(tu)
 
 end
 
-function plot(;
+function plot(
+    ht;
     js = "",
     nos = 24,
     st_ = Vector{Dict{String, Any}}(),
@@ -230,7 +231,6 @@ function plot(;
     hi = 800,
     wi = 800,
     ex = "",
-    ht = "",
 )
 
     # TODO: Do not access the global variable.
@@ -381,7 +381,7 @@ function plot(;
 
 end
 
-function animate(js, he___, di; pe = 1, st_ = Vector{Dict}())
+function animate(di, js, he___; pe = 1, st_ = Vector{Dict}())
 
     n = length(he___)
 
@@ -409,11 +409,11 @@ function animate(js, he___, di; pe = 1, st_ = Vector{Dict}())
 
     dw = joinpath(homedir(), "Downloads")
 
-    pr = "Kumo.animate"
+    pr = "animating"
 
     ke_ = (pr,)
 
-    for pa in BioLab.Path.list(dw; jo = true, ke_)
+    for pa in BioLab.Path.read(dw; join = true, ke_)
 
         rm(pa)
 
@@ -427,7 +427,7 @@ function animate(js, he___, di; pe = 1, st_ = Vector{Dict}())
 
         end
 
-        pri = "$pr.$id"
+        pri = "$(pr)_$id"
 
         he_ = he___[id]
 
@@ -439,32 +439,26 @@ function animate(js, he___, di; pe = 1, st_ = Vector{Dict}())
 
         plot(; js, st_, he_, ex = "png", ht = joinpath(di, "$pri.html"))
 
-        pn = joinpath(dw, "$pri.png")
-
-        while !ispath(pn)
-
-            sleep(0.2)
-
-        end
-
     end
 
-    for na in BioLab.Path.list(dw; jo = false, ig_ = (r"download$",), ke_)
+    for pn in BioLab.Path.read(dw; ig_ = (r"download$",), ke_)
 
-        BioLab.Path.move(joinpath(dw, na), joinpath(di, replace(na, "$pr." => "")); force = true)
+        BioLab.Path.move(joinpath(dw, pn), joinpath(di, replace(pn, "$(pr)_" => "")))
 
     end
 
     pn_ = sort(
-        BioLab.Path.list(di; jo = true, ke_ = (r"png$",));
+        BioLab.Path.read(di; join = true, ke_ = (r"png$",));
         by = pa -> parse(Int, splitext(basename(pa))[1]),
     )
+
+    # TODO: Implement Plot.animate(pn_, gi)
 
     gi = joinpath(di, "animate.gif")
 
     run(`convert -delay 32 -loop 0 $pn_ $gi`)
 
-    run(`open --background $gi`)
+    BioLab.Path.open(gi)
 
 end
 

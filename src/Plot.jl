@@ -99,13 +99,14 @@ function fractionate(co)
 
 end
 
-function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ke_ar...)
+function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ke_ar...)
 
     axis = Dict("automargin" => true)
 
     id = "BioLab.Plot.plot.$(BioLab.Time.stamp())"
 
     BioLab.HTML.write(
+        ht,
         id,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
         """

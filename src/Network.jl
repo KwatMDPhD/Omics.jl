@@ -100,7 +100,7 @@ function plot(
 
     if !isempty(fi)
 
-        while !ispath(fi)
+        while !isfile(fi)
 
             sleep(1)
 

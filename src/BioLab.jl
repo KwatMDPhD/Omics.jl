@@ -28,11 +28,11 @@ macro is_error(ex)
 
 end
 
-for na in readdir(@__DIR__)
+for jl in readdir(@__DIR__)
 
-    if !startswith(na, '_') && na != "BioLab.jl"
+    if !startswith(jl, '_') && jl != "BioLab.jl"
 
-        include(na)
+        include(jl)
 
     end
 

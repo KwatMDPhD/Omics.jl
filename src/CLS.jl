@@ -35,9 +35,9 @@ function read(cl)
 
         n_gr1 = parse(Int, sp1_[2])
 
-        na_ = split(li2)
+        gr_ = split(li2)
 
-        n_gr2 = length(na_)
+        n_gr2 = length(gr_)
 
         n_gr3 = length(unique(sp3_))
 
@@ -47,11 +47,11 @@ function read(cl)
 
         end
 
-        na_id = Dict(na => id for (id, na) in enumerate(na_))
+        na_id = Dict(gr => id for (id, gr) in enumerate(gr_))
 
         DataFrame(
-            "Target" => join(na_, " vs "),
-            ("Sample $id" => na_id[na] for (id, na) in enumerate(sp3_))...,
+            "Target" => join(gr_, " vs "),
+            ("Sample $id" => na_id[gr] for (id, gr) in enumerate(sp3_))...,
         )
 
     end

@@ -2,15 +2,7 @@ module HTML
 
 using ..BioLab
 
-function make(
-    id,
-    so_,
-    sc;
-    he = 800,
-    wi = 1280,
-    ba = "#27221f",
-    ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html"),
-)
+function make(ht, id, so_, sc; he = 800, wi = 1280, ba = "#27221f")
 
     write(
         ht,
