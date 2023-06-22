@@ -1,8 +1,8 @@
-module html
+module HTML
 
 using ..BioLab
 
-function write(
+function make(
     id,
     so_,
     sc;
@@ -12,7 +12,7 @@ function write(
     ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html"),
 )
 
-    Base.write(
+    write(
         ht,
         join(
             vcat(

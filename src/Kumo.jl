@@ -377,14 +377,7 @@ function plot(;
 
     end
 
-    BioLab.Network.plot(
-        vcat(no_, ed_);
-        st_,
-        la,
-        ex,
-        ht,
-        he = hi,
-    )
+    BioLab.Network.plot(vcat(no_, ed_); st_, la, ex, ht, he = hi)
 
 end
 

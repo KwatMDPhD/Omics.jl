@@ -14,19 +14,18 @@ function _readline(st)
 
 end
 
-function read(gs, di)
+function download(gs, di)
 
     fi = "$(gs)_family.soft.gz"
 
-    gz = joinpath(di, fi)
+    Base.download(
+        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:end-3])nnn/$gs/soft/$fi",
+        joinpath(di, fi),
+    )
 
-    if !ispath(gz)
+end
 
-        @info "Downloading $gz"
-
-        download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:end-3])nnn/$gs/soft/$fi", gz)
-
-    end
+function read(gz)
 
     ty_bl_ke_va = Dict(
         ty => OrderedDict{String, OrderedDict{String, String}}() for

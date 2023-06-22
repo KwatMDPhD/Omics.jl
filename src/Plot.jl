@@ -103,14 +103,14 @@ function plot(data, layout = Dict{String, Any}(); config = Dict{String, Any}(), 
 
     axis = Dict("automargin" => true)
 
-    di = "BioLab.Plot.plot.$(BioLab.Time.stamp())"
+    id = "BioLab.Plot.plot.$(BioLab.Time.stamp())"
 
     BioLab.HTML.write(
-        di,
+        id,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
         """
         Plotly.newPlot(
-            "$di",
+            "$id",
             $(write(data)),
             $(write(BioLab.Dict.merge(
                 Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis),

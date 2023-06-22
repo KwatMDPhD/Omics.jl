@@ -2,7 +2,7 @@ include("environment.jl")
 
 # ---- #
 
-te = joinpath(BioLab.TE, "test.GEO")
+te = joinpath(BioLab.TE, "testGEO")
 
 BioLab.Path.reset(te)
 
@@ -12,7 +12,13 @@ gs = "GSE122404"
 
 # ---- #
 
-ty_bl = BioLab.GEO.read(gs, te)
+gz = BioLab.GEO.download(gs, te)
+
+@test isfile(gz)
+
+# ---- #
+
+ty_bl = BioLab.GEO.read(gz)
 
 @test length(ty_bl["DATABASE"]) == 1
 
@@ -43,8 +49,8 @@ platform_table = pl_ke_va[pl]["table"]
 # ---- #
 
 # disable_logging(Warn)
-# 687.734 ms (3441114 allocations: 208.35 MiB)
-# @btime BioLab.GEO.read($gs, $te);
+# 682.000 ms (3441110 allocations: 208.35 MiB)
+# @btime BioLab.GEO.read($gz);
 # disable_logging(Debug)
 
 # ---- #
