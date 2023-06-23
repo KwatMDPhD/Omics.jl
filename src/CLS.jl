@@ -47,11 +47,11 @@ function read(cl)
 
         end
 
-        na_id = Dict(gr => id for (id, gr) in enumerate(gr_))
+        gr_id = Dict(gr => id for (id, gr) in enumerate(gr_))
 
         DataFrame(
-            "Target" => join(gr_, " vs "),
-            ("Sample $id" => na_id[gr] for (id, gr) in enumerate(sp3_))...,
+            "Target" => join(gr_, '_'),
+            ("Sample $id" => gr_id[gr] for (id, gr) in enumerate(sp3_))...,
         )
 
     end
