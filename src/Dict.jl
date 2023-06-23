@@ -12,7 +12,7 @@ function set_with_first!(ke_va, ke, va)
 
         if vac == va
 
-            @info "($ke => $va)."
+            @info "($ke => $vac)."
 
         else
 
@@ -36,7 +36,7 @@ function set_with_last!(ke_va, ke, va)
 
         if vac == va
 
-            @info "($ke => $va)."
+            @info "($ke => $vac)."
 
         else
 
@@ -70,7 +70,11 @@ function set_with_suffix!(ke_va, ke, va)
 
             end
 
-            ke = "$(split(ke, '.')[1]).$(n+=1)"
+            pr = BioLab.String.split_get(ke, '.', 1)
+
+            n += 1
+
+            ke = "$pr.$n"
 
         end
 
