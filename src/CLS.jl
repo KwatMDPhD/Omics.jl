@@ -1,6 +1,6 @@
 module CLS
 
-using DataFrames
+using DataFrames: DataFrame
 
 function read(cl)
 

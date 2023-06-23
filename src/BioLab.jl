@@ -41,7 +41,7 @@ end
 
 function __init__()
 
-    BioLab.Path.reset(TE)
+    Path.reset(TE)
 
 end
 
