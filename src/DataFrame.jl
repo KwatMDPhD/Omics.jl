@@ -20,21 +20,21 @@ end
 
 function make(st::AbstractString)
 
-    make([split(li, '\t') for li in split(st, "\n")])
+    make([split(li, '\t') for li in split(st, '\n')])
 
 end
 
-function make(ron, con_, ro_an__)
+function make(nar, co_, ro_an__)
 
     ro_ = sort!(collect(union(map(keys, ro_an__)...)))
 
-    an__ = [Vector{Any}(undef, 1 + length(con_)) for _ in 1:(1 + length(ro_))]
+    an__ = [Vector{Any}(undef, 1 + length(co_)) for _ in 1:(1 + length(ro_))]
 
     id = 1
 
-    an__[id][1] = ron
+    an__[id][1] = nar
 
-    an__[id][2:end] = con_
+    an__[id][2:end] = co_
 
     for (id, ro) in enumerate(ro_)
 
@@ -50,32 +50,36 @@ function make(ron, con_, ro_an__)
 
 end
 
-function make(ro, ro_, co_, _x_co_x_an)
+# TODO: Benchmark against _DataFrame(roma, roco_).
+function make(ro, ro_, co_, ma)
 
-    insertcols!(_DataFrame(_x_co_x_an, co_), 1, ro => ro_)
+    insertcols!(_DataFrame(ma, co_), 1, ro => ro_)
 
 end
 
-function separate(row_x_column_x_anything)
+function separate(da)
 
-    co_ = names(row_x_column_x_anything)
+    co_ = names(da)
 
     id_ = 2:length(co_)
 
     co_[1],
-    row_x_column_x_anything[:, 1]::Vector{<:AbstractString},
+    # TODO: Benchmark against map(string, da[!, 1]).
+    da[:, 1]::Vector{<:AbstractString},
     co_[id_]::Vector{String},
-    Matrix(row_x_column_x_anything[!, id_])
+    Matrix(da[!, id_])
 
 end
 
-function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
+function collapse(da; fu = mean, ty = Float64)
 
-    @info "Size before collapsing is $(size(row_x_column_x_anything))."
+    si = size(da)
+
+    @info "Size before collapsing is $si."
 
     ro_id_ = OrderedDict{String, Vector{Int}}()
 
-    ro, ro_, co_, ma = BioLab.DataFrame.separate(row_x_column_x_anything)
+    nar, ro_, co_, ma = separate(da)
 
     for (id, ro) in enumerate(ro_)
 
@@ -89,50 +93,56 @@ function collapse(row_x_column_x_anything; fu = mean, ty = Float64)
 
         @warn "There are no rows to collapse."
 
-        return row_x_column_x_anything
+        return da
 
     end
 
-    roc_ = Vector{String}(undef, n)
+    ro2_ = Vector{String}(undef, n)
 
-    mac = Matrix{ty}(undef, (n, length(co_)))
+    ma2 = Matrix{ty}(undef, (n, length(co_)))
 
-    for (id, (ro, id_)) in enumerate(ro_id_)
+    for (id2, (ro, id_)) in enumerate(ro_id_)
 
-        roc_[id] = ro
+        ro2_[id2] = ro
 
         if length(id_) == 1
 
-            nu_ = ma[id_[1], :]
+            an_ = ma[id_[1], :]
 
         else
 
-            nu_ = [fu(nu_) for nu_ in eachcol(ma[id_, :])]
+            # TODO: Benchmark against view(ma, id_, :)
+            # TODO: Benchmark against map(fu, eachcol(ma[id_, :]))
+            an_ = [fu(an_) for an_ in eachcol(ma[id_, :])]
 
         end
 
-        mac[id, :] = nu_
+        ma2[id2, :] = an_
 
     end
 
-    collapsed_x_column_x_anything = make(ro, roc_, co_, mac)
+    da2 = make(nar, ro2_, co_, ma2)
 
-    @info "Size after is $(size(collapsed_x_column_x_anything))."
+    si2 = size(da2)
 
-    collapsed_x_column_x_anything
+    @info "Size after is $si2."
+
+    da2
 
 end
 
-function map_to(row_x_column_x_anything, fu!, fr_, to; de = "")
+function map_to(da, fu!, fr_, to; de = "")
 
-    to_ = row_x_column_x_anything[!, to]
+    daf = da[!, fr_]
+
+    to_ = da[!, to]
 
     fr_to = Dict{
-        typejoin((eltype(skipmissing(co)) for co in eachcol(row_x_column_x_anything))...),
+        typejoin((eltype(skipmissing(co)) for co in eachcol(daf))...),
         eltype(skipmissing(to_)),
     }()
 
-    for (fr_, to) in zip(eachrow(row_x_column_x_anything[!, fr_]), to_)
+    for (fr_, to) in zip(eachrow(daf), to_)
 
         if BioLab.Bad.is_bad(to)
 

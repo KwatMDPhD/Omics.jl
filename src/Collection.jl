@@ -14,9 +14,9 @@ function error_duplicate(an_)
 
     if !allunique(an_)
 
-        error(
-            "Collection has a duplicate. $(join(("$va $ke" for (ke, va) in count_sort(an_) if 1<va), ". ")).",
-        )
+        st = join(("$n $an" for (an, n) in count_sort(an_) if 1 < n), ". ")
+
+        error("Collection has a duplicate. $st.")
 
     end
 
@@ -34,55 +34,51 @@ function error_no_change(an_)
 
     if allequal(an_)
 
-        error("Collection has only $(an_[1]).")
+        an = an_[1]
+
+        error("Collection has only $an.")
 
     end
 
 end
 
-function count_sort(an_; rev = true)
+function count_sort(an_; rev = false)
 
     sort(countmap(an_); byvalue = true, rev)
 
 end
 
-function index(an_)
-
-    ty = eltype(an_)
-
-    an_id = Dict{ty, Int}()
-
-    id_an = Dict{Int, ty}()
-
-    for (id, an) in enumerate(an_)
-
-        an_id[an] = id
-
-        id_an[id] = an
-
-    end
-
-    an_id, id_an
-
-end
+# function index(an_)
+# 
+#     ty = eltype(an_)
+# 
+#     an_id = Dict{ty, Int}()
+# 
+#     id_an = Dict{Int, ty}()
+# 
+#     for (id, an) in enumerate(an_)
+# 
+#         an_id[an] = id
+# 
+#         id_an[id] = an
+# 
+#     end
+# 
+#     an_id, id_an
+# 
+# end
 
 function get_extreme(n::Int, n_ex)
 
-    if n < n_ex
+    if n / 2 < n_ex
 
-        n_ex = n
+        collect(1:n)
 
-    end
+    else
 
-    n_ex2 = n - n_ex + 1
-
-    if !(n_ex < n_ex2)
-
-        n_ex2 = n_ex + 1
+        vcat(collect(1:n_ex), collect((n - n_ex + 1):n))
 
     end
-
-    vcat(collect(1:n_ex), collect(n_ex2:n))
 
 end
 
@@ -92,6 +88,7 @@ function get_extreme(an_, n_ex)
 
 end
 
+# TODO: Benchmark against list comprehension.
 function is_in(an_, an1_)
 
     n = length(an_)
@@ -136,28 +133,28 @@ function sort_like(an___; rev = false)
 
 end
 
-function sort_recursively(co)
-
-    if co isa AbstractArray
-
-        co = [sort_recursively(an2) for an2 in co]
-
-    elseif co isa AbstractDict
-
-        co = sort(Dict(ke => sort_recursively(va) for (ke, va) in co))
-
-    end
-
-    try
-
-        sort!(co)
-
-    catch
-
-    end
-
-    co
-
-end
+# function sort_recursively(co)
+# 
+#     if co isa AbstractArray
+# 
+#         co = [sort_recursively(an2) for an2 in co]
+# 
+#     elseif co isa AbstractDict
+# 
+#         co = sort(Dict(ke => sort_recursively(va) for (ke, va) in co))
+# 
+#     end
+# 
+#     try
+# 
+#         sort!(co)
+# 
+#     catch
+# 
+#     end
+# 
+#     co
+# 
+# end
 
 end
