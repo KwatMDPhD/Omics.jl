@@ -14,8 +14,6 @@ using ..BioLab
 
 function read(pa; xl = "", ke_ar...)
 
-    BioLab.Path.error_missing(pa)
-
     ex = splitext(pa)[2]
 
     if ex == ".xlsx"
@@ -23,6 +21,8 @@ function read(pa; xl = "", ke_ar...)
         DataFrame(readtable(pa, xl))
 
     else
+
+        BioLab.Path.error_missing(pa)
 
         it_ = mmap(pa)
 
@@ -39,6 +39,8 @@ function read(pa; xl = "", ke_ar...)
 end
 
 function write(ts, ro_x_co_x_an)
+
+    BioLab.Path.warn_overwrite(ts)
 
     BioLab.Path.error_extension_difference(ts, "tsv")
 

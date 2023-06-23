@@ -103,14 +103,13 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
 
     axis = Dict("automargin" => true)
 
-    id = "BioLab.Plot.plot.$(BioLab.Time.stamp())"
+    id = "Plot"
 
     BioLab.HTML.write(
         ht,
         id,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
-        """
-        Plotly.newPlot(
+        """Plotly.newPlot(
             "$id",
             $(write(data)),
             $(write(BioLab.Dict.merge(
@@ -118,13 +117,10 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
                 layout,
             ))),
             $(write(BioLab.Dict.merge(
-                Dict(
-                    "displaylogo" => false,
-                ),
+                Dict("displaylogo" => false),
                 config,
             ))),
-        )
-        """;
+        )""";
         ke_ar...,
     )
 
@@ -581,6 +577,18 @@ function plot_radar(
         );
         ke_ar...,
     )
+
+end
+
+function animate(gi, pn_)
+
+    BioLab.Path.warn_overwrite(gi)
+
+    BioLab.Path.error_extension_difference(gi, "gif")
+
+    run(`convert -delay 32 -loop 0 $pn_ $gi`)
+
+    BioLab.Path.open(gi)
 
 end
 

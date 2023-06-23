@@ -16,12 +16,13 @@ end
 
 function download(di, gs)
 
-    gz = "$(gs)_family.soft.gz"
+    ba = "$(gs)_family.soft.gz"
 
-    Base.download(
-        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:end-3])nnn/$gs/soft/$gz",
-        joinpath(di, gz),
-    )
+    pa = joinpath(di, ba)
+
+    BioLab.Path.warn_overwrite(pa)
+
+    Base.download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:end-3])nnn/$gs/soft/$ba", pa)
 
 end
 
@@ -88,7 +89,7 @@ function read(gz)
 
 end
 
-function _name(pl, feature_x_information_x_anything)
+function _map_feature(pl, feature_x_information_x_anything)
 
     pli = parse(Int, pl[4:end])
 
@@ -96,43 +97,43 @@ function _name(pl, feature_x_information_x_anything)
 
         co = "Gene Symbol"
 
-        fu = na -> BioLab.String.split_get(na, " /// ", 1)
+        fu = fe -> BioLab.String.split_get(fe, " /// ", 1)
 
     elseif pli == 13534
 
         co = "UCSC_RefGene_Name"
 
-        fu = na -> BioLab.String.split_get(na, ';', 1)
+        fu = fe -> BioLab.String.split_get(fe, ';', 1)
 
     elseif pli in (5175, 6244, 11532, 17586)
 
         co = "gene_assignment"
 
-        fu = na -> BioLab.String.split_get(na, " // ", 2)
+        fu = fe -> BioLab.String.split_get(fe, " // ", 2)
 
     elseif pli in (2004, 2005, 3718, 3720)
 
         co = "Associated Gene"
 
-        fu = na -> BioLab.String.split_get(na, " // ", 1)
+        fu = fe -> BioLab.String.split_get(fe, " // ", 1)
 
     elseif pli in (6098, 6884, 6947, 10558, 14951)
 
         co = "Symbol"
 
-        fu = na -> na
+        fu = fe -> fe
 
     elseif pli == 16686
 
         co = "GB_ACC"
 
-        fu = na -> na
+        fu = fe -> fe
 
     elseif pli == 10332
 
         co = "GENE_SYMBOL"
 
-        fu = na -> na
+        fu = fe -> fe
 
     elseif pli in (7566, 7567)
 
@@ -144,20 +145,20 @@ function _name(pl, feature_x_information_x_anything)
 
     end
 
-    id_na = Dict{String, String}()
+    id_fe = Dict{String, String}()
 
-    for (id, na) in
+    for (id, fe) in
         zip(feature_x_information_x_anything[!, "ID"], feature_x_information_x_anything[!, co])
 
-        if na isa AbstractString && !isempty(na) && na != "---"
+        if fe isa AbstractString && !isempty(fe) && fe != "---"
 
-            BioLab.Dict.set_with_last!(id_na, id, fu(na))
+            BioLab.Dict.set_with_last!(id_fe, id, fu(fe))
 
         end
 
     end
 
-    id_na
+    id_fe
 
 end
 
@@ -231,10 +232,10 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         if haskey(ke_va, "table")
 
-            id_na = _name(pl, BioLab.DataFrame.make(ke_va["table"]))
+            id_fe = _map_feature(pl, BioLab.DataFrame.make(ke_va["table"]))
 
             feature_x_sample_x_float[!, 1] =
-                [get(id_na, id, "_$id") for id in feature_x_sample_x_float[!, 1]]
+                [get(id_fe, id, "_$id") for id in feature_x_sample_x_float[!, 1]]
 
         else
 

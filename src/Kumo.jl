@@ -377,11 +377,11 @@ function plot(
 
     end
 
-    BioLab.Network.plot(vcat(no_, ed_); st_, la, ex, ht, he = hi)
+    BioLab.Network.plot(ht, vcat(no_, ed_); st_, la, ex, he = hi)
 
 end
 
-function animate(di, js, he___; pe = 1, st_ = Vector{Dict}())
+function animate(gi, js, he___; pe = 1, st_ = Vector{Dict}())
 
     n = length(he___)
 
@@ -419,6 +419,8 @@ function animate(di, js, he___; pe = 1, st_ = Vector{Dict}())
 
     end
 
+    di = dirname(gi)
+
     for id in 1:n
 
         if !(id == 1 || id % pe == 0 || id == n)
@@ -437,28 +439,23 @@ function animate(di, js, he___; pe = 1, st_ = Vector{Dict}())
 
         end
 
-        plot(; js, st_, he_, ex = "png", ht = joinpath(di, "$pri.html"))
+        plot(joinpath(di, "$pri.html"); js, st_, he_, ex = "png")
 
     end
 
     for pn in BioLab.Path.read(dw; ig_ = (r"download$",), ke_)
 
-        BioLab.Path.move(joinpath(dw, pn), joinpath(di, replace(pn, "$(pr)_" => "")))
+        mv(joinpath(dw, pn), joinpath(di, replace(pn, "$(pr)_" => "")))
 
     end
 
-    pn_ = sort(
-        BioLab.Path.read(di; join = true, ke_ = (r"png$",));
-        by = pa -> parse(Int, splitext(basename(pa))[1]),
+    BioLab.Plot.animate(
+        gi,
+        sort(
+            BioLab.Path.read(di; join = true, ke_ = (r"png$",));
+            by = pa -> parse(Int, splitext(basename(pa))[1]),
+        ),
     )
-
-    # TODO: Implement Plot.animate(pn_, gi)
-
-    gi = joinpath(di, "animate.gif")
-
-    run(`convert -delay 32 -loop 0 $pn_ $gi`)
-
-    BioLab.Path.open(gi)
 
 end
 

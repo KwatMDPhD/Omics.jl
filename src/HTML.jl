@@ -4,6 +4,16 @@ using ..BioLab
 
 function make(ht, id, so_, sc; he = 800, wi = 1280, ba = "#27221f")
 
+    if isempty(ht)
+
+        ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html")
+
+    end
+
+    BioLab.Path.warn_overwrite(ht)
+
+    BioLab.Path.error_extension_difference(ht, "html")
+
     write(
         ht,
         join(

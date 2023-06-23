@@ -1,5 +1,15 @@
 module Path
 
+function warn_overwrite(pa)
+
+    if ispath(pa)
+
+        @warn "Overwriting $pa"
+
+    end
+
+end
+
 function error_missing(pa)
 
     if !ispath(pa)
@@ -22,11 +32,11 @@ function error_extension_difference(pa, ex)
 
 end
 
-function replace_extension(pa, ex)
-
-    "$(splitext(pa)[1]).$ex"
-
-end
+#function replace_extension(pa, ex)
+#
+#    "$(splitext(pa)[1]).$ex"
+#
+#end
 
 function make_absolute(pa)
 
@@ -37,6 +47,19 @@ end
 function clean(pa)
 
     replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
+
+end
+
+# TODO: Test.
+function wait(pa; se = 1)
+
+    while !ispath(pa)
+
+        sleep(se)
+
+        @info "Waiting for $pa"
+
+    end
 
 end
 

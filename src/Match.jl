@@ -288,7 +288,11 @@ function make(
 
     pr = joinpath(di, "feature_x_statistic_x_number")
 
-    BioLab.Table.write("$pr.tsv", feature_x_statistic_x_number)
+    ts = "$pr.tsv"
+
+    BioLab.Path.warn_overwrite(ts)
+
+    BioLab.Table.write(ts, feature_x_statistic_x_number)
 
     if 0 < n_ex
 
@@ -401,7 +405,11 @@ function make(
             ),
         ]
 
-        BioLab.Plot.plot(data, layout; he = height + 80, "$pr.html")
+        ht = "$pr.html"
+
+        BioLab.Path.warn_overwrite(ht)
+
+        BioLab.Plot.plot(ht, data, layout; he = height + 80)
 
     end
 
@@ -433,25 +441,25 @@ function make(di, tst, tsf, n_ma, n_pv, n_ex)
 
         end
 
-        make(
-            mkdir(joinpath(di, BioLab.Path.clean("$(ta)_vs_$fen"))),
-            cor,
-            ta,
-            fen,
-            fe_,
-            sag_,
-            nug_,
-            fe_x_sa_x_nu[:, go_];
-            n_ma,
-            n_pv,
-            n_ex,
-        )
+        di2 = joinpath(di, BioLab.Path.clean("$(ta)_matching_$fen"))
+
+        if ispath(di2)
+
+            BioLab.Path.warn_overwrite(di2)
+
+        else
+
+            mkdir(di2)
+
+        end
+
+        make(di2, cor, ta, fen, fe_, sag_, nug_, fe_x_sa_x_nu[:, go_]; n_ma, n_pv, n_ex)
 
     end
 
 end
 
-function compare(di, ts1, ts2)
+function compare(di, na1, na2, ts1, ts2)
 
     fen, fe1_, st_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
 
@@ -477,11 +485,12 @@ function compare(di, ts1, ts2)
 
     BioLab.NumberArray.normalize_with_01!(op_)
 
-    na1 = basename(dirname(ts1))
+    ht = joinpath(di, "$(na1)_and_$na2.html")
 
-    na2 = basename(dirname(ts2))
+    BioLab.Path.warn_overwrite(ht)
 
     BioLab.Plot.plot_scatter(
+        ht,
         (nu2_,),
         (nu1_,),
         (fe1_,),
@@ -493,7 +502,6 @@ function compare(di, ts1, ts2)
             "yaxis" => Dict("title" => Dict("text" => na2)),
             "xaxis" => Dict("title" => Dict("text" => na1)),
         ),
-        ht = joinpath(di, "$(na1)_vs_$na2.html"),
     )
 
 end

@@ -54,11 +54,13 @@ function write(
 
     for (id, (w, ro_, nar)) in enumerate(zip(w_, ro___, nar_))
 
-        pr = "row$(id)_x_factor_x_positive"
+        pr = joinpath(di, "row$(id)_x_factor_x_positive")
 
-        BioLab.Table.write(joinpath(di, "$pr.tsv"), BioLab.DataFrame.make(nar, ro_, fa_, w))
+        ts = "$pr.tsv"
 
-        ht = joinpath(di, "$pr.html")
+        BioLab.Path.warn_overwrite(ts)
+
+        BioLab.Table.write(ts, BioLab.DataFrame.make(nar, ro_, fa_, w))
 
         or_ = BioLab.Clustering.hierarchize(w, 1).order
 
@@ -70,7 +72,12 @@ function write(
 
         end
 
+        ht = "$pr.html"
+
+        BioLab.Path.warn_overwrite(ht)
+
         BioLab.Plot.plot_heat_map(
+            ht,
             co[or_, :],
             ro_[or_],
             fa_;
@@ -82,18 +89,19 @@ function write(
                 "title" => Dict("text" => "W$id"),
                 "xaxis" => axis,
             ),
-            ht,
         )
 
     end
 
     for (id, (h, co_, nac)) in enumerate(zip(h_, co___, nac_))
 
-        pr = "factor_x_column$(id)_x_positive"
+        pr = joinpath(di, "factor_x_column$(id)_x_positive")
 
-        BioLab.Table.write(joinpath(di, "$pr.tsv"), BioLab.DataFrame.make(naf, fa_, co_, h))
+        ts = "$pr.tsv"
 
-        ht = joinpath(di, "$pr.html")
+        BioLab.Path.warn_overwrite(ts)
+
+        BioLab.Table.write(ts, BioLab.DataFrame.make(naf, fa_, co_, h))
 
         or_ = BioLab.Clustering.hierarchize(h, 2).order
 
@@ -105,7 +113,12 @@ function write(
 
         end
 
+        ht = "$pr.html"
+
+        BioLab.Path.warn_overwrite(ht)
+
         BioLab.Plot.plot_heat_map(
+            ht,
             co[:, or_],
             fa_,
             co_[or_];
@@ -117,7 +130,6 @@ function write(
                 "title" => Dict("text" => "H$id"),
                 "yaxis" => axis,
             ),
-            ht,
         )
 
     end

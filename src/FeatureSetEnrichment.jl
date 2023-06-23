@@ -89,6 +89,7 @@ function _sum_all1(sc_, bo_, ex)
 end
 
 function _plot_mountain(
+    ht,
     fe_,
     sc_,
     bo_,
@@ -99,7 +100,6 @@ function _plot_mountain(
     sc = "Score",
     lo = "Low",
     hi = "High",
-    ht = "",
 )
 
     n = length(fe_)
@@ -271,7 +271,7 @@ function _plot_mountain(
         ),
     ]
 
-    BioLab.Plot.plot(trace_, layout; ht)
+    BioLab.Plot.plot(ht, trace_, layout)
 
 end
 

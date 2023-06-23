@@ -5,27 +5,15 @@ using JSON3: write
 using ..BioLab
 
 function plot(
+    ht,
     el_;
     st_ = (),
     la = Dict{String, Any}(),
     ex = "",
     pns = 1,
     ba = "#fcfcfc",
-    ht = "",
     ke_ar...,
 )
-
-    id = "BioLab.Network.plot"
-
-    if isempty(ht)
-
-        pr = @__MODULE__
-
-    else
-
-        pr = splitext(basename(ht))[1]
-
-    end
 
     if isempty(ex)
 
@@ -35,9 +23,19 @@ function plot(
 
     else
 
+        if isempty(ht)
+
+            error("HTML path, which is needed for saving a $ex, is empty.")
+
+        end
+
+        pr = splitext(basename(ht))[1]
+
         na = "$pr.$ex"
 
         fi = joinpath(homedir(), "Downloads", na)
+
+        BioLab.Path.warn_overwrite(fi)
 
         rm(fi; force = true)
 
@@ -47,6 +45,7 @@ function plot(
 
         elseif ex == "png"
 
+            # TODO: Try unquoting the hex color.
             bl = "cy.png({\"full\": true, \"scale\": $pns, \"bg\": \"$ba\"})"
 
         else
@@ -61,9 +60,11 @@ function plot(
 
     la = merge(Dict("animate" => false), la)
 
-    BioLab.HTML.write(
+    id = "Network"
+
+    BioLab.HTML.make(
+        ht,
         id,
-        # TODO: Use the latest.
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
             "https://cdn.rawgit.com/eligrey/FileSaver.js/master/dist/FileSaver.js",
@@ -94,17 +95,16 @@ function plot(
 
         $re""";
         ba,
-        ht,
         ke_ar...,
     )
 
     if !isempty(fi)
 
-        while !isfile(fi)
+        BioLab.Path.wait(fi)
 
-            sleep(1)
+        if ex == "png"
 
-            @info "Waiting for $fi"
+            BioLab.Path.open(fi)
 
         end
 
