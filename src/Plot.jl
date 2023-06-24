@@ -84,7 +84,9 @@ const COSTA = make_color_scheme(("#8c1515", "#175e54"), _BI, "STAnford")
 
 function _make_hex(rg)
 
-    "#$(lowercase(hex(rg)))"
+    he = lowercase(hex(rg))
+
+    "#$he"
 
 end
 
