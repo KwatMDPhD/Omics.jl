@@ -41,12 +41,12 @@ function plot(
 
         if ex == "json"
 
-            bl = "new Blob([JSON.stringify(cy.json(), null, 2)], {type: \"application/json\"})"
+            bl = """new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"})"""
 
         elseif ex == "png"
 
             # TODO: Try unquoting the hex color.
-            bl = "cy.png({\"full\": true, \"scale\": $pns, \"bg\": \"$ba\"})"
+            bl = """cy.png({"full": true, "scale": $pns, "bg": "$ba"})"""
 
         else
 
@@ -54,7 +54,7 @@ function plot(
 
         end
 
-        re = "cy.ready(function() {saveAs($bl, \"$na\");});"
+        re = """cy.ready(function() {saveAs($bl, "$na");});"""
 
     end
 

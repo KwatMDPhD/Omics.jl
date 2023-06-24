@@ -48,25 +48,25 @@ function count_sort(an_; rev = false)
 
 end
 
-# function index(an_)
-# 
-#     ty = eltype(an_)
-# 
-#     an_id = Dict{ty, Int}()
-# 
-#     id_an = Dict{Int, ty}()
-# 
-#     for (id, an) in enumerate(an_)
-# 
-#         an_id[an] = id
-# 
-#         id_an[id] = an
-# 
-#     end
-# 
-#     an_id, id_an
-# 
-# end
+function index(an_)
+
+    ty = eltype(an_)
+
+    an_id = Dict{ty, Int}()
+
+    id_an = Dict{Int, ty}()
+
+    for (id, an) in enumerate(an_)
+
+        an_id[an] = id
+
+        id_an[id] = an
+
+    end
+
+    an_id, id_an
+
+end
 
 function get_extreme(n::Int, n_ex)
 

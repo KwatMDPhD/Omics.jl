@@ -12,10 +12,11 @@ using Printf: @sprintf
 
 using ..BioLab
 
-function _make_color_scheme(he_, ca, no)
+function make_color_scheme(he_, ca, no)
 
     BioLab.Collection.error_no_change(he_)
 
+    # TODO: Benchmark against map.
     ColorScheme([parse(Colorant{Float64}, he) for he in he_], ca, no)
 
 end
@@ -30,7 +31,7 @@ const COBWR = ColorScheme(bwr.colors, _CO, "Blue White Red")
 
 const COPLA = ColorScheme(plasma.colors, _CO, "PLAsma")
 
-const COPL3 = _make_color_scheme(
+const COPL3 = make_color_scheme(
     (
         "#0508b8",
         "#1910d8",
@@ -50,13 +51,13 @@ const COPL3 = _make_color_scheme(
     "PLotly3",
 )
 
-const COASP = _make_color_scheme(
+const COASP = make_color_scheme(
     ("#00936e", "#a4e2b4", "#e0f5e5", "#ffffff", "#fff8d1", "#ffec9f", "#ffd96a"),
     _CO,
     "ASPen",
 )
 
-const COPLO = _make_color_scheme(
+const COPLO = make_color_scheme(
     (
         "#636efa",
         "#ef553b",
@@ -73,13 +74,13 @@ const COPLO = _make_color_scheme(
     "PLOtly",
 )
 
-const COGUA = _make_color_scheme(("#20d9ba", "#9017e6", "#4e40d8", "#ff1968"), _CA, "GUArdiome")
+const COGUA = make_color_scheme(("#20d9ba", "#9017e6", "#4e40d8", "#ff1968"), _CA, "GUArdiome")
 
-const COBIN = _make_color_scheme(("#006442", "#ffb61e"), _BI, "BINary")
+const COBIN = make_color_scheme(("#006442", "#ffb61e"), _BI, "BINary")
 
-const COHUM = _make_color_scheme(("#4b3c39", "#ffddca"), _BI, "HUMan")
+const COHUM = make_color_scheme(("#4b3c39", "#ffddca"), _BI, "HUMan")
 
-const COSTA = _make_color_scheme(("#8c1515", "#175e54"), _BI, "STAnford")
+const COSTA = make_color_scheme(("#8c1515", "#175e54"), _BI, "STAnford")
 
 function _make_hex(rg)
 
@@ -101,26 +102,26 @@ end
 
 function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ke_ar...)
 
+    id = "Plotly"
+
+    daj = write(data)
+
     axis = Dict("automargin" => true)
 
-    id = "Plotly"
+    laj = write(
+        BioLab.Dict.merge(
+            Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis),
+            layout,
+        ),
+    )
+
+    coj = write(merge!(Dict("displaylogo" => false), config))
 
     BioLab.HTML.write(
         ht,
         id,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
-        """Plotly.newPlot(
-            "$id",
-            $(write(data)),
-            $(write(BioLab.Dict.merge(
-                Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis),
-                layout,
-            ))),
-            $(write(BioLab.Dict.merge(
-                Dict("displaylogo" => false),
-                config,
-            ))),
-        )""";
+        """Plotly.newPlot("$id", $daj, $laj, $coj)""";
         ke_ar...,
     )
 
@@ -169,6 +170,7 @@ function _set_opacity(y_)
 end
 
 function plot_scatter(
+    ht,
     y_,
     x_ = _set_x(y_),
     text_ = _set_text(y_);
@@ -181,6 +183,8 @@ function plot_scatter(
 )
 
     plot(
+        ht,
+        # TODO: Check if mapping using a variable of the parent scope slows the performance.
         [
             Dict(
                 "name" => name_[id],
@@ -198,6 +202,7 @@ function plot_scatter(
 end
 
 function plot_bar(
+    ht,
     y_,
     x_ = _set_x(y_);
     name_ = _set_name(y_),
@@ -208,6 +213,7 @@ function plot_bar(
 )
 
     plot(
+        ht,
         [
             Dict(
                 "type" => "bar",
@@ -217,13 +223,14 @@ function plot_bar(
                 "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
             ) for id in eachindex(y_)
         ],
-        merge(Dict("barmode" => "stack"), layout);
+        merge!(Dict("barmode" => "stack"), layout);
         ke_ar...,
     )
 
 end
 
 function plot_histogram(
+    ht,
     x_,
     text_ = _set_text(x_);
     rug_marker_size = ifelse(all(length(x) < 100000 for x in x_), 16, 0),
@@ -250,7 +257,7 @@ function plot_histogram(
 
     if isempty(histnorm)
 
-        yaxis2_title_text = "N"
+        yaxis2_title_text = "Count"
 
     else
 
@@ -326,7 +333,7 @@ function plot_histogram(
 
     end
 
-    plot(data, layout; ke_ar...)
+    plot(ht, data, layout; ke_ar...)
 
 end
 
@@ -348,10 +355,11 @@ function _make_colorbar(z)
 end
 
 function plot_heat_map(
+    ht,
     z::AbstractMatrix,
     y = ["$id *" for id in 1:size(z, 1)],
-    x = ["* $id" for id in 1:size(z, 2)],
-    text = z;
+    x = ["* $id" for id in 1:size(z, 2)];
+    text = z,
     nar = "Row",
     nac = "Column",
     colorscale = fractionate(COBWR),
@@ -374,8 +382,8 @@ function plot_heat_map(
                 "autorange" => "reversed",
                 "title" => Dict("text" => "$nar (n=$n_ro)"),
             ),
-            "xaxis" => Dict("domain" => domain1, "title" => Dict("text" => "$nac (n=$n_co)")),
             "yaxis2" => merge(axis2, Dict("autorange" => "reversed")),
+            "xaxis" => Dict("domain" => domain1, "title" => Dict("text" => "$nac (n=$n_co)")),
             "xaxis2" => axis2,
         ),
         layout,
@@ -393,7 +401,7 @@ function plot_heat_map(
 
         if eltype(grr_) <: AbstractString
 
-            gr_id = BioLab.Collection.pair_index(unique(grr_))[1]
+            gr_id = BioLab.Collection.index(unique(grr_))[1]
 
             grr_ = [gr_id[gr] for gr in grr_]
 
@@ -411,9 +419,10 @@ function plot_heat_map(
 
     if !isempty(grc_)
 
+        # TODO: Test.
         if eltype(grc_) <: AbstractString
 
-            gr_id = BioLab.Collection.pair_index(unique(grc_))[1]
+            gr_id = BioLab.Collection.index(unique(grc_))[1]
 
             grc_ = [gr_id[gr] for gr in grc_]
 
@@ -488,19 +497,20 @@ function plot_heat_map(
 
     end
 
-    plot(data, layout; ke_ar...)
+    plot(ht, data, layout; ke_ar...)
 
 end
 
-function plot_heat_map(row_x_column_x_number; ke_ar...)
+function plot_heat_map(ht, da; ke_ar...)
 
-    ro, ro_, co_, ro_x_co_x_nu = BioLab.DataFrame.separate(row_x_column_x_number)
+    nar, ro_, co_, ro_x_co_x_nu = BioLab.DataFrame.separate(da)
 
-    plot_heat_map(ro_x_co_x_nu, ro_, co_; nar = ro, ke_ar...)
+    plot_heat_map(ht, ro_x_co_x_nu, ro_, co_; nar, ke_ar...)
 
 end
 
 function plot_radar(
+    ht,
     theta_,
     r_;
     radialaxis_range = (0, maximum(vcat(r_...))),
@@ -517,6 +527,7 @@ function plot_radar(
     cofai = "#ebf6f7"
 
     plot(
+        ht,
         [
             Dict(
                 "type" => "scatterpolar",
@@ -540,18 +551,16 @@ function plot_radar(
                 "polar" => Dict(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
-                        "linewidth" => 4,
-                        "linecolor" => costa,
                         "ticks" => "",
                         "tickfont" =>
                             Dict("size" => 32, "family" => "Optima", "color" => "#23191e"),
+                        "linewidth" => 4,
+                        "linecolor" => costa,
                         "gridwidth" => 2,
                         "gridcolor" => cofai,
                     ),
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
-                        "linewidth" => 0.8,
-                        "linecolor" => costa,
                         "nticks" => 10,
                         "tickcolor" => costa,
                         "tickangle" => 90,
@@ -560,6 +569,8 @@ function plot_radar(
                             "family" => "Monospace",
                             "color" => "#1f4788",
                         ),
+                        "linewidth" => 0.8,
+                        "linecolor" => costa,
                         "gridwidth" => 1.2,
                         "gridcolor" => cofai,
                     ),
