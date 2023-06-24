@@ -20,10 +20,10 @@ function read_uniprot()
 
 end
 
-function map_ensembl(feature_x_information_x_anything = read_ensembl())
+function map_ensembl(da = read_ensembl())
 
     BioLab.DataFrame.map_to(
-        feature_x_information_x_anything,
+        da,
         BioLab.Dict.set_with_last!,
         [
             "Transcript stable ID version",
@@ -38,13 +38,13 @@ function map_ensembl(feature_x_information_x_anything = read_ensembl())
 
 end
 
-function map_uniprot(protein_x_information_x_anything = read_uniprot())
+function map_uniprot(da = read_uniprot())
 
     pr_io_an = Dict{String, Dict{String, Any}}()
 
-    io_ = names(protein_x_information_x_anything)
+    io_ = names(da)
 
-    for an_ in eachrow(protein_x_information_x_anything)
+    for an_ in eachrow(da)
 
         io_an = Dict{String, Any}()
 
@@ -56,6 +56,7 @@ function map_uniprot(protein_x_information_x_anything = read_uniprot())
 
             end
 
+            # TODO: If Entry Name is the first column, decouple setting it and the rest of the columns.
             if io == "Entry Name"
 
                 if !endswith(an, "_HUMAN")
@@ -90,7 +91,7 @@ function map_uniprot(protein_x_information_x_anything = read_uniprot())
 
 end
 
-# TODO: Move to Dict.
+# TODO: Move to Collection.
 function rename(na1_, na1_na2)
 
     n = length(na1_)
