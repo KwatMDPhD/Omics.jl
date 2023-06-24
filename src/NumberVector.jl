@@ -24,9 +24,7 @@ function _simulate_negative_positive(n)
 
     sort!(po_)
 
-    ne_ = reverse(-po_)
-
-    ne_, po_
+    reverse(-po_), po_
 
 end
 
@@ -72,7 +70,7 @@ function simulate_wide(n; ze = true)
 
     end
 
-    _concatenate_negative_positive(ne_ * 2, ze, po_)
+    _concatenate_negative_positive(ne_, ze, po_)
 
 end
 
