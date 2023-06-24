@@ -58,13 +58,18 @@ function plot(
 
     end
 
-    la = merge(Dict("animate" => false), la)
+    id = "Cytoscape"
 
-    id = "Network"
+    elj = write(el_)
+
+    stj = write(st_)
+
+    laj = write(merge!(Dict("animate" => false), la))
 
     BioLab.HTML.make(
         ht,
         id,
+        # TODO: Use the latest.
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
             "https://cdn.rawgit.com/eligrey/FileSaver.js/master/dist/FileSaver.js",
@@ -72,9 +77,9 @@ function plot(
         ),
         """var cy = cytoscape({
             container: document.getElementById("$id"),
-            elements: $(write(el_)),
-            style: $(write(st_)),
-            layout: $(write(la)),
+            elements: $elj,
+            style: $stj,
+            layout: $laj,
         });
 
         cy.on("mouseover", "node", function(ev) {

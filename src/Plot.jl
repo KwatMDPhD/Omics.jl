@@ -103,7 +103,7 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
 
     axis = Dict("automargin" => true)
 
-    id = "Plot"
+    id = "Plotly"
 
     BioLab.HTML.write(
         ht,
