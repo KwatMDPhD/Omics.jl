@@ -16,18 +16,21 @@ end
 
 function download(di, gs)
 
-    ba = "$(gs)_family.soft.gz"
+    na = "$(gs)_family.soft.gz"
 
-    pa = joinpath(di, ba)
+    gz = joinpath(di, na)
 
-    BioLab.Path.warn_overwrite(pa)
+    BioLab.Path.warn_overwrite(gz)
 
-    Base.download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:end-3])nnn/$gs/soft/$ba", pa)
+    gs2 = gs[1:(end - 3)]
+
+    Base.download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs2)nnn/$gs/soft/$na", gz)
 
 end
 
 function read(gz)
 
+    # TODO: Benchmark against hard-coding.
     ty_bl_ke_va = Dict(
         ty => OrderedDict{String, OrderedDict{String, String}}() for
         ty in ("DATABASE", "SERIES", "PLATFORM", "SAMPLE")
@@ -55,14 +58,18 @@ function read(gz)
 
         end
 
-        ta = "!$(lowercase(ty))_table_"
+        tyl = lowercase(ty)
+
+        ta = "!$(tyl)_table_"
 
         if startswith(li, "$(ta)begin")
 
+            tyt = titlecase(ty)
+
             ty_bl_ke_va[ty][bl]["table"] = join(
                 (
-                    _readline(st) for _ in
-                    1:(1 + parse(Int, ty_bl_ke_va[ty][bl]["!$(titlecase(ty))_data_row_count"]))
+                    _readline(st) for
+                    _ in 1:(1 + parse(Int, ty_bl_ke_va[ty][bl]["!$(tyt)_data_row_count"]))
                 ),
                 '\n',
             )
@@ -77,6 +84,7 @@ function read(gz)
 
         end
 
+        # TODO: Consider keeping only important information.
         ke, va = split(li, eq; limit = 2)
 
         BioLab.Dict.set_with_suffix!(ty_bl_ke_va[ty][bl], ke, va)
@@ -89,66 +97,67 @@ function read(gz)
 
 end
 
-function _map_feature(pl, feature_x_information_x_anything)
+function _map_feature(pl, ta)
 
-    pli = parse(Int, pl[4:end])
+    it = parse(Int, pl[4:end])
 
-    if pli in (96, 97, 570, 13667)
+    if it in (96, 97, 570, 13667)
 
         co = "Gene Symbol"
 
         fu = fe -> BioLab.String.split_get(fe, " /// ", 1)
 
-    elseif pli == 13534
+    elseif it == 13534
 
         co = "UCSC_RefGene_Name"
 
         fu = fe -> BioLab.String.split_get(fe, ';', 1)
 
-    elseif pli in (5175, 6244, 11532, 17586)
+    elseif it in (5175, 6244, 11532, 17586)
 
         co = "gene_assignment"
 
         fu = fe -> BioLab.String.split_get(fe, " // ", 2)
 
-    elseif pli in (2004, 2005, 3718, 3720)
+    elseif it in (2004, 2005, 3718, 3720)
 
         co = "Associated Gene"
 
         fu = fe -> BioLab.String.split_get(fe, " // ", 1)
 
-    elseif pli in (6098, 6884, 6947, 10558, 14951)
+    elseif it in (6098, 6884, 6947, 10558, 14951)
 
         co = "Symbol"
 
         fu = fe -> fe
 
-    elseif pli == 16686
+    elseif it == 16686
 
         co = "GB_ACC"
 
         fu = fe -> fe
 
-    elseif pli == 10332
+    elseif it == 10332
 
         co = "GENE_SYMBOL"
 
         fu = fe -> fe
 
-    elseif pli in (7566, 7567)
+    elseif it in (7566, 7567)
 
-        error("$pli is a bad platform. Avoid it.")
+        error("$pl is a bad platform. Avoid it.")
 
     else
 
-        error("$pli is a new platform. Implement it.")
+        error("$pl is a new platform. Implement it.")
 
     end
 
+    # TODO: Consider using BioLab.DataFrame.map.
+
     id_fe = Dict{String, String}()
 
-    for (id, fe) in
-        zip(feature_x_information_x_anything[!, "ID"], feature_x_information_x_anything[!, co])
+    for (id, fe) in zip(ta[!, "ID"], ta[!, co])
 
         if fe isa AbstractString && !isempty(fe) && fe != "---"
 
@@ -195,7 +204,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         if haskey(ke_va, "table")
 
-            feature_x_information_x_anything = BioLab.DataFrame.make(ke_va["table"])
+            ta = BioLab.DataFrame.make(ke_va["table"])
 
             merge!(
                 get!(
@@ -203,15 +212,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
                     ke_va["!Sample_platform_id"],
                     fill(Dict{String, Float64}(), n_sa),
                 )[id],
-                Dict(
-                    zip(
-                        feature_x_information_x_anything[!, 1],
-                        map(
-                            st -> parse(Float64, st),
-                            feature_x_information_x_anything[!, "VALUE"],
-                        ),
-                    ),
-                ),
+                Dict(zip(ta[!, 1], map(st -> parse(Float64, st), ta[!, "VALUE"]))),
             )
 
         else
@@ -222,11 +223,11 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     end
 
-    feature_x_sample_x_float_____ = Vector{DataFrame}(undef, length(pl_fe_fl__))
+    da_ = Vector{DataFrame}(undef, length(pl_fe_fl__))
 
     for (id, (pl, fe_fl__)) in enumerate(pl_fe_fl__)
 
-        feature_x_sample_x_float = BioLab.DataFrame.make(pl, sa_, fe_fl__)
+        da = BioLab.DataFrame.make(pl, sa_, fe_fl__)
 
         ke_va = ty_bl_ke_va["PLATFORM"][pl]
 
@@ -234,20 +235,19 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
             id_fe = _map_feature(pl, BioLab.DataFrame.make(ke_va["table"]))
 
-            feature_x_sample_x_float[!, 1] =
-                [get(id_fe, id, "_$id") for id in feature_x_sample_x_float[!, 1]]
+            da[!, 1] = [get(id_fe, id, "_$id") for id in da[!, 1]]
 
         else
 
-            @error "$pl table is empty."
+            @warn "$pl table is empty."
 
         end
 
-        feature_x_sample_x_float_____[id] = feature_x_sample_x_float
+        da_[id] = da
 
     end
 
-    BioLab.DataFrame.make("Characteristic", sa_, ch_st__), feature_x_sample_x_float_____...
+    BioLab.DataFrame.make("Characteristic", sa_, ch_st__), da_...
 
 end
 

@@ -131,7 +131,7 @@ function collapse(da; fu = mean, ty = Float64)
 
 end
 
-function map_to(da, fu!, fr_, to; de = "")
+function map(da, fu!, fr_, to; de = "")
 
     daf = da[!, fr_]
 
