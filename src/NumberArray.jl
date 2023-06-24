@@ -14,11 +14,11 @@ function error_negative(ar)
 
 end
 
-function get_area(ar)
-
-    sum(ar) / length(ar)
-
-end
+# function get_area(ar)
+# 
+#     sum(ar) / length(ar)
+# 
+# end
 
 function get_extreme(ar)
 
@@ -36,7 +36,7 @@ function get_extreme(ar)
 
     maa = abs(ma)
 
-    if isapprox(mia, maa)
+    if mia == maa
 
         (mi, ma)
 
@@ -44,7 +44,7 @@ function get_extreme(ar)
 
         (mi,)
 
-    else#if mia < maa
+    else
 
         (ma,)
 
@@ -70,6 +70,7 @@ end
 
 function skip_nan_apply!!(fu!, ar)
 
+    # TODO: Benchmark against map.
     go_ = [!isnan(nu) for nu in ar]
 
     if any(go_)
@@ -82,6 +83,7 @@ end
 
 function skip_nan_apply!(fu, ar)
 
+    # TODO: Benchmark against map.
     go_ = [!isnan(nu) for nu in ar]
 
     if any(go_)
@@ -96,6 +98,7 @@ function shift_minimum(ar, mi::Real)
 
     sh = mi - minimum(ar)
 
+    # TODO: Benchmark against map(+(sh), ar).
     [nu + sh for nu in ar]
 
 end
@@ -155,6 +158,8 @@ end
 function _normalize_with_rank!(ar, fu)
 
     BioLab.Collection.error_no_change(ar)
+
+    # TODO: Benchmark against .=.
 
     for (id, nu) in enumerate(fu(ar))
 
