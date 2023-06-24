@@ -20,23 +20,23 @@ function error_missing(pa)
 
 end
 
-function error_extension_difference(pa, ex)
+function error_extension_difference(pa, ex2)
 
-    pae = splitext(pa)[2][2:end]
+    ex = splitext(pa)[2][2:end]
 
-    if pae != ex
+    if ex != ex2
 
-        error("Extensions differ. $pae != $ex.")
+        error("Extensions differ. $ex != $ex2.")
 
     end
 
 end
 
-#function replace_extension(pa, ex)
-#
-#    "$(splitext(pa)[1]).$ex"
-#
-#end
+# function replace_extension(pa, ex)
+# 
+#     "$(splitext(pa)[1]).$ex"
+# 
+# end
 
 function make_absolute(pa)
 
@@ -46,7 +46,13 @@ end
 
 function clean(pa)
 
-    replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
+    pa2 = replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
+
+    if pa != pa2
+
+        @warn "$pa --> $pa2."
+
+    end
 
 end
 
@@ -86,6 +92,7 @@ function read(di; join = false, ig_ = (r"^\.",), ke_ = ())
 
         ba = basename(pa)
 
+        # TODO: Benchmark with map(ig->).
         if !any(contains(ba, ig) for ig in ig_) &&
            (isempty(ke_) || any(contains(ba, ke) for ke in ke_))
 
@@ -99,11 +106,23 @@ function read(di; join = false, ig_ = (r"^\.",), ke_ = ())
 
 end
 
-function reset(di)
+#function reset(di)
+#
+#    if isdir(di)
+#
+#        @warn "Removing $di"
+#
+#        rm(di; force = true, recursive = true)
+#
+#    end
+#
+#    mkdir(di)
+#
+#end
 
-    rm(di; force = true, recursive = true)
+function _split(na)
 
-    mkdir(di)
+    rsplit(na, '.'; limit = 3)
 
 end
 
@@ -111,9 +130,11 @@ function rank(di)
 
     na_ = readdir(di)
 
-    for (id, na) in enumerate(sort!(na_; by = na -> parse(Float64, rsplit(na, '.'; limit = 3)[1])))
+    for (id, na) in enumerate(sort!(na_; by = na -> parse(Float64, _split(na)[1])))
 
-        na2 = "$id.$(join(rsplit(na, '.'; limit=3)[2:end], '.'))"
+        su = join(_split(na)[2:end], '.')
+
+        na2 = "$id.$su"
 
         if na != na2
 
