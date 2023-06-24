@@ -6,19 +6,21 @@ using NMF: nnmf
 
 using ..BioLab
 
-function factorize(a, n)
+function factorize(ma, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 10^-4)
 
-    mf = nnmf(a, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 10^-4)
+    mf = nnmf(ma, n; init, alg, maxiter, tol)
 
-    me = " in $(mf.niters) iterations with $(mf.objvalue)."
+    # TODO: Use functions to access fields.
+
+    st = " in $(mf.niters) iterations with $(mf.objvalue)."
 
     if mf.converged
 
-        @info "Converged$me"
+        @info "Converged$st"
 
     else
 
-        error("Did not converge$me")
+        error("Did not converge$st")
 
     end
 
@@ -26,9 +28,9 @@ function factorize(a, n)
 
 end
 
-function solve_h(a, w)
+function solve_h(ma, w)
 
-    clamp!(pinv(w) * a, 0, Inf)
+    clamp!(pinv(w) * ma, 0, Inf)
 
 end
 
@@ -37,8 +39,8 @@ function write(
     w_,
     h_;
     fu = nothing,
-    nar_ = ["Rows $id" for id in eachindex(w_)],
-    nac_ = ["Columns $id" for id in eachindex(h_)],
+    nar_ = ["Row Set $id" for id in eachindex(w_)],
+    nac_ = ["Column Set $id" for id in eachindex(h_)],
     naf = "Factor",
     ro___ = (["$na $id" for id in 1:size(ma, 1)] for (ma, na) in zip(w_, nar_)),
     co___ = (["$na $id" for id in 1:size(ma, 2)] for (ma, na) in zip(h_, nac_)),
@@ -52,15 +54,13 @@ function write(
 
     axis = Dict("dtick" => 1)
 
+    # TODO: Make a function and use it for W and H.
+
     for (id, (w, ro_, nar)) in enumerate(zip(w_, ro___, nar_))
 
         pr = joinpath(di, "row$(id)_x_factor_x_positive")
 
-        ts = "$pr.tsv"
-
-        BioLab.Path.warn_overwrite(ts)
-
-        BioLab.Table.write(ts, BioLab.DataFrame.make(nar, ro_, fa_, w))
+        BioLab.Table.write("$pr.tsv", BioLab.DataFrame.make(nar, ro_, fa_, w))
 
         or_ = BioLab.Clustering.hierarchize(w, 1).order
 
@@ -72,12 +72,8 @@ function write(
 
         end
 
-        ht = "$pr.html"
-
-        BioLab.Path.warn_overwrite(ht)
-
         BioLab.Plot.plot_heat_map(
-            ht,
+            "$pr.html",
             co[or_, :],
             ro_[or_],
             fa_;
@@ -97,11 +93,7 @@ function write(
 
         pr = joinpath(di, "factor_x_column$(id)_x_positive")
 
-        ts = "$pr.tsv"
-
-        BioLab.Path.warn_overwrite(ts)
-
-        BioLab.Table.write(ts, BioLab.DataFrame.make(naf, fa_, co_, h))
+        BioLab.Table.write("$pr.tsv", BioLab.DataFrame.make(naf, fa_, co_, h))
 
         or_ = BioLab.Clustering.hierarchize(h, 2).order
 
@@ -113,12 +105,8 @@ function write(
 
         end
 
-        ht = "$pr.html"
-
-        BioLab.Path.warn_overwrite(ht)
-
         BioLab.Plot.plot_heat_map(
-            ht,
+            "$pr.html",
             co[:, or_],
             fa_,
             co_[or_];
