@@ -8,11 +8,13 @@ function make(ht, id, so_, sc; he = 800, wi = 1280, ba = "#27221f")
 
         ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html")
 
+    else
+
+        BioLab.Path.warn_overwrite(ht)
+
+        BioLab.Path.error_extension_difference(ht, "html")
+
     end
-
-    BioLab.Path.warn_overwrite(ht)
-
-    BioLab.Path.error_extension_difference(ht, "html")
 
     write(
         ht,
@@ -23,12 +25,9 @@ function make(ht, id, so_, sc; he = 800, wi = 1280, ba = "#27221f")
                 "<head>",
                 "<meta charset=\"UTF-8\">",
                 "</head>",
-                "<div id=\"$id\" style=\"margin: auto; min-height: $(he)px; min-width: $(wi)px; display: flex; justify-content: center; align-items: center; padding: 24px; background: $ba;\">",
-                "</div>",
+                "<div id=\"$id\" style=\"margin: auto; min-height: $(he)px; min-width: $(wi)px; display: flex; justify-content: center; align-items: center; padding: 24px; background: $ba;\"></div>",
                 ["<script src=\"$so\"></script>" for so in so_],
-                "<script>",
-                sc,
-                "</script>",
+                "<script>$sc</script>",
                 "</html>",
             ),
             '\n',
