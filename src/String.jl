@@ -4,6 +4,18 @@ using Printf: @sprintf
 
 using ..BioLab
 
+function format(nu)
+
+    if isequal(nu, -0.0)
+
+        nu = 0.0
+
+    end
+
+    @sprintf "%.4g" nu
+
+end
+
 function try_parse(st)
 
     try
@@ -26,82 +38,13 @@ function try_parse(st)
 
 end
 
-function format(nu)
-
-    if isequal(nu, -0.0)
-
-        nu = 0.0
-
-    end
-
-    @sprintf "%.4g" nu
-
-end
-
-function title(st)
-
-    ti = ""
-
-    st = strip(st)
-
-    for (up, ch) in zip((isuppercase(ch) for ch in st), titlecase(replace(st, '_' => ' ')))
-
-        if up
-
-            ch = uppercase(ch)
-
-        end
-
-        ti *= ch
-
-    end
-
-    for lo in (
-        "'m ",
-        "'re ",
-        "'s ",
-        "'ve ",
-        "'d ",
-        " a ",
-        " an ",
-        " st ",
-        " the ",
-        " and ",
-        " but ",
-        " or ",
-        " nor ",
-        " at ",
-        " by ",
-        " for ",
-        " from ",
-        " in ",
-        " into ",
-        " of ",
-        " off ",
-        " on ",
-        " onto ",
-        " out ",
-        " over ",
-        " to ",
-        " up ",
-        " with ",
-        " as ",
-        " vs ",
-    )
-
-        ti = replace(ti, titlecase(lo) => lo)
-
-    end
-
-    ti
-
-end
-
 function limit(st, n)
 
     if n < length(st)
 
-        return "$(st[1:n])..."
+        su = st[1:n]
+
+        return "$su..."
 
     end
 
@@ -145,7 +88,9 @@ function count(n, st)
 
         if endswith(st, si)
 
-            return "$n $(st[1:end-length(si)])$pl"
+            su = st[1:(end - length(si))]
+
+            return "$n $su$pl"
 
         end
 
