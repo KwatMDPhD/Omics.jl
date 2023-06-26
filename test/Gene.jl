@@ -2,6 +2,10 @@ include("environment.jl")
 
 # ---- #
 
+DA = joinpath(BioLab.DA, "Gene")
+
+# ---- #
+
 en = BioLab.Gene.read_ensembl()
 
 # ---- #

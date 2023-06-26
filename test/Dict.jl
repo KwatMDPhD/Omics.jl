@@ -2,6 +2,10 @@ include("environment.jl")
 
 # ---- #
 
+DA = joinpath(BioLab.DA, "Dict")
+
+# ---- #
+
 ke_va = Dict("Existing" => 1)
 
 # ---- #
@@ -75,16 +79,12 @@ BioLab.Dict.map
 
 # ---- #
 
-da = joinpath(DA, "Dict")
-
-# ---- #
-
-@test BioLab.Dict.read(joinpath(da, "example_1.json")) ==
+@test BioLab.Dict.read(joinpath(DA, "example_1.json")) ==
       Dict{String, Any}("fruit" => "Apple", "color" => "Red", "size" => "Large")
 
 # ---- #
 
-@test BioLab.Dict.read(joinpath(da, "example_2.json")) == Dict{String, Any}(
+@test BioLab.Dict.read(joinpath(DA, "example_2.json")) == Dict{String, Any}(
     "quiz" => Dict{String, Any}(
         "sport" => Dict{String, Any}(
             "q1" => Dict{String, Any}(
@@ -115,7 +115,7 @@ da = joinpath(DA, "Dict")
 
 # ---- #
 
-@test BioLab.Dict.read(joinpath(da, "example.toml")) == Dict{String, Any}(
+@test BioLab.Dict.read(joinpath(DA, "example.toml")) == Dict{String, Any}(
     "servers" => Dict{String, Any}(
         "alpha" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.1"),
         "beta" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.2"),

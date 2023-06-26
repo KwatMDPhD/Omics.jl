@@ -1,6 +1,8 @@
-using OrderedCollections: OrderedDict
-
 include("environment.jl")
+
+# ---- #
+
+DA = joinpath(BioLab.DA, "FeatureSetEnrichment")
 
 # ---- #
 
@@ -38,7 +40,7 @@ for an_ in (
     ['a', 'b', 'c', "c"],
 )
 
-    BioLab.Collection.error_duplicate(an_)
+    @test !@is_error BioLab.Collection.error_duplicate(an_)
 
 end
 
@@ -83,22 +85,7 @@ for an_ in (
     ['a', "a"],
 )
 
-    BioLab.Collection.error_no_change(an_)
-
-end
-
-# ---- #
-
-# TODO: Pass the test and remove.
-
-using StatsBase: countmap
-
-for (an_, re) in (
-    ((1, 2, 2, 3, 3, 3, 4), sort(Dict(1 => 1, 2 => 2, 3 => 3, 4 => 1))),
-    (('a', 'b', 'b', 'c', 'c', 'c', 'd'), sort(Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 1))),
-)
-
-    @test countmap(an_) == re
+    @test !@is_error BioLab.Collection.error_no_change(an_)
 
 end
 
@@ -152,9 +139,11 @@ end
 
 # ---- #
 
+an_ = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
+
 an1_ = ['1', '2', 'K']
 
-@test BioLab.Collection.is_in(BioLab.CA_, an1_) ==
+@test BioLab.Collection.is_in(an_, an1_) ==
       [false, true, false, false, false, false, false, false, false, false, false, false, true]
 
 @test BioLab.Collection.is_in(Dict('A' => 1, '2' => 2, '3' => 3, 'Q' => 4, 'K' => 5), an1_) ==
@@ -163,17 +152,15 @@ an1_ = ['1', '2', 'K']
 @test BioLab.Collection.is_in(Dict('A' => 5, '2' => 4, '3' => 3, 'Q' => 2, 'K' => 1), an1_) ==
       [true, false, false, true, false]
 
-@test BioLab.Collection.is_in(BioLab.CA_, an1_) ==
-      BioLab.Collection.is_in(BioLab.CA_, Set(an1_)) ==
-      BioLab.Collection.is_in(Dict(ca => id for (id, ca) in enumerate(BioLab.CA_)), an1_)
+@test BioLab.Collection.is_in(an_, an1_) ==
+      BioLab.Collection.is_in(an_, Set(an1_)) ==
+      BioLab.Collection.is_in(Dict(ca => id for (id, ca) in enumerate(an_)), an1_)
 
 # ---- #
 
-di = joinpath(DA, "FeatureSetEnrichment")
+fe_ = reverse!(BioLab.Table.read(joinpath(DA, "gene_x_statistic_x_number.tsv"))[!, 1])
 
-fe_ = reverse!(BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))[!, 1])
-
-fe1_ = BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+fe1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 # ---- #
 
@@ -188,6 +175,7 @@ fe1_ = BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARG
 # ---- #
 
 # 616.616 ns (2 allocations: 19.67 KiB)
+# 929.688 ns (2 allocations: 19.67 KiB)
 #@btime BioLab.Collection.is_in($(Dict(fe => id for (id, fe) in enumerate(fe_))), $fe1_);
 
 # ---- #

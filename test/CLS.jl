@@ -2,15 +2,17 @@ include("environment.jl")
 
 # ---- #
 
-da = joinpath(BioLab.DA, "CLS")
+DA = joinpath(BioLab.DA, "CLS")
+
+# ---- #
 
 for (na, ta, nu_) in (
     ("CCLE_mRNA_20Q2_no_haem_phen.cls", "HER2", []),
-    ("GSE76137.cls", "Proliferating vs Arrested", [1, 2, 1, 2, 1, 2]),
-    ("LPS_phen.cls", "CNTRL vs LPS", [1, 1, 1, 2, 2, 2]),
+    ("GSE76137.cls", "Proliferating_Arrested", [1, 2, 1, 2, 1, 2]),
+    ("LPS_phen.cls", "CNTRL_LPS", [1, 1, 1, 2, 2, 2]),
 )
 
-    cl = BioLab.CLS.read(joinpath(da, na))
+    cl = BioLab.CLS.read(joinpath(DA, na))
 
     @test cl[!, "Target"] == [ta]
 

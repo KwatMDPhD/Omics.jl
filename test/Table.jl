@@ -4,21 +4,21 @@ include("environment.jl")
 
 # ---- #
 
-di = joinpath(BioLab.DA, "Table")
+DA = joinpath(BioLab.DA, "Table")
 
 # ---- #
 
 for na in ("titanic.tsv", "enst_gene.tsv.gz")
 
     # TODO: Test.
-    BioLab.Table.read(joinpath(di, na))
+    BioLab.Table.read(joinpath(DA, na))
 
 end
 
 # ---- #
 
 # TODO: Test.
-BioLab.Table.read(joinpath(di, "12859_2019_2886_MOESM2_ESM.xlsx"); xl = "HumanSpecific Genes")
+BioLab.Table.read(joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx"); xl = "HumanSpecific Genes")
 
 # ---- #
 
