@@ -48,15 +48,21 @@ function clean(pa)
 
     end
 
+    pa2
+
 end
 
-function wait(pa; se = 1)
+function wait(pa; sl = 1, li = 4)
 
-    while !ispath(pa)
+    se = 0
 
-        sleep(se)
+    while se <= li && !ispath(pa)
 
-        @info "Waiting for $pa"
+        sleep(sl)
+
+        se += sl
+
+        @info "Waiting for $pa ($se/$li)"
 
     end
 

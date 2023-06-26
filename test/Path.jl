@@ -1,14 +1,16 @@
 include("environment.jl")
 
+# ---- #
+
+for pa in (joinpath(TE, "missing_path"), TE)
+
+    BioLab.Path.warn_overwrite(pa)
+
+end
 
 # ---- #
 
-# TODO
-BioLab.Path.warn_overwrite
-
-# ---- #
-
-for pa in ("file", joinpath(@__DIR__, "file"))
+for pa in ("missing_file", joinpath(TE, "missing_path"))
 
     @test @is_error BioLab.Path.error_missing(pa)
 
@@ -16,15 +18,15 @@ end
 
 # ---- #
 
-for pa in ("Path.jl", "path.jl", joinpath(@__DIR__, "Path.jl"), joinpath(@__DIR__, "path.jl"))
+for pa in ("Path.jl", "path.jl", joinpath(@__DIR__, "Path.jl"), joinpath(@__DIR__, "path.jl"), TE)
 
-    BioLab.Path.error_missing(pa)
+    @test !@is_error BioLab.Path.error_missing(pa)
 
 end
 
 # ---- #
 
-for pa in ("file.extension", joinpath(@__DIR__, "file.extension"))
+for pa in ("file.extension", joinpath(TE, "file.extension"))
 
     for ex in (".extension", "another_extension")
 
@@ -32,7 +34,7 @@ for pa in ("file.extension", joinpath(@__DIR__, "file.extension"))
 
     end
 
-    BioLab.Path.error_extension_difference(pa, "extension")
+    @test !@is_error BioLab.Path.error_extension_difference(pa, "extension")
 
 end
 
@@ -71,12 +73,12 @@ end
 
 # ---- #
 
-# TODO
-BioLab.Path.wait
+BioLab.Path.wait(mi)
 
 # ---- #
 
 for pa in (
+    TE,
     joinpath(BioLab.DA, "CLS", "LPS_phen.cls"),
     joinpath(BioLab.DA, "FeatureSetEnrichment", "genes.txt"),
 )
@@ -112,51 +114,45 @@ end
 
 # ---- #
 
-te = joinpath(tempdir(), "BioLab.test.Path")
-
-# ---- #
-
-BioLab.Path.reset(te)
-
-ra = mkdir(joinpath(te, "rank"))
+di = mkdir(joinpath(TE, BioLab.Time.stamp()))
 
 ex = "extension"
 
 for (nu, ch) in zip((0.7, 1, 1.1, 3, 10, 12, 24), 'a':'z')
 
-    touch(joinpath(ra, "$nu.$ch.$ex"))
+    touch(joinpath(di, "$nu.$ch.$ex"))
 
 end
 
-BioLab.Path.rank(ra)
+BioLab.Path.rank(di)
 
-@test BioLab.Path.read(ra) == ["$id.$ch.$ex" for (id, ch) in enumerate('a':'g')]
-
-# ---- #
-
-BioLab.Path.reset(te)
-
-fi1 = touch(joinpath(te, "fi1"))
-
-fi2 = touch(joinpath(te, "fi2"))
-
-BioLab.Path.rename(te, ("fi" => "new",))
-
-@test BioLab.Path.read(te) == ["new1", "new2"]
+@test BioLab.Path.read(di) == ["$id.$ch.$ex" for (id, ch) in enumerate('a':'g')]
 
 # ---- #
 
-BioLab.Path.reset(te)
+di = mkdir(joinpath(TE, BioLab.Time.stamp()))
 
-fi1 = touch(joinpath(te, "fi1"))
+fi1 = touch(joinpath(di, "fi1"))
 
-fi2 = touch(joinpath(te, "fi2"))
+fi2 = touch(joinpath(di, "fi2"))
+
+BioLab.Path.rename(di, ("fi" => "new",))
+
+@test BioLab.Path.read(di) == ["new1", "new2"]
+
+# ---- #
+
+di = mkdir(joinpath(TE, BioLab.Time.stamp()))
+
+fi1 = touch(joinpath(di, "fi1"))
+
+fi2 = touch(joinpath(di, "fi2"))
 
 write(fi1, "Before")
 
 write(fi2, "BeforeBefore")
 
-BioLab.Path.sed(te, ("Before" => "After",))
+BioLab.Path.sed(di, ("Before" => "After",))
 
 @test readline(open(fi1)) == "After"
 
