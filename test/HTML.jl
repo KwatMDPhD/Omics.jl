@@ -10,7 +10,7 @@ sc = "SCRIPT"
 
 # ---- #
 
-BioLab.HTML.write(id, so_, sc)
+BioLab.HTML.make(id, so_, sc)
 
 # ---- #
 
@@ -18,4 +18,4 @@ te = joinpath(tempdir(), "BioLab.test.HTML")
 
 BioLab.Path.reset(te)
 
-BioLab.HTML.write(id, so_, sc; ba = "#000000", ht = joinpath(te, "name.html"))
+BioLab.HTML.make(id, so_, sc; ba = "#000000", ht = joinpath(te, "name.html"))

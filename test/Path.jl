@@ -1,5 +1,11 @@
 include("environment.jl")
 
+
+# ---- #
+
+# TODO
+BioLab.Path.warn_overwrite
+
 # ---- #
 
 for pa in ("file", joinpath(@__DIR__, "file"))
@@ -27,19 +33,6 @@ for pa in ("file.extension", joinpath(@__DIR__, "file.extension"))
     end
 
     BioLab.Path.error_extension_difference(pa, "extension")
-
-end
-
-# ---- #
-
-ex2 = "new_extension"
-
-for (pa, re) in (
-    ("file.extension", "file.$ex2"),
-    (joinpath(@__DIR__, "file.extension"), joinpath(@__DIR__, "file.$ex2")),
-)
-
-    @test BioLab.Path.replace_extension(pa, "new_extension") == re
 
 end
 
@@ -75,6 +68,11 @@ for (pa, re) in ((na, nac), (joinpath("\$", na), joinpath("_", nac)))
     @test BioLab.Path.clean(pa) == re
 
 end
+
+# ---- #
+
+# TODO
+BioLab.Path.wait
 
 # ---- #
 
@@ -115,14 +113,6 @@ end
 # ---- #
 
 te = joinpath(tempdir(), "BioLab.test.Path")
-
-# ---- #
-
-BioLab.Path.reset(te)
-
-touch(joinpath(te, "touch"))
-
-@test isempty(BioLab.Path.read(BioLab.Path.reset(te)))
 
 # ---- #
 

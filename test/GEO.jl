@@ -48,23 +48,23 @@ platform_table = pl_ke_va[pl]["table"]
 
 # ---- #
 
-# disable_logging(Warn)
+#disable_logging(Warn)
 # 682.000 ms (3441110 allocations: 208.35 MiB)
-# @btime BioLab.GEO.read($gz);
-# disable_logging(Debug)
+#@btime BioLab.GEO.read($gz);
+#disable_logging(Debug)
 
 # ---- #
 
 feature_x_information_x_anything = BioLab.DataFrame.make(platform_table)
 
-@test BioLab.GEO._name(pl, feature_x_information_x_anything)["16657485"] == "XR_132471"
+@test BioLab.GEO._map_feature(pl, feature_x_information_x_anything)["16657485"] == "XR_132471"
 
 # ---- #
 
-# disable_logging(Warn)
+#disable_logging(Warn)
 # 9.623 ms (430770 allocations: 18.68 MiB)
-# @btime BioLab.GEO._name($pl, $feature_x_information_x_anything);
-# disable_logging(Debug)
+#@btime BioLab.GEO._map_feature($pl, $feature_x_information_x_anything);
+#disable_logging(Debug)
 
 # ---- #
 
@@ -80,10 +80,10 @@ characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabul
 
 # ---- #
 
-# disable_logging(Warn)
+#disable_logging(Warn)
 # 536.426 ms (4991905 allocations: 708.66 MiB)
-# @btime BioLab.GEO.tabulate($ty_bl);
-# disable_logging(Debug)
+#@btime BioLab.GEO.tabulate($ty_bl);
+#disable_logging(Debug)
 
 # ---- #
 

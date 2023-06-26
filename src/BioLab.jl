@@ -4,9 +4,6 @@ const DA = joinpath(dirname(@__DIR__), "data")
 
 const TE = joinpath(tempdir(), "BioLab")
 
-# TODO: Move to where it is used.
-# const CA_ = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
-
 macro is_error(ex)
 
     quote
@@ -41,7 +38,7 @@ end
 
 function __init__()
 
-    Path.reset(TE)
+    Path.make_directory(TE)
 
 end
 

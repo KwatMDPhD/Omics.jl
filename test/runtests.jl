@@ -1,8 +1,4 @@
-using Aqua
-
-using Test
-
-using BioLab
+include("environment.jl")
 
 # ---- #
 
@@ -43,12 +39,6 @@ end
 @test isdir(BioLab.TE)
 
 @test isempty(readdir(BioLab.TE))
-
-# ---- #
-
-@test isconst(BioLab, :CA_)
-
-@test BioLab.CA_ == ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
 
 # ---- #
 

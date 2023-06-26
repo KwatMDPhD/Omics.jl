@@ -2,23 +2,6 @@ include("environment.jl")
 
 # ---- #
 
-for (st, re) in (
-    ("0", 0),
-    ("-0.0", 0),
-    ("0.0", 0),
-    ("0.1", 0.1),
-    (".1", 0.1),
-    ("1/2", "1/2"),
-    ('a', 'a'),
-    ("Aa", "Aa"),
-)
-
-    @test BioLab.String.try_parse(st) == re
-
-end
-
-# ---- #
-
 for (nu, re) in (
     (-0, "0"),
     (0, "0"),
@@ -38,15 +21,17 @@ end
 # ---- #
 
 for (st, re) in (
-    ("aa", "Aa"),
-    ("DNA", "DNA"),
-    ("Hello world!", "Hello World!"),
-    ("SARS-COVID-2", "SARS-COVID-2"),
-    ("This is an apple", "This Is an Apple"),
-    ("i'm a man", "I'm a Man"),
+    ("0", 0),
+    ("-0.0", 0),
+    ("0.0", 0),
+    ("0.1", 0.1),
+    (".1", 0.1),
+    ("1/2", "1/2"),
+    ('a', 'a'),
+    ("Aa", "Aa"),
 )
 
-    @test BioLab.String.title(st) == re
+    @test BioLab.String.try_parse(st) == re
 
 end
 

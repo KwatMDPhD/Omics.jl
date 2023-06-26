@@ -14,11 +14,11 @@ function error_negative(ar)
 
 end
 
-# function get_area(ar)
-# 
-#     sum(ar) / length(ar)
-# 
-# end
+function get_area(ar)
+
+    sum(ar) / length(ar)
+
+end
 
 function get_extreme(ar)
 

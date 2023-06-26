@@ -174,17 +174,17 @@ fe1_ = BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARG
 # ---- #
 
 # 454.167 μs (2 allocations: 19.67 KiB)
-# @btime BioLab.Collection.is_in($fe_, $(Set(fe1_)));
+#@btime BioLab.Collection.is_in($fe_, $(Set(fe1_)));
 
 # ---- #
 
 # 740.875 μs (2 allocations: 19.67 KiB)
-# @btime BioLab.Collection.is_in($fe_, $fe1_);
+#@btime BioLab.Collection.is_in($fe_, $fe1_);
 
 # ---- #
 
 # 616.616 ns (2 allocations: 19.67 KiB)
-# @btime BioLab.Collection.is_in($(Dict(fe => id for (id, fe) in enumerate(fe_))), $fe1_);
+#@btime BioLab.Collection.is_in($(Dict(fe => id for (id, fe) in enumerate(fe_))), $fe1_);
 
 # ---- #
 
@@ -210,24 +210,5 @@ end
 
 # ---- #
 
-@test BioLab.Collection.sort_recursively(
-    Dict(
-        8 => [Dict('a' => 2, 'b' => 1), Dict("b" => 1, "a" => 2)],
-        7 => (3, 2, 1, Dict('b' => 1, 'a' => 2)),
-        6 => [3, 2, 1, Dict('b' => 1, 'a' => 2)],
-        5 => [1, 'a'],
-        4 => Dict('c' => 1, 'b' => 2, 'a' => 3),
-        3 => Dict(),
-        2 => (3, 2, 1),
-        1 => [3, 2, 1],
-    ),
-) == OrderedDict(
-    1 => [1, 2, 3],
-    2 => (3, 2, 1),
-    3 => OrderedDict(),
-    4 => OrderedDict('a' => 3, 'b' => 2, 'c' => 1),
-    5 => [1, 'a'],
-    6 => [1, 2, 3, OrderedDict('a' => 2, 'b' => 1)],
-    7 => (3, 2, 1, Dict('a' => 2, 'b' => 1)),
-    8 => [OrderedDict('a' => 2, 'b' => 1), OrderedDict("a" => 2, "b" => 1)],
-)
+# TODO
+BioLab.Collection.rename

@@ -32,12 +32,6 @@ function error_extension_difference(pa, ex2)
 
 end
 
-# function replace_extension(pa, ex)
-# 
-#     "$(splitext(pa)[1]).$ex"
-# 
-# end
-
 function make_absolute(pa)
 
     rstrip(abspath(expanduser(pa)), '/')
@@ -56,7 +50,6 @@ function clean(pa)
 
 end
 
-# TODO: Test.
 function wait(pa; se = 1)
 
     while !ispath(pa)
@@ -69,7 +62,6 @@ function wait(pa; se = 1)
 
 end
 
-# TODO: Test.
 function open(pa)
 
     try
@@ -105,20 +97,6 @@ function read(di; join = false, ig_ = (r"^\.",), ke_ = ())
     pa_
 
 end
-
-#function reset(di)
-#
-#    if isdir(di)
-#
-#        @warn "Removing $di"
-#
-#        rm(di; force = true, recursive = true)
-#
-#    end
-#
-#    mkdir(di)
-#
-#end
 
 function _split(na)
 

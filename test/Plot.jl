@@ -6,7 +6,19 @@ include("environment.jl")
 
 # ---- #
 
-@test @is_error BioLab.Plot._make_color_scheme(("#012345",), "Category", "Notes")
+@test BioLab.Plot._CO == "continuous"
+
+# ---- #
+
+@test BioLab.Plot._CA == "categorical"
+
+# ---- #
+
+@test BioLab.Plot._BI == "binary"
+
+# ---- #
+
+@test @is_error BioLab.Plot.make_color_scheme(("#012345",), "Category", "Notes")
 
 # ---- #
 
@@ -16,21 +28,13 @@ ca = "Category"
 
 no = "Notes"
 
-co = BioLab.Plot._make_color_scheme(he_, ca, no)
+co = BioLab.Plot.make_color_scheme(he_, ca, no)
 
 @test length(co) == length(he_)
 
 @test co.category == ca
 
 @test co.notes == no
-
-# ---- #
-
-@test BioLab.Plot._CO == "continuous"
-
-@test BioLab.Plot._CA == "categorical"
-
-@test BioLab.Plot._BI == "binary"
 
 # ---- #
 
@@ -122,7 +126,7 @@ for (he_, fr_) in (
     ),
 )
 
-    @test BioLab.Plot.fractionate(BioLab.Plot._make_color_scheme(he_, ca, no)) ==
+    @test BioLab.Plot.fractionate(BioLab.Plot.make_color_scheme(he_, ca, no)) ==
           collect(zip(fr_, he_))
 
 end
@@ -286,3 +290,8 @@ theta_ = [theta30, theta45, theta60]
 r_ = [1:length(theta30), 1:length(theta45), 1:length(theta60)]
 
 BioLab.Plot.plot_radar(theta_, r_; name_ = [30, 45, 60])
+
+# ---- #
+
+# TODO
+BioLab.Plot.animate

@@ -12,6 +12,12 @@ using Printf: @sprintf
 
 using ..BioLab
 
+const _CO = "continuous"
+
+const _CA = "categorical"
+
+const _BI = "binary"
+
 function make_color_scheme(he_, ca, no)
 
     BioLab.Collection.error_no_change(he_)
@@ -20,12 +26,6 @@ function make_color_scheme(he_, ca, no)
     ColorScheme([parse(Colorant{Float64}, he) for he in he_], ca, no)
 
 end
-
-const _CO = "continuous"
-
-const _CA = "categorical"
-
-const _BI = "binary"
 
 const COBWR = ColorScheme(bwr.colors, _CO, "Blue White Red")
 

@@ -36,7 +36,7 @@ n = 3
 
 seed!(se)
 
-ne_, po_ = BioLab.NumberVector._simulate_negative_positive(n)
+ne_, po_ = BioLab.NumberVector._simulate(n)
 
 ren = [-1.4897554994413376, -0.370149968439238, -0.0]
 
@@ -54,7 +54,7 @@ ret = vcat(ren, rep)
 
 for (ze, re) in ((false, ref), (true, ret))
 
-    @test BioLab.NumberVector._concatenate_negative_positive(ne_, ze, po_) == re
+    @test BioLab.NumberVector._concatenate(ne_, ze, po_) == re
 
 end
 

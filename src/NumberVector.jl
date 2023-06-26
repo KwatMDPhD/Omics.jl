@@ -16,7 +16,7 @@ function force_increasing_with_max!(ar)
 
 end
 
-function _simulate_negative_positive(n)
+function _simulate(n)
 
     ra_ = rand(Normal(), n)
 
@@ -28,7 +28,7 @@ function _simulate_negative_positive(n)
 
 end
 
-function _concatenate_negative_positive(ne_, ze, po_)
+function _concatenate(ne_, ze, po_)
 
     vcat(ne_[1:(end - !ze)], po_)
 
@@ -36,23 +36,23 @@ end
 
 function simulate(n; ze = true)
 
-    ne_, po_ = _simulate_negative_positive(n)
+    ne_, po_ = _simulate(n)
 
-    _concatenate_negative_positive(ne_, ze, po_)
+    _concatenate(ne_, ze, po_)
 
 end
 
 function simulate_deep(n; ze = true)
 
-    ne_, po_ = _simulate_negative_positive(n)
+    ne_, po_ = _simulate(n)
 
-    _concatenate_negative_positive(ne_ * 2, ze, po_)
+    _concatenate(ne_ * 2, ze, po_)
 
 end
 
 function simulate_wide(n; ze = true)
 
-    ne_, po_ = _simulate_negative_positive(n)
+    ne_, po_ = _simulate(n)
 
     ne2_ = Vector{Float64}(undef, n * 2 - 1)
 
@@ -70,7 +70,7 @@ function simulate_wide(n; ze = true)
 
     end
 
-    _concatenate_negative_positive(ne_, ze, po_)
+    _concatenate(ne_, ze, po_)
 
 end
 

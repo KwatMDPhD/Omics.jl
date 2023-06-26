@@ -133,28 +133,56 @@ function sort_like(an___; rev = false)
 
 end
 
-# function sort_recursively(co)
-# 
-#     if co isa AbstractArray
-# 
-#         co = [sort_recursively(an2) for an2 in co]
-# 
-#     elseif co isa AbstractDict
-# 
-#         co = sort(Dict(ke => sort_recursively(va) for (ke, va) in co))
-# 
-#     end
-# 
-#     try
-# 
-#         sort!(co)
-# 
-#     catch
-# 
-#     end
-# 
-#     co
-# 
-# end
+function rename(na1_, na1_na2)
+
+    n = length(na1_)
+
+    na2_ = Vector{String}(undef, n)
+
+    ma_ = Vector{Int}(undef, n)
+
+    n1 = n2 = n3 = 0
+
+    for (id, na1) in enumerate(na1_)
+
+        if haskey(na1_na2, na1)
+
+            na2 = na1_na2[na1]
+
+            if na1 == na2
+
+                ma = 1
+
+                n1 += 1
+
+            else
+
+                ma = 2
+
+                n2 += 1
+
+            end
+
+        else
+
+            na2 = na1
+
+            ma = 3
+
+            n3 += 1
+
+        end
+
+        na2_[id] = na2
+
+        ma_[id] = ma
+
+    end
+
+    @info "Already renamed $n1. Renamed $n2. Failed $n3."
+
+    na2_, ma_
+
+end
 
 end

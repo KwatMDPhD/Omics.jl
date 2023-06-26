@@ -183,14 +183,13 @@ for (fr_, re) in (
     ),
 )
 
-    @test BioLab.DataFrame.map_to(row_x_column_x_string, BioLab.Dict.set_with_first!, fr_, "F") ==
-          re
+    @test BioLab.DataFrame.map(row_x_column_x_string, BioLab.Dict.set_with_first!, fr_, "F") == re
 
 end
 
 # ---- #
 
-@test BioLab.DataFrame.map_to(
+@test BioLab.DataFrame.map(
     DataFrame("From" => ["A B", "C D"], "To" => [1, 2]),
     BioLab.Dict.set_with_first!,
     ["From"],
