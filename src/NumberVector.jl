@@ -70,7 +70,7 @@ function simulate_wide(n; ze = true)
 
     end
 
-    _concatenate(ne_, ze, po_)
+    _concatenate(ne2_, ze, po_)
 
 end
 
