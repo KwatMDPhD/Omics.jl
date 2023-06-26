@@ -12,21 +12,21 @@ using XLSX: readtable
 
 using ..BioLab
 
-function read(pa; xl = "", ke_ar...)
+function read(fi; xl = "", ke_ar...)
 
-    ex = splitext(pa)[2]
+    ex = splitext(fi)[2][2:end]
 
-    if ex == ".xlsx"
+    if ex == "xlsx"
 
-        DataFrame(readtable(pa, xl))
+        DataFrame(readtable(fi, xl))
 
     else
 
-        BioLab.Path.error_missing(pa)
+        BioLab.Path.error_missing(fi)
 
-        it_ = mmap(pa)
+        it_ = mmap(fi)
 
-        if ex == ".gz"
+        if ex == "gz"
 
             it_ = transcode(GzipDecompressor, it_)
 
@@ -38,13 +38,13 @@ function read(pa; xl = "", ke_ar...)
 
 end
 
-function write(ts, ro_x_co_x_an)
+function write(ts, da)
 
     BioLab.Path.warn_overwrite(ts)
 
     BioLab.Path.error_extension_difference(ts, "tsv")
 
-    _write(ts, ro_x_co_x_an; delim = '\t')
+    _write(ts, da; delim = '\t')
 
 end
 
