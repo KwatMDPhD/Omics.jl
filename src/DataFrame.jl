@@ -27,7 +27,7 @@ end
 
 function make(nar, co_, ro_an__)
 
-    ro_ = sort!(collect(union(map(keys, ro_an__)...)))
+    ro_ = sort!(collect(union(Base.map(keys, ro_an__)...)))
 
     an__ = [Vector{Any}(undef, 1 + length(co_)) for _ in 1:(1 + length(ro_))]
 
@@ -65,7 +65,7 @@ function separate(da)
     id_ = 2:length(co_)
 
     co_[1],
-    # TODO: Benchmark against map(string, da[!, 1]).
+    # TODO: Benchmark against Base.map(string, da[!, 1]).
     da[:, 1]::Vector{<:AbstractString},
     co_[id_]::Vector{String},
     Matrix(da[!, id_])
@@ -113,7 +113,7 @@ function collapse(da; fu = mean, ty = Float64)
         else
 
             # TODO: Benchmark against view(ma, id_, :)
-            # TODO: Benchmark against map(fu, eachcol(ma[id_, :]))
+            # TODO: Benchmark against Base.map(fu, eachcol(ma[id_, :]))
             an_ = [fu(an_) for an_ in eachcol(ma[id_, :])]
 
         end
@@ -138,10 +138,11 @@ function map(da, fu!, fr_, to; de = "")
 
     to_ = da[!, to]
 
-    fr_to = Dict{
-        typejoin((eltype(skipmissing(co)) for co in eachcol(daf))...),
-        eltype(skipmissing(to_)),
-    }()
+    tyt = eltype(skipmissing(to_))
+
+    fr_to = Dict{typejoin(tyt, (eltype(skipmissing(co)) for co in eachcol(daf))...), tyt}()
+
+    println(fr_to)
 
     for (fr_, to) in zip(eachrow(daf), to_)
 

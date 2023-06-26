@@ -74,8 +74,17 @@ ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
 # ---- #
 
-# TODO
-BioLab.Dict.map
+an1_an2 = Dict("A" => "A", "a" => "A", "b" => "B")
+
+an1_ = ("A", "a", "b", "c")
+
+an2_ = ["A", "A", "B", "c"]
+
+ma_ = [1, 2, 2, 3]
+
+@test BioLab.Dict.map(an1_an2, an1_) == (an2_, ma_)
+
+@test BioLab.Dict.map(an1_an2, reverse(an1_)) == (reverse(an2_), reverse(ma_))
 
 # ---- #
 

@@ -25,10 +25,10 @@ re = DataFrame(
 # ---- #
 
 @test BioLab.DataFrame.make("""
-                      Row Name\tColumn 1\tColumn 2\tColumn 3\tColumn 4\tColumn 5
-                      Row 1\t1\t2\t3\t4\t5.0
-                      Row 2\tA\tB\tC\t44\t55.0
-                      Row 3\t:)\t;)\t:D\t444\t555.0""") == string.(re)
+    Row Name\tColumn 1\tColumn 2\tColumn 3\tColumn 4\tColumn 5
+    Row 1\t1\t2\t3\t4\t5.0
+    Row 2\tA\tB\tC\t44\t55.0
+    Row 3\t:)\t;)\t:D\t444\t555.0""") == string.(re)
 
 # ---- #
 
@@ -83,7 +83,7 @@ for (ro_an__, re) in (
 
     # 3.594 μs (58 allocations: 4.11 KiB)
     # 3.651 μs (58 allocations: 4.02 KiB)
-    # @btime BioLab.DataFrame.make($ron, $con_, $ro_an__);
+    #@btime BioLab.DataFrame.make($ron, $con_, $ro_an__);
 
 end
 
