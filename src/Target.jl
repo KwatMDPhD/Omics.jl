@@ -26,9 +26,9 @@ function _trigger(fu, nu1_, nu2_)
 
 end
 
-function target(fu, nu1_, fe_x_sa_x_nu2)
+function target(fu, nu1_, ma2)
 
-    map(nu2_ -> _trigger(fu, nu1_, nu2_), eachrow(fe_x_sa_x_nu2))
+    map(nu2_ -> _trigger(fu, nu1_, nu2_), eachrow(ma2))
 
 end
 
