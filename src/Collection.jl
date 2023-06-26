@@ -14,7 +14,7 @@ function error_duplicate(an_)
 
     if !allunique(an_)
 
-        st = join(("$n $an" for (an, n) in count_sort(an_) if 1 < n), ". ")
+        st = join(("$n $an" for (an, n) in countmap(an_) if 1 < n), ". ")
 
         error("Collection has a duplicate. $st.")
 
@@ -39,12 +39,6 @@ function error_no_change(an_)
         error("Collection has only $an.")
 
     end
-
-end
-
-function count_sort(an_; rev = false)
-
-    sort(countmap(an_); byvalue = true, rev)
 
 end
 
@@ -130,58 +124,6 @@ function sort_like(an___; rev = false)
     id_ = sortperm(an___[1]; rev)
 
     (an_[id_] for an_ in an___)
-
-end
-
-function rename(na1_, na1_na2)
-
-    n = length(na1_)
-
-    na2_ = Vector{String}(undef, n)
-
-    ma_ = Vector{Int}(undef, n)
-
-    n1 = n2 = n3 = 0
-
-    for (id, na1) in enumerate(na1_)
-
-        if haskey(na1_na2, na1)
-
-            na2 = na1_na2[na1]
-
-            if na1 == na2
-
-                ma = 1
-
-                n1 += 1
-
-            else
-
-                ma = 2
-
-                n2 += 1
-
-            end
-
-        else
-
-            na2 = na1
-
-            ma = 3
-
-            n3 += 1
-
-        end
-
-        na2_[id] = na2
-
-        ma_[id] = ma
-
-    end
-
-    @info "Already renamed $n1. Renamed $n2. Failed $n3."
-
-    na2_, ma_
 
 end
 

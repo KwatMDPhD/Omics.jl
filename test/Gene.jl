@@ -28,4 +28,4 @@ pr_io_an = BioLab.Gene.map_uniprot(un)
 
 # ---- #
 
-na_, ma_ = BioLab.Collection.rename(unique(skipmissing(en[!, "Gene name"])), en_na)
+na_, ma_ = BioLab.Dict.map(en_na, unique(skipmissing(en[!, "Gene name"])))

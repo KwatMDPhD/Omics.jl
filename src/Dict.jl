@@ -132,6 +132,58 @@ function merge(ke1_va1, ke2_va2)
 
 end
 
+function map(na1_na2, na1_)
+
+    n = length(na1_)
+
+    na2_ = Vector{String}(undef, n)
+
+    ma_ = Vector{Int}(undef, n)
+
+    n1 = n2 = n3 = 0
+
+    for (id, na1) in enumerate(na1_)
+
+        if haskey(na1_na2, na1)
+
+            na2 = na1_na2[na1]
+
+            if na1 == na2
+
+                ma = 1
+
+                n1 += 1
+
+            else
+
+                ma = 2
+
+                n2 += 1
+
+            end
+
+        else
+
+            na2 = na1
+
+            ma = 3
+
+            n3 += 1
+
+        end
+
+        na2_[id] = na2
+
+        ma_[id] = ma
+
+    end
+
+    @info "Already mapped $n1. Mapped $n2. Failed $n3."
+
+    na2_, ma_
+
+end
+
 function read(pa)
 
     ex = splitext(pa)[2][2:end]

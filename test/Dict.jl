@@ -70,6 +70,11 @@ ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
 # ---- #
 
+# TODO
+BioLab.Dict.map
+
+# ---- #
+
 da = joinpath(DA, "Dict")
 
 # ---- #

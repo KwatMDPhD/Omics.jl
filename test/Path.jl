@@ -140,7 +140,7 @@ fi1 = touch(joinpath(te, "fi1"))
 
 fi2 = touch(joinpath(te, "fi2"))
 
-BioLab.Path.rename_recursively(te, ("fi" => "new",))
+BioLab.Path.rename(te, ("fi" => "new",))
 
 @test BioLab.Path.read(te) == ["new1", "new2"]
 
@@ -156,7 +156,7 @@ write(fi1, "Before")
 
 write(fi2, "BeforeBefore")
 
-BioLab.Path.sed_recursively(te, ("Before" => "After",))
+BioLab.Path.sed(te, ("Before" => "After",))
 
 @test readline(open(fi1)) == "After"
 

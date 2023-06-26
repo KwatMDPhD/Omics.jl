@@ -89,12 +89,16 @@ end
 
 # ---- #
 
+# TODO: Pass the test and remove.
+
+using StatsBase: countmap
+
 for (an_, re) in (
     ((1, 2, 2, 3, 3, 3, 4), sort(Dict(1 => 1, 2 => 2, 3 => 3, 4 => 1))),
     (('a', 'b', 'b', 'c', 'c', 'c', 'd'), sort(Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 1))),
 )
 
-    @test BioLab.Collection.count_sort(an_) == re
+    @test countmap(an_) == re
 
 end
 
@@ -207,8 +211,3 @@ for (rev, re) in ((false, ([1, 2, 3, 4, 5, 6], "abcdef")), (true, ([6, 5, 4, 3, 
     @test Tuple(BioLab.Collection.sort_like(an___; rev)) == re
 
 end
-
-# ---- #
-
-# TODO
-BioLab.Collection.rename

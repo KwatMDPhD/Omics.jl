@@ -124,7 +124,7 @@ function rank(di)
 
 end
 
-function rename_recursively(di, pa_)
+function rename(di, pa_)
 
     for (be, af) in pa_
 
@@ -134,7 +134,7 @@ function rename_recursively(di, pa_)
 
 end
 
-function sed_recursively(di, pa_)
+function sed(di, pa_)
 
     for (be, af) in pa_
 
