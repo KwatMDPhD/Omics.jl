@@ -6,6 +6,10 @@ include("environment.jl")
 
 # ---- #
 
+DA = joinpath(BioLab.DA, "Plot")
+
+# ---- #
+
 @test BioLab.Plot._CO == "continuous"
 
 # ---- #
@@ -59,10 +63,11 @@ for co in (
     n = length(co)
 
     BioLab.Plot.plot_heat_map(
+        "",
         permutedims(collect(1:n)),
         Vector{String}(),
-        1:n,
-        permutedims(map(BioLab.Plot._make_hex, co.colors));
+        1:n;
+        text = permutedims(map(BioLab.Plot._make_hex, co.colors)),
         colorscale = BioLab.Plot.fractionate(co),
         layout = Dict("title" => Dict("text" => "$(titlecase(co.category)) $(co.notes)")),
     )
@@ -137,7 +142,7 @@ data = [Dict()]
 
 # ---- #
 
-BioLab.Plot.plot(data)
+BioLab.Plot.plot("", data)
 
 # ---- #
 
@@ -149,15 +154,11 @@ layout = Dict(
 
 # ---- #
 
-BioLab.Plot.plot(data, layout)
+BioLab.Plot.plot("", data, layout)
 
 # ---- #
 
-te = joinpath(tempdir(), "BioLab.test.Plot")
-
-BioLab.Path.reset(te)
-
-BioLab.Plot.plot(data, layout; config = Dict("editable" => true), ht = joinpath(te, "plot.html"))
+BioLab.Plot.plot(joinpath(TE, "plot.html"), data, layout; config = Dict("editable" => true))
 
 # ---- #
 
@@ -169,7 +170,7 @@ y_ = [y1, y2]
 
 # ---- #
 
-BioLab.Plot.plot_scatter(y_)
+BioLab.Plot.plot_scatter("", y_)
 
 # ---- #
 
@@ -183,13 +184,14 @@ y_ = [y1, reverse(y1), [8]]
 
 # ---- #
 
-BioLab.Plot.plot_bar(y_)
+BioLab.Plot.plot_bar("", y_)
 
 # ---- #
 
 x1 = [-2, -1, 0]
 
 BioLab.Plot.plot_bar(
+    "",
     y_,
     [x1, -x1, [0]];
     name_ = ["Jonathan", "Joseph", "Jotaro"],
@@ -202,13 +204,14 @@ x_ = [[-1], [0, 1], [2, 3, 4]]
 
 # ---- #
 
-BioLab.Plot.plot_histogram(x_)
+BioLab.Plot.plot_histogram("", x_)
 
 # ---- #
 
 for xbins_size in (0, 1)
 
     BioLab.Plot.plot_histogram(
+        "",
         x_,
         [["1A"], ["2A", "2B"], ["3A", "3B", "3C"]];
         xbins_size,
@@ -223,7 +226,7 @@ n_ro = 2
 
 n_co = 4
 
-ro1_x_co1_x_nu = convert(Matrix, reshape(1:(n_ro * n_co), n_ro, n_co))
+ma1 = convert(Matrix, reshape(1:(n_ro * n_co), n_ro, n_co))
 
 ro_ = ["Row $id" for id in 1:n_ro]
 
@@ -231,16 +234,17 @@ co_ = ["Column $id" for id in 1:n_co]
 
 # ---- #
 
-BioLab.Plot.plot_heat_map(ro1_x_co1_x_nu)
+BioLab.Plot.plot_heat_map("", ma1)
 
 # ---- #
 
-BioLab.Plot.plot_heat_map(ro1_x_co1_x_nu, ro_, co_)
+BioLab.Plot.plot_heat_map("", ma1, ro_, co_)
 
 # ---- #
 
 BioLab.Plot.plot_heat_map(
-    BioLab.DataFrame.make("Row Name", ro_, co_, ro1_x_co1_x_nu);
+    "",
+    BioLab.DataFrame.make("Row Name", ro_, co_, ma1);
     layout = Dict(
         "title" => Dict("text" => "Plotting DataFrame"),
         "xaxis" => Dict("title" => Dict("text" => "Column Name")),
@@ -253,7 +257,7 @@ y = [-1, 1, -2, 2]
 
 x = [1, 4, 2, 5, 3, 6]
 
-ro2_x_co2_x_nu = [la1 * la2 for la1 in y, la2 in x]
+ma2 = [la1 * la2 for la1 in y, la2 in x]
 
 grr_ = [1, 2, 1, 2]
 
@@ -261,21 +265,15 @@ grc_ = [1, 2, 1, 2, 1, 2]
 
 # ---- #
 
-BioLab.Plot.plot_heat_map(ro2_x_co2_x_nu; grr_)
+BioLab.Plot.plot_heat_map("", ma2; grr_)
 
 # ---- #
 
-BioLab.Plot.plot_heat_map(ro2_x_co2_x_nu; grc_)
+BioLab.Plot.plot_heat_map("", ma2; grc_)
 
 # ---- #
 
-BioLab.Plot.plot_heat_map(
-    ro2_x_co2_x_nu,
-    ["Y = $nu" for nu in y],
-    ["X = $nu" for nu in x];
-    grr_,
-    grc_,
-)
+BioLab.Plot.plot_heat_map("", ma2, ["Y = $nu" for nu in y], ["X = $nu" for nu in x]; grr_, grc_)
 
 # ---- #
 
@@ -289,9 +287,8 @@ theta_ = [theta30, theta45, theta60]
 
 r_ = [1:length(theta30), 1:length(theta45), 1:length(theta60)]
 
-BioLab.Plot.plot_radar(theta_, r_; name_ = [30, 45, 60])
+BioLab.Plot.plot_radar("", theta_, r_; name_ = [30, 45, 60])
 
 # ---- #
 
-# TODO
-BioLab.Plot.animate
+BioLab.Plot.animate(joinpath(TE, "animate.gif"), (joinpath(DA, "$pn.png") for pn in (1, 2)))

@@ -1,16 +1,8 @@
-# using DataFrames
-
 include("environment.jl")
 
 # ---- #
 
 DA = joinpath(BioLab.DA, "FeatureSetEnrichment")
-
-# ---- #
-
-te = joinpath(tempdir(), "BioLab.test.FeatureSetEnrichment")
-
-BioLab.Path.empty(te)
 
 # ---- #
 

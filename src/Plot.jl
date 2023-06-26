@@ -225,7 +225,7 @@ function plot_bar(
                 "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
             ) for id in eachindex(y_)
         ],
-        merge!(Dict("barmode" => "stack"), layout);
+        BioLab.Dict.merge(Dict("barmode" => "stack"), layout);
         ke_ar...,
     )
 

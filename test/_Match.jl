@@ -2,12 +2,6 @@ include("environment.jl")
 
 # ---- #
 
-te = joinpath(tempdir(), "BioLab.test.Match")
-
-BioLab.Path.reset(te)
-
-# ---- #
-
 function benchmark(n_fe, n_sa, ho)
 
     si = (n_fe, n_sa)

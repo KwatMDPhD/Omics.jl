@@ -8,17 +8,17 @@ DA = joinpath(BioLab.DA, "Table")
 
 # ---- #
 
-for na in ("titanic.tsv", "enst_gene.tsv.gz")
+for (na, re) in (("titanic.tsv", (1309, 15)), ("enst_gene.tsv.gz", (256183, 2)))
 
-    # TODO: Test.
-    BioLab.Table.read(joinpath(DA, na))
+    @test size(BioLab.Table.read(joinpath(DA, na))) == re
 
 end
 
 # ---- #
 
-# TODO: Test.
-BioLab.Table.read(joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx"); xl = "HumanSpecific Genes")
+@test size(
+    BioLab.Table.read(joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx"); xl = "HumanSpecific Genes"),
+) == (873, 8)
 
 # ---- #
 
@@ -35,11 +35,7 @@ da = DataFrame(
 
 # ---- #
 
-te = joinpath(tempdir(), "BioLab.test.Table")
-
-BioLab.Path.reset(te)
-
-ts = joinpath(te, "write.csv")
+ts = joinpath(TE, "write.csv")
 
 @test @is_error BioLab.Table.write(ts, da)
 
@@ -47,6 +43,6 @@ ts = joinpath(te, "write.csv")
 
 ts = replace(ts, "csv" => "tsv")
 
-BioLab.Table.write(ts, da)
+@test !@is_error BioLab.Table.write(ts, da)
 
 @test da != BioLab.Table.read(ts)
