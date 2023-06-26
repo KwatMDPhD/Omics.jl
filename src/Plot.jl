@@ -119,7 +119,7 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
 
     coj = write(merge!(Dict("displaylogo" => false), config))
 
-    BioLab.HTML.write(
+    BioLab.HTML.make(
         ht,
         id,
         ("https://cdn.plot.ly/plotly-latest.min.js",),

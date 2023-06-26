@@ -2,10 +2,6 @@ include("environment.jl")
 
 # ---- #
 
-te = joinpath(tempdir(), "BioLab.test.Network")
-
-BioLab.Path.reset(te)
-
 dw = joinpath(homedir(), "Downloads")
 
 # ---- #
@@ -56,8 +52,9 @@ pr1 = "preset"
 
 ex1 = "png"
 
+# TODO: Understand why zooming changes the colors.
 # TODO: Understand why colors do not show up in HTML but in PNG.
-BioLab.Network.plot(el_; la = Dict("name" => pr1), ex = ex1, ht = joinpath(te, "$pr1.html"))
+BioLab.Network.plot(joinpath(TE, "$pr1.html"), el_; la = Dict("name" => pr1), ex = ex1)
 
 fi1 = joinpath(dw, "$pr1.$ex1")
 
@@ -67,7 +64,8 @@ pr2 = "cose"
 
 ex2 = "json"
 
-BioLab.Network.plot(el_; la = Dict("name" => pr2), ex = ex2, ht = joinpath(te, "$pr2.html"))
+# TODO: Understand why zooming changes the colors.
+BioLab.Network.plot(joinpath(TE, "$pr2.html"), el_; la = Dict("name" => pr2), ex = ex2)
 
 fi2 = joinpath(dw, "$pr2.$ex2")
 
@@ -93,7 +91,7 @@ pr3 = "cose_preset"
 
 ex3 = "json"
 
-BioLab.Network.plot(el_; la = Dict("name" => "preset"), ex = ex3, ht = joinpath(te, "$pr3.html"))
+BioLab.Network.plot(joinpath(TE, "$pr3.html"), el_; la = Dict("name" => "preset"), ex = ex3)
 
 fi3 = joinpath(dw, "$pr3.$ex3")
 

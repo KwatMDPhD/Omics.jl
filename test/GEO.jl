@@ -2,17 +2,11 @@ include("environment.jl")
 
 # ---- #
 
-te = joinpath(BioLab.TE, "testGEO")
-
-BioLab.Path.reset(te)
-
-# ---- #
-
 gs = "GSE122404"
 
 # ---- #
 
-gz = BioLab.GEO.download(gs, te)
+gz = BioLab.GEO.download(TE, gs)
 
 @test isfile(gz)
 
@@ -55,15 +49,15 @@ platform_table = pl_ke_va[pl]["table"]
 
 # ---- #
 
-feature_x_information_x_anything = BioLab.DataFrame.make(platform_table)
+ta = BioLab.DataFrame.make(platform_table)
 
-@test BioLab.GEO._map_feature(pl, feature_x_information_x_anything)["16657485"] == "XR_132471"
+@test BioLab.GEO._map_feature(pl, ta)["16657485"] == "XR_132471"
 
 # ---- #
 
 #disable_logging(Warn)
 # 9.623 ms (430770 allocations: 18.68 MiB)
-#@btime BioLab.GEO._map_feature($pl, $feature_x_information_x_anything);
+#@btime BioLab.GEO._map_feature($pl, $ta);
 #disable_logging(Debug)
 
 # ---- #
@@ -81,13 +75,13 @@ characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabul
 # ---- #
 
 #disable_logging(Warn)
-# 536.426 ms (4991905 allocations: 708.66 MiB)
+# 511.084 ms (4991905 allocations: 708.66 MiB)
 #@btime BioLab.GEO.tabulate($ty_bl);
 #disable_logging(Debug)
 
 # ---- #
 
-ty_bl = BioLab.GEO.read("GSE112", te)
+ty_bl = BioLab.GEO.read(BioLab.GEO.download(TE, "GSE112"))
 
 @test length(ty_bl["PLATFORM"]) == 2
 
@@ -95,7 +89,7 @@ ty_bl = BioLab.GEO.read("GSE112", te)
 
 # ---- #
 
-ty_bl = BioLab.GEO.read("GSE197763", te)
+ty_bl = BioLab.GEO.read(BioLab.GEO.download(TE, "GSE197763"))
 
 @test length(ty_bl["PLATFORM"]) == 2
 
@@ -109,7 +103,7 @@ characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabul
 
 # ---- #
 
-ty_bl = BioLab.GEO.read("GSE13534", te)
+ty_bl = BioLab.GEO.read(BioLab.GEO.download(TE, "GSE13534"))
 
 characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabulate(ty_bl)
 

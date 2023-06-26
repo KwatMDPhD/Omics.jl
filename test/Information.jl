@@ -42,6 +42,7 @@ for (nu1_, nu2_) in ar_
         re_ = map(fu, nu1_, nu2_)
 
         BioLab.Plot.plot_scatter(
+            "",
             (nu1_, nu2_, re_);
             name_ = [1, 2, "fu"],
             layout = Dict("title" => Dict("text" => string(fu))),
@@ -65,6 +66,7 @@ for (nu1_, nu2_) in ar_
         re_ = map(fu, nu1_, nu2_, nu3_)
 
         BioLab.Plot.plot_scatter(
+            "",
             (nu1_, nu2_, nu3_, re_);
             name_ = [1, 2, 3, "fu"],
             layout = Dict("title" => Dict("text" => string(fu))),
@@ -94,6 +96,6 @@ x = collect(bi.x)
 
 z = bi.density
 
-BioLab.Plot.plot_heat_map(z, y, x)
+BioLab.Plot.plot_heat_map("", z, y, x)
 
 BioLab.Information.get_information_coefficient(nu1_, nu2_)

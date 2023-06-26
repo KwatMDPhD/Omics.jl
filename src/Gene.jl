@@ -22,7 +22,7 @@ end
 
 function map_ensembl(da = read_ensembl())
 
-    BioLab.DataFrame.map_to(
+    BioLab.DataFrame.map(
         da,
         BioLab.Dict.set_with_last!,
         [

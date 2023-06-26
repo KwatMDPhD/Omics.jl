@@ -4,6 +4,8 @@ include("environment.jl")
 
 DA = joinpath(BioLab.DA, "Gene")
 
+@test readdir(DA) == ["ensembl.tsv.gz", "uniprot.tsv.gz"]
+
 # ---- #
 
 en = BioLab.Gene.read_ensembl()
@@ -29,7 +31,3 @@ pr_io_an = BioLab.Gene.map_uniprot(un)
 @test pr_io_an == BioLab.Gene.map_uniprot()
 
 @test pr_io_an["CD8A"]["Gene Names"] == ["CD8A", "MAL"]
-
-# ---- #
-
-na_, ma_ = BioLab.Dict.map(en_na, unique(skipmissing(en[!, "Gene name"])))

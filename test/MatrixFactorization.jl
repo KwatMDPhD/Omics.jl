@@ -2,15 +2,9 @@ include("environment.jl")
 
 # ---- #
 
-te = joinpath(tempdir(), "BioLab.test.MatrixFactorization")
-
-BioLab.Path.reset(te)
-
-# ---- #
-
 for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
-    st = "$n_ro x $n_co ==> $n_fa"
+    st = "$n_ro x $n_co --> $n_fa"
 
     ama = rand(n_ro, n_co)
 
@@ -24,9 +18,9 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
     BioLab.NumberArray.error_negative(hma)
 
-    di = mkdir(joinpath(te, st))
+    di = mkdir(joinpath(TE, BioLab.Time.stamp()))
 
-    BioLab.MatrixFactorization.write((wma,), (hma,); di)
+    BioLab.MatrixFactorization.write(di, (wma,), (hma,))
 
     @test wma == BioLab.DataFrame.separate(
         BioLab.Table.read(joinpath(di, "row1_x_factor_x_positive.tsv")),
@@ -59,4 +53,6 @@ hma2 = BioLab.MatrixFactorization.solve_h(ama, wma)
 
 # ---- #
 
-BioLab.MatrixFactorization.write((wma,), (hma, hma2))
+@test @is_error BioLab.MatrixFactorization.write("", (wma,), (hma, hma2))
+
+BioLab.MatrixFactorization.write(TE, (wma,), (hma, hma2))

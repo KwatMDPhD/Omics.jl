@@ -46,6 +46,8 @@ function write(
     co___ = (["$na $id" for id in 1:size(ma, 2)] for (ma, na) in zip(h_, nac_)),
 )
 
+    BioLab.Path.error_missing(di)
+
     fa_ = ["$naf $id" for id in 1:size(w_[1], 2)]
 
     lo = 1280

@@ -64,7 +64,7 @@ function plot(
 
     stj = write(st_)
 
-    laj = write(merge!(Dict("animate" => false), la))
+    laj = write(BioLab.Dict.merge(Dict("animate" => false), la))
 
     BioLab.HTML.make(
         ht,
