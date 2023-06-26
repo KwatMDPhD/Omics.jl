@@ -38,7 +38,9 @@ end
 
 function __init__()
 
-    Path.make_directory(TE)
+    rm(TE; recursive = true, force = true)
+
+    mkdir(TE)
 
 end
 

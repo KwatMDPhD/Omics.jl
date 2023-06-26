@@ -1,3 +1,5 @@
+using Aqua
+
 include("environment.jl")
 
 # ---- #
@@ -42,7 +44,7 @@ end
 
 # ---- #
 
-@test BioLab.@is_error error("Amen")
+@test BioLab.@is_error error("@is_error passed its test.")
 
 # ---- #
 
