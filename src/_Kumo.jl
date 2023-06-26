@@ -4,7 +4,7 @@ using LinearAlgebra: norm
 
 using StatsBase: mean
 
-using BioLab
+using ..BioLab
 
 const NO_ = Vector{String}()
 
