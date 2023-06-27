@@ -46,7 +46,7 @@ function _normalize!(it, ::Any)
 
 end
 
-function _merge_layout(ke_va__...)
+function _make_layout(ke_va__...)
 
     reduce(
         BioLab.Dict.merge,
@@ -60,7 +60,7 @@ function _merge_layout(ke_va__...)
 
 end
 
-function _merge_annotation(ke_va__...)
+function _make_annotation(ke_va__...)
 
     reduce(
         BioLab.Dict.merge,
@@ -76,15 +76,15 @@ function _merge_annotation(ke_va__...)
 
 end
 
-function _merge_annotationl(ke_va__...)
+function _make_annotationl(ke_va__...)
 
-    _merge_annotation(Dict("x" => -0.024, "xanchor" => "right"), ke_va__...)
+    _make_annotation(Dict("x" => -0.024, "xanchor" => "right"), ke_va__...)
 
 end
 
 function _annotate(y, ro)
 
-    _merge_annotationl(Dict("y" => y, "text" => "<b>$ro</b>"))
+    _make_annotationl(Dict("y" => y, "text" => "<b>$ro</b>"))
 
 end
 
@@ -104,7 +104,7 @@ function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
             push!(
                 annotations,
-                _merge_annotation(
+                _make_annotation(
                     Dict(
                         "y" => y,
                         "x" => _get_x(idx),
@@ -124,7 +124,7 @@ function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
         push!(
             annotations,
-            _merge_annotationl(Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], 24))),
+            _make_annotationl(Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], 24))),
         )
 
         sc, ma, pv, ad = (@sprintf("%.2g", nu) for nu in fe_x_st_x_nu[idy, :])
@@ -133,7 +133,7 @@ function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
             push!(
                 annotations,
-                _merge_annotation(
+                _make_annotation(
                     Dict("y" => y, "x" => _get_x(idx), "xanchor" => "center", "text" => text),
                 ),
             )
@@ -148,7 +148,7 @@ function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
 end
 
-function _merge_heatmap(ke_va__...)
+function _make_heatmap(ke_va__...)
 
     reduce(BioLab.Dict.merge, ke_va__; init = Dict("type" => "heatmap", "showscale" => false))
 
@@ -176,23 +176,7 @@ function _color(::AbstractArray{Float64})
 
 end
 
-function _plot(ht, ba_, n_ex)
-
-    go_ = map(!, ba_)
-
-    fep_ = fe_[go_]
-
-    fe_x_sa_x_nup = fe_x_sa_x_nu[go_, :]
-
-    fe_x_st_x_nup = fe_x_st_x_nu[go_, :]
-
-    ex_ = reverse!(BioLab.Collection.get_extreme(fe_x_st_x_nup[:, 1], n_ex))
-
-    fep_ = fep_[ex_]
-
-    fe_x_sa_x_nup = fe_x_sa_x_nup[ex_, :]
-
-    fe_x_st_x_nup = fe_x_st_x_nup[ex_, :]
+function _plot(ht, nat, naf, fep_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, layout)
 
     if ta_ isa AbstractVector{Int}
 
@@ -206,9 +190,7 @@ function _plot(ht, ba_, n_ex)
 
             idg_ = findall(==(ta), ta_)
 
-            or_ = BioLab.Clustering.hierarchize(fe_x_sa_x_nup[:, idg_], 2; fu).order
-
-            append!(id_, idg_[or_])
+            append!(id_, idg_[BioLab.Clustering.hierarchize(fe_x_sa_x_nu[:, idg_], 2; fu).order])
 
         end
 
@@ -216,7 +198,7 @@ function _plot(ht, ba_, n_ex)
 
         ta_ = ta_[id_]
 
-        fe_x_sa_x_nup = fe_x_sa_x_nup[:, id_]
+        fe_x_sa_x_nu = fe_x_sa_x_nu[:, id_]
 
     end
 
@@ -226,9 +208,9 @@ function _plot(ht, ba_, n_ex)
 
     @info "$nat colors can range from $tai to $taa."
 
-    fe_x_sa_x_nupc = copy(fe_x_sa_x_nup)
+    fe_x_sa_x_nuc = copy(fe_x_sa_x_nu)
 
-    fei, fea = _normalize!(fe_x_sa_x_nupc, st)
+    fei, fea = _normalize!(fe_x_sa_x_nuc, st)
 
     @info "$naf colors can range from $fei to $fea."
 
@@ -240,7 +222,7 @@ function _plot(ht, ba_, n_ex)
 
     height = max(400, 40 * n_ro)
 
-    layout = _merge_layout(
+    layout = _make_layout(
         Dict(
             "height" => height,
             "title" => Dict("text" => naf),
@@ -252,14 +234,14 @@ function _plot(ht, ba_, n_ex)
             ),
             "annotations" => vcat(
                 _annotate(1 - th2, nat),
-                _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nup),
+                _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nu),
             ),
         ),
         layout,
     )
 
     data = [
-        _merge_heatmap(
+        _make_heatmap(
             Dict(
                 "yaxis" => "y2",
                 "x" => sa_,
@@ -271,16 +253,16 @@ function _plot(ht, ba_, n_ex)
                 "hoverinfo" => "x+z+text",
             ),
         ),
-        _merge_heatmap(
+        _make_heatmap(
             Dict(
                 "yaxis" => "y",
                 "y" => fep_,
                 "x" => sa_,
-                "z" => collect(eachrow(fe_x_sa_x_nupc)),
-                "text" => collect(eachrow(fe_x_sa_x_nup)),
+                "z" => collect(eachrow(fe_x_sa_x_nuc)),
+                "text" => collect(eachrow(fe_x_sa_x_nu)),
                 "zmin" => fei,
                 "zmax" => fea,
-                "colorscale" => _color(fe_x_sa_x_nupc),
+                "colorscale" => _color(fe_x_sa_x_nuc),
                 "hoverinfo" => "x+y+z+text",
             ),
         ),
@@ -424,7 +406,20 @@ function make(
 
     if 0 < n_ex
 
-        _plot("$pr.html", n_ex, st = 4, layout = Dict{String, Any}())
+        id_ = reverse!(BioLab.Collection.get_extreme(fe_x_st_x_nu[:, 1], n_ex))
+
+        _plot(
+            "$pr.html",
+            nat,
+            naf,
+            fe_[id_],
+            sa_,
+            ta_,
+            fe_x_sa_x_nu[id_, :],
+            fe_x_st_x_nu[id_, :],
+            st,
+            layout,
+        )
 
     end
 

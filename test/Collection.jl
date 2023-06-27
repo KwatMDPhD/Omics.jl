@@ -2,7 +2,7 @@ include("environment.jl")
 
 # ---- #
 
-DA = joinpath(BioLab.DA, "FeatureSetEnrichment")
+DA = joinpath(BioLab.DA, "Collection")
 
 # ---- #
 
@@ -134,6 +134,18 @@ for (an_, n_ex, re) in (
 )
 
     @test an_[BioLab.Collection.get_extreme(an_, n_ex)] == re
+
+    @test an_[BioLab.Collection.get_extreme(Tuple(an_), n_ex)] == re
+
+end
+
+# ---- #
+
+fl_ = [NaN, 1, NaN, 2, NaN, 3, NaN, 4, NaN, 5]
+
+for (n, re) in ((1, [2, 10]), (2, [2, 4, 8, 10]), (3, [2, 4, 6, 8, 10]))
+
+    @test BioLab.Collection.get_extreme(fl_, n) == re
 
 end
 

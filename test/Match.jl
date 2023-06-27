@@ -36,7 +36,12 @@ ar = benchmark(1, 2, "1.0:")
 
 for rev in (false, true)
 
-    BioLab.Match.make(ar...; rev, layout = Dict("title" => Dict("text" => "rev = $rev")))
+    BioLab.Match.make(
+        mkdir(joinpath(TE, BioLab.Time.stamp())),
+        ar...;
+        rev,
+        layout = Dict("title" => Dict("text" => "rev = $rev")),
+    )
 
 end
 
@@ -47,6 +52,7 @@ ar = benchmark(50000, 100, "randn")
 for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10), (100, 100))
 
     BioLab.Match.make(
+        mkdir(joinpath(TE, BioLab.Time.stamp())),
         ar...;
         n_ma,
         n_pv,
@@ -63,7 +69,12 @@ ar = benchmark(n_fe, 2, "1.0:")
 
 for n_ex in (0, 1, 2, 3, 6)
 
-    BioLab.Match.make(ar...; n_ex, layout = Dict("title" => Dict("text" => "n_ex = $n_ex")))
+    BioLab.Match.make(
+        mkdir(joinpath(TE, BioLab.Time.stamp())),
+        ar...;
+        n_ex,
+        layout = Dict("title" => Dict("text" => "n_ex = $n_ex")),
+    )
 
 end
 
@@ -79,6 +90,7 @@ for (ta_, fe_x_sa_x_nu) in
     ((ta_, fe_x_sa_x_nu), (tai_, fe_x_sa_x_nu), (ta_, fe_x_sa_x_it), (tai_, fe_x_sa_x_it))
 
     BioLab.Match.make(
+        mkdir(joinpath(TE, BioLab.Time.stamp())),
         fu,
         trn,
         fen,
@@ -97,7 +109,12 @@ ar = fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(2, 3, "randn")
 
 for st in (0, 0.1, 1, 2, 4, 8)
 
-    BioLab.Match.make(ar...; st, layout = Dict("title" => Dict("text" => "st = $st")))
+    BioLab.Match.make(
+        mkdir(joinpath(TE, BioLab.Time.stamp())),
+        ar...;
+        st,
+        layout = Dict("title" => Dict("text" => "st = $st")),
+    )
 
 end
 
@@ -106,6 +123,7 @@ end
 for (n_fe, n_sa) in ((1, 2), (2, 2), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000))
 
     BioLab.Match.make(
+        mkdir(joinpath(TE, BioLab.Time.stamp())),
         benchmark(n_fe, n_sa, "randn")...;
         n_ex = 40,
         layout = Dict("title" => Dict("text" => "$n_fe x $n_sa")),
@@ -133,7 +151,12 @@ for nu_ in ((1, 1, 2, 2, 4, 8), (1, 2, 4, 8, 2, 1))
 
     for rev in (false, true)
 
-        BioLab.Match.make(ar...; rev, layout = Dict("title" => Dict("text" => "$nu_, rev = $rev")))
+        BioLab.Match.make(
+            mkdir(joinpath(TE, BioLab.Time.stamp())),
+            ar...;
+            rev,
+            layout = Dict("title" => Dict("text" => "$nu_, rev = $rev")),
+        )
 
     end
 
