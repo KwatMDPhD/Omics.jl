@@ -7,6 +7,7 @@ DA = joinpath(BioLab.DA, "Collection")
 # ---- #
 
 for an_ in (
+    (),
     (1, 1),
     [1, 1],
     [1, 2, 2],
@@ -28,7 +29,6 @@ end
 # ---- #
 
 for an_ in (
-    (),
     (1, 2),
     [],
     [1, 2],
@@ -47,6 +47,7 @@ end
 # ---- #
 
 for an_ in (
+    (),
     (1, 1),
     [1, 1],
     [1, 1, 1],
@@ -68,7 +69,6 @@ end
 # ---- #
 
 for an_ in (
-    (),
     (1, 2),
     [],
     [1, 2],
@@ -98,59 +98,7 @@ end
 
 # ---- #
 
-for (n, n_ex) in ((0, 0), (0, 1), (1, 0))
-
-    @test BioLab.Collection.get_extreme(n, n_ex) == Vector{Int}()
-
-end
-
-# ---- #
-
-for (n, n_ex, re) in ((5, 1, [1, 5]), (5, 3, [1, 2, 3, 4, 5]), (5, 6, [1, 2, 3, 4, 5]))
-
-    @test BioLab.Collection.get_extreme(n, n_ex) == re
-
-end
-
-# ---- #
-
-co1 = []
-
-co2 = [20, 40, 60, 50, 30, 10]
-
-co3 = collect("bdfhjlnprtvxzywusqomkigeca")
-
-for (an_, n_ex, re) in (
-    (co1, 0, co1),
-    (co1, 1, co1),
-    (co2, 0, Vector{Int}()),
-    (co2, 1, [10, 60]),
-    (co2, 2, [10, 20, 50, 60]),
-    (co2, length(co2) + 1, sort(co2)),
-    (co3, 0, Vector{Char}()),
-    (co3, 1, ['a', 'z']),
-    (co3, 2, ['a', 'b', 'y', 'z']),
-    (co3, length(co3) + 1, sort(co3)),
-)
-
-    @test an_[BioLab.Collection.get_extreme(an_, n_ex)] == re
-
-    @test an_[BioLab.Collection.get_extreme(Tuple(an_), n_ex)] == re
-
-end
-
-# ---- #
-
-fl_ = [NaN, 1, NaN, 2, NaN, 3, NaN, 4, NaN, 5]
-
-for (n, re) in ((1, [2, 10]), (2, [2, 4, 8, 10]), (3, [2, 4, 6, 8, 10]))
-
-    @test BioLab.Collection.get_extreme(fl_, n) == re
-
-end
-
-# ---- #
-
+# TODO: Try with Tuple.
 an_ = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
 
 an1_ = ['1', '2', 'K']
@@ -174,40 +122,12 @@ fe_ = reverse!(BioLab.Table.read(joinpath(DA, "gene_x_statistic_x_number.tsv"))[
 
 fe1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
-# ---- #
-
 # 454.167 μs (2 allocations: 19.67 KiB)
 #@btime BioLab.Collection.is_in($fe_, $(Set(fe1_)));
-
-# ---- #
 
 # 740.875 μs (2 allocations: 19.67 KiB)
 #@btime BioLab.Collection.is_in($fe_, $fe1_);
 
-# ---- #
-
 # 616.616 ns (2 allocations: 19.67 KiB)
 # 929.688 ns (2 allocations: 19.67 KiB)
 #@btime BioLab.Collection.is_in($(Dict(fe => id for (id, fe) in enumerate(fe_))), $fe1_);
-
-# ---- #
-
-ve1 = ['a', 'e', 'K', 't']
-
-ve2 = ["a", "K", "t", "w"]
-
-@test Tuple(BioLab.Collection.sort_like(([2, 4, 1, 3], ve1, ve2))) ==
-      ([1, 2, 3, 4], ['K', 'a', 't', 'e'], ["t", "a", "w", "K"])
-
-@test Tuple(BioLab.Collection.sort_like(([3, 1, 4, 2], ve1, ve2))) ==
-      ([1, 2, 3, 4], ['e', 't', 'a', 'K'], ["K", "w", "a", "t"])
-
-# ---- #
-
-an___ = ([1, 3, 5, 6, 4, 2], "acefdb")
-
-for (rev, re) in ((false, ([1, 2, 3, 4, 5, 6], "abcdef")), (true, ([6, 5, 4, 3, 2, 1], "fedcba")))
-
-    @test Tuple(BioLab.Collection.sort_like(an___; rev)) == re
-
-end

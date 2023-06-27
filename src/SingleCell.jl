@@ -1,6 +1,6 @@
 module SingleCell
 
-#using ProgressMeter: @showprogress
+using ProgressMeter: @showprogress
 
 using ..BioLab
 
@@ -90,56 +90,13 @@ function read(sa_di)
 
     fe_x_ba_x_co = fill(0, (n_fe, n_ba))
 
-    for (idf, idb, co) in zip(idf_, idb_, co_)
+    @showprogress for (idf, idb, co) in zip(idf_, idb_, co_)
 
         fe_x_ba_x_co[idf, idb] = co
 
     end
 
     fe_, ba_, fe_x_ba_x_co, sa_, ids___
-
-end
-
-function select(ma, di, la_, fu, mi, ma, xaxis_title_text)
-
-    n = size(ma, di)
-
-    if di == 1
-
-        ea = eachrow
-
-    else
-
-        ea = eachcol
-
-    end
-
-    re_ = map(fu, ea(ma))
-
-    xaxis = Dict("title" => Dict("text" => xaxis_title_text))
-
-    BioLab.Plot.plot_histogram(
-        "",
-        (re_,);
-        text_ = (la_,),
-        layout = Dict("title" => Dict("text" => "All $n"), "xaxis" => xaxis),
-    )
-
-    ke_ = map(re -> mi <= re <= ma, re_)
-
-    n_ke = sum(ke_)
-
-    pe = BioLab.String.format(n_ke / n * 100)
-
-    BioLab.Plot.plot_histogram(
-        "",
-        (re_[ke_],);
-        text_ = (la_[ke_],),
-        layout = Dict(
-            "title" => Dict("text" => "Selected $n_ke ($pe%) between $mi and $ma"),
-            "xaxis" => xaxis,
-        ),
-    )
 
 end
 
