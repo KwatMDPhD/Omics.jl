@@ -89,6 +89,10 @@ fe_x_sa_x_it = convert(Matrix{Int}, fe_x_sa_x_nu)
 for (ta_, fe_x_sa_x_nu) in
     ((ta_, fe_x_sa_x_nu), (tai_, fe_x_sa_x_nu), (ta_, fe_x_sa_x_it), (tai_, fe_x_sa_x_it))
 
+    tyt = eltype(ta_)
+
+    tyf = eltype(fe_x_sa_x_nu)
+
     BioLab.Match.make(
         mkdir(joinpath(TE, BioLab.Time.stamp())),
         fu,
@@ -98,7 +102,7 @@ for (ta_, fe_x_sa_x_nu) in
         sa_,
         ta_,
         fe_x_sa_x_nu;
-        layout = Dict("title" => Dict("text" => "$(eltype(ta_)) x $(eltype(fe_x_sa_x_nu))")),
+        layout = Dict("title" => Dict("text" => "$tyt x $tyf")),
     )
 
 end

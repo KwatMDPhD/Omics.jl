@@ -62,6 +62,10 @@ for co in (
 
     n = length(co)
 
+    ca = titlecase(co.category)
+
+    no = co.notes
+
     BioLab.Plot.plot_heat_map(
         "",
         permutedims(collect(1:n)),
@@ -69,7 +73,7 @@ for co in (
         1:n;
         text = permutedims(map(BioLab.Plot._make_hex, co.colors)),
         colorscale = BioLab.Plot.fractionate(co),
-        layout = Dict("title" => Dict("text" => "$(titlecase(co.category)) $(co.notes)")),
+        layout = Dict("title" => Dict("text" => "$ca $no")),
     )
 
 end

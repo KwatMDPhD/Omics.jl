@@ -423,93 +423,95 @@ function make(
 
 end
 
-#function make(di, tst, tsf, n_ma, n_pv, n_ex)
-#
-#    _tan, ta_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
-#
-#    naf, fe_, _saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
-#
-#    @assert sa_ == _saf_
-#
-#    for (ta, nu_) in zip(ta_, eachrow(ta_x_sa_x_nu))
-#
-#        go_ = map(!isnan, nu_)
-#
-#        sag_ = sa_[go_]
-#
-#        nug_ = nu_[go_]
-#
-#        try
-#
-#            nug_ = convert(Vector{Int}, nug_)
-#
-#        catch
-#
-#        end
-#
-#        di2 = joinpath(di, BioLab.Path.clean("$(ta)_matching_$naf"))
-#
-#        if ispath(di2)
-#
-#            BioLab.Path.warn_overwrite(di2)
-#
-#        else
-#
-#            mkdir(di2)
-#
-#        end
-#
-#        make(di2, cor, ta, naf, fe_, sag_, nug_, fe_x_sa_x_nu[:, go_]; n_ma, n_pv, n_ex)
-#
-#    end
-#
-#end
-#
-#function compare(di, na1, na2, ts1, ts2)
-#
-#    naf, fe1_, st_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
-#
-#    _fen, fe2_, _st_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
-#
-#    @assert naf == _fen
-#
-#    @assert fe1_ == fe2_
-#
-#    @assert st_ == _st_
-#
-#    nu1_, fe1_ = BioLab.Collection.sort_like((fe_x_st_x_nu1[:, 1], fe1_))
-#
-#    id_ = indexin(fe1_, fe2_)
-#
-#    fe2_ = fe2_[id_]
-#
-#    nu2_ = fe_x_st_x_nu2[id_, 1]
-#
-#    @assert fe1_ == fe2_
-#
-#    op_ = [sqrt(nu1^2 + nu2^2) for (nu1, nu2) in zip(nu1_, nu2_)]
-#
-#    BioLab.NumberArray.normalize_with_01!(op_)
-#
-#    ht = joinpath(di, "$(na1)_and_$na2.html")
-#
-#    BioLab.Path.warn_overwrite(ht)
-#
-#    BioLab.Plot.plot_scatter(
-#        ht,
-#        (nu2_,),
-#        (nu1_,),
-#        (fe1_,),
-#        mode_ = ("markers",),
-#        marker_color_ = ("#20d9ba",);
-#        opacity_ = (op_,),
-#        layout = Dict(
-#            "title" => Dict("text" => "Comparing Match"),
-#            "yaxis" => Dict("title" => Dict("text" => na2)),
-#            "xaxis" => Dict("title" => Dict("text" => na1)),
-#        ),
-#    )
-#
-#end
+# TODO: Test.
+function make(di, tst, tsf, n_ma, n_pv, n_ex, st)
+
+    BioLab.Path.error_missing(di)
+
+    _na, nat_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
+
+    naf, fe_, _saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
+
+    if sa_ != _saf_
+
+        error("Samples differ.")
+
+    end
+
+    for (nat, ta_) in zip(nat_, eachrow(ta_x_sa_x_nu))
+
+        sag_, tag_, fe_x_sa_x_nug = _order_sample(map(!isnan, ta_), sa_, ta_, fe_x_sa_x_nu)
+
+        try
+
+            tag_ = convert(Vector{Int}, tag_)
+
+        catch
+
+        end
+
+        di2 = joinpath(di, BioLab.Path.clean("$(naf)_matching_$naf"))
+
+        if !isdir(di2)
+
+            mkdir(di2)
+
+        end
+
+        make(di2, cor, nat, naf, fe_, sag_, tag_, fe_x_sa_x_nug; n_ma, n_pv, n_ex, st)
+
+    end
+
+end
+
+# TODO: Test.
+function compare(di, na1, na2, ts1, ts2)
+
+    BioLab.Path.error_missing(di)
+
+    _naf1, fe1_, st1_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
+
+    _naf2, fe2_, st2_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
+
+    if fe1_ != fe2_
+
+        error("Features differ.")
+
+    end
+
+    if st1_ != st2_
+
+        error("Statistics differ.")
+
+    end
+
+    nu1_, fe1_ = BioLab.Collection.sort_like((fe_x_st_x_nu1[:, 1], fe1_))
+
+    id_ = indexin(fe1_, fe2_)
+
+    fe2_ = fe2_[id_]
+
+    nu2_ = fe_x_st_x_nu2[id_, 1]
+
+    op_ = map((nu1, nu2) -> sqrt(nu1^2 + nu2^2), zip(nu1_, nu2_))
+
+    BioLab.NumberArray.normalize_with_01!(op_)
+
+    BioLab.Plot.plot_scatter(
+        joinpath(di, "$(na1)_and_$na2.html"),
+        (nu2_,),
+        (nu1_,),
+        (fe1_,),
+        mode_ = ("markers",),
+        marker_color_ = ("#20d9ba",);
+        opacity_ = (op_,),
+        layout = Dict(
+            "title" => Dict("text" => "Comparing Match"),
+            "yaxis" => Dict("title" => Dict("text" => na2)),
+            "xaxis" => Dict("title" => Dict("text" => na1)),
+        ),
+    )
+
+end
 
 end

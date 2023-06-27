@@ -263,7 +263,7 @@ re = [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
 @test he_ == re
 
 # 477.349 ns (5 allocations: 672 bytes)
-# @btime Kumo.heat($fe_sc)
+# @btime Kumo.heat($fe_sc);
 
 # ---- #
 
@@ -276,7 +276,7 @@ re = hcat(re, re * 10)
 @test no_x_sa_x_he == re
 
 # 1.413 μs (15 allocations: 2.09 KiB)
-# @btime Kumo.heat($no_, $fe_x_sa_x_sc)
+# @btime Kumo.heat($no_, $fe_x_sa_x_sc);
 
 # ---- #
 
