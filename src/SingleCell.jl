@@ -100,10 +100,9 @@ function read(sa_di)
 
 end
 
-# TODO: Generalize and move elsewhere.
-function keep(fe_x_ba_x_co, di, mis, mas, min, man)
+function select(ma, di, la_, fu, mi, ma, xaxis_title_text)
 
-    n = size(fe_x_ba_x_co, di)
+    n = size(ma, di)
 
     if di == 1
 
@@ -115,71 +114,32 @@ function keep(fe_x_ba_x_co, di, mis, mas, min, man)
 
     end
 
-    su_ = Vector{Int}(undef, n)
+    re_ = map(fu, ea(ma))
 
-    no_ = Vector{Int}(undef, n)
-
-    for (id, co_) in enumerate(ea(fe_x_ba_x_co))
-
-        su_[id] = sum(co_)
-
-        no_[id] = sum(!iszero, co_)
-
-    end
-
-    title_text = "All $n"
-
-    xaxiss = Dict("title" => Dict("text" => "Sum of Count"))
-
-    xaxisn = Dict("title" => Dict("text" => "Number of Nonzero Count"))
+    xaxis = Dict("title" => Dict("text" => xaxis_title_text))
 
     BioLab.Plot.plot_histogram(
-        (su_,);
-        layout = Dict("title" => Dict("text" => title_text), "xaxis" => xaxiss),
+        "",
+        (re_,);
+        text_ = (la_,),
+        layout = Dict("title" => Dict("text" => "All $n"), "xaxis" => xaxis),
     )
 
-    BioLab.Plot.plot_histogram(
-        (no_,);
-        layout = Dict("title" => Dict("text" => title_text), "xaxis" => xaxisn),
-    )
-
-    kes_ = [mis <= su <= mas for su in su_]
-
-    n_ke = sum(kes_)
-
-    BioLab.Plot.plot_histogram(
-        (su_[kes_],);
-        layout = Dict(
-            "title" => Dict(
-                "text" => "($mis to $mas) Selected $n_ke ($(BioLab.String.format(n_ke / n * 100))%)",
-            ),
-            "xaxis" => xaxiss,
-        ),
-    )
-
-    ken_ = [min <= no <= man for no in no_]
-
-    n_ke = sum(ken_)
-
-    BioLab.Plot.plot_histogram(
-        (no_[ken_],);
-        layout = Dict(
-            "title" => Dict(
-                "text" => "($min to $man) Selected $n_ke ($(BioLab.String.format(n_ke / n * 100))%)",
-            ),
-            "xaxis" => xaxisn,
-        ),
-    )
-
-    ke_ = [kes && ken for (kes, ken) in zip(kes_, ken_)]
+    ke_ = map(re -> mi <= re <= ma, re_)
 
     n_ke = sum(ke_)
 
-    @info "Selected $n_ke ($(BioLab.String.format(n_ke / n * 100))%)."
+    pe = BioLab.String.format(n_ke / n * 100)
 
-    # TODO: Keep based on some.
-
-    ke_
+    BioLab.Plot.plot_histogram(
+        "",
+        (re_[ke_],);
+        text_ = (la_[ke_],),
+        layout = Dict(
+            "title" => Dict("text" => "Selected $n_ke ($pe%) between $mi and $ma"),
+            "xaxis" => xaxis,
+        ),
+    )
 
 end
 
