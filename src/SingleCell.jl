@@ -40,11 +40,19 @@ function read(sa_di)
 
         co1, co2, co3 = (parse(Int, co) for co in names(da))
 
-        @assert n_fes == co1
+        if n_fes != co1
 
-        @assert n_bas == co2
+            error("There are $n_fes features, which is not $co1.")
 
-        @info "$co1 x $co2 x $co3."
+        end
+
+        if n_bas != co2
+
+            error("There are $n_bas barcodes, which is not $co2.")
+
+        end
+
+        @info "$n_fes x $n_bas x $co3."
 
         if isempty(fe_)
 
@@ -52,15 +60,19 @@ function read(sa_di)
 
         else
 
-            @assert fe_ == fes_
+            if fe_ != fes_
+
+                error("Features differ.")
+
+            end
 
         end
 
-        append!(ba_, ["$sa.$ba" for ba in bas_])
+        append!(ba_, map(ba -> "$sa.$ba", bas_))
 
         append!(idf_, da[!, 1])
 
-        append!(idb_, [n_ba + id for id in da[!, 2]])
+        append!(idb_, map(+(n_ba), da[!, 2]))
 
         append!(co_, da[!, 3])
 
@@ -74,12 +86,11 @@ function read(sa_di)
 
     n_fe = length(fe_)
 
-    @assert n_ba == length(ba_)
-
     @info "Combining $n_fe features and $n_ba barcodes"
 
     fe_x_ba_x_co = fill(0, (n_fe, n_ba))
 
+    # TODO: Sort to speed up?
     @showprogress for (idf, idb, co) in zip(idf_, idb_, co_)
 
         fe_x_ba_x_co[idf, idb] = co
