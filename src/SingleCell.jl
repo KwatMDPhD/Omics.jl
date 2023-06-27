@@ -1,6 +1,6 @@
 module SingleCell
 
-using ProgressMeter
+#using ProgressMeter: @showprogress
 
 using ..BioLab
 
@@ -24,7 +24,7 @@ function read(sa_di)
 
     for (sa, di) in sa_di
 
-        @info "Reading $sa ($di)"
+        @info "Reading $sa"
 
         fes_ =
             BioLab.Table.read(joinpath(di, "features.tsv.gz"); header = false, select = [2])[!, 1]
@@ -72,7 +72,7 @@ function read(sa_di)
 
         append!(idf_, da[!, 1])
 
-        append!(idb_, map(+(n_ba), da[!, 2]))
+        append!(idb_, da[!, 2] .+ n_ba)
 
         append!(co_, da[!, 3])
 
@@ -90,8 +90,7 @@ function read(sa_di)
 
     fe_x_ba_x_co = fill(0, (n_fe, n_ba))
 
-    # TODO: Sort to speed up?
-    @showprogress for (idf, idb, co) in zip(idf_, idb_, co_)
+    for (idf, idb, co) in zip(idf_, idb_, co_)
 
         fe_x_ba_x_co[idf, idb] = co
 
@@ -120,7 +119,7 @@ function keep(fe_x_ba_x_co, di, mis, mas, min, man)
 
     no_ = Vector{Int}(undef, n)
 
-    @showprogress for (id, co_) in enumerate(ea(fe_x_ba_x_co))
+    for (id, co_) in enumerate(ea(fe_x_ba_x_co))
 
         su_[id] = sum(co_)
 
