@@ -24,7 +24,11 @@ function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
     for fl_ in eachrow(fe_x_sa_x_fl)
 
-        if !allequal(fl_)
+        if allequal(fl_)
+
+            @warn "All numbers are equal."
+
+        else
 
             _normalize!(fl_, st)
 
@@ -96,14 +100,14 @@ function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
     if la
 
-        for (id, text) in enumerate(("Sc (⧳)", "Pv", "Ad"))
+        for (idx, text) in enumerate(("Sc (⧳)", "Pv", "Ad"))
 
             push!(
                 annotations,
                 _merge_annotation(
                     Dict(
                         "y" => y,
-                        "x" => _get_x(id),
+                        "x" => _get_x(idx),
                         "xanchor" => "center",
                         "text" => "<b>$text</b>",
                     ),
@@ -150,9 +154,9 @@ function _merge_heatmap(ke_va__...)
 
 end
 
-function _color(nu_::AbstractArray{Int})
+function _color(it_::AbstractArray{Int})
 
-    if length(unique(nu_)) < 3
+    if length(unique(it_)) < 3
 
         co = BioLab.Plot.COBIN
 
@@ -172,11 +176,125 @@ function _color(::AbstractArray{Float64})
 
 end
 
+function _plot(ht, ba_, n_ex)
+
+    go_ = map(!, ba_)
+
+    fep_ = fe_[go_]
+
+    fe_x_sa_x_nup = fe_x_sa_x_nu[go_, :]
+
+    fe_x_st_x_nup = fe_x_st_x_nu[go_, :]
+
+    ex_ = reverse!(BioLab.Collection.get_extreme(fe_x_st_x_nup[:, 1], n_ex))
+
+    fep_ = fep_[ex_]
+
+    fe_x_sa_x_nup = fe_x_sa_x_nup[ex_, :]
+
+    fe_x_st_x_nup = fe_x_st_x_nup[ex_, :]
+
+    if ta_ isa AbstractVector{Int}
+
+        @info "Clustering within groups"
+
+        fu = BioLab.Clustering.Euclidean()
+
+        id_ = Vector{Int}()
+
+        for ta in unique(ta_)
+
+            idg_ = findall(==(ta), ta_)
+
+            or_ = BioLab.Clustering.hierarchize(fe_x_sa_x_nup[:, idg_], 2; fu).order
+
+            append!(id_, idg_[or_])
+
+        end
+
+        sa_ = sa_[id_]
+
+        ta_ = ta_[id_]
+
+        fe_x_sa_x_nup = fe_x_sa_x_nup[:, id_]
+
+    end
+
+    tac_ = copy(ta_)
+
+    tai, taa = _normalize!(tac_, st)
+
+    @info "$nat colors can range from $tai to $taa."
+
+    fe_x_sa_x_nupc = copy(fe_x_sa_x_nup)
+
+    fei, fea = _normalize!(fe_x_sa_x_nupc, st)
+
+    @info "$naf colors can range from $fei to $fea."
+
+    n_ro = length(fep_) + 2
+
+    th = 1 / n_ro
+
+    th2 = th / 2
+
+    height = max(400, 40 * n_ro)
+
+    layout = _merge_layout(
+        Dict(
+            "height" => height,
+            "title" => Dict("text" => naf),
+            "yaxis2" => Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
+            "yaxis" => Dict(
+                "domain" => (0, 1 - th * 2),
+                "autorange" => "reversed",
+                "showticklabels" => false,
+            ),
+            "annotations" => vcat(
+                _annotate(1 - th2, nat),
+                _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nup),
+            ),
+        ),
+        layout,
+    )
+
+    data = [
+        _merge_heatmap(
+            Dict(
+                "yaxis" => "y2",
+                "x" => sa_,
+                "z" => [tac_],
+                "text" => [ta_],
+                "zmin" => tai,
+                "zmax" => taa,
+                "colorscale" => _color(tac_),
+                "hoverinfo" => "x+z+text",
+            ),
+        ),
+        _merge_heatmap(
+            Dict(
+                "yaxis" => "y",
+                "y" => fep_,
+                "x" => sa_,
+                "z" => collect(eachrow(fe_x_sa_x_nupc)),
+                "text" => collect(eachrow(fe_x_sa_x_nup)),
+                "zmin" => fei,
+                "zmax" => fea,
+                "colorscale" => _color(fe_x_sa_x_nupc),
+                "hoverinfo" => "x+y+z+text",
+            ),
+        ),
+    ]
+
+    BioLab.Plot.plot(ht, data, layout)
+
+end
+
 function make(
     di,
     fu,
-    tan,
-    fen,
+    nat,
+    naf,
     fe_,
     sa_,
     ta_,
@@ -189,9 +307,15 @@ function make(
     layout = Dict{String, Any}(),
 )
 
+    BioLab.Path.error_missing(di)
+
+    pr = joinpath(di, "feature_x_statistic_x_number")
+
     n_fe = length(fe_)
 
-    @info "Matching $tan and $(BioLab.String.count(n_fe, fen)) with $fu"
+    n_no = BioLab.String.count(n_fe, naf)
+
+    @info "Matching $nat and $n_no with $fu"
 
     id_ = sortperm(ta_; rev)
 
@@ -203,19 +327,23 @@ function make(
 
     @info "Computing scores"
 
-    sc_ = [fu(ta_, nu_) for nu_ in eachrow(fe_x_sa_x_nu)]
+    sc_ = map(nu_ -> fu(ta_, nu_), eachrow(fe_x_sa_x_nu))
 
     ba_ = map(BioLab.Bad.is_bad, sc_)
 
     if any(ba_)
 
-        @warn "Found $(BioLab.String.count(sum(n_ba), "bad value"))."
+        n_no = BioLab.String.count(sum(n_ba), "bad value")
+
+        @warn "Found $n_no."
 
     end
 
     if 0 < n_ma
 
-        @info "Computing margin of error with $(BioLab.String.count(n_ma, "sampling"))"
+        n_no = BioLab.String.count(n_ma, "sampling")
+
+        @info "Computing margin of error with $n_no"
 
         n_sa = length(sa_)
 
@@ -251,7 +379,9 @@ function make(
 
     if 0 < n_pv
 
-        @info "Computing p-values with $(BioLab.String.count(n_pv, "permutation"))"
+        n_no = BioLab.String.count(n_pv, "permutation")
+
+        @info "Computing p-values with $n_no"
 
         co = copy(ta_)
 
@@ -280,13 +410,11 @@ function make(
     fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
 
     feature_x_statistic_x_number = BioLab.DataFrame.make(
-        fen,
+        naf,
         fe_,
         ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
         fe_x_st_x_nu,
     )
-
-    pr = joinpath(di, "feature_x_statistic_x_number")
 
     ts = "$pr.tsv"
 
@@ -296,120 +424,7 @@ function make(
 
     if 0 < n_ex
 
-        go_ = map(!, ba_)
-
-        fep_ = fe_[go_]
-
-        fe_x_sa_x_nup = fe_x_sa_x_nu[go_, :]
-
-        fe_x_st_x_nup = fe_x_st_x_nu[go_, :]
-
-        ex_ = reverse!(BioLab.Collection.get_extreme(fe_x_st_x_nup[:, 1], n_ex))
-
-        fep_ = fep_[ex_]
-
-        fe_x_sa_x_nup = fe_x_sa_x_nup[ex_, :]
-
-        fe_x_st_x_nup = fe_x_st_x_nup[ex_, :]
-
-        if ta_ isa AbstractVector{Int}
-
-            @info "Clustering within groups"
-
-            fu = BioLab.Clustering.Euclidean()
-
-            id_ = Vector{Int}()
-
-            for ta in unique(ta_)
-
-                idg_ = findall(==(ta), ta_)
-
-                or_ = BioLab.Clustering.hierarchize(fe_x_sa_x_nup[:, idg_], 2; fu).order
-
-                append!(id_, idg_[or_])
-
-            end
-
-            sa_ = sa_[id_]
-
-            ta_ = ta_[id_]
-
-            fe_x_sa_x_nup = fe_x_sa_x_nup[:, id_]
-
-        end
-
-        tac_ = copy(ta_)
-
-        tai, taa = _normalize!(tac_, st)
-
-        @info "$tan colors can range from $tai to $taa."
-
-        fe_x_sa_x_nupc = copy(fe_x_sa_x_nup)
-
-        fei, fea = _normalize!(fe_x_sa_x_nupc, st)
-
-        @info "$fen colors can range from $fei to $fea."
-
-        n_ro = length(fep_) + 2
-
-        th = 1 / n_ro
-
-        th2 = th / 2
-
-        height = max(400, 40 * n_ro)
-
-        layout = _merge_layout(
-            Dict(
-                "height" => height,
-                "title" => Dict("text" => fen),
-                "yaxis2" =>
-                    Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
-                "yaxis" => Dict(
-                    "domain" => (0, 1 - th * 2),
-                    "autorange" => "reversed",
-                    "showticklabels" => false,
-                ),
-                "annotations" => vcat(
-                    _annotate(1 - th2, tan),
-                    _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nup),
-                ),
-            ),
-            layout,
-        )
-
-        data = [
-            _merge_heatmap(
-                Dict(
-                    "yaxis" => "y2",
-                    "x" => sa_,
-                    "z" => [tac_],
-                    "text" => [ta_],
-                    "zmin" => tai,
-                    "zmax" => taa,
-                    "colorscale" => _color(tac_),
-                    "hoverinfo" => "x+z+text",
-                ),
-            ),
-            _merge_heatmap(
-                Dict(
-                    "yaxis" => "y",
-                    "y" => fep_,
-                    "x" => sa_,
-                    "z" => collect(eachrow(fe_x_sa_x_nupc)),
-                    "text" => collect(eachrow(fe_x_sa_x_nup)),
-                    "zmin" => fei,
-                    "zmax" => fea,
-                    "colorscale" => _color(fe_x_sa_x_nupc),
-                    "hoverinfo" => "x+y+z+text",
-                ),
-            ),
-        ]
-
-        ht = "$pr.html"
-
-        BioLab.Path.warn_overwrite(ht)
-
-        BioLab.Plot.plot(ht, data, layout; he = height + 80)
+        _plot("$pr.html", n_ex, st = 4, layout = Dict{String, Any}())
 
     end
 
@@ -421,7 +436,7 @@ function make(di, tst, tsf, n_ma, n_pv, n_ex)
 
     _tan, ta_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
 
-    fen, fe_, _saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
+    naf, fe_, _saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
 
     @assert sa_ == _saf_
 
@@ -441,7 +456,7 @@ function make(di, tst, tsf, n_ma, n_pv, n_ex)
 
         end
 
-        di2 = joinpath(di, BioLab.Path.clean("$(ta)_matching_$fen"))
+        di2 = joinpath(di, BioLab.Path.clean("$(ta)_matching_$naf"))
 
         if ispath(di2)
 
@@ -453,7 +468,7 @@ function make(di, tst, tsf, n_ma, n_pv, n_ex)
 
         end
 
-        make(di2, cor, ta, fen, fe_, sag_, nug_, fe_x_sa_x_nu[:, go_]; n_ma, n_pv, n_ex)
+        make(di2, cor, ta, naf, fe_, sag_, nug_, fe_x_sa_x_nu[:, go_]; n_ma, n_pv, n_ex)
 
     end
 
@@ -461,11 +476,11 @@ end
 
 function compare(di, na1, na2, ts1, ts2)
 
-    fen, fe1_, st_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
+    naf, fe1_, st_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
 
     _fen, fe2_, _st_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
 
-    @assert fen == _fen
+    @assert naf == _fen
 
     @assert fe1_ == fe2_
 
