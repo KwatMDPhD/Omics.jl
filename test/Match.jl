@@ -4,15 +4,15 @@ include("environment.jl")
 
 function benchmark(n_fe, n_sa, ho)
 
-    si = (n_fe, n_sa)
+    si = n_fe, n_sa
 
-    if ho == "1.0:"
+    if ho == "12"
 
         ta_ = collect(1.0:n_sa)
 
         fe_x_sa_x_nu = Matrix(reshape(1.0:(n_fe * n_sa), si))
 
-    elseif ho == "randn"
+    elseif ho == "ra"
 
         ta_ = randn(n_sa)
 
@@ -32,7 +32,7 @@ end
 
 # ---- #
 
-ar = benchmark(1, 2, "1.0:")
+ar = benchmark(1, 2, "12")
 
 for rev in (false, true)
 
@@ -47,7 +47,7 @@ end
 
 # ---- #
 
-ar = benchmark(50000, 100, "randn")
+ar = benchmark(50000, 100, "ra")
 
 for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10), (100, 100))
 
@@ -65,7 +65,7 @@ end
 
 n_fe = 5
 
-ar = benchmark(n_fe, 2, "1.0:")
+ar = benchmark(n_fe, 2, "12")
 
 for n_ex in (0, 1, 2, 3, 6)
 
@@ -80,7 +80,7 @@ end
 
 # ---- #
 
-fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(1, 19, "1.0:")
+fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(1, 19, "12")
 
 tai_ = convert(Vector{Int}, ta_)
 
@@ -105,7 +105,7 @@ end
 
 # ---- #
 
-ar = fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(2, 3, "randn")
+ar = fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(2, 3, "ra")
 
 for st in (0, 0.1, 1, 2, 4, 8)
 
@@ -124,7 +124,7 @@ for (n_fe, n_sa) in ((1, 2), (2, 2), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 
 
     BioLab.Match.make(
         mkdir(joinpath(TE, BioLab.Time.stamp())),
-        benchmark(n_fe, n_sa, "randn")...;
+        benchmark(n_fe, n_sa, "ra")...;
         n_ex = 40,
         layout = Dict("title" => Dict("text" => "$n_fe x $n_sa")),
     )

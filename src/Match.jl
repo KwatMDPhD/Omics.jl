@@ -46,6 +46,34 @@ function _normalize!(it, ::Any)
 
 end
 
+function _make_heatmap(ke_va__...)
+
+    reduce(BioLab.Dict.merge, ke_va__; init = Dict("type" => "heatmap", "showscale" => false))
+
+end
+
+function _color(it_::AbstractArray{Int})
+
+    if length(unique(it_)) < 3
+
+        co = BioLab.Plot.COBIN
+
+    else
+
+        co = BioLab.Plot.COPLO
+
+    end
+
+    BioLab.Plot.fractionate(co)
+
+end
+
+function _color(::AbstractArray{Float64})
+
+    BioLab.Plot.fractionate(BioLab.Plot.COBWR)
+
+end
+
 function _make_layout(ke_va__...)
 
     reduce(
@@ -148,31 +176,9 @@ function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
 end
 
-function _make_heatmap(ke_va__...)
+function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
 
-    reduce(BioLab.Dict.merge, ke_va__; init = Dict("type" => "heatmap", "showscale" => false))
-
-end
-
-function _color(it_::AbstractArray{Int})
-
-    if length(unique(it_)) < 3
-
-        co = BioLab.Plot.COBIN
-
-    else
-
-        co = BioLab.Plot.COPLO
-
-    end
-
-    BioLab.Plot.fractionate(co)
-
-end
-
-function _color(::AbstractArray{Float64})
-
-    BioLab.Plot.fractionate(BioLab.Plot.COBWR)
+    sa_[id_], ta_[id_], fe_x_sa_x_nu[:, id_]
 
 end
 
@@ -194,23 +200,19 @@ function _plot(ht, nat, naf, fep_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, lay
 
         end
 
-        sa_ = sa_[id_]
-
-        ta_ = ta_[id_]
-
-        fe_x_sa_x_nu = fe_x_sa_x_nu[:, id_]
+        sa_, ta_, fe_x_sa_x_nu = _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
 
     end
 
-    tac_ = copy(ta_)
+    tan_ = copy(ta_)
 
-    tai, taa = _normalize!(tac_, st)
+    tai, taa = _normalize!(tan_, st)
 
     @info "$nat colors can range from $tai to $taa."
 
-    fe_x_sa_x_nuc = copy(fe_x_sa_x_nu)
+    fe_x_sa_x_nun = copy(fe_x_sa_x_nu)
 
-    fei, fea = _normalize!(fe_x_sa_x_nuc, st)
+    fei, fea = _normalize!(fe_x_sa_x_nun, st)
 
     @info "$naf colors can range from $fei to $fea."
 
@@ -222,53 +224,53 @@ function _plot(ht, nat, naf, fep_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, lay
 
     height = max(400, 40 * n_ro)
 
-    layout = _make_layout(
-        Dict(
-            "height" => height,
-            "title" => Dict("text" => naf),
-            "yaxis2" => Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
-            "yaxis" => Dict(
-                "domain" => (0, 1 - th * 2),
-                "autorange" => "reversed",
-                "showticklabels" => false,
+    BioLab.Plot.plot(
+        ht,
+        [
+            _make_heatmap(
+                Dict(
+                    "yaxis" => "y2",
+                    "x" => sa_,
+                    "z" => [tan_],
+                    "text" => [ta_],
+                    "zmin" => tai,
+                    "zmax" => taa,
+                    "colorscale" => _color(tan_),
+                    "hoverinfo" => "x+z+text",
+                ),
             ),
-            "annotations" => vcat(
-                _annotate(1 - th2, nat),
-                _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nu),
+            _make_heatmap(
+                Dict(
+                    "yaxis" => "y",
+                    "y" => fep_,
+                    "x" => sa_,
+                    "z" => collect(eachrow(fe_x_sa_x_nun)),
+                    "text" => collect(eachrow(fe_x_sa_x_nu)),
+                    "zmin" => fei,
+                    "zmax" => fea,
+                    "colorscale" => _color(fe_x_sa_x_nun),
+                    "hoverinfo" => "x+y+z+text",
+                ),
             ),
+        ],
+        _make_layout(
+            Dict(
+                "height" => height,
+                "title" => Dict("text" => naf),
+                "yaxis2" => Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
+                "yaxis" => Dict(
+                    "domain" => (0, 1 - th * 2),
+                    "autorange" => "reversed",
+                    "showticklabels" => false,
+                ),
+                "annotations" => vcat(
+                    _annotate(1 - th2, nat),
+                    _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nu),
+                ),
+            ),
+            layout,
         ),
-        layout,
     )
-
-    data = [
-        _make_heatmap(
-            Dict(
-                "yaxis" => "y2",
-                "x" => sa_,
-                "z" => [tac_],
-                "text" => [ta_],
-                "zmin" => tai,
-                "zmax" => taa,
-                "colorscale" => _color(tac_),
-                "hoverinfo" => "x+z+text",
-            ),
-        ),
-        _make_heatmap(
-            Dict(
-                "yaxis" => "y",
-                "y" => fep_,
-                "x" => sa_,
-                "z" => collect(eachrow(fe_x_sa_x_nuc)),
-                "text" => collect(eachrow(fe_x_sa_x_nu)),
-                "zmin" => fei,
-                "zmax" => fea,
-                "colorscale" => _color(fe_x_sa_x_nuc),
-                "hoverinfo" => "x+y+z+text",
-            ),
-        ),
-    ]
-
-    BioLab.Plot.plot(ht, data, layout)
 
 end
 
@@ -299,13 +301,7 @@ function make(
 
     @info "Matching $nat and $n_no with $fu"
 
-    id_ = sortperm(ta_; rev)
-
-    sa_ = sa_[id_]
-
-    ta_ = ta_[id_]
-
-    fe_x_sa_x_nu = fe_x_sa_x_nu[:, id_]
+    sa_, ta_, fe_x_sa_x_nu = _order_sample(sortperm(ta_; rev), sa_, ta_, fe_x_sa_x_nu)
 
     @info "Computing scores"
 
@@ -427,93 +423,93 @@ function make(
 
 end
 
-function make(di, tst, tsf, n_ma, n_pv, n_ex)
-
-    _tan, ta_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
-
-    naf, fe_, _saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
-
-    @assert sa_ == _saf_
-
-    for (ta, nu_) in zip(ta_, eachrow(ta_x_sa_x_nu))
-
-        go_ = map(!isnan, nu_)
-
-        sag_ = sa_[go_]
-
-        nug_ = nu_[go_]
-
-        try
-
-            nug_ = convert(Vector{Int}, nug_)
-
-        catch
-
-        end
-
-        di2 = joinpath(di, BioLab.Path.clean("$(ta)_matching_$naf"))
-
-        if ispath(di2)
-
-            BioLab.Path.warn_overwrite(di2)
-
-        else
-
-            mkdir(di2)
-
-        end
-
-        make(di2, cor, ta, naf, fe_, sag_, nug_, fe_x_sa_x_nu[:, go_]; n_ma, n_pv, n_ex)
-
-    end
-
-end
-
-function compare(di, na1, na2, ts1, ts2)
-
-    naf, fe1_, st_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
-
-    _fen, fe2_, _st_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
-
-    @assert naf == _fen
-
-    @assert fe1_ == fe2_
-
-    @assert st_ == _st_
-
-    nu1_, fe1_ = BioLab.Collection.sort_like((fe_x_st_x_nu1[:, 1], fe1_))
-
-    id_ = indexin(fe1_, fe2_)
-
-    fe2_ = fe2_[id_]
-
-    nu2_ = fe_x_st_x_nu2[id_, 1]
-
-    @assert fe1_ == fe2_
-
-    op_ = [sqrt(nu1^2 + nu2^2) for (nu1, nu2) in zip(nu1_, nu2_)]
-
-    BioLab.NumberArray.normalize_with_01!(op_)
-
-    ht = joinpath(di, "$(na1)_and_$na2.html")
-
-    BioLab.Path.warn_overwrite(ht)
-
-    BioLab.Plot.plot_scatter(
-        ht,
-        (nu2_,),
-        (nu1_,),
-        (fe1_,),
-        mode_ = ("markers",),
-        marker_color_ = ("#20d9ba",);
-        opacity_ = (op_,),
-        layout = Dict(
-            "title" => Dict("text" => "Comparing Match"),
-            "yaxis" => Dict("title" => Dict("text" => na2)),
-            "xaxis" => Dict("title" => Dict("text" => na1)),
-        ),
-    )
-
-end
+#function make(di, tst, tsf, n_ma, n_pv, n_ex)
+#
+#    _tan, ta_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
+#
+#    naf, fe_, _saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
+#
+#    @assert sa_ == _saf_
+#
+#    for (ta, nu_) in zip(ta_, eachrow(ta_x_sa_x_nu))
+#
+#        go_ = map(!isnan, nu_)
+#
+#        sag_ = sa_[go_]
+#
+#        nug_ = nu_[go_]
+#
+#        try
+#
+#            nug_ = convert(Vector{Int}, nug_)
+#
+#        catch
+#
+#        end
+#
+#        di2 = joinpath(di, BioLab.Path.clean("$(ta)_matching_$naf"))
+#
+#        if ispath(di2)
+#
+#            BioLab.Path.warn_overwrite(di2)
+#
+#        else
+#
+#            mkdir(di2)
+#
+#        end
+#
+#        make(di2, cor, ta, naf, fe_, sag_, nug_, fe_x_sa_x_nu[:, go_]; n_ma, n_pv, n_ex)
+#
+#    end
+#
+#end
+#
+#function compare(di, na1, na2, ts1, ts2)
+#
+#    naf, fe1_, st_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
+#
+#    _fen, fe2_, _st_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
+#
+#    @assert naf == _fen
+#
+#    @assert fe1_ == fe2_
+#
+#    @assert st_ == _st_
+#
+#    nu1_, fe1_ = BioLab.Collection.sort_like((fe_x_st_x_nu1[:, 1], fe1_))
+#
+#    id_ = indexin(fe1_, fe2_)
+#
+#    fe2_ = fe2_[id_]
+#
+#    nu2_ = fe_x_st_x_nu2[id_, 1]
+#
+#    @assert fe1_ == fe2_
+#
+#    op_ = [sqrt(nu1^2 + nu2^2) for (nu1, nu2) in zip(nu1_, nu2_)]
+#
+#    BioLab.NumberArray.normalize_with_01!(op_)
+#
+#    ht = joinpath(di, "$(na1)_and_$na2.html")
+#
+#    BioLab.Path.warn_overwrite(ht)
+#
+#    BioLab.Plot.plot_scatter(
+#        ht,
+#        (nu2_,),
+#        (nu1_,),
+#        (fe1_,),
+#        mode_ = ("markers",),
+#        marker_color_ = ("#20d9ba",);
+#        opacity_ = (op_,),
+#        layout = Dict(
+#            "title" => Dict("text" => "Comparing Match"),
+#            "yaxis" => Dict("title" => Dict("text" => na2)),
+#            "xaxis" => Dict("title" => Dict("text" => na1)),
+#        ),
+#    )
+#
+#end
 
 end
