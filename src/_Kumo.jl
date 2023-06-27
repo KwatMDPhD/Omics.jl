@@ -576,7 +576,7 @@ function _get_norm(he_, pr)
 
         n = maximum(length(no) for no in NO_) + 2
 
-        for (he, no) in zip(BioLab.Collection.sort_like((he_, NO_); ic = false)...)
+        for (he, no) in zip(BioLab.Vector.sort_like((he_, NO_); ic = false)...)
 
             BioLab.check_print(!iszero(he), "  $(rpad(no, n))$(BioLab.Number.format(he)).")
 

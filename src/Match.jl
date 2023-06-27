@@ -402,7 +402,7 @@ function make(
 
     if 0 < n_ex
 
-        id_ = reverse!(BioLab.Collection.get_extreme(fe_x_st_x_nu[:, 1], n_ex))
+        id_ = reverse!(BioLab.Vector.get_extreme(fe_x_st_x_nu[:, 1], n_ex))
 
         _plot(
             "$pr.html",
@@ -485,7 +485,7 @@ function compare(di, na1, na2, ts1, ts2)
 
     end
 
-    nu1_, fe1_ = BioLab.Collection.sort_like((fe_x_st_x_nu1[:, 1], fe1_))
+    nu1_, fe1_ = BioLab.Vector.sort_like((fe_x_st_x_nu1[:, 1], fe1_))
 
     id_ = indexin(fe1_, fe2_)
 
