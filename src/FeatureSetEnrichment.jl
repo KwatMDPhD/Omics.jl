@@ -135,7 +135,18 @@ function _plot_mountain(
 
     n = length(fe_)
 
-    # TODO
+    x = collect(1:n)
+
+    scatter = Dict("x" => x, "text" => fe_, "mode" => "lines", "fill" => "tozeroy")
+
+    coe1 = "#07fa07"
+
+    coe2 = "rgba(7, 250, 7, 0.32)"
+
+    coe3 = "rgba(7, 250, 7, 0.08)"
+
+    # TODO: Try without setting height and width.
+
     width = 800
 
     height = width / MathConstants.golden
@@ -152,25 +163,16 @@ function _plot_mountain(
 
     annotations_margin = 0.02
 
-    coe1 = "#07fa07"
-
-    coe2 = "rgba(7, 250, 7, 0.32)"
-
-    coe3 = "rgba(7, 250, 7, 0.08)"
-
-    x = collect(1:n)
-
     BioLab.Plot.plot(
         ht,
         [
-            Dict(
-                "y" => sc_,
-                "x" => x,
-                "text" => fe_,
-                "mode" => "lines",
-                "line" => Dict("width" => 1.6, "color" => "#351e1c"),
-                "fill" => "tozeroy",
-                "fillcolor" => "#c0c0c0",
+            BioLab.Dict.merge(
+                scatter,
+                Dict(
+                    "y" => sc_,
+                    "line" => Dict("width" => 1.6, "color" => "#351e1c"),
+                    "fillcolor" => "#c0c0c0",
+                ),
             ),
             Dict(
                 "yaxis" => "y2",
@@ -189,15 +191,14 @@ function _plot_mountain(
                 ),
                 "hoverinfo" => "x+text",
             ),
-            Dict(
-                "yaxis" => "y3",
-                "y" => en_,
-                "x" => x,
-                "text" => fe_,
-                "mode" => "lines",
-                "line" => Dict("width" => 3.2, "color" => coe1),
-                "fill" => "tozeroy",
-                "fillcolor" => coe2,
+            BioLab.Dict.merge(
+                scatter,
+                Dict(
+                    "yaxis" => "y3",
+                    "y" => en_,
+                    "line" => Dict("width" => 3.2, "color" => coe1),
+                    "fillcolor" => coe2,
+                ),
             ),
         ],
         Dict(
