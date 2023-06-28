@@ -270,6 +270,8 @@ function _plot_mountain(
 
 end
 
+# TODO: Try Type{}.
+
 function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     n, su1, su0 = _sum_10(sc_, bo_, ex)
@@ -305,6 +307,8 @@ function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
             en_[id] = cu
 
         end
+
+        # TODO: flipsign.
 
         if cu < 0.0
 
@@ -386,7 +390,7 @@ function _enrich(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function _clip(le, pr, mi)
+function _minus_clip(le, pr, mi)
 
     le -= pr
 
@@ -444,11 +448,11 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         ri1n = ri1 / su1
 
-        le = _clip(le, pra, ep)
+        le = _minus_clip(le, pra, ep)
 
         if prb
 
-            le1 = _clip(le1, pra, ep)
+            le1 = _minus_clip(le1, pra, ep)
 
         end
 
@@ -456,6 +460,7 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         le1n = le1 / su1
 
+        # TODO: use BioLab.Information.
         en = ri1n * log(ri1n / rin) - le1n * log(le1n / len)
 
         pra = abe
@@ -484,7 +489,7 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
 end
 
-function _enrich_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
+function _enrich_klio(fu, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     n, su, su1 = _sum_all1(sc_, bo_, ex)
 
@@ -540,15 +545,15 @@ function _enrich_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
         ri0n = ri0 / su0
 
-        le = _clip(le, pra, ep)
+        le = _minus_clip(le, pra, ep)
 
         if prb
 
-            le1 = _clip(le1, pra, ep)
+            le1 = _minus_clip(le1, pra, ep)
 
         else
 
-            le0 = _clip(le0, pra, ep)
+            le0 = _minus_clip(le0, pra, ep)
 
         end
 
@@ -558,6 +563,7 @@ function _enrich_klio(fe_, sc_, bo_, fu; ex = 1.0, pl = true, ke_ar...)
 
         le0n = le0 / su0
 
+        # TODO: use BioLab.Information.
         en =
             fu(ri1n * log(ri1n / rin), ri0n * log(ri0n / rin)) -
             fu(le1n * log(le1n / len), le0n * log(le0n / len))
@@ -590,13 +596,13 @@ end
 
 function _enrich(al::KLioP, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    _enrich_klio(fe_, sc_, bo_, (_1, _0) -> _1 + _0; ex, pl, ke_ar...)
+    _enrich_klio((_1, _0) -> _1 + _0, fe_, sc_, bo_; ex, pl, ke_ar...)
 
 end
 
 function _enrich(al::KLioM, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
-    _enrich_klio(fe_, sc_, bo_, (_1, _0) -> _1 - _0; ex, pl, ke_ar...)
+    _enrich_klio((_1, _0) -> _1 - _0, fe_, sc_, bo_; ex, pl, ke_ar...)
 
 end
 
@@ -610,6 +616,7 @@ function enrich(
     ke_ar...,
 )
 
+    # TODO: Try without Set.
     _enrich(al, fe_, sc_, BioLab.Collection.is_in(fe_, Set(fe1_)); ex, pl, ke_ar...)
 
 end
@@ -618,6 +625,7 @@ function enrich(al, fe_, sc_, fe1___; ex = 1.0)
 
     ch = Dict(fe => id for (id, fe) in enumerate(fe_))
 
+    # TODO: map.
     [_enrich(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for fe1_ in fe1___]
 
 end
@@ -626,7 +634,7 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0)
 
     n = length(sa_)
 
-    se_x_sa_x_en = Matrix{Float64}(undef, length(se_), n)
+    se_x_sa_x_en = Matrix{Float64}(undef, (length(se_), n))
 
     @showprogress for id in 1:n
 
@@ -634,9 +642,9 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0)
 
         go_ = findall(!isnan, sc_)
 
-        sc_, feg_ = BioLab.Vector.sort_like((sc_[go_], fe_[go_]); ic = false)
+        sc_, fe_ = BioLab.Vector.sort_like((sc_[go_], fe_[go_]); rev = true)
 
-        se_x_sa_x_en[:, id] = enrich(al, feg_, sc_, fe1___; ex)
+        se_x_sa_x_en[:, id] = enrich(al, fe_, sc_, fe1___; ex)
 
     end
 
@@ -644,35 +652,35 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0)
 
 end
 
-# TODO: Decouple benchmarks.
+# TODO: Decouple benchmarking.
 
 function benchmark_card(ca1)
 
-    reverse!([string(ca) for ca in BioLab.CA_]),
-    reverse!(collect(-6:6)),
-    [string(ca) for ca in ca1]
+    ["K", "Q", "J", "X", "9", "8", "7", "6", "5", "4", "3", "2", "A"],
+    [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6],
+    map(string, ca1)
 
 end
 
 function benchmark_random(n, n1)
 
-    fe_ = ["Feature $id" for id in 1:n]
+    fe_ = map(id -> "Feature $id", n:-1:1)
 
-    reverse!(fe_),
-    reverse!(BioLab.VectorNumber.simulate(cld(n, 2); ev = iseven(n))),
+    fe_,
+    reverse!(BioLab.NumberVector.simulate(cld(n, 2); ze = iseven(n))),
     sample(fe_, n1; replace = false)
 
 end
 
-function benchmark_myc()::Tuple{Vector{String}, Vector{Float64}, Vector{String}}
+function benchmark_myc()
 
-    da = joinpath(BioLab.DA, "FeatureSetEnrichment")
+    di = joinpath(BioLab.DA, "FeatureSetEnrichment")
 
-    gene_x_statistic_x_number = BioLab.Table.read(joinpath(da, "gene_x_statistic_x_number.tsv"))
+    da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 
-    reverse!(gene_x_statistic_x_number[!, 1]),
-    reverse!(gene_x_statistic_x_number[!, 2]),
-    BioLab.GMT.read(joinpath(da, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+    reverse!(da[!, 1]),
+    reverse!(da[!, 2]),
+    BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 end
 
