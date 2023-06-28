@@ -45,20 +45,22 @@ function _make_layout(title_text, xaxis_title_text)
 
 end
 
-function select(st_, re_, mi, ma, xaxis_title_text)
+function select(
+    me_,
+    mi,
+    ma;
+    nat = "Thing",
+    th_ = map(id -> "Thing $id", eachindex(me_)),
+    nam = "Metric",
+)
 
-    BioLab.Array.error_size_difference((st_, re_))
+    BioLab.Array.error_size_difference((th_, me_))
 
-    n = length(st_)
+    n = length(th_)
 
-    BioLab.Plot.plot_histogram(
-        "",
-        (re_,),
-        (st_,);
-        layout = _make_layout("All $n", xaxis_title_text),
-    )
+    BioLab.Plot.plot_histogram("", (me_,), (th_,); layout = _make_layout("All $n $nat", nam))
 
-    ke_ = map(re -> mi <= re <= ma, re_)
+    ke_ = map(me -> mi <= me <= ma, me_)
 
     n_ke = sum(ke_)
 
@@ -66,9 +68,9 @@ function select(st_, re_, mi, ma, xaxis_title_text)
 
     BioLab.Plot.plot_histogram(
         "",
-        (re_[ke_],),
-        (st_[ke_],);
-        layout = _make_layout("Selected $n_ke ($pe%) between $mi and $ma", xaxis_title_text),
+        (me_[ke_],),
+        (th_[ke_],);
+        layout = _make_layout("Selected $n_ke ($pe%) $nat between $mi and $ma", nam),
     )
 
     ke_

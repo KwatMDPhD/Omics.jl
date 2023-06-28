@@ -76,15 +76,11 @@ end
 
 n = 1000
 
-st_ = map(id -> "String $id", 1:n)
-
-re_ = randn(n)
-
-xaxis_title_text = "Random Number"
+me_ = randn(n)
 
 for (mi, ma, re) in
-    ((0, 0, fill(false, n)), (-Inf, 0, re_ .<= 0), (0, Inf, 0 .<= re_), (-Inf, Inf, fill(true, n)))
+    ((0, 0, fill(false, n)), (-Inf, 0, me_ .<= 0), (0, Inf, 0 .<= me_), (-Inf, Inf, fill(true, n)))
 
-    @test BioLab.Vector.select(st_, re_, mi, ma, xaxis_title_text) == re
+    @test BioLab.Vector.select(me_, mi, ma) == re
 
 end

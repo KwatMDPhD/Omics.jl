@@ -450,7 +450,7 @@ function make(di, tst, tsf, n_ma, n_pv, n_ex, st)
 
         end
 
-        di2 = joinpath(di, BioLab.Path.clean("$(naf)_matching_$naf"))
+        di2 = joinpath(di, BioLab.Path.clean("$(nat)_matching_$naf"))
 
         if !isdir(di2)
 
@@ -493,7 +493,7 @@ function compare(di, na1, na2, ts1, ts2)
 
     nu2_ = fe_x_st_x_nu2[id_, 1]
 
-    op_ = map((nu1, nu2) -> sqrt(nu1^2 + nu2^2), zip(nu1_, nu2_))
+    op_ = [sqrt(nu1^2 + nu2^2) for (nu1, nu2) in zip(nu1_, nu2_)]
 
     BioLab.NumberArray.normalize_with_01!(op_)
 
