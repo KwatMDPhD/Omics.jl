@@ -74,45 +74,9 @@ function _color(::AbstractArray{Float64})
 
 end
 
-function _make_layout(ke_va__...)
-
-    reduce(
-        BioLab.Dict.merge,
-        ke_va__;
-        init = Dict(
-            "margin" => Dict("l" => 200, "r" => 200),
-            "width" => 800,
-            "title" => Dict("x" => 0.5),
-        ),
-    )
-
-end
-
-function _make_annotation(ke_va__...)
-
-    reduce(
-        BioLab.Dict.merge,
-        ke_va__;
-        init = Dict(
-            "yref" => "paper",
-            "xref" => "paper",
-            "yanchor" => "middle",
-            "font" => Dict("size" => 10),
-            "showarrow" => false,
-        ),
-    )
-
-end
-
 function _make_annotationl(ke_va__...)
 
-    _make_annotation(Dict("x" => -0.024, "xanchor" => "right"), ke_va__...)
-
-end
-
-function _annotate(y, ro)
-
-    _make_annotationl(Dict("y" => y, "text" => "<b>$ro</b>"))
+    BioLab.Plot.make_annotation(Dict("x" => -0.024, "xanchor" => "right"), ke_va__...)
 
 end
 
@@ -122,7 +86,7 @@ function _get_x(id)
 
 end
 
-function _annotate(y, la, th, fe_, fe_x_st_x_nu)
+function _make_annotations(y, la, th, fe_, fe_x_st_x_nu)
 
     annotations = Vector{Dict{String, Any}}()
 
@@ -132,7 +96,7 @@ function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
             push!(
                 annotations,
-                _make_annotation(
+                BioLab.Plot.make_annotation(
                     Dict(
                         "y" => y,
                         "x" => _get_x(idx),
@@ -161,7 +125,7 @@ function _annotate(y, la, th, fe_, fe_x_st_x_nu)
 
             push!(
                 annotations,
-                _make_annotation(
+                BioLab.Plot.make_annotation(
                     Dict("y" => y, "x" => _get_x(idx), "xanchor" => "center", "text" => text),
                 ),
             )
@@ -253,19 +217,25 @@ function _plot(ht, nat, naf, fep_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, lay
                 ),
             ),
         ],
-        _make_layout(
+        BioLab.Dict.merge(
             Dict(
+                "margin" => Dict("l" => 200, "r" => 200),
                 "height" => height,
-                "title" => Dict("text" => naf),
-                "yaxis2" => Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
-                "yaxis" => Dict(
-                    "domain" => (0, 1 - th * 2),
-                    "autorange" => "reversed",
-                    "showticklabels" => false,
+                "width" => 800,
+                "title" => Dict("x" => 0.5, "text" => naf),
+                "yaxis2" => BioLab.Plot.make_axis(
+                    Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
+                ),
+                "yaxis" => BioLab.Plot.make_axis(
+                    Dict(
+                        "domain" => (0, 1 - th * 2),
+                        "autorange" => "reversed",
+                        "showticklabels" => false,
+                    ),
                 ),
                 "annotations" => vcat(
-                    _annotate(1 - th2, nat),
-                    _annotate(1 - th2 * 3, true, th, fep_, fe_x_st_x_nu),
+                    _make_annotationl(Dict("y" => 1 - th2, "text" => "<b>$nat</b>")),
+                    _make_annotations(1 - th2 * 3, true, th, fep_, fe_x_st_x_nu),
                 ),
             ),
             layout,
@@ -507,8 +477,8 @@ function compare(di, na1, na2, ts1, ts2)
         opacity_ = (op_,),
         layout = Dict(
             "title" => Dict("text" => "Comparing Match"),
-            "yaxis" => Dict("title" => Dict("text" => na2)),
-            "xaxis" => Dict("title" => Dict("text" => na1)),
+            "yaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => na2))),
+            "xaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => na1))),
         ),
     )
 

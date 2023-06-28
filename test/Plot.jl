@@ -166,6 +166,30 @@ BioLab.Plot.plot(joinpath(TE, "plot.html"), data, layout; config = Dict("editabl
 
 # ---- #
 
+# TODO
+
+for (z, re) in ((), (), ())
+
+    @test BioLab.Plot.make_colorbar(z)
+
+end
+
+# ---- #
+
+@test BioLab.Plot.make_axis() == Dict("zeroline" => false, "showgrid" => false)
+
+# ---- #
+
+@test BioLab.Plot.make_annotation() == Dict(
+    "yref" => "paper",
+    "xref" => "paper",
+    "yanchor" => "middle",
+    "showarrow" => false,
+    "font" => Dict("size" => 10),
+)
+
+# ---- #
+
 y1 = [-1, 0, 2]
 
 y2 = [3, 4]

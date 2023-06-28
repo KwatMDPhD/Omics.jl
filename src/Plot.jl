@@ -108,16 +108,9 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
 
     daj = write(data)
 
-    axis = Dict("automargin" => true)
+    laj = write(BioLab.Dict.merge(Dict("hovermode" => "closest"), layout))
 
-    laj = write(
-        BioLab.Dict.merge(
-            Dict("hovermode" => "closest", "yaxis" => axis, "xaxis" => axis),
-            layout,
-        ),
-    )
-
-    coj = write(merge!(Dict("displaylogo" => false), config))
+    coj = write(BioLab.Dict.merge(Dict("displaylogo" => false), config))
 
     BioLab.HTML.make(
         ht,
@@ -168,6 +161,49 @@ end
 function _set_opacity(y_)
 
     fill(0.8, length(y_))
+
+end
+
+function make_colorbar(z, ke_va__...)
+
+    tickvals = BioLab.NumberArray.range(z, 10)
+
+    reduce(
+        BioLab.Dict.merge,
+        ke_va__;
+        init = Dict(
+            "thicknessmode" => "fraction",
+            "thickness" => 0.024,
+            "len" => 0.5,
+            "tickvmode" => "array",
+            "tickvals" => tickvals,
+            "ticktext" => [@sprintf("%.3g", ti) for ti in tickvals],
+            "ticks" => "outside",
+            "tickfont" => Dict("size" => 10),
+        ),
+    )
+
+end
+
+function make_axis(ke_va__...)
+
+    reduce(BioLab.Dict.merge, ke_va__; init = Dict("automargin" => true, "showgrid" => false))
+
+end
+
+function make_annotation(ke_va__...)
+
+    reduce(
+        BioLab.Dict.merge,
+        ke_va__;
+        init = Dict(
+            "yref" => "paper",
+            "xref" => "paper",
+            "yanchor" => "middle",
+            "showarrow" => false,
+            "font" => Dict("size" => 10),
+        ),
+    )
 
 end
 
@@ -225,7 +261,7 @@ function plot_bar(
                 "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(Dict("barmode" => "stack"), layout);
+        layout,
         ke_ar...,
     )
 
@@ -269,15 +305,18 @@ function plot_histogram(
 
     layout = BioLab.Dict.merge(
         Dict(
-            "yaxis" => Dict(
-                "domain" => (0, fr),
-                "zeroline" => false,
-                "dtick" => 1,
-                "showticklabels" => false,
+            "yaxis" => make_axis(
+                Dict(
+                    "domain" => (0, fr),
+                    "zeroline" => false,
+                    "dtick" => 1,
+                    "showticklabels" => false,
+                ),
             ),
-            "yaxis2" =>
+            "yaxis2" => make_axis(
                 Dict("domain" => (fr, 1), "title" => Dict("text" => yaxis2_title_text)),
-            "xaxis" => Dict("anchor" => "y"),
+            ),
+            "xaxis" => make_axis(Dict("anchor" => "y")),
         ),
         layout,
     )
@@ -300,7 +339,7 @@ function plot_histogram(
 
         push!(
             data,
-            merge(
+            BioLab.Dict.merge(
                 le,
                 Dict(
                     "yaxis" => "y2",
@@ -315,14 +354,14 @@ function plot_histogram(
 
             push!(
                 data,
-                merge(
+                BioLab.Dict.merge(
                     le,
                     Dict(
                         "showlegend" => false,
                         "y" => fill(id, length(x_[id])),
                         "text" => text_[id],
                         "mode" => "markers",
-                        "marker" => merge(
+                        "marker" => BioLab.Dict.merge(
                             marker,
                             Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
                         ),
@@ -339,20 +378,9 @@ function plot_histogram(
 
 end
 
-function _make_colorbar(z)
+function _make_axis2(ke_va__...)
 
-    tickvals = BioLab.NumberArray.range(z, 10)
-
-    Dict(
-        "thicknessmode" => "fraction",
-        "thickness" => 0.024,
-        "len" => 0.5,
-        "tickvmode" => "array",
-        "tickvals" => tickvals,
-        "ticktext" => [@sprintf("%.3g", ti) for ti in tickvals],
-        "ticks" => "outside",
-        "tickfont" => Dict("size" => 10),
-    )
+    make_axis(Dict("domain" => (0.96, 1), "tickvals" => ()), ke_va__...)
 
 end
 
@@ -375,18 +403,20 @@ function plot_heat_map(
 
     domain1 = (0, 0.95)
 
-    axis2 = Dict("domain" => (0.96, 1), "tickvals" => ())
-
     layout = BioLab.Dict.merge(
         Dict(
-            "yaxis" => Dict(
-                "domain" => domain1,
-                "autorange" => "reversed",
-                "title" => Dict("text" => "$nar (n=$n_ro)"),
+            "yaxis" => make_axis(
+                Dict(
+                    "domain" => domain1,
+                    "autorange" => "reversed",
+                    "title" => Dict("text" => "$nar (n=$n_ro)"),
+                ),
             ),
-            "yaxis2" => merge(axis2, Dict("autorange" => "reversed")),
-            "xaxis" => Dict("domain" => domain1, "title" => Dict("text" => "$nac (n=$n_co)")),
-            "xaxis2" => axis2,
+            "xaxis" => make_axis(
+                Dict("domain" => domain1, "title" => Dict("text" => "$nac (n=$n_co)")),
+            ),
+            "yaxis2" => _make_axis2(Dict("autorange" => "reversed")),
+            "xaxis2" => _make_axis2(),
         ),
         layout,
     )
@@ -440,25 +470,19 @@ function plot_heat_map(
 
     end
 
-    heatmap = Dict("type" => "heatmap")
-
     push!(
         data,
-        merge(
-            heatmap,
-            Dict(
-                "z" => collect(eachrow(z)),
-                "y" => y,
-                "x" => x,
-                "text" => collect(eachrow(text)),
-                "hoverinfo" => "y+x+z+text",
-                "colorscale" => colorscale,
-                "colorbar" => merge(_make_colorbar(z), Dict("x" => colorbarx)),
-            ),
+        Dict(
+            "type" => "heatmap",
+            "z" => collect(eachrow(z)),
+            "y" => y,
+            "x" => x,
+            "text" => collect(eachrow(text)),
+            "hoverinfo" => "y+x+z+text",
+            "colorscale" => colorscale,
+            "colorbar" => make_colorbar(z, Dict("x" => colorbarx)),
         ),
     )
-
-    heatmapg = merge(heatmap, Dict("colorscale" => fractionate(COPLO)))
 
     if !isempty(grr_)
 
@@ -466,14 +490,13 @@ function plot_heat_map(
 
         push!(
             data,
-            merge(
-                heatmapg,
-                Dict(
-                    "xaxis" => "x2",
-                    "z" => [[grr] for grr in grr_],
-                    "hoverinfo" => "y+z",
-                    "colorbar" => merge(_make_colorbar(grr_), Dict("x" => colorbarx)),
-                ),
+            Dict(
+                "type" => "heatmap",
+                "xaxis" => "x2",
+                "z" => [[grr] for grr in grr_],
+                "hoverinfo" => "y+z",
+                "colorscale" => fractionate(COPLO),
+                "colorbar" => make_colorbar(grr_, Dict("x" => colorbarx)),
             ),
         )
 
@@ -486,14 +509,13 @@ function plot_heat_map(
 
         push!(
             data,
-            merge(
-                heatmapg,
-                Dict(
-                    "yaxis" => "y2",
-                    "z" => [grc_],
-                    "hoverinfo" => "x+z",
-                    "colorbar" => merge(_make_colorbar(grc_), Dict("x" => colorbarx)),
-                ),
+            Dict(
+                "type" => "heatmap",
+                "yaxis" => "y2",
+                "z" => [grc_],
+                "hoverinfo" => "x+z",
+                "colorscale" => fractionate(COPLO),
+                "colorbar" => make_colorbar(grc_, Dict("x" => colorbarx)),
             ),
         )
 
