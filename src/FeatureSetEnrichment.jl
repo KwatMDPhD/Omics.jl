@@ -18,8 +18,10 @@ struct KLioM end
 
 function _get_absolute_raise(sc_, id, ex)
 
+    # TODO: Consider getting only ab.
     ab = sc_[id]
 
+    # TODO: flipsign(ab, ab)
     if ab < 0.0
 
         ab = -ab
@@ -104,6 +106,7 @@ function _plot_mountain(
 
     n = length(fe_)
 
+    # TODO
     width = 800
 
     height = width / MathConstants.golden
@@ -152,126 +155,130 @@ function _plot_mountain(
 
     coe3 = "rgba(7, 250, 7, 0.08)"
 
-    layout = Dict(
-        "height" => height,
-        "width" => width,
-        "showlegend" => false,
-        "yaxis" => merge(axis, Dict("domain" => yaxis1_domain, "ticks" => "outside")),
-        "yaxis2" => merge(
-            axis,
-            Dict("domain" => yaxis2_domain, "ticks" => "", "showticklabels" => false),
-        ),
-        "yaxis3" => merge(axis, Dict("domain" => yaxis3_domain, "ticks" => "outside")),
-        "xaxis" => merge(
-            axis,
+    x = collect(1:n)
+
+    BioLab.Plot.plot(
+        ht,
+        [
             Dict(
-                "range" => (1 - xaxis_range_margin, n + xaxis_range_margin),
-                "showspikes" => true,
-                "spikemode" => "across",
-                "spikedash" => "solid",
-                "spikethickness" => 0.69,
-                "spikecolor" => "#ffb61e",
+                "y" => sc_,
+                "x" => x,
+                "text" => fe_,
+                "mode" => "lines",
+                "line" => Dict("width" => 1.6, "color" => "#351e1c"),
+                "fill" => "tozeroy",
+                "fillcolor" => "#c0c0c0",
             ),
-        ),
-        "annotations" => (
-            merge(
-                annotationx,
+            Dict(
+                "yaxis" => "y2",
+                "y" => fill(0, sum(bo_)),
+                "x" => x[bo_],
+                "text" => fe_[bo_],
+                "mode" => "markers",
+                "marker" => Dict(
+                    "symbol" => "line-ns",
+                    "size" => height * (yaxis2_domain[2] - yaxis2_domain[1]),
+                    "line" => Dict(
+                        "width" => 1.08,
+                        "color" => [
+                            BioLab.Plot.color(BioLab.Plot.COBWR, convert(Float64, sc))
+                            for sc in sc_[bo_]
+                        ],
+                    ),
+                ),
+                "hoverinfo" => "x+text",
+            ),
+            Dict(
+                "yaxis" => "y3",
+                "y" => en_,
+                "x" => x,
+                "text" => fe_,
+                "mode" => "lines",
+                "line" => Dict("width" => 3.2, "color" => coe1),
+                "fill" => "tozeroy",
+                "fillcolor" => coe2,
+            ),
+        ],
+        Dict(
+            "height" => height,
+            "width" => width,
+            "showlegend" => false,
+            "yaxis" => merge(axis, Dict("domain" => yaxis1_domain, "ticks" => "outside")),
+            "yaxis2" => merge(
+                axis,
+                Dict("domain" => yaxis2_domain, "ticks" => "", "showticklabels" => false),
+            ),
+            "yaxis3" => merge(axis, Dict("domain" => yaxis3_domain, "ticks" => "outside")),
+            "xaxis" => merge(
+                axis,
                 Dict(
-                    "y" => 1.24,
-                    "text" => "<b>$(BioLab.String.limit(title_text, 32))</b>",
-                    "font" => Dict("size" => 32, "family" => "Relaway", "color" => "#2b2028"),
+                    "range" => (1 - xaxis_range_margin, n + xaxis_range_margin),
+                    "showspikes" => true,
+                    "spikemode" => "across",
+                    "spikedash" => "solid",
+                    "spikethickness" => 0.69,
+                    "spikecolor" => "#ffb61e",
                 ),
             ),
-            merge(
-                annotationx,
-                Dict(
-                    "y" => 1.08,
-                    "text" => "Enrichment: <b>$(BioLab.Number.format(en))</b>",
-                    "font" => Dict("size" => 16, "color" => "#181b26"),
-                    "bgcolor" => coe3,
-                    "borderpad" => 8,
-                    "borderwidth" => borderwidth,
-                    "bordercolor" => coe2,
+            "annotations" => (
+                merge(
+                    annotationx,
+                    Dict(
+                        "y" => 1.24,
+                        "text" => "<b>$(BioLab.String.limit(title_text, 32))</b>",
+                        "font" =>
+                            Dict("size" => 32, "family" => "Relaway", "color" => "#2b2028"),
+                    ),
                 ),
-            ),
-            merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>$sc</b>")),
-            merge(annotationy, Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
-            merge(annotationy, Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
-            merge(
-                annotationx,
-                Dict(
-                    "y" => -0.132,
-                    "text" => "<b>$fe (n=$n)</b>",
-                    "font" => Dict("size" => axis_title_font_size),
+                merge(
+                    annotationx,
+                    Dict(
+                        "y" => 1.08,
+                        "text" => "Enrichment: <b>$(BioLab.Number.format(en))</b>",
+                        "font" => Dict("size" => 16, "color" => "#181b26"),
+                        "bgcolor" => coe3,
+                        "borderpad" => 8,
+                        "borderwidth" => borderwidth,
+                        "bordercolor" => coe2,
+                    ),
                 ),
-            ),
-            merge(
-                annotations,
-                Dict(
-                    "y" => yaxis1_domain[2] * 1 / 4,
-                    "x" => annotations_margin,
-                    "text" => hi,
-                    "font" => Dict("color" => "#ff1992"),
-                    "bordercolor" => "#fcc9b9",
+                merge(annotationy, Dict("y" => mean(yaxis1_domain), "text" => "<b>$sc</b>")),
+                merge(annotationy, Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
+                merge(
+                    annotationy,
+                    Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>"),
                 ),
-            ),
-            merge(
-                annotations,
-                Dict(
-                    "y" => yaxis1_domain[2] * 3 / 4,
-                    "x" => 1 - annotations_margin,
-                    "text" => lo,
-                    "font" => Dict("color" => "#1993ff"),
-                    "bordercolor" => "#b9c9fc",
+                merge(
+                    annotationx,
+                    Dict(
+                        "y" => -0.132,
+                        "text" => "<b>$fe (n=$n)</b>",
+                        "font" => Dict("size" => axis_title_font_size),
+                    ),
+                ),
+                merge(
+                    annotations,
+                    Dict(
+                        "y" => yaxis1_domain[2] * 1 / 4,
+                        "x" => annotations_margin,
+                        "text" => hi,
+                        "font" => Dict("color" => "#ff1992"),
+                        "bordercolor" => "#fcc9b9",
+                    ),
+                ),
+                merge(
+                    annotations,
+                    Dict(
+                        "y" => yaxis1_domain[2] * 3 / 4,
+                        "x" => 1 - annotations_margin,
+                        "text" => lo,
+                        "font" => Dict("color" => "#1993ff"),
+                        "bordercolor" => "#b9c9fc",
+                    ),
                 ),
             ),
         ),
     )
-
-    x = collect(1:n)
-
-    trace_ = [
-        Dict(
-            "y" => sc_,
-            "x" => x,
-            "text" => fe_,
-            "mode" => "lines",
-            "line" => Dict("width" => 1.6, "color" => "#351e1c"),
-            "fill" => "tozeroy",
-            "fillcolor" => "#c0c0c0",
-        ),
-        Dict(
-            "yaxis" => "y2",
-            "y" => fill(0, sum(bo_)),
-            "x" => x[bo_],
-            "text" => fe_[bo_],
-            "mode" => "markers",
-            "marker" => Dict(
-                "symbol" => "line-ns",
-                "size" => height * (yaxis2_domain[2] - yaxis2_domain[1]),
-                "line" => Dict(
-                    "width" => 1.08,
-                    "color" => [
-                        BioLab.Plot.color(BioLab.Plot.COBWR, convert(Float64, sc))
-                        for sc in sc_[bo_]
-                    ],
-                ),
-            ),
-            "hoverinfo" => "x+text",
-        ),
-        Dict(
-            "yaxis" => "y3",
-            "y" => en_,
-            "x" => x,
-            "text" => fe_,
-            "mode" => "lines",
-            "line" => Dict("width" => 3.2, "color" => coe1),
-            "fill" => "tozeroy",
-            "fillcolor" => coe2,
-        ),
-    ]
-
-    BioLab.Plot.plot(ht, trace_, layout)
 
 end
 
