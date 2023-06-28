@@ -18,15 +18,9 @@ struct KLioM end
 
 function _get_absolute_raise(sc_, id, ex)
 
-    # TODO: Consider getting only ab.
     ab = sc_[id]
 
-    # TODO: flipsign(ab, ab)
-    if ab < 0.0
-
-        ab = -ab
-
-    end
+    ab = flipsign(ab, ab)
 
     if ex != 1.0
 
@@ -90,30 +84,10 @@ function _sum_all1(sc_, bo_, ex)
 
 end
 
-function _make_annotationy(ke_va__...)
+function _make_annotation(ke_va__...)
 
     BioLab.Plot.make_annotation(
-        Dict("x" => -0.1, "font" => Dict("size" => 12), "textangle" => -90),
-        ke_va__...,
-    )
-
-end
-
-function _make_annotationx(ke_va__...)
-
-    BioLab.Plot.make_annotation(Dict("x" => 0.5, "font" => Dict("size" => 12)), ke_va__...)
-
-end
-
-function _make_annotations(ke_va__...)
-
-    BioLab.Plot.make_annotation(
-        Dict(
-            "y" => mean(yaxis1_domain),
-            "bgcolor" => "#ffffff",
-            "borderpad" => 2,
-            "borderwidth" => borderwidth,
-        ),
+        Dict("bgcolor" => "#fcfcfc", "borderpad" => 4, "borderwidth" => 2),
         ke_va__...,
     )
 
@@ -127,10 +101,10 @@ function _plot_mountain(
     en_,
     en;
     title_text = "Set Enrichment",
-    fe = "Feature",
-    sc = "Score",
-    lo = "Low",
-    hi = "High",
+    naf = "Feature",
+    nas = "Score",
+    nal = "Low",
+    nah = "High",
 )
 
     n = length(fe_)
@@ -143,25 +117,18 @@ function _plot_mountain(
 
     coe2 = "rgba(7, 250, 7, 0.32)"
 
-    coe3 = "rgba(7, 250, 7, 0.08)"
-
-    # TODO: Try without setting height and width.
-
-    width = 800
-
-    height = width / MathConstants.golden
-
     yaxis1_domain = (0.0, 0.24)
 
     yaxis2_domain = (0.25, 0.31)
 
     yaxis3_domain = (0.32, 1.0)
 
-    xaxis_range_margin = n * 0.01
+    # TODO
+    #xaxis_range_margin = n * 0.01
 
-    borderwidth = 2
+    annotation_margin = 0.016
 
-    annotations_margin = 0.02
+    annotation_font_size = 16
 
     BioLab.Plot.plot(
         ht,
@@ -182,7 +149,7 @@ function _plot_mountain(
                 "mode" => "markers",
                 "marker" => Dict(
                     "symbol" => "line-ns",
-                    "size" => height * (yaxis2_domain[2] - yaxis2_domain[1]),
+                    "size" => 24,
                     "line" => Dict(
                         "width" => 1.08,
                         "color" =>
@@ -202,65 +169,62 @@ function _plot_mountain(
             ),
         ],
         Dict(
-            "height" => height,
-            "width" => width,
             "showlegend" => false,
-            "yaxis" =>
-                BioLab.Plot.make_axis(Dict("domain" => yaxis1_domain, "ticks" => "outside")),
-            "yaxis2" => BioLab.Plot.make_axis(
-                Dict("domain" => yaxis2_domain, "ticks" => "", "showticklabels" => false),
+            "title" => Dict(
+                "text" => "<b>$(BioLab.String.limit(title_text, 32))</b>",
+                "font" => Dict("size" => 32, "family" => "Relaway", "color" => "#2b2028"),
             ),
-            "yaxis3" =>
-                BioLab.Plot.make_axis(Dict("domain" => yaxis3_domain, "ticks" => "outside")),
+            "yaxis" => BioLab.Plot.make_axis(
+                Dict("domain" => yaxis1_domain, "title" => Dict("text" => "<b>$nas</b>")),
+            ),
+            "yaxis2" => BioLab.Plot.make_axis(
+                Dict(
+                    "domain" => yaxis2_domain,
+                    "title" => Dict("text" => "<b>Set</b>"),
+                    "tickvals" => (),
+                ),
+            ),
+            "yaxis3" => BioLab.Plot.make_axis(
+                Dict("domain" => yaxis3_domain, "title" => Dict("text" => "<b>Enrichment</b>")),
+            ),
             "xaxis" => BioLab.Plot.make_axis(
                 Dict(
-                    "range" => (1 - xaxis_range_margin, n + xaxis_range_margin),
+                    # TODO
+                    #"range" => (1 - xaxis_range_margin, n + xaxis_range_margin),
                     "showspikes" => true,
                     "spikemode" => "across",
                     "spikedash" => "solid",
                     "spikethickness" => 0.69,
                     "spikecolor" => "#ffb61e",
+                    "title" => Dict("text" => "<b>$naf (n=$n)</b>"),
                 ),
             ),
             "annotations" => (
-                _make_annotationx(
+                _make_annotation(
                     Dict(
-                        "y" => 1.24,
-                        "text" => "<b>$(BioLab.String.limit(title_text, 32))</b>",
-                        "font" =>
-                            Dict("size" => 32, "family" => "Relaway", "color" => "#2b2028"),
-                    ),
-                ),
-                _make_annotationx(
-                    Dict(
-                        "y" => 1.08,
-                        "text" => "Enrichment: <b>$(BioLab.Number.format(en))</b>",
-                        "font" => Dict("size" => 16, "color" => "#181b26"),
-                        "bgcolor" => coe3,
+                        "y" => 1,
+                        "x" => 0.5,
+                        "text" => "Enrichment = <b>$(BioLab.String.format(en))</b>",
+                        "font" => Dict("size" => 20, "color" => "#224634"),
                         "borderpad" => 8,
-                        "borderwidth" => borderwidth,
-                        "bordercolor" => coe2,
+                        "bordercolor" => coe1,
                     ),
                 ),
-                _make_annotationy(Dict("y" => mean(yaxis1_domain), "text" => "<b>$sc</b>")),
-                _make_annotationy(Dict("y" => mean(yaxis2_domain), "text" => "<b>Set</b>")),
-                _make_annotationy(Dict("y" => mean(yaxis3_domain), "text" => "<b>Enrichment</b>")),
-                _make_annotationx(Dict("y" => -0.132, "text" => "<b>$fe (n=$n)</b>")),
-                _make_annotations(
+                _make_annotation(
                     Dict(
                         "y" => yaxis1_domain[2] * 1 / 4,
-                        "x" => annotations_margin,
-                        "text" => hi,
-                        "font" => Dict("color" => "#ff1992"),
+                        "x" => annotation_margin,
+                        "text" => nah,
+                        "font" => Dict("size" => annotation_font_size, "color" => "#ff1992"),
                         "bordercolor" => "#fcc9b9",
                     ),
                 ),
-                _make_annotations(
+                _make_annotation(
                     Dict(
                         "y" => yaxis1_domain[2] * 3 / 4,
-                        "x" => 1 - annotations_margin,
-                        "text" => lo,
-                        "font" => Dict("color" => "#1993ff"),
+                        "x" => 1 - annotation_margin,
+                        "text" => nal,
+                        "font" => Dict("size" => annotation_font_size, "color" => "#1993ff"),
                         "bordercolor" => "#b9c9fc",
                     ),
                 ),
@@ -623,7 +587,7 @@ end
 
 function enrich(al, fe_, sc_, fe1___; ex = 1.0)
 
-    ch = Dict(fe => id for (id, fe) in enumerate(fe_))
+    ch = Dict(naf => id for (id, naf) in enumerate(fe_))
 
     # TODO: map.
     [_enrich(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for fe1_ in fe1___]

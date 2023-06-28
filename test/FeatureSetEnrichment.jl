@@ -8,23 +8,23 @@ DA = joinpath(BioLab.DA, "FeatureSetEnrichment")
 
 sc_ = [-2.0, -1, 0, 0, 1, 2]
 
+# ---- #
+
 id = 1
 
 for (ex, re) in ((-1.0, 0.5), (1.0, 2.0), (2.0, 4.0), (3.0, 8.0))
 
     @test BioLab.FeatureSetEnrichment._get_absolute_raise(sc_, id, ex) == re
 
-    # 16.784 ns (0 allocations: 0 bytes)
-    # 2.458 ns (0 allocations: 0 bytes)
-    # 16.784 ns (0 allocations: 0 bytes)
-    # 5.500 ns (0 allocations: 0 bytes)
-    # @btime BioLab.FeatureSetEnrichment._get_absolute_raise($sc_, $id, $ex);
+    # 6.041 ns (0 allocations: 0 bytes)
+    # 1.875 ns (0 allocations: 0 bytes)
+    # 5.708 ns (0 allocations: 0 bytes)
+    # 4.583 ns (0 allocations: 0 bytes)
+    @btime BioLab.FeatureSetEnrichment._get_absolute_raise($sc_, $id, $ex)
 
 end
 
 # ---- #
-
-sc_ = [-2.0, -1, 0, 0, 1, 2]
 
 bo_ = [true, true, false, true, false, true]
 
@@ -34,27 +34,26 @@ for (ex, re) in ((1.0, (6, 5.0, 2.0)), (2.0, (6, 9.0, 2.0)))
 
     # 6.417 ns (0 allocations: 0 bytes)
     # 19.121 ns (0 allocations: 0 bytes)    
-    # @btime BioLab.FeatureSetEnrichment._sum_10($sc_, $bo_, $ex);
+    @btime BioLab.FeatureSetEnrichment._sum_10($sc_, $bo_, $ex)
 
 end
 
 # ---- #
 
-sc_ = [-2.0, -1, 0, 0, 1, 2]
-
-for (ex, re) in ((1.0, (6, 6.0, 5.0)), (2.0, (6, 10.0, 9.0)))
+for (ex, re) in ((1.0, (6.0, 5.0)), (2.0, (10.0, 9.0)))
 
     @test BioLab.FeatureSetEnrichment._sum_all1(sc_, bo_, ex) == re
 
-    # 7.791 ns (0 allocations: 0 bytes)
-    # 22.233 ns (0 allocations: 0 bytes)
-    # @btime BioLab.FeatureSetEnrichment._sum_all1($sc_, $bo_, $ex);
+    # 7.298 ns (0 allocations: 0 bytes)
+    # 35.822 ns (0 allocations: 0 bytes)
+    @btime BioLab.FeatureSetEnrichment._sum_all1($sc_, $bo_, $ex)
 
 end
 
 # ---- #
 
 BioLab.FeatureSetEnrichment._plot_mountain(
+    "",
     ["Law", "Black Beard"],
     [1.0, -1.0],
     [true, true],
@@ -70,7 +69,7 @@ ca1 = "A2K"
 BioLab.FeatureSetEnrichment.benchmark_card(ca1)
 
 # 46.970 ns (2 allocations: 240 bytes)
-# @btime BioLab.FeatureSetEnrichment.benchmark_card($ca1);
+@btime BioLab.FeatureSetEnrichment.benchmark_card($ca1);
 
 # ---- #
 
