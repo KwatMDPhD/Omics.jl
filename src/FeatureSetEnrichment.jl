@@ -123,7 +123,6 @@ function _plot_mountain(
 
     yaxis3_domain = (0.32, 1.0)
 
-    # TODO
     #xaxis_range_margin = n * 0.01
 
     annotation_margin = 0.016
@@ -189,7 +188,6 @@ function _plot_mountain(
             ),
             "xaxis" => BioLab.Plot.make_axis(
                 Dict(
-                    # TODO
                     #"range" => (1 - xaxis_range_margin, n + xaxis_range_margin),
                     "showspikes" => true,
                     "spikemode" => "across",
@@ -234,8 +232,6 @@ function _plot_mountain(
 
 end
 
-# TODO: Try Type{}.
-
 function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     n, su1, su0 = _sum_10(sc_, bo_, ex)
@@ -271,8 +267,6 @@ function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
             en_[id] = cu
 
         end
-
-        # TODO: flipsign.
 
         if cu < 0.0
 
@@ -428,8 +422,7 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         le1n = le1 / su1
 
-        # TODO: use BioLab.Information.
-        en = ri1n * log(ri1n / rin) - le1n * log(le1n / len)
+        en = BioLab.Information.get_antisymmetric_kullback_leibler_divergence(ri1n, rin, le1n, len)
 
         pra = abe
 
@@ -533,10 +526,14 @@ function _enrich_klio(fu, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         le0n = le0 / su0
 
-        # TODO: use BioLab.Information.
         en =
-            fu(ri1n * log(ri1n / rin), ri0n * log(ri0n / rin)) -
-            fu(le1n * log(le1n / len), le0n * log(le0n / len))
+            fu(
+                BioLab.Information.get_kullback_leibler_divergence(ri1n, rin),
+                BioLab.Information.get_kullback_leibler_divergence(ri0n, rin),
+            ) - fu(
+                BioLab.Information.get_kullback_leibler_divergence(le1n, len),
+                BioLab.Information.get_kullback_leibler_divergence(le0n, len),
+            )
 
         pra = abe
 
@@ -588,8 +585,7 @@ function enrich(
     ke_ar...,
 )
 
-    # TODO: Try without Set.
-    _enrich(al, fe_, sc_, BioLab.Collection.is_in(fe_, Set(fe1_)); ex, pl, ke_ar...)
+    _enrich(al, fe_, sc_, BioLab.Collection.is_in(fe_, fe1_); ex, pl, ke_ar...)
 
 end
 
@@ -597,8 +593,7 @@ function enrich(al, fe_, sc_, fe1___; ex = 1.0)
 
     ch = Dict(naf => id for (id, naf) in enumerate(fe_))
 
-    # TODO: map.
-    [_enrich(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false) for fe1_ in fe1___]
+    map(fe1_ -> _enrich(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false), fe1___)
 
 end
 
@@ -621,38 +616,6 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0)
     end
 
     se_x_sa_x_en
-
-end
-
-# TODO: Decouple benchmarking.
-
-function benchmark_card(ca1)
-
-    ["K", "Q", "J", "X", "9", "8", "7", "6", "5", "4", "3", "2", "A"],
-    [6.0, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6],
-    [string(ca) for ca in ca1]
-
-end
-
-function benchmark_random(n, n1)
-
-    fe_ = map(id -> "Feature $id", n:-1:1)
-
-    fe_,
-    reverse!(BioLab.NumberVector.simulate(cld(n, 2); ze = iseven(n))),
-    sample(fe_, n1; replace = false)
-
-end
-
-function benchmark_myc()
-
-    di = joinpath(BioLab.DA, "FeatureSetEnrichment")
-
-    da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
-
-    reverse!(da[!, 1]),
-    reverse!(da[!, 2]),
-    BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 end
 

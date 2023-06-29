@@ -50,7 +50,6 @@ function index(an_)
 
 end
 
-# TODO: Benchmark against list comprehension.
 function is_in(an_, an1_)
 
     n = length(an_)
