@@ -281,7 +281,7 @@ function make(
 
     if any(ba_)
 
-        n_no = BioLab.String.count(sum(n_ba), "bad value")
+        n_no = BioLab.String.count(sum(ba_), "bad value")
 
         @warn "Found $n_no."
 
@@ -455,13 +455,27 @@ function compare(di, na1, na2, ts1, ts2)
 
     end
 
-    nu1_, fe1_ = BioLab.Vector.sort_like((fe_x_st_x_nu1[:, 1], fe1_))
+    nu1_ = fe_x_st_x_nu1[:, 1]
+
+    nu2_ = fe_x_st_x_nu2[:, 1]
+
+    go_ = [!isnan(nu1) && !isnan(nu2) for (nu1, nu2) in zip(nu1_, nu2_)]
+
+    fe1_ = fe1_[go_]
+
+    fe2_ = fe2_[go_]
+
+    nu1_ = nu1_[go_]
+
+    nu2_ = nu2_[go_]
+
+    nu1_, fe1_ = BioLab.Vector.sort_like((nu1_, fe1_))
 
     id_ = indexin(fe1_, fe2_)
 
     fe2_ = fe2_[id_]
 
-    nu2_ = fe_x_st_x_nu2[id_, 1]
+    nu2_ = nu2_[id_]
 
     op_ = [sqrt(nu1^2 + nu2^2) for (nu1, nu2) in zip(nu1_, nu2_)]
 
