@@ -80,7 +80,7 @@ function _sum_all1(sc_, bo_, ex)
 
     end
 
-    su, su1
+    n, su, su1
 
 end
 
@@ -350,7 +350,7 @@ function _enrich(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         ht = ""
 
-        _plot_mountain(ht, fe_, sc_, bo_, en_, et; ke_ar...)
+        _plot_mountain(ht, fe_, sc_, bo_, en_, ar; ke_ar...)
 
     end
 
@@ -451,7 +451,7 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         ht = ""
 
-        _plot_mountain(ht, fe_, sc_, bo_, en_, et; ke_ar...)
+        _plot_mountain(ht, fe_, sc_, bo_, en_, ar; ke_ar...)
 
     end
 
@@ -558,7 +558,7 @@ function _enrich_klio(fu, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         ht = ""
 
-        _plot_mountain(ht, fe_, sc_, bo_, en_, et; ke_ar...)
+        _plot_mountain(ht, fe_, sc_, bo_, en_, ar; ke_ar...)
 
     end
 
