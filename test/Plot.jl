@@ -8,6 +8,8 @@ include("environment.jl")
 
 DA = joinpath(BioLab.DA, "Plot")
 
+@test readdir(DA) == []
+
 # ---- #
 
 @test BioLab.Plot._CO == "continuous"

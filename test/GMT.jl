@@ -4,6 +4,8 @@ include("environment.jl")
 
 DA = joinpath(BioLab.DA, "GMT")
 
+@test readdir(DA) == []
+
 # ---- #
 
 for (na, re) in (("h.all.v7.1.symbols.gmt", 50), ("c2.all.v7.1.symbols.gmt", 5529))

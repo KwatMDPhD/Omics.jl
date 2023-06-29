@@ -4,6 +4,8 @@ include("environment.jl")
 
 DA = joinpath(BioLab.DA, "Dict")
 
+@test readdir(DA) == []
+
 # ---- #
 
 ke_va = Dict("Existing" => 1)

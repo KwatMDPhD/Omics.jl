@@ -6,6 +6,8 @@ include("environment.jl")
 
 DA = joinpath(BioLab.DA, "Table")
 
+@test readdir(DA) == []
+
 # ---- #
 
 for (na, re) in (("titanic.tsv", (1309, 15)), ("enst_gene.tsv.gz", (256183, 2)))

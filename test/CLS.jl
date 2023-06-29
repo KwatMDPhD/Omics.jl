@@ -4,6 +4,8 @@ include("environment.jl")
 
 DA = joinpath(BioLab.DA, "CLS")
 
+@test readdir(DA) == []
+
 # ---- #
 
 for (na, ta, nu_) in (

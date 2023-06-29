@@ -4,6 +4,8 @@ include("environment.jl")
 
 DA = joinpath(BioLab.DA, "SingleCell")
 
+@test readdir(DA) == []
+
 # ---- #
 
 sa_di = Dict(

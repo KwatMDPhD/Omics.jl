@@ -4,6 +4,8 @@ include("environment.jl")
 
 DA = joinpath(BioLab.DA, "FeatureSetEnrichment")
 
+@test readdir(DA) == []
+
 # ---- #
 
 sc_ = [-2.0, -1, 0, 0, 1, 2]
@@ -53,7 +55,7 @@ end
 # ---- #
 
 BioLab.FeatureSetEnrichment._plot_mountain(
-    "",
+    joinpath(TE, "plot_mountain.html"),
     ["Black Beard", "Law"],
     [2.0, -2],
     [true, true],
@@ -116,14 +118,7 @@ fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_card("AK")
 
 for al in (BioLab.FeatureSetEnrichment.KS(), BioLab.FeatureSetEnrichment.KLioM())
 
-    BioLab.FeatureSetEnrichment.enrich(
-        al,
-        fe_,
-        sc_,
-        fe1_;
-        title_text = string(al),
-        ht = joinpath(te, "mountain.$al.html"),
-    )
+    BioLab.FeatureSetEnrichment.enrich(al, fe_, sc_, fe1_; title_text = string(al))
 
 end
 

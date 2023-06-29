@@ -2,10 +2,6 @@ include("environment.jl")
 
 # ---- #
 
-DA = joinpath(BioLab.DA, "Collection")
-
-# ---- #
-
 for an_ in (
     (),
     (1, 1),

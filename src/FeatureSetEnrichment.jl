@@ -296,7 +296,9 @@ function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     if pl
 
-        _plot_mountain(fe_, sc_, bo_, en_, et; ke_ar...)
+        ht = ""
+
+        _plot_mountain(ht, fe_, sc_, bo_, en_, et; ke_ar...)
 
     end
 
@@ -346,7 +348,9 @@ function _enrich(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     if pl
 
-        _plot_mountain(fe_, sc_, bo_, en_, ar; ke_ar...)
+        ht = ""
+
+        _plot_mountain(ht, fe_, sc_, bo_, en_, et; ke_ar...)
 
     end
 
@@ -445,7 +449,9 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     if pl
 
-        _plot_mountain(fe_, sc_, bo_, en_, ar; ke_ar...)
+        ht = ""
+
+        _plot_mountain(ht, fe_, sc_, bo_, en_, et; ke_ar...)
 
     end
 
@@ -550,7 +556,9 @@ function _enrich_klio(fu, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     if pl
 
-        _plot_mountain(fe_, sc_, bo_, en_, ar; ke_ar...)
+        ht = ""
+
+        _plot_mountain(ht, fe_, sc_, bo_, en_, et; ke_ar...)
 
     end
 
