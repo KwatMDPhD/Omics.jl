@@ -44,8 +44,8 @@ for (ex, re) in ((1.0, (6.0, 5.0)), (2.0, (10.0, 9.0)))
 
     @test BioLab.FeatureSetEnrichment._sum_all1(sc_, bo_, ex) == re
 
-    # 7.298 ns (0 allocations: 0 bytes)
-    # 35.822 ns (0 allocations: 0 bytes)
+    # 7.708 ns (0 allocations: 0 bytes)
+    # 28.839 ns (0 allocations: 0 bytes)
     @btime BioLab.FeatureSetEnrichment._sum_all1($sc_, $bo_, $ex)
 
 end
@@ -54,44 +54,61 @@ end
 
 BioLab.FeatureSetEnrichment._plot_mountain(
     "",
-    ["Law", "Black Beard"],
-    [1.0, -1.0],
+    ["Black Beard", "Law"],
+    [2.0, -2],
     [true, true],
     [0.1, -0.1],
     11.29,
 )
 
-# ---- #
-
-ca1 = "A2K"
-
-# TODO: Test.
-BioLab.FeatureSetEnrichment.benchmark_card(ca1)
-
-# 46.970 ns (2 allocations: 240 bytes)
-@btime BioLab.FeatureSetEnrichment.benchmark_card($ca1);
 
 # ---- #
 
-for (n, n1) in ((3, 2), (4, 2), (5, 3))
+function test_type_trend(fe_, sc_, fe1_)
 
-    # TODO: Test.
-    BioLab.FeatureSetEnrichment.benchmark_random(n, n1)
+    @test fe_ isa Vector{<:AbstractString}
 
-    # 1.083 μs (30 allocations: 1.81 KiB)
-    # 1.142 μs (34 allocations: 2.02 KiB)    
-    # 1.312 μs (41 allocations: 2.47 KiB)    
-    # @btime BioLab.FeatureSetEnrichment.benchmark_random($n, $n1);
+    @test sc_ isa Vector{Float64}
+
+    @test all(<=(0), diff(sc_))
+
+    @test fe1_ isa Vector{String}
 
 end
 
 # ---- #
 
-# TODO: Test.
-BioLab.FeatureSetEnrichment.benchmark_myc()
+fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_card("A2K")
 
-# 34.414 ms (580131 allocations: 96.05 MiB)
-# @btime BioLab.FeatureSetEnrichment.benchmark_myc()
+test_type_trend(fe_, sc_, fe1_)
+
+@test length(fe_) == 13
+
+@test length(fe1_) == 3
+
+# ---- #
+
+for (n, n1) in ((3, 2), (4, 2), (5, 3))
+
+    fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_random(n, n1)
+
+    test_type_trend(fe_, sc_, fe1_)
+
+    @test length(fe_) == n
+
+    @test length(fe1_) == n1
+
+end
+
+# ---- #
+
+fe_, sc_, fe1_ = BioLab.FeatureSetEnrichment.benchmark_myc()
+
+test_type_trend(fe_, sc_, fe1_)
+
+@test length(fe_) == 20046
+
+@test length(fe1_) == 24
 
 # ---- #
 
