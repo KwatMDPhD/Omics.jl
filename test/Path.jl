@@ -114,6 +114,16 @@ end
 
 # ---- #
 
+di = BioLab.Path.make_directory(joinpath(TE, "directory"))
+
+@test isdir(di)
+
+BioLab.Path.make_directory(di)
+
+@test isdir(di)
+
+# ---- #
+
 di = mkdir(joinpath(TE, BioLab.Time.stamp()))
 
 ex = "extension"

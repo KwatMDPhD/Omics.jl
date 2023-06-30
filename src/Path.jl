@@ -110,6 +110,22 @@ function _split(na)
 
 end
 
+function make_directory(di)
+
+    if isdir(di)
+
+        @warn "$di exists."
+
+    else
+
+        mkdir(di)
+
+    end
+
+    di
+
+end
+
 function rank(di)
 
     na_ = readdir(di)

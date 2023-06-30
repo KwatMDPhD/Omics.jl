@@ -6,23 +6,13 @@ using StatsBase: mean, sample
 
 using ..BioLab
 
-struct KS end
-
-struct KSa end
-
-struct KLi end
-
-struct KLioP end
-
-struct KLioM end
-
 function _get_absolute_raise(sc_, id, ex)
 
     ab = sc_[id]
 
     ab = flipsign(ab, ab)
 
-    if ex != 1.0
+    if !isone(ex)
 
         ab ^= ex
 
@@ -32,7 +22,7 @@ function _get_absolute_raise(sc_, id, ex)
 
 end
 
-function _sum_10(sc_, bo_, ex)
+function _sum_10(sc_, ex, bo_)
 
     n = length(sc_)
 
@@ -58,7 +48,7 @@ function _sum_10(sc_, bo_, ex)
 
 end
 
-function _sum_all1(sc_, bo_, ex)
+function _sum_all1(sc_, ex, bo_)
 
     n = length(sc_)
 
@@ -84,21 +74,21 @@ function _sum_all1(sc_, bo_, ex)
 
 end
 
-function _make_annotation(ke_va__...)
+function _make_annotation(di_...)
 
     BioLab.Plot.make_annotation(
         Dict("bgcolor" => "#fcfcfc", "borderpad" => 4, "borderwidth" => 2),
-        ke_va__...,
+        di_...,
     )
 
 end
 
 function _plot_mountain(
     ht,
-    fe_,
     sc_,
+    fe_,
     bo_,
-    en_,
+    mo_,
     en;
     title_text = "Set Enrichment",
     naf = "Feature",
@@ -161,7 +151,7 @@ function _plot_mountain(
                 scatter,
                 Dict(
                     "yaxis" => "y3",
-                    "y" => en_,
+                    "y" => mo_,
                     "line" => Dict("width" => 3.2, "color" => coe1),
                     "fillcolor" => coe2,
                 ),
@@ -232,19 +222,31 @@ function _plot_mountain(
 
 end
 
-function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+struct KS end
 
-    n, su1, su0 = _sum_10(sc_, bo_, ex)
+struct KSa end
+
+struct KLi end
+
+struct KLioP end
+
+struct KLioM end
+
+function make_string(al)
+
+    BioLab.String.split_get(string(al), '.', 3)[1:(end - 2)]
+
+end
+
+function _enrich(al::KS, sc_, ex, bo_, mo_)
+
+    n, su1, su0 = _sum_10(sc_, ex, bo_)
 
     cu = 0.0
 
     de = 1.0 / su0
 
-    if pl
-
-        en_ = Vector{Float64}(undef, n)
-
-    end
+    mo = !isnothing(mo_)
 
     eta = 0.0
 
@@ -262,9 +264,9 @@ function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         end
 
-        if pl
+        if mo
 
-            en_[id] = cu
+            mo_[id] = cu
 
         end
 
@@ -288,31 +290,19 @@ function _enrich(al::KS, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    if pl
-
-        ht = ""
-
-        _plot_mountain(ht, fe_, sc_, bo_, en_, et; ke_ar...)
-
-    end
-
     et
 
 end
 
-function _enrich(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function _enrich(al::KSa, sc_, ex, bo_, mo_)
 
-    n, su1, su0 = _sum_10(sc_, bo_, ex)
+    n, su1, su0 = _sum_10(sc_, ex, bo_)
 
     cu = 0.0
 
     de = 1.0 / su0
 
-    if pl
-
-        en_ = Vector{Float64}(undef, n)
-
-    end
+    mo = !isnothing(mo_)
 
     ar = 0.0
 
@@ -328,9 +318,9 @@ function _enrich(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         end
 
-        if pl
+        if mo
 
-            en_[id] = cu
+            mo_[id] = cu
 
         end
 
@@ -338,17 +328,7 @@ function _enrich(al::KSa, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    ar /= n
-
-    if pl
-
-        ht = ""
-
-        _plot_mountain(ht, fe_, sc_, bo_, en_, ar; ke_ar...)
-
-    end
-
-    ar
+    ar / n
 
 end
 
@@ -366,9 +346,9 @@ function _minus_clip(le, pr, mi)
 
 end
 
-function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function _enrich(al::KLi, sc_, ex, bo_, mo_)
 
-    n, su, su1 = _sum_all1(sc_, bo_, ex)
+    n, su, su1 = _sum_all1(sc_, ex, bo_)
 
     ep = eps()
 
@@ -384,11 +364,7 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     prb = false
 
-    if pl
-
-        en_ = Vector{Float64}(undef, n)
-
-    end
+    mo = !isnothing(mo_)
 
     ar = 0.0
 
@@ -428,9 +404,9 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         prb = bo
 
-        if pl
+        if mo
 
-            en_[id] = en
+            mo_[id] = en
 
         end
 
@@ -438,23 +414,13 @@ function _enrich(al::KLi, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    ar /= n
-
-    if pl
-
-        ht = ""
-
-        _plot_mountain(ht, fe_, sc_, bo_, en_, ar; ke_ar...)
-
-    end
-
-    ar
+    ar / n
 
 end
 
-function _enrich_klio(fu, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function _enrich_klio(fu, sc_, ex, bo_, mo_)
 
-    n, su, su1 = _sum_all1(sc_, bo_, ex)
+    n, su, su1 = _sum_all1(sc_, ex, bo_)
 
     su0 = su - su1
 
@@ -476,11 +442,7 @@ function _enrich_klio(fu, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     prb = false
 
-    if pl
-
-        en_ = Vector{Float64}(undef, n)
-
-    end
+    mo = !isnothing(mo_)
 
     ar = 0.0
 
@@ -539,9 +501,9 @@ function _enrich_klio(fu, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
         prb = bo
 
-        if pl
+        if mo
 
-            en_[id] = en
+            mo_[id] = en
 
         end
 
@@ -549,73 +511,143 @@ function _enrich_klio(fu, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
 
     end
 
-    ar /= n
-
-    if pl
-
-        ht = ""
-
-        _plot_mountain(ht, fe_, sc_, bo_, en_, ar; ke_ar...)
-
-    end
-
-    ar
+    ar / n
 
 end
 
-function _enrich(al::KLioP, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function _enrich(al::KLioP, sc_, ex, bo_, mo_)
 
-    _enrich_klio((_1, _0) -> _1 + _0, fe_, sc_, bo_; ex, pl, ke_ar...)
+    _enrich_klio((_1, _0) -> _1 + _0, sc_, ex, bo_, mo_)
 
 end
 
-function _enrich(al::KLioM, fe_, sc_, bo_; ex = 1.0, pl = true, ke_ar...)
+function _enrich(al::KLioM, sc_, ex, bo_, mo_)
 
-    _enrich_klio((_1, _0) -> _1 - _0, fe_, sc_, bo_; ex, pl, ke_ar...)
+    _enrich_klio((_1, _0) -> _1 - _0, sc_, ex, bo_, mo_)
 
 end
 
 function enrich(
+    ht,
     al,
-    fe_,
     sc_,
+    fe_,
     fe1_::AbstractVector{<:AbstractString};
+    n = 1,
     ex = 1.0,
-    pl = true,
     ke_ar...,
 )
 
-    _enrich(al, fe_, sc_, BioLab.Collection.is_in(fe_, fe1_); ex, pl, ke_ar...)
+    bo_ = BioLab.Collection.is_in(fe_, fe1_)
+
+    if sum(bo_) < n
+
+        return NaN
+
+    end
+
+    mo_ = Vector{Float64}(undef, length(bo_))
+
+    en = _enrich(al, sc_, ex, bo_, mo_)
+
+    _plot_mountain(ht, sc_, fe_, bo_, mo_, en; ke_ar...)
+
+    en
 
 end
 
-function enrich(al, fe_, sc_, fe1___; ex = 1.0)
+function enrich(al, sc_, fe_, fe1___; n = 1, ex = 1.0)
 
-    ch = Dict(naf => id for (id, naf) in enumerate(fe_))
+    en_ = Vector{Float64}(undef, length(fe1___))
 
-    map(fe1_ -> _enrich(al, fe_, sc_, BioLab.Collection.is_in(ch, fe1_); ex, pl = false), fe1___)
+    fe_id = Dict(fe => id for (id, fe) in enumerate(fe_))
+
+    for (id, fe1_) in enumerate(fe1___)
+
+        bo_ = BioLab.Collection.is_in(fe_id, fe1_)
+
+        if sum(bo_) < n
+
+            en = NaN
+
+        else
+
+            en = _enrich(al, sc_, ex, bo_, nothing)
+
+        end
+
+        en_[id] = en
+
+    end
+
+    en_
 
 end
 
-function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; ex = 1.0)
+function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; n = 1, ex = 1.0)
 
-    n = length(sa_)
+    se_x_sa_x_en = Matrix{Float64}(undef, (length(se_), length(sa_)))
 
-    se_x_sa_x_en = Matrix{Float64}(undef, (length(se_), n))
+    @showprogress for (id, sc_) in enumerate(eachcol(fe_x_sa_x_sc))
 
-    @showprogress for id in 1:n
+        sc2_, fe2_ = BioLab.Vector.skip_nan_sort_like(sc_, fe_; rev = true)
 
-        sc_ = fe_x_sa_x_sc[:, id]
-
-        go_ = findall(!isnan, sc_)
-
-        sc_, feg_ = BioLab.Vector.sort_like((sc_[go_], fe_[go_]); rev = true)
-
-        se_x_sa_x_en[:, id] = enrich(al, feg_, sc_, fe1___; ex)
+        # TODO: Implement and use enrich! to avoid allocating en_.
+        se_x_sa_x_en[:, id] = enrich(al, sc2_, fe2_, fe1___; n, ex)
 
     end
 
     se_x_sa_x_en
+
+end
+
+function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en; ex = 1.0, nac = "Sample")
+
+    BioLab.Path.error_missing(di)
+
+    se_x_sa_x_enm = replace(se_x_sa_x_en, NaN => missing)
+
+    als = make_string(al)
+
+    nacs = BioLab.Path.clean(nac)
+
+    BioLab.Plot.plot_heat_map(
+        joinpath(di, "set_x_$(nacs)_x_enrichment.html"),
+        se_x_sa_x_enm,
+        se_,
+        sa_;
+        nar = "Set",
+        nac,
+        layout = Dict("title" => Dict("text" => "Enrichment with $als")),
+    )
+
+    for fu in (findmin, findmax)
+
+        en, id_ = fu(skipmissing(se_x_sa_x_enm))
+
+        sc2_, fe2_ = BioLab.Vector.skip_nan_sort_like(fe_x_sa_x_sc[:, id_[2]], fe_; rev = true)
+
+        se = se_[id_[1]]
+
+        sa = sa_[id_[2]]
+
+        en2 = enrich(
+            joinpath(di, "$(sa)_enriching_$se.html"),
+            al,
+            sc2_,
+            fe2_,
+            fe1___[id_[1]];
+            ex,
+            title_text = "$sa x $se",
+        )
+
+        if en != en2
+
+            error("Enrichemnts do not match. $en != $en2.")
+
+        end
+
+    end
 
 end
 

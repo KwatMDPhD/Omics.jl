@@ -1,5 +1,7 @@
 module Match
 
+using DataFrames: DataFrame
+
 using Printf: @sprintf
 
 using Random: shuffle!
@@ -146,7 +148,7 @@ function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
 
 end
 
-function _plot(ht, nat, naf, fep_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, layout)
+function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, layout)
 
     if ta_ isa AbstractVector{Int}
 
@@ -188,6 +190,10 @@ function _plot(ht, nat, naf, fep_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, lay
 
     height = max(400, 40 * n_ro)
 
+    n_sa = length(sa_)
+
+    natl = BioLab.String.limit(nat, 24)
+
     BioLab.Plot.plot(
         ht,
         [
@@ -222,7 +228,7 @@ function _plot(ht, nat, naf, fep_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, lay
                 "margin" => Dict("l" => 200, "r" => 200),
                 "height" => height,
                 "width" => 800,
-                "title" => Dict("x" => 0.5, "text" => naf),
+                "title" => Dict("text" => naf),
                 "yaxis2" => BioLab.Plot.make_axis(
                     Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
                 ),
@@ -233,8 +239,9 @@ function _plot(ht, nat, naf, fep_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, lay
                         "showticklabels" => false,
                     ),
                 ),
+                "xaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => "$n_sa $nas"))),
                 "annotations" => vcat(
-                    _make_annotationl(Dict("y" => 1 - th2, "text" => "<b>$nat</b>")),
+                    _make_annotationl(Dict("y" => 1 - th2, "text" => "<b>$natl</b>")),
                     _make_annotations(1 - th2 * 3, true, th, fep_, fe_x_st_x_nu),
                 ),
             ),
@@ -250,6 +257,7 @@ function make(
     nat,
     naf,
     fe_,
+    nas,
     sa_,
     ta_,
     fe_x_sa_x_nu;
@@ -379,6 +387,7 @@ function make(
             nat,
             naf,
             fe_[id_],
+            nas,
             sa_,
             ta_,
             fe_x_sa_x_nu[id_, :],
@@ -394,7 +403,7 @@ function make(
 end
 
 # TODO: Test.
-function make(di, tst, tsf, n_ma, n_pv, n_ex, st)
+function make(di, tst, tsf, nas, n_ma, n_pv, n_ex, st)
 
     BioLab.Path.error_missing(di)
 
@@ -428,7 +437,7 @@ function make(di, tst, tsf, n_ma, n_pv, n_ex, st)
 
         end
 
-        make(di2, cor, nat, naf, fe_, sag_, tag_, fe_x_sa_x_nug; n_ma, n_pv, n_ex, st)
+        make(di2, cor, nat, naf, fe_, nas, sag_, tag_, fe_x_sa_x_nug; n_ma, n_pv, n_ex, st)
 
     end
 
@@ -439,9 +448,21 @@ function compare(di, na1, na2, ts1, ts2)
 
     BioLab.Path.error_missing(di)
 
-    _naf1, fe1_, st1_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
+    na1c = BioLab.Path.clean(na1)
 
-    _naf2, fe2_, st2_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
+    na2c = BioLab.Path.clean(na2)
+
+    pr = joinpath(di, "$(na1c)_compared_to_$na2c")
+
+    naf1, fe1_, st1_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
+
+    naf2, fe2_, st2_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
+
+    if naf1 != naf2
+
+        error("Feature names differ.")
+
+    end
 
     if fe1_ != fe2_
 
@@ -459,7 +480,7 @@ function compare(di, na1, na2, ts1, ts2)
 
     nu2_ = fe_x_st_x_nu2[:, 1]
 
-    go_ = [!isnan(nu1) && !isnan(nu2) for (nu1, nu2) in zip(nu1_, nu2_)]
+    go_ = map((nu1, nu2) -> !isnan(nu1) && !isnan(nu2), nu1_, nu2_)
 
     fe1_ = fe1_[go_]
 
@@ -477,18 +498,20 @@ function compare(di, na1, na2, ts1, ts2)
 
     nu2_ = nu2_[id_]
 
-    op_ = [sqrt(nu1^2 + nu2^2) for (nu1, nu2) in zip(nu1_, nu2_)]
+    di_ = map((nu1, nu2) -> sqrt(nu1^2 + nu2^2), nu1_, nu2_)
 
-    BioLab.NumberArray.normalize_with_01!(op_)
+    BioLab.Table.write("$pr.tsv", DataFrame(naf1 => fe1_, "Distance" => di_))
+
+    BioLab.NumberArray.normalize_with_01!(di_)
 
     BioLab.Plot.plot_scatter(
-        joinpath(di, "$(na1)_and_$na2.html"),
+        "$pr.html",
         (nu2_,),
         (nu1_,),
         (fe1_,),
         mode_ = ("markers",),
-        marker_color_ = ("#20d9ba",);
-        opacity_ = (op_,),
+        marker_color_ = (BioLab.Plot.color(BioLab.Plot.COPL3, di_),);
+        opacity_ = (di_,),
         layout = Dict(
             "title" => Dict("text" => "Comparing Match"),
             "yaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => na2))),

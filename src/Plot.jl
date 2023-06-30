@@ -90,9 +90,15 @@ function _make_hex(rg)
 
 end
 
-function color(co, nu)
+function color(co, nu::Real)
 
     _make_hex(co[nu])
+
+end
+
+function color(co, nu_)
+
+    map(nu -> color(co, nu), nu_)
 
 end
 
@@ -154,7 +160,7 @@ function _set_color(y_, co = COPLO)
 
     end
 
-    [color(co, nu) for nu in nu_]
+    color(co, nu_)
 
 end
 
@@ -166,7 +172,7 @@ end
 
 function make_colorbar(z, ke_va__...)
 
-    tickvals = BioLab.NumberArray.range(z, 10)
+    tickvals = BioLab.NumberArray.range(skipmissing(z), 10)
 
     reduce(
         BioLab.Dict.merge,

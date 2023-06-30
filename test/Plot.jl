@@ -104,25 +104,35 @@ end
 
 # ---- #
 
-for (nu, re) in (
-    (-Inf, "#20d9ba"),
-    (-0.1, "#20d9ba"),
-    (0.0, "#20d9ba"),
-    (1, "#20d9ba"),
-    (0.01, "#23d3bb"),
-    (2, "#9017e6"),
-    (3, "#4e40d8"),
-    (0.99, "#fa1a6b"),
-    (n, "#ff1968"),
-    (1.0, "#ff1968"),
-    (1.1, "#ff1968"),
-    (convert(Float64, n + 1), "#ff1968"),
-    (Inf, "#ff1968"),
-)
+nu_ = [-Inf, -0.1, 0.0, 1, 0.01, 2, 3, 0.99, n, 1.0, 1.1, convert(Float64, n + 1), Inf]
+
+re_ = [
+    "#20d9ba",
+    "#20d9ba",
+    "#20d9ba",
+    "#20d9ba",
+    "#23d3bb",
+    "#9017e6",
+    "#4e40d8",
+    "#fa1a6b",
+    "#ff1968",
+    "#ff1968",
+    "#ff1968",
+    "#ff1968",
+    "#ff1968",
+]
+
+# ---- #
+
+for (nu, re) in zip(nu_, re_)
 
     @test BioLab.Plot.color(co, nu) == re
 
 end
+
+# ---- #
+
+@test BioLab.Plot.color(co, nu_) == re_
 
 # ---- #
 
@@ -168,7 +178,7 @@ BioLab.Plot.plot(joinpath(TE, "plot.html"), data, layout; config = Dict("editabl
 
 # ---- #
 
-# TODO
+# TODO: Use missing.
 
 for (z, re) in ((), (), ())
 

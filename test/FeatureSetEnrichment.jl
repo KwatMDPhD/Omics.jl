@@ -35,11 +35,11 @@ bo_ = [true, true, false, true, false, true]
 
 for (ex, re) in ((1.0, (n, 5.0, 2.0)), (2.0, (n, 9.0, 2.0)))
 
-    @test BioLab.FeatureSetEnrichment._sum_10(sc_, bo_, ex) == re
+    @test BioLab.FeatureSetEnrichment._sum_10(sc_, ex, bo_) == re
 
     # 5.833 ns (0 allocations: 0 bytes)
     # 19.121 ns (0 allocations: 0 bytes)    
-    #@btime BioLab.FeatureSetEnrichment._sum_10($sc_, $bo_, $ex)
+    #@btime BioLab.FeatureSetEnrichment._sum_10($sc_, $ex, $bo_)
 
 end
 
@@ -47,11 +47,11 @@ end
 
 for (ex, re) in ((1.0, (n, 6.0, 5.0)), (2.0, (n, 10.0, 9.0)))
 
-    @test BioLab.FeatureSetEnrichment._sum_all1(sc_, bo_, ex) == re
+    @test BioLab.FeatureSetEnrichment._sum_all1(sc_, ex, bo_) == re
 
     # 7.125 ns (0 allocations: 0 bytes)
     # 28.839 ns (0 allocations: 0 bytes)
-    #@btime BioLab.FeatureSetEnrichment._sum_all1($sc_, $bo_, $ex)
+    #@btime BioLab.FeatureSetEnrichment._sum_all1($sc_, $ex, $bo_)
 
 end
 
@@ -59,8 +59,8 @@ end
 
 BioLab.FeatureSetEnrichment._plot_mountain(
     joinpath(TE, "plot_mountain.html"),
-    ["Black Beard", "Law"],
     [2.0, -2],
+    ["Black Beard", "Law"],
     [true, true],
     [0.1, -0.1],
     11.29,
@@ -104,9 +104,15 @@ end
 
 # ---- #
 
-function _string(al)
+for (al, re) in (
+    (BioLab.FeatureSetEnrichment.KS(), "KS"),
+    (BioLab.FeatureSetEnrichment.KSa(), "KSa"),
+    (BioLab.FeatureSetEnrichment.KLi(), "KLi"),
+    (BioLab.FeatureSetEnrichment.KLioP(), "KLioP"),
+    (BioLab.FeatureSetEnrichment.KLioM(), "KLioM"),
+)
 
-    BioLab.String.split_get(string(al), '.', 3)[1:(end - 2)]
+    @test BioLab.FeatureSetEnrichment.make_string(al) == re
 
 end
 
@@ -116,31 +122,26 @@ fe_, sc_, fe1_ = benchmark_card("AK")
 
 bo_ = BioLab.Collection.is_in(fe_, fe1_)
 
+# 17.159 ns (0 allocations: 0 bytes)
+# 14.780 ns (0 allocations: 0 bytes)
+# 136.541 ns (0 allocations: 0 bytes)
+# 234.256 ns (0 allocations: 0 bytes)
+# 234.397 ns (0 allocations: 0 bytes)
 for al in (
-    # 19.057 ns (0 allocations: 0 bytes)
-    # 132.597 ns (1 allocation: 64 bytes)
     BioLab.FeatureSetEnrichment.KS(),
-    # 16.951 ns (0 allocations: 0 bytes)
-    # 131.913 ns (1 allocation: 64 bytes)
     BioLab.FeatureSetEnrichment.KSa(),
-    # 136.399 ns (0 allocations: 0 bytes)
-    # 247.518 ns (1 allocation: 64 bytes)
     BioLab.FeatureSetEnrichment.KLi(),
-    # 236.014 ns (0 allocations: 0 bytes)
-    # 347.093 ns (1 allocation: 64 bytes)
     BioLab.FeatureSetEnrichment.KLioP(),
-    # 235.979 ns (0 allocations: 0 bytes)
-    # 347.412 ns (1 allocation: 64 bytes)
     BioLab.FeatureSetEnrichment.KLioM(),
 )
 
-    #BioLab.FeatureSetEnrichment._enrich(al, fe_, sc_, bo_; title_text = _string(al))
+    for mo_ in (nothing, Vector{Float64}(undef, length(bo_)))
 
-    #BioLab.FeatureSetEnrichment.enrich(al, fe_, sc_, fe1_; title_text = _string(al))
+        BioLab.FeatureSetEnrichment._enrich(al, sc_, 1.0, bo_, mo_)
 
-    #@btime BioLab.FeatureSetEnrichment._enrich($al, $fe_, $sc_, $bo_; pl = $false)
+    end
 
-    #@btime BioLab.FeatureSetEnrichment.enrich($al, $fe_, $sc_, $fe1_; pl = $false)
+    #@btime BioLab.FeatureSetEnrichment._enrich($al, $sc_, 1.0, $bo_, nothing)
 
 end
 
@@ -160,39 +161,32 @@ se_ = collect(keys(se_fe1_))
 
 fe1___ = collect(values(se_fe1_))
 
+# 45.583 μs (0 allocations: 0 bytes)
+# 3.085 ms (108 allocations: 1.74 MiB)
+# 9.863 ms (380 allocations: 8.92 MiB)
+# 37.167 μs (0 allocations: 0 bytes)
+# 2.671 ms (108 allocations: 1.74 MiB)
+# 8.402 ms (380 allocations: 8.92 MiB)
+# 207.250 μs (0 allocations: 0 bytes)
+# 11.166 ms (108 allocations: 1.74 MiB)
+# 33.891 ms (380 allocations: 8.92 MiB)
+# 356.041 μs (0 allocations: 0 bytes)
+# 18.604 ms (108 allocations: 1.74 MiB)
+# 56.384 ms (380 allocations: 8.92 MiB)
+# 356.209 μs (0 allocations: 0 bytes)
+# 18.594 ms (108 allocations: 1.74 MiB)
+# 56.205 ms (380 allocations: 8.92 MiB)
 for al in (
-    # 45.583 μs (0 allocations: 0 bytes)
-    # 785.917 μs (2 allocations: 19.67 KiB)
-    # 3.050 ms (108 allocations: 1.74 MiB)
-    # 9.747 ms (383 allocations: 9.38 MiB)
     BioLab.FeatureSetEnrichment.KS(),
-    # 37.166 μs (0 allocations: 0 bytes)
-    # 777.541 μs (2 allocations: 19.67 KiB)
-    # 2.637 ms (108 allocations: 1.74 MiB)
-    # 8.320 ms (383 allocations: 9.38 MiB)
     BioLab.FeatureSetEnrichment.KSa(),
-    # 208.958 μs (0 allocations: 0 bytes)
-    # 949.791 μs (2 allocations: 19.67 KiB)
-    # 11.234 ms (108 allocations: 1.74 MiB)
-    # 34.220 ms (383 allocations: 9.38 MiB)
     BioLab.FeatureSetEnrichment.KLi(),
-    # 355.041 μs (0 allocations: 0 bytes)
-    # 1.096 ms (2 allocations: 19.67 KiB)
-    # 18.519 ms (108 allocations: 1.74 MiB)
-    # 56.218 ms (383 allocations: 9.38 MiB) 
     BioLab.FeatureSetEnrichment.KLioP(),
-    # 354.833 μs (0 allocations: 0 bytes)                 
-    # 1.096 ms (2 allocations: 19.67 KiB)
-    # 18.561 ms (108 allocations: 1.74 MiB)
-    # 55.909 ms (383 allocations: 9.38 MiB)
     BioLab.FeatureSetEnrichment.KLioM(),
 )
 
-    #@btime BioLab.FeatureSetEnrichment._enrich($al, $fe_, $sc_, $bo_; pl = $false)
+    #@btime BioLab.FeatureSetEnrichment._enrich($al, $sc_, 1.0, $bo_, nothing)
 
-    #@btime BioLab.FeatureSetEnrichment.enrich($al, $fe_, $sc_, $fe1_; pl = $false)
-
-    #@btime BioLab.FeatureSetEnrichment.enrich($al, $fe_, $sc_, $fe1___)
+    #@btime BioLab.FeatureSetEnrichment.enrich($al, $sc_, $fe_, $fe1___)
 
     #@btime BioLab.FeatureSetEnrichment.enrich($al, $fe_, $sa_, $fe_x_sa_x_sc, $se_, $fe1___)
 

@@ -36,6 +36,15 @@ function sort_like(an___; rev = false)
 
 end
 
+# TODO: Test.
+function skip_nan_sort_like(fl_, an_; rev = false)
+
+    go_ = findall(!isnan, fl_)
+
+    sort_like((fl_[go_], an_[go_]); rev)
+
+end
+
 function _make_layout(title_text, xaxis_title_text)
 
     Dict(
@@ -46,6 +55,7 @@ function _make_layout(title_text, xaxis_title_text)
 end
 
 function select(
+    ht,
     me_,
     mi,
     ma;
@@ -67,7 +77,7 @@ function select(
     pe = BioLab.String.format(n_ke / n * 100)
 
     BioLab.Plot.plot_histogram(
-        "",
+        ht,
         (me_[ke_],),
         (th_[ke_],);
         layout = _make_layout("Selected $n_ke ($pe%) $nat between $mi and $ma", nam),
