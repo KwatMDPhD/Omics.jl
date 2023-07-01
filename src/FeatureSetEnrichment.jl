@@ -2,15 +2,13 @@ module FeatureSetEnrichment
 
 using ProgressMeter: @showprogress
 
-using StatsBase: mean, sample
+using StatsBase: sample
 
 using ..BioLab
 
 function _get_absolute_raise(sc_, id, ex)
 
-    ab = sc_[id]
-
-    ab = flipsign(ab, ab)
+    ab = abs(sc_[id])
 
     if !isone(ex)
 
@@ -107,11 +105,11 @@ function _plot_mountain(
 
     coe2 = "rgba(7, 250, 7, 0.32)"
 
-    yaxis1_domain = (0.0, 0.24)
+    yaxis1_domain = (0, 0.24)
 
     yaxis2_domain = (0.25, 0.31)
 
-    yaxis3_domain = (0.32, 1.0)
+    yaxis3_domain = (0.32, 1)
 
     #xaxis_range_margin = n * 0.01
 
@@ -141,8 +139,7 @@ function _plot_mountain(
                     "size" => 24,
                     "line" => Dict(
                         "width" => 1.08,
-                        "color" =>
-                            map(sc -> BioLab.Plot.color(BioLab.Plot.COBWR, sc), sc_[bo_]),
+                        "color" => BioLab.Plot.color(sc_[bo_], BioLab.Plot.COBWR),
                     ),
                 ),
                 "hoverinfo" => "x+text",
@@ -244,7 +241,7 @@ function _enrich(al::KS, sc_, ex, bo_, mo_)
 
     cu = 0.0
 
-    de = 1.0 / su0
+    de = 1 / su0
 
     mo = !isnothing(mo_)
 
@@ -270,15 +267,7 @@ function _enrich(al::KS, sc_, ex, bo_, mo_)
 
         end
 
-        if cu < 0.0
-
-            cua = -cu
-
-        else
-
-            cua = cu
-
-        end
+        cua = abs(cu)
 
         if eta < cua
 
@@ -332,7 +321,7 @@ function _enrich(al::KSa, sc_, ex, bo_, mo_)
 
 end
 
-function _minus_clip(le, pr, mi)
+function _get_left(le, pr, mi)
 
     le -= pr
 
@@ -370,15 +359,15 @@ function _enrich(al::KLi, sc_, ex, bo_, mo_)
 
     for id in 1:n
 
-        abe = _get_absolute_raise(sc_, id, ex)
+        ab = _get_absolute_raise(sc_, id, ex)
 
-        ri += abe
+        ri += ab
 
         bo = bo_[id]
 
         if bo
 
-            ri1 += abe
+            ri1 += ab
 
         end
 
@@ -386,11 +375,11 @@ function _enrich(al::KLi, sc_, ex, bo_, mo_)
 
         ri1n = ri1 / su1
 
-        le = _minus_clip(le, pra, ep)
+        le = _get_left(le, pra, ep)
 
         if prb
 
-            le1 = _minus_clip(le1, pra, ep)
+            le1 = _get_left(le1, pra, ep)
 
         end
 
@@ -400,7 +389,7 @@ function _enrich(al::KLi, sc_, ex, bo_, mo_)
 
         en = BioLab.Information.get_antisymmetric_kullback_leibler_divergence(ri1n, rin, le1n, len)
 
-        pra = abe
+        pra = ab
 
         prb = bo
 
@@ -448,19 +437,19 @@ function _enrich_klio(fu, sc_, ex, bo_, mo_)
 
     for id in 1:n
 
-        abe = _get_absolute_raise(sc_, id, ex)
+        ab = _get_absolute_raise(sc_, id, ex)
 
-        ri += abe
+        ri += ab
 
         bo = bo_[id]
 
         if bo
 
-            ri1 += abe
+            ri1 += ab
 
         else
 
-            ri0 += abe
+            ri0 += ab
 
         end
 
@@ -470,15 +459,15 @@ function _enrich_klio(fu, sc_, ex, bo_, mo_)
 
         ri0n = ri0 / su0
 
-        le = _minus_clip(le, pra, ep)
+        le = _get_left(le, pra, ep)
 
         if prb
 
-            le1 = _minus_clip(le1, pra, ep)
+            le1 = _get_left(le1, pra, ep)
 
         else
 
-            le0 = _minus_clip(le0, pra, ep)
+            le0 = _get_left(le0, pra, ep)
 
         end
 
@@ -488,16 +477,9 @@ function _enrich_klio(fu, sc_, ex, bo_, mo_)
 
         le0n = le0 / su0
 
-        en =
-            fu(
-                BioLab.Information.get_kullback_leibler_divergence(ri1n, rin),
-                BioLab.Information.get_kullback_leibler_divergence(ri0n, rin),
-            ) - fu(
-                BioLab.Information.get_kullback_leibler_divergence(le1n, len),
-                BioLab.Information.get_kullback_leibler_divergence(le0n, len),
-            )
+        en = fu(ri1n, ri0n, rin) - fu(le1n, le0n, len)
 
-        pra = abe
+        pra = ab
 
         prb = bo
 
@@ -517,26 +499,23 @@ end
 
 function _enrich(al::KLioP, sc_, ex, bo_, mo_)
 
-    _enrich_klio((_1, _0) -> _1 + _0, sc_, ex, bo_, mo_)
+    _enrich_klio(BioLab.Information.get_symmetric_kullback_leibler_divergence, sc_, ex, bo_, mo_)
 
 end
 
 function _enrich(al::KLioM, sc_, ex, bo_, mo_)
 
-    _enrich_klio((_1, _0) -> _1 - _0, sc_, ex, bo_, mo_)
+    _enrich_klio(
+        BioLab.Information.get_antisymmetric_kullback_leibler_divergence,
+        sc_,
+        ex,
+        bo_,
+        mo_,
+    )
 
 end
 
-function enrich(
-    ht,
-    al,
-    sc_,
-    fe_,
-    fe1_::AbstractVector{<:AbstractString};
-    n = 1,
-    ex = 1.0,
-    ke_ar...,
-)
+function enrich(ht, al, sc_, fe_, fe1_::AbstractVector{<:AbstractString}; n = 1, ex = 1, ke_ar...)
 
     bo_ = BioLab.Collection.is_in(fe_, fe1_)
 
@@ -556,7 +535,7 @@ function enrich(
 
 end
 
-function enrich(al, sc_, fe_, fe1___; n = 1, ex = 1.0)
+function enrich(al, sc_, fe_, fe1___; n = 1, ex = 1)
 
     en_ = Vector{Float64}(undef, length(fe1___))
 
@@ -584,7 +563,7 @@ function enrich(al, sc_, fe_, fe1___; n = 1, ex = 1.0)
 
 end
 
-function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; n = 1, ex = 1.0)
+function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; n = 1, ex = 1)
 
     se_x_sa_x_en = Matrix{Float64}(undef, (length(se_), length(sa_)))
 
@@ -601,7 +580,7 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; n = 1, ex = 1.0)
 
 end
 
-function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en; ex = 1.0, nac = "Sample")
+function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en; ex = 1, nac = "Sample")
 
     BioLab.Path.error_missing(di)
 

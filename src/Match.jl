@@ -54,28 +54,6 @@ function _make_heatmap(ke_va__...)
 
 end
 
-function _color(it_::AbstractArray{Int})
-
-    if length(unique(it_)) < 3
-
-        co = BioLab.Plot.COBIN
-
-    else
-
-        co = BioLab.Plot.COPLO
-
-    end
-
-    BioLab.Plot.fractionate(co)
-
-end
-
-function _color(::AbstractArray{Float64})
-
-    BioLab.Plot.fractionate(BioLab.Plot.COBWR)
-
-end
-
 function _make_annotationl(ke_va__...)
 
     BioLab.Plot.make_annotation(Dict("x" => -0.024, "xanchor" => "right"), ke_va__...)
@@ -205,7 +183,7 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
                     "text" => [ta_],
                     "zmin" => tai,
                     "zmax" => taa,
-                    "colorscale" => _color(tan_),
+                    "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.pick_color_scheme(tan_)),
                     "hoverinfo" => "x+z+text",
                 ),
             ),
@@ -218,7 +196,8 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
                     "text" => collect(eachrow(fe_x_sa_x_nu)),
                     "zmin" => fei,
                     "zmax" => fea,
-                    "colorscale" => _color(fe_x_sa_x_nun),
+                    "colorscale" =>
+                        BioLab.Plot.fractionate(BioLab.Plot.pick_color_scheme(fe_x_sa_x_nun)),
                     "hoverinfo" => "x+y+z+text",
                 ),
             ),
@@ -507,10 +486,10 @@ function compare(di, na1, na2, ts1, ts2)
     BioLab.Plot.plot_scatter(
         "$pr.html",
         (nu2_,),
-        (nu1_,),
-        (fe1_,),
+        (nu1_,);
+        text_ = (fe1_,),
         mode_ = ("markers",),
-        marker_color_ = (BioLab.Plot.color(BioLab.Plot.COPL3, di_),);
+        marker_color_ = (BioLab.Plot.color(di_, BioLab.Plot.COPL3),),
         opacity_ = (di_,),
         layout = Dict(
             "title" => Dict("text" => "Comparing Match"),

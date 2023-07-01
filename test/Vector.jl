@@ -81,6 +81,6 @@ me_ = randn(n)
 for (mi, ma, re) in
     ((0, 0, fill(false, n)), (-Inf, 0, me_ .<= 0), (0, Inf, 0 .<= me_), (-Inf, Inf, fill(true, n)))
 
-    @test BioLab.Vector.select("", me_, mi, ma) == re
+    @test BioLab.Vector.select(TE, me_, mi, ma) == re
 
 end

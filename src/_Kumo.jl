@@ -348,7 +348,7 @@ function plot(
                 Dict(
                     "selector" => "#$no",
                     "style" =>
-                        Dict("background-color" => BioLab.Plot.color(BioLab.Plot.COBWR, fr)),
+                        Dict("background-color" => BioLab.Plot.color(fr, BioLab.Plot.COBWR)),
                 ) for (no, fr) in zip(NO_, co)
             ),
         )

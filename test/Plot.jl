@@ -8,23 +8,17 @@ include("environment.jl")
 
 DA = joinpath(BioLab.DA, "Plot")
 
-@test readdir(DA) == []
+@test readdir(DA) == ["1.png", "2.png"]
 
 # ---- #
 
 @test BioLab.Plot._CO == "continuous"
 
-# ---- #
-
 @test BioLab.Plot._CA == "categorical"
-
-# ---- #
 
 @test BioLab.Plot._BI == "binary"
 
-# ---- #
-
-@test @is_error BioLab.Plot.make_color_scheme(("#012345",), "Category", "Notes")
+@test BioLab.Plot._MO == "monotonous"
 
 # ---- #
 
@@ -44,11 +38,35 @@ co = BioLab.Plot.make_color_scheme(he_, ca, no)
 
 # ---- #
 
+for (rg, re) in ((RGB(1, 0, 0), "#ff0000"), (RGB(0, 1, 0), "#00ff00"), (RGB(0, 0, 1), "#0000ff"))
+
+    @test BioLab.Plot._make_hex(rg) == re
+
+end
+
+# ---- #
+
+for (he_, fr_) in (
+    (("#000000", "#ffffff"), (0, 1)),
+    (("#ff0000", "#00ff00", "#0000ff"), (0, 0.5, 1)),
+    (("#ff0000", "#00ff00", "#0000ff", "#f0000f"), (0, 1 / 3, 2 / 3, 1)),
+    (("#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0"), (0, 0.25, 0.5, 0.75, 1)),
+    (
+        ("#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0", "#00ff00"),
+        (0, 0.2, 0.4, 0.6, 0.8, 1),
+    ),
+)
+
+    @test BioLab.Plot.fractionate(BioLab.Plot.make_color_scheme(he_, ca, no)) ==
+          collect(zip(fr_, he_))
+
+end
+
+# ---- #
+
 @test BioLab.Plot.COBWR.colors == bwr.colors
 
 @test BioLab.Plot.COPLA.colors == plasma.colors
-
-# ---- #
 
 for co in (
     BioLab.Plot.COBWR,
@@ -60,6 +78,7 @@ for co in (
     BioLab.Plot.COBIN,
     BioLab.Plot.COHUM,
     BioLab.Plot.COSTA,
+    BioLab.Plot.COMON,
 )
 
     n = length(co)
@@ -82,9 +101,18 @@ end
 
 # ---- #
 
-for (rg, re) in ((RGB(1, 0, 0), "#ff0000"), (RGB(0, 1, 0), "#00ff00"), (RGB(0, 0, 1), "#0000ff"))
+for (n, re) in (
+    (0, COMON),
+    (1, COMON),
+    (2, COBIN),
+    (3, COPLO),
+    (19, COPLO),
+    (20, COPLO),
+    (21, COBWR),
+    (99, COBWR),
+)
 
-    @test BioLab.Plot._make_hex(rg) == re
+    @test BioLab.Plot.pick_color_scheme(repeat(rand(n), 2)) == re
 
 end
 
@@ -101,8 +129,6 @@ for nu in (NaN, -1, 0, n + 1)
     @test @is_error co[nu]
 
 end
-
-# ---- #
 
 nu_ = [-Inf, -0.1, 0.0, 1, 0.01, 2, 3, 0.99, n, 1.0, 1.1, convert(Float64, n + 1), Inf]
 
@@ -122,45 +148,17 @@ re_ = [
     "#ff1968",
 ]
 
-# ---- #
-
 for (nu, re) in zip(nu_, re_)
 
-    @test BioLab.Plot.color(co, nu) == re
+    @test BioLab.Plot.color(nu, co) == re
 
 end
 
-# ---- #
-
-@test BioLab.Plot.color(co, nu_) == re_
-
-# ---- #
-
-for (he_, fr_) in (
-    (("#000000", "#ffffff"), (0, 1)),
-    (("#ff0000", "#00ff00", "#0000ff"), (0, 0.5, 1)),
-    (("#ff0000", "#00ff00", "#0000ff", "#f0000f"), (0, 1 / 3, 2 / 3, 1)),
-    (("#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0"), (0, 0.25, 0.5, 0.75, 1)),
-    (
-        ("#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0", "#00ff00"),
-        (0, 0.2, 0.4, 0.6, 0.8, 1),
-    ),
-)
-
-    @test BioLab.Plot.fractionate(BioLab.Plot.make_color_scheme(he_, ca, no)) ==
-          collect(zip(fr_, he_))
-
-end
+@test BioLab.Plot.color(nu_, co) == re_
 
 # ---- #
 
 data = [Dict()]
-
-# ---- #
-
-BioLab.Plot.plot("", data)
-
-# ---- #
 
 layout = Dict(
     "title" => "Title",
@@ -168,11 +166,9 @@ layout = Dict(
     "xaxis" => Dict("title" => "X-Axis Title"),
 )
 
-# ---- #
+BioLab.Plot.plot("", data)
 
 BioLab.Plot.plot("", data, layout)
-
-# ---- #
 
 BioLab.Plot.plot(joinpath(TE, "plot.html"), data, layout; config = Dict("editable" => true))
 
@@ -208,11 +204,7 @@ y2 = [3, 4]
 
 y_ = [y1, y2]
 
-# ---- #
-
 BioLab.Plot.plot_scatter("", y_)
-
-# ---- #
 
 BioLab.Plot.plot_scatter(y_, [y1 * 10, y2 * 10]; name_ = ("One", "Two"))
 
@@ -222,13 +214,9 @@ y1 = [-1, 2, 5]
 
 y_ = [y1, reverse(y1), [8]]
 
-# ---- #
+x1 = [-2, -1, 0]
 
 BioLab.Plot.plot_bar("", y_)
-
-# ---- #
-
-x1 = [-2, -1, 0]
 
 BioLab.Plot.plot_bar(
     "",
@@ -242,11 +230,7 @@ BioLab.Plot.plot_bar(
 
 x_ = [[-1], [0, 1], [2, 3, 4]]
 
-# ---- #
-
 BioLab.Plot.plot_histogram("", x_)
-
-# ---- #
 
 for xbins_size in (0, 1)
 
@@ -272,15 +256,9 @@ ro_ = ["Row $id" for id in 1:n_ro]
 
 co_ = ["Column $id" for id in 1:n_co]
 
-# ---- #
-
 BioLab.Plot.plot_heat_map("", ma1)
 
-# ---- #
-
 BioLab.Plot.plot_heat_map("", ma1, ro_, co_)
-
-# ---- #
 
 BioLab.Plot.plot_heat_map(
     "",
@@ -290,8 +268,6 @@ BioLab.Plot.plot_heat_map(
         "xaxis" => Dict("title" => Dict("text" => "Column Name")),
     ),
 )
-
-# ---- #
 
 y = [-1, 1, -2, 2]
 
@@ -303,15 +279,9 @@ grr_ = [1, 2, 1, 2]
 
 grc_ = [1, 2, 1, 2, 1, 2]
 
-# ---- #
-
 BioLab.Plot.plot_heat_map("", ma2; grr_)
 
-# ---- #
-
 BioLab.Plot.plot_heat_map("", ma2; grc_)
-
-# ---- #
 
 BioLab.Plot.plot_heat_map("", ma2, ["Y = $nu" for nu in y], ["X = $nu" for nu in x]; grr_, grc_)
 

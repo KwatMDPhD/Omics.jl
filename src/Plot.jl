@@ -18,11 +18,10 @@ const _CA = "categorical"
 
 const _BI = "binary"
 
+const _MO = "monotonous"
+
 function make_color_scheme(he_, ca, no)
 
-    BioLab.Collection.error_no_change(he_)
-
-    # TODO: Benchmark against map.
     ColorScheme([parse(Colorant{Float64}, he) for he in he_], ca, no)
 
 end
@@ -82,6 +81,8 @@ const COHUM = make_color_scheme(("#4b3c39", "#ffddca"), _BI, "HUMan")
 
 const COSTA = make_color_scheme(("#8c1515", "#175e54"), _BI, "STAnford")
 
+const COMON = make_color_scheme(("#fbb92d",), _MO, "MONotonous")
+
 function _make_hex(rg)
 
     he = lowercase(hex(rg))
@@ -90,21 +91,45 @@ function _make_hex(rg)
 
 end
 
-function color(co, nu::Real)
+function fractionate(co)
+
+    collect(zip(0:(1 / (length(co) - 1)):1, _make_hex(rg) for rg in co))
+
+end
+
+function pick_color_scheme(nu_)
+
+    n = length(unique(nu_))
+
+    if n <= 1
+
+        COMON
+
+    elseif n <= 2
+
+        COBIN
+
+    elseif n <= 20
+
+        COPLO
+
+    else
+
+        COBWR
+
+    end
+
+end
+
+function color(nu::Real, co)
 
     _make_hex(co[nu])
 
 end
 
-function color(co, nu_)
+function color(nu_, co = pick_color_scheme(nu_))
 
-    map(nu -> color(co, nu), nu_)
-
-end
-
-function fractionate(co)
-
-    collect(zip(0:(1 / (length(co) - 1)):1, _make_hex(rg) for rg in co))
+    map(nu -> color(nu, co), nu_)
 
 end
 
@@ -146,7 +171,7 @@ function _set_name(y_)
 
 end
 
-function _set_color(y_, co = COPLO)
+function _set_color(y_)
 
     n = length(y_) - 1
 
@@ -160,7 +185,7 @@ function _set_color(y_, co = COPLO)
 
     end
 
-    color(co, nu_)
+    color(nu_)
 
 end
 
@@ -170,13 +195,13 @@ function _set_opacity(y_)
 
 end
 
-function make_colorbar(z, ke_va__...)
+function make_colorbar(z, di_...)
 
     tickvals = BioLab.NumberArray.range(skipmissing(z), 10)
 
     reduce(
         BioLab.Dict.merge,
-        ke_va__;
+        di_;
         init = Dict(
             "thicknessmode" => "fraction",
             "thickness" => 0.024,
@@ -191,17 +216,17 @@ function make_colorbar(z, ke_va__...)
 
 end
 
-function make_axis(ke_va__...)
+function make_axis(di_...)
 
-    reduce(BioLab.Dict.merge, ke_va__; init = Dict("automargin" => true, "showgrid" => false))
+    reduce(BioLab.Dict.merge, di_; init = Dict("automargin" => true, "showgrid" => false))
 
 end
 
-function make_annotation(ke_va__...)
+function make_annotation(di_...)
 
     reduce(
         BioLab.Dict.merge,
-        ke_va__;
+        di_;
         init = Dict(
             "yref" => "paper",
             "xref" => "paper",
@@ -216,8 +241,8 @@ end
 function plot_scatter(
     ht,
     y_,
-    x_ = _set_x(y_),
-    text_ = _set_text(y_);
+    x_ = _set_x(y_);
+    text_ = _set_text(y_),
     name_ = _set_name(y_),
     mode_ = [ifelse(length(y) < 10^3, "markers+lines", "lines") for y in y_],
     marker_color_ = _set_color(y_),
@@ -239,7 +264,7 @@ function plot_scatter(
                 "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
             ) for id in eachindex(y_)
         ],
-        layout;
+        BioLab.Dict.merge(Dict("yaxis" => make_axis(), "xaxis" => make_axis()), layout);
         ke_ar...,
     )
 
@@ -267,7 +292,7 @@ function plot_bar(
                 "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
             ) for id in eachindex(y_)
         ],
-        layout,
+        BioLab.Dict.merge(Dict("yaxis" => make_axis(), "xaxis" => make_axis()), layout);
         ke_ar...,
     )
 
@@ -384,9 +409,9 @@ function plot_histogram(
 
 end
 
-function _make_axis2(ke_va__...)
+function _make_axis2(di_...)
 
-    make_axis(Dict("domain" => (0.96, 1), "tickvals" => ()), ke_va__...)
+    make_axis(Dict("domain" => (0.96, 1), "tickvals" => ()), di_...)
 
 end
 

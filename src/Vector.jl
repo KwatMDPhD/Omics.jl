@@ -55,7 +55,7 @@ function _make_layout(title_text, xaxis_title_text)
 end
 
 function select(
-    ht,
+    di,
     me_,
     mi,
     ma;
@@ -64,11 +64,18 @@ function select(
     nam = "Metric",
 )
 
-    BioLab.Array.error_size_difference((th_, me_))
+    BioLab.Path.error_missing(di)
 
-    n = length(th_)
+    pr = joinpath(di, BioLab.Path.clean(nat))
 
-    BioLab.Plot.plot_histogram("", (me_,), (th_,); layout = _make_layout("All $n $nat", nam))
+    n = length(me_)
+
+    BioLab.Plot.plot_histogram(
+        "$pr.html",
+        (me_,),
+        (th_,);
+        layout = _make_layout("All $n $nat", nam),
+    )
 
     ke_ = map(me -> mi <= me <= ma, me_)
 
@@ -77,7 +84,7 @@ function select(
     pe = BioLab.String.format(n_ke / n * 100)
 
     BioLab.Plot.plot_histogram(
-        ht,
+        "$(pr)_selected.html",
         (me_[ke_],),
         (th_[ke_],);
         layout = _make_layout("Selected $n_ke ($pe%) $nat between $mi and $ma", nam),
