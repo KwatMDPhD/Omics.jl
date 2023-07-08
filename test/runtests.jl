@@ -1,6 +1,8 @@
 using Aqua
 
-include("environment.jl")
+using Test
+
+using BioLab
 
 # ---- #
 
@@ -12,15 +14,15 @@ Aqua.test_ambiguities(BioLab)
 
 # ----------------------------------------------------------------------------------------------- #
 
-sr = joinpath(dirname(@__DIR__), "src")
+const SR = joinpath(dirname(@__DIR__), "src")
 
-mo_ = filter!(!startswith('_'), readdir(sr))
+const MO_ = filter!(!startswith('_'), readdir(SR))
 
 # ---- #
 
-for mo in mo_
+for mo in MO_
 
-    @test splitext(mo)[1] == split(readline(joinpath(sr, mo)))[2]
+    @test mo[1:(end - 3)] == split(readline(joinpath(SR, mo)))[2]
 
 end
 
@@ -48,15 +50,15 @@ end
 
 # ---- #
 
-te_ = filter!(!startswith('_'), readdir(@__DIR__))
+const TE_ = filter!(!startswith('_'), readdir(@__DIR__))
 
 # ---- #
 
-@test symdiff(mo_, te_) == ["BioLab.jl", "environment.jl", "runtests.jl"]
+@test symdiff(MO_, TE_) == ["BioLab.jl", "runtests.jl"]
 
 # ---- #
 
-for te in te_
+for te in TE_
 
     if te != "runtests.jl"
 

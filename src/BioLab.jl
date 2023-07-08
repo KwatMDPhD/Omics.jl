@@ -4,15 +4,7 @@ const DA = joinpath(dirname(@__DIR__), "data")
 
 const TE = joinpath(tempdir(), "BioLab")
 
-for jl in readdir(@__DIR__)
-
-    if !startswith(jl, '_') && jl != "BioLab.jl"
-
-        include(jl)
-
-    end
-
-end
+foreach(include, (jl for jl in readdir(@__DIR__) if !startswith(jl, '_') && jl != "BioLab.jl"))
 
 macro is_error(ex)
 
@@ -38,9 +30,7 @@ end
 
 function __init__()
 
-    rm(TE; recursive = true, force = true)
-
-    mkdir(TE)
+    BioLab.Path.make_directory(TE)
 
 end
 
