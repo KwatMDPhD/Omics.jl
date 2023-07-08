@@ -96,7 +96,48 @@ function read(sa_di)
 
     end
 
+    if !allunique(fe_)
+
+        st = BioLab.Collection._countmap_string(fe_)
+
+        @warn "Features have duplicates.\n$st."
+
+        fe_, fe_x_ba_x_co = BioLab.NumberMatrix.collapse(maximum, Int, fe_, fe_x_ba_x_co)
+
+    end
+
     fe_, ba_, fe_x_ba_x_co, sa_, ids___
+
+end
+
+# TODO: Test.
+function make_target(ta_re_, gr_, idg___)
+
+    ta_ = collect(keys(ta_re_))
+
+    ta_x_sa_x_nu = fill(NaN, (length(ta_), maximum(idg___)[end]))
+
+    for (idt, re_) in enumerate(values(ta_re_))
+
+        for (nu, re) in zip((0, 1), re_)
+
+            re2 = Regex(re)
+
+            for (gr, idg_) in zip(gr_, idg___)
+
+                if contains(gr, re2)
+
+                    ta_x_sa_x_nu[idt, idg_] .= nu
+
+                end
+
+            end
+
+        end
+
+    end
+
+    ta_, ta_x_sa_x_nu
 
 end
 

@@ -174,13 +174,9 @@ function _plot_mountain(
                 Dict("domain" => yaxis3_domain, "title" => Dict("text" => "<b>Enrichment</b>")),
             ),
             "xaxis" => BioLab.Plot.make_axis(
+                BioLab.Plot.make_spike(),
                 Dict(
                     #"range" => (1 - xaxis_range_margin, n + xaxis_range_margin),
-                    "showspikes" => true,
-                    "spikemode" => "across",
-                    "spikedash" => "solid",
-                    "spikethickness" => 0.69,
-                    "spikecolor" => "#ffb61e",
                     "title" => Dict("text" => "<b>$naf (n=$n)</b>"),
                 ),
             ),
@@ -580,7 +576,7 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; n = 1, ex = 1)
 
 end
 
-function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en; ex = 1, nac = "Sample")
+function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex = 1)
 
     BioLab.Path.error_missing(di)
 

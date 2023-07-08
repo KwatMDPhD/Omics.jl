@@ -1,8 +1,10 @@
 module Dict
 
-using JSON: parse, print
+using JSON: parsefile as json_parsefile, print
 
-using TOML: parsefile
+using OrderedCollections: OrderedDict
+
+using TOML: parsefile as toml_parsefile
 
 using ..BioLab
 
@@ -90,7 +92,10 @@ end
 
 function merge(ke1_va1, ke2_va2, fu!)
 
-    ke_va = Base.Dict()
+    ke_va = Base.Dict{
+        typejoin(eltype(keys(ke1_va1)), eltype(keys(ke2_va2))),
+        typejoin(eltype(values(ke1_va1)), eltype(values(ke2_va2))),
+    }()
 
     for ke in union(keys(ke1_va1), keys(ke2_va2))
 
@@ -186,17 +191,18 @@ function map(na1_na2, na1_)
 
 end
 
-function read(pa)
+# TODO: Test.
+function read(pa, dicttype = OrderedDict; ke_ar...)
 
     ex = splitext(pa)[2][2:end]
 
     if ex in ("json", "ipynb")
 
-        parse(open(pa))
+        json_parsefile(pa; dicttype, ke_ar...)
 
     elseif ex == "toml"
 
-        parsefile(pa)
+        convert(dicttype, toml_parsefile(pa; ke_ar...))
 
     else
 

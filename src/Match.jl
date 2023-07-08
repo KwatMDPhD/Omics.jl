@@ -48,25 +48,25 @@ function _normalize!(it, ::Any)
 
 end
 
-function _make_heatmap(ke_va__...)
+function _make_heatmap(di_...)
 
-    reduce(BioLab.Dict.merge, ke_va__; init = Dict("type" => "heatmap", "showscale" => false))
+    reduce(BioLab.Dict.merge, di_; init = Dict("type" => "heatmap", "showscale" => false))
 
 end
 
-function _make_annotationl(ke_va__...)
+function _make_annotationl(di_...)
 
-    BioLab.Plot.make_annotation(Dict("x" => -0.024, "xanchor" => "right"), ke_va__...)
+    BioLab.Plot.make_annotation(Dict("x" => -0.024, "xanchor" => "right"), di_...)
 
 end
 
 function _get_x(id)
 
-    0.97 + id / 7
+    0.97 + id * 0.088
 
 end
 
-function _make_annotations(y, la, th, fe_, fe_x_st_x_nu)
+function _make_annotations(y, la, th, fe_, n_li, fe_x_st_x_nu)
 
     annotations = Vector{Dict{String, Any}}()
 
@@ -96,7 +96,7 @@ function _make_annotations(y, la, th, fe_, fe_x_st_x_nu)
 
         push!(
             annotations,
-            _make_annotationl(Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], 24))),
+            _make_annotationl(Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], n_li))),
         )
 
         sc, ma, pv, ad = (@sprintf("%.2g", nu) for nu in fe_x_st_x_nu[idy, :])
@@ -166,11 +166,13 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
 
     th2 = th / 2
 
-    height = max(400, 40 * n_ro)
+    height = max(640, 40 * n_ro)
 
     n_sa = length(sa_)
 
-    natl = BioLab.String.limit(nat, 24)
+    n_li = 30
+
+    natl = BioLab.String.limit(nat, n_li)
 
     BioLab.Plot.plot(
         ht,
@@ -204,24 +206,20 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
         ],
         BioLab.Dict.merge(
             Dict(
-                "margin" => Dict("l" => 200, "r" => 200),
+                "margin" => Dict("l" => 220, "r" => 220),
                 "height" => height,
-                "width" => 800,
+                "width" => 1200,
                 "title" => Dict("text" => naf),
-                "yaxis2" => BioLab.Plot.make_axis(
-                    Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
-                ),
-                "yaxis" => BioLab.Plot.make_axis(
-                    Dict(
-                        "domain" => (0, 1 - th * 2),
-                        "autorange" => "reversed",
-                        "showticklabels" => false,
-                    ),
+                "yaxis2" => Dict("domain" => (1 - th, 1), "dtick" => 1, "showticklabels" => false),
+                "yaxis" => Dict(
+                    "domain" => (0, 1 - th * 2),
+                    "autorange" => "reversed",
+                    "showticklabels" => false,
                 ),
                 "xaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => "$n_sa $nas"))),
                 "annotations" => vcat(
                     _make_annotationl(Dict("y" => 1 - th2, "text" => "<b>$natl</b>")),
-                    _make_annotations(1 - th2 * 3, true, th, fep_, fe_x_st_x_nu),
+                    _make_annotations(1 - th2 * 3, true, th, fep_, n_li, fe_x_st_x_nu),
                 ),
             ),
             layout,
@@ -264,15 +262,21 @@ function make(
 
     sc_ = map(nu_ -> fu(ta_, nu_), eachrow(fe_x_sa_x_nu))
 
-    ba_ = map(BioLab.Bad.is_bad, sc_)
+    isb_ = map(isnan, sc_)
 
-    if any(ba_)
+    if any(isb_)
 
-        n_no = BioLab.String.count(sum(ba_), "bad value")
+        n_no = BioLab.String.count(sum(isb_), "bad value")
 
         @warn "Found $n_no."
 
     end
+
+    ma_ = fill(NaN, n_fe)
+
+    pv_ = fill(NaN, n_fe)
+
+    ad_ = fill(NaN, n_fe)
 
     if 0 < n_ma
 
@@ -306,10 +310,6 @@ function make(
 
         end
 
-    else
-
-        ma_ = fill(NaN, n_fe)
-
     end
 
     if 0 < n_pv
@@ -336,26 +336,23 @@ function make(
 
         pv_, ad_ = BioLab.Significance.get_p_value_adjust(sc_, ra_)
 
-    else
-
-        pv_ = ad_ = fill(NaN, n_fe)
-
     end
 
     fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
-
-    feature_x_statistic_x_number = BioLab.DataFrame.make(
-        naf,
-        fe_,
-        ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
-        fe_x_st_x_nu,
-    )
 
     ts = "$pr.tsv"
 
     BioLab.Path.warn_overwrite(ts)
 
-    BioLab.Table.write(ts, feature_x_statistic_x_number)
+    BioLab.Table.write(
+        ts,
+        BioLab.DataFrame.make(
+            naf,
+            fe_,
+            ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
+            fe_x_st_x_nu,
+        ),
+    )
 
     if 0 < n_ex
 
@@ -377,20 +374,20 @@ function make(
 
     end
 
-    feature_x_statistic_x_number
+    fe_x_st_x_nu
 
 end
 
 # TODO: Test.
-function make(di, tst, tsf, nas, n_ma, n_pv, n_ex, st)
+function make(di, tst, tsf, nas, pe_; ke_ar...)
 
     BioLab.Path.error_missing(di)
 
     _na, nat_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
 
-    naf, fe_, _saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
+    naf, fe_, saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
 
-    if sa_ != _saf_
+    if sa_ != saf_
 
         error("Samples differ.")
 
@@ -398,7 +395,7 @@ function make(di, tst, tsf, nas, n_ma, n_pv, n_ex, st)
 
     for (nat, ta_) in zip(nat_, eachrow(ta_x_sa_x_nu))
 
-        sag_, tag_, fe_x_sa_x_nug = _order_sample(map(!isnan, ta_), sa_, ta_, fe_x_sa_x_nu)
+        sag_, tag_, fe_x_sag_x_nu = _order_sample(map(!isnan, ta_), sa_, ta_, fe_x_sa_x_nu)
 
         try
 
@@ -408,22 +405,34 @@ function make(di, tst, tsf, nas, n_ma, n_pv, n_ex, st)
 
         end
 
-        di2 = joinpath(di, BioLab.Path.clean("$(nat)_matching_$naf"))
+        di2 = BioLab.Path.make_directory(joinpath(di, BioLab.Path.clean("$(nat)_matching_$naf")))
 
-        if !isdir(di2)
+        fe_x_st_x_nu = make(di2, cor, nat, naf, fe_, nas, sag_, tag_, fe_x_sag_x_nu; ke_ar...)
 
-            mkdir(di2)
+        is_ = BioLab.Collection.is_in(fe_, pe_)
 
-        end
+        id_ = sortperm(fe_x_st_x_nu[is_, 1]; rev = true)
 
-        make(di2, cor, nat, naf, fe_, nas, sag_, tag_, fe_x_sa_x_nug; n_ma, n_pv, n_ex, st)
+        _plot(
+            joinpath(di2, "peek.html"),
+            nat,
+            naf,
+            fe_[is_][id_],
+            nas,
+            sag_,
+            tag_,
+            fe_x_sag_x_nu[is_, :][id_, :],
+            fe_x_st_x_nu[is_, :][id_, :],
+            get(ke_ar, :st, 4),
+            Dict{String, Any}("title" => Dict("text" => "Peek")),
+        )
 
     end
 
 end
 
 # TODO: Test.
-function compare(di, na1, na2, ts1, ts2)
+function compare(di, na1, na2, ts1, ts2; title_text = "")
 
     BioLab.Path.error_missing(di)
 
@@ -492,7 +501,7 @@ function compare(di, na1, na2, ts1, ts2)
         marker_color_ = (BioLab.Plot.color(di_, BioLab.Plot.COPL3),),
         opacity_ = (di_,),
         layout = Dict(
-            "title" => Dict("text" => "Comparing Match"),
+            "title" => Dict("text" => title_text),
             "yaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => na2))),
             "xaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => na1))),
         ),

@@ -2,10 +2,6 @@ module DataFrame
 
 using DataFrames: DataFrame as _DataFrame, insertcols!
 
-using OrderedCollections: OrderedDict
-
-using StatsBase: mean
-
 using ..BioLab
 
 function make(an___)
@@ -72,63 +68,24 @@ function separate(da)
 
 end
 
-function collapse(da; fu = mean, ty = Float64)
-
-    si = size(da)
-
-    @info "Size before collapsing is $si."
-
-    ro_id_ = OrderedDict{String, Vector{Int}}()
+# TODO: Test.
+function collapse(fu, ty, da)
 
     nar, ro_, co_, ma = separate(da)
 
-    for (id, ro) in enumerate(ro_)
+    ro2_ma2 = BioLab.NumberMatrix.collapse(fu, ty, ro_, ma)
 
-        push!(get!(ro_id_, ro, Vector{Int}()), id)
+    if isnothing(ro2_ma2)
 
-    end
+        nothing
 
-    n = length(ro_id_)
+    else
 
-    if length(ro_) == n
+        ro2_, ma2 = ro2_ma2
 
-        @warn "There are no rows to collapse."
-
-        return da
+        make(nar, ro2_, co_, ma2)
 
     end
-
-    ro2_ = Vector{String}(undef, n)
-
-    ma2 = Matrix{ty}(undef, (n, length(co_)))
-
-    for (id2, (ro, id_)) in enumerate(ro_id_)
-
-        ro2_[id2] = ro
-
-        if length(id_) == 1
-
-            an_ = ma[id_[1], :]
-
-        else
-
-            # TODO: Benchmark against view(ma, id_, :)
-            # TODO: Benchmark against Base.map(fu, eachcol(ma[id_, :]))
-            an_ = [fu(an_) for an_ in eachcol(ma[id_, :])]
-
-        end
-
-        ma2[id2, :] = an_
-
-    end
-
-    da2 = make(nar, ro2_, co_, ma2)
-
-    si2 = size(da2)
-
-    @info "Size after is $si2."
-
-    da2
 
 end
 

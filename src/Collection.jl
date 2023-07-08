@@ -2,6 +2,12 @@ module Collection
 
 using StatsBase: countmap
 
+function _countmap_string(an_)
+
+    join(("$n $an" for (an, n) in countmap(an_) if 1 < n), ".\n")
+
+end
+
 function error_duplicate(an_)
 
     if isempty(an_)
@@ -12,9 +18,9 @@ function error_duplicate(an_)
 
     if !allunique(an_)
 
-        st = join(("$n $an" for (an, n) in countmap(an_) if 1 < n), ". ")
+        st = _countmap_string(an_)
 
-        error("Collection has a duplicate. $st.")
+        error("Collection has duplicates.\n$st.")
 
     end
 
@@ -24,7 +30,9 @@ function error_no_change(an_)
 
     if allequal(an_)
 
-        error("Collection has no change. $an_.")
+        st = _countmap_string(an_)
+
+        error("Collection has no change. $st.")
 
     end
 

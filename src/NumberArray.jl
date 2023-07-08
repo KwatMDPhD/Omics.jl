@@ -68,27 +68,51 @@ function range(ar, n)
 
 end
 
-function skip_nan_apply!!(fu!, ar)
+# TODO: Test.
 
-    # TODO: Benchmark against map.
-    go_ = [!isnan(nu) for nu in ar]
+function skip_nan_apply!!(fu!, ar, n = 1)
 
-    if any(go_)
+    vi = view(ar, map(!isnan, ar))
 
-        fu!(view(ar, go_))
+    if length(vi) < n
+
+        vi .= NaN
+
+    else
+
+        fu!(vi)
 
     end
 
 end
 
-function skip_nan_apply!(fu, ar)
+function skip_nan_apply!(fu, ar, n = 1)
 
-    # TODO: Benchmark against map.
-    go_ = [!isnan(nu) for nu in ar]
+    vi = view(ar, map(!isnan, ar))
 
-    if any(go_)
+    if length(vi) < n
 
-        ar[go_] = fu(ar[go_])
+        vi .= NaN
+
+    else
+
+        vi .= fu(vi)
+
+    end
+
+end
+
+function skip_nan_apply(fu, ar, n = 1)
+
+    vi = view(ar, map(!isnan, ar))
+
+    if length(vi) < n
+
+        NaN
+
+    else
+
+        fu(vi)
 
     end
 
@@ -129,15 +153,7 @@ function normalize_with_0!(ar)
 
     BioLab.Collection.error_no_change(ar)
 
-    me = mean(ar)
-
-    st = std(ar)
-
-    for (id, nu) in enumerate(ar)
-
-        ar[id] = (nu - me) / st
-
-    end
+    ar .= (ar .- mean(ar)) ./ std(ar)
 
 end
 

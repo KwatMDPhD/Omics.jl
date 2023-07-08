@@ -6,7 +6,7 @@ using Colors: Colorant, hex
 
 using DataFrames: DataFrame
 
-using JSON3: write
+using JSON: json
 
 using Printf: @sprintf
 
@@ -97,7 +97,7 @@ function fractionate(co)
 
 end
 
-function pick_color_scheme(nu_)
+function pick_color_scheme(nu_::AbstractArray{Int})
 
     n = length(unique(nu_))
 
@@ -109,15 +109,17 @@ function pick_color_scheme(nu_)
 
         COBIN
 
-    elseif n <= 20
+    else
 
         COPLO
 
-    else
-
-        COBWR
-
     end
+
+end
+
+function pick_color_scheme(::AbstractArray{Float64})
+
+    COBWR
 
 end
 
@@ -137,11 +139,11 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
 
     id = "Plotly"
 
-    daj = write(data)
+    daj = json(data)
 
-    laj = write(BioLab.Dict.merge(Dict("hovermode" => "closest"), layout))
+    laj = json(BioLab.Dict.merge(Dict("hovermode" => "closest"), layout))
 
-    coj = write(BioLab.Dict.merge(Dict("displaylogo" => false), config))
+    coj = json(BioLab.Dict.merge(Dict("displaylogo" => false), config))
 
     BioLab.HTML.make(
         ht,
@@ -173,19 +175,7 @@ end
 
 function _set_color(y_)
 
-    n = length(y_) - 1
-
-    if iszero(n)
-
-        nu_ = 1:1
-
-    else
-
-        nu_ = 0:(1 / n):1
-
-    end
-
-    color(nu_)
+    color(1:length(y_))
 
 end
 
@@ -219,6 +209,23 @@ end
 function make_axis(di_...)
 
     reduce(BioLab.Dict.merge, di_; init = Dict("automargin" => true, "showgrid" => false))
+
+end
+
+# TODO: Test.
+function make_spike(di_...)
+
+    reduce(
+        BioLab.Dict.merge,
+        di_;
+        init = Dict(
+            "showspikes" => true,
+            "spikemode" => "across",
+            "spikedash" => "solid",
+            "spikethickness" => 1,
+            "spikecolor" => "#561649",
+        ),
+    )
 
 end
 

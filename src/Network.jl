@@ -1,6 +1,6 @@
 module Network
 
-using JSON3: write
+using JSON: json
 
 using ..BioLab
 
@@ -60,11 +60,11 @@ function plot(
 
     id = "Cytoscape"
 
-    elj = write(el_)
+    elj = json(el_)
 
-    stj = write(st_)
+    stj = json(st_)
 
-    laj = write(BioLab.Dict.merge(Dict("animate" => false), la))
+    laj = json(BioLab.Dict.merge(Dict("animate" => false), la))
 
     BioLab.HTML.make(
         ht,
