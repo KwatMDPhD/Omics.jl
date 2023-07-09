@@ -6,16 +6,12 @@ function read(cl)
 
     li1, li2, li3 = readlines(cl)
 
-    li1 = lstrip(li1, '#')
-
-    li2 = lstrip(li2, '#')
-
     sp3_ = split(li3)
 
-    if li1 == "numeric"
+    if li1 == "#numeric"
 
         DataFrame(
-            "Target" => li2,
+            "Target" => li2[2:end],
             ("Sample $id" => parse(Float64, nu) for (id, nu) in enumerate(sp3_))...,
         )
 
@@ -35,7 +31,7 @@ function read(cl)
 
         n_gr1 = parse(Int, sp1_[2])
 
-        gr_ = split(li2)
+        gr_ = split(li2[2:end])
 
         n_gr2 = length(gr_)
 
