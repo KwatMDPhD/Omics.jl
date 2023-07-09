@@ -37,6 +37,7 @@ ma = reshape(1:(n_ro * n_co), (n_ro, n_co))
 # ---- #
 
 da = BioLab.DataFrame.make(ro, ro_, co_, ma)
+@test !(Any in eltype.(eachcol(da)))
 
 @test size(da) == (n_ro, n_co + 1)
 

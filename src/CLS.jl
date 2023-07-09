@@ -1,27 +1,30 @@
 module CLS
 
-using DataFrames: DataFrame
+using ..BioLab
 
 function read(cl)
 
     li1, li2, li3 = readlines(cl)
 
+    li2 = chop(li2; head = 1, tail = 0)
+
     sp3_ = split(li3)
+
+    n_sa3 = length(sp3_)
+
+    nar = "Target"
+
+    nac_ = string.("Sample ", 1:n_sa3)
 
     if li1 == "#numeric"
 
-        DataFrame(
-            "Target" => view(li2, 2:length(li2)),
-            ("Sample $id" => parse(Float64, nu) for (id, nu) in enumerate(sp3_))...,
-        )
+        BioLab.DataFrame.make(nar, li2, nac_, [parse(Float64, nu) for _ in 1:1, nu in sp3_])
 
     else
 
         sp1_ = split(li1)
 
         n_sa1 = parse(Int, sp1_[1])
-
-        n_sa3 = length(sp3_)
 
         if n_sa1 != n_sa3
 
@@ -31,7 +34,7 @@ function read(cl)
 
         n_gr1 = parse(Int, sp1_[2])
 
-        gr_ = split(view(li2, 2:length(li2)))
+        gr_ = split(li2)
 
         n_gr2 = length(gr_)
 
@@ -45,10 +48,7 @@ function read(cl)
 
         gr_id = Dict(gr => id for (id, gr) in enumerate(gr_))
 
-        DataFrame(
-            "Target" => join(gr_, '_'),
-            ("Sample $id" => gr_id[gr] for (id, gr) in enumerate(sp3_))...,
-        )
+        BioLab.DataFrame.make(nar, join(gr_, '_'), nac_, [gr_id[gr] for _ in 1:1, gr in sp3_])
 
     end
 

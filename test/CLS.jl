@@ -22,10 +22,19 @@ for (na, ta, nu_) in (
     ("LPS_phen.cls", "CNTRL_LPS", [1, 1, 1, 2, 2, 2]),
 )
 
-    da = BioLab.CLS.read(joinpath(DA, na))
+    cl = joinpath(DA, na)
+
+    da = BioLab.CLS.read(cl)
+
+    @test !(Any in eltype.(eachcol(da)))
 
     @test da[!, "Target"] == [ta]
 
     @test collect(da[1, string.("Sample ", eachindex(nu_))]) == nu_
+
+    # 388.875 μs (6235 allocations: 530.48 KiB)
+    # 10.750 μs (99 allocations: 7.71 KiB)
+    # 10.459 μs (99 allocations: 7.66 KiB)
+    #@btime BioLab.CLS.read($cl)
 
 end

@@ -2,6 +2,7 @@ module BioLab
 
 const DA = joinpath(dirname(@__DIR__), "data")
 
+# TODO: Make unique with time or randomness.
 const TE = joinpath(tempdir(), "BioLab")
 
 foreach(include, (jl for jl in readdir(@__DIR__) if !startswith(jl, '_') && jl != "BioLab.jl"))
