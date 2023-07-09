@@ -8,11 +8,15 @@ an_ = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
 
 an1_ = ['1', '2', 'K']
 
-@test BioLab.Collection.is_in(Dict('A' => 1, '2' => 2, '3' => 3, 'Q' => 4, 'K' => 5), an1_) ==
-      [false, true, false, false, true]
+for an1_ in (an1_, Tuple(an1_))
 
-@test BioLab.Collection.is_in(Dict('A' => 5, '2' => 4, '3' => 3, 'Q' => 2, 'K' => 1), an1_) ==
-      [true, false, false, true, false]
+    @test BioLab.Collection.is_in(Dict('A' => 1, '2' => 2, '3' => 3, 'Q' => 4, 'K' => 5), an1_) ==
+          [false, true, false, false, true]
+
+    @test BioLab.Collection.is_in(Dict('A' => 5, '2' => 4, '3' => 3, 'Q' => 2, 'K' => 1), an1_) ==
+          [true, false, false, true, false]
+
+end
 
 # ---- #
 
