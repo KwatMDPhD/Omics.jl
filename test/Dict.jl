@@ -1,10 +1,15 @@
+using Base: Order
+using OrderedCollections: OrderedDict
+
 using Test: @test
+
+using BioLab
 
 # ---- #
 
 DA = joinpath(BioLab.DA, "Dict")
 
-@test readdir(DA) == []
+@test readdir(DA) == ["example.toml", "example_1.json", "example_2.json"]
 
 # ---- #
 
@@ -71,31 +76,26 @@ ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 @test BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
       BioLab.Dict.merge(ke2_va2, ke1_va1, BioLab.Dict.set_with_first!)
 
-@test BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
-      BioLab.Dict.merge(ke1_va1, ke2_va2)
+# ---- #
+
+js1 = joinpath(DA, "example_1.json")
 
 # ---- #
 
-an1_an2 = Dict("A" => "A", "a" => "A", "b" => "B")
+for dicttype in (Dict, OrderedDict, OrderedDict{String, String})
 
-an1_ = ("A", "a", "b", "c")
+    println(summary(BioLab.Dict.read(js1, dicttype)))
+    @test BioLab.Dict.read(js1, dicttype) isa dicttype
 
-an2_ = ["A", "A", "B", "c"]
-
-ma_ = [1, 2, 2, 3]
-
-@test BioLab.Dict.map(an1_an2, an1_) == (an2_, ma_)
-
-@test BioLab.Dict.map(an1_an2, reverse(an1_)) == (reverse(an2_), reverse(ma_))
+end
 
 # ---- #
 
-@test BioLab.Dict.read(joinpath(DA, "example_1.json")) ==
-      Dict{String, Any}("fruit" => "Apple", "color" => "Red", "size" => "Large")
+@test BioLab.Dict.read(js1) == OrderedDict("fruit" => "Apple", "color" => "Red", "size" => "Large")
 
 # ---- #
 
-@test BioLab.Dict.read(joinpath(DA, "example_2.json")) == Dict{String, Any}(
+@test BioLab.Dict.read(joinpath(DA, "example_2.json")) == OrderedDict{String, Any}(
     "quiz" => Dict{String, Any}(
         "sport" => Dict{String, Any}(
             "q1" => Dict{String, Any}(
@@ -126,7 +126,7 @@ ma_ = [1, 2, 2, 3]
 
 # ---- #
 
-@test BioLab.Dict.read(joinpath(DA, "example.toml")) == Dict{String, Any}(
+@test BioLab.Dict.read(joinpath(DA, "example.toml")) == OrderedDict{String, Any}(
     "servers" => Dict{String, Any}(
         "alpha" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.1"),
         "beta" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.2"),
@@ -164,7 +164,7 @@ ke_va = Dict(
     "episode" => 1030,
 )
 
-js = joinpath(mkpath(joinpath(tempdir(), "BioLab.test.Dict")), "write_read.json")
+js = joinpath(BioLab.TE, "write_read.json")
 
 # ---- #
 

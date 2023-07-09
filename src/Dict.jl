@@ -68,7 +68,7 @@ function set_with_suffix!(ke_va, ke, va)
 
         while haskey(ke_va, ke)
 
-            if n == 1
+            if isone(n)
 
                 ke = "$ke.1"
 
@@ -92,12 +92,16 @@ end
 
 function merge(ke1_va1, ke2_va2, fu!)
 
+    ke1_ = keys(ke1_va1)
+
+    ke2_ = keys(ke2_va2)
+
     ke_va = Base.Dict{
-        typejoin(eltype(keys(ke1_va1)), eltype(keys(ke2_va2))),
+        typejoin(eltype(ke1_), eltype(ke2_)),
         typejoin(eltype(values(ke1_va1)), eltype(values(ke2_va2))),
     }()
 
-    for ke in union(keys(ke1_va1), keys(ke2_va2))
+    for ke in union(ke1_, ke2_)
 
         if haskey(ke1_va1, ke) && haskey(ke2_va2, ke)
 
@@ -133,68 +137,9 @@ function merge(ke1_va1, ke2_va2, fu!)
 
 end
 
-function merge(ke1_va1, ke2_va2)
-
-    merge(ke1_va1, ke2_va2, set_with_last!)
-
-end
-
-function map(na1_na2, na1_)
-
-    n = length(na1_)
-
-    na2_ = Vector{String}(undef, n)
-
-    ma_ = Vector{Int}(undef, n)
-
-    n1 = n2 = n3 = 0
-
-    for (id, na1) in enumerate(na1_)
-
-        if haskey(na1_na2, na1)
-
-            na2 = na1_na2[na1]
-
-            if na1 == na2
-
-                ma = 1
-
-                n1 += 1
-
-            else
-
-                ma = 2
-
-                n2 += 1
-
-            end
-
-        else
-
-            na2 = na1
-
-            ma = 3
-
-            n3 += 1
-
-        end
-
-        na2_[id] = na2
-
-        ma_[id] = ma
-
-    end
-
-    @info "Already mapped $n1. Mapped $n2. Failed $n3."
-
-    na2_, ma_
-
-end
-
-# TODO: Test.
 function read(pa, dicttype = OrderedDict; ke_ar...)
 
-    ex = splitext(pa)[2][2:end]
+    ex = chop(splitext(pa)[2]; head = 1, tail = 0)
 
     if ex in ("json", "ipynb")
 
@@ -202,6 +147,7 @@ function read(pa, dicttype = OrderedDict; ke_ar...)
 
     elseif ex == "toml"
 
+        # TODO: Test order.
         convert(dicttype, toml_parsefile(pa; ke_ar...))
 
     else
