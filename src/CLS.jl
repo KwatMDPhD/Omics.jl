@@ -11,7 +11,7 @@ function read(cl)
     if li1 == "#numeric"
 
         DataFrame(
-            "Target" => li2[2:end],
+            "Target" => view(li2, 2:length(li2)),
             ("Sample $id" => parse(Float64, nu) for (id, nu) in enumerate(sp3_))...,
         )
 
@@ -31,7 +31,7 @@ function read(cl)
 
         n_gr1 = parse(Int, sp1_[2])
 
-        gr_ = split(li2[2:end])
+        gr_ = split(view(li2, 2:length(li2)))
 
         n_gr2 = length(gr_)
 

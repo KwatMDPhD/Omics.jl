@@ -2,13 +2,13 @@ module Matrix
 
 using ..BioLab
 
-function _error_size_difference(ar_)
+function _error_size_difference(ve_)
 
-    for id in 2:length(ar_)
+    for id in 2:length(ve_)
 
-        si1 = size(ar_[id - 1])
+        si1 = size(ve_[id - 1])
 
-        si2 = size(ar_[id])
+        si2 = size(ve_[id])
 
         if si1 != si2
 
@@ -20,19 +20,19 @@ function _error_size_difference(ar_)
 
 end
 
-function make(ar_)
+function make(ve_)
 
-    _error_size_difference(ar_)
+    _error_size_difference(ve_)
 
-    n_ro = length(ar_)
+    n_ro = length(ve_)
 
-    n_co = length(ar_[1])
+    n_co = length(ve_[1])
 
-    ma = Base.Matrix{eltype(vcat(ar_...))}(undef, (n_ro, n_co))
+    ma = Base.Matrix{eltype(vcat(ve_...))}(undef, (n_ro, n_co))
 
     for idc in 1:n_co, idr in 1:n_ro
 
-        ma[idr, idc] = ar_[idr][idc]
+        ma[idr, idc] = ve_[idr][idc]
 
     end
 

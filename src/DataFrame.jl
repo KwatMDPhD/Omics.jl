@@ -4,9 +4,9 @@ using DataFrames: DataFrame as _DataFrame, insertcols!
 
 using ..BioLab
 
-function make(an___)
+function make(ve_)
 
-    _DataFrame(BioLab.Matrix.make(an___[2:end]), an___[1])
+    _DataFrame(BioLab.Matrix.make(ve_[2:end]), ve_[1])
 
 end
 

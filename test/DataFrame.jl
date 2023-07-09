@@ -6,12 +6,12 @@ using BioLab
 
 # ---- #
 
-@test BioLab.DataFrame.make((
+@test BioLab.DataFrame.make([
     vcat("Row Name", string.("Column ", 1:5)),
     ["Row 1", 1, 2, 3, 4, 5.0],
     ["Row 2", 'A', 'B', 'C', 44, 55.0],
     ["Row 3", ":)", ";)", ":D", 444, 555.0],
-)) == DataFrame(
+]) == DataFrame(
     "Row Name" => string.("Row ", 1:3),
     "Column 1" => [1, 'A', ":)"],
     "Column 2" => [2, 'B', ";)"],
@@ -46,7 +46,7 @@ da = BioLab.DataFrame.make(ro, ro_, co_, ma)
 )
 
 # 1.121 μs (22 allocations: 1.89 KiB)
-#@btime BioLab.DataFrame.make($ro, $ro_, $co_, $ma);
+@btime BioLab.DataFrame.make($ro, $ro_, $co_, $ma);
 
 # ---- #
 
@@ -57,7 +57,7 @@ BioLab.DataFrame.separate(da)[2][1] = ":("
 @test da[1, 1] == "Row 1"
 
 # 2.106 μs (28 allocations: 2.08 KiB)
-#@btime BioLab.DataFrame.separate($da);
+@btime BioLab.DataFrame.separate($da);
 
 # ---- #
 
@@ -84,6 +84,8 @@ for (fr_, re) in (
 )
 
     @test BioLab.DataFrame.map(da, BioLab.Dict.set_with_first!, fr_, "F") == re
+
+    @btime BioLab.DataFrame.map($da, BioLab.Dict.set_with_first!, $fr_, "F")
 
 end
 
