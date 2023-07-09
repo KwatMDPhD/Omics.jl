@@ -1,8 +1,12 @@
-include("environment.jl")
+using Distances: CorrDist
+
+using Test: @test
+
+using BioLab
 
 # ---- #
 
-fu = BioLab.Clustering.CorrDist()
+fu = CorrDist()
 
 # ---- #
 
@@ -18,12 +22,12 @@ ma = [
 
 @test BioLab.Clustering.hierarchize(ma, 1).order == [4, 1, 2, 3, 7, 5, 6]
 
-@test BioLab.Clustering.hierarchize(ma, 1; fu).order == [3, 6, 2, 5, 7, 1, 4]
-
 @test BioLab.Clustering.hierarchize(ma, 2).order == [1, 3, 2, 4]
 
 @test BioLab.Clustering.hierarchize(ma, 1).order ==
       BioLab.Clustering.hierarchize(permutedims(ma), 2).order
+
+@test BioLab.Clustering.hierarchize(ma, 1; fu).order == [3, 6, 2, 5, 7, 1, 4]
 
 # ---- #
 

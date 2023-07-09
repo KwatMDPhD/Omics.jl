@@ -1,4 +1,4 @@
-include("environment.jl")
+using Test: @test
 
 # ---- #
 

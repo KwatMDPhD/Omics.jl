@@ -1,6 +1,6 @@
 using DataFrames: DataFrame
 
-include("environment.jl")
+using Test: @test
 
 # ---- #
 

@@ -2,7 +2,7 @@ using ColorSchemes: bwr, plasma
 
 using Colors: RGB
 
-include("environment.jl")
+using Test: @test
 
 # ---- #
 

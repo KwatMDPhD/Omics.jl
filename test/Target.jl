@@ -1,6 +1,6 @@
 using StatsBase: mean
 
-include("environment.jl")
+using Test: @test
 
 # ---- #
 

@@ -1,6 +1,6 @@
 using Random: seed!
 
-include("environment.jl")
+using Test: @test
 
 # ---- #
 

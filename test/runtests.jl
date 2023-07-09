@@ -1,14 +1,14 @@
-using Aqua
+using Aqua: test_all, test_ambiguities
 
-using Test
+using Test: @test
 
 using BioLab
 
 # ---- #
 
-Aqua.test_all(BioLab; ambiguities = false)
+test_all(BioLab; ambiguities = false)
 
-Aqua.test_ambiguities(BioLab)
+test_ambiguities(BioLab)
 
 # ---- #
 

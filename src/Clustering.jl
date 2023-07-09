@@ -2,7 +2,7 @@ module Clustering
 
 using Clustering: Hclust, cutree, hclust
 
-using Distances: CorrDist, Euclidean, pairwise
+using Distances: Euclidean, pairwise
 
 function hierarchize(ma, dims; fu = Euclidean(), linkage = :ward)
 
