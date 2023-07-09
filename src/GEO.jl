@@ -171,6 +171,32 @@ function _map_feature(pl, ta)
 
 end
 
+function make(nar, co_, ro_an__)
+
+    ro_ = sort!(collect(union(Base.map(keys, ro_an__)...)))
+
+    an__ = [Vector{Any}(undef, 1 + length(co_)) for _ in 1:(1 + length(ro_))]
+
+    id = 1
+
+    an__[id][1] = nar
+
+    an__[id][2:end] = co_
+
+    for (id, ro) in enumerate(ro_)
+
+        id = 1 + id
+
+        an__[id][1] = ro
+
+        an__[id][2:end] .= (get(ro_an, ro, missing) for ro_an in ro_an__)
+
+    end
+
+    make(an__)
+
+end
+
 function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl_ke_va["SAMPLE"]))
@@ -227,7 +253,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     for (id, (pl, fe_fl__)) in enumerate(pl_fe_fl__)
 
-        da = BioLab.DataFrame.make(pl, sa_, fe_fl__)
+        da = _make(pl, sa_, fe_fl__)
 
         ke_va = ty_bl_ke_va["PLATFORM"][pl]
 
@@ -247,7 +273,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
     end
 
-    BioLab.DataFrame.make("Characteristic", sa_, ch_st__), da_...
+    _make("Characteristic", sa_, ch_st__), da_...
 
 end
 

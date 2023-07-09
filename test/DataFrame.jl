@@ -2,10 +2,17 @@ using DataFrames: DataFrame
 
 using Test: @test
 
+using BioLab
+
 # ---- #
 
-re = DataFrame(
-    "Row Name" => ["Row $id" for id in 1:3],
+@test BioLab.DataFrame.make((
+    vcat("Row Name", string.("Column ", 1:5)),
+    ["Row 1", 1, 2, 3, 4, 5.0],
+    ["Row 2", 'A', 'B', 'C', 44, 55.0],
+    ["Row 3", ":)", ";)", ":D", 444, 555.0],
+)) == DataFrame(
+    "Row Name" => string.("Row ", 1:3),
     "Column 1" => [1, 'A', ":)"],
     "Column 2" => [2, 'B', ";)"],
     "Column 3" => [3, 'C', ":D"],
@@ -15,153 +22,46 @@ re = DataFrame(
 
 # ---- #
 
-@test BioLab.DataFrame.make((
-    vcat("Row Name", ["Column $id" for id in 1:5]),
-    ["Row 1", 1, 2, 3, 4, 5.0],
-    ["Row 2", 'A', 'B', 'C', 44, 55.0],
-    ["Row 3", ":)", ";)", ":D", 444, 555.0],
-)) == re
-
-# ---- #
-
-@test BioLab.DataFrame.make("""
-    Row Name\tColumn 1\tColumn 2\tColumn 3\tColumn 4\tColumn 5
-    Row 1\t1\t2\t3\t4\t5.0
-    Row 2\tA\tB\tC\t44\t55.0
-    Row 3\t:)\t;)\t:D\t444\t555.0""") == string.(re)
-
-# ---- #
-
 n_ro = 3
 
 n_co = 4
 
 ro = "Row Name"
 
-ro_ = ["Row $id" for id in 1:n_ro]
+ro_ = string.("Row ", 1:n_ro)
 
-co_ = ["Column $id" for id in 1:n_co]
+co_ = string.("Column ", 1:n_co)
 
-ro_x_co_x_fl = rand(n_ro, n_co)
+ma = reshape(1:(n_ro * n_co), (n_ro, n_co))
 
 # ---- #
 
-ron = "Row Name"
+da = BioLab.DataFrame.make(ro, ro_, co_, ma)
 
-con_ = ["Column 1", "Column 2", "Column 3"]
+@test size(da) == (n_ro, n_co + 1)
 
-for (ro_an__, re) in (
-    (
-        (
-            Dict("Row 1" => 1, "Row 2" => 2),
-            Dict("Row 2" => 2, "Row 3" => 3),
-            Dict("Row 1" => 1, "Row 2" => 2, "Row 3" => 3),
-        ),
-        DataFrame(
-            ron => ["Row 1", "Row 2", "Row 3"],
-            "Column 1" => [1, 2, missing],
-            "Column 2" => [missing, 2, 3],
-            "Column 3" => [1, 2, 3],
-        ),
-    ),
-    (
-        (
-            Dict("Row 1" => 'a', "Row 2" => 'b'),
-            Dict("Row 2" => 'b', "Row 3" => 'c'),
-            Dict("Row 1" => 'a', "Row 2" => 'b', "Row 3" => 'c'),
-        ),
-        DataFrame(
-            "Row Name" => ["Row 1", "Row 2", "Row 3"],
-            "Column 1" => ['a', 'b', missing],
-            "Column 2" => [missing, 'b', 'c'],
-            "Column 3" => ['a', 'b', 'c'],
-        ),
-    ),
+@test da == DataFrame(
+    "Row Name" => string.("Row ", 1:n_ro),
+    ("Column $id" => view(ma, :, id) for id in 1:n_co)...,
 )
 
-    @test isequal(BioLab.DataFrame.make(ron, con_, ro_an__), re)
-
-    # 3.594 μs (58 allocations: 4.11 KiB)
-    # 3.651 μs (58 allocations: 4.02 KiB)
-    #@btime BioLab.DataFrame.make($ron, $con_, $ro_an__);
-
-end
+# 1.121 μs (22 allocations: 1.89 KiB)
+#@btime BioLab.DataFrame.make($ro, $ro_, $co_, $ma);
 
 # ---- #
 
-row_x_column_x_anything = BioLab.DataFrame.make(ro, ro_, co_, ro_x_co_x_fl)
+@test BioLab.DataFrame.separate(da) == (ro, ro_, co_, ma)
 
-@test size(row_x_column_x_anything) == (n_ro, n_co + 1)
+BioLab.DataFrame.separate(da)[2][1] = ":("
 
-@test row_x_column_x_anything == DataFrame(
-    "Row Name" => ["Row $id" for id in 1:n_ro],
-    ("Column $id" => ro_x_co_x_fl[:, id] for id in 1:n_co)...,
-)
+@test da[1, 1] == "Row 1"
 
-# ---- #
-
-@test BioLab.DataFrame.separate(row_x_column_x_anything) == (ro, ro_, co_, ro_x_co_x_fl)
-
-BioLab.DataFrame.separate(row_x_column_x_anything)[2][1] = ":("
-
-@test row_x_column_x_anything[1, 1] == "Row 1"
+# 2.106 μs (28 allocations: 2.08 KiB)
+#@btime BioLab.DataFrame.separate($da);
 
 # ---- #
 
-ro_x_co_x_an = DataFrame(
-    "Row Name" => ["Row $id" for id in 1:3],
-    "Column 1" => [1, 'A', ":)"],
-    "Column 2" => [2, 'B', ";)"],
-    "Column 3" => [3, 'C', ":D"],
-)
-
-# ---- #
-
-for (an___, re) in (
-    (
-        (
-            ["Row Name", "Column 1", "Column 2"],
-            ["Row 1", 1, 2],
-            ["Row 2", 10, 20],
-            ["Row 3", 100, 200],
-        ),
-        DataFrame(
-            "Row Name" => ["Row 1", "Row 2", "Row 3"],
-            "Column 1" => [1.0, 10, 100],
-            "Column 2" => [2.0, 20, 200],
-        ),
-    ),
-    (
-        (
-            ["Row Name", "Column 1", "Column 2"],
-            ["Row 1", 1, 2],
-            ["Row 1", 10, 20],
-            ["Row 2", 100, 200],
-        ),
-        DataFrame(
-            "Row Name" => ["Row 1", "Row 2"],
-            "Column 1" => [5.5, 100],
-            "Column 2" => [11.0, 200],
-        ),
-    ),
-    (
-        (
-            ["Row Name", "Column 1", "Column 2"],
-            ["Row 1", 1, 2],
-            ["Row 1", 10, 20],
-            ["Row 1", 100, 200],
-        ),
-        DataFrame("Row Name" => ["Row 1"], "Column 1" => [37.0], "Column 2" => [74.0]),
-    ),
-)
-
-    @test BioLab.DataFrame.collapse(BioLab.DataFrame.make(an___)) == re
-
-end
-
-# ---- #
-
-row_x_column_x_string = DataFrame(
+da = DataFrame(
     "M1" => [nothing, "M12", "M13", "M14"],
     "F" => ["F1", missing, "F3", "F4"],
     "M2" => ["M21", "M22", "", "M24"],
@@ -183,7 +83,7 @@ for (fr_, re) in (
     ),
 )
 
-    @test BioLab.DataFrame.map(row_x_column_x_string, BioLab.Dict.set_with_first!, fr_, "F") == re
+    @test BioLab.DataFrame.map(da, BioLab.Dict.set_with_first!, fr_, "F") == re
 
 end
 
