@@ -1,11 +1,10 @@
 module BioLab
 
+foreach(include, (jl for jl in readdir(@__DIR__) if !startswith(jl, '_') && jl != "BioLab.jl"))
+
 const DA = joinpath(dirname(@__DIR__), "data")
 
-# TODO: Make unique with time or randomness.
-const TE = joinpath(tempdir(), "BioLab")
-
-foreach(include, (jl for jl in readdir(@__DIR__) if !startswith(jl, '_') && jl != "BioLab.jl"))
+const TE = joinpath(tempdir(), string("BioLab", BioLab.Time.stamp()))
 
 macro is_error(ex)
 
