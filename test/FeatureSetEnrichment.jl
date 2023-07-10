@@ -153,15 +153,15 @@ const EX = 1
 
 # ---- #
 
-fe_, sc_, fe1_ = benchmark_card("AK")
+const CFE_, CSC_, CFE1_ = benchmark_card("AK")
 
-bo_ = in(Set(fe1_)).(fe_)
+const CBO_ = in(Set(CFE1_)).(CFE_)
 
 for al in AL_
 
     for mo_ in (nothing, Vector{Float64}(undef, length(bo_)))
 
-        BioLab.FeatureSetEnrichment._enrich(al, sc_, EX, bo_, mo_)
+        BioLab.FeatureSetEnrichment._enrich(al, CSC_, EX, CBO_, mo_)
 
     end
 
@@ -176,7 +176,7 @@ for al in AL_
     # 144.306 ns (0 allocations: 0 bytes)
     # 242.131 ns (0 allocations: 0 bytes)
     # 242.079 ns (0 allocations: 0 bytes)
-    @btime BioLab.FeatureSetEnrichment._enrich($al, $sc_, $EX, $bo_, nothing)
+    @btime BioLab.FeatureSetEnrichment._enrich($al, $CSC_, $EX, $CBO_, nothing)
 
 end
 
@@ -256,22 +256,10 @@ for al in AL_
     # 18.812 ms (108 allocations: 934.22 KiB)
     # 57.440 ms (358 allocations: 4.59 MiB)
 
-    #@btime BioLab.FeatureSetEnrichment._enrich($al, $MSC_, $EX, $MBO_, nothing)
+    @btime BioLab.FeatureSetEnrichment._enrich($al, $MSC_, $EX, $MBO_, nothing)
 
-    #@btime BioLab.FeatureSetEnrichment.enrich($al, $MSC_, $MFE_, $MFE1___)
+    @btime BioLab.FeatureSetEnrichment.enrich($al, $MSC_, $MFE_, $MFE1___)
 
-    #@btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSA_, $FE_X_SA_X_MSC, $MSE_, $MFE1___)
-
-end
-
-# ---- #
-
-function benchmark_random(n, n1)
-
-    fe_ = string.("Feature ", n:-1:1)
-
-    fe_,
-    reverse!(BioLab.NumberVector.simulate(cld(n, 2); ze = iseven(n))),
-    sample(fe_, n1; replace = false)
+    @btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSA_, $FE_X_SA_X_MSC, $MSE_, $MFE1___)
 
 end

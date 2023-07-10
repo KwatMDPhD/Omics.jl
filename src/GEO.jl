@@ -6,13 +6,7 @@ using GZip: open
 
 using OrderedCollections: OrderedDict
 
-using ..BioLab
-
-function _readline(st)
-
-    readline(st; keep = false)
-
-end
+using BioLab
 
 function download(di, gs)
 
@@ -22,25 +16,36 @@ function download(di, gs)
 
     BioLab.Path.warn_overwrite(gz)
 
-    gs2 = gs[1:(end - 3)]
+    gs2 = chop(gs; tail = 3)
 
     Base.download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs2)nnn/$gs/soft/$na", gz)
 
 end
 
+function _readline(st)
+
+    readline(st; keep = false)
+
+end
+
+function _split(li)
+
+    split(li, " = "; limit = 2)
+
+end
+
 function read(gz)
 
-    # TODO: Benchmark against hard-coding.
-    ty_bl_ke_va = Dict(
-        ty => OrderedDict{String, OrderedDict{String, String}}() for
-        ty in ("DATABASE", "SERIES", "PLATFORM", "SAMPLE")
+    bl_th_ke_va = Dict(
+        "DATABASE" => OrderedDict{String, OrderedDict{String, String}}(),
+        "SERIES" => OrderedDict{String, OrderedDict{String, String}}(),
+        "PLATFORM" => OrderedDict{String, OrderedDict{String, String}}(),
+        "SAMPLE" => OrderedDict{String, OrderedDict{String, String}}(),
     )
-
-    ty = ""
 
     bl = ""
 
-    eq = " = "
+    th = ""
 
     st = open(gz)
 
@@ -50,26 +55,26 @@ function read(gz)
 
         if startswith(li, '^')
 
-            ty, bl = split(li[2:end], eq; limit = 2)
+            bl, th = _split(chop(li; head = 1, tail = 0))
 
-            ty_bl_ke_va[ty][bl] = OrderedDict{String, String}()
+            bl_th_ke_va[bl][th] = OrderedDict{String, String}()
 
             continue
 
         end
 
-        tyl = lowercase(ty)
+        bll = lowercase(bl)
 
-        ta = "!$(tyl)_table_"
+        ta = "!$(bll)_table_"
 
         if startswith(li, "$(ta)begin")
 
-            tyt = titlecase(ty)
+            blt = titlecase(bl)
 
-            ty_bl_ke_va[ty][bl]["table"] = join(
+            bl_th_ke_va[bl][th]["table"] = join(
                 (
                     _readline(st) for
-                    _ in 1:(1 + parse(Int, ty_bl_ke_va[ty][bl]["!$(tyt)_data_row_count"]))
+                    _ in 1:(1 + parse(Int, bl_th_ke_va[bl][th]["!$(blt)_data_row_count"]))
                 ),
                 '\n',
             )
@@ -84,16 +89,15 @@ function read(gz)
 
         end
 
-        # TODO: Consider keeping only important information.
-        ke, va = split(li, eq; limit = 2)
+        ke, va = _split(li)
 
-        BioLab.Dict.set_with_suffix!(ty_bl_ke_va[ty][bl], ke, va)
+        BioLab.Dict.set_with_suffix!(bl_th_ke_va[bl][th], ke, va)
 
     end
 
     close(st)
 
-    ty_bl_ke_va
+    bl_th_ke_va
 
 end
 
@@ -171,21 +175,22 @@ function _map_feature(pl, ta)
 
 end
 
-function make(nar, co_, ro_an__)
+function _make(nar, co_, ro_an__)
 
-    ro_ = sort!(collect(union(Base.map(keys, ro_an__)...)))
+    ro_ = sort!(collect(union(keys.(ro_an__)...)))
 
-    an__ = [Vector{Any}(undef, 1 + length(co_)) for _ in 1:(1 + length(ro_))]
+    an__ = fill(Vector{Any}(undef, 1 + length(co_)), 1 + length(ro_))
 
     id = 1
 
     an__[id][1] = nar
 
+    # TODO: Try ..
     an__[id][2:end] = co_
 
     for (id, ro) in enumerate(ro_)
 
-        id = 1 + id
+        id += 1
 
         an__[id][1] = ro
 
@@ -193,13 +198,19 @@ function make(nar, co_, ro_an__)
 
     end
 
-    make(an__)
+    BioLab.DataFrame.make(an__)
 
 end
 
-function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
+function _make(st)
 
-    sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(ty_bl_ke_va["SAMPLE"]))
+    BioLab.DataFrame.make(split.(eachsplit(st, '\n'), '\t'))
+
+end
+
+function tabulate(bl_th_ke_va; sa = "!Sample_title", ig_ = ())
+
+    sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(bl_th_ke_va["SAMPLE"]))
 
     sa_ = collect(keys(sa_ke_va))
 
@@ -214,11 +225,11 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
     for (id, (sa, ke_va)) in enumerate(sa_ke_va)
 
         ch_ = [
-            va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics") &&
-            (isempty(ig_) || !any(contains(va, ig) for ig in ig_))
+            va for (ke, va) in ke_va if
+            startswith(ke, "!Sample_characteristics") && !any(occursin(va), ig_)
         ]
 
-        if all(contains(ch, de) for ch in ch_)
+        if all(contains(de), ch_)
 
             merge!(ch_st__[id], Dict(split(ch, de; limit = 2) for ch in ch_))
 
@@ -230,7 +241,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         if haskey(ke_va, "table")
 
-            ta = BioLab.DataFrame.make(ke_va["table"])
+            ta = _make(ke_va["table"])
 
             merge!(
                 get!(
@@ -238,7 +249,7 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
                     ke_va["!Sample_platform_id"],
                     fill(Dict{String, Float64}(), n_sa),
                 )[id],
-                Dict(zip(ta[!, 1], map(st -> parse(Float64, st), ta[!, "VALUE"]))),
+                Dict(zip(ta[!, 1], parse.(Float64, ta[!, "VALUE"]))),
             )
 
         else
@@ -255,13 +266,13 @@ function tabulate(ty_bl_ke_va; sa = "!Sample_title", ig_ = ())
 
         da = _make(pl, sa_, fe_fl__)
 
-        ke_va = ty_bl_ke_va["PLATFORM"][pl]
+        ke_va = bl_th_ke_va["PLATFORM"][pl]
 
         if haskey(ke_va, "table")
 
             id_fe = _map_feature(pl, BioLab.DataFrame.make(ke_va["table"]))
 
-            da[!, 1] = [get(id_fe, id, "_$id") for id in da[!, 1]]
+            da[!, 1] .= (id -> get(id_fe, id, "_$id")).(da[!, 1])
 
         else
 
