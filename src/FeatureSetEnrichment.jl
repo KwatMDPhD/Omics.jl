@@ -70,15 +70,6 @@ function _sum_all1(sc_, ex, bo_)
 
 end
 
-function _make_annotation(di_...)
-
-    BioLab.Plot.make_annotation(
-        Dict("bgcolor" => "#fcfcfc", "borderpad" => 4, "borderwidth" => 2),
-        di_...,
-    )
-
-end
-
 function _plot_mountain(
     ht,
     sc_,
@@ -97,11 +88,21 @@ function _plot_mountain(
 
     x = collect(1:n)
 
-    scatter = Dict("x" => x, "text" => fe_, "mode" => "lines", "fill" => "tozeroy")
+    scatter = Dict(
+        "x" => x,
+        "text" => fe_,
+        "mode" => "lines",
+        "line" => Dict("width" => 0),
+        "fill" => "tozeroy",
+    )
 
     coe1 = "#07fa07"
 
     coe2 = "rgba(7, 250, 7, 0.32)"
+
+    cob = "#1993ff"
+
+    cor = "#ff1992"
 
     yaxis1_domain = (0, 0.24)
 
@@ -111,6 +112,11 @@ function _plot_mountain(
 
     #xaxis_range_margin = n * 0.01
 
+    annotation = BioLab.Dict.merge(
+        BioLab.Plot.ANNOTATION,
+        Dict("bgcolor" => "#fcfcfc", "borderpad" => 4, "borderwidth" => 2),
+    )
+
     annotation_margin = 0.016
 
     annotation_font_size = 16
@@ -118,26 +124,20 @@ function _plot_mountain(
     BioLab.Plot.plot(
         ht,
         [
-            BioLab.Dict.merge(
-                scatter,
-                Dict(
-                    "y" => sc_,
-                    "line" => Dict("width" => 1.6, "color" => "#351e1c"),
-                    "fillcolor" => "#c0c0c0",
-                ),
-            ),
+            BioLab.Dict.merge(scatter, Dict("y" => ifelse.(sc_ .< 0, sc_, 0), "fillcolor" => cob)),
+            BioLab.Dict.merge(scatter, Dict("y" => ifelse.(0 .< sc_, sc_, 0), "fillcolor" => cor)),
             Dict(
                 "yaxis" => "y2",
-                "y" => fill(0, sum(bo_)),
-                "x" => x[bo_],
-                "text" => fe_[bo_],
+                "y" => zeros(sum(bo_)),
+                "x" => view(x, bo_),
+                "text" => view(fe_, bo_),
                 "mode" => "markers",
                 "marker" => Dict(
                     "symbol" => "line-ns",
                     "size" => 24,
                     "line" => Dict(
                         "width" => 1.08,
-                        "color" => BioLab.Plot.color(sc_[bo_], BioLab.Plot.COBWR),
+                        "color" => BioLab.Plot.color.(view(sc_, bo_), (BioLab.Plot.COBWR,)),
                     ),
                 ),
                 "hoverinfo" => "x+text",
@@ -179,7 +179,8 @@ function _plot_mountain(
                 ),
             ),
             "annotations" => (
-                _make_annotation(
+                BioLab.Dict.merge(
+                    annotation,
                     Dict(
                         "y" => 1,
                         "x" => 0.5,
@@ -189,21 +190,23 @@ function _plot_mountain(
                         "bordercolor" => coe1,
                     ),
                 ),
-                _make_annotation(
+                BioLab.Dict.merge(
+                    annotation,
                     Dict(
                         "y" => yaxis1_domain[2] * 1 / 4,
                         "x" => annotation_margin,
                         "text" => nah,
-                        "font" => Dict("size" => annotation_font_size, "color" => "#ff1992"),
+                        "font" => Dict("size" => annotation_font_size, "color" => cor),
                         "bordercolor" => "#fcc9b9",
                     ),
                 ),
-                _make_annotation(
+                BioLab.Dict.merge(
+                    annotation,
                     Dict(
                         "y" => yaxis1_domain[2] * 3 / 4,
                         "x" => 1 - annotation_margin,
                         "text" => nal,
-                        "font" => Dict("size" => annotation_font_size, "color" => "#1993ff"),
+                        "font" => Dict("size" => annotation_font_size, "color" => cob),
                         "bordercolor" => "#b9c9fc",
                     ),
                 ),
@@ -225,11 +228,11 @@ struct KLioM end
 
 function make_string(al)
 
-    BioLab.String.split_get(string(al), '.', 3)[1:(end - 2)]
+    chop(string(al); head = 28, tail = 2)
 
 end
 
-function _enrich(al::KS, sc_, ex, bo_, mo_)
+function _enrich(::KS, sc_, ex, bo_, mo_)
 
     n, su1, su0 = _sum_10(sc_, ex, bo_)
 
@@ -277,7 +280,7 @@ function _enrich(al::KS, sc_, ex, bo_, mo_)
 
 end
 
-function _enrich(al::KSa, sc_, ex, bo_, mo_)
+function _enrich(::KSa, sc_, ex, bo_, mo_)
 
     n, su1, su0 = _sum_10(sc_, ex, bo_)
 
@@ -329,7 +332,7 @@ function _get_left(le, pr, mi)
 
 end
 
-function _enrich(al::KLi, sc_, ex, bo_, mo_)
+function _enrich(::KLi, sc_, ex, bo_, mo_)
 
     n, su, su1 = _sum_all1(sc_, ex, bo_)
 
@@ -491,13 +494,13 @@ function _enrich_klio(fu, sc_, ex, bo_, mo_)
 
 end
 
-function _enrich(al::KLioP, sc_, ex, bo_, mo_)
+function _enrich(::KLioP, sc_, ex, bo_, mo_)
 
     _enrich_klio(BioLab.Information.get_symmetric_kullback_leibler_divergence, sc_, ex, bo_, mo_)
 
 end
 
-function _enrich(al::KLioM, sc_, ex, bo_, mo_)
+function _enrich(::KLioM, sc_, ex, bo_, mo_)
 
     _enrich_klio(
         BioLab.Information.get_antisymmetric_kullback_leibler_divergence,
@@ -511,7 +514,7 @@ end
 
 function enrich(ht, al, sc_, fe_, fe1_::AbstractVector{<:AbstractString}; n = 1, ex = 1, ke_ar...)
 
-    bo_ = BioLab.Collection.is_in(fe_, fe1_)
+    bo_ = in(Set(fe1_)).(fe_)
 
     if sum(bo_) < n
 
@@ -561,12 +564,19 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; n = 1, ex = 1)
 
     se_x_sa_x_en = Matrix{Float64}(undef, (length(se_), length(sa_)))
 
+    no_ = BitVector(undef, length(fe_))
+
     @showprogress for (id, sc_) in enumerate(eachcol(fe_x_sa_x_sc))
 
-        sc2_, fe2_ = BioLab.Vector.skip_nan_sort_like(sc_, fe_; rev = true)
+        no_ .= .!isnan.(sc_)
 
-        # TODO: Implement and use enrich! to avoid allocating en_.
-        se_x_sa_x_en[:, id] = enrich(al, sc2_, fe2_, fe1___; n, ex)
+        # TODO: Understand why view(sc_, no_) is slower; is this due to NaN?
+
+        scn_ = sc_[no_]
+
+        so_ = sortperm(scn_; rev = true)
+
+        se_x_sa_x_en[:, id] = enrich(al, view(scn_, so_), view(fe_[no_], so_), fe1___; n, ex)
 
     end
 
@@ -598,6 +608,7 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
 
         en, id_ = fu(skipmissing(se_x_sa_x_enm))
 
+        # TODO: Resume here Zzz...
         sc2_, fe2_ = BioLab.Vector.skip_nan_sort_like(fe_x_sa_x_sc[:, id_[2]], fe_; rev = true)
 
         se = se_[id_[1]]

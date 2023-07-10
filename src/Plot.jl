@@ -129,12 +129,6 @@ function color(nu::Real, co)
 
 end
 
-function color(nu_, co = pick_color_scheme(nu_))
-
-    map(nu -> color(nu, co), nu_)
-
-end
-
 function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ke_ar...)
 
     id = "Plotly"
@@ -228,6 +222,15 @@ function make_spike(di_...)
     )
 
 end
+
+
+const ANNOTATION = Dict(
+    "yref" => "paper",
+    "xref" => "paper",
+    "yanchor" => "middle",
+    "showarrow" => false,
+    "font" => Dict("size" => 10),
+)
 
 function make_annotation(di_...)
 
