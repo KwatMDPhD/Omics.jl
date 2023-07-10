@@ -2,7 +2,7 @@ module SingleCell
 
 using ProgressMeter: @showprogress
 
-using ..BioLab
+using BioLab
 
 function read(sa_di)
 

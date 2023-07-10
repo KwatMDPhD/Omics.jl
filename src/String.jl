@@ -2,7 +2,7 @@ module String
 
 using Printf: @sprintf
 
-using ..BioLab
+using BioLab
 
 function format(nu)
 

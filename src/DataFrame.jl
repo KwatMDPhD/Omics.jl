@@ -2,7 +2,7 @@ module DataFrame
 
 using DataFrames: DataFrame as _DataFrame, insertcols!
 
-using ..BioLab
+using BioLab
 
 function make(ve_)
 

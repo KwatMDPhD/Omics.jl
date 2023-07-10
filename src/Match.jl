@@ -10,7 +10,7 @@ using Statistics: cor
 
 using StatsBase: sample
 
-using ..BioLab
+using BioLab
 
 function _normalize!(fl_::AbstractVector{Float64}, st)
 

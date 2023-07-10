@@ -10,7 +10,7 @@ using Mmap: mmap
 
 using XLSX: readtable
 
-using ..BioLab
+using BioLab
 
 function read(fi; xl = "", ke_ar...)
 

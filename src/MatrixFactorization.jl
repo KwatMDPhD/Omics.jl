@@ -4,7 +4,7 @@ using LinearAlgebra: pinv
 
 using NMF: nnmf
 
-using ..BioLab
+using BioLab
 
 function factorize(ma, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 10^-4)
 

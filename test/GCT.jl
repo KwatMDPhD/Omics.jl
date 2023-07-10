@@ -1,10 +1,14 @@
 using Test: @test
 
+using BioLab
+
 # ---- #
 
 DA = joinpath(BioLab.DA, "GCT")
 
-@test readdir(DA) == []
+# ---- #
+
+@test readdir(DA) == ["a.gct"]
 
 # ---- #
 

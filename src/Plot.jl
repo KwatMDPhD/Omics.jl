@@ -10,7 +10,7 @@ using JSON: json
 
 using Printf: @sprintf
 
-using ..BioLab
+using BioLab
 
 const _CO = "continuous"
 

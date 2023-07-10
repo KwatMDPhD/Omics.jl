@@ -4,7 +4,7 @@ using ProgressMeter: @showprogress
 
 using StatsBase: sample
 
-using ..BioLab
+using BioLab
 
 function _get_absolute_raise(sc_, id, ex)
 

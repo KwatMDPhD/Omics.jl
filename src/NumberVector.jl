@@ -2,7 +2,7 @@ module NumberVector
 
 using Distributions: Normal
 
-using ..BioLab
+using BioLab
 
 function force_increasing_with_min!(ar)
 

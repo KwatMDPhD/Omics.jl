@@ -1,6 +1,6 @@
 module CLS
 
-using ..BioLab
+using BioLab
 
 function read(cl)
 

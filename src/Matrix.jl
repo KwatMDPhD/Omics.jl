@@ -1,6 +1,6 @@
 module Matrix
 
-using ..BioLab
+using BioLab
 
 function _error_size_difference(ve_)
 

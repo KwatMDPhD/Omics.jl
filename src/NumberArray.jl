@@ -2,7 +2,7 @@ module NumberArray
 
 using StatsBase: competerank, denserank, mean, ordinalrank, std, tiedrank
 
-using ..BioLab
+using BioLab
 
 function error_negative(ar)
 

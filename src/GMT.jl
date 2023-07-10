@@ -1,6 +1,6 @@
 module GMT
 
-using ..BioLab
+using BioLab
 
 function read(gm)
 
@@ -10,7 +10,7 @@ function read(gm)
 
         sp_ = split(li, '\t')
 
-        BioLab.Dict.set_with_last!(se_ge_, sp_[1], filter!(!isempty, sp_[3:end]))
+        BioLab.Dict.set_with_last!(se_ge_, sp_[1], filter!(!isempty, view(sp_, 3:length(sp_))))
 
     end
 

@@ -1,10 +1,10 @@
 module GCT
 
-using ..BioLab
+using BioLab
 
 function read(gc)
 
-    BioLab.Table.read(gc; header = 3, delim = '\t', drop = ["Description"])
+    BioLab.Table.read(gc; header = 3, drop = ["Description"])
 
 end
 

@@ -1,6 +1,6 @@
 module Target
 
-using ..BioLab
+using BioLab
 
 function _aim(nu1_, nu2_)
 

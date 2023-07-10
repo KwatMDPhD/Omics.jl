@@ -1,29 +1,11 @@
 module Gene
 
-using ..BioLab
+using BioLab
 
-function _read(gz)
-
-    BioLab.Table.read(joinpath(BioLab.DA, "Gene", gz))
-
-end
-
-function read_ensembl()
-
-    _read("ensembl.tsv.gz")
-
-end
-
-function read_uniprot()
-
-    _read("uniprot.tsv.gz")
-
-end
-
-function map_ensembl(da = read_ensembl())
+function map_ensembl()
 
     BioLab.DataFrame.map(
-        da,
+        BioLab.Table.read(joinpath(BioLab.DA, "Gene", "ensembl.tsv.gz")),
         BioLab.Dict.set_with_last!,
         [
             "Transcript stable ID version",
@@ -38,26 +20,28 @@ function map_ensembl(da = read_ensembl())
 
 end
 
-function map_uniprot(da = read_uniprot())
+function map_uniprot()
 
-    pr_io_an = Dict{String, Dict{String, Any}}()
+    pr_co_an = Dict{String, Dict{String, Any}}()
 
-    io_ = names(da)
+    da = BioLab.Table.read(joinpath(BioLab.DA, "Gene", "uniprot.tsv.gz"))
+
+    co_ = names(da)
 
     for an_ in eachrow(da)
 
-        io_an = Dict{String, Any}()
+        co_an = Dict{String, Any}()
 
-        for (io, an) in zip(io_, an_)
+        for (co, an) in zip(co_, an_)
 
-            if ismissing(an)
+            if BioLab.Bad.is_bad(an)
 
                 continue
 
             end
 
             # TODO: If Entry Name is the first column, decouple setting it and the rest of the columns.
-            if io == "Entry Name"
+            if co == "Entry Name"
 
                 if !endswith(an, "_HUMAN")
 
@@ -65,21 +49,21 @@ function map_uniprot(da = read_uniprot())
 
                 end
 
-                BioLab.Dict.set_with_last!(pr_io_an, an[1:(end - 6)], io_an)
+                BioLab.Dict.set_with_last!(pr_co_an, chop(an; tail = 6), co_an)
 
             else
 
-                if io == "Gene Names"
+                if co == "Gene Names"
 
                     an = split(an)
 
-                elseif io == "Interacts with"
+                elseif co == "Interacts with"
 
                     an = split(an, "; ")
 
                 end
 
-                io_an[io] = an
+                co_an[co] = an
 
             end
 
@@ -87,7 +71,7 @@ function map_uniprot(da = read_uniprot())
 
     end
 
-    pr_io_an
+    pr_co_an
 
 end
 

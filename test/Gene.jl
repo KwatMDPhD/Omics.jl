@@ -1,33 +1,41 @@
+using Logging: Debug, Info, disable_logging
+
 using Test: @test
+
+using BioLab
 
 # ---- #
 
 DA = joinpath(BioLab.DA, "Gene")
 
+# ---- #
+
 @test readdir(DA) == ["ensembl.tsv.gz", "uniprot.tsv.gz"]
 
 # ---- #
 
-en = BioLab.Gene.read_ensembl()
+en = BioLab.Table.read(joinpath(DA, "ensembl.tsv.gz"))
 
 # ---- #
 
-un = BioLab.Gene.read_uniprot()
+un = BioLab.Table.read(joinpath(DA, "uniprot.tsv.gz"))
 
 # ---- #
 
-Logging.disable_logging(Info)
+disable_logging(Info)
+en_na = BioLab.Gene.map_ensembl()
+disable_logging(Debug)
 
-en_na = BioLab.Gene.map_ensembl(en)
+@test length(en_na) == 828011
 
-@test en_na == BioLab.Gene.map_ensembl()
+for (ke, va) in (("GPI-214", "GPI"), ("ENST00000303227", "GLOD5"), ("ENST00000592956.1", "SYT5"))
 
-Logging.disable_logging(Debug)
+    @test en_na[ke] == va
+
+end
 
 # ---- #
 
-pr_io_an = BioLab.Gene.map_uniprot(un)
-
-@test pr_io_an == BioLab.Gene.map_uniprot()
+pr_io_an = BioLab.Gene.map_uniprot()
 
 @test pr_io_an["CD8A"]["Gene Names"] == ["CD8A", "MAL"]
