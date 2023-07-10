@@ -88,21 +88,11 @@ function _plot_mountain(
 
     x = collect(1:n)
 
-    scatter = Dict(
-        "x" => x,
-        "text" => fe_,
-        "mode" => "lines",
-        "line" => Dict("width" => 0),
-        "fill" => "tozeroy",
-    )
+    scatter = Dict("x" => x, "text" => fe_, "mode" => "lines", "fill" => "tozeroy")
 
     coe1 = "#07fa07"
 
     coe2 = "rgba(7, 250, 7, 0.32)"
-
-    cob = "#1993ff"
-
-    cor = "#ff1992"
 
     yaxis1_domain = (0, 0.24)
 
@@ -124,8 +114,22 @@ function _plot_mountain(
     BioLab.Plot.plot(
         ht,
         [
-            BioLab.Dict.merge(scatter, Dict("y" => ifelse.(sc_ .< 0, sc_, 0), "fillcolor" => cob)),
-            BioLab.Dict.merge(scatter, Dict("y" => ifelse.(0 .< sc_, sc_, 0), "fillcolor" => cor)),
+            BioLab.Dict.merge(
+                scatter,
+                Dict(
+                    "y" => ifelse.(sc_ .< 0, sc_, 0),
+                    "line" => Dict("width" => 1, "color" => "#351e1c"),
+                    "fillcolor" => "#c0c0c0",
+                ),
+            ),
+            BioLab.Dict.merge(
+                scatter,
+                Dict(
+                    "y" => ifelse.(0 .< sc_, sc_, 0),
+                    "line" => Dict("width" => 1, "color" => "#351e1c"),
+                    "fillcolor" => "#c0c0c0",
+                ),
+            ),
             Dict(
                 "yaxis" => "y2",
                 "y" => zeros(sum(bo_)),
@@ -196,7 +200,7 @@ function _plot_mountain(
                         "y" => yaxis1_domain[2] * 1 / 4,
                         "x" => annotation_margin,
                         "text" => nah,
-                        "font" => Dict("size" => annotation_font_size, "color" => cor),
+                        "font" => Dict("size" => annotation_font_size, "color" => "#ff1992"),
                         "bordercolor" => "#fcc9b9",
                     ),
                 ),
@@ -206,7 +210,7 @@ function _plot_mountain(
                         "y" => yaxis1_domain[2] * 3 / 4,
                         "x" => 1 - annotation_margin,
                         "text" => nal,
-                        "font" => Dict("size" => annotation_font_size, "color" => cob),
+                        "font" => Dict("size" => annotation_font_size, "color" => "#1993ff"),
                         "bordercolor" => "#b9c9fc",
                     ),
                 ),
@@ -588,15 +592,13 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
 
     BioLab.Path.error_missing(di)
 
-    se_x_sa_x_enm = replace(se_x_sa_x_en, NaN => missing)
-
     als = make_string(al)
 
     nacs = BioLab.Path.clean(nac)
 
     BioLab.Plot.plot_heat_map(
         joinpath(di, "set_x_$(nacs)_x_enrichment.html"),
-        se_x_sa_x_enm,
+        replace(se_x_sa_x_en, NaN => missing),
         se_,
         sa_;
         nar = "Set",
@@ -604,23 +606,42 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
         layout = Dict("title" => Dict("text" => "Enrichment with $als")),
     )
 
-    for fu in (findmin, findmax)
+    nos_ = BitVector(undef, length(fe_))
 
-        en, id_ = fu(skipmissing(se_x_sa_x_enm))
+    noe_ = .!isnan.(se_x_sa_x_en)
 
-        # TODO: Resume here Zzz...
-        sc2_, fe2_ = BioLab.Vector.skip_nan_sort_like(fe_x_sa_x_sc[:, id_[2]], fe_; rev = true)
+    for id_ in
+        view(view(CartesianIndices(se_x_sa_x_en), noe_), sortperm(view(se_x_sa_x_en, noe_)))[[
+        1,
+        2,
+        3,
+        end - 2,
+        end - 1,
+        end,
+    ]]
 
-        se = se_[id_[1]]
+        en = se_x_sa_x_en[id_]
 
-        sa = sa_[id_[2]]
+        id1, id2 = Tuple(id_)
+
+        se = se_[id1]
+
+        sa = sa_[id2]
+
+        sc_ = fe_x_sa_x_sc[:, id2]
+
+        nos_ .= .!isnan.(sc_)
+
+        scn_ = sc_[nos_]
+
+        so_ = sortperm(scn_; rev = true)
 
         en2 = enrich(
             joinpath(di, "$(sa)_enriching_$se.html"),
             al,
-            sc2_,
-            fe2_,
-            fe1___[id_[1]];
+            view(scn_, so_),
+            view(fe_[nos_], so_),
+            fe1___[id1];
             ex,
             title_text = "$sa x $se",
         )

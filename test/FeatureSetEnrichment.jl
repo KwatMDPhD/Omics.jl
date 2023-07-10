@@ -49,7 +49,7 @@ for (ex, re) in (
     # 3.958 ns (0 allocations: 0 bytes)
     # 5.208 ns (0 allocations: 0 bytes)
     # 2.416 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
+    # 4.000 ns (0 allocations: 0 bytes)
     # 4.875 ns (0 allocations: 0 bytes)
     # 5.541 ns (0 allocations: 0 bytes)
     # 12.470 ns (0 allocations: 0 bytes)
@@ -196,19 +196,47 @@ end
 
 # ---- #
 
-fe_, sc_, fe1_ = benchmark_myc()
+const MFE_, MSC_, MFE1_ = benchmark_myc()
 
-bo_ = in(Set(fe1_)).(fe_)
+const MBO_ = in(Set(MFE1_)).(MFE_)
 
-sa_ = ["Score", "Score x 10", "Constant"]
+const MSA_ = ["Score", "Score x 10", "Constant"]
 
-fe_x_sa_x_sc = hcat(sc_, sc_ * 10.0, fill(0.8, length(fe_)))
+const FE_X_SA_X_MSC = hcat(MSC_, MSC_ * 10.0, fill(0.8, length(MFE_)))
 
-se_fe1_ = BioLab.GMT.read(joinpath(DA, "h.all.v7.1.symbols.gmt"))
+const MSE_FE1_ = BioLab.GMT.read(joinpath(DA, "h.all.v7.1.symbols.gmt"))
 
-se_ = collect(keys(se_fe1_))
+const MSE_ = collect(keys(MSE_FE1_))
 
-fe1___ = collect(values(se_fe1_))
+const MFE1___ = collect(values(MSE_FE1_))
+
+# ---- #
+
+for al in AL_
+
+    BioLab.FeatureSetEnrichment.enrich("", al, MSC_, MFE_, MFE1_)
+
+end
+
+# ---- #
+
+const AL = AL_[1]
+
+se_x_sa_x_en = BioLab.FeatureSetEnrichment.enrich(AL, MFE_, MSA_, FE_X_SA_X_MSC, MSE_, MFE1___)
+
+BioLab.FeatureSetEnrichment.plot(
+    BioLab.TE,
+    AL,
+    MFE_,
+    MSA_,
+    FE_X_SA_X_MSC,
+    MSE_,
+    MFE1___,
+    se_x_sa_x_en,
+    "Sample",
+)
+
+# ---- #
 
 for al in AL_
 
@@ -228,11 +256,11 @@ for al in AL_
     # 18.812 ms (108 allocations: 934.22 KiB)
     # 57.440 ms (358 allocations: 4.59 MiB)
 
-    @btime BioLab.FeatureSetEnrichment._enrich($al, $sc_, $EX, $bo_, nothing)
+    #@btime BioLab.FeatureSetEnrichment._enrich($al, $MSC_, $EX, $MBO_, nothing)
 
-    @btime BioLab.FeatureSetEnrichment.enrich($al, $sc_, $fe_, $fe1___)
+    #@btime BioLab.FeatureSetEnrichment.enrich($al, $MSC_, $MFE_, $MFE1___)
 
-    @btime BioLab.FeatureSetEnrichment.enrich($al, $fe_, $sa_, $fe_x_sa_x_sc, $se_, $fe1___)
+    #@btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSA_, $FE_X_SA_X_MSC, $MSE_, $MFE1___)
 
 end
 
