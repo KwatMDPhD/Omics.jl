@@ -2,13 +2,6 @@ module Information
 
 using KernelDensity: kde
 
-# TODO
-function get_entropy(nu_)
-
-    0
-
-end
-
 function get_kullback_leibler_divergence(nu1, nu2)
 
     nu1 * log(nu1 / nu2)
@@ -52,16 +45,17 @@ function get_antisymmetric_kullback_leibler_divergence(nu1, nu2, nu3)
 end
 
 # TODO
-function get_mutual_information(nu1_, nu2_)
+function get_entropy(nu_)
 
-    0
+end
+
+# TODO
+function get_mutual_information(nu1_, nu2_)
 
 end
 
 # TODO
 function get_information_coefficient(nu1_, nu2_)
-
-    get_mutual_information(nu1_, nu2_)
 
 end
 

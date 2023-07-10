@@ -6,7 +6,7 @@ using OrderedCollections: OrderedDict
 
 using TOML: parsefile as toml_parsefile
 
-using ..BioLab
+using BioLab
 
 function set_with_first!(ke_va, ke, va)
 
@@ -134,6 +134,12 @@ function merge(ke1_va1, ke2_va2, fu!)
     end
 
     ke_va
+
+end
+
+function merge(ke1_va1, ke2_va2)
+
+    merge(ke1_va1, ke2_va2, set_with_last!)
 
 end
 

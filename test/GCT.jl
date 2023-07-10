@@ -4,7 +4,7 @@ using BioLab
 
 # ---- #
 
-DA = joinpath(BioLab.DA, "GCT")
+const DA = joinpath(BioLab.DA, "GCT")
 
 # ---- #
 

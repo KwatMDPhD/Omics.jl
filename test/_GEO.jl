@@ -6,9 +6,9 @@ using BioLab
 
 # ---- #
 
-nar = "Row Name"
+const NAR = "Row Name"
 
-nac_ = ["Column 1", "Column 2", "Column 3"]
+const CO_ = ["Column 1", "Column 2", "Column 3"]
 
 for (ro_an__, re) in (
     (
@@ -18,7 +18,7 @@ for (ro_an__, re) in (
             Dict("Row 1" => 1, "Row 2" => 2, "Row 3" => 3),
         ),
         DataFrame(
-            nar => ["Row 1", "Row 2", "Row 3"],
+            NAR => ["Row 1", "Row 2", "Row 3"],
             "Column 1" => [1, 2, missing],
             "Column 2" => [missing, 2, 3],
             "Column 3" => [1, 2, 3],
@@ -39,11 +39,11 @@ for (ro_an__, re) in (
     ),
 )
 
-    @test isequal(BioLab.GEO._make(nar, nac_, ro_an__), re)
+    @test isequal(BioLab.GEO._make(NAR, CO_, ro_an__), re)
 
     # 2.268 μs (37 allocations: 3.25 KiB)
     # 2.199 μs (37 allocations: 3.22 KiB)
-    @btime BioLab.GEO._make($nar, $nac_, $ro_an__)
+    @btime BioLab.GEO._make($NAR, $CO_, $ro_an__)
 
 end
 

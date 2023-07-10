@@ -1,37 +1,31 @@
 using Test: @test
 
-# ---- #
-
-for nu_ in (fill(0, 10), fill(1, 10))
-
-    println(BioLab.Information.get_entropy(nu_))
-
-end
+using BioLab
 
 # ---- #
 
-n = 10
+const N = 10
 
-nu1_ = BioLab.NumberArray.shift_minimum(randn(n), "0<")
+const NU1_ = BioLab.NumberArray.shift_minimum(randn(N), "0<")
 
-nu2_ = BioLab.NumberArray.shift_minimum(randn(n), "0<")
+const NU2_ = BioLab.NumberArray.shift_minimum(randn(N), "0<")
 
-nu1s_ = [nu + 1 for nu in nu1_]
+const NU1S_ = NU1_ .+ 1
 
-nu2s_ = [nu + 1 for nu in nu2_]
+const NU2S_ = NU2_ .+ 1
 
-ar_ = (
+const AR_ = (
     ([1, 1, 1], [1, 1, 1]),
     ([1, 2, 3], [10, 20, 30]),
     (
         (BioLab.Information.kde(nu1_).density, BioLab.Information.kde(nu2_).density) for
-        (nu1_, nu2_) in ((nu1_, nu1_), (nu1_, nu2_), (nu1s_, nu2s_))
+        (nu1_, nu2_) in ((NU1_, NU1_), (NU1_, NU2_), (NU1S_, NU2S_))
     )...,
 )
 
 # ---- #
 
-for (nu1_, nu2_) in ar_
+for (nu1_, nu2_) in AR_
 
     for fu in (
         BioLab.Information.get_kullback_leibler_divergence,
@@ -39,12 +33,12 @@ for (nu1_, nu2_) in ar_
         BioLab.Information.get_thermodynamic_depth,
     )
 
-        re_ = map(fu, nu1_, nu2_)
+        re_ = fu.(nu1_, nu2_)
 
         BioLab.Plot.plot_scatter(
             "",
             (nu1_, nu2_, re_);
-            name_ = [1, 2, "fu"],
+            name_ = (1, 2, "Result"),
             layout = Dict("title" => Dict("text" => string(fu))),
         )
 
@@ -54,7 +48,7 @@ end
 
 # ---- #
 
-for (nu1_, nu2_) in ar_
+for (nu1_, nu2_) in AR_
 
     for fu in (
         BioLab.Information.get_symmetric_kullback_leibler_divergence,
@@ -63,12 +57,12 @@ for (nu1_, nu2_) in ar_
 
         nu3_ = (nu1_ + nu2_) / 2
 
-        re_ = map(fu, nu1_, nu2_, nu3_)
+        re_ = fu.(nu1_, nu2_, nu3_)
 
         BioLab.Plot.plot_scatter(
             "",
             (nu1_, nu2_, nu3_, re_);
-            name_ = [1, 2, 3, "fu"],
+            name_ = (1, 2, 3, "Result"),
             layout = Dict("title" => Dict("text" => string(fu))),
         )
 
@@ -77,16 +71,28 @@ for (nu1_, nu2_) in ar_
 end
 
 # ---- #
+# TODO
+
+for nu_ in (fill(0, 10), fill(1, 10))
+
+    BioLab.Information.get_entropy(nu_)
+
+end
+
+# ---- #
+# TODO
 
 nu1_ = collect(0:10)
 
 nu2_ = collect(0:10:100)
 
 # ---- #
+# TODO
 
 BioLab.Information.get_mutual_information(nu1_, nu2_)
 
 # ---- #
+# TODO
 
 bi = BioLab.Information.kde((nu1_, nu2_), npoints = (8, 8))
 

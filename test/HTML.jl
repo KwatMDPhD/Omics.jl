@@ -1,23 +1,27 @@
 using Test: @test
 
-# ---- #
-
-id = "DIV_ID"
-
-so_ = ("SOURCE_1", "SOURCE_2")
-
-sc = "SCRIPT"
+using BioLab
 
 # ---- #
 
-BioLab.HTML.make("", id, so_, sc)
+const ID = "DIV_ID"
+
+const SO_ = ("SOURCE_1", "SOURCE_2")
+
+const SC = "SCRIPT"
 
 # ---- #
 
-ht = joinpath(TE, "name.html")
+BioLab.HTML.make("", ID, SO_, SC)
+
+# ---- #
 
 for ba in ("#000000", "#ffffff")
 
-    BioLab.HTML.make(ht, id, so_, sc; ba)
+    ht = joinpath(BioLab.TE, "$ba.html")
+
+    BioLab.HTML.make(ht, ID, SO_, SC; ba)
+
+    @test length(readlines(ht)) == 8 + length(SO_)
 
 end

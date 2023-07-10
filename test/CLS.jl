@@ -4,7 +4,7 @@ using BioLab
 
 # ---- #
 
-DA = joinpath(BioLab.DA, "CLS")
+const DA = joinpath(BioLab.DA, "CLS")
 
 # ---- #
 
@@ -35,6 +35,6 @@ for (na, ta, nu_) in (
     # 388.875 μs (6235 allocations: 530.48 KiB)
     # 10.750 μs (99 allocations: 7.71 KiB)
     # 10.459 μs (99 allocations: 7.66 KiB)
-    #@btime BioLab.CLS.read($cl)
+    @btime BioLab.CLS.read($cl)
 
 end

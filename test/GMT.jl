@@ -1,8 +1,10 @@
 using Test: @test
 
+using BioLab
+
 # ---- #
 
-DA = joinpath(BioLab.DA, "GMT")
+const DA = joinpath(BioLab.DA, "GMT")
 
 # ---- #
 
@@ -16,8 +18,8 @@ for (na, re) in (("h.all.v7.1.symbols.gmt", 50), ("c2.all.v7.1.symbols.gmt", 552
 
     @test length(BioLab.GMT.read(gm)) == re
 
-    # 340.875 μs (7767 allocations: 977.20 KiB)
-    # 26.456 ms (521432 allocations: 51.53 MiB)
-    #@btime BioLab.GMT.read($gm)
+    # 338.208 μs (7767 allocations: 977.20 KiB)
+    # 25.456 ms (521432 allocations: 51.53 MiB)
+    @btime BioLab.GMT.read($gm)
 
 end

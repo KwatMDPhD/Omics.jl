@@ -6,7 +6,7 @@ using BioLab
 
 # ---- #
 
-DA = joinpath(BioLab.DA, "Gene")
+const DA = joinpath(BioLab.DA, "Gene")
 
 # ---- #
 
@@ -14,28 +14,22 @@ DA = joinpath(BioLab.DA, "Gene")
 
 # ---- #
 
-en = BioLab.Table.read(joinpath(DA, "ensembl.tsv.gz"))
-
-# ---- #
-
-un = BioLab.Table.read(joinpath(DA, "uniprot.tsv.gz"))
-
-# ---- #
-
 disable_logging(Info)
-en_na = BioLab.Gene.map_ensembl()
+
+const EN_NA = BioLab.Gene.map_ensembl()
+
 disable_logging(Debug)
 
-@test length(en_na) == 828011
+@test length(EN_NA) == 828011
 
 for (ke, va) in (("GPI-214", "GPI"), ("ENST00000303227", "GLOD5"), ("ENST00000592956.1", "SYT5"))
 
-    @test en_na[ke] == va
+    @test EN_NA[ke] == va
 
 end
 
 # ---- #
 
-pr_io_an = BioLab.Gene.map_uniprot()
+const PR_IO_AN = BioLab.Gene.map_uniprot()
 
-@test pr_io_an["CD8A"]["Gene Names"] == ["CD8A", "MAL"]
+@test PR_IO_AN["CD8A"]["Gene Names"] == ["CD8A", "MAL"]

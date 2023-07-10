@@ -6,11 +6,11 @@ using BioLab
 
 # ---- #
 
-fu = CorrDist()
+const FU = CorrDist()
 
 # ---- #
 
-ma = [
+const MA1 = [
     0 0 0 0.1
     1 2 1 2
     2 1 2 1
@@ -20,18 +20,18 @@ ma = [
     30 30 30 30.1
 ]
 
-@test BioLab.Clustering.hierarchize(ma, 1).order == [4, 1, 2, 3, 7, 5, 6]
+@test BioLab.Clustering.hierarchize(MA1, 1).order == [4, 1, 2, 3, 7, 5, 6]
 
-@test BioLab.Clustering.hierarchize(ma, 2).order == [1, 3, 2, 4]
+@test BioLab.Clustering.hierarchize(MA1, 2).order == [1, 3, 2, 4]
 
-@test BioLab.Clustering.hierarchize(ma, 1).order ==
-      BioLab.Clustering.hierarchize(permutedims(ma), 2).order
+@test BioLab.Clustering.hierarchize(MA1, 1).order ==
+      BioLab.Clustering.hierarchize(permutedims(MA1), 2).order
 
-@test BioLab.Clustering.hierarchize(ma, 1; fu).order == [3, 6, 2, 5, 7, 1, 4]
+@test BioLab.Clustering.hierarchize(MA1, 1; fu = FU).order == [3, 6, 2, 5, 7, 1, 4]
 
 # ---- #
 
-ma = [
+const MA2 = [
     0 0 0 0.1
     1 2 1 2
     2 1 2 1
@@ -49,15 +49,15 @@ for (k, gr_) in (
     (4, [1, 2, 3, 1, 2, 3, 4]),
 )
 
-    @test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(ma, 1; fu), k) == gr_
+    @test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA2, 1; fu = FU), k) == gr_
 
 end
 
 # ---- #
 
-ma = rand(16, 2)
+const MA3 = rand(16, 2)
 
-k = 4
+const K = 4
 
-@test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(ma, 1), k) ==
-      BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(permutedims(ma), 2), k)
+@test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA3, 1), K) ==
+      BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(permutedims(MA3), 2), K)

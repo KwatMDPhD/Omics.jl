@@ -22,47 +22,50 @@ using BioLab
 
 # ---- #
 
-n_ro = 3
+const N_RO = 3
 
-n_co = 4
+const N_CO = 4
 
-ro = "Row Name"
+const NAR = "Row Name"
 
-ro_ = string.("Row ", 1:n_ro)
+const RO_ = string.("Row ", 1:N_RO)
 
-co_ = string.("Column ", 1:n_co)
+const CO_ = string.("Column ", 1:N_CO)
 
-ma = reshape(1:(n_ro * n_co), (n_ro, n_co))
+const MA = reshape(1:(N_RO * N_CO), (N_RO, N_CO))
 
 # ---- #
 
-da = BioLab.DataFrame.make(ro, ro_, co_, ma)
-@test !(Any in eltype.(eachcol(da)))
+const DA1 = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
-@test size(da) == (n_ro, n_co + 1)
+# ---- #
 
-@test da == DataFrame(
-    "Row Name" => string.("Row ", 1:n_ro),
-    ("Column $id" => view(ma, :, id) for id in 1:n_co)...,
+@test !(Any in eltype.(eachcol(DA1)))
+
+@test size(DA1) == (N_RO, N_CO + 1)
+
+@test DA1 == DataFrame(
+    "Row Name" => string.("Row ", 1:N_RO),
+    ("Column $id" => view(MA, :, id) for id in 1:N_CO)...,
 )
 
 # 1.121 μs (22 allocations: 1.89 KiB)
-@btime BioLab.DataFrame.make($ro, $ro_, $co_, $ma);
+@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
 
-@test BioLab.DataFrame.separate(da) == (ro, ro_, co_, ma)
+@test BioLab.DataFrame.separate(DA1) == (NAR, RO_, CO_, MA)
 
-BioLab.DataFrame.separate(da)[2][1] = ":("
+BioLab.DataFrame.separate(DA1)[2][1] = ":("
 
-@test da[1, 1] == "Row 1"
+@test DA1[1, 1] == "Row 1"
 
 # 2.106 μs (28 allocations: 2.08 KiB)
-@btime BioLab.DataFrame.separate($da);
+@btime BioLab.DataFrame.separate($DA1);
 
 # ---- #
 
-da = DataFrame(
+const DA2 = DataFrame(
     "M1" => [nothing, "M12", "M13", "M14"],
     "F" => ["F1", missing, "F3", "F4"],
     "M2" => ["M21", "M22", "", "M24"],
@@ -84,9 +87,11 @@ for (fr_, re) in (
     ),
 )
 
-    @test BioLab.DataFrame.map(da, BioLab.Dict.set_with_first!, fr_, "F") == re
+    @test BioLab.DataFrame.map(DA2, BioLab.Dict.set_with_first!, fr_, "F") == re
 
-    @btime BioLab.DataFrame.map($da, BioLab.Dict.set_with_first!, $fr_, "F")
+    # 3.422 μs (68 allocations: 3.83 KiB)
+    # 4.881 μs (74 allocations: 4.09 KiB)
+    @btime BioLab.DataFrame.map($DA2, BioLab.Dict.set_with_first!, $fr_, "F")
 
 end
 

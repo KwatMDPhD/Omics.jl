@@ -1,4 +1,3 @@
-using Base: Order
 using OrderedCollections: OrderedDict
 
 using Test: @test
@@ -7,20 +6,22 @@ using BioLab
 
 # ---- #
 
-DA = joinpath(BioLab.DA, "Dict")
+const DA = joinpath(BioLab.DA, "Dict")
+
+# ---- #
 
 @test readdir(DA) == ["example.toml", "example_1.json", "example_2.json"]
 
 # ---- #
 
-ke_va = Dict("Existing" => 1)
+const DI1 = Dict("Existing" => 1)
 
 # ---- #
 
 for (ke, va, re) in
-    (("Existing", 1, ke_va), ("Existing", 2, ke_va), ("New", 3, Dict("Existing" => 1, "New" => 3)))
+    (("Existing", 1, DI1), ("Existing", 2, DI1), ("New", 3, Dict("Existing" => 1, "New" => 3)))
 
-    co = copy(ke_va)
+    co = copy(DI1)
 
     BioLab.Dict.set_with_first!(co, ke, va)
 
@@ -31,12 +32,12 @@ end
 # ---- #
 
 for (ke, va, re) in (
-    ("Existing", 1, ke_va),
+    ("Existing", 1, DI1),
     ("Existing", 2, Dict("Existing" => 2)),
     ("New", 3, Dict("Existing" => 1, "New" => 3)),
 )
 
-    co = copy(ke_va)
+    co = copy(DI1)
 
     BioLab.Dict.set_with_last!(co, ke, va)
 
@@ -52,7 +53,7 @@ for (ke, va, re) in (
     ("New", 3, Dict("Existing" => 1, "New" => 3)),
 )
 
-    co = copy(ke_va)
+    co = copy(DI1)
 
     BioLab.Dict.set_with_suffix!(co, ke, va)
 
@@ -62,36 +63,39 @@ end
 
 # ---- #
 
-ke1_va1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
+const KE1_VA1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 
-ke2_va2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
+const KE2_VA2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
-@test BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
+@test BioLab.Dict.merge(KE1_VA1, KE2_VA2, BioLab.Dict.set_with_last!) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))
 
 
-@test BioLab.Dict.merge(ke2_va2, ke1_va1, BioLab.Dict.set_with_last!) ==
+@test BioLab.Dict.merge(KE2_VA2, KE1_VA1, BioLab.Dict.set_with_last!) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))
 
-@test BioLab.Dict.merge(ke1_va1, ke2_va2, BioLab.Dict.set_with_last!) ==
-      BioLab.Dict.merge(ke2_va2, ke1_va1, BioLab.Dict.set_with_first!)
+@test BioLab.Dict.merge(KE1_VA1, KE2_VA2, BioLab.Dict.set_with_last!) ==
+      BioLab.Dict.merge(KE2_VA2, KE1_VA1, BioLab.Dict.set_with_first!)
+
+@test BioLab.Dict.merge(KE1_VA1, KE2_VA2, BioLab.Dict.set_with_last!) ==
+      BioLab.Dict.merge(KE1_VA1, KE2_VA2)
 
 # ---- #
 
-js1 = joinpath(DA, "example_1.json")
+const JS1 = joinpath(DA, "example_1.json")
 
 # ---- #
 
 for dicttype in (Dict, OrderedDict, OrderedDict{String, String})
 
-    println(summary(BioLab.Dict.read(js1, dicttype)))
-    @test BioLab.Dict.read(js1, dicttype) isa dicttype
+    println(summary(BioLab.Dict.read(JS1, dicttype)))
+    @test BioLab.Dict.read(JS1, dicttype) isa dicttype
 
 end
 
 # ---- #
 
-@test BioLab.Dict.read(js1) == OrderedDict("fruit" => "Apple", "color" => "Red", "size" => "Large")
+@test BioLab.Dict.read(JS1) == OrderedDict("fruit" => "Apple", "color" => "Red", "size" => "Large")
 
 # ---- #
 
@@ -147,7 +151,7 @@ end
 
 # ---- #
 
-ke_va = Dict(
+const DI2 = Dict(
     "Luffy" => "Pirate King",
     "Crews" => [
         "Luffy",
@@ -164,18 +168,18 @@ ke_va = Dict(
     "episode" => 1030,
 )
 
-js = joinpath(BioLab.TE, "write_read.json")
+const JS2 = joinpath(BioLab.TE, "write_read.json")
 
 # ---- #
 
-BioLab.Dict.write(js, ke_va)
+BioLab.Dict.write(JS2, DI2)
 
-@test ke_va == BioLab.Dict.read(js)
+@test DI2 == BioLab.Dict.read(JS2)
 
 # ---- #
 
-ke_va["Black Beard"] = ("Yami Yami", "Gura Gura")
+DI2["Black Beard"] = ("Yami Yami", "Gura Gura")
 
-BioLab.Dict.write(js, ke_va)
+BioLab.Dict.write(JS2, DI2)
 
-@test ke_va != BioLab.Dict.read(js)
+@test DI2 != BioLab.Dict.read(JS2)
