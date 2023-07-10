@@ -6,7 +6,7 @@ using BioLab
 
 function make(ve_)
 
-    _DataFrame(BioLab.Matrix.make(ve_[2:end]), ve_[1])
+    _DataFrame(BioLab.Matrix.make(view(ve_, 2:length(ve_))), ve_[1])
 
 end
 

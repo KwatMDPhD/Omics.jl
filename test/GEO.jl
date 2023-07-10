@@ -1,5 +1,7 @@
 using DataFrames: DataFrame
 
+using Logging: Debug, Warn, disable_logging
+
 using Test: @test
 
 using BioLab
@@ -41,8 +43,8 @@ for (ro_an__, re) in (
 
     @test isequal(BioLab.GEO._make(NAR, CO_, ro_an__), re)
 
-    # 2.268 μs (37 allocations: 3.25 KiB)
-    # 2.199 μs (37 allocations: 3.22 KiB)
+    # 2.338 μs (43 allocations: 3.41 KiB)
+    # 2.296 μs (43 allocations: 3.38 KiB)
     @btime BioLab.GEO._make($NAR, $CO_, $ro_an__)
 
 end
@@ -53,29 +55,29 @@ gs = "GSE122404"
 
 # ---- #
 
-gz = BioLab.GEO.download(TE, gs)
+gz = BioLab.GEO.download(BioLab.TE, gs)
 
 @test isfile(gz)
 
 # ---- #
 
-ty_bl = BioLab.GEO.read(gz)
+bl_th = BioLab.GEO.read(gz)
 
-@test length(ty_bl["DATABASE"]) == 1
+@test length(bl_th["DATABASE"]) == 1
 
-@test length(ty_bl["DATABASE"]["GeoMiame"]) == 4
+@test length(bl_th["DATABASE"]["GeoMiame"]) == 4
 
-@test length(ty_bl["SERIES"]) == 1
+@test length(bl_th["SERIES"]) == 1
 
-@test length(ty_bl["SERIES"]["GSE122404"]) == 44
+@test length(bl_th["SERIES"]["GSE122404"]) == 44
 
-@test length(ty_bl["SAMPLE"]) == 20
+@test length(bl_th["SAMPLE"]) == 20
 
-@test length(ty_bl["SAMPLE"]["GSM3466115"]) == 36
+@test length(bl_th["SAMPLE"]["GSM3466115"]) == 36
 
-@test size(BioLab.DataFrame.make(ty_bl["SAMPLE"]["GSM3466115"]["table"])) == (53617, 2)
+@test size(BioLab.GEO._make(bl_th["SAMPLE"]["GSM3466115"]["table"])) == (53617, 2)
 
-pl_ke_va = ty_bl["PLATFORM"]
+pl_ke_va = bl_th["PLATFORM"]
 
 @test length(pl_ke_va) == 1
 
@@ -83,33 +85,37 @@ pl = "GPL16686"
 
 @test length(pl_ke_va[pl]) == 47
 
-platform_table = pl_ke_va[pl]["table"]
+tas = pl_ke_va[pl]["table"]
 
-@test size(BioLab.DataFrame.make(platform_table)) == (53981, 8)
-
-# ---- #
-
-#disable_logging(Warn)
-# 682.000 ms (3441110 allocations: 208.35 MiB)
-#@btime BioLab.GEO.read($gz);
-#disable_logging(Debug)
+@test size(BioLab.GEO._make(tas)) == (53981, 8)
 
 # ---- #
 
-ta = BioLab.DataFrame.make(platform_table)
+disable_logging(Warn)
+
+# 646.881 ms (3441018 allocations: 208.35 MiB)
+@btime BioLab.GEO.read($gz);
+
+disable_logging(Debug)
+
+# ---- #
+
+ta = BioLab.GEO._make(tas)
 
 @test BioLab.GEO._map_feature(pl, ta)["16657485"] == "XR_132471"
 
 # ---- #
 
-#disable_logging(Warn)
-# 9.623 ms (430770 allocations: 18.68 MiB)
-#@btime BioLab.GEO._map_feature($pl, $ta);
-#disable_logging(Debug)
+disable_logging(Warn)
+
+# 15.094 ms (430769 allocations: 18.68 MiB)
+@btime BioLab.GEO._map_feature($pl, $ta);
+
+disable_logging(Debug)
 
 # ---- #
 
-characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabulate(ty_bl)
+characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabulate(bl_th)
 
 @test size(characteristic_x_sample_x_string) == (1, 21)
 
@@ -121,28 +127,30 @@ characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabul
 
 # ---- #
 
-#disable_logging(Warn)
-# 511.084 ms (4991905 allocations: 708.66 MiB)
-#@btime BioLab.GEO.tabulate($ty_bl);
-#disable_logging(Debug)
+disable_logging(Warn)
+
+# 932.823 ms (12535717 allocations: 1002.24 MiB)
+@btime BioLab.GEO.tabulate($bl_th);
+
+disable_logging(Debug)
 
 # ---- #
 
-ty_bl = BioLab.GEO.read(BioLab.GEO.download(TE, "GSE112"))
+bl_th = BioLab.GEO.read(BioLab.GEO.download(BioLab.TE, "GSE112"))
 
-@test length(ty_bl["PLATFORM"]) == 2
+@test length(bl_th["PLATFORM"]) == 2
 
-@test @is_error BioLab.GEO.tabulate(ty_bl)
+@test BioLab.@is_error BioLab.GEO.tabulate(bl_th)
 
 # ---- #
 
-ty_bl = BioLab.GEO.read(BioLab.GEO.download(TE, "GSE197763"))
+bl_th = BioLab.GEO.read(BioLab.GEO.download(BioLab.TE, "GSE197763"))
 
-@test length(ty_bl["PLATFORM"]) == 2
+@test length(bl_th["PLATFORM"]) == 2
 
-@test all(!haskey(ke_va, "table") for ke_va in values(ty_bl["PLATFORM"]))
+@test all(!haskey(ke_va, "table") for ke_va in values(bl_th["PLATFORM"]))
 
-characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabulate(ty_bl)
+characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabulate(bl_th)
 
 @test size(characteristic_x_sample_x_string) == (4, 127)
 
@@ -150,11 +158,11 @@ characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabul
 
 # ---- #
 
-ty_bl = BioLab.GEO.read(BioLab.GEO.download(TE, "GSE13534"))
+bl_th = BioLab.GEO.read(BioLab.GEO.download(BioLab.TE, "GSE13534"))
 
-characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabulate(ty_bl)
+characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabulate(bl_th)
 
-@test isempty(characteristic_x_sample_x_string)
+@test isnothing(characteristic_x_sample_x_string)
 
 @test length(feature_x_sample_x_float) == 1
 

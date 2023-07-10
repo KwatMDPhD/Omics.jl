@@ -103,7 +103,7 @@ end
 
 function _map_feature(pl, ta)
 
-    it = parse(Int, pl[4:end])
+    it = parse(Int, chop(pl; head = 3, tail = 0))
 
     if it in (96, 97, 570, 13667)
 
@@ -157,8 +157,6 @@ function _map_feature(pl, ta)
 
     end
 
-    # TODO: Consider using BioLab.DataFrame.map.
-
     id_fe = Dict{String, String}()
 
     for (id, fe) in zip(ta[!, "ID"], ta[!, co])
@@ -179,13 +177,18 @@ function _make(nar, co_, ro_an__)
 
     ro_ = sort!(collect(union(keys.(ro_an__)...)))
 
-    an__ = fill(Vector{Any}(undef, 1 + length(co_)), 1 + length(ro_))
+    if isempty(ro_)
+
+        return
+
+    end
+
+    an__ = [Vector{Any}(undef, 1 + length(co_)) for _ in 1:(1 + length(ro_))]
 
     id = 1
 
     an__[id][1] = nar
 
-    # TODO: Try ..
     an__[id][2:end] = co_
 
     for (id, ro) in enumerate(ro_)
@@ -194,7 +197,7 @@ function _make(nar, co_, ro_an__)
 
         an__[id][1] = ro
 
-        an__[id][2:end] .= (get(ro_an, ro, missing) for ro_an in ro_an__)
+        an__[id][2:end] = [get(ro_an, ro, missing) for ro_an in ro_an__]
 
     end
 
@@ -208,7 +211,7 @@ function _make(st)
 
 end
 
-function tabulate(bl_th_ke_va; sa = "!Sample_title", ig_ = ())
+function tabulate(bl_th_ke_va; sa = "!Sample_title")
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(bl_th_ke_va["SAMPLE"]))
 
@@ -218,16 +221,13 @@ function tabulate(bl_th_ke_va; sa = "!Sample_title", ig_ = ())
 
     de = ": "
 
-    ch_st__ = fill(Dict{String, String}(), n_sa)
+    ch_st__ = [Dict{String, String}() for _ in 1:n_sa]
 
     pl_fe_fl__ = Dict{String, Vector{Dict{String, Float64}}}()
 
     for (id, (sa, ke_va)) in enumerate(sa_ke_va)
 
-        ch_ = [
-            va for (ke, va) in ke_va if
-            startswith(ke, "!Sample_characteristics") && !any(occursin(va), ig_)
-        ]
+        ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
 
         if all(contains(de), ch_)
 
@@ -247,7 +247,7 @@ function tabulate(bl_th_ke_va; sa = "!Sample_title", ig_ = ())
                 get!(
                     pl_fe_fl__,
                     ke_va["!Sample_platform_id"],
-                    fill(Dict{String, Float64}(), n_sa),
+                    [Dict{String, Float64}() for _ in 1:n_sa],
                 )[id],
                 Dict(zip(ta[!, 1], parse.(Float64, ta[!, "VALUE"]))),
             )
@@ -270,9 +270,9 @@ function tabulate(bl_th_ke_va; sa = "!Sample_title", ig_ = ())
 
         if haskey(ke_va, "table")
 
-            id_fe = _map_feature(pl, BioLab.DataFrame.make(ke_va["table"]))
+            id_fe = _map_feature(pl, _make(ke_va["table"]))
 
-            da[!, 1] .= (id -> get(id_fe, id, "_$id")).(da[!, 1])
+            da[!, 1] = [get(id_fe, id, "_$id") for id in da[!, 1]]
 
         else
 
