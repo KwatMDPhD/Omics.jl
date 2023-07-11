@@ -42,14 +42,14 @@ const MA2 = [
 ]
 
 
-for (k, gr_) in (
+for (k, re) in (
     (1, [1, 1, 1, 1, 1, 1, 1]),
     (2, [1, 1, 2, 1, 1, 2, 1]),
     (3, [1, 2, 3, 1, 2, 3, 1]),
     (4, [1, 2, 3, 1, 2, 3, 4]),
 )
 
-    @test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA2, 1; fu = FU), k) == gr_
+    @test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA2, 1; fu = FU), k) == re
 
 end
 
