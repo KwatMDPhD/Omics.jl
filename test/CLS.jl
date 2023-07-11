@@ -4,7 +4,7 @@ using BioLab
 
 # ---- #
 
-const DA = joinpath(BioLab.DA, "CLS")
+const DA = joinpath(BioLab._DA, "CLS")
 
 # ---- #
 
@@ -26,9 +26,11 @@ for (na, ta, nu_) in (
 
     da = BioLab.CLS.read(cl)
 
+    @test size(da, 1) == 1
+
     @test !(Any in eltype.(eachcol(da)))
 
-    @test da[!, "Target"] == [ta]
+    @test da[1, "Target"] == ta
 
     @test collect(da[1, string.("Sample ", eachindex(nu_))]) == nu_
 
