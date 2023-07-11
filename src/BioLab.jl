@@ -2,9 +2,9 @@ module BioLab
 
 foreach(include, (jl for jl in readdir(@__DIR__) if !startswith(jl, '_') && jl != "BioLab.jl"))
 
-const DA = joinpath(dirname(@__DIR__), "data")
+const _DA = joinpath(dirname(@__DIR__), "data")
 
-const TE = joinpath(tempdir(), string("BioLab", BioLab.Time.stamp()))
+const TE = joinpath(tempdir(), "BioLab$(BioLab.Time.stamp())")
 
 macro is_error(ex)
 

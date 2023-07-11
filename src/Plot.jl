@@ -129,6 +129,12 @@ function color(nu::Real, co)
 
 end
 
+function color(nu_, co = pick_color_scheme(nu_))
+
+    color.(nu_, (co,))
+
+end
+
 function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ke_ar...)
 
     id = "Plotly"
@@ -169,7 +175,7 @@ end
 
 function _set_color(y_)
 
-    color(1:length(y_))
+    color(eachindex(y_))
 
 end
 

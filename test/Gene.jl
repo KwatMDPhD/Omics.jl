@@ -20,7 +20,7 @@ const EN_NA = BioLab.Gene.map_ensembl()
 
 disable_logging(Debug)
 
-@test length(EN_NA) == 828011
+@test length(EN_NA) == 788360#828011
 
 for (ke, va) in (("GPI-214", "GPI"), ("ENST00000303227", "GLOD5"), ("ENST00000592956.1", "SYT5"))
 

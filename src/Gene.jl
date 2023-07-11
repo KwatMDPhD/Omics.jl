@@ -2,21 +2,65 @@ module Gene
 
 using BioLab
 
+function _read(na)
+
+    BioLab.Table.read(joinpath(BioLab._DA, "Gene", na))
+
+end
+
 function map_ensembl()
 
-    BioLab.DataFrame.map(
-        BioLab.Table.read(joinpath(BioLab.DA, "Gene", "ensembl.tsv.gz")),
-        BioLab.Dict.set_with_last!,
-        [
-            "Transcript stable ID version",
-            "Transcript stable ID",
-            "Transcript name",
-            "Gene stable ID version",
-            "Gene stable ID",
+    da = _read("ensembl.tsv.gz")
+
+    ma = Matrix(
+        da[
+            !,
+            [
+                "Transcript stable ID version",
+                "Transcript stable ID",
+                "Transcript name",
+                "Gene stable ID version",
+                "Gene stable ID",
+                "Gene name",
+            ],
         ],
-        "Gene name";
-        de = '|',
     )
+
+    n = size(ma, 2)
+
+    fr_to = Dict{String, String}()
+
+    for an_ in eachrow(ma)
+
+        fr_ = view(an_, 1:(n - 1))
+
+        to = an_[n]
+
+        if BioLab.Bad.is(to)
+
+            continue
+
+        end
+
+        for fr in fr_
+
+            if BioLab.Bad.is(fr)
+
+                continue
+
+            end
+
+            for fr in eachsplit(fr, '|')
+
+                BioLab.Dict.set_with_last!(fr_to, fr, to)
+
+            end
+
+        end
+
+    end
+
+    fr_to
 
 end
 
@@ -24,23 +68,22 @@ function map_uniprot()
 
     pr_co_an = Dict{String, Dict{String, Any}}()
 
-    da = BioLab.Table.read(joinpath(BioLab.DA, "Gene", "uniprot.tsv.gz"))
+    da = _read("uniprot.tsv.gz")
 
     co_ = names(da)
 
-    for an_ in eachrow(da)
+    for an_ in eachrow(Matrix(da))
 
         co_an = Dict{String, Any}()
 
         for (co, an) in zip(co_, an_)
 
-            if BioLab.Bad.is_bad(an)
+            if BioLab.Bad.is(an)
 
                 continue
 
             end
 
-            # TODO: If Entry Name is the first column, decouple setting it and the rest of the columns.
             if co == "Entry Name"
 
                 if !endswith(an, "_HUMAN")

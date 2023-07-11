@@ -22,6 +22,6 @@ for ba in ("#000000", "#ffffff")
 
     BioLab.HTML.make(ht, ID, SO_, SC; ba)
 
-    @test length(readlines(ht)) == 8 + length(SO_)
+    @test length(readlines(ht)) == 10 + length(SO_)
 
 end

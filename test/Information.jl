@@ -6,21 +6,22 @@ using BioLab
 
 const N = 10
 
-const NU1_ = BioLab.NumberArray.shift_minimum(randn(N), "0<")
+const NU1_ = randn(N)
 
-const NU2_ = BioLab.NumberArray.shift_minimum(randn(N), "0<")
+const NU2_ = randn(N)
 
-const NU1S_ = NU1_ .+ 1
+function get_density(nu_)
 
-const NU2S_ = NU2_ .+ 1
+    BioLab.Information.kde(nu_).density
+
+end
 
 const AR_ = (
     ([1, 1, 1], [1, 1, 1]),
     ([1, 2, 3], [10, 20, 30]),
-    (
-        (BioLab.Information.kde(nu1_).density, BioLab.Information.kde(nu2_).density) for
-        (nu1_, nu2_) in ((NU1_, NU1_), (NU1_, NU2_), (NU1S_, NU2S_))
-    )...,
+    (get_density(NU1_), get_density(NU2_)),
+    (get_density(NU1_ .+= minimum(NU1_)), get_density(NU2_ .+= minimum(NU2_))),
+    (get_density(NU1_ .+ 1), get_density(NU2_ .+ 1)),
 )
 
 # ---- #
@@ -33,11 +34,9 @@ for (nu1_, nu2_) in AR_
         BioLab.Information.get_thermodynamic_depth,
     )
 
-        re_ = fu.(nu1_, nu2_)
-
         BioLab.Plot.plot_scatter(
             "",
-            (nu1_, nu2_, re_);
+            (nu1_, nu2_, fu.(nu1_, nu2_));
             name_ = (1, 2, "Result"),
             layout = Dict("title" => Dict("text" => string(fu))),
         )
@@ -57,11 +56,9 @@ for (nu1_, nu2_) in AR_
 
         nu3_ = (nu1_ + nu2_) / 2
 
-        re_ = fu.(nu1_, nu2_, nu3_)
-
         BioLab.Plot.plot_scatter(
             "",
-            (nu1_, nu2_, nu3_, re_);
+            (nu1_, nu2_, nu3_, fu.(nu1_, nu2_, nu3_));
             name_ = (1, 2, 3, "Result"),
             layout = Dict("title" => Dict("text" => string(fu))),
         )

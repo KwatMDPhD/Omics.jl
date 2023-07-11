@@ -1,12 +1,11 @@
 using Test: @test
 
-# ---- #
-
-@test @is_error BioLab.Matrix.make(([1, 2], [3, 4, 5]))
+using BioLab
 
 # ---- #
 
 for (an___, re) in (
+    (([1, 2], [3, 4, 5]), [1 2; 3 4]),
     (([1, 2, 3], [4, 5, 6]), [1 2 3; 4 5 6]),
     (([1, 2.0, 3], [4, 5, 6]), [1 2.0 3; 4 5 6]),
     (([1, NaN, 3], [4, 5, 6]), [1 NaN 3; 4 5 6]),
@@ -36,14 +35,15 @@ for (an___, re) in (
 
     @test isequal(BioLab.Matrix.make(an___), re)
 
-    # 55.287 ns (2 allocations: 224 bytes)
-    # 53.710 ns (2 allocations: 224 bytes)
-    # 53.710 ns (2 allocations: 224 bytes)
-    # 624.035 ns (15 allocations: 528 bytes)
-    # 641.915 ns (15 allocations: 528 bytes)
-    # 2.866 μs (9 allocations: 400 bytes)
-    # 56.784 ns (2 allocations: 160 bytes)
-    # 3.083 μs (43 allocations: 1.33 KiB)
-    #@btime BioLab.Matrix.make($an___);
+    # 24.054 ns (1 allocation: 96 bytes)
+    # 25.645 ns (1 allocation: 112 bytes)
+    # 74.554 ns (5 allocations: 256 bytes)
+    # 74.512 ns (5 allocations: 256 bytes)
+    # 63.052 ns (2 allocations: 224 bytes)
+    # 63.095 ns (2 allocations: 224 bytes)
+    # 715.850 ns (17 allocations: 1.05 KiB)
+    # 25.560 ns (1 allocation: 80 bytes)
+    # 2.167 μs (25 allocations: 1.41 KiB)
+    @btime BioLab.Matrix.make($an___)
 
 end

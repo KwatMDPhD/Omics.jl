@@ -139,10 +139,8 @@ function _plot_mountain(
                 "marker" => Dict(
                     "symbol" => "line-ns",
                     "size" => 24,
-                    "line" => Dict(
-                        "width" => 1.08,
-                        "color" => BioLab.Plot.color.(view(sc_, bo_), (BioLab.Plot.COBWR,)),
-                    ),
+                    "line" =>
+                        Dict("width" => 1.08, "color" => BioLab.Plot.color(view(sc_, bo_))),
                 ),
                 "hoverinfo" => "x+text",
             ),
