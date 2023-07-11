@@ -20,7 +20,7 @@ end
 
 function is(st::AbstractString)
 
-    contains(st, r"^\s*$")
+    contains(st, r"^[^0-9A-Za-z]+$")
 
 end
 
