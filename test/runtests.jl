@@ -14,43 +14,53 @@ test_ambiguities(BioLab)
 
 # ----------------------------------------------------------------------------------------------- #
 
-const SR = joinpath(dirname(@__DIR__), "src")
+function read_filter(di)
 
-const MO_ = filter!(!startswith('_'), readdir(SR))
-
-# ---- #
-
-for mo in MO_
-
-    @test mo[1:(end - 3)] == split(readline(joinpath(SR, mo)))[2]
+    filter!(!startswith('_'), readdir(di))
 
 end
 
 # ---- #
 
-@test isconst(BioLab, :DA)
+const SR = joinpath(dirname(@__DIR__), "src")
 
-@test basename(BioLab.DA) == "data"
+const MO_ = read_filter(SR)
 
-@test isdir(BioLab.DA)
+# ---- #
+
+for mo in MO_
+
+    @test chop(mo; tail = 3) == split(readline(joinpath(SR, mo)))[2]
+
+end
+
+# ---- #
+
+@test isconst(BioLab, :_DA)
+
+@test basename(BioLab._DA) == "data"
+
+@test readdir(BioLab._DA) ==
+      ["CLS", "Dict", "FeatureSetEnrichment", "GCT", "GMT", "Gene", "Plot", "SingleCell", "Table"]
 
 # ---- #
 
 @test isconst(BioLab, :TE)
 
-@test basename(BioLab.TE) == "BioLab"
-
-@test isdir(BioLab.TE)
+@test contains(
+    basename(BioLab.TE),
+    r"^BioLab[\d]{4}_[\d]{1}_[\d]{2}_[\d]{2}_[\d]{2}_[\d]{2}_[\d]{3}$",
+)
 
 @test isempty(readdir(BioLab.TE))
 
 # ---- #
 
-@test BioLab.@is_error error("@is_error passed its test.")
+@test BioLab.@is_error error("This is an error message.")
 
 # ---- #
 
-const TE_ = filter!(!startswith('_'), readdir(@__DIR__))
+const TE_ = read_filter(@__DIR__)
 
 # ---- #
 

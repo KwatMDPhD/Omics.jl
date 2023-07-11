@@ -1,6 +1,14 @@
 module BioLab
 
-foreach(include, (jl for jl in readdir(@__DIR__) if !startswith(jl, '_') && jl != "BioLab.jl"))
+for jl in readdir(@__DIR__)
+
+    if !startswith(jl, '_') && jl != "BioLab.jl"
+
+        include(jl)
+
+    end
+
+end
 
 const _DA = joinpath(dirname(@__DIR__), "data")
 
