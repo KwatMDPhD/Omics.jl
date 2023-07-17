@@ -2,7 +2,7 @@ module Matrix
 
 function make(ve_)
 
-    [ve_[idr][idc] for idr in 1:length(ve_), idc in 1:length(ve_[1])]
+    [ve_[id1][id2] for id1 in eachindex(ve_), id2 in eachindex(ve_[1])]
 
 end
 

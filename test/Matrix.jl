@@ -35,15 +35,15 @@ for (an___, re) in (
 
     @test isequal(BioLab.Matrix.make(an___), re)
 
-    # 24.054 ns (1 allocation: 96 bytes)
-    # 25.645 ns (1 allocation: 112 bytes)
-    # 74.554 ns (5 allocations: 256 bytes)
-    # 74.512 ns (5 allocations: 256 bytes)
-    # 63.052 ns (2 allocations: 224 bytes)
-    # 63.095 ns (2 allocations: 224 bytes)
-    # 715.850 ns (17 allocations: 1.05 KiB)
-    # 25.560 ns (1 allocation: 80 bytes)
-    # 2.167 μs (25 allocations: 1.41 KiB)
+    # 22.734 ns (1 allocation: 96 bytes)
+    # 23.845 ns (1 allocation: 112 bytes)
+    # 75.309 ns (5 allocations: 256 bytes)
+    # 75.283 ns (5 allocations: 256 bytes)
+    # 64.584 ns (2 allocations: 224 bytes)
+    # 62.926 ns (2 allocations: 224 bytes)
+    # 722.793 ns (17 allocations: 1008 bytes)
+    # 23.678 ns (1 allocation: 80 bytes)
+    # 1.396 μs (25 allocations: 1.34 KiB)
     @btime BioLab.Matrix.make($an___)
 
 end
