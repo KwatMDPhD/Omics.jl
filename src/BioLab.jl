@@ -1,5 +1,9 @@
 module BioLab
 
+const _DA = joinpath(dirname(@__DIR__), "data")
+
+const TE = joinpath(tempdir(), "BioLab")
+
 for jl in readdir(@__DIR__)
 
     if !startswith(jl, '_') && jl != "BioLab.jl"
@@ -9,10 +13,6 @@ for jl in readdir(@__DIR__)
     end
 
 end
-
-const _DA = joinpath(dirname(@__DIR__), "data")
-
-const TE = joinpath(tempdir(), "BioLab$(BioLab.Time.stamp())")
 
 macro is_error(ex)
 

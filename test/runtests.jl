@@ -14,6 +14,23 @@ test_ambiguities(BioLab)
 
 # ----------------------------------------------------------------------------------------------- #
 
+@test isconst(BioLab, :_DA)
+
+@test basename(BioLab._DA) == "data"
+
+@test readdir(BioLab._DA) ==
+      ["CLS", "Dict", "FeatureSetEnrichment", "GCT", "GMT", "Gene", "Plot", "SingleCell", "Table"]
+
+# ---- #
+
+@test isconst(BioLab, :TE)
+
+@test basename(BioLab.TE) == "BioLab"
+
+@test isempty(readdir(BioLab.TE))
+
+# ---- #
+
 function read_filter(di)
 
     filter!(!startswith('_'), readdir(di))
@@ -28,31 +45,11 @@ const MO_ = read_filter(SR)
 
 # ---- #
 
-for mo in MO_
+for jl in MO_
 
-    @test chop(mo; tail = 3) == split(readline(joinpath(SR, mo)))[2]
+    @test chop(jl; tail = 3) == chop(readline(joinpath(SR, jl)); head = 7, tail = 0)
 
 end
-
-# ---- #
-
-@test isconst(BioLab, :_DA)
-
-@test basename(BioLab._DA) == "data"
-
-@test readdir(BioLab._DA) ==
-      ["CLS", "Dict", "FeatureSetEnrichment", "GCT", "GMT", "Gene", "Plot", "SingleCell", "Table"]
-
-# ---- #
-
-@test isconst(BioLab, :TE)
-
-@test contains(
-    basename(BioLab.TE),
-    r"^BioLab[\d]{4}_[\d]{1}_[\d]{2}_[\d]{2}_[\d]{2}_[\d]{2}_[\d]{3}$",
-)
-
-@test isempty(readdir(BioLab.TE))
 
 # ---- #
 
@@ -68,13 +65,13 @@ const TE_ = read_filter(@__DIR__)
 
 # ---- #
 
-for te in TE_
+for jl in TE_
 
-    if te != "runtests.jl"
+    if jl != "runtests.jl"
 
-        @info "Testing $te"
+        @info "Testing $jl"
 
-        run(`julia --project $te`)
+        run(`julia --project $jl`)
 
     end
 
