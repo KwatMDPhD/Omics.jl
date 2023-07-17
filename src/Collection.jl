@@ -2,7 +2,7 @@ module Collection
 
 function is_in(an_id, an1_)
 
-    is_ = falses(length(an_id))
+    bi_ = falses(length(an_id))
 
     for an1 in an1_
 
@@ -10,13 +10,13 @@ function is_in(an_id, an1_)
 
         if !isnothing(id)
 
-            is_[id] = true
+            bi_[id] = true
 
         end
 
     end
 
-    is_
+    bi_
 
 end
 
