@@ -12,7 +12,7 @@ const DA = joinpath(BioLab._DA, "CLS")
 
 # ---- #
 
-for (na, ta, nu_) in (
+for (cl, ta, nu_) in (
     (
         "CCLE_mRNA_20Q2_no_haem_phen.cls",
         "HER2",
@@ -22,13 +22,13 @@ for (na, ta, nu_) in (
     ("LPS_phen.cls", "CNTRL_LPS", [1, 1, 1, 2, 2, 2]),
 )
 
-    cl = joinpath(DA, na)
+    cl = joinpath(DA, cl)
 
     da = BioLab.CLS.read(cl)
 
     @test size(da, 1) == 1
 
-    @test !(Any in eltype.(eachcol(da)))
+    @test all(co -> eltype(co) != Any, eachcol(da))
 
     @test da[1, "Target"] == ta
 
