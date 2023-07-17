@@ -14,13 +14,14 @@ end
 
 function is(fl::Float64)
 
+    # TODO: Learn about -0.0.
     !isfinite(fl) || isequal(fl, -0.0)
 
 end
 
 function is(st::AbstractString)
 
-    contains(st, r"^[^0-9A-Za-z]+$")
+    isempty(st) || contains(st, r"^[^0-9A-Za-z]+$")
 
 end
 
