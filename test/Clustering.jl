@@ -41,7 +41,6 @@ const MA2 = [
     30 30 30 30.1
 ]
 
-
 for (k, re) in (
     (1, [1, 1, 1, 1, 1, 1, 1]),
     (2, [1, 1, 2, 1, 1, 2, 1]),
@@ -51,13 +50,7 @@ for (k, re) in (
 
     @test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA2, 1; fu = FU), k) == re
 
+    @test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA2, 1), k) ==
+          BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(permutedims(MA2), 2), k)
+
 end
-
-# ---- #
-
-const MA3 = rand(16, 2)
-
-const K = 4
-
-@test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA3, 1), K) ==
-      BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(permutedims(MA3), 2), K)
