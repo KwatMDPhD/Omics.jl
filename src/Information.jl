@@ -8,27 +8,27 @@ function get_kullback_leibler_divergence(nu1, nu2)
 
 end
 
-function get_thermodynamic_breadth(nu1, nu2)
-
-    get_kullback_leibler_divergence(nu1, nu2) + get_kullback_leibler_divergence(nu2, nu1)
-
-end
-
 function get_thermodynamic_depth(nu1, nu2)
 
     get_kullback_leibler_divergence(nu1, nu2) - get_kullback_leibler_divergence(nu2, nu1)
 
 end
 
-function get_symmetric_kullback_leibler_divergence(nu1, nu2, nu3)
+function get_thermodynamic_breadth(nu1, nu2)
 
-    get_kullback_leibler_divergence(nu1, nu3) + get_kullback_leibler_divergence(nu2, nu3)
+    get_kullback_leibler_divergence(nu1, nu2) + get_kullback_leibler_divergence(nu2, nu1)
 
 end
 
 function get_antisymmetric_kullback_leibler_divergence(nu1, nu2, nu3)
 
     get_kullback_leibler_divergence(nu1, nu3) - get_kullback_leibler_divergence(nu2, nu3)
+
+end
+
+function get_symmetric_kullback_leibler_divergence(nu1, nu2, nu3)
+
+    get_kullback_leibler_divergence(nu1, nu3) + get_kullback_leibler_divergence(nu2, nu3)
 
 end
 

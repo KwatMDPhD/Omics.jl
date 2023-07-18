@@ -20,8 +20,7 @@ const AR_ = (
     ([1, 1, 1], [1, 1, 1]),
     ([1, 2, 3], [10, 20, 30]),
     (get_density(NU1_), get_density(NU2_)),
-    (get_density(NU1_ .+= minimum(NU1_)), get_density(NU2_ .+= minimum(NU2_))),
-    (get_density(NU1_ .+ 1), get_density(NU2_ .+ 1)),
+    (get_density(NU1_ .+ minimum(NU1_)), get_density(NU2_ .+ minimum(NU2_))),
 )
 
 # ---- #
@@ -68,7 +67,6 @@ for (nu1_, nu2_) in AR_
 end
 
 # ---- #
-# TODO
 
 for nu_ in (fill(0, 10), fill(1, 10))
 
@@ -77,19 +75,16 @@ for nu_ in (fill(0, 10), fill(1, 10))
 end
 
 # ---- #
-# TODO
 
 nu1_ = collect(0:10)
 
 nu2_ = collect(0:10:100)
 
 # ---- #
-# TODO
 
 BioLab.Information.get_mutual_information(nu1_, nu2_)
 
 # ---- #
-# TODO
 
 bi = BioLab.Information.kde((nu1_, nu2_), npoints = (8, 8))
 
@@ -100,5 +95,7 @@ x = collect(bi.x)
 z = bi.density
 
 BioLab.Plot.plot_heat_map("", z, y, x)
+
+# ---- #
 
 BioLab.Information.get_information_coefficient(nu1_, nu2_)
