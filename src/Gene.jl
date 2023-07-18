@@ -4,7 +4,7 @@ using BioLab
 
 function map_ensembl()
 
-    sp_to = Dict{String, String}()
+    en_na = Dict{String, String}()
 
     ma = Matrix(
         BioLab.Table.read(
@@ -42,7 +42,7 @@ function map_ensembl()
 
             for sp in eachsplit(fr, '|')
 
-                BioLab.Dict.set!(sp_to, sp, to)
+                BioLab.Dict.set!(en_na, sp, to)
 
             end
 
@@ -50,19 +50,23 @@ function map_ensembl()
 
     end
 
-    sp_to
+    en_na
 
 end
 
 function map_uniprot()
 
-    pr_co_an = Dict{String, Dict{String, Any}}()
+    pr_di = Dict{String, Dict{String, Any}}()
 
     da = BioLab.Table.read(joinpath(BioLab._DA, "Gene", "uniprot.tsv.gz"))
 
     co_ = names(da)
 
-    for an_ in eachrow(Matrix(da))
+    id = 2
+
+    popat!(co_, id)
+
+    for (ro, an_) in zip(da[!, id], eachrow(Matrix(da[!, co_])))
 
         co_an = Dict{String, Any}()
 
@@ -74,31 +78,25 @@ function map_uniprot()
 
             end
 
-            if co == "Entry Name"
+            if co == "Gene Names"
 
-                BioLab.Dict.set!(pr_co_an, chop(an; tail = 6), co_an)
+                an = split(an)
 
-            else
+            elseif co == "Interacts with"
 
-                if co == "Gene Names"
-
-                    an = split(an)
-
-                elseif co == "Interacts with"
-
-                    an = split(an, "; ")
-
-                end
-
-                co_an[co] = an
+                an = split(an, "; ")
 
             end
 
+            co_an[co] = an
+
         end
+
+        BioLab.Dict.set!(pr_di, chop(ro; tail = 6), co_an)
 
     end
 
-    pr_co_an
+    pr_di
 
 end
 

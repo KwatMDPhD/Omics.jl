@@ -6,26 +6,26 @@ using BioLab
 
 const ID = "DIV_ID"
 
-const SO_ = ("SOURCE_1", "SOURCE_2")
+const SR_ = ("SCRIPT_SRC_1", "SCRIPT_SRC_2")
 
 const SC = "SCRIPT"
 
 # ---- #
 
-BioLab.HTML.make("", ID, SO_, SC)
+BioLab.HTML.make("", ID, SR_, SC)
 
 # ---- #
 
 const HT = joinpath(BioLab.TE, "name.html")
 
-BioLab.HTML.make(HT, ID, SO_, SC)
+BioLab.HTML.make(HT, ID, SR_, SC)
 
-@test length(readlines(HT)) == 10 + length(SO_)
+@test length(readlines(HT)) == 10 + length(SR_)
 
 # ---- #
 
 for ba in ("#000000", "#ffffff")
 
-    BioLab.HTML.make("", ID, SO_, SC; ba)
+    BioLab.HTML.make("", ID, SR_, SC; ba)
 
 end

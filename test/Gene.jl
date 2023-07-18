@@ -30,6 +30,6 @@ end
 
 # ---- #
 
-const PR_CO_AN = BioLab.Gene.map_uniprot()
+const PR_DI = BioLab.Gene.map_uniprot()
 
-@test PR_CO_AN["CD8A"]["Gene Names"] == ["CD8A", "MAL"]
+@test PR_DI["CD8A"]["Gene Names"] == ["CD8A", "MAL"]
