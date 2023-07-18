@@ -16,12 +16,16 @@ BioLab.HTML.make("", ID, SO_, SC)
 
 # ---- #
 
+const HT = joinpath(BioLab.TE, "name.html")
+
+BioLab.HTML.make(HT, ID, SO_, SC)
+
+@test length(readlines(HT)) == 10 + length(SO_)
+
+# ---- #
+
 for ba in ("#000000", "#ffffff")
 
-    ht = joinpath(BioLab.TE, "$ba.html")
-
-    BioLab.HTML.make(ht, ID, SO_, SC; ba)
-
-    @test length(readlines(ht)) == 10 + length(SO_)
+    BioLab.HTML.make("", ID, SO_, SC; ba)
 
 end
