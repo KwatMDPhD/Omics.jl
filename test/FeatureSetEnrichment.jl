@@ -4,7 +4,7 @@ using BioLab
 
 # ---- #
 
-const DA = joinpath(BioLab.DA, "FeatureSetEnrichment")
+const DA = joinpath(BioLab._DA, "FeatureSetEnrichment")
 
 # ---- #
 
@@ -184,7 +184,7 @@ end
 
 function benchmark_myc()
 
-    di = joinpath(BioLab.DA, "FeatureSetEnrichment")
+    di = joinpath(BioLab._DA, "FeatureSetEnrichment")
 
     da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
 

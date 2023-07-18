@@ -10,15 +10,11 @@ using BioLab
 
 function download(di, gs)
 
-    na = "$(gs)_family.soft.gz"
+    gsc = chop(gs; tail = 3)
 
-    gz = joinpath(di, na)
+    gz = "$(gs)_family.soft.gz"
 
-    BioLab.Path.warn_overwrite(gz)
-
-    gs2 = chop(gs; tail = 3)
-
-    Base.download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs2)nnn/$gs/soft/$na", gz)
+    Base.download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gsc)nnn/$gs/soft/$gz", joinpath(di, gz))
 
 end
 
@@ -28,15 +24,15 @@ function _readline(st)
 
 end
 
-function _split(li)
+function _eachsplit(li)
 
-    split(li, " = "; limit = 2)
+    eachsplit(li, " = "; limit = 2)
 
 end
 
 function read(gz)
 
-    bl_th_ke_va = Dict(
+    bl_th = Dict(
         "DATABASE" => OrderedDict{String, OrderedDict{String, String}}(),
         "SERIES" => OrderedDict{String, OrderedDict{String, String}}(),
         "PLATFORM" => OrderedDict{String, OrderedDict{String, String}}(),
@@ -55,9 +51,9 @@ function read(gz)
 
         if startswith(li, '^')
 
-            bl, th = _split(chop(li; head = 1, tail = 0))
+            bl, th = _eachsplit(chop(li; head = 1, tail = 0))
 
-            bl_th_ke_va[bl][th] = OrderedDict{String, String}()
+            bl_th[bl][th] = OrderedDict{String, String}()
 
             continue
 
@@ -71,15 +67,19 @@ function read(gz)
 
             blt = titlecase(bl)
 
-            bl_th_ke_va[bl][th]["table"] = join(
+            jo = join(
                 (
                     _readline(st) for
-                    _ in 1:(1 + parse(Int, bl_th_ke_va[bl][th]["!$(blt)_data_row_count"]))
+                    _ in 1:(1 + parse(Int, bl_th[bl][th]["!$(blt)_data_row_count"]))
                 ),
                 '\n',
             )
 
-            if _readline(st) != "$(ta)end"
+            if _readline(st) == "$(ta)end"
+
+                bl_th[bl][th]["table"] = jo
+
+            else
 
                 error("$ta did not end.")
 
@@ -89,19 +89,19 @@ function read(gz)
 
         end
 
-        ke, va = _split(li)
+        ke, va = _eachsplit(li)
 
-        BioLab.Dict.set_with_suffix!(bl_th_ke_va[bl][th], ke, va)
+        BioLab.Dict.set_with_suffix!(bl_th[bl][th], ke, va)
 
     end
 
     close(st)
 
-    bl_th_ke_va
+    bl_th
 
 end
 
-function _map_feature(pl, ta)
+function _map_feature(pl, co_, sp___)
 
     it = parse(Int, chop(pl; head = 3, tail = 0))
 
@@ -159,11 +159,17 @@ function _map_feature(pl, ta)
 
     id_fe = Dict{String, String}()
 
-    for (id, fe) in zip(ta[!, "ID"], ta[!, co])
+    idi = findfirst(==("ID"), co_)
 
-        if fe isa AbstractString && !isempty(fe) && fe != "---"
+    idc = findfirst(==(co), co_)
 
-            BioLab.Dict.set_with_last!(id_fe, id, fu(fe))
+    for sp_ in sp___
+
+        fe = sp_[idc]
+
+        if !BioLab.Bad.is(fe)
+
+            BioLab.Dict.set!(id_fe, sp_[idi], fu(fe))
 
         end
 
@@ -173,9 +179,15 @@ function _map_feature(pl, ta)
 
 end
 
+function _dice(st)
+
+    split.(eachsplit(st, '\n'), '\t')
+
+end
+
 function _make(nar, co_, ro_an__)
 
-    ro_ = sort!(collect(union(keys.(ro_an__)...)))
+    ro_ = union(keys.(ro_an__)...)
 
     if isempty(ro_)
 
@@ -183,55 +195,36 @@ function _make(nar, co_, ro_an__)
 
     end
 
-    an__ = [Vector{Any}(undef, 1 + length(co_)) for _ in 1:(1 + length(ro_))]
-
-    id = 1
-
-    an__[id][1] = nar
-
-    an__[id][2:end] = co_
-
-    for (id, ro) in enumerate(ro_)
-
-        id += 1
-
-        an__[id][1] = ro
-
-        an__[id][2:end] = [get(ro_an, ro, missing) for ro_an in ro_an__]
-
-    end
-
-    BioLab.DataFrame.make(an__)
+    DataFrame(
+        BioLab.Matrix.make([
+            vcat(ro, [get(ro_an, ro, missing) for ro_an in ro_an__]) for ro in sort!(collect(ro_))
+        ]),
+        vcat(nar, co_),
+    )
 
 end
 
-function _make(st)
+function tabulate(bl_th; sa = "!Sample_title")
 
-    BioLab.DataFrame.make(split.(eachsplit(st, '\n'), '\t'))
+    sa_di = OrderedDict(di[sa] => di for di in values(bl_th["SAMPLE"]))
 
-end
+    sa_ = collect(keys(sa_di))
 
-function tabulate(bl_th_ke_va; sa = "!Sample_title")
-
-    sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(bl_th_ke_va["SAMPLE"]))
-
-    sa_ = collect(keys(sa_ke_va))
-
-    n_sa = length(sa_)
+    ids_ = 1:length(sa_)
 
     de = ": "
 
-    ch_st__ = [Dict{String, String}() for _ in 1:n_sa]
+    ch_st__ = [Dict{String, String}() for _ in ids_]
 
     pl_fe_fl__ = Dict{String, Vector{Dict{String, Float64}}}()
 
-    for (id, (sa, ke_va)) in enumerate(sa_ke_va)
+    for (ids, (sa, di)) in enumerate(sa_di)
 
-        ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
+        ch_ = [va for (ke, va) in di if startswith(ke, "!Sample_characteristics")]
 
         if all(contains(de), ch_)
 
-            merge!(ch_st__[id], Dict(split(ch, de; limit = 2) for ch in ch_))
+            merge!(ch_st__[ids], Dict(eachsplit(ch, de; limit = 2) for ch in ch_))
 
         else
 
@@ -239,17 +232,23 @@ function tabulate(bl_th_ke_va; sa = "!Sample_title")
 
         end
 
-        if haskey(ke_va, "table")
+        if haskey(di, "table")
 
-            ta = _make(ke_va["table"])
+            sp___ = _dice(di["table"])
+
+            idv = findfirst(==("VALUE"), sp___[1])
+
+            pl = di["!Sample_platform_id"]
+
+            if !haskey(pl_fe_fl__, pl)
+
+                pl_fe_fl__[pl] = [Dict{String, Float64}() for _ in ids_]
+
+            end
 
             merge!(
-                get!(
-                    pl_fe_fl__,
-                    ke_va["!Sample_platform_id"],
-                    [Dict{String, Float64}() for _ in 1:n_sa],
-                )[id],
-                Dict(zip(ta[!, 1], parse.(Float64, ta[!, "VALUE"]))),
+                pl_fe_fl__[pl][ids],
+                Dict(sp_[1] => parse(Float64, sp_[idv]) for sp_ in view(sp___, 2:length(sp___))),
             )
 
         else
@@ -262,15 +261,17 @@ function tabulate(bl_th_ke_va; sa = "!Sample_title")
 
     da_ = Vector{DataFrame}(undef, length(pl_fe_fl__))
 
-    for (id, (pl, fe_fl__)) in enumerate(pl_fe_fl__)
+    for (idp, (pl, fe_fl__)) in enumerate(pl_fe_fl__)
 
         da = _make(pl, sa_, fe_fl__)
 
-        ke_va = bl_th_ke_va["PLATFORM"][pl]
+        di = bl_th["PLATFORM"][pl]
 
-        if haskey(ke_va, "table")
+        if haskey(di, "table")
 
-            id_fe = _map_feature(pl, _make(ke_va["table"]))
+            sp___ = _dice(di["table"])
+
+            id_fe = _map_feature(pl, sp___[1], view(sp___, 2:length(sp___)))
 
             da[!, 1] = [get(id_fe, id, "_$id") for id in da[!, 1]]
 
@@ -280,7 +281,7 @@ function tabulate(bl_th_ke_va; sa = "!Sample_title")
 
         end
 
-        da_[id] = da
+        da_[idp] = da
 
     end
 

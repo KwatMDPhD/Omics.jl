@@ -4,12 +4,6 @@ using DataFrames: DataFrame as _DataFrame, insertcols!
 
 using BioLab
 
-#function make(co_, ve_)
-#
-#    _DataFrame(BioLab.Matrix.make(ve_), co_)
-#
-#end
-#
 function make(nar, ro_, co_, ma)
 
     insertcols!(_DataFrame(ma, co_), 1, nar => ro_)

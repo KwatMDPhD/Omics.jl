@@ -12,9 +12,9 @@ const DA = joinpath(BioLab._DA, "GMT")
 
 # ---- #
 
-for (na, re) in (("h.all.v7.1.symbols.gmt", 50), ("c2.all.v7.1.symbols.gmt", 5529))
+for (gm, re) in (("h.all.v7.1.symbols.gmt", 50), ("c2.all.v7.1.symbols.gmt", 5529))
 
-    gm = joinpath(DA, na)
+    gm = joinpath(DA, gm)
 
     @test length(BioLab.GMT.read(gm)) == re
 
