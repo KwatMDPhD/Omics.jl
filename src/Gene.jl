@@ -10,27 +10,22 @@ end
 
 function map_ensembl()
 
-    da = _read("ensembl.tsv.gz")
-
-    ma = Matrix(
-        da[
-            !,
-            [
-                "Transcript stable ID version",
-                "Transcript stable ID",
-                "Transcript name",
-                "Gene stable ID version",
-                "Gene stable ID",
-                "Gene name",
-            ],
-        ],
-    )
-
-    n = size(ma, 2)
-
     fr_to = Dict{String, String}()
 
-    for an_ in eachrow(ma)
+    da = _read("ensembl.tsv.gz")
+
+    co_ = [
+        "Transcript stable ID version",
+        "Transcript stable ID",
+        "Transcript name",
+        "Gene stable ID version",
+        "Gene stable ID",
+        "Gene name",
+    ]
+
+    n = length(co_)
+
+    for an_ in eachrow(Matrix(da[!, co_]))
 
         fr_ = view(an_, 1:(n - 1))
 
@@ -52,7 +47,7 @@ function map_ensembl()
 
             for fr in eachsplit(fr, '|')
 
-                BioLab.Dict.set_with_last!(fr_to, fr, to)
+                BioLab.Dict.set!(fr_to, fr, to)
 
             end
 
@@ -86,13 +81,7 @@ function map_uniprot()
 
             if co == "Entry Name"
 
-                if !endswith(an, "_HUMAN")
-
-                    error("$an lacks _HUMAN.")
-
-                end
-
-                BioLab.Dict.set_with_last!(pr_co_an, chop(an; tail = 6), co_an)
+                BioLab.Dict.set!(pr_co_an, chop(an; tail = 6), co_an)
 
             else
 

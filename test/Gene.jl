@@ -6,7 +6,7 @@ using BioLab
 
 # ---- #
 
-const DA = joinpath(BioLab.DA, "Gene")
+const DA = joinpath(BioLab._DA, "Gene")
 
 # ---- #
 
