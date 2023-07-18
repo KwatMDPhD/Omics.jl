@@ -6,7 +6,7 @@ using BioLab
 
 # ---- #
 
-const DA = joinpath(BioLab.DA, "Dict")
+const DA = joinpath(BioLab._DA, "Dict")
 
 # ---- #
 
@@ -18,19 +18,6 @@ const DI1 = Dict("Existing" => 1)
 
 # ---- #
 
-for (ke, va, re) in
-    (("Existing", 1, DI1), ("Existing", 2, DI1), ("New", 3, Dict("Existing" => 1, "New" => 3)))
-
-    co = copy(DI1)
-
-    BioLab.Dict.set_with_first!(co, ke, va)
-
-    @test co == re
-
-end
-
-# ---- #
-
 for (ke, va, re) in (
     ("Existing", 1, DI1),
     ("Existing", 2, Dict("Existing" => 2)),
@@ -39,7 +26,7 @@ for (ke, va, re) in (
 
     co = copy(DI1)
 
-    BioLab.Dict.set_with_last!(co, ke, va)
+    BioLab.Dict.set!(co, ke, va)
 
     @test co == re
 
@@ -63,37 +50,36 @@ end
 
 # ---- #
 
-const KE1_VA1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
+const DI2 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 
-const KE2_VA2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
+const DI3 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
-@test BioLab.Dict.merge(KE1_VA1, KE2_VA2, BioLab.Dict.set_with_last!) ==
+@test BioLab.Dict.merge(DI2, DI3) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))
 
 
-@test BioLab.Dict.merge(KE2_VA2, KE1_VA1, BioLab.Dict.set_with_last!) ==
+@test BioLab.Dict.merge(DI3, DI2) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))
 
-@test BioLab.Dict.merge(KE1_VA1, KE2_VA2, BioLab.Dict.set_with_last!) ==
-      BioLab.Dict.merge(KE2_VA2, KE1_VA1, BioLab.Dict.set_with_first!)
+for (di1, di2, re) in (
+    (Dict(1 => 'a'), Dict(2 => 'b'), Dict{Int, Char}),
+    (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Float64, Any}),
+    (Dict(1.0 => "Aa"), Dict(2 => chop("Bbx")), Dict{Float64, AbstractString}),
+)
 
-@test BioLab.Dict.merge(KE1_VA1, KE2_VA2, BioLab.Dict.set_with_last!) ==
-      BioLab.Dict.merge(KE1_VA1, KE2_VA2)
+    @test BioLab.Dict.merge(di1, di2) isa re
+
+end
 
 # ---- #
 
 const JS1 = joinpath(DA, "example_1.json")
 
-# ---- #
-
 for dicttype in (Dict, OrderedDict, OrderedDict{String, String})
 
-    println(summary(BioLab.Dict.read(JS1, dicttype)))
     @test BioLab.Dict.read(JS1, dicttype) isa dicttype
 
 end
-
-# ---- #
 
 @test BioLab.Dict.read(JS1) == OrderedDict("fruit" => "Apple", "color" => "Red", "size" => "Large")
 
@@ -130,7 +116,7 @@ end
 
 # ---- #
 
-@test BioLab.Dict.read(joinpath(DA, "example.toml")) == OrderedDict{String, Any}(
+@test BioLab.Dict.read(joinpath(DA, "example.toml")) == Dict{String, Any}(
     "servers" => Dict{String, Any}(
         "alpha" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.1"),
         "beta" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.2"),
@@ -151,7 +137,7 @@ end
 
 # ---- #
 
-const DI2 = Dict(
+const DI4 = Dict(
     "Luffy" => "Pirate King",
     "Crews" => [
         "Luffy",
@@ -170,16 +156,6 @@ const DI2 = Dict(
 
 const JS2 = joinpath(BioLab.TE, "write_read.json")
 
-# ---- #
+BioLab.Dict.write(JS2, DI4)
 
-BioLab.Dict.write(JS2, DI2)
-
-@test DI2 == BioLab.Dict.read(JS2)
-
-# ---- #
-
-DI2["Black Beard"] = ("Yami Yami", "Gura Gura")
-
-BioLab.Dict.write(JS2, DI2)
-
-@test DI2 != BioLab.Dict.read(JS2)
+@test DI4 == BioLab.Dict.read(JS2)

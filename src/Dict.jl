@@ -8,31 +8,7 @@ using TOML: parsefile as toml_parsefile
 
 using BioLab
 
-function set_with_first!(ke_va, ke, va)
-
-    if haskey(ke_va, ke)
-
-        vac = ke_va[ke]
-
-        if vac == va
-
-            @info "($ke => $vac)."
-
-        else
-
-            @warn "$ke => $vac ($va)."
-
-        end
-
-    else
-
-        ke_va[ke] = va
-
-    end
-
-end
-
-function set_with_last!(ke_va, ke, va)
+function set!(ke_va, ke, va)
 
     if haskey(ke_va, ke)
 
@@ -90,18 +66,17 @@ function set_with_suffix!(ke_va, ke, va)
 
 end
 
-function merge(ke1_va1, ke2_va2, fu!)
+function merge(ke1_va1, ke2_va2, fu = set!)
 
     ke1_ = keys(ke1_va1)
 
     ke2_ = keys(ke2_va2)
 
-    ke_va = Base.Dict{
-        typejoin(eltype(ke1_), eltype(ke2_)),
-        typejoin(eltype(values(ke1_va1)), eltype(values(ke2_va2))),
-    }()
+    ke_ = union(ke1_, ke2_)
 
-    for ke in union(ke1_, ke2_)
+    ke_va = Base.Dict{eltype(ke_), eltype(union(values(ke1_va1), values(ke2_va2)))}()
+
+    for ke in ke_
 
         if haskey(ke1_va1, ke) && haskey(ke2_va2, ke)
 
@@ -111,13 +86,13 @@ function merge(ke1_va1, ke2_va2, fu!)
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                ke_va[ke] = merge(va1, va2, fu!)
+                ke_va[ke] = merge(va1, va2, fu)
 
             else
 
-                fu!(ke_va, ke, va1)
+                fu(ke_va, ke, va1)
 
-                fu!(ke_va, ke, va2)
+                fu(ke_va, ke, va2)
 
             end
 
@@ -137,12 +112,6 @@ function merge(ke1_va1, ke2_va2, fu!)
 
 end
 
-function merge(ke1_va1, ke2_va2)
-
-    merge(ke1_va1, ke2_va2, set_with_last!)
-
-end
-
 function read(pa, dicttype = OrderedDict; ke_ar...)
 
     ex = chop(splitext(pa)[2]; head = 1, tail = 0)
@@ -153,8 +122,7 @@ function read(pa, dicttype = OrderedDict; ke_ar...)
 
     elseif ex == "toml"
 
-        # TODO: Test order.
-        convert(dicttype, toml_parsefile(pa; ke_ar...))
+        toml_parsefile(pa; ke_ar...)
 
     else
 
