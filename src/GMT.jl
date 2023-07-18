@@ -10,7 +10,7 @@ function read(gm)
 
         sp_ = split(li, '\t')
 
-        BioLab.Dict.set_with_last!(se_ge_, sp_[1], filter!(!isempty, view(sp_, 3:length(sp_))))
+        BioLab.Dict.set!(se_ge_, sp_[1], filter!(!isempty, view(sp_, 3:length(sp_))))
 
     end
 

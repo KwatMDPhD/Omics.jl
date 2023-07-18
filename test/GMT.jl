@@ -4,7 +4,7 @@ using BioLab
 
 # ---- #
 
-const DA = joinpath(BioLab.DA, "GMT")
+const DA = joinpath(BioLab._DA, "GMT")
 
 # ---- #
 
@@ -18,7 +18,7 @@ for (na, re) in (("h.all.v7.1.symbols.gmt", 50), ("c2.all.v7.1.symbols.gmt", 552
 
     @test length(BioLab.GMT.read(gm)) == re
 
-    # 338.208 μs (7767 allocations: 977.20 KiB)
+    # 334.208 μs (7767 allocations: 977.20 KiB)
     # 25.456 ms (521432 allocations: 51.53 MiB)
     @btime BioLab.GMT.read($gm)
 
