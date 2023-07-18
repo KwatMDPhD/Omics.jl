@@ -2,32 +2,27 @@ module Gene
 
 using BioLab
 
-function _read(na)
-
-    BioLab.Table.read(joinpath(BioLab._DA, "Gene", na))
-
-end
-
 function map_ensembl()
 
-    fr_to = Dict{String, String}()
+    sp_to = Dict{String, String}()
 
-    da = _read("ensembl.tsv.gz")
+    ma = Matrix(
+        BioLab.Table.read(
+            joinpath(BioLab._DA, "Gene", "ensembl.tsv.gz");
+            select = [
+                "Transcript stable ID version",
+                "Transcript stable ID",
+                "Transcript name",
+                "Gene stable ID version",
+                "Gene stable ID",
+                "Gene name",
+            ],
+        ),
+    )
 
-    co_ = [
-        "Transcript stable ID version",
-        "Transcript stable ID",
-        "Transcript name",
-        "Gene stable ID version",
-        "Gene stable ID",
-        "Gene name",
-    ]
+    n = size(ma, 2)
 
-    n = length(co_)
-
-    for an_ in eachrow(Matrix(da[!, co_]))
-
-        fr_ = view(an_, 1:(n - 1))
+    for an_ in eachrow(ma)
 
         to = an_[n]
 
@@ -37,7 +32,7 @@ function map_ensembl()
 
         end
 
-        for fr in fr_
+        for fr in view(an_, 1:(n - 1))
 
             if BioLab.Bad.is(fr)
 
@@ -45,9 +40,9 @@ function map_ensembl()
 
             end
 
-            for fr in eachsplit(fr, '|')
+            for sp in eachsplit(fr, '|')
 
-                BioLab.Dict.set!(fr_to, fr, to)
+                BioLab.Dict.set!(sp_to, sp, to)
 
             end
 
@@ -55,7 +50,7 @@ function map_ensembl()
 
     end
 
-    fr_to
+    sp_to
 
 end
 
@@ -63,7 +58,7 @@ function map_uniprot()
 
     pr_co_an = Dict{String, Dict{String, Any}}()
 
-    da = _read("uniprot.tsv.gz")
+    da = BioLab.Table.read(joinpath(BioLab._DA, "Gene", "uniprot.tsv.gz"))
 
     co_ = names(da)
 
