@@ -134,10 +134,6 @@ end
 
 function write(js, ke_va; id = 2)
 
-    BioLab.Path.warn_overwrite(js)
-
-    BioLab.Path.error_extension_difference(js, "json")
-
     open(js, "w") do io
 
         print(io, ke_va, id)
