@@ -286,9 +286,9 @@ for al in AL_
     # 18.377 ms (108 allocations: 934.22 KiB)
     # 55.950 ms (358 allocations: 4.59 MiB)
 
-    #@btime BioLab.FeatureSetEnrichment._enrich($al, $MSC_, $EX, $MIS_, nothing)
+    @btime BioLab.FeatureSetEnrichment._enrich($al, $MSC_, $EX, $MIS_, nothing)
 
-    #@btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSC_, $MFE1___)
+    @btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSC_, $MFE1___)
 
     @btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSA_, $FE_X_SA_X_MSC, $MFE1___)
 
