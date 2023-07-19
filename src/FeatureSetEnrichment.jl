@@ -4,7 +4,23 @@ using ProgressMeter: @showprogress
 
 using BioLab
 
-function _index_absolute_exponentiate(sc_, id, ex)
+struct KS end
+
+struct KSa end
+
+struct KLi end
+
+struct KLioM end
+
+struct KLioP end
+
+function make_string(al)
+
+    chop(string(al); head = 28, tail = 2)
+
+end
+
+@inline function _index_absolute_exponentiate(sc_, id, ex)
 
     ab = abs(sc_[id])
 
@@ -18,7 +34,7 @@ function _index_absolute_exponentiate(sc_, id, ex)
 
 end
 
-function _sum_01(sc_, ex, bo_)
+@inline function _sum_01(sc_, ex, is_)
 
     n = length(sc_)
 
@@ -26,7 +42,7 @@ function _sum_01(sc_, ex, bo_)
 
     for id in 1:n
 
-        if bo_[id]
+        if is_[id]
 
             su1 += _index_absolute_exponentiate(sc_, id, ex)
 
@@ -42,7 +58,7 @@ function _sum_01(sc_, ex, bo_)
 
 end
 
-function _sum_all1(sc_, ex, bo_)
+@inline function _sum_all1(sc_, ex, is_)
 
     n = length(sc_)
 
@@ -54,7 +70,7 @@ function _sum_all1(sc_, ex, bo_)
 
         su += ab
 
-        if bo_[id]
+        if is_[id]
 
             su1 += ab
 
@@ -66,11 +82,265 @@ function _sum_all1(sc_, ex, bo_)
 
 end
 
+@inline function _ready_ks(sc_, ex, is_, mo_)
+
+    n, su0, su1 = _sum_01(sc_, ex, is_)
+
+    n, 1 / su0, su1, 0.0, !isnothing(mo_)
+
+end
+
+function _enrich(::KS, sc_, ex, is_, mo_)
+
+    n, de, su1, cu, mo = _ready_ks(sc_, ex, is_, mo_)
+
+    et = 0.0
+
+    eta = 0.0
+
+    for id in 1:n
+
+        if is_[id]
+
+            cu += _index_absolute_exponentiate(sc_, id, ex) / su1
+
+        else
+
+            cu -= de
+
+        end
+
+        if mo
+
+            mo_[id] = cu
+
+        end
+
+        cua = abs(cu)
+
+        if eta < cua
+
+            et = cu
+
+            eta = cua
+
+        end
+
+    end
+
+    et
+
+end
+
+function _enrich(::KSa, sc_, ex, is_, mo_)
+
+    n, de, su1, cu, mo = _ready_ks(sc_, ex, is_, mo_)
+
+    ar = 0.0
+
+    for id in 1:n
+
+        if is_[id]
+
+            cu += _index_absolute_exponentiate(sc_, id, ex) / su1
+
+        else
+
+            cu -= de
+
+        end
+
+        if mo
+
+            mo_[id] = cu
+
+        end
+
+        ar += cu
+
+    end
+
+    ar / n
+
+end
+
+@inline function _ready_kli(sc_, ex, is_, mo_)
+
+    n, su, su1 = _sum_all1(sc_, ex, is_)
+
+    ep = eps()
+
+    n, su, su1, ep, ep, ep, 1.0, 1.0, 0.0, !isnothing(mo_), 0.0, 0.0
+
+end
+
+function _enrich(::KLi, sc_, ex, is_, mo_)
+
+    n, su, su1, ep, ri, ri1, le, le1, ar, mo, ridp, ri1dp = _ready_kli(sc_, ex, is_, mo_)
+
+    for id in 1:n
+
+        ab = _index_absolute_exponentiate(sc_, id, ex)
+
+        rid = ab / su
+
+        if is_[id]
+
+            ri1d = ab / su1
+
+        else
+
+            ri1d = 0.0
+
+        end
+
+        ri += rid
+
+        ri1 += ri1d
+
+        le -= ridp
+
+        le1 -= ri1dp
+
+        if le < ep
+
+            le = ep
+
+        end
+
+        if le1 < ep
+
+            le1 = ep
+
+        end
+
+        en = BioLab.Information.get_antisymmetric_kullback_leibler_divergence(ri1, ri, le1, le)
+
+        ar += en
+
+        if mo
+
+            mo_[id] = en
+
+        end
+
+        ridp = rid
+
+        ri1dp = ri1d
+
+    end
+
+    ar / n
+
+end
+
+function _enrich_klio(fu, sc_, ex, is_, mo_)
+
+    n, su, su1, ep, ri, ri1, le, le1, ar, mo, ridp, ri1dp = _ready_kli(sc_, ex, is_, mo_)
+
+    su0 = su - su1
+
+    ri0 = ep
+
+    le0 = 1.0
+
+    ri0dp = 0.0
+
+    for id in 1:n
+
+        ab = _index_absolute_exponentiate(sc_, id, ex)
+
+        rid = ab / su
+
+        if is_[id]
+
+            ri1d = ab / su1
+
+            ri0d = 0.0
+
+        else
+
+            ri1d = 0.0
+
+            ri0d = ab / su0
+
+        end
+
+        ri += rid
+
+        ri1 += ri1d
+
+        ri0 += ri0d
+
+        le -= ridp
+
+        le1 -= ri1dp
+
+        le0 -= ri0dp
+
+        if le < ep
+
+            le = ep
+
+        end
+
+        if le1 < ep
+
+            le1 = ep
+
+        end
+
+        if le0 < ep
+
+            le0 = ep
+
+        end
+
+        en = fu(ri1, ri0, ri) - fu(le1, le0, le)
+
+        ar += en
+
+        if mo
+
+            mo_[id] = en
+
+        end
+
+        ridp = rid
+
+        ri1dp = ri1d
+
+        ri0dp = ri0d
+
+    end
+
+    ar / n
+
+end
+
+function _enrich(::KLioM, sc_, ex, is_, mo_)
+
+    _enrich_klio(
+        BioLab.Information.get_antisymmetric_kullback_leibler_divergence,
+        sc_,
+        ex,
+        is_,
+        mo_,
+    )
+
+end
+
+function _enrich(::KLioP, sc_, ex, is_, mo_)
+
+    _enrich_klio(BioLab.Information.get_symmetric_kullback_leibler_divergence, sc_, ex, is_, mo_)
+
+end
+
 function _plot_mountain(
     ht,
     fe_,
     sc_,
-    bo_,
+    is_,
     mo_,
     en;
     title_text = "Set Enrichment",
@@ -84,7 +354,13 @@ function _plot_mountain(
 
     x = collect(1:n)
 
-    scatter = Dict("x" => x, "text" => fe_, "mode" => "lines", "fill" => "tozeroy")
+    scatter = Dict(
+        "x" => x,
+        "text" => fe_,
+        "mode" => "lines",
+        "line" => Dict("width" => 2, "color" => "#ffffff"),
+        "fill" => "tozeroy",
+    )
 
     cor = "#ff1992"
 
@@ -106,9 +382,14 @@ function _plot_mountain(
             "showarrow" => false,
             "bgcolor" => "#fcfcfc",
             "borderpad" => 4.8,
-            "borderwidth" => 2,
+            "borderwidth" => 2.4,
             "font" => Dict("size" => 16),
         ),
+    )
+
+    annotationhl = BioLab.Dict.merge(
+        annotation,
+        Dict("y" => sum(yaxis1_domain) / 2, "bordercolor" => "#ffd96a"),
     )
 
     annotation_margin = 0.032
@@ -116,27 +397,13 @@ function _plot_mountain(
     BioLab.Plot.plot(
         ht,
         [
-            BioLab.Dict.merge(
-                scatter,
-                Dict(
-                    "y" => ifelse.(sc_ .< 0, sc_, 0),
-                    "line" => Dict("width" => 1, "color" => "#ffffff"),
-                    "fillcolor" => cob,
-                ),
-            ),
-            BioLab.Dict.merge(
-                scatter,
-                Dict(
-                    "y" => ifelse.(0 .< sc_, sc_, 0),
-                    "line" => Dict("width" => 1, "color" => "#ffffff"),
-                    "fillcolor" => cor,
-                ),
-            ),
+            BioLab.Dict.merge(scatter, Dict("y" => ifelse.(sc_ .< 0, sc_, 0), "fillcolor" => cob)),
+            BioLab.Dict.merge(scatter, Dict("y" => ifelse.(0 .< sc_, sc_, 0), "fillcolor" => cor)),
             Dict(
                 "yaxis" => "y2",
-                "y" => zeros(sum(bo_)),
-                "x" => view(x, bo_),
-                "text" => view(fe_, bo_),
+                "y" => zeros(sum(is_)),
+                "x" => view(x, is_),
+                "text" => view(fe_, is_),
                 "mode" => "markers",
                 "marker" => Dict(
                     "symbol" => "line-ns",
@@ -190,27 +457,19 @@ function _plot_mountain(
                         "text" => "Enrichment = <b>$(BioLab.String.format(en))</b>",
                         "font" => Dict("size" => 20, "color" => "#224634"),
                         "borderpad" => 12.8,
-                        "bordercolor" => coe1,
+                        "bordercolor" => "#ffd96a",
                     ),
                 ),
                 BioLab.Dict.merge(
-                    annotation,
-                    Dict(
-                        "y" => yaxis1_domain[2] * 0.25,
-                        "x" => annotation_margin,
-                        "text" => nah,
-                        "font" => Dict("color" => cor),
-                        "bordercolor" => "#fcc9b9",
-                    ),
+                    annotationhl,
+                    Dict("x" => annotation_margin, "text" => nah, "font" => Dict("color" => cor)),
                 ),
                 BioLab.Dict.merge(
-                    annotation,
+                    annotationhl,
                     Dict(
-                        "y" => yaxis1_domain[2] * 0.75,
                         "x" => 1 - annotation_margin,
                         "text" => nal,
                         "font" => Dict("color" => cob),
-                        "bordercolor" => "#b9c9fc",
                     ),
                 ),
             ),
@@ -219,319 +478,21 @@ function _plot_mountain(
 
 end
 
-# TODO: Pick up here.
-
-struct KS end
-
-struct KSa end
-
-struct KLi end
-
-struct KLioP end
-
-struct KLioM end
-
-function make_string(al)
-
-    chop(string(al); head = 28, tail = 2)
-
-end
-
-function _enrich(::KS, sc_, ex, bo_, mo_)
-
-    n, su0, su1 = _sum_01(sc_, ex, bo_)
-
-    cu = 0.0
-
-    de = 1 / su0
-
-    mo = !isnothing(mo_)
-
-    eta = 0.0
-
-    et = 0.0
-
-    for id in 1:n
-
-        if bo_[id]
-
-            cu += _index_absolute_exponentiate(sc_, id, ex) / su1
-
-        else
-
-            cu -= de
-
-        end
-
-        if mo
-
-            mo_[id] = cu
-
-        end
-
-        cua = abs(cu)
-
-        if eta < cua
-
-            eta = cua
-
-            et = cu
-
-        end
-
-    end
-
-    et
-
-end
-
-function _enrich(::KSa, sc_, ex, bo_, mo_)
-
-    n, su0, su1 = _sum_01(sc_, ex, bo_)
-
-    cu = 0.0
-
-    de = 1.0 / su0
-
-    mo = !isnothing(mo_)
-
-    ar = 0.0
-
-    for id in 1:n
-
-        if bo_[id]
-
-            cu += _index_absolute_exponentiate(sc_, id, ex) / su1
-
-        else
-
-            cu -= de
-
-        end
-
-        if mo
-
-            mo_[id] = cu
-
-        end
-
-        ar += cu
-
-    end
-
-    ar / n
-
-end
-
-function _get_left(le, pr, mi)
-
-    le -= pr
-
-    if le < mi
-
-        le = mi
-
-    end
-
-    le
-
-end
-
-function _enrich(::KLi, sc_, ex, bo_, mo_)
-
-    n, su, su1 = _sum_all1(sc_, ex, bo_)
-
-    ep = eps()
-
-    ri = ep
-
-    ri1 = ep
-
-    le = su
-
-    le1 = su1
-
-    pra = 0.0
-
-    prb = false
-
-    mo = !isnothing(mo_)
-
-    ar = 0.0
-
-    for id in 1:n
-
-        ab = _index_absolute_exponentiate(sc_, id, ex)
-
-        ri += ab
-
-        bo = bo_[id]
-
-        if bo
-
-            ri1 += ab
-
-        end
-
-        rin = ri / su
-
-        ri1n = ri1 / su1
-
-        le = _get_left(le, pra, ep)
-
-        if prb
-
-            le1 = _get_left(le1, pra, ep)
-
-        end
-
-        len = le / su
-
-        le1n = le1 / su1
-
-        en = BioLab.Information.get_antisymmetric_kullback_leibler_divergence(ri1n, rin, le1n, len)
-
-        pra = ab
-
-        prb = bo
-
-        if mo
-
-            mo_[id] = en
-
-        end
-
-        ar += en
-
-    end
-
-    ar / n
-
-end
-
-function _enrich_klio(fu, sc_, ex, bo_, mo_)
-
-    n, su, su1 = _sum_all1(sc_, ex, bo_)
-
-    su0 = su - su1
-
-    ep = eps()
-
-    ri = ep
-
-    ri1 = ep
-
-    ri0 = ep
-
-    le = su
-
-    le1 = su1
-
-    le0 = su0
-
-    pra = 0.0
-
-    prb = false
-
-    mo = !isnothing(mo_)
-
-    ar = 0.0
-
-    for id in 1:n
-
-        ab = _index_absolute_exponentiate(sc_, id, ex)
-
-        ri += ab
-
-        bo = bo_[id]
-
-        if bo
-
-            ri1 += ab
-
-        else
-
-            ri0 += ab
-
-        end
-
-        rin = ri / su
-
-        ri1n = ri1 / su1
-
-        ri0n = ri0 / su0
-
-        le = _get_left(le, pra, ep)
-
-        if prb
-
-            le1 = _get_left(le1, pra, ep)
-
-        else
-
-            le0 = _get_left(le0, pra, ep)
-
-        end
-
-        len = le / su
-
-        le1n = le1 / su1
-
-        le0n = le0 / su0
-
-        en = fu(ri1n, ri0n, rin) - fu(le1n, le0n, len)
-
-        pra = ab
-
-        prb = bo
-
-        if mo
-
-            mo_[id] = en
-
-        end
-
-        ar += en
-
-    end
-
-    ar / n
-
-end
-
-function _enrich(::KLioP, sc_, ex, bo_, mo_)
-
-    _enrich_klio(BioLab.Information.get_symmetric_kullback_leibler_divergence, sc_, ex, bo_, mo_)
-
-end
-
-function _enrich(::KLioM, sc_, ex, bo_, mo_)
-
-    _enrich_klio(
-        BioLab.Information.get_antisymmetric_kullback_leibler_divergence,
-        sc_,
-        ex,
-        bo_,
-        mo_,
-    )
-
-end
-
 function enrich(ht, al, sc_, fe_, fe1_::AbstractVector{<:AbstractString}; n = 1, ex = 1, ke_ar...)
 
-    bo_ = in(Set(fe1_)).(fe_)
+    is_ = in(Set(fe1_)).(fe_)
 
-    if sum(bo_) < n
+    if sum(is_) < n
 
         return NaN
 
     end
 
-    mo_ = Vector{Float64}(undef, length(bo_))
+    mo_ = Vector{Float64}(undef, length(is_))
 
-    en = _enrich(al, sc_, ex, bo_, mo_)
+    en = _enrich(al, sc_, ex, is_, mo_)
 
-    _plot_mountain(ht, fe_, sc_, bo_, mo_, en; ke_ar...)
+    _plot_mountain(ht, fe_, sc_, is_, mo_, en; ke_ar...)
 
     en
 
@@ -545,15 +506,15 @@ function enrich(al, sc_, fe_, fe1___; n = 1, ex = 1)
 
     for (id, fe1_) in enumerate(fe1___)
 
-        bo_ = BioLab.Collection.is_in(fe_id, fe1_)
+        is_ = BioLab.Collection.is_in(fe_id, fe1_)
 
-        if sum(bo_) < n
+        if sum(is_) < n
 
             en = NaN
 
         else
 
-            en = _enrich(al, sc_, ex, bo_, nothing)
+            en = _enrich(al, sc_, ex, is_, nothing)
 
         end
 
