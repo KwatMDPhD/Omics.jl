@@ -399,9 +399,9 @@ version = "0.6.0"
 
 [[deps.NMF]]
 deps = ["LinearAlgebra", "NonNegLeastSquares", "Printf", "Random", "RandomizedLinAlg", "SnoopPrecompile", "Statistics", "StatsBase"]
-git-tree-sha1 = "ba38a6a10b3c8822c297d5505d764b4e80d5e29b"
+git-tree-sha1 = "25676b8f17852a9f92361e627e4bcace13d6302c"
 uuid = "6ef6ca0d-6ad7-5ff6-b225-e928bfa0a386"
-version = "1.0.0"
+version = "1.0.1"
 
 [[deps.NaNMath]]
 deps = ["OpenLibm_jll"]

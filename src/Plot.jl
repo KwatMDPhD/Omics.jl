@@ -206,53 +206,24 @@ function make_colorbar(z, di_...)
 
 end
 
-function make_axis(di_...)
+const AXIS = Dict("automargin" => true, "showgrid" => false)
 
-    reduce(BioLab.Dict.merge, di_; init = Dict("automargin" => true, "showgrid" => false))
-
-end
-
-# TODO: Test.
-function make_spike(di_...)
-
-    reduce(
-        BioLab.Dict.merge,
-        di_;
-        init = Dict(
-            "showspikes" => true,
-            "spikemode" => "across",
-            "spikedash" => "solid",
-            "spikethickness" => 1,
-            "spikecolor" => "#561649",
-        ),
-    )
-
-end
-
+const SPIKE = Dict(
+    "showspikes" => true,
+    "spikemode" => "across",
+    "spikesnap" => "cursor",
+    "spikedash" => "solid",
+    "spikethickness" => 1,
+    "spikecolor" => "#561649",
+)
 
 const ANNOTATION = Dict(
     "yref" => "paper",
     "xref" => "paper",
     "yanchor" => "middle",
+    "xanchor" => "center",
     "showarrow" => false,
-    "font" => Dict("size" => 10),
 )
-
-function make_annotation(di_...)
-
-    reduce(
-        BioLab.Dict.merge,
-        di_;
-        init = Dict(
-            "yref" => "paper",
-            "xref" => "paper",
-            "yanchor" => "middle",
-            "showarrow" => false,
-            "font" => Dict("size" => 10),
-        ),
-    )
-
-end
 
 function plot_scatter(
     ht,

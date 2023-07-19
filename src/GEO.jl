@@ -61,9 +61,9 @@ function read(gz)
 
         bll = lowercase(bl)
 
-        ta = "!$(bll)_table_"
+        pr = "!$(bll)_table_"
 
-        if startswith(li, "$(ta)begin")
+        if startswith(li, "$(pr)begin")
 
             blt = titlecase(bl)
 
@@ -75,13 +75,13 @@ function read(gz)
                 '\n',
             )
 
-            if _readline(st) == "$(ta)end"
+            if _readline(st) == "$(pr)end"
 
                 bl_th[bl][th]["table"] = jo
 
             else
 
-                error("$ta did not end.")
+                @error "$pr did not end."
 
             end
 

@@ -38,23 +38,23 @@ for (ex, re) in (
     (0.5, sqrt(2)),
 )
 
-    @test BioLab.FeatureSetEnrichment._get_absolute_raise(SC_, ID, ex) == re
+    @test BioLab.FeatureSetEnrichment._index_absolute_exponentiate(SC_, ID, ex) == re
 
     # 3.625 ns (0 allocations: 0 bytes)
     # 5.500 ns (0 allocations: 0 bytes)
-    # 1.792 ns (0 allocations: 0 bytes)
-    # 3.666 ns (0 allocations: 0 bytes)
     # 1.791 ns (0 allocations: 0 bytes)
-    # 1.792 ns (0 allocations: 0 bytes)
+    # 3.625 ns (0 allocations: 0 bytes)
+    # 1.791 ns (0 allocations: 0 bytes)
+    # 1.791 ns (0 allocations: 0 bytes)
     # 3.958 ns (0 allocations: 0 bytes)
     # 5.208 ns (0 allocations: 0 bytes)
     # 2.416 ns (0 allocations: 0 bytes)
-    # 4.000 ns (0 allocations: 0 bytes)
+    # 3.958 ns (0 allocations: 0 bytes)
     # 4.875 ns (0 allocations: 0 bytes)
     # 5.541 ns (0 allocations: 0 bytes)
     # 12.470 ns (0 allocations: 0 bytes)
     # 12.470 ns (0 allocations: 0 bytes)
-    @btime BioLab.FeatureSetEnrichment._get_absolute_raise($SC_, $ID, $ex)
+    @btime BioLab.FeatureSetEnrichment._index_absolute_exponentiate($SC_, $ID, $ex)
 
 end
 
@@ -65,15 +65,15 @@ const BO_ = [true, false, true, false, true, true, false, false, true]
 # ---- #
 
 for (ex, re) in (
-    (1, (N, 6.4, 4.0)),
-    (1.0, (N, 6.4, 4.0)),
-    (2, (N, 16.06, 4.0)),
-    (2.0, (N, 16.06, 4.0)),
-    (0.1, (N, 4.068020158853387, 4.0)),
-    (0.5, (N, 4.672336016204768, 4.0)),
+    (1, (N, 4.0, 6.4)),
+    (1.0, (N, 4.0, 6.4)),
+    (2, (N, 4.0, 16.06)),
+    (2.0, (N, 4.0, 16.06)),
+    (0.1, (N, 4.0, 4.068020158853387)),
+    (0.5, (N, 4.0, 4.672336016204768)),
 )
 
-    @test BioLab.FeatureSetEnrichment._sum_10(SC_, ex, BO_) == re
+    @test BioLab.FeatureSetEnrichment._sum_01(SC_, ex, BO_) == re
 
     # 9.217 ns (0 allocations: 0 bytes)
     # 7.333 ns (0 allocations: 0 bytes)
@@ -81,7 +81,7 @@ for (ex, re) in (
     # 28.224 ns (0 allocations: 0 bytes)
     # 54.442 ns (0 allocations: 0 bytes)
     # 54.483 ns (0 allocations: 0 bytes)
-    @btime BioLab.FeatureSetEnrichment._sum_10($SC_, $ex, $BO_)
+    @btime BioLab.FeatureSetEnrichment._sum_01($SC_, $ex, $BO_)
 
 end
 
@@ -101,9 +101,9 @@ for (ex, re) in (
     # 8.884 ns (0 allocations: 0 bytes)
     # 8.884 ns (0 allocations: 0 bytes)
     # 25.309 ns (0 allocations: 0 bytes)
-    # 49.426 ns (0 allocations: 0 bytes)
-    # 97.427 ns (0 allocations: 0 bytes)
-    # 97.456 ns (0 allocations: 0 bytes)
+    # 48.414 ns (0 allocations: 0 bytes)
+    # 96.272 ns (0 allocations: 0 bytes)
+    # 96.417 ns (0 allocations: 0 bytes)
     @btime BioLab.FeatureSetEnrichment._sum_all1($SC_, $ex, $BO_)
 
 end
@@ -112,11 +112,12 @@ end
 
 BioLab.FeatureSetEnrichment._plot_mountain(
     joinpath(BioLab.TE, "plot_mountain.html"),
-    [2.0, 0, -2],
     ["Set Feature 1", "Set Feature 2", "Set Feature 3"],
+    [2.0, 0, -2],
     [true, true, true],
     [0.1, 0, -0.1],
-    11.41,
+    11.41;
+    title_text = join((1:9..., 0))^10,
 )
 
 # ---- #
@@ -159,7 +160,7 @@ const CBO_ = in(Set(CFE1_)).(CFE_)
 
 for al in AL_
 
-    for mo_ in (nothing, Vector{Float64}(undef, length(bo_)))
+    for mo_ in (nothing, Vector{Float64}(undef, length(CBO_)))
 
         BioLab.FeatureSetEnrichment._enrich(al, CSC_, EX, CBO_, mo_)
 

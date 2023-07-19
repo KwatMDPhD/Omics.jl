@@ -4,7 +4,7 @@ using ProgressMeter: @showprogress
 
 using BioLab
 
-function _get_absolute_raise(sc_, id, ex)
+function _index_absolute_exponentiate(sc_, id, ex)
 
     ab = abs(sc_[id])
 
@@ -18,19 +18,17 @@ function _get_absolute_raise(sc_, id, ex)
 
 end
 
-function _sum_10(sc_, ex, bo_)
+function _sum_01(sc_, ex, bo_)
 
     n = length(sc_)
 
-    su1 = 0.0
-
-    su0 = 0.0
+    su0 = su1 = 0.0
 
     for id in 1:n
 
         if bo_[id]
 
-            su1 += _get_absolute_raise(sc_, id, ex)
+            su1 += _index_absolute_exponentiate(sc_, id, ex)
 
         else
 
@@ -40,7 +38,7 @@ function _sum_10(sc_, ex, bo_)
 
     end
 
-    n, su1, su0
+    n, su0, su1
 
 end
 
@@ -48,13 +46,11 @@ function _sum_all1(sc_, ex, bo_)
 
     n = length(sc_)
 
-    su = 0.0
-
-    su1 = 0.0
+    su = su1 = 0.0
 
     for id in 1:n
 
-        ab = _get_absolute_raise(sc_, id, ex)
+        ab = _index_absolute_exponentiate(sc_, id, ex)
 
         su += ab
 
@@ -72,8 +68,8 @@ end
 
 function _plot_mountain(
     ht,
-    sc_,
     fe_,
+    sc_,
     bo_,
     mo_,
     en;
@@ -90,6 +86,10 @@ function _plot_mountain(
 
     scatter = Dict("x" => x, "text" => fe_, "mode" => "lines", "fill" => "tozeroy")
 
+    cor = "#ff1992"
+
+    cob = "#1993ff"
+
     coe1 = "#07fa07"
 
     coe2 = "rgba(7, 250, 7, 0.32)"
@@ -100,16 +100,18 @@ function _plot_mountain(
 
     yaxis3_domain = (0.32, 1)
 
-    #xaxis_range_margin = n * 0.01
-
     annotation = BioLab.Dict.merge(
         BioLab.Plot.ANNOTATION,
-        Dict("bgcolor" => "#fcfcfc", "borderpad" => 4, "borderwidth" => 2),
+        Dict(
+            "showarrow" => false,
+            "bgcolor" => "#fcfcfc",
+            "borderpad" => 4.8,
+            "borderwidth" => 2,
+            "font" => Dict("size" => 16),
+        ),
     )
 
-    annotation_margin = 0.016
-
-    annotation_font_size = 16
+    annotation_margin = 0.032
 
     BioLab.Plot.plot(
         ht,
@@ -118,16 +120,16 @@ function _plot_mountain(
                 scatter,
                 Dict(
                     "y" => ifelse.(sc_ .< 0, sc_, 0),
-                    "line" => Dict("width" => 1, "color" => "#351e1c"),
-                    "fillcolor" => "#c0c0c0",
+                    "line" => Dict("width" => 1, "color" => "#ffffff"),
+                    "fillcolor" => cob,
                 ),
             ),
             BioLab.Dict.merge(
                 scatter,
                 Dict(
                     "y" => ifelse.(0 .< sc_, sc_, 0),
-                    "line" => Dict("width" => 1, "color" => "#351e1c"),
-                    "fillcolor" => "#c0c0c0",
+                    "line" => Dict("width" => 1, "color" => "#ffffff"),
+                    "fillcolor" => cor,
                 ),
             ),
             Dict(
@@ -139,8 +141,7 @@ function _plot_mountain(
                 "marker" => Dict(
                     "symbol" => "line-ns",
                     "size" => 24,
-                    "line" =>
-                        Dict("width" => 1.08, "color" => BioLab.Plot.color(view(sc_, bo_))),
+                    "line" => Dict("width" => 1.28, "color" => "#175e54", "opacity" => 0.8),
                 ),
                 "hoverinfo" => "x+text",
             ),
@@ -157,28 +158,28 @@ function _plot_mountain(
         Dict(
             "showlegend" => false,
             "title" => Dict(
-                "text" => "<b>$(BioLab.String.limit(title_text, 32))</b>",
+                "text" => "<b>$(BioLab.String.limit(title_text, 80))</b>",
                 "font" => Dict("size" => 32, "family" => "Relaway", "color" => "#2b2028"),
             ),
-            "yaxis" => BioLab.Plot.make_axis(
+            "yaxis" => BioLab.Dict.merge(
+                BioLab.Plot.AXIS,
                 Dict("domain" => yaxis1_domain, "title" => Dict("text" => "<b>$nas</b>")),
             ),
-            "yaxis2" => BioLab.Plot.make_axis(
+            "yaxis2" => BioLab.Dict.merge(
+                BioLab.Plot.AXIS,
                 Dict(
                     "domain" => yaxis2_domain,
                     "title" => Dict("text" => "<b>Set</b>"),
                     "tickvals" => (),
                 ),
             ),
-            "yaxis3" => BioLab.Plot.make_axis(
+            "yaxis3" => BioLab.Dict.merge(
+                BioLab.Plot.AXIS,
                 Dict("domain" => yaxis3_domain, "title" => Dict("text" => "<b>Enrichment</b>")),
             ),
-            "xaxis" => BioLab.Plot.make_axis(
-                BioLab.Plot.make_spike(),
-                Dict(
-                    #"range" => (1 - xaxis_range_margin, n + xaxis_range_margin),
-                    "title" => Dict("text" => "<b>$naf (n=$n)</b>"),
-                ),
+            "xaxis" => BioLab.Dict.merge(
+                BioLab.Dict.merge(BioLab.Plot.AXIS, BioLab.Plot.SPIKE),
+                Dict("zeroline" => false, "title" => Dict("text" => "<b>$naf (n=$n)</b>")),
             ),
             "annotations" => (
                 BioLab.Dict.merge(
@@ -188,27 +189,27 @@ function _plot_mountain(
                         "x" => 0.5,
                         "text" => "Enrichment = <b>$(BioLab.String.format(en))</b>",
                         "font" => Dict("size" => 20, "color" => "#224634"),
-                        "borderpad" => 8,
+                        "borderpad" => 12.8,
                         "bordercolor" => coe1,
                     ),
                 ),
                 BioLab.Dict.merge(
                     annotation,
                     Dict(
-                        "y" => yaxis1_domain[2] * 1 / 4,
+                        "y" => yaxis1_domain[2] * 0.25,
                         "x" => annotation_margin,
                         "text" => nah,
-                        "font" => Dict("size" => annotation_font_size, "color" => "#ff1992"),
+                        "font" => Dict("color" => cor),
                         "bordercolor" => "#fcc9b9",
                     ),
                 ),
                 BioLab.Dict.merge(
                     annotation,
                     Dict(
-                        "y" => yaxis1_domain[2] * 3 / 4,
+                        "y" => yaxis1_domain[2] * 0.75,
                         "x" => 1 - annotation_margin,
                         "text" => nal,
-                        "font" => Dict("size" => annotation_font_size, "color" => "#1993ff"),
+                        "font" => Dict("color" => cob),
                         "bordercolor" => "#b9c9fc",
                     ),
                 ),
@@ -217,6 +218,8 @@ function _plot_mountain(
     )
 
 end
+
+# TODO: Pick up here.
 
 struct KS end
 
@@ -236,7 +239,7 @@ end
 
 function _enrich(::KS, sc_, ex, bo_, mo_)
 
-    n, su1, su0 = _sum_10(sc_, ex, bo_)
+    n, su0, su1 = _sum_01(sc_, ex, bo_)
 
     cu = 0.0
 
@@ -252,7 +255,7 @@ function _enrich(::KS, sc_, ex, bo_, mo_)
 
         if bo_[id]
 
-            cu += _get_absolute_raise(sc_, id, ex) / su1
+            cu += _index_absolute_exponentiate(sc_, id, ex) / su1
 
         else
 
@@ -284,7 +287,7 @@ end
 
 function _enrich(::KSa, sc_, ex, bo_, mo_)
 
-    n, su1, su0 = _sum_10(sc_, ex, bo_)
+    n, su0, su1 = _sum_01(sc_, ex, bo_)
 
     cu = 0.0
 
@@ -298,7 +301,7 @@ function _enrich(::KSa, sc_, ex, bo_, mo_)
 
         if bo_[id]
 
-            cu += _get_absolute_raise(sc_, id, ex) / su1
+            cu += _index_absolute_exponentiate(sc_, id, ex) / su1
 
         else
 
@@ -358,7 +361,7 @@ function _enrich(::KLi, sc_, ex, bo_, mo_)
 
     for id in 1:n
 
-        ab = _get_absolute_raise(sc_, id, ex)
+        ab = _index_absolute_exponentiate(sc_, id, ex)
 
         ri += ab
 
@@ -436,7 +439,7 @@ function _enrich_klio(fu, sc_, ex, bo_, mo_)
 
     for id in 1:n
 
-        ab = _get_absolute_raise(sc_, id, ex)
+        ab = _index_absolute_exponentiate(sc_, id, ex)
 
         ri += ab
 
@@ -528,7 +531,7 @@ function enrich(ht, al, sc_, fe_, fe1_::AbstractVector{<:AbstractString}; n = 1,
 
     en = _enrich(al, sc_, ex, bo_, mo_)
 
-    _plot_mountain(ht, sc_, fe_, bo_, mo_, en; ke_ar...)
+    _plot_mountain(ht, fe_, sc_, bo_, mo_, en; ke_ar...)
 
     en
 

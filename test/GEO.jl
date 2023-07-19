@@ -26,17 +26,17 @@ const BL_TH = BioLab.GEO.read(GZ)
 
 @test length(BL_TH["SERIES"]["GSE122404"]) == 44
 
-@test length(BL_TH["SAMPLE"]) == 20
-
-@test length(BL_TH["SAMPLE"]["GSM3466115"]) == 36
-
-@test length(BioLab.GEO._dice(BL_TH["SAMPLE"]["GSM3466115"]["table"])) == 53618
-
 @test length(BL_TH["PLATFORM"]) == 1
 
 @test length(BL_TH["PLATFORM"]["GPL16686"]) == 47
 
 @test length(BioLab.GEO._dice(BL_TH["PLATFORM"]["GPL16686"]["table"])) == 53982
+
+@test length(BL_TH["SAMPLE"]) == 20
+
+@test length(BL_TH["SAMPLE"]["GSM3466115"]) == 36
+
+@test length(BioLab.GEO._dice(BL_TH["SAMPLE"]["GSM3466115"]["table"])) == 53618
 
 disable_logging(Warn)
 
