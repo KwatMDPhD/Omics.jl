@@ -478,7 +478,7 @@ function _plot_mountain(
 
 end
 
-function enrich(ht, al, sc_, fe_, fe1_::AbstractVector{<:AbstractString}; n = 1, ex = 1, ke_ar...)
+function enrich(ht::AbstractString, al, fe_, sc_, fe1_; n = 1, ex = 1, ke_ar...)
 
     is_ = in(Set(fe1_)).(fe_)
 
@@ -488,7 +488,7 @@ function enrich(ht, al, sc_, fe_, fe1_::AbstractVector{<:AbstractString}; n = 1,
 
     end
 
-    mo_ = Vector{Float64}(undef, length(is_))
+    mo_ = Vector{Float64}(undef, length(fe_))
 
     en = _enrich(al, sc_, ex, is_, mo_)
 
@@ -498,7 +498,7 @@ function enrich(ht, al, sc_, fe_, fe1_::AbstractVector{<:AbstractString}; n = 1,
 
 end
 
-function enrich(al, sc_, fe_, fe1___; n = 1, ex = 1)
+function enrich(al, fe_, sc_, fe1___; n = 1, ex = 1)
 
     en_ = Vector{Float64}(undef, length(fe1___))
 
@@ -526,9 +526,9 @@ function enrich(al, sc_, fe_, fe1___; n = 1, ex = 1)
 
 end
 
-function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; n = 1, ex = 1)
+function enrich(al, fe_, sa_, fe_x_sa_x_sc, fe1___; n = 1, ex = 1)
 
-    se_x_sa_x_en = Matrix{Float64}(undef, (length(se_), length(sa_)))
+    se_x_sa_x_en = Matrix{Float64}(undef, (length(fe1___), length(sa_)))
 
     no_ = BitVector(undef, length(fe_))
 
@@ -536,15 +536,13 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; n = 1, ex = 1)
 
         no_ .= .!isnan.(sc_)
 
-        # TODO: Understand why view(sc_, no_) is slower; is this due to NaN?
+        # TODO: Understand why view is slower.
 
-        # TODO: view.
         scn_ = sc_[no_]
 
         so_ = sortperm(scn_; rev = true)
 
-        # TODO: view.
-        se_x_sa_x_en[:, id] = enrich(al, view(scn_, so_), view(fe_[no_], so_), fe1___; n, ex)
+        se_x_sa_x_en[:, id] = enrich(al, view(fe_[no_], so_), view(scn_, so_), fe1___; n, ex)
 
     end
 
@@ -606,8 +604,8 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
         en2 = enrich(
             joinpath(di, "$(sa)_enriching_$se.html"),
             al,
-            view(scn_, so_),
             view(fe_[nos_], so_),
+            view(scn_, so_),
             fe1___[id1];
             ex,
             title_text = "$sa x $se",
