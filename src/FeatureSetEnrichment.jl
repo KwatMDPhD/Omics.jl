@@ -538,10 +538,12 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___; n = 1, ex = 1)
 
         # TODO: Understand why view(sc_, no_) is slower; is this due to NaN?
 
+        # TODO: view.
         scn_ = sc_[no_]
 
         so_ = sortperm(scn_; rev = true)
 
+        # TODO: view.
         se_x_sa_x_en[:, id] = enrich(al, view(scn_, so_), view(fe_[no_], so_), fe1___; n, ex)
 
     end
@@ -572,6 +574,7 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
 
     noe_ = .!isnan.(se_x_sa_x_en)
 
+    # TODO: view.
     for id_ in
         view(view(CartesianIndices(se_x_sa_x_en), noe_), sortperm(view(se_x_sa_x_en, noe_)))[[
         1,
@@ -582,6 +585,7 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
         end,
     ]]
 
+        # TODO: view.
         en = se_x_sa_x_en[id_]
 
         id1, id2 = Tuple(id_)
@@ -594,6 +598,7 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
 
         nos_ .= .!isnan.(sc_)
 
+        # TODO: view.
         scn_ = sc_[nos_]
 
         so_ = sortperm(scn_; rev = true)
