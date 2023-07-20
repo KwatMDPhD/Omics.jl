@@ -6,9 +6,9 @@ using NMF: nnmf
 
 using BioLab
 
-function factorize(ma, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 10^-4)
+function factorize(ma, n; ke_ar...)
 
-    mf = nnmf(ma, n; init, alg, maxiter, tol)
+    mf = nnmf(ma, n; ke_ar...)
 
     st = " in $(mf.niters) iterations with $(mf.objvalue)."
 
@@ -47,11 +47,11 @@ function write(
 
     BioLab.Path.error_missing(di)
 
-    fa_ = string.("$naf ", 1:size(w_[1], 2))
-
     lo = 1280
 
     sh = 800
+
+    fa_ = string.("$naf ", 1:size(w_[1], 2))
 
     axis = BioLab.Dict.merge(BioLab.Plot.AXIS, Dict("dtick" => 1))
 

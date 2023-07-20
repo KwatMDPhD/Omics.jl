@@ -10,7 +10,7 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
     maa = rand(n_ro, n_co)
 
-    maw, mah = BioLab.MatrixFactorization.factorize(maa, n_fa)
+    maw, mah = BioLab.MatrixFactorization.factorize(maa, n_fa; maxiter = 10^3)
 
     @test size(maw) == (n_ro, n_fa)
 
@@ -37,7 +37,7 @@ end
 
 const MAA = rand(7, 9)
 
-const MAW, MAH = BioLab.MatrixFactorization.factorize(MAA, 3)
+const MAW, MAH = BioLab.MatrixFactorization.factorize(MAA, 3; maxiter = 10^3)
 
 const MAH2 = BioLab.MatrixFactorization.solve_h(MAA, MAW)
 
