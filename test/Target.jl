@@ -2,6 +2,8 @@ using StatsBase: mean
 
 using Test: @test
 
+using BioLab
+
 # ---- #
 
 nu_ = [2, 3, 4, 5]

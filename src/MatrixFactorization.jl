@@ -10,8 +10,6 @@ function factorize(ma, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 
 
     mf = nnmf(ma, n; init, alg, maxiter, tol)
 
-    # TODO: Use functions to access fields.
-
     st = " in $(mf.niters) iterations with $(mf.objvalue)."
 
     if mf.converged
@@ -28,6 +26,7 @@ function factorize(ma, n; init = :random, alg = :multdiv, maxiter = 10^5, tol = 
 
 end
 
+# TODO: Improve.
 function solve_h(ma, w)
 
     clamp!(pinv(w) * ma, 0, Inf)
@@ -38,27 +37,25 @@ function write(
     di,
     w_,
     h_;
-    fu = nothing,
-    nar_ = ["Row Set $id" for id in eachindex(w_)],
-    nac_ = ["Column Set $id" for id in eachindex(h_)],
+    no = true,
+    nar_ = string.("Row Set ", eachindex(w_)),
+    nac_ = string.("Column Set ", eachindex(h_)),
     naf = "Factor",
-    ro___ = (["$na $id" for id in 1:size(ma, 1)] for (ma, na) in zip(w_, nar_)),
-    co___ = (["$na $id" for id in 1:size(ma, 2)] for (ma, na) in zip(h_, nac_)),
+    ro___ = (string.("$na ", 1:size(ma, 1)) for (ma, na) in zip(w_, nar_)),
+    co___ = (string.("$na ", 1:size(ma, 2)) for (ma, na) in zip(h_, nac_)),
 )
 
     BioLab.Path.error_missing(di)
 
-    fa_ = ["$naf $id" for id in 1:size(w_[1], 2)]
+    fa_ = string.("$naf ", 1:size(w_[1], 2))
 
     lo = 1280
 
     sh = 800
 
-    axis = Dict("dtick" => 1)
+    axis = BioLab.Dict.merge(BioLab.Plot.AXIS, Dict("dtick" => 1))
 
-    # TODO: Make a function and use it for W and H.
-
-    for (id, (w, ro_, nar)) in enumerate(zip(w_, ro___, nar_))
+    for (id, (w, nar, ro_)) in enumerate(zip(w_, nar_, ro___))
 
         pr = joinpath(di, "row$(id)_x_factor_x_positive")
 
@@ -66,18 +63,18 @@ function write(
 
         or_ = BioLab.Clustering.hierarchize(w, 1).order
 
-        co = copy(w)
+        if no
 
-        if !isnothing(fu)
+            w = copy(w)
 
-            map!(fu, eachrow(co), eachrow(co))
+            foreach(BioLab.NumberArray.normalize_with_0!, eachrow(w))
 
         end
 
         BioLab.Plot.plot_heat_map(
             "$pr.html",
-            co[or_, :],
-            ro_[or_],
+            view(w, or_, :),
+            view(ro_, or_),
             fa_;
             nar,
             nac = naf,
@@ -91,7 +88,7 @@ function write(
 
     end
 
-    for (id, (h, co_, nac)) in enumerate(zip(h_, co___, nac_))
+    for (id, (h, nac, co_)) in enumerate(zip(h_, nac_, co___))
 
         pr = joinpath(di, "factor_x_column$(id)_x_positive")
 
@@ -99,19 +96,19 @@ function write(
 
         or_ = BioLab.Clustering.hierarchize(h, 2).order
 
-        co = copy(h)
+        if no
 
-        if !isnothing(fu)
+            h = copy(h)
 
-            map!(fu, eachcol(co), eachcol(co))
+            foreach(BioLab.NumberArray.normalize_with_0!, eachcol(h))
 
         end
 
         BioLab.Plot.plot_heat_map(
             "$pr.html",
-            co[:, or_],
+            view(h, :, or_),
             fa_,
-            co_[or_];
+            view(co_, or_);
             nar = naf,
             nac,
             layout = Dict(

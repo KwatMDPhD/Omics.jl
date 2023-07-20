@@ -1,5 +1,7 @@
 using Test: @test
 
+using BioLab
+
 # ---- #
 
 dw = joinpath(homedir(), "Downloads")

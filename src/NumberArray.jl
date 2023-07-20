@@ -4,16 +4,6 @@ using StatsBase: competerank, denserank, mean, ordinalrank, std, tiedrank
 
 using BioLab
 
-function error_negative(ar)
-
-    if any(<(0), ar)
-
-        error("There is a negative.")
-
-    end
-
-end
-
 function get_area(ar)
 
     sum(ar) / length(ar)
@@ -135,8 +125,6 @@ end
 
 function normalize_with_01!(ar)
 
-    BioLab.Collection.error_no_change(ar)
-
     mi = minimum(ar)
 
     ra = maximum(ar) - mi
@@ -151,15 +139,11 @@ end
 
 function normalize_with_0!(ar)
 
-    BioLab.Collection.error_no_change(ar)
-
     ar .= (ar .- mean(ar)) ./ std(ar)
 
 end
 
 function normalize_with_sum!(ar)
-
-    error_negative(ar)
 
     su = sum(ar)
 
@@ -172,8 +156,6 @@ function normalize_with_sum!(ar)
 end
 
 function _normalize_with_rank!(ar, fu)
-
-    BioLab.Collection.error_no_change(ar)
 
     # TODO: Benchmark against .=.
 

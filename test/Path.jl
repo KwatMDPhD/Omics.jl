@@ -1,5 +1,7 @@
 using Test: @test
 
+using BioLab
+
 # ---- #
 
 for pa in (joinpath(TE, "missing_path"), TE)

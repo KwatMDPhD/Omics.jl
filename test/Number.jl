@@ -1,5 +1,7 @@
 using Test: @test
 
+using BioLab
+
 # ---- #
 
 for (ra, re) in zip(

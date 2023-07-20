@@ -1,5 +1,7 @@
 using Test: @test
 
+using BioLab
+
 # ---- #
 
 function benchmark(n_fe, n_sa, ho)

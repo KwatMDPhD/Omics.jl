@@ -1,5 +1,7 @@
 using Test: @test
 
+using BioLab
+
 # ---- #
 
 DA = joinpath(BioLab.DA, "SingleCell")

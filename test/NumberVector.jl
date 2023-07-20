@@ -2,6 +2,8 @@ using Random: seed!
 
 using Test: @test
 
+using BioLab
+
 # ---- #
 
 for (nu_, re) in (

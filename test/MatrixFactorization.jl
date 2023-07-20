@@ -1,58 +1,46 @@
 using Test: @test
 
+using BioLab
+
 # ---- #
+
+const FU = >=(0)
 
 for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
-    st = "$n_ro x $n_co --> $n_fa"
+    maa = rand(n_ro, n_co)
 
-    ama = rand(n_ro, n_co)
+    maw, mah = BioLab.MatrixFactorization.factorize(maa, n_fa)
 
-    wma, hma = BioLab.MatrixFactorization.factorize(ama, n_fa)
+    @test size(maw) == (n_ro, n_fa)
 
-    @test size(wma) == (n_ro, n_fa)
+    @test size(mah) == (n_fa, n_co)
 
-    @test size(hma) == (n_fa, n_co)
+    @test all(FU, maw)
 
-    BioLab.NumberArray.error_negative(wma)
+    @test all(FU, mah)
 
-    BioLab.NumberArray.error_negative(hma)
+    @test BioLab.@is_error BioLab.MatrixFactorization.write("", (maw,), (mah,))
 
-    di = mkdir(joinpath(TE, BioLab.Time.stamp()))
+    di = BioLab.Path.make_directory(joinpath(BioLab.TE, "$n_ro $n_co $n_fa"))
 
-    BioLab.MatrixFactorization.write(di, (wma,), (hma,))
+    BioLab.MatrixFactorization.write(di, (maw,), (mah,))
 
-    @test wma == BioLab.DataFrame.separate(
-        BioLab.Table.read(joinpath(di, "row1_x_factor_x_positive.tsv")),
-    )[4]
+    @test maw == Matrix(BioLab.Table.read(joinpath(di, "row1_x_factor_x_positive.tsv"))[!, 2:end])
 
-    @test hma == BioLab.DataFrame.separate(
-        BioLab.Table.read(joinpath(di, "factor_x_column1_x_positive.tsv")),
-    )[4]
+    @test mah ==
+          Matrix(BioLab.Table.read(joinpath(di, "factor_x_column1_x_positive.tsv"))[!, 2:end])
 
 end
 
 # ---- #
 
-n_ro = 7
+const MAA = rand(7, 9)
 
-n_co = 9
+const MAW, MAH = BioLab.MatrixFactorization.factorize(MAA, 3)
 
-n_fa = 3
+const MAH2 = BioLab.MatrixFactorization.solve_h(MAA, MAW)
 
-ama = rand(n_ro, n_co)
+@test isapprox(MAH, MAH2; rtol = 1e-0)
 
-# ---- #
-
-wma, hma = BioLab.MatrixFactorization.factorize(ama, n_fa)
-
-hma2 = BioLab.MatrixFactorization.solve_h(ama, wma)
-
-# TODO: Solve better.
-@test isapprox(hma, hma2; rtol = 1)
-
-# ---- #
-
-@test @is_error BioLab.MatrixFactorization.write("", (wma,), (hma, hma2))
-
-BioLab.MatrixFactorization.write(TE, (wma,), (hma, hma2))
+BioLab.MatrixFactorization.write(BioLab.TE, (MAW,), (MAH, MAH2))
