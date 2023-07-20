@@ -14,7 +14,7 @@ struct KLioM end
 
 struct KLioP end
 
-function make_string(al)
+function _make_string(al)
 
     chop(string(al); head = 28, tail = 2)
 
@@ -90,7 +90,7 @@ end
 
 end
 
-function _enrich(::KS, sc_, ex, is_, mo_)
+function _enrich!(::KS, sc_, ex, is_, mo_)
 
     n, de, su1, cu, mo = _ready_ks(sc_, ex, is_, mo_)
 
@@ -132,7 +132,7 @@ function _enrich(::KS, sc_, ex, is_, mo_)
 
 end
 
-function _enrich(::KSa, sc_, ex, is_, mo_)
+function _enrich!(::KSa, sc_, ex, is_, mo_)
 
     n, de, su1, cu, mo = _ready_ks(sc_, ex, is_, mo_)
 
@@ -174,7 +174,7 @@ end
 
 end
 
-function _enrich(::KLi, sc_, ex, is_, mo_)
+function _enrich!(::KLi, sc_, ex, is_, mo_)
 
     n, su, su1, ep, ri, ri1, le, le1, ar, mo, ridp, ri1dp = _ready_kli(sc_, ex, is_, mo_)
 
@@ -318,7 +318,7 @@ function _enrich_klio(fu, sc_, ex, is_, mo_)
 
 end
 
-function _enrich(::KLioM, sc_, ex, is_, mo_)
+function _enrich!(::KLioM, sc_, ex, is_, mo_)
 
     _enrich_klio(
         BioLab.Information.get_antisymmetric_kullback_leibler_divergence,
@@ -330,19 +330,19 @@ function _enrich(::KLioM, sc_, ex, is_, mo_)
 
 end
 
-function _enrich(::KLioP, sc_, ex, is_, mo_)
+function _enrich!(::KLioP, sc_, ex, is_, mo_)
 
     _enrich_klio(BioLab.Information.get_symmetric_kullback_leibler_divergence, sc_, ex, is_, mo_)
 
 end
 
-function _plot_mountain(
+function plot(
     ht,
+    al,
     fe_,
     sc_,
-    is_,
-    mo_,
-    en;
+    fe1_;
+    ex = 1,
     title_text = "Set Enrichment",
     naf = "Feature",
     nas = "Score",
@@ -350,7 +350,13 @@ function _plot_mountain(
     nah = "High",
 )
 
+    is_ = in(Set(fe1_)).(fe_)
+
     n = length(fe_)
+
+    mo_ = Vector{Float64}(undef, n)
+
+    en = _enrich!(al, sc_, ex, is_, mo_)
 
     x = collect(1:n)
 
@@ -370,6 +376,8 @@ function _plot_mountain(
 
     coe2 = "rgba(7, 250, 7, 0.32)"
 
+    title_text = BioLab.String.limit(title_text, 80)
+
     yaxis1_domain = (0, 0.24)
 
     yaxis2_domain = (0.25, 0.31)
@@ -386,6 +394,8 @@ function _plot_mountain(
             "font" => Dict("size" => 16),
         ),
     )
+
+    enf = BioLab.String.format(en)
 
     annotationhl = BioLab.Dict.merge(
         annotation,
@@ -425,7 +435,7 @@ function _plot_mountain(
         Dict(
             "showlegend" => false,
             "title" => Dict(
-                "text" => "<b>$(BioLab.String.limit(title_text, 80))</b>",
+                "text" => "<b>$title_text</b>",
                 "font" => Dict("size" => 32, "family" => "Relaway", "color" => "#2b2028"),
             ),
             "yaxis" => BioLab.Dict.merge(
@@ -454,7 +464,7 @@ function _plot_mountain(
                     Dict(
                         "y" => 1,
                         "x" => 0.5,
-                        "text" => "Enrichment = <b>$(BioLab.String.format(en))</b>",
+                        "text" => "Enrichment = <b>$enf</b>",
                         "font" => Dict("size" => 20, "color" => "#224634"),
                         "borderpad" => 12.8,
                         "bordercolor" => "#ffd96a",
@@ -478,26 +488,6 @@ function _plot_mountain(
 
 end
 
-function enrich(ht::AbstractString, al, fe_, sc_, fe1_; n = 1, ex = 1, ke_ar...)
-
-    is_ = in(Set(fe1_)).(fe_)
-
-    if sum(is_) < n
-
-        return NaN
-
-    end
-
-    mo_ = Vector{Float64}(undef, length(fe_))
-
-    en = _enrich(al, sc_, ex, is_, mo_)
-
-    _plot_mountain(ht, fe_, sc_, is_, mo_, en; ke_ar...)
-
-    en
-
-end
-
 function enrich(al, fe_, sc_, fe1___; n = 1, ex = 1)
 
     en_ = Vector{Float64}(undef, length(fe1___))
@@ -514,7 +504,7 @@ function enrich(al, fe_, sc_, fe1___; n = 1, ex = 1)
 
         else
 
-            en = _enrich(al, sc_, ex, is_, nothing)
+            en = _enrich!(al, sc_, ex, is_, nothing)
 
         end
 
@@ -554,39 +544,33 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
 
     BioLab.Path.error_missing(di)
 
-    als = make_string(al)
+    als = _make_string(al)
 
-    nacs = BioLab.Path.clean(nac)
+    nacc = BioLab.Path.clean(nac)
 
     BioLab.Plot.plot_heat_map(
-        joinpath(di, "set_x_$(nacs)_x_enrichment.html"),
+        joinpath(di, "set_x_$(nacc)_x_enrichment.html"),
         replace(se_x_sa_x_en, NaN => missing),
         se_,
         sa_;
         nar = "Set",
         nac,
-        layout = Dict("title" => Dict("text" => "Enrichment with $als")),
+        layout = Dict("title" => Dict("text" => "Enrichment using $als")),
     )
 
     nos_ = BitVector(undef, length(fe_))
 
-    noe_ = .!isnan.(se_x_sa_x_en)
+    noe = .!isnan.(se_x_sa_x_en)
 
-    # TODO: view.
     for id_ in
-        view(view(CartesianIndices(se_x_sa_x_en), noe_), sortperm(view(se_x_sa_x_en, noe_)))[[
-        1,
-        2,
-        3,
-        end - 2,
-        end - 1,
-        end,
-    ]]
-
-        # TODO: view.
-        en = se_x_sa_x_en[id_]
+        view(view(CartesianIndices(se_x_sa_x_en), noe), sortperm(view(se_x_sa_x_en, noe)))[BioLab.Vector.get_extreme(
+        sum(noe),
+        8,
+    )]
 
         id1, id2 = Tuple(id_)
+
+        enf = BioLab.String.format(se_x_sa_x_en[id1, id2])
 
         se = se_[id1]
 
@@ -596,26 +580,19 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
 
         nos_ .= .!isnan.(sc_)
 
-        # TODO: view.
-        scn_ = sc_[nos_]
+        scn_ = view(sc_, nos_)
 
         so_ = sortperm(scn_; rev = true)
 
-        en2 = enrich(
+        plot(
             joinpath(di, "$(sa)_enriching_$se.html"),
             al,
-            view(fe_[nos_], so_),
+            view(view(fe_, nos_), so_),
             view(scn_, so_),
             fe1___[id1];
             ex,
-            title_text = "$sa x $se",
+            title_text = "$sa Enriching $se ($enf)",
         )
-
-        if en != en2
-
-            error("Enrichemnts do not match. $en != $en2.")
-
-        end
 
     end
 

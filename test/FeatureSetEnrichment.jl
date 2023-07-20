@@ -13,9 +13,7 @@ const DA = joinpath(BioLab._DA, "FeatureSetEnrichment")
 
 # ---- #
 
-const SC_ = [-2, -1, -0.5, 0, 0, 0.5, 1, 2, 3.4]
-
-const N = length(SC_)
+const SSC_ = [-2, -1, -0.5, 0, 0, 0.5, 1, 2, 3.4]
 
 # ---- #
 
@@ -38,7 +36,7 @@ for (ex, re) in (
     (0.5, sqrt(2)),
 )
 
-    @test BioLab.FeatureSetEnrichment._index_absolute_exponentiate(SC_, ID, ex) == re
+    @test BioLab.FeatureSetEnrichment._index_absolute_exponentiate(SSC_, ID, ex) == re
 
     # 3.625 ns (0 allocations: 0 bytes)
     # 5.500 ns (0 allocations: 0 bytes)
@@ -54,13 +52,15 @@ for (ex, re) in (
     # 5.541 ns (0 allocations: 0 bytes)
     # 12.470 ns (0 allocations: 0 bytes)
     # 12.470 ns (0 allocations: 0 bytes)
-    @btime BioLab.FeatureSetEnrichment._index_absolute_exponentiate($SC_, $ID, $ex)
+    @btime BioLab.FeatureSetEnrichment._index_absolute_exponentiate($SSC_, $ID, $ex)
 
 end
 
 # ---- #
 
-const IS_ = [true, false, true, false, true, true, false, false, true]
+const SIS_ = BitVector((true, false, true, false, true, true, false, false, true))
+
+const N = length(SSC_)
 
 # ---- #
 
@@ -73,15 +73,24 @@ for (ex, re) in (
     (0.5, (N, 4.0, 4.672336016204768)),
 )
 
-    @test BioLab.FeatureSetEnrichment._sum_01(SC_, ex, IS_) == re
+    @test BioLab.FeatureSetEnrichment._sum_01(SSC_, ex, SIS_) == re
 
+    # 9.843 ns (0 allocations: 0 bytes)
     # 9.217 ns (0 allocations: 0 bytes)
-    # 7.333 ns (0 allocations: 0 bytes)
-    # 20.770 ns (0 allocations: 0 bytes)
-    # 28.224 ns (0 allocations: 0 bytes)
+    # 10.010 ns (0 allocations: 0 bytes)
+    # 7.375 ns (0 allocations: 0 bytes)
+    # 21.314 ns (0 allocations: 0 bytes)
+    # 20.728 ns (0 allocations: 0 bytes)
+    # 34.659 ns (0 allocations: 0 bytes)
+    # 28.141 ns (0 allocations: 0 bytes)
+    # 57.249 ns (0 allocations: 0 bytes)
     # 54.442 ns (0 allocations: 0 bytes)
-    # 54.483 ns (0 allocations: 0 bytes)
-    @btime BioLab.FeatureSetEnrichment._sum_01($SC_, $ex, $IS_)
+    # 57.206 ns (0 allocations: 0 bytes)
+    # 54.442 ns (0 allocations: 0 bytes)
+
+    @btime BioLab.FeatureSetEnrichment._sum_01($SSC_, $ex, $SIS_)
+
+    @btime BioLab.FeatureSetEnrichment._sum_01($SSC_, $ex, $(convert(Vector{Bool}, SIS_)))
 
 end
 
@@ -96,29 +105,26 @@ for (ex, re) in (
     (0.5, (N, 8.086549578577863, 4.672336016204768)),
 )
 
-    @test BioLab.FeatureSetEnrichment._sum_all1(SC_, ex, IS_) == re
+    @test BioLab.FeatureSetEnrichment._sum_all1(SSC_, ex, SIS_) == re
 
+    # 11.386 ns (0 allocations: 0 bytes)
+    # 8.925 ns (0 allocations: 0 bytes)
+    # 11.386 ns (0 allocations: 0 bytes)
     # 8.884 ns (0 allocations: 0 bytes)
-    # 8.884 ns (0 allocations: 0 bytes)
+    # 28.098 ns (0 allocations: 0 bytes)
     # 25.309 ns (0 allocations: 0 bytes)
-    # 48.414 ns (0 allocations: 0 bytes)
-    # 96.272 ns (0 allocations: 0 bytes)
-    # 96.417 ns (0 allocations: 0 bytes)
-    @btime BioLab.FeatureSetEnrichment._sum_all1($SC_, $ex, $IS_)
+    # 49.645 ns (0 allocations: 0 bytes)
+    # 48.371 ns (0 allocations: 0 bytes)
+    # 97.237 ns (0 allocations: 0 bytes)
+    # 96.329 ns (0 allocations: 0 bytes)
+    # 97.281 ns (0 allocations: 0 bytes)
+    # 96.403 ns (0 allocations: 0 bytes)
+
+    @btime BioLab.FeatureSetEnrichment._sum_all1($SSC_, $ex, $SIS_)
+
+    @btime BioLab.FeatureSetEnrichment._sum_all1($SSC_, $ex, $(convert(Vector{Bool}, SIS_)))
 
 end
-
-# ---- #
-
-BioLab.FeatureSetEnrichment._plot_mountain(
-    joinpath(BioLab.TE, "plot_mountain.html"),
-    ["Set Feature 1", "Set Feature 2", "Set Feature 3"],
-    [2.0, 0, -2],
-    [true, true, true],
-    [0.1, 0, -0.1],
-    11.41;
-    title_text = join((1:9..., 0))^10,
-)
 
 # ---- #
 
@@ -134,17 +140,7 @@ const AL_ = (
 
 for (al, re) in zip(AL_, ("KS", "KSa", "KLi", "KLioM", "KLioP"))
 
-    @test BioLab.FeatureSetEnrichment.make_string(al) == re
-
-end
-
-# ---- #
-
-function benchmark_card(ca1)
-
-    ["K", "Q", "J", "X", "9", "8", "7", "6", "5", "4", "3", "2", "A"],
-    [6.0, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6],
-    string.(collect(ca1))
+    @test BioLab.FeatureSetEnrichment._make_string(al) == re
 
 end
 
@@ -154,40 +150,42 @@ const EX = 1
 
 # ---- #
 
-const CFE_, CSC_, CFE1_ = benchmark_card("AK")
+const CFE_ = ["K", "Q", "J", "X", "9", "8", "7", "6", "5", "4", "3", "2", "A"]
+
+const CSC_ = [6.0, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6]
+
+const CFE1_ = ["A", "K"]
 
 const CIS_ = in(Set(CFE1_)).(CFE_)
 
+# ---- #
+
 for (al, re) in zip(AL_, (-0.5, 0.0, 0.0, 0.0, 0.0))
 
-    for mo_ in (nothing, Vector{Float64}(undef, length(CFE_)))
-
-        BioLab.FeatureSetEnrichment._enrich(al, CSC_, EX, CIS_, mo_)
-
-    end
-
     @test isapprox(
-        BioLab.FeatureSetEnrichment._enrich(al, CSC_, EX, CIS_, nothing),
+        BioLab.FeatureSetEnrichment._enrich!(al, CSC_, EX, CIS_, nothing),
         re;
         atol = 1e-15,
     )
 
-    # 16.699 ns (0 allocations: 0 bytes)
     # 22.233 ns (0 allocations: 0 bytes)
+    # 16.699 ns (0 allocations: 0 bytes)
     #
+    # 20.645 ns (0 allocations: 0 bytes)
     # 15.489 ns (0 allocations: 0 bytes)
-    # 20.666 ns (0 allocations: 0 bytes)
     #
+    # 130.314 ns (0 allocations: 0 bytes)
     # 125.510 ns (0 allocations: 0 bytes)
-    # 130.567 ns (0 allocations: 0 bytes)
     #
-    # 232.155 ns (0 allocations: 0 bytes)
-    # 236.207 ns (0 allocations: 0 bytes)
-    #
-    # 232.143 ns (0 allocations: 0 bytes)
     # 236.014 ns (0 allocations: 0 bytes)
+    # 232.075 ns (0 allocations: 0 bytes)
+    #
+    # 235.920 ns (0 allocations: 0 bytes)
+    # 231.971 ns (0 allocations: 0 bytes)
 
-    @btime BioLab.FeatureSetEnrichment._enrich(
+    @btime BioLab.FeatureSetEnrichment._enrich!($al, $CSC_, $EX, $CIS_, nothing)
+
+    @btime BioLab.FeatureSetEnrichment._enrich!(
         $al,
         $CSC_,
         $EX,
@@ -195,27 +193,26 @@ for (al, re) in zip(AL_, (-0.5, 0.0, 0.0, 0.0, 0.0))
         nothing,
     )
 
-    @btime BioLab.FeatureSetEnrichment._enrich($al, $CSC_, $EX, $CIS_, nothing)
+end
+
+# ---- #
+
+for al in AL_
+
+    BioLab.FeatureSetEnrichment.plot("", al, CFE_, CSC_, CFE1_, title_text = join((1:9..., 0))^10)
 
 end
 
 # ---- #
 
-function benchmark_myc()
+const MFE_, MSC_ =
+    eachcol(BioLab.Table.read(joinpath(DA, "gene_x_statistic_x_number.tsv"); select = [1, 2]))
 
-    di = joinpath(BioLab._DA, "FeatureSetEnrichment")
+reverse!(MFE_)
 
-    da = BioLab.Table.read(joinpath(di, "gene_x_statistic_x_number.tsv"))
+reverse!(MSC_)
 
-    reverse!(da[!, 1]),
-    reverse!(da[!, 2]),
-    BioLab.GMT.read(joinpath(di, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
-
-end
-
-# ---- #
-
-const MFE_, MSC_, MFE1_ = benchmark_myc()
+const MFE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 const MIS_ = in(Set(MFE1_)).(MFE_)
 
@@ -224,6 +221,8 @@ const MSA_ = ["Score", "Score x 10", "Constant"]
 const FE_X_SA_X_MSC = hcat(MSC_, MSC_ * 10.0, fill(0.8, length(MFE_)))
 
 const MSE_FE1_ = BioLab.GMT.read(joinpath(DA, "h.all.v7.1.symbols.gmt"))
+
+const MSE_ = collect(keys(MSE_FE1_))
 
 const MFE1___ = collect(values(MSE_FE1_))
 
@@ -240,15 +239,43 @@ for (al, re) in zip(
     ),
 )
 
-    @test isapprox(BioLab.FeatureSetEnrichment.enrich("", al, MFE_, MSC_, MFE1_), re; atol = 1e-12)
+    @test isapprox(
+        BioLab.FeatureSetEnrichment._enrich!(al, MSC_, EX, MIS_, nothing),
+        re;
+        atol = 1e-12,
+    )
+
+    # 43.375 μs (0 allocations: 0 bytes)
+    # 2.945 ms (108 allocations: 934.22 KiB)
+    # 9.270 ms (358 allocations: 4.59 MiB)
+    #
+    # 37.166 μs (0 allocations: 0 bytes)
+    # 2.645 ms (108 allocations: 934.22 KiB)
+    # 8.390 ms (358 allocations: 4.59 MiB)
+    #
+    # 198.208 μs (0 allocations: 0 bytes)
+    # 10.592 ms (108 allocations: 934.22 KiB)
+    # 33.617 ms (358 allocations: 4.59 MiB)
+    #
+    # 349.667 μs (0 allocations: 0 bytes)
+    # 18.345 ms (108 allocations: 934.22 KiB)
+    # 55.971 ms (358 allocations: 4.59 MiB)
+    #
+    # 349.750 μs (0 allocations: 0 bytes)
+    # 18.363 ms (108 allocations: 934.22 KiB)
+    # 55.950 ms (358 allocations: 4.59 MiB)
+
+    @btime BioLab.FeatureSetEnrichment._enrich!($al, $MSC_, $EX, $MIS_, nothing)
+
+    @btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSC_, $MFE1___)
+
+    @btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSA_, $FE_X_SA_X_MSC, $MFE1___)
 
 end
 
 # ---- #
 
-const AL = AL_[1]
-
-se_x_sa_x_en = BioLab.FeatureSetEnrichment.enrich(AL, MFE_, MSA_, FE_X_SA_X_MSC, MFE1___)
+const AL = BioLab.FeatureSetEnrichment.KS()
 
 BioLab.FeatureSetEnrichment.plot(
     BioLab.TE,
@@ -256,40 +283,8 @@ BioLab.FeatureSetEnrichment.plot(
     MFE_,
     MSA_,
     FE_X_SA_X_MSC,
-    collect(keys(MSE_FE1_)),
+    MSE_,
     MFE1___,
-    se_x_sa_x_en,
+    BioLab.FeatureSetEnrichment.enrich(AL, MFE_, MSA_, FE_X_SA_X_MSC, MFE1___),
     "Sample",
 )
-
-# ---- #
-
-for al in AL_
-
-    # 43.375 μs (0 allocations: 0 bytes)
-    # 2.945 ms (108 allocations: 934.22 KiB)
-    # 9.302 ms (358 allocations: 4.59 MiB)
-    #
-    # 37.166 μs (0 allocations: 0 bytes)
-    # 2.645 ms (108 allocations: 934.22 KiB)
-    # 8.390 ms (358 allocations: 4.59 MiB)
-    #
-    # 198.208 μs (0 allocations: 0 bytes)
-    # 10.629 ms (108 allocations: 934.22 KiB)
-    # 33.617 ms (358 allocations: 4.59 MiB)
-    #
-    # 349.667 μs (0 allocations: 0 bytes)
-    # 18.350 ms (108 allocations: 934.22 KiB)
-    # 56.063 ms (358 allocations: 4.59 MiB)
-    #
-    # 349.792 μs (0 allocations: 0 bytes)
-    # 18.377 ms (108 allocations: 934.22 KiB)
-    # 55.950 ms (358 allocations: 4.59 MiB)
-
-    @btime BioLab.FeatureSetEnrichment._enrich($al, $MSC_, $EX, $MIS_, nothing)
-
-    @btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSC_, $MFE1___)
-
-    @btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSA_, $FE_X_SA_X_MSC, $MFE1___)
-
-end
