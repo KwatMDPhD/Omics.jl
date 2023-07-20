@@ -1,8 +1,8 @@
 module Matrix
 
-function make(ve_)
+function make(an___)
 
-    [ve_[id1][id2] for id1 in eachindex(ve_), id2 in eachindex(ve_[1])]
+    [an___[id1][id2] for id1 in eachindex(an___), id2 in eachindex(an___[1])]
 
 end
 
