@@ -169,7 +169,7 @@ function _map_feature(pl, co_, sp___)
 
         if !BioLab.Bad.is(fe)
 
-            BioLab.Dict.set!(id_fe, sp_[idi], fu(fe))
+            id_fe[sp_[idi]] = fu(fe)
 
         end
 
@@ -228,7 +228,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         else
 
-            @warn "A $sa characteristic lacks $de." ch_
+            @error "A $sa characteristic lacks $de." ch_
 
         end
 
@@ -277,7 +277,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         else
 
-            @warn "$pl table is empty."
+            @error "$pl table is empty."
 
         end
 

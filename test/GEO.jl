@@ -1,7 +1,5 @@
 using DataFrames: DataFrame
 
-using Logging: Debug, Warn, disable_logging
-
 using Test: @test
 
 using BioLab
@@ -38,12 +36,8 @@ const BL_TH = BioLab.GEO.read(GZ)
 
 @test length(BioLab.GEO._dice(BL_TH["SAMPLE"]["GSM3466115"]["table"])) == 53618
 
-disable_logging(Warn)
-
 # 623.414 ms (3439384 allocations: 208.13 MiB)
 @btime BioLab.GEO.read($GZ);
-
-disable_logging(Debug)
 
 # ---- #
 
@@ -57,12 +51,8 @@ characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabul
 
 @test names(characteristic_x_sample_x_string)[2:end] == names(feature_x_sample_x_float[1])[2:end]
 
-disable_logging(Warn)
-
 # 655.075 ms (4702093 allocations: 585.20 MiB)
 @btime BioLab.GEO.tabulate($BL_TH);
-
-disable_logging(Debug)
 
 # ---- #
 

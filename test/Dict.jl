@@ -16,24 +16,6 @@ const DA = joinpath(BioLab._DA, "Dict")
 
 const DIS = Dict("Existing" => 1)
 
-# ---- #
-
-for (ke, va, re) in (
-    ("Existing", 1, DIS),
-    ("Existing", 2, Dict("Existing" => 2)),
-    ("New", 3, Dict("Existing" => 1, "New" => 3)),
-)
-
-    co = copy(DIS)
-
-    BioLab.Dict.set!(co, ke, va)
-
-    @test co == re
-
-end
-
-# ---- #
-
 for (ke, va, re) in (
     ("Existing", 1, Dict("Existing" => 1, "Existing.2" => 1)),
     ("Existing", 2, Dict("Existing" => 1, "Existing.2" => 2)),

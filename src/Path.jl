@@ -40,15 +40,7 @@ end
 
 function clean(pa)
 
-    pa2 = replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
-
-    if pa != pa2
-
-        @warn "$pa --> $pa2."
-
-    end
-
-    pa2
+    replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
 
 end
 
@@ -114,7 +106,7 @@ function make_directory(di)
 
     if isdir(di)
 
-        @warn "$di exists."
+        @warn "$di already exists."
 
     else
 

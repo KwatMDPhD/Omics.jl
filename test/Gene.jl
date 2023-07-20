@@ -1,5 +1,3 @@
-using Logging: Debug, Info, disable_logging
-
 using Test: @test
 
 using BioLab
@@ -14,11 +12,7 @@ const DA = joinpath(BioLab._DA, "Gene")
 
 # ---- #
 
-disable_logging(Info)
-
 const EN_NA = BioLab.Gene.map_ensembl()
-
-disable_logging(Debug)
 
 @test length(EN_NA) == 788360
 

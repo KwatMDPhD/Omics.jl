@@ -90,6 +90,16 @@ end
 
 end
 
+@inline function _ready_kli(sc_, ex, is_, mo_)
+
+    n, su, su1 = _sum_all1(sc_, ex, is_)
+
+    ep = eps()
+
+    n, su, su1, ep, ep, ep, 1.0, 1.0, 0.0, !isnothing(mo_), 0.0, 0.0
+
+end
+
 function _enrich!(::KS, sc_, ex, is_, mo_)
 
     n, de, su1, cu, mo = _ready_ks(sc_, ex, is_, mo_)
@@ -161,16 +171,6 @@ function _enrich!(::KSa, sc_, ex, is_, mo_)
     end
 
     ar / n
-
-end
-
-@inline function _ready_kli(sc_, ex, is_, mo_)
-
-    n, su, su1 = _sum_all1(sc_, ex, is_)
-
-    ep = eps()
-
-    n, su, su1, ep, ep, ep, 1.0, 1.0, 0.0, !isnothing(mo_), 0.0, 0.0
 
 end
 
@@ -387,7 +387,6 @@ function plot(
     annotation = BioLab.Dict.merge(
         BioLab.Plot.ANNOTATION,
         Dict(
-            "showarrow" => false,
             "bgcolor" => "#fcfcfc",
             "borderpad" => 4.8,
             "borderwidth" => 2.4,

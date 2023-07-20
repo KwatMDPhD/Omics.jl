@@ -42,7 +42,7 @@ function map_ensembl()
 
             for sp in eachsplit(fr, '|')
 
-                BioLab.Dict.set!(en_na, sp, to)
+                en_na[sp] = to
 
             end
 
@@ -92,7 +92,15 @@ function map_uniprot()
 
         end
 
-        BioLab.Dict.set!(pr_di, chop(ro; tail = 6), co_an)
+        pr = chop(ro; tail = 6)
+
+        if haskey(pr_di, pr)
+
+            error("$pr already exists.")
+
+        end
+
+        pr_di[pr] = co_an
 
     end
 

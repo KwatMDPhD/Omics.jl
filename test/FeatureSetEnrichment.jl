@@ -108,7 +108,7 @@ for (ex, re) in (
     @test BioLab.FeatureSetEnrichment._sum_all1(SSC_, ex, SIS_) == re
 
     # 11.386 ns (0 allocations: 0 bytes)
-    # 8.925 ns (0 allocations: 0 bytes)
+    # 8.916 ns (0 allocations: 0 bytes)
     # 11.386 ns (0 allocations: 0 bytes)
     # 8.884 ns (0 allocations: 0 bytes)
     # 28.098 ns (0 allocations: 0 bytes)
@@ -118,7 +118,7 @@ for (ex, re) in (
     # 97.237 ns (0 allocations: 0 bytes)
     # 96.329 ns (0 allocations: 0 bytes)
     # 97.281 ns (0 allocations: 0 bytes)
-    # 96.403 ns (0 allocations: 0 bytes)
+    # 96.286 ns (0 allocations: 0 bytes)
 
     @btime BioLab.FeatureSetEnrichment._sum_all1($SSC_, $ex, $SIS_)
 
@@ -135,8 +135,6 @@ const AL_ = (
     BioLab.FeatureSetEnrichment.KLioM(),
     BioLab.FeatureSetEnrichment.KLioP(),
 )
-
-# ---- #
 
 for (al, re) in zip(AL_, ("KS", "KSa", "KLi", "KLioM", "KLioP"))
 
@@ -177,8 +175,8 @@ for (al, re) in zip(AL_, (-0.5, 0.0, 0.0, 0.0, 0.0))
     # 130.314 ns (0 allocations: 0 bytes)
     # 125.510 ns (0 allocations: 0 bytes)
     #
-    # 236.014 ns (0 allocations: 0 bytes)
-    # 232.075 ns (0 allocations: 0 bytes)
+    # 235.922 ns (0 allocations: 0 bytes)
+    # 231.969 ns (0 allocations: 0 bytes)
     #
     # 235.920 ns (0 allocations: 0 bytes)
     # 231.971 ns (0 allocations: 0 bytes)
@@ -247,23 +245,23 @@ for (al, re) in zip(
 
     # 43.375 μs (0 allocations: 0 bytes)
     # 2.945 ms (108 allocations: 934.22 KiB)
-    # 9.270 ms (358 allocations: 4.59 MiB)
+    # 9.257 ms (358 allocations: 4.59 MiB)
     #
     # 37.166 μs (0 allocations: 0 bytes)
-    # 2.645 ms (108 allocations: 934.22 KiB)
-    # 8.390 ms (358 allocations: 4.59 MiB)
+    # 2.640 ms (108 allocations: 934.22 KiB)
+    # 8.343 ms (358 allocations: 4.59 MiB)
     #
     # 198.208 μs (0 allocations: 0 bytes)
     # 10.592 ms (108 allocations: 934.22 KiB)
     # 33.617 ms (358 allocations: 4.59 MiB)
     #
     # 349.667 μs (0 allocations: 0 bytes)
-    # 18.345 ms (108 allocations: 934.22 KiB)
+    # 18.327 ms (108 allocations: 934.22 KiB)
     # 55.971 ms (358 allocations: 4.59 MiB)
     #
-    # 349.750 μs (0 allocations: 0 bytes)
-    # 18.363 ms (108 allocations: 934.22 KiB)
-    # 55.950 ms (358 allocations: 4.59 MiB)
+    # 349.708 μs (0 allocations: 0 bytes)
+    # 18.328 ms (108 allocations: 934.22 KiB)
+    # 55.922 ms (358 allocations: 4.59 MiB)
 
     @btime BioLab.FeatureSetEnrichment._enrich!($al, $MSC_, $EX, $MIS_, nothing)
 

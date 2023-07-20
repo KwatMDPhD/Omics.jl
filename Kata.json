@@ -1,8 +1,5 @@
 {
-  "download": {
-    "data/test": "s3://guardiome-data/clinvar",
-    "data/test.vcf": "s3://guardiome-data/snpEff/variants_head_ann.vcf"
-  },
+  "download": {},
   "call": {
     "update": "julia --project --eval 'using Pkg; Pkg.update()'",
     "run": "julia --project --eval 'using Pkg; Pkg.test()'"

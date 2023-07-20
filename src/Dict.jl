@@ -8,37 +8,9 @@ using TOML: parsefile as toml_parsefile
 
 using BioLab
 
-function set!(ke_va, ke, va)
-
-    if haskey(ke_va, ke)
-
-        vac = ke_va[ke]
-
-        if vac == va
-
-            @info "($ke => $vac)."
-
-        else
-
-            @warn "$ke => ($vac) $va."
-
-            ke_va[ke] = va
-
-        end
-
-    else
-
-        ke_va[ke] = va
-
-    end
-
-end
-
 function set_with_suffix!(ke_va, ke, va)
 
     if haskey(ke_va, ke)
-
-        kec = ke
 
         n = 1
 
@@ -58,15 +30,13 @@ function set_with_suffix!(ke_va, ke, va)
 
         end
 
-        @warn "($kec) $ke => $va."
-
     end
 
     ke_va[ke] = va
 
 end
 
-function merge(ke1_va1, ke2_va2, fu = set!)
+function merge(ke1_va1, ke2_va2)
 
     ke1_ = keys(ke1_va1)
 
@@ -86,13 +56,11 @@ function merge(ke1_va1, ke2_va2, fu = set!)
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                ke_va[ke] = merge(va1, va2, fu)
+                ke_va[ke] = merge(va1, va2)
 
             else
 
-                fu(ke_va, ke, va1)
-
-                fu(ke_va, ke, va2)
+                ke_va[ke] = va2
 
             end
 
