@@ -340,12 +340,8 @@ function make(
 
     fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
 
-    ts = "$pr.tsv"
-
-    BioLab.Path.warn_overwrite(ts)
-
     BioLab.Table.write(
-        ts,
+        "$pr.tsv",
         BioLab.DataFrame.make(
             naf,
             fe_,

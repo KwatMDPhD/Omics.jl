@@ -35,18 +35,19 @@ function plot(
 
         fi = joinpath(homedir(), "Downloads", na)
 
-        BioLab.Path.warn_overwrite(fi)
+        if isfile(fi)
 
-        rm(fi; force = true)
+            rm(fi)
+
+        end
 
         if ex == "json"
 
-            bl = """new Blob([JSON.stringify(cy.json(), null, 2)], {type: "application/json"})"""
+            bl = "new Blob([JSON.stringify(cy.json(), null, 2)], {type: \"application/json\"})"
 
         elseif ex == "png"
 
-            # TODO: Try unquoting the hex color.
-            bl = """cy.png({"full": true, "scale": $pns, "bg": "$ba"})"""
+            bl = "cy.png({full: true, scale: $pns, bg: \"$ba\"})"
 
         else
 
@@ -54,7 +55,7 @@ function plot(
 
         end
 
-        re = """cy.ready(function() {saveAs($bl, "$na");});"""
+        re = "cy.ready(function() {saveAs($bl, \"$na\")});"
 
     end
 
@@ -75,7 +76,8 @@ function plot(
             "https://cdn.rawgit.com/eligrey/FileSaver.js/master/dist/FileSaver.js",
             "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.25.0/cytoscape.min.js",
         ),
-        """var cy = cytoscape({
+        """
+        var cy = cytoscape({
             container: document.getElementById("$id"),
             elements: $elj,
             style: $stj,

@@ -40,10 +40,6 @@ end
 
 function write(ts, da)
 
-    BioLab.Path.warn_overwrite(ts)
-
-    BioLab.Path.error_extension_difference(ts, "tsv")
-
     _write(ts, da; delim = '\t')
 
 end

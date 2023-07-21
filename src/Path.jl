@@ -1,15 +1,5 @@
 module Path
 
-function warn_overwrite(pa)
-
-    if ispath(pa)
-
-        @warn "Overwriting $pa"
-
-    end
-
-end
-
 function error_missing(pa)
 
     if !ispath(pa)

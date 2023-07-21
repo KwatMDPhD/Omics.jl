@@ -627,10 +627,6 @@ end
 
 function animate(gi, pn_)
 
-    BioLab.Path.warn_overwrite(gi)
-
-    BioLab.Path.error_extension_difference(gi, "gif")
-
     run(`convert -delay 32 -loop 0 $pn_ $gi`)
 
     BioLab.Path.open(gi)

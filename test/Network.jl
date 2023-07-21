@@ -4,11 +4,11 @@ using BioLab
 
 # ---- #
 
-dw = joinpath(homedir(), "Downloads")
+const DW = joinpath(homedir(), "Downloads")
 
 # ---- #
 
-el_ = Vector{Dict{String, Any}}([
+const EL_ = Vector{Dict{String, Any}}([
     Dict(
         "data" => Dict("id" => "A"),
         "position" => Dict("x" => 0, "y" => 0),
@@ -50,26 +50,25 @@ el_ = Vector{Dict{String, Any}}([
     ),
 ])
 
-pr1 = "preset"
+# ---- #
 
-ex1 = "png"
+const NAME1 = "preset"
 
-# TODO: Understand why zooming changes the colors.
-# TODO: Understand why colors do not show up in HTML but in PNG.
-BioLab.Network.plot(joinpath(TE, "$pr1.html"), el_; la = Dict("name" => pr1), ex = ex1)
+const EX1 = "png"
 
-fi1 = joinpath(dw, "$pr1.$ex1")
+BioLab.Network.plot(joinpath(BioLab.TE, "$NAME1.html"), EL_; la = Dict("name" => NAME1), ex = EX1)
+
+const FI1 = joinpath(DW, "$NAME1.$EX1")
 
 # ---- #
 
-pr2 = "cose"
+const NAME2 = "cose"
 
-ex2 = "json"
+const EX2 = "json"
 
-# TODO: Understand why zooming changes the colors.
-BioLab.Network.plot(joinpath(TE, "$pr2.html"), el_; la = Dict("name" => pr2), ex = ex2)
+BioLab.Network.plot(joinpath(BioLab.TE, "$NAME2.html"), EL_; la = Dict("name" => NAME2), ex = EX2)
 
-fi2 = joinpath(dw, "$pr2.$ex2")
+const FI2 = joinpath(DW, "$NAME2.$EX2")
 
 # ---- #
 
@@ -83,26 +82,27 @@ end
 
 # ---- #
 
-no1_ = read_element(fi2)
+const EL2_ = read_element(FI2)
 
-BioLab.Network.position!(el_, no1_)
-
-# ---- #
-
-pr3 = "cose_preset"
-
-ex3 = "json"
-
-BioLab.Network.plot(joinpath(TE, "$pr3.html"), el_; la = Dict("name" => "preset"), ex = ex3)
-
-fi3 = joinpath(dw, "$pr3.$ex3")
-
-@test no1_ == read_element(fi3)
+BioLab.Network.position!(EL_, EL2_)
 
 # ---- #
 
-for fi in (fi1, fi2, fi3)
+const NAME3 = "cose_preset"
 
-    rm(fi)
+const EX3 = "json"
 
-end
+BioLab.Network.plot(
+    joinpath(BioLab.TE, "$NAME3.html"),
+    EL_;
+    la = Dict("name" => "preset"),
+    ex = EX3,
+)
+
+const FI3 = joinpath(DW, "$NAME3.$EX3")
+
+@test EL2_ == read_element(FI3)
+
+# ---- #
+
+foreach(rm, (FI1, FI2, FI3))

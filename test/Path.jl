@@ -4,14 +4,6 @@ using BioLab
 
 # ---- #
 
-for pa in (joinpath(TE, "missing_path"), TE)
-
-    BioLab.Path.warn_overwrite(pa)
-
-end
-
-# ---- #
-
 for pa in ("missing_file", joinpath(TE, "missing_path"))
 
     @test @is_error BioLab.Path.error_missing(pa)
