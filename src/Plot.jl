@@ -185,9 +185,25 @@ function _set_opacity(y_)
 
 end
 
+function _range(ar::AbstractArray{Int}, ::Int)
+
+    minimum(ar):maximum(ar)
+
+end
+
+function _range(ar, n)
+
+    mi = minimum(ar)
+
+    ma = maximum(ar)
+
+    mi:((ma - mi) / n):ma
+
+end
+
 function make_colorbar(z, x)
 
-    tickvals = BioLab.NumberArray.range(skipmissing(z), 10)
+    tickvals = _range(skipmissing(z), 10)
 
     Dict(
         "x" => x,

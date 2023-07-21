@@ -176,6 +176,26 @@ BioLab.Plot.plot(joinpath(TE, "plot.html"), data, layout; config = Dict("editabl
 
 # ---- #
 
+it_ = collect(-1:9)
+
+for n in 1:3
+
+    @test collect(BioLab.Plot._range(it_, n)) == collect(-1:9)
+
+end
+
+# ---- #
+
+fl_ = convert(Vector{Float64}, it_)
+
+for (n, re) in ((1, [-1, 9]), (2, [-1, 4, 9]), (4, [-1, 1.5, 4, 6.5, 9]), (10, fl_))
+
+    @test collect(BioLab.Plot._range(fl_, n)) == re
+
+end
+
+# ---- #
+
 # TODO: Use missing.
 
 for (z, re) in ((), (), ())
