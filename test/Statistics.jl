@@ -8,15 +8,15 @@ const FR_ = (0, 0.001, 0.025, 0.05, 0.5, 0.95, 0.975, 0.999, 1)
 
 # ---- #
 
-for (fr, re) in zip(FR_, (-Inf, -3.09, -1.96, -1.64, 0, 1.64, 1.96, 3.09, Inf))
+for (cu, re) in zip(FR_, (-Inf, -3.09, -1.96, -1.64, 0, 1.64, 1.96, 3.09, Inf))
 
-    @test isapprox(BioLab.Statistics.get_z_score(fr), re; atol = 1e-2)
+    @test isapprox(BioLab.Statistics.get_z_score(cu), re; atol = 1e-2)
 
 end
 
 # ---- #
 
-for (fr, re) in zip(
+for (co, re) in zip(
     FR_,
     (
         (0, 0),
@@ -31,6 +31,6 @@ for (fr, re) in zip(
     ),
 )
 
-    @test BioLab.Statistics.get_confidence_interval(fr) == re
+    @test BioLab.Statistics.get_confidence_interval(co) == re
 
 end

@@ -12,7 +12,7 @@ function get_margin_of_error(nu_, er = 0.05)
 
 end
 
-function _get_p_value(n, ra_)
+@inline function _get_p_value(n, ra_)
 
     if iszero(n)
 
@@ -32,7 +32,7 @@ function get_p_value_for_less(nu, ra_)
 
     end
 
-    _get_p_value(sum(ra <= nu for ra in ra_), ra_)
+    _get_p_value(sum(<=(nu), ra_), ra_)
 
 end
 
@@ -44,7 +44,7 @@ function get_p_value_for_more(nu, ra_)
 
     end
 
-    _get_p_value(sum(nu <= ra for ra in ra_), ra_)
+    _get_p_value(sum(>=(nu), ra_), ra_)
 
 end
 
@@ -56,9 +56,9 @@ function get_p_value_adjust(fu, nu_, ra_)
 
     ad_ = fill(NaN, n)
 
-    is_ = map(!isnan, pv_)
+    no_ = .!isnan.(pv_)
 
-    ad_[is_] .= adjust(pv_[is_], n, BenjaminiHochberg())
+    ad_[no_] .= adjust(pv_[no_], n, BenjaminiHochberg())
 
     pv_, ad_
 
@@ -70,8 +70,7 @@ function get_p_value_adjust(nu_, ra_)
 
     pvm_, adm_ = get_p_value_adjust(get_p_value_for_more, nu_, ra_)
 
-    [ifelse(pvl < pvm, pvl, pvm) for (pvl, pvm) in zip(pvl_, pvm_)],
-    [ifelse(adl < adm, adl, adm) for (adl, adm) in zip(adl_, adm_)]
+    ifelse.(pvl_ .< pvm_, pvl_, pvm_), ifelse.(adl_ .< adm_, adl_, adm_)
 
 end
 

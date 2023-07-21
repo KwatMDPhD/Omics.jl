@@ -2,17 +2,17 @@ module Statistics
 
 using Distributions: Normal, quantile
 
-function get_z_score(fr)
+function get_z_score(cu)
 
-    quantile(Normal(), fr)
+    quantile(Normal(), cu)
 
 end
 
-function get_confidence_interval(fr)
+function get_confidence_interval(co)
 
-    fr = (1 - fr) / 2
+    cu = (1 - co) / 2
 
-    get_z_score(fr), get_z_score(1 - fr)
+    get_z_score(cu), get_z_score(1 - cu)
 
 end
 

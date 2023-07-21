@@ -1,3 +1,5 @@
+using Random: seed!
+
 using Test: @test
 
 using BioLab
@@ -16,69 +18,71 @@ for (po, re) in zip(
     ),
 )
 
-    Random.seed!(20230612)
+    seed!(20230612)
 
-    @test isequal(BioLab.Significance.get_margin_of_error(randn(10^po)), re)
+    nu_ = randn(10^po)
 
-end
+    @test isequal(BioLab.Significance.get_margin_of_error(nu_), re)
 
-# ---- #
-
-ra_ = collect(1:10)
-
-@test BioLab.Significance._get_p_value(0, ra_) == BioLab.Significance._get_p_value(1, ra_) == 0.1
-
-# ---- #
-
-n = 2
-
-@test BioLab.Significance._get_p_value(n, ra_) == 0.2
-
-# ---- #
-
-nu_ = (1, 2, 9, 10)
-
-re_ = (0.1, 0.2, 0.9, 1)
-
-# ---- #
-
-for (nu, re) in zip(nu_, re_)
-
-    @test BioLab.Significance.get_p_value_for_less(nu, ra_) == re
+    # 24.347 ns (0 allocations: 0 bytes)
+    # 31.648 ns (0 allocations: 0 bytes)
+    # 61.247 ns (0 allocations: 0 bytes)
+    # 537.698 ns (0 allocations: 0 bytes)
+    # 3.974 μs (0 allocations: 0 bytes)
+    # 40.583 μs (0 allocations: 0 bytes)
+    @btime BioLab.Significance.get_margin_of_error($nu_)
 
 end
 
 # ---- #
 
-for (nu, re) in zip(nu_, reverse(re_))
+const RA_ = collect(1:10)
 
-    @test BioLab.Significance.get_p_value_for_more(nu, ra_) == re
+# ---- #
+
+@test BioLab.Significance._get_p_value(0, RA_) == BioLab.Significance._get_p_value(1, RA_) == 0.1
+
+@test BioLab.Significance._get_p_value(2, RA_) == 0.2
+
+# ---- #
+
+const NU_ = (1, 2, 9, 10)
+
+const RE_ = (0.1, 0.2, 0.9, 1)
+
+# ---- #
+
+for (nu, re) in zip(NU_, RE_)
+
+    @test BioLab.Significance.get_p_value_for_less(nu, RA_) == re
+
+    # 6.125 ns (0 allocations: 0 bytes)
+    # 8.291 ns (0 allocations: 0 bytes)
+    # 6.125 ns (0 allocations: 0 bytes)
+    # 6.125 ns (0 allocations: 0 bytes)
+    @btime BioLab.Significance.get_p_value_for_less($nu, $RA_)
 
 end
 
 # ---- #
 
-@test all(
-    isapprox(pv, re; atol = 0.01) for (pv, re) in zip(
-        BioLab.Significance.adjust_p_value([
-            0.005,
-            0.009,
-            0.019,
-            0.022,
-            0.051,
-            0.101,
-            0.361,
-            0.387,
-        ]),
-        (0.036, 0.036, 0.044, 0.044, 0.082, 0.135, 0.387, 0.387),
-    )
-)
+for (nu, re) in zip(NU_, reverse(RE_))
+
+    @test BioLab.Significance.get_p_value_for_more(nu, RA_) == re
+
+    # 6.125 ns (0 allocations: 0 bytes)
+    # 6.125 ns (0 allocations: 0 bytes)
+    # 6.125 ns (0 allocations: 0 bytes)
+    # 6.125 ns (0 allocations: 0 bytes)
+    @btime BioLab.Significance.get_p_value_for_more($nu, $RA_)
+
+end
 
 # ---- #
 
-nu_ = [0, 1, 8, 9]
+const NU2_ = [0, 1, 8, 9]
 
-ra_ = collect(0:9)
+const RA2_ = collect(0:9)
 
 # ---- #
 
@@ -87,11 +91,18 @@ for (fu, re) in (
     (BioLab.Significance.get_p_value_for_more, ([1, 0.9, 0.2, 0.1], [1, 1, 0.4, 0.4])),
 )
 
-    @test BioLab.Significance.get_p_value_adjust(fu, nu_, ra_) == re
+    @test BioLab.Significance.get_p_value_adjust(fu, NU2_, RA2_) == re
+
+    # 319.013 ns (10 allocations: 864 bytes)
+    # 324.382 ns (10 allocations: 864 bytes)
+    @btime BioLab.Significance.get_p_value_adjust($fu, $NU2_, $RA2_)
 
 end
 
 # ---- #
 
-@test BioLab.Significance.get_p_value_adjust(nu_, ra_) ==
+@test BioLab.Significance.get_p_value_adjust(NU2_, RA2_) ==
       ([0.1, 0.2, 0.2, 0.1], [0.4, 0.4, 0.4, 0.4])
+
+# 720.055 ns (22 allocations: 1.88 KiB)
+@btime BioLab.Significance.get_p_value_adjust($NU2_, $RA2_);
