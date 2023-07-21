@@ -6,17 +6,17 @@ function rank_in_fraction(ra)
 
     n = fld(ra, 9)
 
-    for digits in 1:n
+    for id in 1:n
 
-        fr += 9 * 10.0^-digits
+        fr += 9 * 10.0^-id
 
     end
 
-    digits = n + 1
+    id = n + 1
 
-    fr += (ra % 9) * 10.0^-digits
+    fr += (ra % 9) * 10.0^-id
 
-    round(fr; digits)
+    round(fr; digits = id)
 
 end
 
