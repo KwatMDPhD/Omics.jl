@@ -84,9 +84,11 @@ BioLab.Path.make_directory(DI)
 
 const DI2 = mkdir(joinpath(BioLab.TE, BioLab.Time.stamp()))
 
+const CH_ = 'a':'g'
+
 const EX = "extension"
 
-for (nu, ch) in zip((0.7, 1, 1.1, 3, 10, 12, 24), 'a':'z')
+for (nu, ch) in zip((0.7, 1, 1.1, 3, 10, 12, 24), CH_)
 
     touch(joinpath(DI2, "$nu.$ch.$EX"))
 
@@ -94,4 +96,4 @@ end
 
 BioLab.Path.rank(DI2)
 
-@test BioLab.Path.read(DI2) == ["$id.$ch.$EX" for (id, ch) in enumerate('a':'g')]
+@test BioLab.Path.read(DI2) == ["$id.$ch.$EX" for (id, ch) in enumerate(CH_)]
