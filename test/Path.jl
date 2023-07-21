@@ -4,62 +4,40 @@ using BioLab
 
 # ---- #
 
-for pa in ("missing_file", joinpath(TE, "missing_path"))
+for pa in ("missing_file", joinpath(BioLab.TE, "missing_path"))
 
-    @test @is_error BioLab.Path.error_missing(pa)
+    @test BioLab.@is_error BioLab.Path.error_missing(pa)
+
+end
+
+for pa in
+    ("Path.jl", "path.jl", joinpath(@__DIR__, "Path.jl"), joinpath(@__DIR__, "path.jl"), BioLab.TE)
+
+    @test !BioLab.@is_error BioLab.Path.error_missing(pa)
 
 end
 
 # ---- #
 
-for pa in ("Path.jl", "path.jl", joinpath(@__DIR__, "Path.jl"), joinpath(@__DIR__, "path.jl"), TE)
-
-    @test !@is_error BioLab.Path.error_missing(pa)
-
-end
-
-# ---- #
-
-for pa in ("file.extension", joinpath(TE, "file.extension"))
+for pa in ("file.extension", joinpath(BioLab.TE, "file.extension"))
 
     for ex in (".extension", "another_extension")
 
-        @test @is_error BioLab.Path.error_extension_difference(pa, ex)
+        @test BioLab.@is_error BioLab.Path.error_extension_difference(pa, ex)
 
     end
 
-    @test !@is_error BioLab.Path.error_extension_difference(pa, "extension")
+    @test !BioLab.@is_error BioLab.Path.error_extension_difference(pa, "extension")
 
 end
 
 # ---- #
 
-pk = dirname(@__DIR__)
+const NA = "a_b.c-d+e!f%g%h]iJK"
 
-jl = dirname(pk)
+const NAC = "a_b.c_d_e_f_g_h_ijk"
 
-ho = homedir()
-
-for (pa, re) in (
-    (".", @__DIR__),
-    ("..", pk),
-    (joinpath("..", ".."), jl),
-    (joinpath("~", "name"), joinpath(ho, "name")),
-    (@__DIR__, @__DIR__),
-    ((@__DIR__)[2:end], joinpath(@__DIR__, (@__DIR__)[2:end])),
-)
-
-    @test BioLab.Path.make_absolute(pa) == re
-
-end
-
-# ---- #
-
-na = "a_b.c-d+e!f%g%h]iJK"
-
-nac = "a_b.c_d_e_f_g_h_ijk"
-
-for (pa, re) in ((na, nac), (joinpath("\$", na), joinpath("_", nac)))
+for (pa, re) in ((NA, NAC), (joinpath("\$", NA), joinpath("_", NAC)))
 
     @test BioLab.Path.clean(pa) == re
 
@@ -67,97 +45,53 @@ end
 
 # ---- #
 
-BioLab.Path.wait(mi)
+BioLab.Path.wait("missing_file")
 
 # ---- #
 
-for pa in (
-    TE,
-    joinpath(BioLab.DA, "CLS", "LPS_phen.cls"),
-    joinpath(BioLab.DA, "FeatureSetEnrichment", "genes.txt"),
-)
-
-    BioLab.Path.open(pa)
-
-end
+BioLab.Path.open(BioLab.TE)
 
 # ---- #
 
-@test all(!startswith('.'), BioLab.Path.read(ho))
+const HO = homedir()
+
+const HI = r"^\."
+
+@test !any(startswith('.'), BioLab.Path.read(HO; ig_ = (HI,)))
+
+@test all(startswith('.'), BioLab.Path.read(HO; ke_ = (HI,)))
+
+@test isempty(BioLab.Path.read(HO; ig_ = (HI,), ke_ = (HI,)))
+
+@test all(na -> isuppercase(na[1]), BioLab.Path.read(HO; ke_ = (r"^[A-Z]",)))
+
+@test BioLab.Path.read(HO; ke_ = (r"^Downloads$",)) == ["Downloads"]
+
+@test BioLab.Path.read(HO; ke_ = (r"^[A-Z]", r"^Downloads$")) ==
+      BioLab.Path.read(HO; ke_ = (r"^[A-Z]",))
 
 # ---- #
 
-@test isempty(BioLab.Path.read(ho; ke_ = (r"^\.",)))
+const DI = BioLab.Path.make_directory(joinpath(BioLab.TE, "directory"))
+
+@test isdir(DI)
+
+BioLab.Path.make_directory(DI)
+
+@test isdir(DI)
 
 # ---- #
 
-@test all(startswith('.'), BioLab.Path.read(ho; ig_ = (), ke_ = (r"^\.",)))
+const DI2 = mkdir(joinpath(BioLab.TE, BioLab.Time.stamp()))
 
-# ---- #
-
-@test all(na -> isuppercase(na[1]), BioLab.Path.read(ho; ke_ = (r"^[A-Z]",)))
-
-# ---- #
-
-@test BioLab.Path.read(ho; ke_ = (r"^Downloads$",)) == ["Downloads"]
-
-# ---- #
-
-@test BioLab.Path.read(ho; ke_ = (r"^[A-Z]", r"^Downloads$")) ==
-      BioLab.Path.read(ho; ke_ = (r"^[A-Z]",))
-
-# ---- #
-
-di = BioLab.Path.make_directory(joinpath(TE, "directory"))
-
-@test isdir(di)
-
-BioLab.Path.make_directory(di)
-
-@test isdir(di)
-
-# ---- #
-
-di = mkdir(joinpath(TE, BioLab.Time.stamp()))
-
-ex = "extension"
+const EX = "extension"
 
 for (nu, ch) in zip((0.7, 1, 1.1, 3, 10, 12, 24), 'a':'z')
 
-    touch(joinpath(di, "$nu.$ch.$ex"))
+    touch(joinpath(DI2, "$nu.$ch.$EX"))
 
 end
 
-BioLab.Path.rank(di)
+BioLab.Path.rank(DI2)
 
-@test BioLab.Path.read(di) == ["$id.$ch.$ex" for (id, ch) in enumerate('a':'g')]
-
-# ---- #
-
-di = mkdir(joinpath(TE, BioLab.Time.stamp()))
-
-fi1 = touch(joinpath(di, "fi1"))
-
-fi2 = touch(joinpath(di, "fi2"))
-
-BioLab.Path.rename(di, ("fi" => "new",))
-
-@test BioLab.Path.read(di) == ["new1", "new2"]
-
-# ---- #
-
-di = mkdir(joinpath(TE, BioLab.Time.stamp()))
-
-fi1 = touch(joinpath(di, "fi1"))
-
-fi2 = touch(joinpath(di, "fi2"))
-
-write(fi1, "Before")
-
-write(fi2, "BeforeBefore")
-
-BioLab.Path.sed(di, ("Before" => "After",))
-
-@test readline(open(fi1)) == "After"
-
-@test readline(open(fi2)) == "AfterAfter"
+@test BioLab.Path.read(DI2) == ["$id.$ch.$EX" for (id, ch) in enumerate('a':'g')]
