@@ -40,3 +40,16 @@ n_ba = 5158
 #Logging.disable_logging(Warn);
 #@btime BioLab.SingleCell.read($sa_di);
 #Logging.disable_logging(Debug);
+
+# ---- #
+
+n = 1000
+
+me_ = randn(n)
+
+for (mi, ma, re) in
+    ((0, 0, fill(false, n)), (-Inf, 0, me_ .<= 0), (0, Inf, 0 .<= me_), (-Inf, Inf, fill(true, n)))
+
+    @test BioLab.Vector.select(TE, me_, mi, ma) == re
+
+end

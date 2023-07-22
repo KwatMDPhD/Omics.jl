@@ -1,6 +1,6 @@
 module Vector
 
-function get_extreme(n::Int, n_ex)
+function get_extreme(n, n_ex)
 
     if n / 2 < n_ex
 
@@ -16,13 +16,13 @@ end
 
 function get_extreme(an_::AbstractVector, n_ex)
 
-    sortperm(an_)[get_extreme(length(an_), n_ex)]
+    view(sortperm(an_), get_extreme(length(an_), n_ex))
 
 end
 
 function get_extreme(fl_::AbstractVector{Float64}, n_ex)
 
-    sortperm(fl_)[get_extreme(length(fl_) - sum(isnan, fl_), n_ex)]
+    view(sortperm(fl_), get_extreme(length(fl_) - sum(isnan, fl_), n_ex))
 
 end
 
