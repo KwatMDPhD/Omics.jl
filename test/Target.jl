@@ -22,8 +22,8 @@ for (nu1_, re) in ((NU11_, (NU11_, NU21_)), (Vector{Bool}(NU11_), RE1), (BitVect
 
     @test BioLab.Target._aim(nu1_, NU21_) == re
 
-    # 1.500 ns (0 allocations: 0 bytes)
-    # 86.849 ns (4 allocations: 256 bytes)
+    # 1.459 ns (0 allocations: 0 bytes)
+    # 86.672 ns (4 allocations: 256 bytes)
     # 75.996 ns (4 allocations: 256 bytes)
     @btime BioLab.Target._aim($nu1_, $NU21_)
 
@@ -98,7 +98,7 @@ end
 
 const NU13_ = [0, 0, 0, 1, 1, 1]
 
-const MA23 = BioLab.Simulation.make_matrix_1234(2, 6)
+const MA23 = BioLab.Simulation.make_matrix_123(2, 6)
 
 const RE3 = [-6.0, -6]
 
