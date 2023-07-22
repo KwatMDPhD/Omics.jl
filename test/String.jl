@@ -16,7 +16,7 @@ for (nu, re) in (
     (0.000001, "1e-06"),
 )
 
-    @test isequal(BioLab.String.format(nu), re)
+    @test BioLab.String.format(nu) == re
 
 end
 
@@ -47,33 +47,27 @@ end
 
 # ---- #
 
-st = join('a':'z', '.')
-
-de = '.'
-
 for (id, re) in ((1, "a"), (16, "p"), (26, "z"))
 
-    @test BioLab.String.split_get(st, de, id) == re
+    @test BioLab.String.split_get(
+        "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z",
+        '.',
+        id,
+    ) == re
 
 end
 
 # ---- #
 
-de = "--"
+const ST1 = "A--BB--CCC"
 
-id_ = (1, 2, 1)
+const DE = "--"
 
-# ---- #
+const ID_ = (1, 2, 1)
 
-st1 = "A--BB--CCC"
+@test BioLab.@is_error BioLab.String.transplant(ST1, "a--bb", DE, ID_)
 
-@test @is_error BioLab.String.transplant(st1, "a--bb", de, id_)
-
-# ---- #
-
-st2 = "a--bb--ccc"
-
-@test BioLab.String.transplant(st1, st2, de, id_) == "A--bb--CCC"
+@test BioLab.String.transplant(ST1, "a--bb--ccc", DE, ID_) == "A--bb--CCC"
 
 # ---- #
 

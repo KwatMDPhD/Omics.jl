@@ -42,7 +42,7 @@ function limit(st, n)
 
     if n < length(st)
 
-        su = st[1:n]
+        su = view(st, 1:n)
 
         return "$su..."
 
@@ -78,7 +78,7 @@ function count(n, st)
 
     end
 
-    if length(st) == 3 && st[2:3] == "ex"
+    if length(st) == 3 && view(st, 2:3) == "ex"
 
         return "$n $(st)es"
 
@@ -88,7 +88,7 @@ function count(n, st)
 
         if endswith(st, si)
 
-            su = st[1:(end - length(si))]
+            su = view(st, 1:(length(st) - length(si)))
 
             return "$n $su$pl"
 
