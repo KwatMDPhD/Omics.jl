@@ -8,9 +8,9 @@ function _aim(nu1_, nu2_)
 
 end
 
-function _aim(bo_::AbstractVector{Bool}, nu_)
+function _aim(bi_::AbstractVector{Bool}, nu_)
 
-    nu_[map(!, bo_)], nu_[bo_]
+    nu_[.!bi_], nu_[bi_]
 
 end
 
