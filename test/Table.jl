@@ -6,9 +6,11 @@ using BioLab
 
 # ---- #
 
-DA = joinpath(BioLab.DA, "Table")
+const DA = joinpath(BioLab._DA, "Table")
 
-@test readdir(DA) == []
+# ---- #
+
+@test readdir(DA) == ["12859_2019_2886_MOESM2_ESM.xlsx", "enst_gene.tsv.gz", "titanic.tsv"]
 
 # ---- #
 
@@ -18,35 +20,25 @@ for (na, re) in (("titanic.tsv", (1309, 15)), ("enst_gene.tsv.gz", (256183, 2)))
 
 end
 
-# ---- #
-
 @test size(
     BioLab.Table.read(joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx"); xl = "HumanSpecific Genes"),
 ) == (873, 8)
 
 # ---- #
 
-co1 = 1:4
+const CO1 = 1:4
 
-co2 = 1.0:4
+const CO2 = 1.0:4
 
-da = DataFrame(
-    "Column 1" => co1,
-    "Column 2" => co2,
-    "Column 3" => map(string, co1),
-    "Column 4" => map(string, co2),
+const DT = DataFrame(
+    "Column 1" => CO1,
+    "Column 2" => CO2,
+    "Column 3" => string.(CO1),
+    "Column 4" => string.(CO2),
 )
 
-# ---- #
+const TS = joinpath(BioLab.TE, "write.tsv")
 
-ts = joinpath(TE, "write.csv")
+BioLab.Table.write(TS, DT)
 
-@test @is_error BioLab.Table.write(ts, da)
-
-# ---- #
-
-ts = replace(ts, "csv" => "tsv")
-
-@test !@is_error BioLab.Table.write(ts, da)
-
-@test da != BioLab.Table.read(ts)
+@test eltype.(eachcol(BioLab.Table.read(TS))) == [Int, Float64, Int, Float64]

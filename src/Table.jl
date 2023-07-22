@@ -14,7 +14,7 @@ using BioLab
 
 function read(fi; xl = "", ke_ar...)
 
-    ex = splitext(fi)[2][2:end]
+    ex = chop(splitext(fi)[2]; head = 1, tail = 0)
 
     if ex == "xlsx"
 
