@@ -26,6 +26,8 @@ const HE_ = ("#ff71fb", "#fcc9b9", "#c91f37")
 
 @test BioLab.Plot.COPLA == plasma
 
+# ---- #
+
 for co in (
     BioLab.Plot.COBWR,
     BioLab.Plot.COPLA,
@@ -96,11 +98,15 @@ const CO = BioLab.Plot.COGUA
 
 const N = length(CO)
 
+# ---- #
+
 for nu in (NaN, -1, 0, N + 1)
 
     @test BioLab.@is_error CO[nu]
 
 end
+
+# ---- #
 
 for (nu, re) in zip(
     (-Inf, -0.1, 0.0, 0.01, 0.99, 1.0, 1.1, Inf),
@@ -111,9 +117,13 @@ for (nu, re) in zip(
 
 end
 
+# ---- #
+
 const IT_ = [1, 2, 3, N]
 
 const RE_ = ["#20d9ba", "#9017e6", "#4e40d8", "#ff1968"]
+
+# ---- #
 
 for (it, re) in zip(IT_, RE_)
 
@@ -122,6 +132,8 @@ for (it, re) in zip(IT_, RE_)
 end
 
 @test BioLab.Plot.color(IT_, CO) == RE_
+
+# ---- #
 
 @test BioLab.Plot.color(vcat(IT_, N + 1), CO) == [
     "#20d9ba"
@@ -133,62 +145,29 @@ end
 
 # ---- #
 
-data = [Dict()]
+const DATA = [Dict{String, Any}()]
 
-layout = Dict(
+const LAYOUT = Dict(
     "title" => "Title",
     "yaxis" => Dict("title" => "Y-Axis Title"),
     "xaxis" => Dict("title" => "X-Axis Title"),
 )
 
-BioLab.Plot.plot("", data)
+# ---- #
 
-BioLab.Plot.plot("", data, layout)
-
-BioLab.Plot.plot(joinpath(TE, "plot.html"), data, layout; config = Dict("editable" => true))
+BioLab.Plot.plot("", DATA)
 
 # ---- #
 
-it_ = collect(-1:9)
-
-for n in 1:3
-
-    @test collect(BioLab.Plot._range(it_, n)) == collect(-1:9)
-
-end
+BioLab.Plot.plot("", DATA, LAYOUT)
 
 # ---- #
 
-fl_ = convert(Vector{Float64}, it_)
-
-for (n, re) in ((1, [-1, 9]), (2, [-1, 4, 9]), (4, [-1, 1.5, 4, 6.5, 9]), (10, fl_))
-
-    @test collect(BioLab.Plot._range(fl_, n)) == re
-
-end
-
-# ---- #
-
-# TODO: Use missing.
-
-for (z, re) in ((), (), ())
-
-    @test BioLab.Plot.make_colorbar(z)
-
-end
-
-# ---- #
-
-@test BioLab.Plot.make_axis() == Dict("zeroline" => false, "showgrid" => false)
-
-# ---- #
-
-@test BioLab.Plot.make_annotation() == Dict(
-    "yref" => "paper",
-    "xref" => "paper",
-    "yanchor" => "middle",
-    "showarrow" => false,
-    "font" => Dict("size" => 10),
+BioLab.Plot.plot(
+    joinpath(BioLab.TE, "editable.html"),
+    DATA,
+    LAYOUT;
+    config = Dict("editable" => true),
 )
 
 # ---- #

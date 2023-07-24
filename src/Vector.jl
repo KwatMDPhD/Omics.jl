@@ -26,4 +26,20 @@ function get_extreme(fl_::AbstractVector{Float64}, n_ex)
 
 end
 
+function range(ar::AbstractArray{Int}, ::Int)
+
+    minimum(ar):maximum(ar)
+
+end
+
+function range(ar, n)
+
+    mi = minimum(ar)
+
+    ma = maximum(ar)
+
+    mi:((ma - mi) / n):ma
+
+end
+
 end

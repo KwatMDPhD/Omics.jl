@@ -133,7 +133,7 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
 
     daj = json(data)
 
-    laj = json(BioLab.Dict.merge(Dict("hovermode" => "closest"), layout))
+    laj = json(layout)
 
     coj = json(BioLab.Dict.merge(Dict("displaylogo" => false), config))
 
@@ -141,7 +141,7 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
         ht,
         id,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
-        """Plotly.newPlot("$id", $daj, $laj, $coj)""";
+        "Plotly.newPlot(\"$id\", $daj, $laj, $coj)";
         ke_ar...,
     )
 
@@ -177,46 +177,21 @@ function _set_opacity(y_)
 
 end
 
-function _range(ar::AbstractArray{Int}, ::Int)
-
-    minimum(ar):maximum(ar)
-
-end
-
-function _range(ar, n)
-
-    mi = minimum(ar)
-
-    ma = maximum(ar)
-
-    mi:((ma - mi) / n):ma
-
-end
-
-function make_colorbar(z, x)
-
-    tickvals = _range(z, 10)
-
-    Dict(
-        "x" => x,
-        "thicknessmode" => "fraction",
-        "thickness" => 0.024,
-        "len" => 0.5,
-        "tickvmode" => "array",
-        "tickvals" => tickvals,
-        "ticktext" => [@sprintf("%.3g", ti) for ti in tickvals],
-        "ticks" => "outside",
-        "tickfont" => Dict("size" => 10),
-    )
-
-end
+const COLORBAR = Dict(
+    "thicknessmode" => "fraction",
+    "thickness" => 0.024,
+    "len" => 0.5,
+    #"tickvmode" => "array",
+    #"ticks" => "outside",
+    #"tickfont" => Dict("size" => 10),
+)
 
 const AXIS = Dict("automargin" => true, "showgrid" => false)
 
 const SPIKE = Dict(
     "showspikes" => true,
-    "spikemode" => "across",
     "spikesnap" => "cursor",
+    "spikemode" => "across",
     "spikedash" => "solid",
     "spikethickness" => 1,
     "spikecolor" => "#561649",

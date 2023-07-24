@@ -80,3 +80,17 @@ for (n, re) in ((1, [2, 10]), (2, [2, 4, 8, 10]), (3, [2, 4, 6, 8, 10]))
     @test BioLab.Vector.get_extreme(FL_, n) == re
 
 end
+
+# ---- #
+
+const ITR_ = collect(-1:9)
+
+const FLR_ = convert(Vector{Float64}, ITR_)
+
+for (n, re) in ((1, [-1, 9]), (2, [-1, 4, 9]), (4, [-1, 1.5, 4, 6.5, 9]), (10, FLR_))
+
+    @test collect(BioLab.Vector.range(ITR_, n)) == -1:9
+
+    @test collect(BioLab.Vector.range(FLR_, n)) == re
+
+end
