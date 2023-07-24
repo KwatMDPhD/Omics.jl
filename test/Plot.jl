@@ -8,35 +8,46 @@ using BioLab
 
 # ---- #
 
-DA = joinpath(BioLab.DA, "Plot")
+const DA = joinpath(BioLab._DA, "Plot")
+
+# ---- #
 
 @test readdir(DA) == ["1.png", "2.png"]
 
 # ---- #
 
-@test BioLab.Plot._CO == "continuous"
+const HE_ = ("#ff71fb", "#fcc9b9", "#c91f37")
 
-@test BioLab.Plot._CA == "categorical"
-
-@test BioLab.Plot._BI == "binary"
-
-@test BioLab.Plot._MO == "monotonous"
+@test length(BioLab.Plot.make_color_scheme(HE_)) == length(HE_)
 
 # ---- #
 
-he_ = ("#ff71fb", "#fcc9b9", "#c91f37")
+@test BioLab.Plot.COBWR == bwr
 
-ca = "Category"
+@test BioLab.Plot.COPLA == plasma
 
-no = "Notes"
+for co in (
+    BioLab.Plot.COBWR,
+    BioLab.Plot.COPLA,
+    BioLab.Plot.COPL3,
+    BioLab.Plot.COASP,
+    BioLab.Plot.COPLO,
+    BioLab.Plot.COGUA,
+    BioLab.Plot.COBIN,
+    BioLab.Plot.COHUM,
+    BioLab.Plot.COSTA,
+    BioLab.Plot.COMON,
+)
 
-co = BioLab.Plot.make_color_scheme(he_, ca, no)
+    BioLab.Plot.plot_heat_map(
+        "",
+        [x for _ in 1:1, x in 1:length(co)];
+        text = [BioLab.Plot._make_hex(cl) for _ in 1:1, cl in co.colors],
+        colorscale = BioLab.Plot.map_fraction_to_color(co),
+        layout = Dict("yaxis" => Dict("tickvals" => ()), "xaxis" => Dict("dtick" => 1)),
+    )
 
-@test length(co) == length(he_)
-
-@test co.category == ca
-
-@test co.notes == no
+end
 
 # ---- #
 
@@ -59,104 +70,66 @@ for (he_, fr_) in (
     ),
 )
 
-    @test BioLab.Plot.fractionate(BioLab.Plot.make_color_scheme(he_, ca, no)) ==
+    @test BioLab.Plot.map_fraction_to_color(BioLab.Plot.make_color_scheme(he_)) ==
           collect(zip(fr_, he_))
 
 end
 
 # ---- #
 
-@test BioLab.Plot.COBWR.colors == bwr.colors
-
-@test BioLab.Plot.COPLA.colors == plasma.colors
-
-for co in (
-    BioLab.Plot.COBWR,
-    BioLab.Plot.COPLA,
-    BioLab.Plot.COPL3,
-    BioLab.Plot.COASP,
-    BioLab.Plot.COPLO,
-    BioLab.Plot.COGUA,
-    BioLab.Plot.COBIN,
-    BioLab.Plot.COHUM,
-    BioLab.Plot.COSTA,
-    BioLab.Plot.COMON,
-)
-
-    n = length(co)
-
-    ca = titlecase(co.category)
-
-    no = co.notes
-
-    BioLab.Plot.plot_heat_map(
-        "",
-        permutedims(collect(1:n)),
-        Vector{String}(),
-        1:n;
-        text = permutedims(map(BioLab.Plot._make_hex, co.colors)),
-        colorscale = BioLab.Plot.fractionate(co),
-        layout = Dict("title" => Dict("text" => "$ca $no")),
-    )
-
-end
-
-# ---- #
-
 for (n, re) in (
-    (0, COMON),
-    (1, COMON),
-    (2, COBIN),
-    (3, COPLO),
-    (19, COPLO),
-    (20, COPLO),
-    (21, COBWR),
-    (99, COBWR),
+    (0, BioLab.Plot.COMON),
+    (1, BioLab.Plot.COMON),
+    (2, BioLab.Plot.COBIN),
+    (3, BioLab.Plot.COPLO),
 )
 
-    @test BioLab.Plot.pick_color_scheme(repeat(rand(n), 2)) == re
+    @test BioLab.Plot.pick_color_scheme(rand(n)) == BioLab.Plot.COBWR
+
+    @test BioLab.Plot.pick_color_scheme(rand(Int, n)) == re
 
 end
 
 # ---- #
 
-co = BioLab.Plot.COGUA
+const CO = BioLab.Plot.COGUA
 
-n = length(co)
+const N = length(CO)
 
-# ---- #
+for nu in (NaN, -1, 0, N + 1)
 
-for nu in (NaN, -1, 0, n + 1)
-
-    @test @is_error co[nu]
+    @test BioLab.@is_error CO[nu]
 
 end
 
-nu_ = [-Inf, -0.1, 0.0, 1, 0.01, 2, 3, 0.99, n, 1.0, 1.1, convert(Float64, n + 1), Inf]
+for (nu, re) in zip(
+    (-Inf, -0.1, 0.0, 0.01, 0.99, 1.0, 1.1, Inf),
+    ("#20d9ba", "#20d9ba", "#20d9ba", "#23d3bb", "#fa1a6b", "#ff1968", "#ff1968", "#ff1968"),
+)
 
-re_ = [
-    "#20d9ba",
-    "#20d9ba",
-    "#20d9ba",
-    "#20d9ba",
-    "#23d3bb",
-    "#9017e6",
-    "#4e40d8",
-    "#fa1a6b",
-    "#ff1968",
-    "#ff1968",
-    "#ff1968",
-    "#ff1968",
-    "#ff1968",
+    @test BioLab.Plot.color(nu, CO) == re
+
+end
+
+const IT_ = [1, 2, 3, N]
+
+const RE_ = ["#20d9ba", "#9017e6", "#4e40d8", "#ff1968"]
+
+for (it, re) in zip(IT_, RE_)
+
+    @test BioLab.Plot.color(it, CO) == re
+
+end
+
+@test BioLab.Plot.color(IT_, CO) == RE_
+
+@test BioLab.Plot.color(vcat(IT_, N + 1), CO) == [
+    "#20d9ba"
+    "#7448db"
+    "#6f2cdf"
+    "#7a36bc"
+    "#ff1968"
 ]
-
-for (nu, re) in zip(nu_, re_)
-
-    @test BioLab.Plot.color(nu, co) == re
-
-end
-
-@test BioLab.Plot.color(nu_, co) == re_
 
 # ---- #
 

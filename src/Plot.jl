@@ -4,84 +4,70 @@ using ColorSchemes: ColorScheme, bwr, plasma
 
 using Colors: Colorant, hex
 
-using DataFrames: DataFrame
-
 using JSON: json
 
 using Printf: @sprintf
 
 using BioLab
 
-const _CO = "continuous"
+function make_color_scheme(he_)
 
-const _CA = "categorical"
-
-const _BI = "binary"
-
-const _MO = "monotonous"
-
-function make_color_scheme(he_, ca, no)
-
-    ColorScheme([parse(Colorant{Float64}, he) for he in he_], ca, no)
+    ColorScheme([parse(Colorant{Float64}, he) for he in he_])
 
 end
 
-const COBWR = ColorScheme(bwr.colors, _CO, "Blue White Red")
+const COBWR = bwr
 
-const COPLA = ColorScheme(plasma.colors, _CO, "PLAsma")
+const COPLA = plasma
 
-const COPL3 = make_color_scheme(
-    (
-        "#0508b8",
-        "#1910d8",
-        "#3c19f0",
-        "#6b1cfb",
-        "#981cfd",
-        "#bf1cfd",
-        "#dd2bfd",
-        "#f246fe",
-        "#fc67fd",
-        "#fe88fc",
-        "#fea5fd",
-        "#febefe",
-        "#fec3fe",
-    ),
-    _CO,
-    "PLotly3",
-)
+const COPL3 = make_color_scheme((
+    "#0508b8",
+    "#1910d8",
+    "#3c19f0",
+    "#6b1cfb",
+    "#981cfd",
+    "#bf1cfd",
+    "#dd2bfd",
+    "#f246fe",
+    "#fc67fd",
+    "#fe88fc",
+    "#fea5fd",
+    "#febefe",
+    "#fec3fe",
+))
 
-const COASP = make_color_scheme(
-    ("#00936e", "#a4e2b4", "#e0f5e5", "#ffffff", "#fff8d1", "#ffec9f", "#ffd96a"),
-    _CO,
-    "ASPen",
-)
+const COASP = make_color_scheme((
+    "#00936e",
+    "#a4e2b4",
+    "#e0f5e5",
+    "#ffffff",
+    "#fff8d1",
+    "#ffec9f",
+    "#ffd96a",
+))
 
-const COPLO = make_color_scheme(
-    (
-        "#636efa",
-        "#ef553b",
-        "#00cc96",
-        "#ab63fa",
-        "#ffa15a",
-        "#19d3f3",
-        "#ff6692",
-        "#b6e880",
-        "#ff97ff",
-        "#fecb52",
-    ),
-    _CA,
-    "PLOtly",
-)
+const COPLO = make_color_scheme((
+    "#636efa",
+    "#ef553b",
+    "#00cc96",
+    "#ab63fa",
+    "#ffa15a",
+    "#19d3f3",
+    "#ff6692",
+    "#b6e880",
+    "#ff97ff",
+    "#fecb52",
+))
 
-const COGUA = make_color_scheme(("#20d9ba", "#9017e6", "#4e40d8", "#ff1968"), _CA, "GUArdiome")
+const COGUA = make_color_scheme(("#20d9ba", "#9017e6", "#4e40d8", "#ff1968"))
 
-const COBIN = make_color_scheme(("#006442", "#ffb61e"), _BI, "BINary")
+const COBIN = make_color_scheme(("#006442", "#ffb61e"))
 
-const COHUM = make_color_scheme(("#4b3c39", "#ffddca"), _BI, "HUMan")
+const COHUM = make_color_scheme(("#4b3c39", "#ffddca"))
 
-const COSTA = make_color_scheme(("#8c1515", "#175e54"), _BI, "STAnford")
+const COSTA = make_color_scheme(("#8c1515", "#175e54"))
 
-const COMON = make_color_scheme(("#fbb92d",), _MO, "MONotonous")
+const COMON = make_color_scheme(("#fbb92d",))
 
 function _make_hex(rg)
 
@@ -91,15 +77,21 @@ function _make_hex(rg)
 
 end
 
-function fractionate(co)
+function map_fraction_to_color(co)
 
     collect(zip(0:(1 / (length(co) - 1)):1, _make_hex(rg) for rg in co))
 
 end
 
-function pick_color_scheme(nu_::AbstractArray{Int})
+function pick_color_scheme(::AbstractArray{Float64})
 
-    n = length(unique(nu_))
+    COBWR
+
+end
+
+function pick_color_scheme(it_::AbstractArray{Int})
+
+    n = length(unique(it_))
 
     if n <= 1
 
@@ -117,12 +109,6 @@ function pick_color_scheme(nu_::AbstractArray{Int})
 
 end
 
-function pick_color_scheme(::AbstractArray{Float64})
-
-    COBWR
-
-end
-
 function color(nu::Real, co)
 
     _make_hex(co[nu])
@@ -131,7 +117,13 @@ end
 
 function color(nu_, co = pick_color_scheme(nu_))
 
-    color.(nu_, (co,))
+    fl_ = Vector{Float64}(undef, length(nu_))
+
+    copy!(fl_, nu_)
+
+    BioLab.Number.normalize_with_01!(fl_)
+
+    (nu -> color(nu, co)).(fl_)
 
 end
 
@@ -203,7 +195,7 @@ end
 
 function make_colorbar(z, x)
 
-    tickvals = _range(skipmissing(z), 10)
+    tickvals = _range(z, 10)
 
     Dict(
         "x" => x,
@@ -419,7 +411,7 @@ function plot_heat_map(
     text = z,
     nar = "Row",
     nac = "Column",
-    colorscale = fractionate(COBWR),
+    colorscale = map_fraction_to_color(COBWR),
     grr_ = Vector{Int}(),
     grc_ = Vector{Int}(),
     layout = Dict{String, Any}(),
@@ -524,7 +516,7 @@ function plot_heat_map(
                 "xaxis" => "x2",
                 "z" => [[grr] for grr in grr_],
                 "hoverinfo" => "y+z",
-                "colorscale" => fractionate(COPLO),
+                "colorscale" => map_fraction_to_color(COPLO),
                 "colorbar" => make_colorbar(z, colorbarx += 0.06),
             ),
         )
@@ -540,7 +532,7 @@ function plot_heat_map(
                 "yaxis" => "y2",
                 "z" => [grc_],
                 "hoverinfo" => "x+z",
-                "colorscale" => fractionate(COPLO),
+                "colorscale" => map_fraction_to_color(COPLO),
                 "colorbar" => make_colorbar(z, colorbarx += 0.06),
             ),
         )
