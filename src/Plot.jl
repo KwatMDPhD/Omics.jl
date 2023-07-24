@@ -149,19 +149,19 @@ end
 
 function _set_x(y_)
 
-    [collect(eachindex(y)) for y in y_]
+    (y -> collect(eachindex(y))).(y_)
 
 end
 
 function _set_text(y_)
 
-    fill(Vector{String}(), length(y_))
+    [Vector{String}() for _ in eachindex(y_)]
 
 end
 
 function _set_name(y_)
 
-    ["Name $id" for id in eachindex(y_)]
+    string.("Name ", eachindex(y_))
 
 end
 
@@ -171,39 +171,24 @@ function _set_color(y_)
 
 end
 
-function _set_opacity(y_)
-
-    fill(0.8, length(y_))
-
-end
-
-const COLORBAR = Dict(
-    "thicknessmode" => "fraction",
-    "thickness" => 0.024,
-    "len" => 0.5,
-    #"tickvmode" => "array",
-    #"ticks" => "outside",
-    #"tickfont" => Dict("size" => 10),
-)
-
 const AXIS = Dict("automargin" => true, "showgrid" => false)
 
-const SPIKE = Dict(
-    "showspikes" => true,
-    "spikesnap" => "cursor",
-    "spikemode" => "across",
-    "spikedash" => "solid",
-    "spikethickness" => 1,
-    "spikecolor" => "#561649",
-)
-
-const ANNOTATION = Dict(
-    "yref" => "paper",
-    "xref" => "paper",
-    "yanchor" => "middle",
-    "xanchor" => "center",
-    "showarrow" => false,
-)
+#const SPIKE = Dict(
+#    "showspikes" => true,
+#    "spikesnap" => "cursor",
+#    "spikemode" => "across",
+#    "spikedash" => "solid",
+#    "spikethickness" => 1,
+#    "spikecolor" => "#561649",
+#)
+#
+#const ANNOTATION = Dict(
+#    "yref" => "paper",
+#    "xref" => "paper",
+#    "yanchor" => "middle",
+#    "xanchor" => "center",
+#    "showarrow" => false,
+#)
 
 function plot_scatter(
     ht,
@@ -211,16 +196,14 @@ function plot_scatter(
     x_ = _set_x(y_);
     text_ = _set_text(y_),
     name_ = _set_name(y_),
-    mode_ = [ifelse(length(y) < 10^3, "markers+lines", "lines") for y in y_],
+    mode_ = (y -> ifelse(length(y) < 10^3, "markers+lines", "lines")).(y_),
     marker_color_ = _set_color(y_),
-    opacity_ = _set_opacity(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
 
     plot(
         ht,
-        # TODO: Check if mapping using a variable of the parent scope slows the performance.
         [
             Dict(
                 "name" => name_[id],
@@ -228,7 +211,7 @@ function plot_scatter(
                 "x" => x_[id],
                 "text" => text_[id],
                 "mode" => mode_[id],
-                "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
+                "marker" => Dict("color" => marker_color_[id]),
             ) for id in eachindex(y_)
         ],
         BioLab.Dict.merge(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
@@ -243,7 +226,6 @@ function plot_bar(
     x_ = _set_x(y_);
     name_ = _set_name(y_),
     marker_color_ = _set_color(y_),
-    opacity_ = _set_opacity(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -256,7 +238,7 @@ function plot_bar(
                 "name" => name_[id],
                 "y" => y_[id],
                 "x" => x_[id],
-                "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
+                "marker" => Dict("color" => marker_color_[id]),
             ) for id in eachindex(y_)
         ],
         BioLab.Dict.merge(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
@@ -272,7 +254,6 @@ function plot_histogram(
     rug_marker_size = ifelse(all(length(x) < 100000 for x in x_), 16, 0),
     name_ = _set_name(x_),
     marker_color_ = _set_color(x_),
-    opacity_ = _set_opacity(x_),
     histnorm = "",
     xbins_size = 0,
     layout = Dict{String, Any}(),
@@ -327,7 +308,7 @@ function plot_histogram(
 
     for id in 1:n
 
-        marker = Dict("color" => marker_color_[id], "opacity" => opacity_[id])
+        marker = Dict("color" => marker_color_[id])
 
         le = Dict(
             "showlegend" => showlegend,
@@ -375,6 +356,24 @@ function plot_histogram(
     end
 
     plot(ht, data, layout; ke_ar...)
+
+end
+
+function _make_colorbar(x, z)
+
+    tickvals = BioLab.Vector.range(z, 10)
+
+    Dict(
+        "x" => x,
+        "thicknessmode" => "fraction",
+        "thickness" => 0.024,
+        "len" => 0.5,
+        #"tickvmode" => "array",
+        "tickvals" => tickvals,
+        #"ticktext" => BioLab.String.format.(tickvals),
+        #"ticks" => "outside",
+        #"tickfont" => Dict("size" => 10),
+    )
 
 end
 
@@ -478,7 +477,7 @@ function plot_heat_map(
             "text" => collect(eachrow(text)),
             "hoverinfo" => "y+x+z+text",
             "colorscale" => colorscale,
-            "colorbar" => make_colorbar(z, colorbarx),
+            "colorbar" => _make_colorbar(colorbarx, z),
         ),
     )
 
@@ -492,7 +491,7 @@ function plot_heat_map(
                 "z" => [[grr] for grr in grr_],
                 "hoverinfo" => "y+z",
                 "colorscale" => map_fraction_to_color(COPLO),
-                "colorbar" => make_colorbar(z, colorbarx += 0.06),
+                "colorbar" => _make_colorbar(colorbarx += 0.06, grr_),
             ),
         )
 
@@ -508,21 +507,13 @@ function plot_heat_map(
                 "z" => [grc_],
                 "hoverinfo" => "x+z",
                 "colorscale" => map_fraction_to_color(COPLO),
-                "colorbar" => make_colorbar(z, colorbarx += 0.06),
+                "colorbar" => _make_colorbar(colorbarx += 0.06, grc_),
             ),
         )
 
     end
 
     plot(ht, data, layout; ke_ar...)
-
-end
-
-function plot_heat_map(ht, da; ke_ar...)
-
-    nar, ro_, co_, ro_x_co_x_nu = BioLab.DataFrame.separate(da)
-
-    plot_heat_map(ht, ro_x_co_x_nu, ro_, co_; nar, ke_ar...)
 
 end
 
@@ -534,7 +525,6 @@ function plot_radar(
     name_ = _set_name(theta_),
     line_color_ = _set_color(theta_),
     fillcolor_ = line_color_,
-    opacity_ = _set_opacity(theta_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -551,7 +541,6 @@ function plot_radar(
                 "name" => name_[id],
                 "theta" => vcat(theta_[id], theta_[id][1]),
                 "r" => vcat(r_[id], r_[id][1]),
-                "opacity" => opacity_[id],
                 "line" => Dict(
                     "shape" => "spline",
                     "smoothing" => 0,

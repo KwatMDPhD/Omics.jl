@@ -66,7 +66,7 @@ end
 
 function make_matrix_123(n_ro, n_co)
 
-    Matrix(reshape(1:(n_ro * n_co), (n_ro, n_co)))
+    convert(Matrix, reshape(1:(n_ro * n_co), (n_ro, n_co)))
 
 end
 

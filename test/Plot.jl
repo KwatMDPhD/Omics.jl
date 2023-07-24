@@ -18,7 +18,11 @@ const DA = joinpath(BioLab._DA, "Plot")
 
 const HE_ = ("#ff71fb", "#fcc9b9", "#c91f37")
 
-@test length(BioLab.Plot.make_color_scheme(HE_)) == length(HE_)
+# ---- #
+
+const CO = BioLab.Plot.make_color_scheme(HE_)
+
+@test length(CO) == length(HE_)
 
 # ---- #
 
@@ -34,7 +38,6 @@ for co in (
     BioLab.Plot.COPL3,
     BioLab.Plot.COASP,
     BioLab.Plot.COPLO,
-    BioLab.Plot.COGUA,
     BioLab.Plot.COBIN,
     BioLab.Plot.COHUM,
     BioLab.Plot.COSTA,
@@ -94,8 +97,6 @@ end
 
 # ---- #
 
-const CO = BioLab.Plot.COGUA
-
 const N = length(CO)
 
 # ---- #
@@ -110,7 +111,7 @@ end
 
 for (nu, re) in zip(
     (-Inf, -0.1, 0.0, 0.01, 0.99, 1.0, 1.1, Inf),
-    ("#20d9ba", "#20d9ba", "#20d9ba", "#23d3bb", "#fa1a6b", "#ff1968", "#ff1968", "#ff1968"),
+    ("#ff71fb", "#ff71fb", "#ff71fb", "#ff73fa", "#ca223a", "#c91f37", "#c91f37", "#c91f37"),
 )
 
     @test BioLab.Plot.color(nu, CO) == re
@@ -119,29 +120,21 @@ end
 
 # ---- #
 
-const IT_ = [1, 2, 3, N]
-
-const RE_ = ["#20d9ba", "#9017e6", "#4e40d8", "#ff1968"]
+const IT_ = [1, 2, N]
 
 # ---- #
 
-for (it, re) in zip(IT_, RE_)
+for (it, re) in zip(IT_, HE_)
 
     @test BioLab.Plot.color(it, CO) == re
 
 end
 
-@test BioLab.Plot.color(IT_, CO) == RE_
+@test BioLab.Plot.color(IT_, CO) == collect(HE_)
 
 # ---- #
 
-@test BioLab.Plot.color(vcat(IT_, N + 1), CO) == [
-    "#20d9ba"
-    "#7448db"
-    "#6f2cdf"
-    "#7a36bc"
-    "#ff1968"
-]
+@test BioLab.Plot.color(vcat(IT_, N + 1), CO) == [HE_[1], "#fdaccf", "#eb908e", HE_[end]]
 
 # ---- #
 
@@ -172,45 +165,53 @@ BioLab.Plot.plot(
 
 # ---- #
 
-y1 = [-1, 0, 2]
+const SCY1 = [-1, 0, 2]
 
-y2 = [3, 4]
+const SCY2 = [3, 4]
 
-y_ = [y1, y2]
-
-BioLab.Plot.plot_scatter("", y_)
-
-BioLab.Plot.plot_scatter(y_, [y1 * 10, y2 * 10]; name_ = ("One", "Two"))
+const SCY_ = [SCY1, SCY2]
 
 # ---- #
 
-y1 = [-1, 2, 5]
+BioLab.Plot.plot_scatter("", SCY_)
 
-y_ = [y1, reverse(y1), [8]]
+# ---- #
 
-x1 = [-2, -1, 0]
+BioLab.Plot.plot_scatter("", SCY_, [SCY1 * 10, SCY2 * 10])
 
-BioLab.Plot.plot_bar("", y_)
+# ---- #
+
+const BAY = [-1, 2, 5]
+
+const BAY_ = [BAY, reverse(BAY), [8]]
+
+# ---- #
+
+BioLab.Plot.plot_bar("", BAY_)
+
+# ---- #
 
 BioLab.Plot.plot_bar(
     "",
-    y_,
-    [x1, -x1, [0]];
+    BAY_,
+    [[-2, -1, 0], [-2, -1, 0], [1]];
     name_ = ["Jonathan", "Joseph", "Jotaro"],
     layout = Dict("barmode" => "group", "title" => Dict("text" => "barmode = group")),
 )
 
 # ---- #
 
-x_ = [[-1], [0, 1], [2, 3, 4]]
+const HIX_ = [[-1], [0, 1], [2, 3, 4]]
 
-BioLab.Plot.plot_histogram("", x_)
+BioLab.Plot.plot_histogram("", HIX_)
+
+# ---- #
 
 for xbins_size in (0, 1)
 
     BioLab.Plot.plot_histogram(
         "",
-        x_,
+        HIX_,
         [["1A"], ["2A", "2B"], ["3A", "3B", "3C"]];
         xbins_size,
         layout = Dict("title" => Dict("text" => "xbins_size = $xbins_size")),
@@ -220,59 +221,71 @@ end
 
 # ---- #
 
-n_ro = 2
+const MA1 = BioLab.Simulation.make_matrix_123(2, 4)
 
-n_co = 4
+# ---- #
 
-ma1 = convert(Matrix, reshape(1:(n_ro * n_co), n_ro, n_co))
+BioLab.Plot.plot_heat_map("", MA1)
 
-ro_ = ["Row $id" for id in 1:n_ro]
-
-co_ = ["Column $id" for id in 1:n_co]
-
-BioLab.Plot.plot_heat_map("", ma1)
-
-BioLab.Plot.plot_heat_map("", ma1, ro_, co_)
+# ---- #
 
 BioLab.Plot.plot_heat_map(
     "",
-    BioLab.DataFrame.make("Row Name", ro_, co_, ma1);
-    layout = Dict(
-        "title" => Dict("text" => "Plotting DataFrame"),
-        "xaxis" => Dict("title" => Dict("text" => "Column Name")),
-    ),
+    MA1,
+    string("Row ", 1:size(MA1, 1)),
+    string("Column ", 1:size(MA1, 2)),
 )
 
-y = [-1, 1, -2, 2]
+# ---- #
 
-x = [1, 4, 2, 5, 3, 6]
+const HEY = [-1, 1, -2, 2]
 
-ma2 = [la1 * la2 for la1 in y, la2 in x]
+const HEX = [1, 4, 2, 5, 3, 6]
 
-grr_ = [1, 2, 1, 2]
-
-grc_ = [1, 2, 1, 2, 1, 2]
-
-BioLab.Plot.plot_heat_map("", ma2; grr_)
-
-BioLab.Plot.plot_heat_map("", ma2; grc_)
-
-BioLab.Plot.plot_heat_map("", ma2, ["Y = $nu" for nu in y], ["X = $nu" for nu in x]; grr_, grc_)
+const MA2 = [y * x for y in HEY, x in HEX]
 
 # ---- #
 
-theta30 = collect(0:30:360)
-
-theta45 = collect(0:45:360)
-
-theta60 = collect(0:60:360)
-
-theta_ = [theta30, theta45, theta60]
-
-r_ = [1:length(theta30), 1:length(theta45), 1:length(theta60)]
-
-BioLab.Plot.plot_radar("", theta_, r_; name_ = [30, 45, 60])
+const GRR_ = [1, 2, 1, 2]
 
 # ---- #
 
-BioLab.Plot.animate(joinpath(TE, "animate.gif"), (joinpath(DA, "$pn.png") for pn in (1, 2)))
+BioLab.Plot.plot_heat_map("", MA2; grr_ = GRR_)
+
+# ---- #
+
+const GRC_ = [1, 2, 1, 2, 1, 2]
+
+# ---- #
+
+BioLab.Plot.plot_heat_map("", MA2; grc_ = GRC_)
+
+# ---- #
+
+BioLab.Plot.plot_heat_map(
+    "",
+    MA2,
+    string.("Y = ", HEY),
+    string.("X = ", HEX);
+    grr_ = GRR_,
+    grc_ = GRC_,
+)
+
+# ---- #
+
+const THETA30 = collect(0:30:360)
+
+const THETA45 = collect(0:45:360)
+
+const THETA60 = collect(0:60:360)
+
+BioLab.Plot.plot_radar(
+    "",
+    [THETA30, THETA45, THETA60],
+    [eachindex(THETA30), eachindex(THETA45), eachindex(THETA60)];
+    name_ = [30, 45, 60],
+)
+
+# ---- #
+
+BioLab.Plot.animate(joinpath(BioLab.TE, "animate.gif"), (joinpath(DA, "$pn.png") for pn in 1:2))
