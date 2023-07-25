@@ -6,8 +6,6 @@ using Colors: Colorant, hex
 
 using JSON: json
 
-using Printf: @sprintf
-
 using BioLab
 
 function make_color_scheme(he_)
