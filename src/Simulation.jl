@@ -64,9 +64,9 @@ function make_vector_mirror_wide(n; ze = true)
 
 end
 
-function make_matrix_123(n_ro, n_co)
+function make_matrix_123(n_ro, n_co, ty = Int)
 
-    convert(Matrix, reshape(1:(n_ro * n_co), (n_ro, n_co)))
+    convert(Matrix{ty}, reshape(1:(n_ro * n_co), (n_ro, n_co)))
 
 end
 

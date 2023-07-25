@@ -221,7 +221,7 @@ end
 
 # ---- #
 
-const MA1 = BioLab.Simulation.make_matrix_123(2, 4)
+const MA1 = BioLab.Simulation.make_matrix_123(2, 4, Float64)
 
 # ---- #
 
@@ -232,15 +232,15 @@ BioLab.Plot.plot_heat_map("", MA1)
 BioLab.Plot.plot_heat_map(
     "",
     MA1,
-    string("Row ", 1:size(MA1, 1)),
-    string("Column ", 1:size(MA1, 2)),
+    string.("Row ", 1:size(MA1, 1)),
+    string.("Column ", 1:size(MA1, 2)),
 )
 
 # ---- #
 
-const HEY = [-1, 1, -2, 2]
+const HEY = [-1.0, 1, -2, 2]
 
-const HEX = [1, 4, 2, 5, 3, 6]
+const HEX = [1.0, 4, 2, 5, 3, 6]
 
 const MA2 = [y * x for y in HEY, x in HEX]
 
@@ -284,6 +284,7 @@ BioLab.Plot.plot_radar(
     [THETA30, THETA45, THETA60],
     [eachindex(THETA30), eachindex(THETA45), eachindex(THETA60)];
     name_ = [30, 45, 60],
+    layout = Dict("title" => Dict("text" => "Title Text")),
 )
 
 # ---- #

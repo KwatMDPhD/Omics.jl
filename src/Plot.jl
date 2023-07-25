@@ -89,7 +89,7 @@ function pick_color_scheme(::AbstractArray{Float64})
 
 end
 
-function pick_color_scheme(it_::AbstractArray{Int})
+function pick_color_scheme(it_)
 
     n = length(unique(it_))
 
@@ -251,7 +251,7 @@ function plot_histogram(
     ht,
     x_,
     text_ = _set_text(x_);
-    rug_marker_size = ifelse(all(length(x) < 100000 for x in x_), 16, 0),
+    rug_marker_size = ifelse(all(x -> length(x) < 100000, x_), 16, 0),
     name_ = _set_name(x_),
     marker_color_ = _set_color(x_),
     histnorm = "",
@@ -286,18 +286,13 @@ function plot_histogram(
         Dict(
             "yaxis" => BioLab.Dict.merge(
                 AXIS,
-                Dict(
-                    "domain" => (0, fr),
-                    "zeroline" => false,
-                    "dtick" => 1,
-                    "showticklabels" => false,
-                ),
+                Dict("domain" => (0, fr), "zeroline" => false, "tickvals" => ()),
             ),
             "yaxis2" => BioLab.Dict.merge(
                 AXIS,
                 Dict("domain" => (fr, 1), "title" => Dict("text" => yaxis2_title_text)),
             ),
-            "xaxis" => BioLab.Dict.merge(AXIS, Dict("anchor" => "y")),
+            "xaxis" => AXIS,
         ),
         layout,
     )
@@ -308,14 +303,12 @@ function plot_histogram(
 
     for id in 1:n
 
-        marker = Dict("color" => marker_color_[id])
-
         le = Dict(
             "showlegend" => showlegend,
             "legendgroup" => id,
             "name" => name_[id],
             "x" => x_[id],
-            "marker" => marker,
+            "marker" => Dict("color" => marker_color_[id]),
         )
 
         push!(
@@ -342,10 +335,7 @@ function plot_histogram(
                         "y" => fill(id, length(x_[id])),
                         "text" => text_[id],
                         "mode" => "markers",
-                        "marker" => BioLab.Dict.merge(
-                            marker,
-                            Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
-                        ),
+                        "marker" => Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
                         "hoverinfo" => "x+text",
                     ),
                 ),
@@ -366,28 +356,24 @@ function _make_colorbar(x, z)
     Dict(
         "x" => x,
         "thicknessmode" => "fraction",
-        "thickness" => 0.024,
+        "thickness" => 0.02,
         "len" => 0.5,
-        #"tickvmode" => "array",
         "tickvals" => tickvals,
-        #"ticktext" => BioLab.String.format.(tickvals),
-        #"ticks" => "outside",
-        #"tickfont" => Dict("size" => 10),
     )
 
 end
 
 function plot_heat_map(
     ht,
-    z::AbstractMatrix,
-    y = ["$id *" for id in 1:size(z, 1)],
-    x = ["* $id" for id in 1:size(z, 2)];
+    z,
+    y = string.(1:size(z, 1), " *"),
+    x = string.("* ", 1:size(z, 2));
     text = z,
     nar = "Row",
     nac = "Column",
-    colorscale = map_fraction_to_color(COBWR),
-    grr_ = Vector{Int}(),
-    grc_ = Vector{Int}(),
+    colorscale = map_fraction_to_color(pick_color_scheme(z)),
+    grr_ = Vector{Union{Int, AbstractString}}(),
+    grc_ = Vector{Union{Int, AbstractString}}(),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -396,7 +382,7 @@ function plot_heat_map(
 
     domain1 = (0, 0.95)
 
-    axis2 = BioLab.Dict.merge(AXIS, Dict("domain" => (0.96, 1), "tickvals" => ()))
+    axis2 = BioLab.Dict.merge(AXIS, Dict("domain" => (domain1[2] + 0.01, 1), "tickvals" => ()))
 
     layout = BioLab.Dict.merge(
         Dict(
@@ -420,50 +406,33 @@ function plot_heat_map(
 
     data = Vector{Dict{String, Any}}()
 
-    # TODO: Cluster within a group.
-
     colorbarx = 1
+
+    # TODO: Cluster within a group.
 
     if !isempty(grr_)
 
         colorbarx += 0.04
 
-        if eltype(grr_) <: AbstractString
-
-            gr_id = BioLab.Collection.index(unique(grr_))[1]
-
-            grr_ = [gr_id[gr] for gr in grr_]
-
-        end
-
         so_ = sortperm(grr_)
 
-        grr_ = grr_[so_]
+        grr_ = view(grr_, so_)
 
-        y = y[so_]
+        y = view(y, so_)
 
-        z = z[so_, :]
+        z = view(z, so_, :)
 
     end
 
     if !isempty(grc_)
 
-        # TODO: Test.
-        if eltype(grc_) <: AbstractString
-
-            gr_id = BioLab.Collection.index(unique(grc_))[1]
-
-            grc_ = [gr_id[gr] for gr in grc_]
-
-        end
-
         so_ = sortperm(grc_)
 
-        grc_ = grc_[so_]
+        grc_ = view(grc_, so_)
 
-        x = x[so_]
+        x = view(x, so_)
 
-        z = z[:, so_]
+        z = view(z, :, so_)
 
     end
 
@@ -490,7 +459,7 @@ function plot_heat_map(
                 "xaxis" => "x2",
                 "z" => [[grr] for grr in grr_],
                 "hoverinfo" => "y+z",
-                "colorscale" => map_fraction_to_color(COPLO),
+                "colorscale" => map_fraction_to_color(pick_color_scheme(grr_)),
                 "colorbar" => _make_colorbar(colorbarx += 0.06, grr_),
             ),
         )
@@ -506,7 +475,7 @@ function plot_heat_map(
                 "yaxis" => "y2",
                 "z" => [grc_],
                 "hoverinfo" => "x+z",
-                "colorscale" => map_fraction_to_color(COPLO),
+                "colorscale" => map_fraction_to_color(pick_color_scheme(grc_)),
                 "colorbar" => _make_colorbar(colorbarx += 0.06, grc_),
             ),
         )
@@ -557,32 +526,34 @@ function plot_radar(
                 "polar" => Dict(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
-                        "ticks" => "",
-                        "tickfont" =>
-                            Dict("size" => 32, "family" => "Optima", "color" => "#23191e"),
                         "linewidth" => 4,
                         "linecolor" => costa,
+                        "ticklen" => 16,
+                        "tickwidth" => 2,
+                        "tickcolor" => costa,
+                        "tickfont" =>
+                            Dict("size" => 32, "family" => "Optima", "color" => "#23191e"),
                         "gridwidth" => 2,
                         "gridcolor" => cofai,
                     ),
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
-                        "nticks" => 10,
+                        "linewidth" => 2,
+                        "linecolor" => costa,
+                        "ticklen" => 8,
+                        "tickwidth" => 2,
                         "tickcolor" => costa,
-                        "tickangle" => 90,
                         "tickfont" => Dict(
-                            "size" => 12,
+                            "size" => 16,
                             "family" => "Monospace",
                             "color" => "#1f4788",
                         ),
-                        "linewidth" => 0.8,
-                        "linecolor" => costa,
-                        "gridwidth" => 1.2,
+                        "gridwidth" => 1.6,
                         "gridcolor" => cofai,
                     ),
                 ),
                 "title" => Dict(
-                    "x" => 0.01,
+                    "x" => 0.02,
                     "font" => Dict(
                         "size" => 48,
                         "family" => "Times New Roman",
