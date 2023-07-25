@@ -6,128 +6,6 @@ using BioLab
 
 # ---- #
 
-const NU11_ = [0, 0, 1, 1]
-
-const NU21_ = [2, 3, 4, 5]
-
-const RE1 = ([2, 3], [4, 5])
-
-for (nu1_, re) in ((NU11_, (NU11_, NU21_)), (Vector{Bool}(NU11_), RE1), (BitVector(NU11_), RE1))
-
-    @test BioLab.Match._aim(nu1_, NU21_) == re
-
-    # 1.459 ns (0 allocations: 0 bytes)
-    # 86.672 ns (4 allocations: 256 bytes)
-    # 75.996 ns (4 allocations: 256 bytes)
-    #@btime BioLab.Match._aim($nu1_, $NU21_)
-
-end
-
-# ---- #
-
-const NU11R_ = rand((0, 1), 1000)
-
-const NU21R_ = randn(length(NU11R_))
-
-for nu1_ in (randn(length(NU11R_)), Vector{Bool}(NU11R_), BitVector(NU11R_))
-
-    # 1.458 ns (0 allocations: 0 bytes)
-    # 1.525 μs (5 allocations: 12.53 KiB)
-    # 1.262 μs (4 allocations: 8.34 KiB)
-    #@btime BioLab.Match._aim($nu1_, $NU21R_)
-
-end
-
-# ---- #
-
-function fus(nu1_, nu2_)
-
-    sum(nu1_) - sum(nu2_)
-
-end
-
-# ---- #
-
-const NU12_ = [0, 0, 1, 1]
-
-const NU22_ = [1, 10, 100, 1000]
-
-const RE2 = -1089
-
-for (nu1_, re) in ((NU22_ .+ 1, 4), (Vector{Bool}(NU12_), RE2), (BitVector(NU12_), RE2))
-
-    @test BioLab.Match._trigger(fus, nu1_, NU22_) == re
-
-    # 3.958 ns (0 allocations: 0 bytes)
-    # 89.438 ns (4 allocations: 256 bytes)
-    # 78.814 ns (4 allocations: 256 bytes)
-    #@btime BioLab.Match._trigger($fus, $nu1_, $NU22_)
-
-end
-
-# ---- #
-
-const NU12R_ = rand((0, 1), 1000)
-
-const NU22R_ = randn(length(NU12R_))
-
-for nu1_ in (randn(length(NU12R_)), Vector{Bool}(NU12R_), BitVector(NU12R_))
-
-    # 347.093 ns (0 allocations: 0 bytes)
-    # 1.675 μs (5 allocations: 12.53 KiB)
-    # 1.408 μs (4 allocations: 8.34 KiB)
-    #@btime BioLab.Match._trigger($fus, $nu1_, $NU22R_)
-
-end
-
-# ---- #
-
-function fum(nu1_, nu2_)
-
-    mean(nu1_) - mean(nu2_)
-
-end
-
-# ---- #
-
-const NU13_ = [0, 0, 0, 1, 1, 1]
-
-const MA23 = BioLab.Simulation.make_matrix_123(2, 6)
-
-const RE3 = [-6.0, -6]
-
-for (nu1_, re) in (
-    ([1, 10, 100, 1000, 10000, 100000], [18512.5, 18511.5]),
-    (Vector{Bool}(NU13_), RE3),
-    (BitVector(NU13_), RE3),
-)
-
-    @test BioLab.Match.target(fum, nu1_, MA23) == re
-
-    # 42.718 ns (1 allocation: 80 bytes)
-    # 215.223 ns (9 allocations: 592 bytes)
-    # 184.788 ns (9 allocations: 592 bytes)
-    #@btime BioLab.Match.Match($fum, $nu1_, $MA23)
-
-end
-
-# ---- #
-
-const NU13R_ = rand((0, 1), 1000)
-
-const MA23R = randn((100, length(NU13R_)))
-
-for nu1_ in (randn(length(NU13R_)), Vector{Bool}(NU13R_), BitVector(NU13R_))
-
-    # 104.458 μs (1 allocation: 896 bytes)
-    # 174.417 μs (501 allocations: 1.22 MiB)
-    # 158.125 μs (401 allocations: 835.25 KiB)
-    #@btime BioLab.Match.Match($fum, $nu1_, $MA23R)
-
-end
-
-# ---- #
-
 function benchmark(n_fe, n_sa, ho)
 
     si = n_fe, n_sa
@@ -136,11 +14,11 @@ function benchmark(n_fe, n_sa, ho)
 
         ta_ = collect(1.0:n_sa)
 
-        fe_x_sa_x_nu = Matrix(reshape(1.0:(n_fe * n_sa), si))
+        fe_x_sa_x_nu = BioLab.Simulation.make_matrix_123(n_fe, n_sa, Float64)
 
     elseif ho == "ra"
 
-        ta_ = randn(n_sa)
+        ta_ = BioLab.Simulation.make_vector_mirror(cld(n_sa, 2); ze = iseven(n_sa))
 
         fe_x_sa_x_nu = randn(si)
 
@@ -149,8 +27,8 @@ function benchmark(n_fe, n_sa, ho)
     BioLab.Match.cor,
     "Target",
     "Feature",
-    ["Feature $id" for id in 1:n_fe],
     "Sample",
+    ["Feature $id" for id in 1:n_fe],
     ["Sample $id" for id in 1:n_sa],
     ta_,
     fe_x_sa_x_nu
@@ -159,135 +37,122 @@ end
 
 # ---- #
 
-ar = benchmark(1, 2, "12")
+function make_directory_layout(title_text)
+
+    BioLab.Path.make_directory(joinpath(BioLab.TE, BioLab.Path.clean(title_text))),
+    Dict("title" => Dict("text" => title_text))
+
+end
+
+# ---- #
+
+const REA_ = benchmark(1, 2, "12")
 
 for rev in (false, true)
 
-    BioLab.Match.make(
-        mkdir(joinpath(BioLab.TE, BioLab.Time.stamp())),
-        ar...;
-        rev,
-        layout = Dict("title" => Dict("text" => "rev = $rev")),
-    )
+    di, layout = make_directory_layout("rev = $rev")
+
+    BioLab.Match.make(di, REA_...; rev, layout)
 
 end
 
 # ---- #
 
-ar = benchmark(50000, 100, "ra")
+const NA_ = benchmark(50000, 100, "ra")
 
-for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10), (100, 100))
+for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10), (40, 40))
 
-    BioLab.Match.make(
-        mkdir(joinpath(BioLab.TE, BioLab.Time.stamp())),
-        ar...;
-        n_ma,
-        n_pv,
-        layout = Dict("title" => Dict("text" => "n_ma = $n_ma, n_pv = $n_pv")),
-    )
+    di, layout = make_directory_layout("n_ma = $n_ma, n_pv = $n_pv")
+
+    BioLab.Match.make(di, NA_...; n_ma, n_pv, layout)
 
 end
 
 # ---- #
 
-n_fe = 5
-
-ar = benchmark(n_fe, 2, "12")
+const EXA_ = benchmark(5, 2, "12")
 
 for n_ex in (0, 1, 2, 3, 6)
 
-    BioLab.Match.make(
-        mkdir(joinpath(BioLab.TE, BioLab.Time.stamp())),
-        ar...;
-        n_ex,
-        layout = Dict("title" => Dict("text" => "n_ex = $n_ex")),
-    )
+    di, layout = make_directory_layout("n_ex = $n_ex")
+
+    BioLab.Match.make(di, EXA_...; n_ex, layout)
 
 end
 
 # ---- #
 
-fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(1, 19, "12")
+const FU, NAT, NAF, NAS, FE_, SA_, TA_, FE_X_SA_X_NU = benchmark(1, 19, "12")
 
-tai_ = convert(Vector{Int}, ta_)
+const TAI_ = convert(Vector{Int}, TA_)
 
-fe_x_sa_x_it = convert(Matrix{Int}, fe_x_sa_x_nu)
+const FE_X_SA_X_IT = convert(Matrix{Int}, FE_X_SA_X_NU)
 
 for (ta_, fe_x_sa_x_nu) in
-    ((ta_, fe_x_sa_x_nu), (tai_, fe_x_sa_x_nu), (ta_, fe_x_sa_x_it), (tai_, fe_x_sa_x_it))
+    ((TA_, FE_X_SA_X_NU), (TAI_, FE_X_SA_X_NU), (TA_, FE_X_SA_X_IT), (TAI_, FE_X_SA_X_IT))
 
     tyt = eltype(ta_)
 
     tyf = eltype(fe_x_sa_x_nu)
 
-    BioLab.Match.make(
-        mkdir(joinpath(BioLab.TE, BioLab.Time.stamp())),
-        fu,
-        trn,
-        fen,
-        fe_,
-        sa_,
-        ta_,
-        fe_x_sa_x_nu;
-        layout = Dict("title" => Dict("text" => "$tyt x $tyf")),
-    )
+    di, layout = make_directory_layout("$tyt x $tyf")
+
+    BioLab.Match.make(di, FU, NAT, NAF, NAS, FE_, SA_, ta_, fe_x_sa_x_nu; layout)
 
 end
 
 # ---- #
 
-ar = fu, trn, fen, fe_, sa_, ta_, fe_x_sa_x_nu = benchmark(2, 3, "ra")
+const STA_ = benchmark(2, 3, "ra")
 
 for st in (0, 0.1, 1, 2, 4, 8)
 
-    BioLab.Match.make(
-        mkdir(joinpath(BioLab.TE, BioLab.Time.stamp())),
-        ar...;
-        st,
-        layout = Dict("title" => Dict("text" => "st = $st")),
-    )
+    di, layout = make_directory_layout("st = $st")
+
+    BioLab.Match.make(di, STA_...; st, layout)
 
 end
 
 # ---- #
 
-for (n_fe, n_sa) in ((1, 2), (2, 2), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000))
+for (n_fe, n_sa) in ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000))
 
-    BioLab.Match.make(
-        mkdir(joinpath(BioLab.TE, BioLab.Time.stamp())),
-        benchmark(n_fe, n_sa, "ra")...;
-        n_ex = 40,
-        layout = Dict("title" => Dict("text" => "$n_fe x $n_sa")),
-    )
+    di, layout = make_directory_layout("$n_fe x $n_sa")
+
+    BioLab.Match.make(di, benchmark(n_fe, n_sa, "ra")...; n_ex = 40, layout)
 
 end
 
 # ---- #
 
-n_fe = 3
+const N_FE = 3
 
-fe_ = ["Feature $id" for id in 1:n_fe]
+const GFE_ = string.("Feature ", 1:N_FE)
 
-n_gr = 4
+const N_GR = 4
 
-n_sa = 6
+const N_RE = 6
 
-ta_ = repeat(1:n_gr, n_sa)
+const GSA_ = vec(["$ch $gr" for gr in 1:N_GR, ch in ('A':'Z')[1:N_RE]])
 
-sa_ = vec(["$ch $gr" for gr in 1:n_gr, ch in ('A':'Z')[1:n_sa]])
+const GTA_ = repeat(1:N_GR, N_RE)
 
 for nu_ in ((1, 1, 2, 2, 4, 8), (1, 2, 4, 8, 2, 1))
 
-    ar = fu, "Group", "Feature", fe_, sa_, ta_, hcat((fill(nu, (n_fe, n_gr)) for nu in nu_)...)
+    ar_ = BioLab.Match.cor,
+    "Group",
+    "Feature",
+    "Sample",
+    GFE_,
+    GSA_,
+    GTA_,
+    hcat((fill(nu, (N_FE, N_GR)) for nu in nu_)...)
 
     for rev in (false, true)
 
-        BioLab.Match.make(
-            mkdir(joinpath(BioLab.TE, BioLab.Time.stamp())),
-            ar...;
-            rev,
-            layout = Dict("title" => Dict("text" => "$nu_, rev = $rev")),
-        )
+        di, layout = make_directory_layout("$nu_, rev = $rev")
+
+        BioLab.Match.make(di, ar_...; rev, layout)
 
     end
 

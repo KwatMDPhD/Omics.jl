@@ -4,6 +4,8 @@ using DataFrames: DataFrame
 
 using Printf: @sprintf
 
+using ProgressMeter: @showprogress
+
 using Random: shuffle!
 
 using Statistics: cor
@@ -12,31 +14,99 @@ using StatsBase: sample
 
 using BioLab
 
-# TODO: Use target.
+function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
 
-function _aim(nu1_, nu2_)
-
-    nu1_, nu2_
+    view(sa_, id_), view(ta_, id_), view(fe_x_sa_x_nu, :, id_)
 
 end
 
-function _aim(bi_::AbstractVector{Bool}, nu_)
+function _align!(it, ::Any)
 
-    nu_[.!bi_], nu_[bi_]
-
-end
-
-function _trigger(fu, nu1_, nu2_)
-
-    nu1a_, nu2a_ = _aim(nu1_, nu2_)
-
-    fu(nu1a_, nu2a_)
+    minimum(it), maximum(it)
 
 end
 
-function target(fu, nu1_, ma2)
+const _ANNOTATION =
+    Dict("yref" => "paper", "xref" => "paper", "showarrow" => false, "yanchor" => "middle")
 
-    map(nu2_ -> _trigger(fu, nu1_, nu2_), eachrow(ma2))
+const _ANNOTATIONL = BioLab.Dict.merge_recursively(
+    _ANNOTATION,
+    Dict(
+        "x" => -0.024,
+        "xanchor" => "right",
+        "font" => Dict("family" => "Gravitas One", "size" => 16),
+    ),
+)
+
+function _get_x(id)
+
+    0.97 + id * 0.088
+
+end
+
+function _annotate_feature(y, la, th, fe_, n_li, fe_x_st_x_nu)
+
+    annotations = Vector{Dict{String, Any}}()
+
+    if la
+
+        for (idx, text) in enumerate(("Sc (⧳)", "Pv", "Ad"))
+
+            push!(
+                annotations,
+                BioLab.Dict.merge_recursively(
+                    _ANNOTATION,
+                    Dict(
+                        "y" => y,
+                        "x" => _get_x(idx),
+                        "xanchor" => "center",
+                        "text" => "<b>$text</b>",
+                        "font" => Dict("family" => "Droid Serif", "size" => 16),
+                    ),
+                ),
+            )
+
+        end
+
+    end
+
+    y -= th
+
+    for idy in eachindex(fe_)
+
+        push!(
+            annotations,
+            BioLab.Dict.merge_recursively(
+                _ANNOTATIONL,
+                Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], n_li)),
+            ),
+        )
+
+        sc, ma, pv, ad = (@sprintf("%.2g", nu) for nu in view(fe_x_st_x_nu, idy, :))
+
+        for (idx, text) in enumerate(("$sc ($ma)", pv, ad))
+
+            push!(
+                annotations,
+                BioLab.Dict.merge_recursively(
+                    _ANNOTATION,
+                    Dict(
+                        "y" => y,
+                        "x" => _get_x(idx),
+                        "xanchor" => "center",
+                        "text" => text,
+                        "font" => Dict("family" => "Droid Serif", "size" => 12.8),
+                    ),
+                ),
+            )
+
+        end
+
+        y -= th
+
+    end
+
+    annotations
 
 end
 
@@ -70,92 +140,7 @@ function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
 end
 
-function _align!(it, ::Any)
-
-    minimum(it), maximum(it)
-
-end
-
-const _HEATMAP = Dict("type" => "heatmap", "showscale" => false)
-
-const _ANNOTATION =
-    Dict("yref" => "paper", "xref" => "paper", "showarrow" => false, "yanchor" => "middle")
-
-const _ANNOTATIONL =
-    BioLab.Dict.merge_recursively(_ANNOTATION, Dict("x" => -0.024, "xanchor" => "right"))
-
-function _get_x(id)
-
-    0.97 + id * 0.088
-
-end
-
-function _annotate_feature(y, la, th, fe_, n_li, fe_x_st_x_nu)
-
-    annotations = Vector{Dict{String, Any}}()
-
-    if la
-
-        for (idx, text) in enumerate(("Sc (⧳)", "Pv", "Ad"))
-
-            push!(
-                annotations,
-                BioLab.Dict.merge_recursively(
-                    _ANNOTATION,
-                    Dict(
-                        "y" => y,
-                        "x" => _get_x(idx),
-                        "xanchor" => "center",
-                        "text" => "<b>$text</b>",
-                    ),
-                ),
-            )
-
-        end
-
-    end
-
-    y -= th
-
-    for idy in eachindex(fe_)
-
-        push!(
-            annotations,
-            BioLab.Dict.merge_recursively(
-                _ANNOTATIONL,
-                Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], n_li)),
-            ),
-        )
-
-        sc, ma, pv, ad = (@sprintf("%.2g", nu) for nu in view(fe_x_st_x_nu, idy, :))
-
-        for (idx, text) in enumerate(("$sc ($ma)", pv, ad))
-
-            push!(
-                annotations,
-                BioLab.Dict.merge_recursively(
-                    _ANNOTATION,
-                    Dict("y" => y, "x" => _get_x(idx), "xanchor" => "center", "text" => text),
-                ),
-            )
-
-        end
-
-        y -= th
-
-    end
-
-    annotations
-
-end
-
-function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
-
-    view(sa_, id_), view(ta_, id_), view(fe_x_sa_x_nu, :, id_)
-
-end
-
-function _plot(ht, nat, naf, fe_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, layout)
+function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, layout)
 
     if ta_ isa AbstractVector{Int}
 
@@ -192,6 +177,8 @@ function _plot(ht, nat, naf, fe_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
     @info "$naf colors can range from $fei to $fea."
 
+    heatmap = Dict("type" => "heatmap", "showscale" => false)
+
     n_ro = length(fe_) + 2
 
     th = 1 / n_ro
@@ -206,11 +193,12 @@ function _plot(ht, nat, naf, fe_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
     natl = BioLab.String.limit(nat, n_li)
 
+
     BioLab.Plot.plot(
         ht,
         [
             BioLab.Dict.merge_recursively(
-                _HEATMAP,
+                heatmap,
                 Dict(
                     "yaxis" => "y2",
                     "name" => "Target",
@@ -225,7 +213,7 @@ function _plot(ht, nat, naf, fe_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
                 ),
             ),
             BioLab.Dict.merge_recursively(
-                _HEATMAP,
+                heatmap,
                 Dict(
                     "name" => "Feature",
                     "y" => fe_,
@@ -254,7 +242,7 @@ function _plot(ht, nat, naf, fe_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
                 ),
                 "xaxis" => BioLab.Dict.merge_recursively(
                     BioLab.Plot.AXIS,
-                    Dict("title" => Dict("text" => "$n_sa $nas")),
+                    Dict("title" => Dict("text" => BioLab.String.count(n_sa, nas))),
                 ),
                 "annotations" => vcat(
                     BioLab.Dict.merge_recursively(
@@ -270,14 +258,13 @@ function _plot(ht, nat, naf, fe_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
 end
 
-# TODO...
 function make(
     di,
     fu,
     nat,
     naf,
-    fe_,
     nas,
+    fe_,
     sa_,
     ta_,
     fe_x_sa_x_nu;
@@ -293,7 +280,7 @@ function make(
 
     pr = joinpath(di, "feature_x_statistic_x_number")
 
-    n_fe = length(fe_)
+    n_fe, n_sa = size(fe_x_sa_x_nu)
 
     n_no = BioLab.String.count(n_fe, naf)
 
@@ -303,9 +290,9 @@ function make(
 
     @info "Computing scores"
 
-    sc_ = map(nu_ -> fu(ta_, nu_), eachrow(fe_x_sa_x_nu))
+    sc_ = (nu_ -> fu(ta_, nu_)).(eachrow(fe_x_sa_x_nu))
 
-    isb_ = map(isnan, sc_)
+    isb_ = isnan.(sc_)
 
     if any(isb_)
 
@@ -327,25 +314,19 @@ function make(
 
         @info "Computing margin of error with $n_no"
 
-        n_sa = length(sa_)
-
-        id_ = 1:n_sa
-
         n_sm = ceil(Int, n_sa * 0.632)
 
-        ma_ = Vector{Float64}(undef, n_fe)
-
-        for idf in 1:n_fe
-
-            nu_ = fe_x_sa_x_nu[idf, :]
+        @showprogress for idf in 1:n_fe
 
             ra_ = Vector{Float64}(undef, n_ma)
 
+            nu_ = view(fe_x_sa_x_nu, idf, :)
+
             for idr in 1:n_ma
 
-                ids_ = sample(id_, n_sm; replace = false)
+                ids_ = sample(1:n_sa, n_sm; replace = false)
 
-                ra_[idr] = fu(ta_[ids_], nu_[ids_])
+                ra_[idr] = fu(view(ta_, ids_), view(nu_, ids_))
 
             end
 
@@ -365,13 +346,15 @@ function make(
 
         ra_ = Vector{Float64}(undef, n_fe * n_pv)
 
-        for idf in 1:n_fe
+        idr = 0
 
-            nu_ = fe_x_sa_x_nu[idf, :]
+        @showprogress for idf in 1:n_fe
 
-            for idr in 1:n_pv
+            nu_ = view(fe_x_sa_x_nu, idf, :)
 
-                ra_[(idf - 1) * n_pv + idr] = fu(shuffle!(co), nu_)
+            for _ in 1:n_pv
+
+                ra_[idr += 1] = fu(shuffle!(co), nu_)
 
             end
 
@@ -395,18 +378,18 @@ function make(
 
     if 0 < n_ex
 
-        id_ = reverse!(BioLab.Vector.get_extreme(fe_x_st_x_nu[:, 1], n_ex))
+        id_ = reverse!(BioLab.Vector.get_extreme(view(fe_x_st_x_nu, :, 1), n_ex))
 
         _plot(
             "$pr.html",
             nat,
             naf,
-            fe_[id_],
             nas,
+            view(fe_, id_),
             sa_,
             ta_,
-            fe_x_sa_x_nu[id_, :],
-            fe_x_st_x_nu[id_, :],
+            view(fe_x_sa_x_nu, id_, :),
+            view(fe_x_st_x_nu, id_, :),
             st,
             layout,
         )
@@ -417,139 +400,139 @@ function make(
 
 end
 
-function make(di, tst, tsf, nas, pe_; ke_ar...)
-
-    BioLab.Path.error_missing(di)
-
-    _na, nat_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
-
-    naf, fe_, saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
-
-    if sa_ != saf_
-
-        error("Samples differ.")
-
-    end
-
-    for (nat, ta_) in zip(nat_, eachrow(ta_x_sa_x_nu))
-
-        sag_, tag_, fe_x_sag_x_nu = _order_sample(map(!isnan, ta_), sa_, ta_, fe_x_sa_x_nu)
-
-        try
-
-            tag_ = convert(Vector{Int}, tag_)
-
-        catch
-
-        end
-
-        di2 = BioLab.Path.make_directory(joinpath(di, BioLab.Path.clean("$(nat)_matching_$naf")))
-
-        fe_x_st_x_nu = make(di2, cor, nat, naf, fe_, nas, sag_, tag_, fe_x_sag_x_nu; ke_ar...)
-
-        is_ = BioLab.Collection.is_in(fe_, pe_)
-
-        id_ = sortperm(fe_x_st_x_nu[is_, 1]; rev = true)
-
-        _plot(
-            joinpath(di2, "peek.html"),
-            nat,
-            naf,
-            fe_[is_][id_],
-            nas,
-            sag_,
-            tag_,
-            fe_x_sag_x_nu[is_, :][id_, :],
-            fe_x_st_x_nu[is_, :][id_, :],
-            get(ke_ar, :st, 4),
-            Dict{String, Any}("title" => Dict("text" => "Peek")),
-        )
-
-    end
-
-end
-
-function compare(di, na1, na2, ts1, ts2; title_text = "")
-
-    BioLab.Path.error_missing(di)
-
-    na1c = BioLab.Path.clean(na1)
-
-    na2c = BioLab.Path.clean(na2)
-
-    pr = joinpath(di, "$(na1c)_compared_to_$na2c")
-
-    naf1, fe1_, st1_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
-
-    naf2, fe2_, st2_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
-
-    if naf1 != naf2
-
-        error("Feature names differ.")
-
-    end
-
-    if fe1_ != fe2_
-
-        error("Features differ.")
-
-    end
-
-    if st1_ != st2_
-
-        error("Statistics differ.")
-
-    end
-
-    nu1_ = fe_x_st_x_nu1[:, 1]
-
-    nu2_ = fe_x_st_x_nu2[:, 1]
-
-    go_ = map((nu1, nu2) -> !isnan(nu1) && !isnan(nu2), nu1_, nu2_)
-
-    fe1_ = fe1_[go_]
-
-    fe2_ = fe2_[go_]
-
-    nu1_ = nu1_[go_]
-
-    nu2_ = nu2_[go_]
-
-    nu1_, fe1_ = BioLab.Vector.sort_like((nu1_, fe1_))
-
-    id_ = indexin(fe1_, fe2_)
-
-    fe2_ = fe2_[id_]
-
-    nu2_ = nu2_[id_]
-
-    di_ = map((nu1, nu2) -> sqrt(nu1^2 + nu2^2), nu1_, nu2_)
-
-    BioLab.Table.write("$pr.tsv", DataFrame(naf1 => fe1_, "Distance" => di_))
-
-    BioLab.Number.normalize_with_01!(di_)
-
-    BioLab.Plot.plot_scatter(
-        "$pr.html",
-        (nu2_,),
-        (nu1_,);
-        text_ = (fe1_,),
-        mode_ = ("markers",),
-        marker_color_ = (BioLab.Plot.color(di_, BioLab.Plot.COPL3),),
-        opacity_ = (di_,),
-        layout = Dict(
-            "title" => Dict("text" => title_text),
-            "yaxis" => BioLab.Dict.merge_recursively(
-                BioLab.Plot.AXIS,
-                Dict("title" => Dict("text" => na2)),
-            ),
-            "xaxis" => BioLab.Dict.merge_recursively(
-                BioLab.Plot.AXIS,
-                Dict("title" => Dict("text" => na1)),
-            ),
-        ),
-    )
-
-end
-
+#function make(di, tst, tsf, nas, pe_; ke_ar...)
+#
+#    BioLab.Path.error_missing(di)
+#
+#    _na, nat_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
+#
+#    naf, fe_, saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
+#
+#    if sa_ != saf_
+#
+#        error("Samples differ.")
+#
+#    end
+#
+#    for (nat, ta_) in zip(nat_, eachrow(ta_x_sa_x_nu))
+#
+#        sag_, tag_, fe_x_sag_x_nu = _order_sample(map(!isnan, ta_), sa_, ta_, fe_x_sa_x_nu)
+#
+#        try
+#
+#            tag_ = convert(Vector{Int}, tag_)
+#
+#        catch
+#
+#        end
+#
+#        di2 = BioLab.Path.make_directory(joinpath(di, BioLab.Path.clean("$(nat)_matching_$naf")))
+#
+#        fe_x_st_x_nu = make(di2, cor, nat, naf, fe_, nas, sag_, tag_, fe_x_sag_x_nu; ke_ar...)
+#
+#        is_ = BioLab.Collection.is_in(fe_, pe_)
+#
+#        id_ = sortperm(fe_x_st_x_nu[is_, 1]; rev = true)
+#
+#        _plot(
+#            joinpath(di2, "peek.html"),
+#            nat,
+#            naf,
+#            nas,
+#            fe_[is_][id_],
+#            sag_,
+#            tag_,
+#            fe_x_sag_x_nu[is_, :][id_, :],
+#            fe_x_st_x_nu[is_, :][id_, :],
+#            get(ke_ar, :st, 4),
+#            Dict{String, Any}("title" => Dict("text" => "Peek")),
+#        )
+#
+#    end
+#
+#end
+#
+#function compare(di, na1, na2, ts1, ts2; title_text = "")
+#
+#    BioLab.Path.error_missing(di)
+#
+#    na1c = BioLab.Path.clean(na1)
+#
+#    na2c = BioLab.Path.clean(na2)
+#
+#    pr = joinpath(di, "$(na1c)_compared_to_$na2c")
+#
+#    naf1, fe1_, st1_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
+#
+#    naf2, fe2_, st2_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
+#
+#    if naf1 != naf2
+#
+#        error("Feature names differ.")
+#
+#    end
+#
+#    if fe1_ != fe2_
+#
+#        error("Features differ.")
+#
+#    end
+#
+#    if st1_ != st2_
+#
+#        error("Statistics differ.")
+#
+#    end
+#
+#    nu1_ = fe_x_st_x_nu1[:, 1]
+#
+#    nu2_ = fe_x_st_x_nu2[:, 1]
+#
+#    go_ = map((nu1, nu2) -> !isnan(nu1) && !isnan(nu2), nu1_, nu2_)
+#
+#    fe1_ = fe1_[go_]
+#
+#    fe2_ = fe2_[go_]
+#
+#    nu1_ = nu1_[go_]
+#
+#    nu2_ = nu2_[go_]
+#
+#    nu1_, fe1_ = BioLab.Vector.sort_like((nu1_, fe1_))
+#
+#    id_ = indexin(fe1_, fe2_)
+#
+#    fe2_ = fe2_[id_]
+#
+#    nu2_ = nu2_[id_]
+#
+#    di_ = map((nu1, nu2) -> sqrt(nu1^2 + nu2^2), nu1_, nu2_)
+#
+#    BioLab.Table.write("$pr.tsv", DataFrame(naf1 => fe1_, "Distance" => di_))
+#
+#    BioLab.Number.normalize_with_01!(di_)
+#
+#    BioLab.Plot.plot_scatter(
+#        "$pr.html",
+#        (nu2_,),
+#        (nu1_,);
+#        text_ = (fe1_,),
+#        mode_ = ("markers",),
+#        marker_color_ = (BioLab.Plot.color(di_, BioLab.Plot.COPL3),),
+#        opacity_ = (di_,),
+#        layout = Dict(
+#            "title" => Dict("text" => title_text),
+#            "yaxis" => BioLab.Dict.merge_recursively(
+#                BioLab.Plot.AXIS,
+#                Dict("title" => Dict("text" => na2)),
+#            ),
+#            "xaxis" => BioLab.Dict.merge_recursively(
+#                BioLab.Plot.AXIS,
+#                Dict("title" => Dict("text" => na1)),
+#            ),
+#        ),
+#    )
+#
+#end
+#
 end
