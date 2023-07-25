@@ -82,7 +82,7 @@ function make_directory(di)
 
     if isdir(di)
 
-        @error "$di already exists."
+        @warn "$di already exists."
 
     else
 

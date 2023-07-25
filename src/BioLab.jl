@@ -38,6 +38,8 @@ end
 
 function __init__()
 
+    rm(TE; recursive = true, force = true)
+
     BioLab.Path.make_directory(TE)
 
 end

@@ -385,8 +385,12 @@ function plot(
     yaxis3_domain = (0.32, 1)
 
     annotation = BioLab.Dict.merge(
-        BioLab.Plot.ANNOTATION,
         Dict(
+            "yref" => "paper",
+            "xref" => "paper",
+            "yanchor" => "middle",
+            "xanchor" => "center",
+            "showarrow" => false,
             "bgcolor" => "#fcfcfc",
             "borderpad" => 4.8,
             "borderwidth" => 2.4,

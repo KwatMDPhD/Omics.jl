@@ -180,14 +180,6 @@ const AXIS = Dict("automargin" => true, "showgrid" => false)
 #    "spikecolor" => "#561649",
 #)
 #
-#const ANNOTATION = Dict(
-#    "yref" => "paper",
-#    "xref" => "paper",
-#    "yanchor" => "middle",
-#    "xanchor" => "center",
-#    "showarrow" => false,
-#)
-
 function plot_scatter(
     ht,
     y_,

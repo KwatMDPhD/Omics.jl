@@ -36,7 +36,7 @@ function set_with_suffix!(ke_va, ke, va)
 
 end
 
-function merge(ke1_va1, ke2_va2)
+function merge_recursively(ke1_va1, ke2_va2)
 
     ke1_ = keys(ke1_va1)
 
@@ -56,7 +56,7 @@ function merge(ke1_va1, ke2_va2)
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                ke_va[ke] = merge(va1, va2)
+                ke_va[ke] = merge_recursively(va1, va2)
 
             else
 
