@@ -110,7 +110,6 @@ function read(sa_di)
 
 end
 
-# TODO: Test.
 function make_target(ta_re_, gr_, idg___)
 
     ta_ = collect(keys(ta_re_))

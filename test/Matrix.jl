@@ -1,3 +1,5 @@
+using StatsBase: mean
+
 using Test: @test
 
 using BioLab

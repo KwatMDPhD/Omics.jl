@@ -384,36 +384,36 @@ function plot(
 
     yaxis3_domain = (0.32, 1)
 
-    annotation = BioLab.Dict.merge(
+    annotation = Dict("showarrow" => false, "bgcolor" => "#fcfcfc", "borderwidth" => 2.4)
+
+    enf = BioLab.String.format(en)
+
+    annotationhl = BioLab.Dict.merge_recursively(
+        annotation,
         Dict(
-            "yref" => "paper",
-            "xref" => "paper",
-            "yanchor" => "middle",
-            "xanchor" => "center",
-            "showarrow" => false,
-            "bgcolor" => "#fcfcfc",
+            "y" => 0,
             "borderpad" => 4.8,
-            "borderwidth" => 2.4,
+            "bordercolor" => "#ffd96a",
             "font" => Dict("size" => 16),
         ),
     )
 
-    enf = BioLab.String.format(en)
-
-    annotationhl = BioLab.Dict.merge(
-        annotation,
-        Dict("y" => sum(yaxis1_domain) / 2, "bordercolor" => "#ffd96a"),
-    )
-
-    annotation_margin = 0.032
+    margin = n * 0.008
 
     BioLab.Plot.plot(
         ht,
         [
-            BioLab.Dict.merge(scatter, Dict("y" => ifelse.(sc_ .< 0, sc_, 0), "fillcolor" => cob)),
-            BioLab.Dict.merge(scatter, Dict("y" => ifelse.(0 .< sc_, sc_, 0), "fillcolor" => cor)),
+            BioLab.Dict.merge_recursively(
+                scatter,
+                Dict("name" => "- Score", "y" => ifelse.(sc_ .< 0, sc_, 0), "fillcolor" => cob),
+            ),
+            BioLab.Dict.merge_recursively(
+                scatter,
+                Dict("name" => "+ Score", "y" => ifelse.(0 .< sc_, sc_, 0), "fillcolor" => cor),
+            ),
             Dict(
                 "yaxis" => "y2",
+                "name" => "Set",
                 "y" => zeros(sum(is_)),
                 "x" => view(x, is_),
                 "text" => view(fe_, is_),
@@ -423,12 +423,13 @@ function plot(
                     "size" => 24,
                     "line" => Dict("width" => 1.28, "color" => "#175e54", "opacity" => 0.8),
                 ),
-                "hoverinfo" => "x+text",
+                "hoverinfo" => "x+text+name",
             ),
-            BioLab.Dict.merge(
+            BioLab.Dict.merge_recursively(
                 scatter,
                 Dict(
                     "yaxis" => "y3",
+                    "name" => "Δ Enrichment",
                     "y" => mo_,
                     "line" => Dict("width" => 3.2, "color" => coe1),
                     "fillcolor" => coe2,
@@ -441,11 +442,11 @@ function plot(
                 "text" => "<b>$title_text</b>",
                 "font" => Dict("size" => 32, "family" => "Relaway", "color" => "#2b2028"),
             ),
-            "yaxis" => BioLab.Dict.merge(
+            "yaxis" => BioLab.Dict.merge_recursively(
                 BioLab.Plot.AXIS,
                 Dict("domain" => yaxis1_domain, "title" => Dict("text" => "<b>$nas</b>")),
             ),
-            "yaxis2" => BioLab.Dict.merge(
+            "yaxis2" => BioLab.Dict.merge_recursively(
                 BioLab.Plot.AXIS,
                 Dict(
                     "domain" => yaxis2_domain,
@@ -453,34 +454,41 @@ function plot(
                     "tickvals" => (),
                 ),
             ),
-            "yaxis3" => BioLab.Dict.merge(
+            "yaxis3" => BioLab.Dict.merge_recursively(
                 BioLab.Plot.AXIS,
-                Dict("domain" => yaxis3_domain, "title" => Dict("text" => "<b>Enrichment</b>")),
+                Dict("domain" => yaxis3_domain, "title" => Dict("text" => "<b>Δ Enrichment</b>")),
             ),
-            "xaxis" => BioLab.Dict.merge(
-                BioLab.Dict.merge(BioLab.Plot.AXIS, BioLab.Plot.SPIKE),
+            "xaxis" => BioLab.Dict.merge_recursively(
+                BioLab.Dict.merge_recursively(BioLab.Plot.AXIS, BioLab.Plot.SPIKE),
                 Dict("zeroline" => false, "title" => Dict("text" => "<b>$naf (n=$n)</b>")),
             ),
             "annotations" => (
-                BioLab.Dict.merge(
+                BioLab.Dict.merge_recursively(
                     annotation,
                     Dict(
-                        "y" => 1,
-                        "x" => 0.5,
+                        "yref" => "paper",
+                        "xref" => "paper",
+                        "y" => 1.02,
                         "text" => "Enrichment = <b>$enf</b>",
                         "font" => Dict("size" => 20, "color" => "#224634"),
                         "borderpad" => 12.8,
                         "bordercolor" => "#ffd96a",
                     ),
                 ),
-                BioLab.Dict.merge(
-                    annotationhl,
-                    Dict("x" => annotation_margin, "text" => nah, "font" => Dict("color" => cor)),
-                ),
-                BioLab.Dict.merge(
+                BioLab.Dict.merge_recursively(
                     annotationhl,
                     Dict(
-                        "x" => 1 - annotation_margin,
+                        "x" => 1 - margin,
+                        "xanchor" => "right",
+                        "text" => nah,
+                        "font" => Dict("color" => cor),
+                    ),
+                ),
+                BioLab.Dict.merge_recursively(
+                    annotationhl,
+                    Dict(
+                        "x" => n + margin,
+                        "xanchor" => "left",
                         "text" => nal,
                         "font" => Dict("color" => cob),
                     ),
@@ -553,7 +561,7 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
 
     BioLab.Plot.plot_heat_map(
         joinpath(di, "set_x_$(nacc)_x_enrichment.html"),
-        replace(se_x_sa_x_en, NaN => missing),
+        se_x_sa_x_en,
         se_,
         sa_;
         nar = "Set",

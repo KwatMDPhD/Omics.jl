@@ -77,7 +77,11 @@ end
 
 function _make_heatmap(di_...)
 
-    reduce(BioLab.Dict.merge, di_; init = Dict("type" => "heatmap", "showscale" => false))
+    reduce(
+        BioLab.Dict.merge_recursively,
+        di_;
+        init = Dict("type" => "heatmap", "showscale" => false),
+    )
 
 end
 
@@ -207,18 +211,19 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
             _make_heatmap(
                 Dict(
                     "yaxis" => "y2",
+                    "name" => "Target",
                     "x" => sa_,
                     "z" => [tan_],
                     "text" => [ta_],
                     "zmin" => tai,
                     "zmax" => taa,
                     "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.pick_color_scheme(tan_)),
-                    "hoverinfo" => "x+z+text",
+                    "hoverinfo" => "x+z+text+name",
                 ),
             ),
             _make_heatmap(
                 Dict(
-                    "yaxis" => "y",
+                    "name" => "Feature",
                     "y" => fep_,
                     "x" => sa_,
                     "z" => collect(eachrow(fe_x_sa_x_nun)),
@@ -227,11 +232,10 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
                     "zmax" => fea,
                     "colorscale" =>
                         BioLab.Plot.fractionate(BioLab.Plot.pick_color_scheme(fe_x_sa_x_nun)),
-                    "hoverinfo" => "x+y+z+text",
                 ),
             ),
         ],
-        BioLab.Dict.merge(
+        BioLab.Dict.merge_recursively(
             Dict(
                 "margin" => Dict("l" => 220, "r" => 220),
                 "height" => height,
@@ -401,7 +405,6 @@ function make(
 
 end
 
-# TODO: Test.
 function make(di, tst, tsf, nas, pe_; ke_ar...)
 
     BioLab.Path.error_missing(di)
@@ -454,7 +457,6 @@ function make(di, tst, tsf, nas, pe_; ke_ar...)
 
 end
 
-# TODO: Test.
 function compare(di, na1, na2, ts1, ts2; title_text = "")
 
     BioLab.Path.error_missing(di)

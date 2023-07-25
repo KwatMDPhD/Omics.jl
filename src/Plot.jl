@@ -87,7 +87,7 @@ function pick_color_scheme(::AbstractArray{Float64})
 
 end
 
-function pick_color_scheme(it_)
+function pick_color_scheme(it_::AbstractArray{Int})
 
     n = length(unique(it_))
 
@@ -133,7 +133,7 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
 
     laj = json(layout)
 
-    coj = json(BioLab.Dict.merge(Dict("displaylogo" => false), config))
+    coj = json(BioLab.Dict.merge_recursively(Dict("displaylogo" => false), config))
 
     BioLab.HTML.make(
         ht,
@@ -165,21 +165,21 @@ end
 
 function _set_color(y_)
 
-    color(eachindex(y_))
+    color(collect(eachindex(y_)))
 
 end
 
 const AXIS = Dict("automargin" => true, "showgrid" => false)
 
-#const SPIKE = Dict(
-#    "showspikes" => true,
-#    "spikesnap" => "cursor",
-#    "spikemode" => "across",
-#    "spikedash" => "solid",
-#    "spikethickness" => 1,
-#    "spikecolor" => "#561649",
-#)
-#
+const SPIKE = Dict(
+    "showspikes" => true,
+    "spikesnap" => "cursor",
+    "spikemode" => "across",
+    "spikedash" => "solid",
+    "spikethickness" => 1,
+    "spikecolor" => "#561649",
+)
+
 function plot_scatter(
     ht,
     y_,
@@ -204,7 +204,7 @@ function plot_scatter(
                 "marker" => Dict("color" => marker_color_[id]),
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
+        BioLab.Dict.merge_recursively(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
         ke_ar...,
     )
 
@@ -231,7 +231,7 @@ function plot_bar(
                 "marker" => Dict("color" => marker_color_[id]),
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
+        BioLab.Dict.merge_recursively(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
         ke_ar...,
     )
 
@@ -272,13 +272,13 @@ function plot_histogram(
 
     end
 
-    layout = BioLab.Dict.merge(
+    layout = BioLab.Dict.merge_recursively(
         Dict(
-            "yaxis" => BioLab.Dict.merge(
+            "yaxis" => BioLab.Dict.merge_recursively(
                 AXIS,
                 Dict("domain" => (0, fr), "zeroline" => false, "tickvals" => ()),
             ),
-            "yaxis2" => BioLab.Dict.merge(
+            "yaxis2" => BioLab.Dict.merge_recursively(
                 AXIS,
                 Dict("domain" => (fr, 1), "title" => Dict("text" => yaxis2_title_text)),
             ),
@@ -303,7 +303,7 @@ function plot_histogram(
 
         push!(
             data,
-            BioLab.Dict.merge(
+            BioLab.Dict.merge_recursively(
                 le,
                 Dict(
                     "yaxis" => "y2",
@@ -318,7 +318,7 @@ function plot_histogram(
 
             push!(
                 data,
-                BioLab.Dict.merge(
+                BioLab.Dict.merge_recursively(
                     le,
                     Dict(
                         "showlegend" => false,
@@ -326,7 +326,7 @@ function plot_histogram(
                         "text" => text_[id],
                         "mode" => "markers",
                         "marker" => Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
-                        "hoverinfo" => "x+text",
+                        "hoverinfo" => "x+text+name",
                     ),
                 ),
             )
@@ -372,11 +372,14 @@ function plot_heat_map(
 
     domain1 = (0, 0.95)
 
-    axis2 = BioLab.Dict.merge(AXIS, Dict("domain" => (domain1[2] + 0.01, 1), "tickvals" => ()))
+    axis2 = BioLab.Dict.merge_recursively(
+        AXIS,
+        Dict("domain" => (domain1[2] + 0.01, 1), "tickvals" => ()),
+    )
 
-    layout = BioLab.Dict.merge(
+    layout = BioLab.Dict.merge_recursively(
         Dict(
-            "yaxis" => BioLab.Dict.merge(
+            "yaxis" => BioLab.Dict.merge_recursively(
                 AXIS,
                 Dict(
                     "domain" => domain1,
@@ -384,11 +387,11 @@ function plot_heat_map(
                     "title" => Dict("text" => "$nar (n=$n_ro)"),
                 ),
             ),
-            "xaxis" => BioLab.Dict.merge(
+            "xaxis" => BioLab.Dict.merge_recursively(
                 AXIS,
                 Dict("domain" => domain1, "title" => Dict("text" => "$nac (n=$n_co)")),
             ),
-            "yaxis2" => BioLab.Dict.merge(axis2, Dict("autorange" => "reversed")),
+            "yaxis2" => BioLab.Dict.merge_recursively(axis2, Dict("autorange" => "reversed")),
             "xaxis2" => axis2,
         ),
         layout,
@@ -430,11 +433,11 @@ function plot_heat_map(
         data,
         Dict(
             "type" => "heatmap",
+            "name" => "Data",
             "z" => collect(eachrow(z)),
             "y" => y,
             "x" => x,
             "text" => collect(eachrow(text)),
-            "hoverinfo" => "y+x+z+text",
             "colorscale" => colorscale,
             "colorbar" => _make_colorbar(colorbarx, z),
         ),
@@ -445,10 +448,11 @@ function plot_heat_map(
         push!(
             data,
             Dict(
-                "type" => "heatmap",
                 "xaxis" => "x2",
+                "type" => "heatmap",
+                "name" => "Row Group",
                 "z" => [[grr] for grr in grr_],
-                "hoverinfo" => "y+z",
+                "hoverinfo" => "y+z+name",
                 "colorscale" => map_fraction_to_color(pick_color_scheme(grr_)),
                 "colorbar" => _make_colorbar(colorbarx += 0.06, grr_),
             ),
@@ -461,10 +465,11 @@ function plot_heat_map(
         push!(
             data,
             Dict(
-                "type" => "heatmap",
                 "yaxis" => "y2",
+                "type" => "heatmap",
+                "name" => "Column Group",
                 "z" => [grc_],
-                "hoverinfo" => "x+z",
+                "hoverinfo" => "x+z+name",
                 "colorscale" => map_fraction_to_color(pick_color_scheme(grc_)),
                 "colorbar" => _make_colorbar(colorbarx += 0.06, grc_),
             ),
@@ -511,7 +516,7 @@ function plot_radar(
                 "fillcolor" => fillcolor_[id],
             ) for id in eachindex(theta_)
         ],
-        BioLab.Dict.merge(
+        BioLab.Dict.merge_recursively(
             Dict(
                 "polar" => Dict(
                     "angularaxis" => Dict(

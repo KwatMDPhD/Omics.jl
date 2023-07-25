@@ -65,7 +65,7 @@ function plot(
 
     stj = json(st_)
 
-    laj = json(BioLab.Dict.merge(Dict("animate" => false), la))
+    laj = json(BioLab.Dict.merge_recursively(Dict("animate" => false), la))
 
     BioLab.HTML.make(
         ht,

@@ -53,7 +53,7 @@ function write(
 
     fa_ = string.("$naf ", 1:size(w_[1], 2))
 
-    axis = BioLab.Dict.merge(BioLab.Plot.AXIS, Dict("dtick" => 1))
+    axis = BioLab.Dict.merge_recursively(BioLab.Plot.AXIS, Dict("dtick" => 1))
 
     for (id, (w, nar, ro_)) in enumerate(zip(w_, nar_, ro___))
 
@@ -67,7 +67,7 @@ function write(
 
             w = copy(w)
 
-            foreach(BioLab.NumberArray.normalize_with_0!, eachrow(w))
+            foreach(BioLab.Number.normalize_with_0!, eachrow(w))
 
         end
 
@@ -100,7 +100,7 @@ function write(
 
             h = copy(h)
 
-            foreach(BioLab.NumberArray.normalize_with_0!, eachcol(h))
+            foreach(BioLab.Number.normalize_with_0!, eachcol(h))
 
         end
 
