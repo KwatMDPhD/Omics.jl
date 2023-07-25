@@ -265,7 +265,7 @@ re = [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
 @test he_ == re
 
 # 477.349 ns (5 allocations: 672 bytes)
-# @btime Kumo.heat($fe_sc);
+#@btime Kumo.heat($fe_sc);
 
 # ---- #
 
@@ -278,7 +278,7 @@ re = hcat(re, re * 10)
 @test no_x_sa_x_he == re
 
 # 1.413 μs (15 allocations: 2.09 KiB)
-# @btime Kumo.heat($no_, $fe_x_sa_x_sc);
+#@btime Kumo.heat($no_, $fe_x_sa_x_sc);
 
 # ---- #
 
@@ -287,7 +287,7 @@ so_x_ta_x_ed = Kumo.make_edge_matrix()
 @test sum(so_x_ta_x_ed) == length(Kumo.ED_)
 
 # 1.200 μs (15 allocations: 3.73 KiB)
-# @btime Kumo.make_edge_matrix()
+#@btime Kumo.make_edge_matrix();
 
 # ---- #
 
@@ -296,7 +296,7 @@ he___ = Kumo.anneal(he_)
 @test all(length(he_) == 12 for he_ in he___)
 
 # 43.541 μs (939 allocations: 92.45 KiB)
-# @btime Kumo.anneal($he_);
+#@btime Kumo.anneal($he_);
 
 # ---- #
 
@@ -305,7 +305,7 @@ no_x_sa_x_an = Kumo.anneal(no_x_sa_x_he)
 @test size(no_x_sa_x_an) == size(no_x_sa_x_he)
 
 # 92.958 μs (2006 allocations: 195.16 KiB)
-# @btime Kumo.anneal($no_x_sa_x_he);
+#@btime Kumo.anneal($no_x_sa_x_he);
 
 # ---- #
 

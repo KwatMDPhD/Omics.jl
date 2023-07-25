@@ -37,9 +37,7 @@ n_ba = 5158
 
 # 6.025 s (49138936 allocations: 5.27 GiB)
 # 6.658 s (49140059 allocations: 5.27 GiB) with @showprogress
-#Logging.disable_logging(Warn);
 #@btime BioLab.SingleCell.read($sa_di);
-#Logging.disable_logging(Debug);
 
 # ---- #
 

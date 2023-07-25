@@ -35,30 +35,30 @@ const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MY
 # ---- #
 
 # 737.667 μs (2 allocations: 19.67 KiB)
-@btime [fe in $FE1_ for fe in $FE_];
+#@btime [fe in $FE1_ for fe in $FE_];
 
 # 739.250 μs (3 allocations: 6.84 KiB)
-@btime in($FE1_).($FE_);
+#@btime in($FE1_).($FE_);
 
 # ---- #
 
 const FE1S = Set(FE1_)
 
 # 440.864 ns (7 allocations: 1.13 KiB)
-@btime Set($FE1_);
+#@btime Set($FE1_);
 
 # 459.542 μs (2 allocations: 19.67 KiB)
-@btime [fe in $FE1S for fe in $FE_];
+#@btime [fe in $FE1S for fe in $FE_];
 
 # 464.167 μs (3 allocations: 6.84 KiB)
-@btime in($FE1S).($FE_);
+#@btime in($FE1S).($FE_);
 
 # ---- #
 
 const FE_ID = Dict(fe => id for (id, fe) in enumerate(FE_))
 
 # 508.250 μs (7 allocations: 800.92 KiB)
-@btime Dict(fe => id for (id, fe) in enumerate($FE_));
+#@btime Dict(fe => id for (id, fe) in enumerate($FE_));
 
 # 384.698 ns (2 allocations: 2.66 KiB)
-@btime BioLab.Collection.is_in($FE_ID, $FE1_);
+#@btime BioLab.Collection.is_in($FE_ID, $FE1_);

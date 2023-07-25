@@ -42,7 +42,7 @@ const DA1 = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 )
 
 # 1.104 μs (22 allocations: 1.89 KiB)
-@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
+#@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
 
@@ -53,4 +53,4 @@ BioLab.DataFrame.separate(DA1)[2][1] = ":("
 @test DA1[1, 1] == "Row 1"
 
 # 2.269 μs (28 allocations: 2.08 KiB)
-@btime BioLab.DataFrame.separate($DA1);
+#@btime BioLab.DataFrame.separate($DA1);

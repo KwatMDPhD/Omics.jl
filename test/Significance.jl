@@ -30,7 +30,7 @@ for (po, re) in zip(
     # 537.698 ns (0 allocations: 0 bytes)
     # 3.974 μs (0 allocations: 0 bytes)
     # 40.583 μs (0 allocations: 0 bytes)
-    @btime BioLab.Significance.get_margin_of_error($nu_)
+    #@btime BioLab.Significance.get_margin_of_error($nu_)
 
 end
 
@@ -60,7 +60,7 @@ for (nu, re) in zip(NU_, RE_)
     # 8.291 ns (0 allocations: 0 bytes)
     # 6.125 ns (0 allocations: 0 bytes)
     # 6.125 ns (0 allocations: 0 bytes)
-    @btime BioLab.Significance.get_p_value_for_less($nu, $RA_)
+    #@btime BioLab.Significance.get_p_value_for_less($nu, $RA_)
 
 end
 
@@ -74,7 +74,7 @@ for (nu, re) in zip(NU_, reverse(RE_))
     # 6.125 ns (0 allocations: 0 bytes)
     # 6.125 ns (0 allocations: 0 bytes)
     # 6.125 ns (0 allocations: 0 bytes)
-    @btime BioLab.Significance.get_p_value_for_more($nu, $RA_)
+    #@btime BioLab.Significance.get_p_value_for_more($nu, $RA_)
 
 end
 
@@ -95,7 +95,7 @@ for (fu, re) in (
 
     # 319.013 ns (10 allocations: 864 bytes)
     # 324.382 ns (10 allocations: 864 bytes)
-    @btime BioLab.Significance.get_p_value_adjust($fu, $NU2_, $RA2_)
+    #@btime BioLab.Significance.get_p_value_adjust($fu, $NU2_, $RA2_)
 
 end
 
@@ -105,4 +105,4 @@ end
       ([0.1, 0.2, 0.2, 0.1], [0.4, 0.4, 0.4, 0.4])
 
 # 720.055 ns (22 allocations: 1.88 KiB)
-@btime BioLab.Significance.get_p_value_adjust($NU2_, $RA2_);
+#@btime BioLab.Significance.get_p_value_adjust($NU2_, $RA2_);

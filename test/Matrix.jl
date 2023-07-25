@@ -1,7 +1,5 @@
 using Test: @test
 
-using Logging: Debug, Info, disable_logging
-
 using BioLab
 
 # ---- #
@@ -103,7 +101,7 @@ for (an___, re) in (
 
             @test isequal(BioLab.Matrix.make(an___), re)
 
-            @btime BioLab.Matrix.make($an___)
+            #@btime BioLab.Matrix.make($an___)
 
         end
 
@@ -116,7 +114,7 @@ end
 const MA = [
     1 2
     10 20
-     100 200
+    100 200
 ]
 
 for (ro_, ro2_, ma2) in (
@@ -140,13 +138,10 @@ for (ro_, ro2_, ma2) in (
 
         @test BioLab.Matrix.collapse(mean, Float64, ro_, MA) == (ro2_, ma2)
 
-        disable_logging(Info)
 
         # 734.756 ns (20 allocations: 1.31 KiB)
         # 641.104 ns (16 allocations: 1.11 KiB)
-        @btime BioLab.Matrix.collapse(mean, Float64, $ro_, $MA)
-
-        disable_logging(Debug)
+        #@btime BioLab.Matrix.collapse(mean, Float64, $ro_, $MA)
 
     end
 

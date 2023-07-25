@@ -52,7 +52,7 @@ for (ex, re) in (
     # 5.541 ns (0 allocations: 0 bytes)
     # 12.470 ns (0 allocations: 0 bytes)
     # 12.470 ns (0 allocations: 0 bytes)
-    @btime BioLab.FeatureSetEnrichment._index_absolute_exponentiate($SSC_, $ID, $ex)
+    #@btime BioLab.FeatureSetEnrichment._index_absolute_exponentiate($SSC_, $ID, $ex)
 
 end
 
@@ -88,9 +88,9 @@ for (ex, re) in (
     # 57.206 ns (0 allocations: 0 bytes)
     # 54.442 ns (0 allocations: 0 bytes)
 
-    @btime BioLab.FeatureSetEnrichment._sum_01($SSC_, $ex, $SIS_)
+    #@btime BioLab.FeatureSetEnrichment._sum_01($SSC_, $ex, $SIS_)
 
-    @btime BioLab.FeatureSetEnrichment._sum_01($SSC_, $ex, $(convert(Vector{Bool}, SIS_)))
+    #@btime BioLab.FeatureSetEnrichment._sum_01($SSC_, $ex, $(convert(Vector{Bool}, SIS_)))
 
 end
 
@@ -120,9 +120,9 @@ for (ex, re) in (
     # 97.281 ns (0 allocations: 0 bytes)
     # 96.286 ns (0 allocations: 0 bytes)
 
-    @btime BioLab.FeatureSetEnrichment._sum_all1($SSC_, $ex, $SIS_)
+    #@btime BioLab.FeatureSetEnrichment._sum_all1($SSC_, $ex, $SIS_)
 
-    @btime BioLab.FeatureSetEnrichment._sum_all1($SSC_, $ex, $(convert(Vector{Bool}, SIS_)))
+    #@btime BioLab.FeatureSetEnrichment._sum_all1($SSC_, $ex, $(convert(Vector{Bool}, SIS_)))
 
 end
 
@@ -181,15 +181,15 @@ for (al, re) in zip(AL_, (-0.5, 0.0, 0.0, 0.0, 0.0))
     # 235.920 ns (0 allocations: 0 bytes)
     # 231.971 ns (0 allocations: 0 bytes)
 
-    @btime BioLab.FeatureSetEnrichment._enrich!($al, $CSC_, $EX, $CIS_, nothing)
+    #@btime BioLab.FeatureSetEnrichment._enrich!($al, $CSC_, $EX, $CIS_, nothing)
 
-    @btime BioLab.FeatureSetEnrichment._enrich!(
-        $al,
-        $CSC_,
-        $EX,
-        $(convert(Vector{Bool}, CIS_)),
-        nothing,
-    )
+    #@btime BioLab.FeatureSetEnrichment._enrich!(
+    #    $al,
+    #    $CSC_,
+    #    $EX,
+    #    $(convert(Vector{Bool}, CIS_)),
+    #    nothing,
+    #)
 
 end
 
@@ -263,11 +263,11 @@ for (al, re) in zip(
     # 18.328 ms (108 allocations: 934.22 KiB)
     # 55.922 ms (358 allocations: 4.59 MiB)
 
-    @btime BioLab.FeatureSetEnrichment._enrich!($al, $MSC_, $EX, $MIS_, nothing)
+    #@btime BioLab.FeatureSetEnrichment._enrich!($al, $MSC_, $EX, $MIS_, nothing)
 
-    @btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSC_, $MFE1___)
+    #@btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSC_, $MFE1___)
 
-    @btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSA_, $FE_X_SA_X_MSC, $MFE1___)
+    #@btime BioLab.FeatureSetEnrichment.enrich($al, $MFE_, $MSA_, $FE_X_SA_X_MSC, $MFE1___)
 
 end
 
