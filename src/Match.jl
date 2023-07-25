@@ -12,6 +12,8 @@ using StatsBase: sample
 
 using BioLab
 
+# TODO: Use target.
+
 function _aim(nu1_, nu2_)
 
     nu1_, nu2_
@@ -38,9 +40,9 @@ function target(fu, nu1_, ma2)
 
 end
 
-function _normalize!(fl_::AbstractVector{Float64}, st)
+function _align!(fl_::AbstractVector{Float64}, st)
 
-    BioLab.NumberArray.normalize_with_0!(fl_)
+    BioLab.Number.normalize_with_0!(fl_)
 
     clamp!(fl_, -st, st)
 
@@ -48,7 +50,7 @@ function _normalize!(fl_::AbstractVector{Float64}, st)
 
 end
 
-function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
+function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
     for fl_ in eachrow(fe_x_sa_x_fl)
 
@@ -58,7 +60,7 @@ function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
         else
 
-            _normalize!(fl_, st)
+            _align!(fl_, st)
 
         end
 
@@ -68,27 +70,19 @@ function _normalize!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
 end
 
-function _normalize!(it, ::Any)
+function _align!(it, ::Any)
 
     minimum(it), maximum(it)
 
 end
 
-function _make_heatmap(di_...)
+const _HEATMAP = Dict("type" => "heatmap", "showscale" => false)
 
-    reduce(
-        BioLab.Dict.merge_recursively,
-        di_;
-        init = Dict("type" => "heatmap", "showscale" => false),
-    )
+const _ANNOTATION =
+    Dict("yref" => "paper", "xref" => "paper", "showarrow" => false, "yanchor" => "middle")
 
-end
-
-function _make_annotationl(di_...)
-
-    BioLab.Plot.make_annotation(Dict("x" => -0.024, "xanchor" => "right"), di_...)
-
-end
+const _ANNOTATIONL =
+    BioLab.Dict.merge_recursively(_ANNOTATION, Dict("x" => -0.024, "xanchor" => "right"))
 
 function _get_x(id)
 
@@ -96,7 +90,7 @@ function _get_x(id)
 
 end
 
-function _make_annotations(y, la, th, fe_, n_li, fe_x_st_x_nu)
+function _annotate_feature(y, la, th, fe_, n_li, fe_x_st_x_nu)
 
     annotations = Vector{Dict{String, Any}}()
 
@@ -106,7 +100,8 @@ function _make_annotations(y, la, th, fe_, n_li, fe_x_st_x_nu)
 
             push!(
                 annotations,
-                BioLab.Plot.make_annotation(
+                BioLab.Dict.merge_recursively(
+                    _ANNOTATION,
                     Dict(
                         "y" => y,
                         "x" => _get_x(idx),
@@ -126,16 +121,20 @@ function _make_annotations(y, la, th, fe_, n_li, fe_x_st_x_nu)
 
         push!(
             annotations,
-            _make_annotationl(Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], n_li))),
+            BioLab.Dict.merge_recursively(
+                _ANNOTATIONL,
+                Dict("y" => y, "text" => BioLab.String.limit(fe_[idy], n_li)),
+            ),
         )
 
-        sc, ma, pv, ad = (@sprintf("%.2g", nu) for nu in fe_x_st_x_nu[idy, :])
+        sc, ma, pv, ad = (@sprintf("%.2g", nu) for nu in view(fe_x_st_x_nu, idy, :))
 
         for (idx, text) in enumerate(("$sc ($ma)", pv, ad))
 
             push!(
                 annotations,
-                BioLab.Plot.make_annotation(
+                BioLab.Dict.merge_recursively(
+                    _ANNOTATION,
                     Dict("y" => y, "x" => _get_x(idx), "xanchor" => "center", "text" => text),
                 ),
             )
@@ -152,11 +151,11 @@ end
 
 function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
 
-    sa_[id_], ta_[id_], fe_x_sa_x_nu[:, id_]
+    view(sa_, id_), view(ta_, id_), view(fe_x_sa_x_nu, :, id_)
 
 end
 
-function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, layout)
+function _plot(ht, nat, naf, fe_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, layout)
 
     if ta_ isa AbstractVector{Int}
 
@@ -170,7 +169,10 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
 
             idg_ = findall(==(ta), ta_)
 
-            append!(id_, idg_[BioLab.Clustering.hierarchize(fe_x_sa_x_nu[:, idg_], 2; fu).order])
+            append!(
+                id_,
+                idg_[BioLab.Clustering.hierarchize(view(fe_x_sa_x_nu, :, idg_), 2; fu).order],
+            )
 
         end
 
@@ -178,19 +180,19 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
 
     end
 
-    tan_ = copy(ta_)
+    tac_ = copy(ta_)
 
-    tai, taa = _normalize!(tan_, st)
+    tai, taa = _align!(tac_, st)
 
     @info "$nat colors can range from $tai to $taa."
 
-    fe_x_sa_x_nun = copy(fe_x_sa_x_nu)
+    fe_x_sa_x_nuc = copy(fe_x_sa_x_nu)
 
-    fei, fea = _normalize!(fe_x_sa_x_nun, st)
+    fei, fea = _align!(fe_x_sa_x_nuc, st)
 
     @info "$naf colors can range from $fei to $fea."
 
-    n_ro = length(fep_) + 2
+    n_ro = length(fe_) + 2
 
     th = 1 / n_ro
 
@@ -207,30 +209,34 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
     BioLab.Plot.plot(
         ht,
         [
-            _make_heatmap(
+            BioLab.Dict.merge_recursively(
+                _HEATMAP,
                 Dict(
                     "yaxis" => "y2",
                     "name" => "Target",
                     "x" => sa_,
-                    "z" => [tan_],
+                    "z" => [tac_],
                     "text" => [ta_],
                     "zmin" => tai,
                     "zmax" => taa,
-                    "colorscale" => BioLab.Plot.fractionate(BioLab.Plot.pick_color_scheme(tan_)),
+                    "colorscale" =>
+                        BioLab.Plot.map_fraction_to_color(BioLab.Plot.pick_color_scheme(tac_)),
                     "hoverinfo" => "x+z+text+name",
                 ),
             ),
-            _make_heatmap(
+            BioLab.Dict.merge_recursively(
+                _HEATMAP,
                 Dict(
                     "name" => "Feature",
-                    "y" => fep_,
+                    "y" => fe_,
                     "x" => sa_,
-                    "z" => collect(eachrow(fe_x_sa_x_nun)),
+                    "z" => collect(eachrow(fe_x_sa_x_nuc)),
                     "text" => collect(eachrow(fe_x_sa_x_nu)),
                     "zmin" => fei,
                     "zmax" => fea,
-                    "colorscale" =>
-                        BioLab.Plot.fractionate(BioLab.Plot.pick_color_scheme(fe_x_sa_x_nun)),
+                    "colorscale" => BioLab.Plot.map_fraction_to_color(
+                        BioLab.Plot.pick_color_scheme(fe_x_sa_x_nuc),
+                    ),
                 ),
             ),
         ],
@@ -246,10 +252,16 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
                     "autorange" => "reversed",
                     "showticklabels" => false,
                 ),
-                "xaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => "$n_sa $nas"))),
+                "xaxis" => BioLab.Dict.merge_recursively(
+                    BioLab.Plot.AXIS,
+                    Dict("title" => Dict("text" => "$n_sa $nas")),
+                ),
                 "annotations" => vcat(
-                    _make_annotationl(Dict("y" => 1 - th2, "text" => "<b>$natl</b>")),
-                    _make_annotations(1 - th2 * 3, true, th, fep_, n_li, fe_x_st_x_nu),
+                    BioLab.Dict.merge_recursively(
+                        _ANNOTATIONL,
+                        Dict("y" => 1 - th2, "text" => "<b>$natl</b>"),
+                    ),
+                    _annotate_feature(1 - th2 * 3, true, th, fe_, n_li, fe_x_st_x_nu),
                 ),
             ),
             layout,
@@ -258,6 +270,7 @@ function _plot(ht, nat, naf, fep_, nas, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st
 
 end
 
+# TODO...
 function make(
     di,
     fu,
@@ -514,7 +527,7 @@ function compare(di, na1, na2, ts1, ts2; title_text = "")
 
     BioLab.Table.write("$pr.tsv", DataFrame(naf1 => fe1_, "Distance" => di_))
 
-    BioLab.NumberArray.normalize_with_01!(di_)
+    BioLab.Number.normalize_with_01!(di_)
 
     BioLab.Plot.plot_scatter(
         "$pr.html",
@@ -526,8 +539,14 @@ function compare(di, na1, na2, ts1, ts2; title_text = "")
         opacity_ = (di_,),
         layout = Dict(
             "title" => Dict("text" => title_text),
-            "yaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => na2))),
-            "xaxis" => BioLab.Plot.make_axis(Dict("title" => Dict("text" => na1))),
+            "yaxis" => BioLab.Dict.merge_recursively(
+                BioLab.Plot.AXIS,
+                Dict("title" => Dict("text" => na2)),
+            ),
+            "xaxis" => BioLab.Dict.merge_recursively(
+                BioLab.Plot.AXIS,
+                Dict("title" => Dict("text" => na1)),
+            ),
         ),
     )
 
