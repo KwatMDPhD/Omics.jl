@@ -22,17 +22,13 @@ end
 
 function range(ar::AbstractArray{Int}, ::Int)
 
-    minimum(ar):maximum(ar)
+    Base.range(minimum(ar), maximum(ar))
 
 end
 
 function range(ar, n)
 
-    mi = minimum(ar)
-
-    ma = maximum(ar)
-
-    mi:((ma - mi) / n):ma
+    Base.range(minimum(ar), maximum(ar), n)
 
 end
 
