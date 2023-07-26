@@ -14,8 +14,7 @@ end
 
 function is(fl::Float64)
 
-    # TODO: Learn about -0.0.
-    !isfinite(fl) || isequal(fl, -0.0)
+    !isfinite(fl) #|| isequal(fl, -0.0)
 
 end
 

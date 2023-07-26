@@ -40,7 +40,7 @@ const SP_ = (
 
 # ---- #
 
-for an in (nothing, missing, NaN, -Inf, Inf, -0.0, "", "α", "π", SP_..., SP_ .^ 2...)
+for an in (nothing, missing, NaN, -Inf, Inf, "", "α", "π", SP_..., SP_ .^ 2...)
 
     @test BioLab.Bad.is(an)
 
@@ -49,6 +49,7 @@ end
 # ---- #
 
 for an in (
+    -0.0,
     0.0,
     1.0,
     1,
