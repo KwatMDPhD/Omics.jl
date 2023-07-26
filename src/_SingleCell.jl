@@ -27,12 +27,18 @@ function read(sa_di)
         @info "Reading $sa"
 
         fes_ =
-            BioLab.Table.read(joinpath(di, "features.tsv.gz"); header = false, select = [2])[!, 1]
+            BioLab.DataFrame.read(joinpath(di, "features.tsv.gz"); header = false, select = [2])[
+                !,
+                1,
+            ]
 
         bas_ =
-            BioLab.Table.read(joinpath(di, "barcodes.tsv.gz"); header = false, select = [1])[!, 1]
+            BioLab.DataFrame.read(joinpath(di, "barcodes.tsv.gz"); header = false, select = [1])[
+                !,
+                1,
+            ]
 
-        da = BioLab.Table.read(joinpath(di, "matrix.mtx.gz"); header = 3, delim = " ")
+        da = BioLab.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3, delim = " ")
 
         n_fes = length(fes_)
 
@@ -102,7 +108,7 @@ function read(sa_di)
 
         @warn "Features have duplicates.\n$st."
 
-        fe_, fe_x_ba_x_co = BioLab.NumberMatrix.collapse(maximum, Int, fe_, fe_x_ba_x_co)
+        fe_, fe_x_ba_x_co = BioLab.Matrix.collapse(maximum, Int, fe_, fe_x_ba_x_co)
 
     end
 

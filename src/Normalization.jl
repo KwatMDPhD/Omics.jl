@@ -1,28 +1,6 @@
-module Number
+module Normalization
 
 using StatsBase: competerank, denserank, mean, std, tiedrank
-
-function rank_in_fraction(ra)
-
-    fr = 0
-
-    n = fld(ra, 9)
-
-    for id in 1:n
-
-        fr += 9 * 10.0^-id
-
-    end
-
-    id = n + 1
-
-    fr += (ra % 9) * 10.0^-id
-
-    round(fr; digits = id)
-
-end
-
-# TODO: Relocate to NumberArray.jl.
 
 function normalize_with_01!(ar)
 

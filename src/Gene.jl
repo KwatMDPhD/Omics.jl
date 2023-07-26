@@ -7,7 +7,7 @@ function map_ensembl()
     en_na = Dict{String, String}()
 
     ma = Matrix(
-        BioLab.Table.read(
+        BioLab.DataFrame.read(
             joinpath(BioLab._DA, "Gene", "ensembl.tsv.gz");
             select = [
                 "Transcript stable ID version",
@@ -58,7 +58,7 @@ function map_uniprot()
 
     pr_di = Dict{String, Dict{String, Any}}()
 
-    da = BioLab.Table.read(joinpath(BioLab._DA, "Gene", "uniprot.tsv.gz"))
+    da = BioLab.DataFrame.read(joinpath(BioLab._DA, "Gene", "uniprot.tsv.gz"))
 
     co_ = names(da)
 

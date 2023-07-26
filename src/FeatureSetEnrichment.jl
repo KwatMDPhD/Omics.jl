@@ -501,7 +501,7 @@ function enrich(al, fe_, sc_, fe1___; n = 1, ex = 1)
 
     for (id, fe1_) in enumerate(fe1___)
 
-        is_ = BioLab.Collection.is_in(fe_id, fe1_)
+        is_ = BioLab.Dict.is_in(fe_id, fe1_)
 
         if sum(is_) < n
 
@@ -545,7 +545,7 @@ end
 
 function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex = 1)
 
-    BioLab.Path.error_missing(di)
+    BioLab.Error.error_missing(di)
 
     als = _make_string(al)
 
@@ -566,7 +566,7 @@ function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex
     noe = .!isnan.(se_x_sa_x_en)
 
     for id_ in
-        view(view(CartesianIndices(se_x_sa_x_en), noe), sortperm(view(se_x_sa_x_en, noe)))[BioLab.Vector.get_extreme(
+        view(view(CartesianIndices(se_x_sa_x_en), noe), sortperm(view(se_x_sa_x_en, noe)))[BioLab.Rank.get_extreme(
         sum(noe),
         8,
     )]

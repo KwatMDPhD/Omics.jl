@@ -1,4 +1,4 @@
-module Network
+module Graph
 
 using JSON: json
 

@@ -18,8 +18,17 @@ test_ambiguities(BioLab)
 
 @test basename(BioLab._DA) == "data"
 
-@test readdir(BioLab._DA) ==
-      ["CLS", "Dict", "FeatureSetEnrichment", "GCT", "GMT", "Gene", "Plot", "SingleCell", "Table"]
+@test readdir(BioLab._DA) == [
+    "CLS",
+    "DataFrame",
+    "Dict",
+    "FeatureSetEnrichment",
+    "GCT",
+    "GMT",
+    "Gene",
+    "Plot",
+    "SingleCell",
+]
 
 # ---- #
 
@@ -31,6 +40,7 @@ test_ambiguities(BioLab)
 
 # ---- #
 
+# TODO: Use BioLab.Path.read.
 function read_filter(di)
 
     filter!(!startswith('_'), readdir(di))
@@ -43,6 +53,8 @@ const SR = joinpath(dirname(@__DIR__), "src")
 
 const MO_ = read_filter(SR)
 
+const TE_ = read_filter(@__DIR__)
+
 # ---- #
 
 for jl in MO_
@@ -50,14 +62,6 @@ for jl in MO_
     @test chop(jl; tail = 3) == chop(readline(joinpath(SR, jl)); head = 7, tail = 0)
 
 end
-
-# ---- #
-
-@test BioLab.@is_error error("This is an error message.")
-
-# ---- #
-
-const TE_ = read_filter(@__DIR__)
 
 # ---- #
 

@@ -334,13 +334,13 @@ function plot(
 
         for (no, he) in zip(no_, he_)
 
-            no["data"]["weight"] = BioLab.Number.format(he)
+            no["data"]["weight"] = BioLab.String.format(he)
 
         end
 
         co = copy(he_)
 
-        BioLab.NumberArray.normalize_with_01!(co)
+        BioLab.Normalization.normalize_with_01!(co)
 
         append!(
             st_,
@@ -570,7 +570,7 @@ function _get_norm(he_, pr)
 
     no = norm(he_)
 
-    BioLab.check_print(pr, "🧮 $(BioLab.Number.format(no)).")
+    BioLab.check_print(pr, "🧮 $(BioLab.String.format(no)).")
 
     if pr
 
@@ -578,7 +578,7 @@ function _get_norm(he_, pr)
 
         for (he, no) in zip(BioLab.Vector.sort_like((he_, NO_); ic = false)...)
 
-            BioLab.check_print(!iszero(he), "  $(rpad(no, n))$(BioLab.Number.format(he)).")
+            BioLab.check_print(!iszero(he), "  $(rpad(no, n))$(BioLab.String.format(he)).")
 
         end
 
@@ -665,7 +665,7 @@ function anneal(
 
         ch2 = no2 - no
 
-        BioLab.check_print(pr, "  🐣 $(BioLab.Number.format(ch2)).")
+        BioLab.check_print(pr, "  🐣 $(BioLab.String.format(ch2)).")
 
         if abs(ch2) < ch
 

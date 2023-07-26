@@ -1,21 +1,5 @@
 module Path
 
-function error_missing(pa)
-
-    if !ispath(pa)
-
-        error("$pa is missing.")
-
-    end
-
-end
-
-function clean(pa)
-
-    replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
-
-end
-
 function wait(pa; sl = 1, li = 8)
 
     se = 0
@@ -29,6 +13,12 @@ function wait(pa; sl = 1, li = 8)
         @info "Waiting for $pa ($se/$li)"
 
     end
+
+end
+
+function clean(pa)
+
+    replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
 
 end
 

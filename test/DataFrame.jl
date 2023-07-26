@@ -6,6 +6,14 @@ using BioLab
 
 # ---- #
 
+const DA = joinpath(BioLab._DA, "DataFrame")
+
+# ---- #
+
+@test readdir(DA) == ["12859_2019_2886_MOESM2_ESM.xlsx", "enst_gene.tsv.gz", "titanic.tsv"]
+
+# ---- #
+
 function make_axis(pr, n)
 
     string.(pr, 1:n)
@@ -24,7 +32,7 @@ const RO_ = make_axis("Row ", N_RO)
 
 const CO_ = make_axis("Column ", N_CO)
 
-const MA = Matrix(reshape(1:(N_RO * N_CO), (N_RO, N_CO)))
+const MA = BioLab.Simulation.make_matrix_1n(N_RO, N_CO)
 
 # ---- #
 
@@ -54,3 +62,39 @@ BioLab.DataFrame.separate(DA1)[2][1] = ":("
 
 # 2.269 μs (28 allocations: 2.08 KiB)
 #@btime BioLab.DataFrame.separate($DA1);
+
+# ---- #
+
+for (na, re) in (("titanic.tsv", (1309, 15)), ("enst_gene.tsv.gz", (256183, 2)))
+
+    @test size(BioLab.DataFrame.read(joinpath(DA, na))) == re
+
+end
+
+# ---- #
+
+@test size(
+    BioLab.DataFrame.read(
+        joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx");
+        xl = "HumanSpecific Genes",
+    ),
+) == (873, 8)
+
+# ---- #
+
+const CO1 = 1:4
+
+const CO2 = 1.0:4
+
+const DT = DataFrame(
+    "Column 1" => CO1,
+    "Column 2" => CO2,
+    "Column 3" => string.(CO1),
+    "Column 4" => string.(CO2),
+)
+
+const TS = joinpath(BioLab.TE, "write.tsv")
+
+BioLab.DataFrame.write(TS, DT)
+
+@test eltype.(eachcol(BioLab.DataFrame.read(TS))) == [Int, Float64, Int, Float64]

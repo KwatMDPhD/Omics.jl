@@ -29,8 +29,8 @@ for (nu1_, nu2_) in AR_
 
     for fu in (
         BioLab.Information.get_kullback_leibler_divergence,
-        BioLab.Information.get_thermodynamic_breadth,
         BioLab.Information.get_thermodynamic_depth,
+        BioLab.Information.get_thermodynamic_breadth,
     )
 
         BioLab.Plot.plot_scatter(
@@ -49,8 +49,8 @@ end
 for (nu1_, nu2_) in AR_
 
     for fu in (
-        BioLab.Information.get_symmetric_kullback_leibler_divergence,
         BioLab.Information.get_antisymmetric_kullback_leibler_divergence,
+        BioLab.Information.get_symmetric_kullback_leibler_divergence,
     )
 
         nu3_ = (nu1_ + nu2_) / 2

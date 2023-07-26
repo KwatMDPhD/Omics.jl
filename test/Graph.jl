@@ -56,7 +56,7 @@ const NAME1 = "preset"
 
 const EX1 = "png"
 
-BioLab.Network.plot(joinpath(BioLab.TE, "$NAME1.html"), EL_; la = Dict("name" => NAME1), ex = EX1)
+BioLab.Graph.plot(joinpath(BioLab.TE, "$NAME1.html"), EL_; la = Dict("name" => NAME1), ex = EX1)
 
 const FI1 = joinpath(DW, "$NAME1.$EX1")
 
@@ -66,7 +66,7 @@ const NAME2 = "cose"
 
 const EX2 = "json"
 
-BioLab.Network.plot(joinpath(BioLab.TE, "$NAME2.html"), EL_; la = Dict("name" => NAME2), ex = EX2)
+BioLab.Graph.plot(joinpath(BioLab.TE, "$NAME2.html"), EL_; la = Dict("name" => NAME2), ex = EX2)
 
 const FI2 = joinpath(DW, "$NAME2.$EX2")
 
@@ -84,7 +84,7 @@ end
 
 const EL2_ = read_element(FI2)
 
-BioLab.Network.position!(EL_, EL2_)
+BioLab.Graph.position!(EL_, EL2_)
 
 # ---- #
 
@@ -92,12 +92,7 @@ const NAME3 = "cose_preset"
 
 const EX3 = "json"
 
-BioLab.Network.plot(
-    joinpath(BioLab.TE, "$NAME3.html"),
-    EL_;
-    la = Dict("name" => "preset"),
-    ex = EX3,
-)
+BioLab.Graph.plot(joinpath(BioLab.TE, "$NAME3.html"), EL_; la = Dict("name" => "preset"), ex = EX3)
 
 const FI3 = joinpath(DW, "$NAME3.$EX3")
 

@@ -21,13 +21,13 @@ js = include_ito(it)
 
 # ---- #
 
-_, io_, sa_, io_x_sa_x_an = BioLab.DataFrame.separate(BioLab.Table.read(tsi))
+_, io_, sa_, io_x_sa_x_an = BioLab.DataFrame.separate(BioLab.DataFrame.read(tsi))
 
 ta_ = io_x_sa_x_an[findfirst(io == iop for io in io_), :]
 
 # ---- #
 
-_naf, fe_, sa2_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
+_naf, fe_, sa2_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.DataFrame.read(tsf))
 
 look(vec(fe_x_sa_x_nu))
 
@@ -49,7 +49,7 @@ end
 
 # TODO: Understand the effect of normalization.
 
-BioLab.Matrix.apply_by_row!(BioLab.NumberArray.normalize_with_0!, fe_x_sa_x_nu)
+BioLab.Matrix.apply_by_row!(BioLab.Normalization.normalize_with_0!, fe_x_sa_x_nu)
 
 fe_x_sa_x_nu .-= minimum(fe_x_sa_x_nu) - 2.0
 
@@ -183,7 +183,7 @@ BioLab.Plot.plot_histogram(
     marker_color_ = (COS,),
     layout = Dict(
         "title" =>
-            Dict("text" => "$(BioLab.Number.format(sc_[id]))% Tight Grouping Using $n Shufflings"),
+            Dict("text" => "$(BioLab.String.format(sc_[id]))% Tight Grouping Using $n Shufflings"),
     ),
     ht = joinpath(ou, "shuffling.html"),
 )

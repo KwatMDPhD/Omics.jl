@@ -14,7 +14,7 @@ function benchmark(n_fe, n_sa, ho)
 
         ta_ = collect(1.0:n_sa)
 
-        fe_x_sa_x_nu = BioLab.Simulation.make_matrix_123(n_fe, n_sa, Float64)
+        fe_x_sa_x_nu = BioLab.Simulation.make_matrix_1n(n_fe, n_sa, Float64)
 
     elseif ho == "ra"
 

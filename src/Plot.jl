@@ -117,7 +117,7 @@ function color(nu_, co = pick_color_scheme(nu_))
 
     copy!(fl_, nu_)
 
-    BioLab.Number.normalize_with_01!(fl_)
+    BioLab.Normalization.normalize_with_01!(fl_)
 
     (nu -> color(nu, co)).(fl_)
 
@@ -235,6 +235,7 @@ function plot_bar(
 
 end
 
+# TODO: Plot fitted line.
 function plot_histogram(
     ht,
     x_,
@@ -339,7 +340,7 @@ end
 
 function _make_colorbar(x, z)
 
-    tickvals = BioLab.Vector.range(z, 10)
+    tickvals = BioLab.Rank.range(z, 10)
 
     Dict(
         "x" => x,

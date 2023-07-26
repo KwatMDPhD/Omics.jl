@@ -80,6 +80,26 @@ function merge_recursively(ke1_va1, ke2_va2)
 
 end
 
+function is_in(an_id, an1_)
+
+    bi_ = falses(length(an_id))
+
+    for an1 in an1_
+
+        id = get(an_id, an1, nothing)
+
+        if !isnothing(id)
+
+            bi_[id] = true
+
+        end
+
+    end
+
+    bi_
+
+end
+
 function read(pa, dicttype = OrderedDict; ke_ar...)
 
     ex = chop(splitext(pa)[2]; head = 1, tail = 0)

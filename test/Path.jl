@@ -4,18 +4,7 @@ using BioLab
 
 # ---- #
 
-for pa in ("missing_file", joinpath(BioLab.TE, "missing_path"))
-
-    @test BioLab.@is_error BioLab.Path.error_missing(pa)
-
-end
-
-for pa in
-    ("Path.jl", "path.jl", joinpath(@__DIR__, "Path.jl"), joinpath(@__DIR__, "path.jl"), BioLab.TE)
-
-    @test !BioLab.@is_error BioLab.Path.error_missing(pa)
-
-end
+BioLab.Path.wait("missing_file")
 
 # ---- #
 
@@ -28,10 +17,6 @@ for (pa, re) in ((NA, NAC), (joinpath("\$", NA), joinpath("_", NAC)))
     @test BioLab.Path.clean(pa) == re
 
 end
-
-# ---- #
-
-BioLab.Path.wait("missing_file")
 
 # ---- #
 

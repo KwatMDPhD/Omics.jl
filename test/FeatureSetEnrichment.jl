@@ -13,6 +13,24 @@ const DA = joinpath(BioLab._DA, "FeatureSetEnrichment")
 
 # ---- #
 
+const AL_ = (
+    BioLab.FeatureSetEnrichment.KS(),
+    BioLab.FeatureSetEnrichment.KSa(),
+    BioLab.FeatureSetEnrichment.KLi(),
+    BioLab.FeatureSetEnrichment.KLioM(),
+    BioLab.FeatureSetEnrichment.KLioP(),
+)
+
+# ---- #
+
+for (al, re) in zip(AL_, ("KS", "KSa", "KLi", "KLioM", "KLioP"))
+
+    @test BioLab.FeatureSetEnrichment._make_string(al) == re
+
+end
+
+# ---- #
+
 const SSC_ = [-2, -1, -0.5, 0, 0, 0.5, 1, 2, 3.4]
 
 # ---- #
@@ -128,22 +146,6 @@ end
 
 # ---- #
 
-const AL_ = (
-    BioLab.FeatureSetEnrichment.KS(),
-    BioLab.FeatureSetEnrichment.KSa(),
-    BioLab.FeatureSetEnrichment.KLi(),
-    BioLab.FeatureSetEnrichment.KLioM(),
-    BioLab.FeatureSetEnrichment.KLioP(),
-)
-
-for (al, re) in zip(AL_, ("KS", "KSa", "KLi", "KLioM", "KLioP"))
-
-    @test BioLab.FeatureSetEnrichment._make_string(al) == re
-
-end
-
-# ---- #
-
 const EX = 1
 
 # ---- #
@@ -155,8 +157,6 @@ const CSC_ = [6.0, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6]
 const CFE1_ = ["A", "K"]
 
 const CIS_ = in(Set(CFE1_)).(CFE_)
-
-# ---- #
 
 for (al, re) in zip(AL_, (-0.5, 0.0, 0.0, 0.0, 0.0))
 
@@ -204,7 +204,7 @@ end
 # ---- #
 
 const MFE_, MSC_ =
-    eachcol(BioLab.Table.read(joinpath(DA, "gene_x_statistic_x_number.tsv"); select = [1, 2]))
+    eachcol(BioLab.DataFrame.read(joinpath(DA, "gene_x_statistic_x_number.tsv"); select = [1, 2]))
 
 reverse!(MFE_)
 
@@ -284,5 +284,6 @@ BioLab.FeatureSetEnrichment.plot(
     MSE_,
     MFE1___,
     BioLab.FeatureSetEnrichment.enrich(AL, MFE_, MSA_, FE_X_SA_X_MSC, MFE1___),
-    "Sample",
+    "Sample";
+    ex = EX,
 )

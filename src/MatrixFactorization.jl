@@ -45,7 +45,7 @@ function write(
     co___ = (string.("$na ", 1:size(ma, 2)) for (ma, na) in zip(h_, nac_)),
 )
 
-    BioLab.Path.error_missing(di)
+    BioLab.Error.error_missing(di)
 
     lo = 1280
 
@@ -59,7 +59,7 @@ function write(
 
         pr = joinpath(di, "row$(id)_x_factor_x_positive")
 
-        BioLab.Table.write("$pr.tsv", BioLab.DataFrame.make(nar, ro_, fa_, w))
+        BioLab.DataFrame.write("$pr.tsv", BioLab.DataFrame.make(nar, ro_, fa_, w))
 
         or_ = BioLab.Clustering.hierarchize(w, 1).order
 
@@ -67,7 +67,7 @@ function write(
 
             w = copy(w)
 
-            foreach(BioLab.Number.normalize_with_0!, eachrow(w))
+            foreach(BioLab.Normalization.normalize_with_0!, eachrow(w))
 
         end
 
@@ -92,7 +92,7 @@ function write(
 
         pr = joinpath(di, "factor_x_column$(id)_x_positive")
 
-        BioLab.Table.write("$pr.tsv", BioLab.DataFrame.make(naf, fa_, co_, h))
+        BioLab.DataFrame.write("$pr.tsv", BioLab.DataFrame.make(naf, fa_, co_, h))
 
         or_ = BioLab.Clustering.hierarchize(h, 2).order
 
@@ -100,7 +100,7 @@ function write(
 
             h = copy(h)
 
-            foreach(BioLab.Number.normalize_with_0!, eachcol(h))
+            foreach(BioLab.Normalization.normalize_with_0!, eachcol(h))
 
         end
 

@@ -76,4 +76,4 @@ end
 
 # ---- #
 
-@test BioLab.Simulation.make_matrix_123(2, 3) == [1 3 5; 2 4 6]
+@test BioLab.Simulation.make_matrix_1n(2, 3) == [1 3 5; 2 4 6]

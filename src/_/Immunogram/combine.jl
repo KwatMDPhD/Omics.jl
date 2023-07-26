@@ -2,11 +2,11 @@ include("_.jl")
 
 # ---- #
 
-io_x_sa_x_an = BioLab.Table.read(
+io_x_sa_x_an = BioLab.DataFrame.read(
     "/Users/kwat/craft/pro/VaccineResponse.pro/output/SDY1264/information_x_sample0_x_anything.tsv",
 )
 
-fe_x_sa_x_nu = BioLab.Table.read(
+fe_x_sa_x_nu = BioLab.DataFrame.read(
     "/Users/kwat/craft/pro/VaccineResponse.pro/output/SDY1264/gene_x_sample0_x_numbercollapsed.tsv",
 )
 

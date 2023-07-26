@@ -218,9 +218,9 @@ uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[deps.FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays", "Statistics"]
-git-tree-sha1 = "f0af9b12329a637e8fba7d6543f915fff6ba0090"
+git-tree-sha1 = "f372472e8672b1d993e93dada09e23139b509f9e"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "1.4.2"
+version = "1.5.0"
 
 [[deps.FixedPointNumbers]]
 deps = ["Statistics"]
@@ -394,10 +394,10 @@ uuid = "f8716d33-7c4a-5097-896f-ce0ecbd3ef6b"
 version = "0.6.0"
 
 [[deps.NMF]]
-deps = ["LinearAlgebra", "NonNegLeastSquares", "Printf", "Random", "RandomizedLinAlg", "SnoopPrecompile", "Statistics", "StatsBase"]
-git-tree-sha1 = "25676b8f17852a9f92361e627e4bcace13d6302c"
+deps = ["LinearAlgebra", "NonNegLeastSquares", "PrecompileTools", "Printf", "Random", "RandomizedLinAlg", "Statistics", "StatsBase"]
+git-tree-sha1 = "f036d3901d031e7dbc19c7ada06d7b86451cd2df"
 uuid = "6ef6ca0d-6ad7-5ff6-b225-e928bfa0a386"
-version = "1.0.1"
+version = "1.0.2"
 
 [[deps.NaNMath]]
 deps = ["OpenLibm_jll"]
@@ -568,12 +568,6 @@ uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
 [[deps.SharedArrays]]
 deps = ["Distributed", "Mmap", "Random", "Serialization"]
 uuid = "1a1011a3-84de-559e-8e89-a11a2f7dc383"
-
-[[deps.SnoopPrecompile]]
-deps = ["Preferences"]
-git-tree-sha1 = "e760a70afdcd461cf01a575947738d359234665c"
-uuid = "66db9d55-30c0-4569-8b51-7e840670fc0c"
-version = "1.0.3"
 
 [[deps.Sockets]]
 uuid = "6462fe0b-24de-5631-8697-dd941f90decc"

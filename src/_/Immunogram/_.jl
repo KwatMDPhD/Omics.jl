@@ -401,7 +401,7 @@ function compare_grouping(
             colorscale = BioLab.Plot.fractionate(BioLab.Plot.COASP),
             layout = Dict(
                 "title" =>
-                    Dict("text" => "$(BioLab.Number.format(sc * 100))% Tight Grouping Using $na"),
+                    Dict("text" => "$(BioLab.String.format(sc * 100))% Tight Grouping Using $na"),
                 "yaxis" => Dict("dtick" => 1),
             ),
             ht,

@@ -20,7 +20,7 @@ js = include_ito(it)
 
 # ---- #
 
-_, io_, sa_, io_x_sa_x_an = BioLab.DataFrame.separate(BioLab.Table.read(tsi))
+_, io_, sa_, io_x_sa_x_an = BioLab.DataFrame.separate(BioLab.DataFrame.read(tsi))
 
 ta_ = io_x_sa_x_an[findfirst(io == iop for io in io_), :]
 
@@ -28,7 +28,7 @@ ta_, ta_x_sa_x_nu = make_ta_x_sa_x_nu(ta_)
 
 # ---- #
 
-_naf, fe_, sa2_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
+_naf, fe_, sa2_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.DataFrame.read(tsf))
 
 @test allunique(fe_)
 

@@ -4,47 +4,6 @@ using BioLab
 
 # ---- #
 
-for (ra, re) in zip(
-    0:28,
-    (
-        0.0,
-        0.1,
-        0.2,
-        0.3,
-        0.4,
-        0.5,
-        0.6,
-        0.7,
-        0.8,
-        0.9,
-        0.91,
-        0.92,
-        0.93,
-        0.94,
-        0.95,
-        0.96,
-        0.97,
-        0.98,
-        0.99,
-        0.991,
-        0.992,
-        0.993,
-        0.994,
-        0.995,
-        0.996,
-        0.997,
-        0.998,
-        0.999,
-        0.9991,
-    ),
-)
-
-    @test BioLab.Number.rank_in_fraction(ra) == re
-
-end
-
-# ---- #
-
 const AR_ = ([0.0, 1, 2], [-1, 0, 0.3333333333333333, 1], Matrix(reshape(1.0:6, (2, 3))))
 
 # ---- #
@@ -53,14 +12,14 @@ for (ar, re) in zip(AR_, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1], [0 0.4 0
 
     co = copy(ar)
 
-    BioLab.Number.normalize_with_01!(co)
+    BioLab.Normalization.normalize_with_01!(co)
 
     @test co == re
 
     # 18.830 ns (0 allocations: 0 bytes)
     # 24.089 ns (0 allocations: 0 bytes)
     # 34.121 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Number.normalize_with_01!(co) setup = (co = copy($ar))
+    #@btime BioLab.Normalization.normalize_with_01!(co) setup = (co = copy($ar))
 
 end
 
@@ -80,14 +39,14 @@ for (ar, re) in zip(
 
     co = copy(ar)
 
-    BioLab.Number.normalize_with_0!(co)
+    BioLab.Normalization.normalize_with_0!(co)
 
     @test co == re
 
     # 25.216 ns (0 allocations: 0 bytes)
     # 26.788 ns (0 allocations: 0 bytes)
     # 29.648 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Number.normalize_with_0!(co) setup = (co = copy($ar))
+    #@btime BioLab.Normalization.normalize_with_0!(co) setup = (co = copy($ar))
 
 end
 
@@ -106,13 +65,13 @@ for (ar, re) in zip(
 
     co = copy(ar)
 
-    BioLab.Number.normalize_with_sum!(co)
+    BioLab.Normalization.normalize_with_sum!(co)
 
     @test co == re
 
     # 7.167 ns (0 allocations: 0 bytes)
     # 10.218 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Number.normalize_with_sum!(co) setup = (co = copy($ar))
+    #@btime BioLab.Normalization.normalize_with_sum!(co) setup = (co = copy($ar))
 
 end
 
@@ -126,13 +85,13 @@ for (ar, re) in zip(ARR_, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
     co = copy(ar)
 
-    BioLab.Number.normalize_with_1223!(co)
+    BioLab.Normalization.normalize_with_1223!(co)
 
     @test co == re
 
     # 240.209 ns (2 allocations: 224 bytes)
     # 282.834 ns (6 allocations: 432 bytes)
-    #@btime BioLab.Number.normalize_with_1223!(co) setup = (co = copy($ar))
+    #@btime BioLab.Normalization.normalize_with_1223!(co) setup = (co = copy($ar))
 
 end
 
@@ -142,13 +101,13 @@ for (ar, re) in zip(ARR_, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
 
     co = copy(ar)
 
-    BioLab.Number.normalize_with_1224!(co)
+    BioLab.Normalization.normalize_with_1224!(co)
 
     @test co == re
 
     # 240.423 ns (2 allocations: 224 bytes)
     # 283.424 ns (6 allocations: 432 bytes)
-    #@btime BioLab.Number.normalize_with_1224!(co) setup = (co = copy($ar))
+    #@btime BioLab.Normalization.normalize_with_1224!(co) setup = (co = copy($ar))
 
 end
 
@@ -158,25 +117,25 @@ for (ar, re) in zip(ARR_, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
 
     co = float.(ar)
 
-    BioLab.Number.normalize_with_125254!(co)
+    BioLab.Normalization.normalize_with_125254!(co)
 
     @test co == re
 
     # 247.389 ns (2 allocations: 224 bytes)
     # 296.206 ns (6 allocations: 432 bytes)
-    #@btime BioLab.Number.normalize_with_125254!(co) setup = (co = float.($ar))
+    #@btime BioLab.Normalization.normalize_with_125254!(co) setup = (co = float.($ar))
 
 end
 
 # ---- #
 
 const FU_ = (
-    BioLab.Number.normalize_with_01!,
-    BioLab.Number.normalize_with_0!,
-    BioLab.Number.normalize_with_sum!,
-    BioLab.Number.normalize_with_1223!,
-    BioLab.Number.normalize_with_1224!,
-    BioLab.Number.normalize_with_125254!,
+    BioLab.Normalization.normalize_with_01!,
+    BioLab.Normalization.normalize_with_0!,
+    BioLab.Normalization.normalize_with_sum!,
+    BioLab.Normalization.normalize_with_1223!,
+    BioLab.Normalization.normalize_with_1224!,
+    BioLab.Normalization.normalize_with_125254!,
 )
 
 const MA = [

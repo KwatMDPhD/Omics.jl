@@ -14,28 +14,6 @@ for jl in readdir(@__DIR__)
 
 end
 
-macro is_error(ex)
-
-    quote
-
-        try
-
-            $(esc(ex))
-
-            false
-
-        catch er
-
-            @info "Errored." er
-
-            true
-
-        end
-
-    end
-
-end
-
 function __init__()
 
     if isdir(TE)

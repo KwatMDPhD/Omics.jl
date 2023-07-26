@@ -22,7 +22,7 @@ end
 
 function _align!(fl_::AbstractVector{Float64}, st)
 
-    BioLab.Number.normalize_with_0!(fl_)
+    BioLab.Normalization.normalize_with_0!(fl_)
 
     clamp!(fl_, -st, st)
 
@@ -276,7 +276,7 @@ function make(
     layout = Dict{String, Any}(),
 )
 
-    BioLab.Path.error_missing(di)
+    BioLab.Error.error_missing(di)
 
     pr = joinpath(di, "feature_x_statistic_x_number")
 
@@ -366,7 +366,7 @@ function make(
 
     fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
 
-    BioLab.Table.write(
+    BioLab.DataFrame.write(
         "$pr.tsv",
         BioLab.DataFrame.make(
             naf,
@@ -378,7 +378,7 @@ function make(
 
     if 0 < n_ex
 
-        id_ = reverse!(BioLab.Vector.get_extreme(view(fe_x_st_x_nu, :, 1), n_ex))
+        id_ = reverse!(BioLab.Rank.get_extreme(view(fe_x_st_x_nu, :, 1), n_ex))
 
         _plot(
             "$pr.html",
@@ -402,11 +402,11 @@ end
 
 #function make(di, tst, tsf, nas, pe_; ke_ar...)
 #
-#    BioLab.Path.error_missing(di)
+#    BioLab.Error.error_missing(di)
 #
-#    _na, nat_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tst))
+#    _na, nat_, sa_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.DataFrame.read(tst))
 #
-#    naf, fe_, saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.Table.read(tsf))
+#    naf, fe_, saf_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.DataFrame.read(tsf))
 #
 #    if sa_ != saf_
 #
@@ -426,11 +426,11 @@ end
 #
 #        end
 #
-#        di2 = BioLab.Path.make_directory(joinpath(di, BioLab.Path.clean("$(nat)_matching_$naf")))
+#        di2 = mkdir(joinpath(di, BioLab.Path.clean("$(nat)_matching_$naf")))
 #
 #        fe_x_st_x_nu = make(di2, cor, nat, naf, fe_, nas, sag_, tag_, fe_x_sag_x_nu; ke_ar...)
 #
-#        is_ = BioLab.Collection.is_in(fe_, pe_)
+#        is_ = BioLab.Dict.is_in(fe_, pe_)
 #
 #        id_ = sortperm(fe_x_st_x_nu[is_, 1]; rev = true)
 #
@@ -454,7 +454,7 @@ end
 #
 #function compare(di, na1, na2, ts1, ts2; title_text = "")
 #
-#    BioLab.Path.error_missing(di)
+#    BioLab.Error.error_missing(di)
 #
 #    na1c = BioLab.Path.clean(na1)
 #
@@ -462,9 +462,9 @@ end
 #
 #    pr = joinpath(di, "$(na1c)_compared_to_$na2c")
 #
-#    naf1, fe1_, st1_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.Table.read(ts1))
+#    naf1, fe1_, st1_, fe_x_st_x_nu1 = BioLab.DataFrame.separate(BioLab.DataFrame.read(ts1))
 #
-#    naf2, fe2_, st2_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.Table.read(ts2))
+#    naf2, fe2_, st2_, fe_x_st_x_nu2 = BioLab.DataFrame.separate(BioLab.DataFrame.read(ts2))
 #
 #    if naf1 != naf2
 #
@@ -508,9 +508,9 @@ end
 #
 #    di_ = map((nu1, nu2) -> sqrt(nu1^2 + nu2^2), nu1_, nu2_)
 #
-#    BioLab.Table.write("$pr.tsv", DataFrame(naf1 => fe1_, "Distance" => di_))
+#    BioLab.DataFrame.write("$pr.tsv", DataFrame(naf1 => fe1_, "Distance" => di_))
 #
-#    BioLab.Number.normalize_with_01!(di_)
+#    BioLab.Normalization.normalize_with_01!(di_)
 #
 #    BioLab.Plot.plot_scatter(
 #        "$pr.html",

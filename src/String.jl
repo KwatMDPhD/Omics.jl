@@ -64,22 +64,6 @@ function dice(st)
 
 end
 
-function transplant(st1, st2, de, id_)
-
-    sp1_ = split(st1, de)
-
-    sp2_ = split(st2, de)
-
-    if length(sp1_) != length(sp2_)
-
-        error("Split lengths differ.")
-
-    end
-
-    join((ifelse(id == 1, sp1, sp2) for (id, sp1, sp2) in zip(id_, sp1_, sp2_)), de)
-
-end
-
 function count(n, st)
 
     if n <= 1

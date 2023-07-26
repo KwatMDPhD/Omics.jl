@@ -20,16 +20,17 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
     @test all(FU, mah)
 
-    @test BioLab.@is_error BioLab.MatrixFactorization.write("", (maw,), (mah,))
+    @test BioLab.Error.@is_error BioLab.MatrixFactorization.write("", (maw,), (mah,))
 
     di = mkdir(joinpath(BioLab.TE, "$n_ro $n_co $n_fa"))
 
     BioLab.MatrixFactorization.write(di, (maw,), (mah,))
 
-    @test maw == Matrix(BioLab.Table.read(joinpath(di, "row1_x_factor_x_positive.tsv"))[!, 2:end])
+    @test maw ==
+          Matrix(BioLab.DataFrame.read(joinpath(di, "row1_x_factor_x_positive.tsv"))[!, 2:end])
 
     @test mah ==
-          Matrix(BioLab.Table.read(joinpath(di, "factor_x_column1_x_positive.tsv"))[!, 2:end])
+          Matrix(BioLab.DataFrame.read(joinpath(di, "factor_x_column1_x_positive.tsv"))[!, 2:end])
 
 end
 

@@ -103,7 +103,7 @@ const N = length(CO)
 
 for nu in (NaN, -1, 0, N + 1)
 
-    @test BioLab.@is_error CO[nu]
+    @test BioLab.Error.@is_error CO[nu]
 
 end
 
@@ -221,7 +221,7 @@ end
 
 # ---- #
 
-const MA1 = BioLab.Simulation.make_matrix_123(2, 4, Float64)
+const MA1 = BioLab.Simulation.make_matrix_1n(2, 4, Float64)
 
 # ---- #
 

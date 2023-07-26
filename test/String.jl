@@ -65,18 +65,6 @@ end
 
 # ---- #
 
-const ST1 = "A--BB--CCC"
-
-const DE = "--"
-
-const ID_ = (1, 2, 1)
-
-@test BioLab.@is_error BioLab.String.transplant(ST1, "a--bb", DE, ID_)
-
-@test BioLab.String.transplant(ST1, "a--bb--ccc", DE, ID_) == "A--bb--CCC"
-
-# ---- #
-
 for (si, pl) in (
     ("vertex", "vertices"),
     ("edge", "edges"),

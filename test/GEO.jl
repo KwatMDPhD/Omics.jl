@@ -26,13 +26,13 @@ const BL_TH = BioLab.GEO.read(GZ)
 
 @test length(BL_TH["PLATFORM"]["GPL16686"]) == 47
 
-@test length(BioLab.GEO._dice(BL_TH["PLATFORM"]["GPL16686"]["table"])) == 53982
+@test length(BioLab.String.dice(BL_TH["PLATFORM"]["GPL16686"]["table"])) == 53982
 
 @test length(BL_TH["SAMPLE"]) == 20
 
 @test length(BL_TH["SAMPLE"]["GSM3466115"]) == 36
 
-@test length(BioLab.GEO._dice(BL_TH["SAMPLE"]["GSM3466115"]["table"])) == 53618
+@test length(BioLab.String.dice(BL_TH["SAMPLE"]["GSM3466115"]["table"])) == 53618
 
 # 623.414 ms (3439384 allocations: 208.13 MiB)
 #@btime BioLab.GEO.read($GZ);
