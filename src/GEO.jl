@@ -179,12 +179,6 @@ function _map_feature(pl, co_, sp___)
 
 end
 
-function _dice(st)
-
-    split.(eachsplit(st, '\n'), '\t')
-
-end
-
 function _make(nar, co_, ro_an__)
 
     ro_ = union(keys.(ro_an__)...)
@@ -234,7 +228,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         if haskey(di, "table")
 
-            sp___ = _dice(di["table"])
+            sp___ = BioLab.String.dice(di["table"])
 
             idv = findfirst(==("VALUE"), sp___[1])
 
@@ -269,7 +263,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         if haskey(di, "table")
 
-            sp___ = _dice(di["table"])
+            sp___ = BioLab.String.dice(di["table"])
 
             id_fe = _map_feature(pl, sp___[1], view(sp___, 2:length(sp___)))
 

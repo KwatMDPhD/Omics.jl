@@ -59,6 +59,12 @@ end
 
 # ---- #
 
+@test BioLab.String.dice("""
+1\t2\t3
+4\t5\t6""") == [["1", "2", "3"], ["4", "5", "6"]]
+
+# ---- #
+
 const ST1 = "A--BB--CCC"
 
 const DE = "--"

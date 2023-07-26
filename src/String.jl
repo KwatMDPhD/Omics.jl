@@ -58,6 +58,12 @@ function split_get(st, de, id)
 
 end
 
+function dice(st)
+
+    split.(eachsplit(st, '\n'), '\t')
+
+end
+
 function transplant(st1, st2, de, id_)
 
     sp1_ = split(st1, de)

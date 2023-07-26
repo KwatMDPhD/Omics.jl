@@ -10,18 +10,6 @@ function error_missing(pa)
 
 end
 
-function error_extension_difference(pa, ex2)
-
-    ex = chop(splitext(pa)[2]; head = 1, tail = 0)
-
-    if ex != ex2
-
-        error("Extensions differ. $ex != $ex2.")
-
-    end
-
-end
-
 function clean(pa)
 
     replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
@@ -75,22 +63,6 @@ function read(di; ig_ = (), ke_ = (), ke_ar...)
     end
 
     pa_
-
-end
-
-function make_directory(di)
-
-    if isdir(di)
-
-        @warn "$di already exists."
-
-    else
-
-        mkdir(di)
-
-    end
-
-    di
 
 end
 

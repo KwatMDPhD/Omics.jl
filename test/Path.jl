@@ -19,20 +19,6 @@ end
 
 # ---- #
 
-for pa in ("file.extension", joinpath(BioLab.TE, "file.extension"))
-
-    for ex in (".extension", "another_extension")
-
-        @test BioLab.@is_error BioLab.Path.error_extension_difference(pa, ex)
-
-    end
-
-    @test !BioLab.@is_error BioLab.Path.error_extension_difference(pa, "extension")
-
-end
-
-# ---- #
-
 const NA = "a_b.c-d+e!f%g%h]iJK"
 
 const NAC = "a_b.c_d_e_f_g_h_ijk"
@@ -69,16 +55,6 @@ const HI = r"^\."
 
 @test BioLab.Path.read(HO; ke_ = (r"^[A-Z]", r"^Downloads$")) ==
       BioLab.Path.read(HO; ke_ = (r"^[A-Z]",))
-
-# ---- #
-
-const DI = BioLab.Path.make_directory(joinpath(BioLab.TE, "directory"))
-
-@test isdir(DI)
-
-BioLab.Path.make_directory(DI)
-
-@test isdir(DI)
 
 # ---- #
 

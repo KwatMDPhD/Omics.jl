@@ -39,7 +39,7 @@ end
 
 function make_directory_layout(title_text)
 
-    BioLab.Path.make_directory(joinpath(BioLab.TE, BioLab.Path.clean(title_text))),
+    mkdir(joinpath(BioLab.TE, BioLab.Path.clean(title_text))),
     Dict("title" => Dict("text" => title_text))
 
 end

@@ -234,7 +234,7 @@ function _enrich!(::KLi, sc_, ex, is_, mo_)
 
 end
 
-function _enrich_klio(fu, sc_, ex, is_, mo_)
+function _enrich!(fu::Function, sc_, ex, is_, mo_)
 
     n, su, su1, ep, ri, ri1, le, le1, ar, mo, ridp, ri1dp = _ready_kli(sc_, ex, is_, mo_)
 
@@ -320,19 +320,13 @@ end
 
 function _enrich!(::KLioM, sc_, ex, is_, mo_)
 
-    _enrich_klio(
-        BioLab.Information.get_antisymmetric_kullback_leibler_divergence,
-        sc_,
-        ex,
-        is_,
-        mo_,
-    )
+    _enrich!(BioLab.Information.get_antisymmetric_kullback_leibler_divergence, sc_, ex, is_, mo_)
 
 end
 
 function _enrich!(::KLioP, sc_, ex, is_, mo_)
 
-    _enrich_klio(BioLab.Information.get_symmetric_kullback_leibler_divergence, sc_, ex, is_, mo_)
+    _enrich!(BioLab.Information.get_symmetric_kullback_leibler_divergence, sc_, ex, is_, mo_)
 
 end
 
@@ -536,8 +530,6 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, fe1___; n = 1, ex = 1)
     @showprogress for (id, sc_) in enumerate(eachcol(fe_x_sa_x_sc))
 
         no_ .= .!isnan.(sc_)
-
-        # TODO: Understand why view is slower.
 
         scn_ = sc_[no_]
 

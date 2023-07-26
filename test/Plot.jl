@@ -20,7 +20,7 @@ const HE_ = ("#ff71fb", "#fcc9b9", "#c91f37")
 
 # ---- #
 
-const CO = BioLab.Plot.make_color_scheme(HE_)
+const CO = BioLab.Plot._make_color_scheme(HE_)
 
 @test length(CO) == length(HE_)
 
@@ -75,7 +75,7 @@ for (he_, fr_) in (
     ),
 )
 
-    @test BioLab.Plot.map_fraction_to_color(BioLab.Plot.make_color_scheme(he_)) ==
+    @test BioLab.Plot.map_fraction_to_color(BioLab.Plot._make_color_scheme(he_)) ==
           collect(zip(fr_, he_))
 
 end

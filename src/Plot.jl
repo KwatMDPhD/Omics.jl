@@ -8,7 +8,7 @@ using JSON: json
 
 using BioLab
 
-function make_color_scheme(he_)
+function _make_color_scheme(he_)
 
     ColorScheme([parse(Colorant{Float64}, he) for he in he_])
 
@@ -18,7 +18,7 @@ const COBWR = bwr
 
 const COPLA = plasma
 
-const COPL3 = make_color_scheme((
+const COPL3 = _make_color_scheme((
     "#0508b8",
     "#1910d8",
     "#3c19f0",
@@ -34,7 +34,7 @@ const COPL3 = make_color_scheme((
     "#fec3fe",
 ))
 
-const COASP = make_color_scheme((
+const COASP = _make_color_scheme((
     "#00936e",
     "#a4e2b4",
     "#e0f5e5",
@@ -44,7 +44,7 @@ const COASP = make_color_scheme((
     "#ffd96a",
 ))
 
-const COPLO = make_color_scheme((
+const COPLO = _make_color_scheme((
     "#636efa",
     "#ef553b",
     "#00cc96",
@@ -57,15 +57,13 @@ const COPLO = make_color_scheme((
     "#fecb52",
 ))
 
-const COGUA = make_color_scheme(("#20d9ba", "#9017e6", "#4e40d8", "#ff1968"))
+const COBIN = _make_color_scheme(("#006442", "#ffb61e"))
 
-const COBIN = make_color_scheme(("#006442", "#ffb61e"))
+const COHUM = _make_color_scheme(("#4b3c39", "#ffddca"))
 
-const COHUM = make_color_scheme(("#4b3c39", "#ffddca"))
+const COSTA = _make_color_scheme(("#8c1515", "#175e54"))
 
-const COSTA = make_color_scheme(("#8c1515", "#175e54"))
-
-const COMON = make_color_scheme(("#fbb92d",))
+const COMON = _make_color_scheme(("#fbb92d",))
 
 function _make_hex(rg)
 

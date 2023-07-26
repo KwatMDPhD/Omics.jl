@@ -22,6 +22,8 @@ function rank_in_fraction(ra)
 
 end
 
+# TODO: Relocate to NumberArray.jl.
+
 function normalize_with_01!(ar)
 
     mi = minimum(ar)

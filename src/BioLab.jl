@@ -38,9 +38,13 @@ end
 
 function __init__()
 
-    rm(TE; recursive = true, force = true)
+    if isdir(TE)
 
-    BioLab.Path.make_directory(TE)
+        rm(TE; recursive = true)
+
+    end
+
+    mkdir(TE)
 
 end
 

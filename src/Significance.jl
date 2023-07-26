@@ -50,7 +50,7 @@ end
 
 function get_p_value_adjust(fu, nu_, ra_)
 
-    pv_ = map(nu -> fu(nu, ra_), nu_)
+    pv_ = (nu -> fu(nu, ra_)).(nu_)
 
     n = length(pv_)
 

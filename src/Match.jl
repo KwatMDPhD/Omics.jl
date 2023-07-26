@@ -20,6 +20,36 @@ function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
 
 end
 
+function _align!(fl_::AbstractVector{Float64}, st)
+
+    BioLab.Number.normalize_with_0!(fl_)
+
+    clamp!(fl_, -st, st)
+
+    -st, st
+
+end
+
+function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
+
+    for fl_ in eachrow(fe_x_sa_x_fl)
+
+        if allequal(fl_)
+
+            @warn "All numbers are equal."
+
+        else
+
+            _align!(fl_, st)
+
+        end
+
+    end
+
+    -st, st
+
+end
+
 function _align!(it, ::Any)
 
     minimum(it), maximum(it)
@@ -107,36 +137,6 @@ function _annotate_feature(y, la, th, fe_, n_li, fe_x_st_x_nu)
     end
 
     annotations
-
-end
-
-function _align!(fl_::AbstractVector{Float64}, st)
-
-    BioLab.Number.normalize_with_0!(fl_)
-
-    clamp!(fl_, -st, st)
-
-    -st, st
-
-end
-
-function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
-
-    for fl_ in eachrow(fe_x_sa_x_fl)
-
-        if allequal(fl_)
-
-            @warn "All numbers are equal."
-
-        else
-
-            _align!(fl_, st)
-
-        end
-
-    end
-
-    -st, st
 
 end
 
