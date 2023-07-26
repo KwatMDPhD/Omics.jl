@@ -4,10 +4,6 @@ using BioLab
 
 # ---- #
 
-const DW = joinpath(homedir(), "Downloads")
-
-# ---- #
-
 const EL_ = Vector{Dict{String, Any}}([
     Dict(
         "data" => Dict("id" => "A"),
@@ -52,6 +48,10 @@ const EL_ = Vector{Dict{String, Any}}([
 
 # ---- #
 
+const DW = joinpath(homedir(), "Downloads")
+
+# ---- #
+
 const NAME1 = "preset"
 
 const EX1 = "png"
@@ -83,6 +83,8 @@ end
 # ---- #
 
 const EL2_ = read_element(FI2)
+
+# ---- #
 
 BioLab.Graph.position!(EL_, EL2_)
 

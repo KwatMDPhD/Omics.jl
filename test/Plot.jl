@@ -22,6 +22,8 @@ const HE_ = ("#ff71fb", "#fcc9b9", "#c91f37")
 
 const CO = BioLab.Plot._make_color_scheme(HE_)
 
+# ---- #
+
 @test length(CO) == length(HE_)
 
 # ---- #
@@ -130,6 +132,8 @@ for (it, re) in zip(IT_, HE_)
 
 end
 
+# ---- #
+
 @test BioLab.Plot.color(IT_, CO) == collect(HE_)
 
 # ---- #
@@ -165,11 +169,7 @@ BioLab.Plot.plot(
 
 # ---- #
 
-const SCY1 = [-1, 0, 2]
-
-const SCY2 = [3, 4]
-
-const SCY_ = [SCY1, SCY2]
+const SCY_ = [[-1, 0, 2], [3, 4]]
 
 # ---- #
 
@@ -177,13 +177,11 @@ BioLab.Plot.plot_scatter("", SCY_)
 
 # ---- #
 
-BioLab.Plot.plot_scatter("", SCY_, [SCY1 * 10, SCY2 * 10])
+BioLab.Plot.plot_scatter("", SCY_, SCY_ * 10)
 
 # ---- #
 
-const BAY = [-1, 2, 5]
-
-const BAY_ = [BAY, reverse(BAY), [8]]
+const BAY_ = [[-1, 2, 5], [5, 2, -1], [8]]
 
 # ---- #
 
@@ -203,6 +201,8 @@ BioLab.Plot.plot_bar(
 
 const HIX_ = [[-1], [0, 1], [2, 3, 4]]
 
+# ---- #
+
 BioLab.Plot.plot_histogram("", HIX_)
 
 # ---- #
@@ -221,28 +221,23 @@ end
 
 # ---- #
 
-const MA1 = BioLab.Simulation.make_matrix_1n(2, 4, Float64)
+const Z = BioLab.Simulation.make_matrix_1n(2, 4, Float64)
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", MA1)
+BioLab.Plot.plot_heat_map("", Z)
 
 # ---- #
 
-BioLab.Plot.plot_heat_map(
-    "",
-    MA1,
-    string.("Row ", 1:size(MA1, 1)),
-    string.("Column ", 1:size(MA1, 2)),
-)
+BioLab.Plot.plot_heat_map("", Z, string.("Row ", 1:size(Z, 1)), string.("Column ", 1:size(Z, 2)))
 
 # ---- #
 
-const HEY = [-1.0, 1, -2, 2]
+const Y2 = [-1.0, 1, -2, 2]
 
-const HEX = [1.0, 4, 2, 5, 3, 6]
+const X2 = [1.0, 4, 2, 5, 3, 6]
 
-const MA2 = [y * x for y in HEY, x in HEX]
+const Z2 = [y * x for y in Y2, x in X2]
 
 # ---- #
 
@@ -250,7 +245,7 @@ const GRR_ = [1, 2, 1, 2]
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", MA2; grr_ = GRR_)
+BioLab.Plot.plot_heat_map("", Z2; grr_ = GRR_)
 
 # ---- #
 
@@ -258,15 +253,15 @@ const GRC_ = [1, 2, 1, 2, 1, 2]
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", MA2; grc_ = GRC_)
+BioLab.Plot.plot_heat_map("", Z2; grc_ = GRC_)
 
 # ---- #
 
 BioLab.Plot.plot_heat_map(
     "",
-    MA2,
-    string.("Y = ", HEY),
-    string.("X = ", HEX);
+    Z2,
+    string.("Y = ", Y2),
+    string.("X = ", X2);
     grr_ = GRR_,
     grc_ = GRC_,
 )

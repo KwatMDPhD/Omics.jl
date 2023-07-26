@@ -21,8 +21,6 @@ const AL_ = (
     BioLab.FeatureSetEnrichment.KLioP(),
 )
 
-# ---- #
-
 for (al, re) in zip(AL_, ("KS", "KSa", "KLi", "KLioM", "KLioP"))
 
     @test BioLab.FeatureSetEnrichment._make_string(al) == re

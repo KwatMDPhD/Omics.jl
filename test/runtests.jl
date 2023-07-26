@@ -1,4 +1,4 @@
-using Aqua: test_all, test_ambiguities
+#using Aqua: test_all, test_ambiguities
 
 using Test: @test
 
@@ -40,20 +40,13 @@ test_ambiguities(BioLab)
 
 # ---- #
 
-# TODO: Use BioLab.Path.read.
-function read_filter(di)
-
-    filter!(!startswith('_'), readdir(di))
-
-end
-
-# ---- #
-
 const SR = joinpath(dirname(@__DIR__), "src")
 
-const MO_ = read_filter(SR)
+const IG_ = (r"^[!_]",)
 
-const TE_ = read_filter(@__DIR__)
+const MO_ = BioLab.Path.read(SR; ig_ = IG_)
+
+const TE_ = BioLab.Path.read(@__DIR__; ig_ = IG_)
 
 # ---- #
 

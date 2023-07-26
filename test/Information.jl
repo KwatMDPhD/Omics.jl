@@ -4,17 +4,19 @@ using BioLab
 
 # ---- #
 
-const N = 10
-
-const NU1_ = randn(N)
-
-const NU2_ = randn(N)
-
 function get_density(nu_)
 
     BioLab.Information.kde(nu_).density
 
 end
+
+# ---- #
+
+const N = 10
+
+const NU1_ = randn(N)
+
+const NU2_ = randn(N)
 
 const AR_ = (
     ([1, 1, 1], [1, 1, 1]),
@@ -75,16 +77,13 @@ for nu_ in (fill(0, 10), fill(1, 10))
 end
 
 # ---- #
+# TODO
 
 nu1_ = collect(0:10)
 
 nu2_ = collect(0:10:100)
 
-# ---- #
-
 BioLab.Information.get_mutual_information(nu1_, nu2_)
-
-# ---- #
 
 bi = BioLab.Information.kde((nu1_, nu2_), npoints = (8, 8))
 
@@ -95,7 +94,5 @@ x = collect(bi.x)
 z = bi.density
 
 BioLab.Plot.plot_heat_map("", z, y, x)
-
-# ---- #
 
 BioLab.Information.get_information_coefficient(nu1_, nu2_)

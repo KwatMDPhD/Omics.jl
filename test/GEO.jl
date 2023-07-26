@@ -8,11 +8,15 @@ const GS = "GSE122404"
 
 const GZ = BioLab.GEO.download(BioLab.TE, GS)
 
+# ---- #
+
 @test isfile(GZ)
 
 # ---- #
 
 const BL_TH = BioLab.GEO.read(GZ)
+
+# ---- #
 
 @test length(BL_TH["DATABASE"]) == 1
 

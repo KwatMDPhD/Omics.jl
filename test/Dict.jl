@@ -32,6 +32,18 @@ end
 
 # ---- #
 
+for (di1, di2, re) in (
+    (Dict(1 => 'a'), Dict(2 => 'b'), Dict{Int, Char}),
+    (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Float64, Any}),
+    (Dict(1.0 => "Aa"), Dict(2 => chop("Bbx")), Dict{Float64, AbstractString}),
+)
+
+    @test BioLab.Dict.merge_recursively(di1, di2) isa re
+
+end
+
+# ---- #
+
 const DI1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 
 const DI2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
@@ -42,18 +54,6 @@ const DI2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
 @test BioLab.Dict.merge_recursively(DI2, DI1) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))
-
-# ---- #
-
-for (di1, di2, re) in (
-    (Dict(1 => 'a'), Dict(2 => 'b'), Dict{Int, Char}),
-    (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Float64, Any}),
-    (Dict(1.0 => "Aa"), Dict(2 => chop("Bbx")), Dict{Float64, AbstractString}),
-)
-
-    @test BioLab.Dict.merge_recursively(di1, di2) isa re
-
-end
 
 # ---- #
 
@@ -121,6 +121,8 @@ const FE_ID = Dict(fe => id for (id, fe) in enumerate(FE_))
 
 const JS1 = joinpath(DA, "example_1.json")
 
+# ---- #
+
 for dicttype in (Dict, OrderedDict, OrderedDict{String, String})
 
     @test BioLab.Dict.read(JS1, dicttype) isa dicttype
@@ -185,6 +187,8 @@ end
 
 # ---- #
 
+const JSW = joinpath(BioLab.TE, "write_read.json")
+
 const DIW = Dict(
     "Luffy" => "Pirate King",
     "Crews" => [
@@ -201,8 +205,6 @@ const DIW = Dict(
     ],
     "episode" => 1030,
 )
-
-const JSW = joinpath(BioLab.TE, "write_read.json")
 
 BioLab.Dict.write(JSW, DIW)
 

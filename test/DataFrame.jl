@@ -34,17 +34,15 @@ const CO_ = make_axis("Column ", N_CO)
 
 const MA = BioLab.Simulation.make_matrix_1n(N_RO, N_CO)
 
-# ---- #
-
-const DA1 = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
+const DAMS = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
 # ---- #
 
-@test all(co -> eltype(co) != Any, eachcol(DA1))
+@test all(co -> eltype(co) != Any, eachcol(DAMS))
 
-@test size(DA1) == (N_RO, N_CO + 1)
+@test size(DAMS) == (N_RO, N_CO + 1)
 
-@test DA1 == DataFrame(
+@test DAMS == DataFrame(
     "Row Name" => make_axis("Row ", N_RO),
     ("Column $id" => view(MA, :, id) for id in 1:N_CO)...,
 )
@@ -54,14 +52,14 @@ const DA1 = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
 # ---- #
 
-@test BioLab.DataFrame.separate(DA1) == (NAR, RO_, CO_, MA)
+@test BioLab.DataFrame.separate(DAMS) == (NAR, RO_, CO_, MA)
 
-BioLab.DataFrame.separate(DA1)[2][1] = ":("
+BioLab.DataFrame.separate(DAMS)[2][1] = ":("
 
-@test DA1[1, 1] == "Row 1"
+@test DAMS[1, 1] == "Row 1"
 
 # 2.269 μs (28 allocations: 2.08 KiB)
-#@btime BioLab.DataFrame.separate($DA1);
+#@btime BioLab.DataFrame.separate($DAMS);
 
 # ---- #
 

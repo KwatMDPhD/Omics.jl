@@ -6,8 +6,6 @@ using BioLab
 
 @test BioLab.Error.@is_error error("This is an error message.")
 
-# ---- #
-
 @test !BioLab.Error.@is_error "This is not an error message."
 
 # ---- #
@@ -17,8 +15,6 @@ for pa in ("missing_file", joinpath(BioLab.TE, "missing_path"))
     @test BioLab.Error.@is_error BioLab.Error.error_missing(pa)
 
 end
-
-# ---- #
 
 for pa in
     ("Path.jl", "path.jl", joinpath(@__DIR__, "Path.jl"), joinpath(@__DIR__, "path.jl"), BioLab.TE)
