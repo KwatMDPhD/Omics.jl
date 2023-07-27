@@ -1,4 +1,4 @@
-#using Aqua: test_all, test_ambiguities
+using Aqua: test_all, test_ambiguities
 
 using Test: @test
 

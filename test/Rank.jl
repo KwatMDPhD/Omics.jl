@@ -49,7 +49,7 @@ const ITR_ = collect(-1:9)
 
 const FLR_ = convert(Vector{Float64}, ITR_)
 
-for (n, re) in ((1, [-1, 9]), (2, [-1, 4, 9]), (4, [-1, 1.5, 4, 6.5, 9]), (10, FLR_))
+for (n, re) in ((2, [-1, 9]), (3, [-1, 4, 9]), (5, [-1, 1.5, 4, 6.5, 9]), (11, FLR_))
 
     @test collect(BioLab.Rank.range(ITR_, n)) == -1:9
 
