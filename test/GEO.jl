@@ -6,6 +6,8 @@ using BioLab
 
 const GS = "GSE122404"
 
+@test BioLab.Error.@is_error BioLab.GEO.download("", GS)
+
 const GZ = BioLab.GEO.download(BioLab.TE, GS)
 
 # ---- #

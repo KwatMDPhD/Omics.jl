@@ -311,8 +311,6 @@ no_x_sa_x_an = Kumo.anneal(no_x_sa_x_he)
 
 for pe in (0, 0.5, 1)
 
-    di = mkpath(joinpath(te, "animate.$pe"))
-
-    Kumo.animate(js, he___, di; pe)
+    Kumo.animate(js, he___, mkdir(joinpath(te, "animate.$pe")); pe)
 
 end

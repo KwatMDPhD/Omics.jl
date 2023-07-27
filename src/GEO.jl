@@ -10,6 +10,8 @@ using BioLab
 
 function download(di, gs)
 
+    BioLab.Error.error_missing(di)
+
     gsc = chop(gs; tail = 3)
 
     gz = "$(gs)_family.soft.gz"
@@ -200,7 +202,7 @@ end
 
 function tabulate(bl_th; sa = "!Sample_title")
 
-    sa_di = OrderedDict(di[sa] => di for di in values(bl_th["SAMPLE"]))
+    sa_di = OrderedDict(ke_va[sa] => ke_va for ke_va in values(bl_th["SAMPLE"]))
 
     sa_ = collect(keys(sa_di))
 
@@ -212,9 +214,9 @@ function tabulate(bl_th; sa = "!Sample_title")
 
     pl_fe_fl__ = Dict{String, Vector{Dict{String, Float64}}}()
 
-    for (ids, (sa, di)) in enumerate(sa_di)
+    for (ids, (sa, ke_va)) in enumerate(sa_di)
 
-        ch_ = [va for (ke, va) in di if startswith(ke, "!Sample_characteristics")]
+        ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
 
         if all(contains(de), ch_)
 
@@ -226,13 +228,13 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         end
 
-        if haskey(di, "table")
+        if haskey(ke_va, "table")
 
-            sp___ = BioLab.String.dice(di["table"])
+            sp___ = BioLab.String.dice(ke_va["table"])
 
             idv = findfirst(==("VALUE"), sp___[1])
 
-            pl = di["!Sample_platform_id"]
+            pl = ke_va["!Sample_platform_id"]
 
             if !haskey(pl_fe_fl__, pl)
 
@@ -259,11 +261,11 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         da = _make(pl, sa_, fe_fl__)
 
-        di = bl_th["PLATFORM"][pl]
+        ke_va = bl_th["PLATFORM"][pl]
 
-        if haskey(di, "table")
+        if haskey(ke_va, "table")
 
-            sp___ = BioLab.String.dice(di["table"])
+            sp___ = BioLab.String.dice(ke_va["table"])
 
             id_fe = _map_feature(pl, sp___[1], view(sp___, 2:length(sp___)))
 

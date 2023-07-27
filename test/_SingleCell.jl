@@ -4,7 +4,9 @@ using BioLab
 
 # ---- #
 
-DA = joinpath(BioLab.DA, "SingleCell")
+DA = joinpath(BioLab._DA, "SingleCell")
+
+# ---- #
 
 @test readdir(DA) == []
 

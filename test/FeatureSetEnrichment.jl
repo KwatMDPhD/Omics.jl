@@ -106,8 +106,6 @@ for (ex, re) in (
 
     #@btime BioLab.FeatureSetEnrichment._sum_01($SSC_, $ex, $SIS_)
 
-    #@btime BioLab.FeatureSetEnrichment._sum_01($SSC_, $ex, $(convert(Vector{Bool}, SIS_)))
-
 end
 
 # ---- #
@@ -137,8 +135,6 @@ for (ex, re) in (
     # 96.286 ns (0 allocations: 0 bytes)
 
     #@btime BioLab.FeatureSetEnrichment._sum_all1($SSC_, $ex, $SIS_)
-
-    #@btime BioLab.FeatureSetEnrichment._sum_all1($SSC_, $ex, $(convert(Vector{Bool}, SIS_)))
 
 end
 
@@ -180,14 +176,6 @@ for (al, re) in zip(AL_, (-0.5, 0.0, 0.0, 0.0, 0.0))
     # 231.971 ns (0 allocations: 0 bytes)
 
     #@btime BioLab.FeatureSetEnrichment._enrich!($al, $CSC_, $EX, $CIS_, nothing)
-
-    #@btime BioLab.FeatureSetEnrichment._enrich!(
-    #    $al,
-    #    $CSC_,
-    #    $EX,
-    #    $(convert(Vector{Bool}, CIS_)),
-    #    nothing,
-    #)
 
 end
 
@@ -273,6 +261,21 @@ end
 
 const AL = BioLab.FeatureSetEnrichment.KS()
 
+se_x_sa_x_en = BioLab.FeatureSetEnrichment.enrich(AL, MFE_, MSA_, FE_X_SA_X_MSC, MFE1___)
+
+@test BioLab.Error.@is_error BioLab.FeatureSetEnrichment.plot(
+    "",
+    AL,
+    MFE_,
+    MSA_,
+    FE_X_SA_X_MSC,
+    MSE_,
+    MFE1___,
+    se_x_sa_x_en,
+    "Sample";
+    ex = EX,
+)
+
 BioLab.FeatureSetEnrichment.plot(
     BioLab.TE,
     AL,
@@ -281,7 +284,7 @@ BioLab.FeatureSetEnrichment.plot(
     FE_X_SA_X_MSC,
     MSE_,
     MFE1___,
-    BioLab.FeatureSetEnrichment.enrich(AL, MFE_, MSA_, FE_X_SA_X_MSC, MFE1___),
+    se_x_sa_x_en,
     "Sample";
     ex = EX,
 )

@@ -68,11 +68,7 @@ for (an_id, re) in (
     (Dict('A' => 1, 'Z' => 2, 'B' => 3), (true, false, true)),
 )
 
-    bi_ = BitVector(re)
-
-    bo_ = convert(Vector{Bool}, bi_)
-
-    @test BioLab.Dict.is_in(an_id, AN1_) == bi_ == bo_
+    @test BioLab.Dict.is_in(an_id, AN1_) == BitVector(re)
 
 end
 

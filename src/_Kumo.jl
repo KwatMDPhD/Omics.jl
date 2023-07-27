@@ -258,7 +258,7 @@ function plot(
 
     tri_ = (0.866, 0.5, -0.866, 0.5, 0, -1)
 
-    di = nos * 0.16
+    nod = nos * 0.16
 
     coe = "#20d9ba"
 
@@ -310,8 +310,8 @@ function plot(
                     "width" => nos * 0.08,
                     "target-arrow-shape" => "triangle-backcurve",
                     "arrow-scale" => 1.6,
-                    "source-distance-from-node" => di,
-                    "target-distance-from-node" => di,
+                    "source-distance-from-node" => nod,
+                    "target-distance-from-node" => nod,
                     "line-opacity" => 0.64,
                     "line-fill" => "linear-gradient",
                     "line-gradient-stop-colors" => ("#ffffff", "#171412"),

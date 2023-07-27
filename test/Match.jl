@@ -46,6 +46,10 @@ end
 
 # ---- #
 
+@test BioLab.Error.@is_error BioLab.Match.make("", benchmark(1, 1, "12")...)
+
+# ---- #
+
 const REA_ = benchmark(1, 2, "12")
 
 for rev in (false, true)
