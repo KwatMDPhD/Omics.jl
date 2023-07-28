@@ -58,19 +58,15 @@ function read(sa_di)
 
         end
 
-        @info "$n_fes x $n_bas x $co3."
+        @info "$co1 x $co2 x $co3."
 
         if isempty(fe_)
 
             fe_ = fes_
 
-        else
+        elseif fe_ != fes_
 
-            if fe_ != fes_
-
-                error("Features differ.")
-
-            end
+            error("Features mismatch.")
 
         end
 
@@ -94,7 +90,7 @@ function read(sa_di)
 
     @info "Combining $n_fe features and $n_ba barcodes"
 
-    fe_x_ba_x_co = fill(0, (n_fe, n_ba))
+    fe_x_ba_x_co = zeros(Int, (n_fe, n_ba))
 
     @showprogress for (idf, idb, co) in zip(idf_, idb_, co_)
 
@@ -104,7 +100,7 @@ function read(sa_di)
 
     if !allunique(fe_)
 
-        st = BioLab.Collection._countmap_string(fe_)
+        st = join(("$va $ke" for (ke, va) in BioLab.Collection.count_sort(fe_)), ". ")
 
         @warn "Features have duplicates.\n$st."
 
@@ -116,23 +112,27 @@ function read(sa_di)
 
 end
 
-function make_target(ta_re_, gr_, idg___)
+function target(ta_re_, sa_)
 
-    ta_ = collect(keys(ta_re_))
+    n_ta = length(ta_re_)
 
-    ta_x_sa_x_nu = fill(NaN, (length(ta_), maximum(idg___)[end]))
+    ta_ = Vector{String}(undef, n_ta)
 
-    for (idt, re_) in enumerate(values(ta_re_))
+    ta_x_sa_x_nu = fill(NaN, (n_ta, length(sa_)))
+
+    for (idt, (ta, re_)) in enumerate(ta_re_)
+
+        ta_[idt] = ta
 
         for (nu, re) in zip((0, 1), re_)
 
             re2 = Regex(re)
 
-            for (gr, idg_) in zip(gr_, idg___)
+            for (ids, sa) in enumerate(sa_)
 
-                if contains(gr, re2)
+                if contains(sa, re2)
 
-                    ta_x_sa_x_nu[idt, idg_] .= nu
+                    ta_x_sa_x_nu[idt, ids] = nu
 
                 end
 
