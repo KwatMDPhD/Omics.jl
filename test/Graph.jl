@@ -7,42 +7,42 @@ using BioLab
 const EL_ = Vector{Dict{String, Any}}([
     Dict(
         "data" => Dict("id" => "A"),
-        "position" => Dict("x" => 0, "y" => 0),
+        "position" => Dict("y" => 0, "x" => 0),
         "style" => Dict("background-color" => "#790505"),
     ),
     Dict(
         "data" => Dict("id" => "B"),
-        "position" => Dict("x" => 20, "y" => 20),
+        "position" => Dict("y" => 20, "x" => 20),
         "style" => Dict("background-color" => "#a40522"),
     ),
     Dict(
         "data" => Dict("id" => "C"),
-        "position" => Dict("x" => 40, "y" => 40),
+        "position" => Dict("y" => 40, "x" => 40),
         "style" => Dict("background-color" => "#e06351"),
     ),
     Dict(
         "data" => Dict("id" => "D"),
-        "position" => Dict("x" => 80, "y" => 80),
+        "position" => Dict("y" => 80, "x" => 80),
         "style" => Dict("background-color" => "#dd9159"),
     ),
     Dict(
         "data" => Dict("id" => "E"),
-        "position" => Dict("x" => 160, "y" => 160),
+        "position" => Dict("y" => 160, "x" => 160),
         "style" => Dict("background-color" => "#fc7f31"),
     ),
     Dict(
         "data" => Dict("id" => "F"),
-        "position" => Dict("x" => 320, "y" => 320),
+        "position" => Dict("y" => 320, "x" => 320),
         "style" => Dict("background-color" => "#fbb92d"),
+    ),
+    Dict(
+        "data" => Dict("id" => "G"),
+        "position" => Dict("y" => 640, "x" => 640),
+        "style" => Dict("background-color" => "#561649"),
     ),
     Dict(
         "data" => Dict("id" => "H", "source" => "F", "target" => "G"),
         "style" => Dict("line-color" => "#6c9956"),
-    ),
-    Dict(
-        "data" => Dict("id" => "G"),
-        "position" => Dict("x" => 640, "y" => 640),
-        "style" => Dict("background-color" => "#561649"),
     ),
 ])
 

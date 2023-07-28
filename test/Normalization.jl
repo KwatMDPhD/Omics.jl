@@ -193,7 +193,7 @@ for (fu, re) in zip(
 
     foreach(fu, eachcol(co))
 
-    @test isapprox(co, re; atol = 10^-5)
+    @test isapprox(co, re; atol = 1e-5)
 
     # 54.865 ns (0 allocations: 0 bytes)
     # 81.436 ns (0 allocations: 0 bytes)
@@ -253,7 +253,7 @@ for (fu, re) in zip(
 
     foreach(fu, eachrow(co))
 
-    @test isapprox(co, re; atol = 10^-5)
+    @test isapprox(co, re; atol = 1e-5)
 
     # 55.145 ns (0 allocations: 0 bytes)
     # 81.996 ns (0 allocations: 0 bytes)

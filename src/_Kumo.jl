@@ -28,7 +28,7 @@ function _add!(no)
 
 end
 
-function _add!(so, ta)
+function _add!(so::Struct, ta::Struct)
 
     sos = string(so)
 
@@ -58,7 +58,7 @@ function _add!(so, ta)
 
 end
 
-function _add!(so_::Tuple, ta)
+function _add!(so_::Tuple, ta::Struct)
 
     for so in so_
 
@@ -68,7 +68,7 @@ function _add!(so_::Tuple, ta)
 
 end
 
-function _add!(so, ta_::Tuple)
+function _add!(so::Struct, ta_::Tuple)
 
     for ta in ta_
 
@@ -84,7 +84,7 @@ function _add!(::Tuple, ::Tuple)
 
 end
 
-function _make_how_node(so, ho)
+function _make_how_node(so::Struct, ho)
 
     "$so.$ho"
 
@@ -136,11 +136,15 @@ macro st(sy, cl_...)
     println("AFTER")
     println(sy)
 
+    sys = string($sy)
+
+    cls_ = string.($cl_)
+
     quote
 
         @st $sy
 
-        NO_CL_[string($sy)] = map(string, $cl_)
+        NO_CL_[$sys] = $cls_
 
     end
 
@@ -200,7 +204,7 @@ function print()
 
 end
 
-function _elementize(no::String)
+function _elementize(no::AbstractString)
 
     if contains(no, '.')
 
@@ -216,7 +220,7 @@ function _elementize(no::String)
 
 end
 
-function _elementize(tu)
+function _elementize(tu::Tuple)
 
     Dict("data" => Dict("source" => tu[1], "target" => tu[2]))
 
@@ -250,9 +254,11 @@ function plot(
 
     n_ed = length(ed_)
 
-    println(
-        "🎨 Plotting $(BioLab.String.count(n_no, "node")) and $(BioLab.String.count(n_ed, "edge"))",
-    )
+    n_1 = BioLab.String.count(n_no, "node")
+
+    n_2 = BioLab.String.count(n_ed, "edge")
+
+    @info "Plotting $n_1 and $n_2"
 
     nohs = nos * 0.64
 
@@ -544,7 +550,9 @@ function heat(fe_sc; no_al_ = Dict{String, Tuple}(), pr = true)
         ("🔥 Succeeded (%)", (n_ex + n_al) / n_tr * 100),
     )
 
-        BioLab.check_print(pr, "$(rpad(st, 23)) $nu.")
+        stp = rpad(st, 23)
+
+        BioLab.check_print(pr, "$stp $nu.")
 
     end
 
@@ -589,11 +597,11 @@ function _get_norm(he_, pr)
 end
 
 function anneal(
-    he_::AbstractVector{<:Real},
+    he_::AbstractVector,
     so_x_ta_x_ed = make_edge_matrix();
     n = 10^3,
     de = 0.5,
-    ch = 10^-6,
+    ch = 1e-6,
     pr = true,
 )
 
@@ -690,7 +698,7 @@ function anneal(
 end
 
 # TODO: Test multiple dispatch.
-function anneal(no_x_sa_x_he, so_x_ta_x_ed = make_edge_matrix(); ke_ar...)
+function anneal(no_x_sa_x_he::AbstractMatrix, so_x_ta_x_ed = make_edge_matrix(); ke_ar...)
 
     no_x_sa_x_an = Matrix{Float64}(undef, size(no_x_sa_x_he))
 

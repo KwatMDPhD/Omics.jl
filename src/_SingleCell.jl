@@ -74,7 +74,7 @@ function read(sa_di)
 
         end
 
-        append!(ba_, map(ba -> "$sa.$ba", bas_))
+        append!(ba_, string.("$sa.", bas_))
 
         append!(idf_, da[!, 1])
 

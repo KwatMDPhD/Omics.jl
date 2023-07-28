@@ -82,7 +82,7 @@ no_x_sa_x_an = Kumo.anneal(no_x_sa_x_he, so_x_ta_x_ed; de, pr = false)
 
 for sa in los_
 
-    ous = mkpath(joinpath(ou, sa))
+    ous = mkdir(joinpath(ou, sa))
 
     id = findfirst(sa2 == sa for sa2 in sa_)
 
@@ -152,7 +152,7 @@ for (id, (na, nac, ro_, ro_x_co_x_nu)) in enumerate((
             n_ma = 10,
             n_pv = 10,
             pl = bo,
-            di = mkpath(joinpath(ou, "$ta.$na")),
+            di = mkdir(joinpath(ou, "$ta.$na")),
         )
 
         ta_x_na_x_sc[idt, id] = average_match_score(feature_x_statistics_x_number)

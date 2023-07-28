@@ -20,15 +20,15 @@ function rank_in_fraction(ra)
 
 end
 
-function range(ar::AbstractArray{Int}, ::Int)
+function range(fl::AbstractArray{Float64}, n::Int)
 
-    Base.range(minimum(ar), maximum(ar))
+    Base.range(minimum(fl), maximum(fl), n)
 
 end
 
-function range(ar, n)
+function range(it::AbstractArray{Int}, ::Int)
 
-    Base.range(minimum(ar), maximum(ar), n)
+    Base.range(minimum(it), maximum(it))
 
 end
 

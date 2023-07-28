@@ -94,11 +94,7 @@ function map_uniprot()
 
         pr = chop(ro; tail = 6)
 
-        if haskey(pr_di, pr)
-
-            error("$pr already exists.")
-
-        end
+        BioLab.Error.error_has_key(pr_di, pr)
 
         pr_di[pr] = co_an
 

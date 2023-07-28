@@ -1,7 +1,5 @@
 module Match
 
-using DataFrames: DataFrame
-
 using Printf: @sprintf
 
 using ProgressMeter: @showprogress
@@ -20,7 +18,7 @@ function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
 
 end
 
-function _align!(fl_::AbstractVector{Float64}, st)
+function _align!(fl_::AbstractVector{Float64}, st::Real)
 
     BioLab.Normalization.normalize_with_0!(fl_)
 
@@ -30,7 +28,7 @@ function _align!(fl_::AbstractVector{Float64}, st)
 
 end
 
-function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
+function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st::Real)
 
     for fl_ in eachrow(fe_x_sa_x_fl)
 
@@ -50,7 +48,7 @@ function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st)
 
 end
 
-function _align!(it, ::Any)
+function _align!(it::AbstractArray{Int}, ::Real)
 
     minimum(it), maximum(it)
 
@@ -490,6 +488,7 @@ end
 #
 #    nu2_ = fe_x_st_x_nu2[:, 1]
 #
+#    # TODO: ..
 #    go_ = map((nu1, nu2) -> !isnan(nu1) && !isnan(nu2), nu1_, nu2_)
 #
 #    fe1_ = fe1_[go_]
@@ -508,6 +507,7 @@ end
 #
 #    nu2_ = nu2_[id_]
 #
+#    # TODO: ..
 #    di_ = map((nu1, nu2) -> sqrt(nu1^2 + nu2^2), nu1_, nu2_)
 #
 #    BioLab.DataFrame.write("$pr.tsv", DataFrame(naf1 => fe1_, "Distance" => di_))

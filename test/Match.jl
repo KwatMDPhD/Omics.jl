@@ -39,8 +39,15 @@ end
 
 function make_directory_layout(title_text)
 
-    mkdir(joinpath(BioLab.TE, BioLab.Path.clean(title_text))),
-    Dict("title" => Dict("text" => title_text))
+    di = joinpath(BioLab.TE, BioLab.Path.clean(title_text))
+
+    if !isdir(di)
+
+        mkdir(di)
+
+    end
+
+    di, Dict("title" => Dict("text" => title_text))
 
 end
 
@@ -64,7 +71,7 @@ end
 
 const NA_ = benchmark(50000, 100, "ra")
 
-for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10), (40, 40))
+for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10))
 
     di, layout = make_directory_layout("n_ma = $n_ma, n_pv = $n_pv")
 

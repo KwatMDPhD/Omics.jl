@@ -87,7 +87,7 @@ no_x_sa_x_an = Kumo.anneal(no_x_sa_x_he, so_x_ta_x_ed; de, pr = false)
 
 for sa in los_
 
-    ous = mkpath(joinpath(ou, sa))
+    ous = mkdir(joinpath(ou, sa))
 
     id = findfirst(sa2 == sa for sa2 in sa_)
 

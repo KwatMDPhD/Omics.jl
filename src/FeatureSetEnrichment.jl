@@ -386,9 +386,9 @@ function plot(
         annotation,
         Dict(
             "y" => 0,
+            "font" => Dict("size" => 16),
             "borderpad" => 4.8,
             "bordercolor" => "#ffd96a",
-            "font" => Dict("size" => 16),
         ),
     )
 

@@ -2,11 +2,13 @@ module Error
 
 macro is_error(ex)
 
+    exe = esc(ex)
+
     quote
 
         try
 
-            $(esc(ex))
+            $exe
 
             false
 
@@ -17,6 +19,18 @@ macro is_error(ex)
             true
 
         end
+
+    end
+
+end
+
+function error_has_key(ke_va, ke)
+
+    if haskey(ke_va, ke)
+
+        va = ke_va[ke]
+
+        error("$ke (=> $va) already exists.")
 
     end
 

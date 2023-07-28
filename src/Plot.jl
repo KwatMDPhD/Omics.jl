@@ -85,9 +85,9 @@ function pick_color_scheme(::AbstractArray{Float64})
 
 end
 
-function pick_color_scheme(it_::AbstractArray{Int})
+function pick_color_scheme(it::AbstractArray{Int})
 
-    n = length(unique(it_))
+    n = length(unique(it))
 
     if n <= 1
 
@@ -111,7 +111,7 @@ function color(nu::Real, co)
 
 end
 
-function color(nu_, co = pick_color_scheme(nu_))
+function color(nu_::AbstractVector{<:Real}, co = pick_color_scheme(nu_))
 
     fl_ = Vector{Float64}(undef, length(nu_))
 
@@ -361,8 +361,8 @@ function plot_heat_map(
     nar = "Row",
     nac = "Column",
     colorscale = map_fraction_to_color(pick_color_scheme(z)),
-    grr_ = Vector{Union{Int, AbstractString}}(),
-    grc_ = Vector{Union{Int, AbstractString}}(),
+    grr_ = Vector{Int}(),
+    grc_ = Vector{Int}(),
     layout = Dict{String, Any}(),
     ke_ar...,
 )

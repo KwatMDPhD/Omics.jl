@@ -1,5 +1,6 @@
 module GEO
 
+# TODO: Use BioLab.DataFrame instead.
 using DataFrames: DataFrame
 
 using GZip: open

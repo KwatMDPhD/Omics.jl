@@ -10,6 +10,14 @@ using BioLab
 
 # ---- #
 
+const KE_VA = Dict("Key" => "Value")
+
+@test BioLab.Error.@is_error BioLab.Error.error_has_key(KE_VA, "Key")
+
+@test !BioLab.Error.@is_error BioLab.Error.error_has_key(KE_VA, "New Key")
+
+# ---- #
+
 for pa in ("missing_file", joinpath(BioLab.TE, "missing_path"))
 
     @test BioLab.Error.@is_error BioLab.Error.error_missing(pa)
