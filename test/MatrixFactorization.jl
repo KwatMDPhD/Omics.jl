@@ -22,13 +22,7 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
     @test BioLab.Error.@is_error BioLab.MatrixFactorization.write("", (maw,), (mah,))
 
-    di = joinpath(BioLab.TE, "$n_ro $n_co $n_fa")
-
-    if !isdir(di)
-
-        mkdir(di)
-
-    end
+    di = BioLab.Path.make_directory(joinpath(BioLab.TE, "$n_ro $n_co $n_fa"))
 
     BioLab.MatrixFactorization.write(di, (maw,), (mah,))
 

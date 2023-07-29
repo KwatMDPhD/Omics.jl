@@ -4,10 +4,6 @@ using BioLab
 
 # ---- #
 
-BioLab.Path.wait("missing_file")
-
-# ---- #
-
 const NA = "a_b.c-d+e!f%g%h]iJK"
 
 const NAC = "a_b.c_d_e_f_g_h_ijk"
@@ -20,7 +16,7 @@ end
 
 # ---- #
 
-BioLab.Path.open(BioLab.TE)
+BioLab.Path.wait("missing_file")
 
 # ---- #
 
@@ -43,6 +39,14 @@ const HI = r"^\."
 
 # ---- #
 
+const DI = BioLab.Path.make_directory(joinpath(BioLab.TE, "directory"))
+
+@test isdir(DI)
+
+BioLab.Path.make_directory(DI)
+
+# ---- #
+
 const DI2 = mkdir(joinpath(BioLab.TE, BioLab.Time.stamp()))
 
 const CH_ = 'a':'g'
@@ -58,3 +62,7 @@ end
 BioLab.Path.rank(DI2)
 
 @test BioLab.Path.read(DI2) == ["$id.$ch.$EX" for (id, ch) in enumerate(CH_)]
+
+# ---- #
+
+BioLab.Path.open(BioLab.TE)

@@ -1,5 +1,11 @@
 module Path
 
+function clean(pa)
+
+    replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
+
+end
+
 function wait(pa; sl = 1, li = 8)
 
     se = 0
@@ -11,26 +17,6 @@ function wait(pa; sl = 1, li = 8)
         se += sl
 
         @info "Waiting for $pa ($se/$li)"
-
-    end
-
-end
-
-function clean(pa)
-
-    replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
-
-end
-
-function open(pa)
-
-    try
-
-        run(`open --background $pa`)
-
-    catch
-
-        @error "Could not open $pa."
 
     end
 
@@ -56,6 +42,22 @@ function read(di; ig_ = (), ke_ = (), ke_ar...)
 
 end
 
+function make_directory(di)
+
+    if isdir(di)
+
+        @warn "$di already exists."
+
+    else
+
+        mkdir(di)
+
+    end
+
+    di
+
+end
+
 function rank(di)
 
     flnaex_ = rsplit.(readdir(di), '.'; limit = 3)
@@ -71,6 +73,20 @@ function rank(di)
             mv(joinpath(di, na1), joinpath(di, na2))
 
         end
+
+    end
+
+end
+
+function open(pa)
+
+    try
+
+        run(`open --background $pa`)
+
+    catch
+
+        @error "Could not open $pa."
 
     end
 
