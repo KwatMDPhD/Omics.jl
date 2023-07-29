@@ -53,7 +53,7 @@ for (n, re) in ((2, [-1, 9]), (3, [-1, 4, 9]), (5, [-1, 1.5, 4, 6.5, 9]), (11, F
 
     @test collect(BioLab.Rank.range(ITR_, n)) == -1:9
 
-    @test collect(BioLab.Rank.range(FLR_, n)) == re
+    @test collect(BioLab.Rank.range(vcat(NaN, FLR_), n)) == re
 
 end
 

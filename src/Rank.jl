@@ -22,7 +22,9 @@ end
 
 function range(fl::AbstractArray{Float64}, n::Int)
 
-    Base.range(minimum(fl), maximum(fl), n)
+    fl2 = view(fl, .!isnan.(fl))
+
+    Base.range(minimum(fl2), maximum(fl2), n)
 
 end
 

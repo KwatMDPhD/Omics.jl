@@ -113,6 +113,12 @@ end
 
 function color(nu_::AbstractVector{<:Real}, co = pick_color_scheme(nu_))
 
+    if length(nu_) == 1
+
+        return [color(0.5, co)]
+
+    end
+
     fl_ = Vector{Float64}(undef, length(nu_))
 
     copy!(fl_, nu_)

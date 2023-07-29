@@ -18,8 +18,6 @@ function read(sa_di)
 
     sa_ = Vector{String}()
 
-    ids___ = Vector{UnitRange{Int}}()
-
     n_ba = 0
 
     for (sa, di) in sa_di
@@ -78,9 +76,11 @@ function read(sa_di)
 
         append!(co_, da[!, 3])
 
-        push!(sa_, sa)
+        for _ in 1:n_bas
 
-        push!(ids___, (n_ba + 1):(n_ba + n_bas))
+            push!(sa_, sa)
+
+        end
 
         n_ba += n_bas
 
@@ -108,7 +108,7 @@ function read(sa_di)
 
     end
 
-    fe_, ba_, fe_x_ba_x_co, sa_, ids___
+    fe_, ba_, fe_x_ba_x_co, sa_
 
 end
 

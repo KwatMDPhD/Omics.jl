@@ -122,6 +122,10 @@ end
 
 # ---- #
 
+@test BioLab.Plot.color([1], CO) == ["#fcc9b9"]
+
+# ---- #
+
 const IT_ = [1, 2, N]
 
 # ---- #
