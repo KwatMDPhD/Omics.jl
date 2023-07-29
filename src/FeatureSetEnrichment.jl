@@ -452,9 +452,13 @@ function plot(
                 BioLab.Plot.AXIS,
                 Dict("domain" => yaxis3_domain, "title" => Dict("text" => "<b>Δ Enrichment</b>")),
             ),
-            "xaxis" => BioLab.Dict.merge_recursively(
-                BioLab.Dict.merge_recursively(BioLab.Plot.AXIS, BioLab.Plot.SPIKE),
-                Dict("zeroline" => false, "title" => Dict("text" => "<b>$naf (n=$n)</b>")),
+            "xaxis" => reduce(
+                BioLab.Dict.merge_recursively,
+                (
+                    BioLab.Plot.AXIS,
+                    BioLab.Plot.SPIKE,
+                    Dict("zeroline" => false, "title" => Dict("text" => "<b>$naf (n=$n)</b>")),
+                ),
             ),
             "annotations" => (
                 BioLab.Dict.merge_recursively(
@@ -543,7 +547,7 @@ function enrich(al, fe_, fe_x_sa_x_sc::AbstractMatrix, fe1___; n = 1, ex = 1)
 
 end
 
-function plot(di, al, fe_, fe_x_sa_x_sc, fe1___, se_, nac, sa_, se_x_sa_x_en; ex = 1)
+function plot(di, al, fe_, fe_x_sa_x_sc, fe1___, nac, se_, sa_, se_x_sa_x_en; ex = 1)
 
     BioLab.Error.error_missing(di)
 

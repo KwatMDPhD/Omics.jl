@@ -34,7 +34,7 @@ function range(it::AbstractArray{Int}, ::Int)
 
 end
 
-function get_extreme(n, n_ex)
+function get_extreme(n::Int, n_ex)
 
     if n / 2 < n_ex
 

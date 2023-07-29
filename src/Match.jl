@@ -188,6 +188,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
     natl = BioLab.String.limit(nat, n_li)
 
+    # TODO: Use BioLab.Plot.AXIS?
     axis = Dict(
         "tickcolor" => "#6c9956",
         "tickfont" => Dict("family" => _FONT_FAMILY_1, "size" => _FONT_SIZE_1),

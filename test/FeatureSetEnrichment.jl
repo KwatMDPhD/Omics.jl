@@ -245,8 +245,8 @@ se_x_sa_x_en = BioLab.FeatureSetEnrichment.enrich(AL, MFE_, FE_X_SA_X_MSC, MFE1_
     MFE_,
     FE_X_SA_X_MSC,
     MFE1___,
-    MSE_,
     "Sample",
+    MSE_,
     MSA_,
     se_x_sa_x_en;
     ex = EX,
@@ -258,8 +258,8 @@ BioLab.FeatureSetEnrichment.plot(
     MFE_,
     FE_X_SA_X_MSC,
     MFE1___,
-    MSE_,
     "Sample",
+    MSE_,
     MSA_,
     se_x_sa_x_en;
     ex = EX,
