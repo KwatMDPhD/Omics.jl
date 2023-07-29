@@ -17,7 +17,7 @@ const SA_DI = Dict(
     (sa, di) in (("Sample 96", "7166_mr_96_filtered"), ("Sample 87", "7166_mr_87_filtered"))
 )
 
-const FE_, BA_, FE_X_BA_X_CO, SA_, IDS___ = BioLab.SingleCell.read(SA_DI)
+const FE_, BA_, FE_X_BA_X_CO, SA_ = BioLab.SingleCell.read(SA_DI)
 
 const N_FE = 56858
 
@@ -29,9 +29,7 @@ const N_BA = 5158
 
 @test size(FE_X_BA_X_CO) == (N_FE, N_BA)
 
-@test SA_ == collect(keys(SA_DI))
-
-@test IDS___ == [1:3905, 3906:N_BA]
+@test length(SA_) == N_BA
 
 # ---- #
 

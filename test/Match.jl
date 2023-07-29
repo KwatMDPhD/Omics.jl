@@ -25,7 +25,7 @@ function benchmark(n_fe, n_sa, ho)
     end
 
     BioLab.Match.cor,
-    "Target",
+    "TargetTargetTargetTargetTargetTargetTargetTarget",
     "Feature",
     "Sample",
     ["Feature $id" for id in 1:n_fe],

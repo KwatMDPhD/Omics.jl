@@ -462,7 +462,7 @@ function plot(
                     Dict(
                         "yref" => "paper",
                         "xref" => "paper",
-                        "y" => 1.02,
+                        "y" => 1.04,
                         "text" => "Enrichment = <b>$enf</b>",
                         "font" => Dict("size" => 20, "color" => "#224634"),
                         "borderpad" => 12.8,

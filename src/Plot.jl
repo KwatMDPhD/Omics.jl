@@ -173,6 +173,21 @@ function _set_color(y_)
 
 end
 
+# TODO: Differentiate opacity and marker.opacity.
+function _set_opacity(nu___)
+
+    fill(0.88, length(nu___))
+
+end
+
+const COLORBAR = Dict(
+    "len" => 0.5,
+    "thickness" => 16,
+    "outlinecolor" => "#ebf6f7",
+    "title" => Dict("font" => Dict("family" => "Droid Sans Mono", "size" => 12.8)),
+    "tickfont" => Dict("family" => "Droid Sans Mono", "size" => 10),
+)
+
 const AXIS = Dict("automargin" => true, "showgrid" => false)
 
 const SPIKE = Dict(
@@ -192,6 +207,7 @@ function plot_scatter(
     name_ = _set_name(y_),
     mode_ = (y -> ifelse(length(y) < 10^3, "markers+lines", "lines")).(y_),
     marker_color_ = _set_color(y_),
+    opacity_ = _set_opacity(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -205,7 +221,7 @@ function plot_scatter(
                 "x" => x_[id],
                 "text" => text_[id],
                 "mode" => mode_[id],
-                "marker" => Dict("color" => marker_color_[id]),
+                "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
             ) for id in eachindex(y_)
         ],
         BioLab.Dict.merge_recursively(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
@@ -220,6 +236,7 @@ function plot_bar(
     x_ = _set_x(y_);
     name_ = _set_name(y_),
     marker_color_ = _set_color(y_),
+    opacity_ = _set_opacity(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -232,7 +249,7 @@ function plot_bar(
                 "name" => name_[id],
                 "y" => y_[id],
                 "x" => x_[id],
-                "marker" => Dict("color" => marker_color_[id]),
+                "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
             ) for id in eachindex(y_)
         ],
         BioLab.Dict.merge_recursively(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
@@ -249,6 +266,7 @@ function plot_histogram(
     rug_marker_size = ifelse(all(x -> length(x) < 100000, x_), 16, 0),
     name_ = _set_name(x_),
     marker_color_ = _set_color(x_),
+    opacity_ = _set_opacity(x_),
     histnorm = "",
     xbins_size = 0,
     layout = Dict{String, Any}(),
@@ -279,13 +297,13 @@ function plot_histogram(
 
     layout = BioLab.Dict.merge_recursively(
         Dict(
-            "yaxis" => BioLab.Dict.merge_recursively(
-                AXIS,
-                Dict("domain" => (0, fr), "zeroline" => false, "tickvals" => ()),
-            ),
             "yaxis2" => BioLab.Dict.merge_recursively(
                 AXIS,
                 Dict("domain" => (fr, 1), "title" => Dict("text" => yaxis2_title_text)),
+            ),
+            "yaxis" => BioLab.Dict.merge_recursively(
+                AXIS,
+                Dict("domain" => (0, fr), "zeroline" => false, "tickvals" => ()),
             ),
             "xaxis" => AXIS,
         ),
@@ -303,7 +321,7 @@ function plot_histogram(
             "legendgroup" => id,
             "name" => name_[id],
             "x" => x_[id],
-            "marker" => Dict("color" => marker_color_[id]),
+            "marker" => Dict("color" => marker_color_[id], "opacity" => opacity_[id]),
         )
 
         push!(
@@ -341,20 +359,6 @@ function plot_histogram(
     end
 
     plot(ht, data, layout; ke_ar...)
-
-end
-
-function _make_colorbar(x, z)
-
-    tickvals = BioLab.Rank.range(z, 10)
-
-    Dict(
-        "x" => x,
-        "thicknessmode" => "fraction",
-        "thickness" => 0.02,
-        "len" => 0.5,
-        "tickvals" => tickvals,
-    )
 
 end
 
@@ -406,6 +410,10 @@ function plot_heat_map(
 
     colorbarx = 1
 
+    dx = 0.064
+
+    n_ti = 8
+
     # TODO: Cluster within a group.
 
     if !isempty(grr_)
@@ -444,7 +452,10 @@ function plot_heat_map(
             "x" => x,
             "text" => collect(eachrow(text)),
             "colorscale" => colorscale,
-            "colorbar" => _make_colorbar(colorbarx, z),
+            "colorbar" => BioLab.Dict.merge_recursively(
+                COLORBAR,
+                Dict("x" => colorbarx, "tickvals" => BioLab.Rank.range(z, n_ti)),
+            ),
         ),
     )
 
@@ -459,7 +470,10 @@ function plot_heat_map(
                 "z" => [[grr] for grr in grr_],
                 "hoverinfo" => "y+z+name",
                 "colorscale" => map_fraction_to_color(pick_color_scheme(grr_)),
-                "colorbar" => _make_colorbar(colorbarx += 0.06, grr_),
+                "colorbar" => BioLab.Dict.merge_recursively(
+                    COLORBAR,
+                    Dict("x" => (colorbarx += dx), "tickvals" => BioLab.Rank.range(grr_, n_ti)),
+                ),
             ),
         )
 
@@ -476,7 +490,10 @@ function plot_heat_map(
                 "z" => [grc_],
                 "hoverinfo" => "x+z+name",
                 "colorscale" => map_fraction_to_color(pick_color_scheme(grc_)),
-                "colorbar" => _make_colorbar(colorbarx += 0.06, grc_),
+                "colorbar" => BioLab.Dict.merge_recursively(
+                    COLORBAR,
+                    Dict("x" => (colorbarx += dx), "tickvals" => BioLab.Rank.range(grc_, n_ti)),
+                ),
             ),
         )
 
@@ -494,6 +511,7 @@ function plot_radar(
     name_ = _set_name(theta_),
     line_color_ = _set_color(theta_),
     fillcolor_ = line_color_,
+    opacity_ = _set_opacity(theta_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -519,6 +537,7 @@ function plot_radar(
                 "marker" => Dict("size" => 4, "color" => line_color_[id]),
                 "fill" => "toself",
                 "fillcolor" => fillcolor_[id],
+                "opacity" => opacity_[id],
             ) for id in eachindex(theta_)
         ],
         BioLab.Dict.merge_recursively(

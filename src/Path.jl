@@ -6,7 +6,7 @@ function clean(pa)
 
 end
 
-function wait(pa; sl = 1, li = 8)
+function wait(pa; sl = 1, li = 4)
 
     se = 0
 
