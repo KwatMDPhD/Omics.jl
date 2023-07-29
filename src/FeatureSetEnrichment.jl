@@ -493,7 +493,7 @@ function plot(
 
 end
 
-function enrich(al, fe_, sc_, fe1___; n = 1, ex = 1)
+function enrich(al, fe_, sc_::AbstractVector, fe1___; n = 1, ex = 1)
 
     en_ = Vector{Float64}(undef, length(fe1___))
 
@@ -521,9 +521,9 @@ function enrich(al, fe_, sc_, fe1___; n = 1, ex = 1)
 
 end
 
-function enrich(al, fe_, sa_, fe_x_sa_x_sc, fe1___; n = 1, ex = 1)
+function enrich(al, fe_, fe_x_sa_x_sc::AbstractMatrix, fe1___; n = 1, ex = 1)
 
-    se_x_sa_x_en = Matrix{Float64}(undef, (length(fe1___), length(sa_)))
+    se_x_sa_x_en = Matrix{Float64}(undef, (length(fe1___), size(fe_x_sa_x_sc, 2)))
 
     no_ = BitVector(undef, length(fe_))
 
@@ -543,7 +543,7 @@ function enrich(al, fe_, sa_, fe_x_sa_x_sc, fe1___; n = 1, ex = 1)
 
 end
 
-function plot(di, al, fe_, sa_, fe_x_sa_x_sc, se_, fe1___, se_x_sa_x_en, nac; ex = 1)
+function plot(di, al, fe_, fe_x_sa_x_sc, fe1___, se_, nac, sa_, se_x_sa_x_en; ex = 1)
 
     BioLab.Error.error_missing(di)
 
