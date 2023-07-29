@@ -66,6 +66,14 @@ end
 
 # ---- #
 
+for he in ("#ff0000", "#00ff00", "#0000ff")
+
+    @test BioLab.Plot.add_alpha(he, 0.5) == "$(he)80"
+
+end
+
+# ---- #
+
 for (he_, fr_) in (
     (("#000000", "#ffffff"), (0, 1)),
     (("#ff0000", "#00ff00", "#0000ff"), (0, 0.5, 1)),
@@ -177,7 +185,11 @@ const SCY_ = [[-1, 0, 2], [3, 4]]
 
 # ---- #
 
-BioLab.Plot.plot_scatter("", SCY_)
+BioLab.Plot.plot_scatter(
+    "",
+    SCY_;
+    marker_color_ = ["#20d9ba", BioLab.Plot.add_alpha("#20d9ba", 0.5)],
+)
 
 # ---- #
 

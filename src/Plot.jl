@@ -2,7 +2,7 @@ module Plot
 
 using ColorSchemes: ColorScheme, bwr, plasma
 
-using Colors: Colorant, hex
+using Colors: Colorant, coloralpha, hex
 
 using JSON: json
 
@@ -65,11 +65,17 @@ const COSTA = _make_color_scheme(("#8c1515", "#175e54"))
 
 const COMON = _make_color_scheme(("#fbb92d",))
 
-function _make_hex(rg)
+function _make_hex(rg, style = :AUTO)
 
-    he = lowercase(hex(rg))
+    he = lowercase(hex(rg, style))
 
     "#$he"
+
+end
+
+function add_alpha(he, al)
+
+    _make_hex(coloralpha(parse(Colorant, he), al))
 
 end
 
