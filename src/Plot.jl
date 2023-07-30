@@ -173,9 +173,9 @@ function _set_name(y_)
 
 end
 
-function _set_color(y_)
+function _set_marker(y_)
 
-    color(collect(eachindex(y_)))
+    [Dict("color" => co) for co in color(collect(eachindex(y_)))]
 
 end
 
@@ -205,7 +205,7 @@ function plot_scatter(
     text_ = _set_text(y_),
     name_ = _set_name(y_),
     mode_ = (y -> ifelse(length(y) < 10^3, "markers+lines", "lines")).(y_),
-    marker_color_ = _set_color(y_),
+    marker_ = _set_marker(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -219,7 +219,7 @@ function plot_scatter(
                 "x" => x_[id],
                 "text" => text_[id],
                 "mode" => mode_[id],
-                "marker" => Dict("color" => marker_color_[id]),
+                "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
         BioLab.Dict.merge_recursively(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
@@ -233,7 +233,7 @@ function plot_bar(
     y_,
     x_ = _set_x(y_);
     name_ = _set_name(y_),
-    marker_color_ = _set_color(y_),
+    marker_ = _set_marker(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -246,7 +246,7 @@ function plot_bar(
                 "name" => name_[id],
                 "y" => y_[id],
                 "x" => x_[id],
-                "marker" => Dict("color" => marker_color_[id]),
+                "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
         BioLab.Dict.merge_recursively(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
@@ -262,7 +262,7 @@ function plot_histogram(
     text_ = _set_text(x_);
     rug_marker_size = ifelse(all(x -> length(x) < 100000, x_), 16, 0),
     name_ = _set_name(x_),
-    marker_color_ = _set_color(x_),
+    marker_ = _set_marker(x_),
     histnorm = "",
     xbins_size = 0,
     layout = Dict{String, Any}(),
@@ -317,7 +317,7 @@ function plot_histogram(
             "legendgroup" => id,
             "name" => name_[id],
             "x" => x_[id],
-            "marker" => Dict("color" => marker_color_[id]),
+            "marker" => marker_[id],
         )
 
         push!(
@@ -505,7 +505,7 @@ function plot_radar(
     r_;
     radialaxis_range = (0, maximum(vcat(r_...))),
     name_ = _set_name(theta_),
-    line_color_ = _set_color(theta_),
+    line_color_ = color(collect(eachindex(theta_))),
     fillcolor_ = line_color_,
     layout = Dict{String, Any}(),
     ke_ar...,

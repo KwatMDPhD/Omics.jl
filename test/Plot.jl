@@ -185,10 +185,15 @@ const SCY_ = [[-1, 0, 2], [3, 4]]
 
 # ---- #
 
+const HE = "#20d9ba"
+
 BioLab.Plot.plot_scatter(
     "",
     SCY_;
-    marker_color_ = ["#20d9ba", BioLab.Plot.add_alpha("#20d9ba", 0.5)],
+    marker_ = (
+        Dict("size" => 40, "color" => HE),
+        Dict("size" => 20, "color" => BioLab.Plot.add_alpha(HE, 0.5)),
+    ),
 )
 
 # ---- #
