@@ -358,7 +358,7 @@ function plot(
         "x" => x,
         "text" => fe_,
         "mode" => "lines",
-        "line" => Dict("width" => 2, "color" => "#ffffff"),
+        "line" => Dict("width" => 0.4),
         "fill" => "tozeroy",
     )
 
@@ -368,7 +368,7 @@ function plot(
 
     coe1 = "#07fa07"
 
-    coe2 = "rgba(7, 250, 7, 0.32)"
+    coe2 = BioLab.Plot.add_alpha(coe1, 0.32)
 
     title_text = BioLab.String.limit(title_text, 80)
 
@@ -399,11 +399,21 @@ function plot(
         [
             BioLab.Dict.merge_recursively(
                 scatter,
-                Dict("name" => "- Score", "y" => ifelse.(sc_ .< 0, sc_, 0), "fillcolor" => cob),
+                Dict(
+                    "name" => "- Score",
+                    "y" => ifelse.(sc_ .< 0, sc_, 0),
+                    "line" => Dict("color" => cob),
+                    "fillcolor" => cob,
+                ),
             ),
             BioLab.Dict.merge_recursively(
                 scatter,
-                Dict("name" => "+ Score", "y" => ifelse.(0 .< sc_, sc_, 0), "fillcolor" => cor),
+                Dict(
+                    "name" => "+ Score",
+                    "y" => ifelse.(0 .< sc_, sc_, 0),
+                    "line" => Dict("color" => cor),
+                    "fillcolor" => cor,
+                ),
             ),
             Dict(
                 "yaxis" => "y2",
