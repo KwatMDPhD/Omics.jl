@@ -557,7 +557,7 @@ function enrich(al, fe_, fe_x_sa_x_sc::AbstractMatrix, fe1___; mi = 1, ex = 1)
 
 end
 
-function plot(di, al, fe_, fe_x_sa_x_sc, fe1___, nac, se_, sa_, se_x_sa_x_en; ex = 1)
+function plot(di, al, fe_, fe_x_sa_x_sc, fe1___, nac, se_, sa_, se_x_sa_x_en; ex = 1, n_pl = 4)
 
     BioLab.Error.error_missing(di)
 
@@ -582,7 +582,7 @@ function plot(di, al, fe_, fe_x_sa_x_sc, fe1___, nac, se_, sa_, se_x_sa_x_en; ex
     for id_ in
         view(view(CartesianIndices(se_x_sa_x_en), noe), sortperm(view(se_x_sa_x_en, noe)))[BioLab.Rank.get_extreme(
         sum(noe),
-        8,
+        n_pl,
     )]
 
         id1, id2 = Tuple(id_)
