@@ -507,7 +507,7 @@ function plot(
 
 end
 
-function enrich(al, fe_, sc_::AbstractVector, fe1___; n = 1, ex = 1)
+function enrich(al, fe_, sc_::AbstractVector, fe1___; mi = 1, ex = 1)
 
     en_ = Vector{Float64}(undef, length(fe1___))
 
@@ -517,7 +517,7 @@ function enrich(al, fe_, sc_::AbstractVector, fe1___; n = 1, ex = 1)
 
         is_ = BioLab.Dict.is_in(fe_id, fe1_)
 
-        if sum(is_) < n
+        if sum(is_) < mi
 
             en = NaN
 
@@ -535,7 +535,7 @@ function enrich(al, fe_, sc_::AbstractVector, fe1___; n = 1, ex = 1)
 
 end
 
-function enrich(al, fe_, fe_x_sa_x_sc::AbstractMatrix, fe1___; n = 1, ex = 1)
+function enrich(al, fe_, fe_x_sa_x_sc::AbstractMatrix, fe1___; mi = 1, ex = 1)
 
     se_x_sa_x_en = Matrix{Float64}(undef, (length(fe1___), size(fe_x_sa_x_sc, 2)))
 
@@ -549,7 +549,7 @@ function enrich(al, fe_, fe_x_sa_x_sc::AbstractMatrix, fe1___; n = 1, ex = 1)
 
         so_ = sortperm(scn_; rev = true)
 
-        se_x_sa_x_en[:, id] = enrich(al, view(fe_[no_], so_), view(scn_, so_), fe1___; n, ex)
+        se_x_sa_x_en[:, id] = enrich(al, view(fe_[no_], so_), view(scn_, so_), fe1___; mi, ex)
 
     end
 
