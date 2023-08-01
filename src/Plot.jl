@@ -587,6 +587,8 @@ function animate(gi, pn_)
 
     BioLab.Path.open(gi)
 
+    gi
+
 end
 
 end

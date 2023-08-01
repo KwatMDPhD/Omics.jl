@@ -39,11 +39,11 @@ const HI = r"^\."
 
 # ---- #
 
-const DI = BioLab.Path.make_directory(joinpath(BioLab.TE, "directory"))
+const DI1 = BioLab.Path.make_directory(joinpath(BioLab.TE, "directory"))
 
-@test isdir(DI)
+@test isdir(DI1)
 
-BioLab.Path.make_directory(DI)
+BioLab.Path.make_directory(DI1)
 
 # ---- #
 
@@ -59,9 +59,7 @@ for (nu, ch) in zip((0.7, 1, 1.1, 3, 10, 12, 24), CH_)
 
 end
 
-BioLab.Path.rank(DI2)
-
-@test BioLab.Path.read(DI2) == ["$id.$ch.$EX" for (id, ch) in enumerate(CH_)]
+@test BioLab.Path.read(BioLab.Path.rank(DI2)) == ["$id.$ch.$EX" for (id, ch) in enumerate(CH_)]
 
 # ---- #
 

@@ -117,6 +117,8 @@ function plot(
 
     end
 
+    ht
+
 end
 
 function position!(el_, el2_)

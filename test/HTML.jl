@@ -12,15 +12,12 @@ const SC = "SCRIPT"
 
 # ---- #
 
-BioLab.HTML.make("", ID, SR_, SC)
+@test dirname(BioLab.HTML.make("", ID, SR_, SC)) == BioLab.TE
 
 # ---- #
 
-const HT = joinpath(BioLab.TE, "name.html")
-
-BioLab.HTML.make(HT, ID, SR_, SC)
-
-@test length(readlines(HT)) == 10 + length(SR_)
+@test length(readlines(BioLab.HTML.make(joinpath(BioLab.TE, "name.html"), ID, SR_, SC))) ==
+      10 + length(SR_)
 
 # ---- #
 

@@ -56,7 +56,9 @@ const NAME1 = "preset"
 
 const EX1 = "png"
 
-BioLab.Graph.plot(joinpath(BioLab.TE, "$NAME1.html"), EL_; la = Dict("name" => NAME1), ex = EX1)
+const HT = joinpath(BioLab.TE, "$NAME1.html")
+
+@test BioLab.Graph.plot(HT, EL_; la = Dict("name" => NAME1), ex = EX1) == HT
 
 const FI1 = joinpath(DW, "$NAME1.$EX1")
 

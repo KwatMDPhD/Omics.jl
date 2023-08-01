@@ -91,8 +91,6 @@ const DT = DataFrame(
     "Column 4" => string.(CO2),
 )
 
-const TS = joinpath(BioLab.TE, "write.tsv")
-
-BioLab.DataFrame.write(TS, DT)
-
-@test eltype.(eachcol(BioLab.DataFrame.read(TS))) == [Int, Float64, Int, Float64]
+@test eltype.(
+    eachcol(BioLab.DataFrame.read(BioLab.DataFrame.write(joinpath(BioLab.TE, "write.tsv"), DT)))
+) == [Int, Float64, Int, Float64]

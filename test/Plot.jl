@@ -305,4 +305,6 @@ BioLab.Plot.plot_radar(
 
 # ---- #
 
-BioLab.Plot.animate(joinpath(BioLab.TE, "animate.gif"), (joinpath(DA, "$pn.png") for pn in 1:2))
+const GI = joinpath(BioLab.TE, "animate.gif")
+
+@test BioLab.Plot.animate(GI, (joinpath(DA, "$pn.png") for pn in 1:2)) == GI

@@ -121,6 +121,8 @@ function write(
 
     end
 
+    di
+
 end
 
 end

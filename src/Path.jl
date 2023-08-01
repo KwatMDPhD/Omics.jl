@@ -76,6 +76,8 @@ function rank(di)
 
     end
 
+    di
+
 end
 
 function open(pa)

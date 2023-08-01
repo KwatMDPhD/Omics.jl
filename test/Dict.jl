@@ -183,8 +183,6 @@ end
 
 # ---- #
 
-const JSW = joinpath(BioLab.TE, "write_read.json")
-
 const DIW = Dict(
     "Luffy" => "Pirate King",
     "Crews" => [
@@ -202,6 +200,4 @@ const DIW = Dict(
     "episode" => 1030,
 )
 
-BioLab.Dict.write(JSW, DIW)
-
-@test DIW == BioLab.Dict.read(JSW)
+@test DIW == BioLab.Dict.read(BioLab.Dict.write(joinpath(BioLab.TE, "write_read.json"), DIW))

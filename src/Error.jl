@@ -38,19 +38,37 @@ function error_has_key(ke_va, ke)
 
 end
 
-function error_duplicate(an_)
+function error_duplicate(co)
 
-    if isempty(an_)
+    if isempty(co)
 
-        error("Collection is empty.")
+        error("Is empty.")
 
     end
 
-    if !allunique(an_)
+    if !allunique(co)
 
-        st = join(("$n $an" for (an, n) in BioLab.Collection.count_sort(an_) if 1 < n), ".\n")
+        st = join(("$n $an" for (an, n) in BioLab.Collection.count_sort(co) if 1 < n), ".\n")
 
-        error("Collection has duplicates.\n$st.")
+        error("Has duplicates.\n$st.")
+
+    end
+
+end
+
+function error_bad(co)
+
+    id_ = findall(BioLab.Bad.is, co)
+
+    n = sum(id_)
+
+    if !iszero(n)
+
+        n_no = BioLab.String.count(n, "bad value")
+
+        st = join(unique(co[id_]), ".\n")
+
+        error("Has $n_no.\n$st.")
 
     end
 

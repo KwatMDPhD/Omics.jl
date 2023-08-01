@@ -613,6 +613,8 @@ function plot(di, al, fe_, fe_x_sa_x_sc, fe1___, nac, se_, sa_, se_x_sa_x_en; ex
 
     end
 
+    di
+
 end
 
 end

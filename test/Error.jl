@@ -32,6 +32,68 @@ end
 
 # ---- #
 
+const SP_ = (
+    " ",
+    ",",
+    ".",
+    ";",
+    ":",
+    "?",
+    "!",
+    "(",
+    ")",
+    "[",
+    "]",
+    "{",
+    "}",
+    "<",
+    ">",
+    "=",
+    "~",
+    "+",
+    "-",
+    "*",
+    "^",
+    "/",
+    "%",
+    "|",
+    "&",
+    "_",
+    "@",
+    "#",
+    "\"",
+    "\'",
+    "`",
+)
+
+@test BioLab.Error.@is_error BioLab.Error.error_bad((
+    nothing,
+    missing,
+    NaN,
+    -Inf,
+    Inf,
+    "",
+    "α",
+    "π",
+    SP_...,
+))
+
+@test !BioLab.Error.@is_error BioLab.Error.error_bad((
+    -0.0,
+    0.0,
+    1.0,
+    1,
+    "Abc",
+    "A",
+    "a",
+    string.("A", SP_)...,
+    string.(SP_, "A")...,
+    string.("A", SP_, "B")...,
+    'A',
+))
+
+# ---- #
+
 for pa in ("missing_file", joinpath(BioLab.TE, "missing_path"))
 
     @test BioLab.Error.@is_error BioLab.Error.error_missing(pa)

@@ -24,7 +24,7 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3))
 
     di = BioLab.Path.make_directory(joinpath(BioLab.TE, "$n_ro $n_co $n_fa"))
 
-    BioLab.MatrixFactorization.write(di, (maw,), (mah,))
+    @test BioLab.MatrixFactorization.write(di, (maw,), (mah,)) == di
 
     @test maw ==
           Matrix(BioLab.DataFrame.read(joinpath(di, "row1_x_factor_x_positive.tsv"))[!, 2:end])

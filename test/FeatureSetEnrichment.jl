@@ -252,7 +252,7 @@ se_x_sa_x_en = BioLab.FeatureSetEnrichment.enrich(AL, MFE_, FE_X_SA_X_MSC, MFE1_
     ex = EX,
 )
 
-BioLab.FeatureSetEnrichment.plot(
+@test BioLab.FeatureSetEnrichment.plot(
     BioLab.TE,
     AL,
     MFE_,
@@ -263,4 +263,4 @@ BioLab.FeatureSetEnrichment.plot(
     MSA_,
     se_x_sa_x_en;
     ex = EX,
-)
+) == BioLab.TE
