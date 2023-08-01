@@ -1,5 +1,7 @@
 module Error
 
+using BioLab
+
 macro is_error(ex)
 
     exe = esc(ex)
@@ -31,6 +33,24 @@ function error_has_key(ke_va, ke)
         va = ke_va[ke]
 
         error("$ke (=> $va) already exists.")
+
+    end
+
+end
+
+function error_duplicate(an_)
+
+    if isempty(an_)
+
+        error("Collection is empty.")
+
+    end
+
+    if !allunique(an_)
+
+        st = join(("$n $an" for (an, n) in BioLab.Collection.count_sort(an_) if 1 < n), ".\n")
+
+        error("Collection has duplicates.\n$st.")
 
     end
 

@@ -100,7 +100,7 @@ function read(sa_di)
 
     if !allunique(fe_)
 
-        st = join(("$va $ke" for (ke, va) in BioLab.Collection.count_sort(fe_) if 1 < va), ". ")
+        st = join(("$n $fe" for (fe, n) in BioLab.Collection.count_sort(fe_) if 1 < n), ".\n")
 
         @warn "Features have duplicates.\n$st."
 

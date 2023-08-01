@@ -18,6 +18,20 @@ const KE_VA = Dict("Key" => "Value")
 
 # ---- #
 
+for an_ in ((), ('a', 'a'), ('a', 'a', 'a', 'b', 'b'), (1, 1.0))
+
+    @test BioLab.Error.@is_error BioLab.Error.error_duplicate(an_)
+
+end
+
+for an_ in (('a', 'b'), (1, 2))
+
+    @test !BioLab.Error.@is_error BioLab.Error.error_duplicate(an_)
+
+end
+
+# ---- #
+
 for pa in ("missing_file", joinpath(BioLab.TE, "missing_path"))
 
     @test BioLab.Error.@is_error BioLab.Error.error_missing(pa)
