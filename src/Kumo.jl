@@ -360,20 +360,21 @@ function plot(
 
 end
 
-# TODO: Pick up.
-function animate(gi, js, he___; pe = 1, st_ = Vector{Dict}())
+function animate(gi, js, he___; pe = 1, st_ = Vector{Dict{String, Any}}())
 
     n = length(he___)
 
-    if pe == 0
+    if iszero(pe)
+
+        @info "Animating changes"
 
         ch = true
 
         pe = 1
 
-        println("📽️  Animating changes")
-
     else
+
+        @info "Animating every $pe of $n"
 
         ch = false
 
@@ -382,8 +383,6 @@ function animate(gi, js, he___; pe = 1, st_ = Vector{Dict}())
             pe = ceil(Int, pe * n)
 
         end
-
-        println("📽️  Animating every $pe of $n")
 
     end
 
@@ -403,27 +402,25 @@ function animate(gi, js, he___; pe = 1, st_ = Vector{Dict}())
 
     for id in 1:n
 
-        if !(id == 1 || id % pe == 0 || id == n)
+        if id != 1 && !iszero(id % pe) && id != n
 
             continue
 
         end
 
-        pri = "$(pr)_$id"
-
         he_ = he___[id]
 
         if ch && 1 < id
 
-            he_ -= he___[id - 1]
+            he_ .-= he___[id - 1]
 
         end
 
-        plot(joinpath(di, "$pri.html"); js, st_, he_, ex = "png")
+        plot(joinpath(di, "$(pr)_$id.html"); js, st_, he_, ex = "png")
 
     end
 
-    for pn in BioLab.Path.read(dw; ig_ = (r"download$",), ke_)
+    for pn in BioLab.Path.read(dw; ke_)
 
         mv(joinpath(dw, pn), joinpath(di, replace(pn, "$(pr)_" => "")))
 
@@ -433,7 +430,7 @@ function animate(gi, js, he___; pe = 1, st_ = Vector{Dict}())
         gi,
         sort(
             BioLab.Path.read(di; join = true, ke_ = (r"png$",));
-            by = pa -> parse(Int, splitext(basename(pa))[1]),
+            by = pa -> parse(Int, chop(basename(pa); tail = 4)),
         ),
     )
 
@@ -441,11 +438,11 @@ end
 
 function make_edge_matrix()
 
-    no_id = BioLab.Collection.pair_index(NO_)[1]
+    no_id = Dict(no => id for (id, no) in enumerate(NO_))
 
     n = length(no_id)
 
-    so_x_ta_x_ed = fill(false, (n, n))
+    so_x_ta_x_ed = falses((n, n))
 
     for (so, ta) in ED_
 
@@ -457,90 +454,83 @@ function make_edge_matrix()
 
 end
 
-function heat(fe_sc; no_al_ = Dict{String, Tuple}(), pr = true)
+function heat(no_he; no_pa_ = Dict{String, Tuple}())
 
-    he_ = fill(0, length(NO_))
+    n = length(NO_)
 
-    n_tr = 0
+    he_ = zeros(n)
 
-    n_ex = 0
-
-    n_al = 0
+    n_1 = n_2 = 0
 
     for (id, no) in enumerate(NO_)
 
-        if contains(no, '.') || endswith(no, '_')
+        if haskey(no_he, no)
 
-            continue
+            he = no_he[no]
 
-        end
+            @info "$no --> $he."
 
-        n_tr += 1
+            he_[id] = he
 
-        if haskey(fe_sc, no)
+            n_1 += 1
 
-            he_[id] = fe_sc[no]
+        elseif haskey(no_pa_, no)
 
-            n_ex += 1
+            he2_ = Vector{Float64}()
 
-        elseif haskey(no_al_, no)
+            for pa in no_pa_[no]
 
-            hea_ = Vector{Float64}()
+                if haskey(no_he, pa)
 
-            for al in no_al_[no]
+                    he2 = no_he[pa]
 
-                if haskey(fe_sc, al)
+                    @info "$no --> $pa --> $he2."
 
-                    he = fe_sc[al]
-
-                    BioLab.check_print(pr, "$no 📛 $al 👉 $he")
-
-                    push!(hea_, he)
+                    push!(he2_, he2)
 
                 end
 
             end
 
-            if !isempty(hea_)
+            if isempty(he2_)
 
-                he = mean(hea_)
+                @info "Failed to part-heat $no."
 
-                BioLab.check_print(pr, "$no 🔱 $he")
+            else
+
+                he = mean(he2_)
+
+                @info "$no --> --> $he."
 
                 he_[id] = he
 
-                n_al += 1
+                n_2 += 1
 
             end
+
+        else
+
+            @info "Failed to heat $no."
 
         end
 
     end
 
-    for (st, nu) in (
-        ("🤞 Tried", n_tr),
-        ("📇 Exactly heated", n_ex),
-        ("📛 Alias heated", n_al),
-        ("🔥 Succeeded (%)", (n_ex + n_al) / n_tr * 100),
-    )
+    n_tr = (n - sum(no -> contains(no, '.') || endswith(no, '_'), NO_))
 
-        stp = rpad(st, 23)
-
-        BioLab.check_print(pr, "$stp $nu.")
-
-    end
+    @info "Heated." n n_tr n_1 n_2 BioLab.String.format((n_1 + n_2) / n_tr * 100)
 
     he_
 
 end
 
-function heat(fe_, fe_x_sa_x_sc; no_al_ = Dict{String, Tuple}())
+function heat(fe_, fe_x_sa_x_sc; no_pa_ = Dict{String, Tuple}())
 
-    no_x_sa_x_he = fill(0, length(NO_), size(fe_x_sa_x_sc, 2))
+    no_x_sa_x_he = zeros((length(NO_), size(fe_x_sa_x_sc, 2)))
 
     for (id, sc_) in enumerate(eachcol(fe_x_sa_x_sc))
 
-        no_x_sa_x_he[:, id] = heat(Dict(zip(fe_, sc_)); no_al_, pr = id == 1)
+        no_x_sa_x_he[:, id] = heat(Dict(zip(fe_, sc_)); no_pa_)
 
     end
 
@@ -548,21 +538,27 @@ function heat(fe_, fe_x_sa_x_sc; no_al_ = Dict{String, Tuple}())
 
 end
 
-function _get_norm(he_, pr)
+function _get_norm(he_)
 
     no = norm(he_)
 
-    BioLab.check_print(pr, "🧮 $(BioLab.String.format(no)).")
+    @info begin
 
-    if pr
+        println("Norm = $no.")
 
-        n = maximum(length(no) for no in NO_) + 2
+        id_ = sortperm(he_; rev = true)
 
-        for (he, no) in zip(BioLab.Vector.sort_like((he_, NO_); ic = false)...)
+        for (he, no) in zip(view(he_, id_), view(NO_, id_))
 
-            BioLab.check_print(!iszero(he), "  $(rpad(no, n))$(BioLab.String.format(he)).")
+            if !iszero(he)
+
+                println("$no --> $he.")
+
+            end
 
         end
+
+        "Last statement."
 
     end
 
@@ -570,14 +566,7 @@ function _get_norm(he_, pr)
 
 end
 
-function anneal(
-    he_::AbstractVector,
-    so_x_ta_x_ed = make_edge_matrix();
-    n = 10^3,
-    de = 0.5,
-    ch = 1e-6,
-    pr = true,
-)
+function anneal(he_::AbstractVector, so_x_ta_x_ed; n = 10^3, de = 0.5, ch = 1e-6)
 
     n_ta = size(so_x_ta_x_ed, 2)
 
@@ -585,7 +574,7 @@ function anneal(
 
     he___ = [he_]
 
-    no = _get_norm(he_, pr)
+    no = _get_norm(he_)
 
     for id in 1:n
 
@@ -605,7 +594,7 @@ function anneal(
 
             end
 
-            hes_ = he_[so_]
+            hes_ = view(he_, so_)
 
             if contains(ta, '.')
 
@@ -617,21 +606,21 @@ function anneal(
 
                 end
 
-                ho = split(ta, '.')[2]
+                n_ch = lenght(ta)
+
+                ho = view(ta, n_ch - 1, n_ch)
 
                 if ho == "de"
 
-                    he2_[idt] = -mean(hes_)
+                    si = -1
 
-                elseif ho == "in"
+                else#if ho == "in"
 
-                    he2_[idt] = mean(hes_)
-
-                else
-
-                    error()
+                    si = 1
 
                 end
+
+                he2_[idt] = si * mean(hes_)
 
             else
 
@@ -643,21 +632,21 @@ function anneal(
 
         push!(he___, he2_)
 
-        no2 = _get_norm(he2_, pr)
+        no2 = _get_norm(he2_)
 
         ch2 = no2 - no
 
-        BioLab.check_print(pr, "  🐣 $(BioLab.String.format(ch2)).")
+        @info "Δ = $ch2."
 
         if abs(ch2) < ch
 
-            BioLab.check_print(pr, "🏁 $id / $n.")
+            @info "Converged."
 
             break
 
         elseif id == n
 
-            @warn "👺 Did not converge." no2 ch2
+            @info "Failed to converge." no2 ch2
 
         end
 
@@ -671,14 +660,13 @@ function anneal(
 
 end
 
-# TODO: Test multiple dispatch.
-function anneal(no_x_sa_x_he::AbstractMatrix, so_x_ta_x_ed = make_edge_matrix(); ke_ar...)
+function anneal(no_x_sa_x_he::AbstractMatrix, so_x_ta_x_ed; ke_ar...)
 
-    no_x_sa_x_an = Matrix{Float64}(undef, size(no_x_sa_x_he))
+    no_x_sa_x_an = similar(no_x_sa_x_he)
 
     for (id, he_) in enumerate(eachcol(no_x_sa_x_he))
 
-        no_x_sa_x_an[:, id] = anneal(convert(Vector{Float64}, he_), so_x_ta_x_ed; ke_ar...)[end]
+        no_x_sa_x_an[:, id] .= anneal(he_, so_x_ta_x_ed; ke_ar...)[end]
 
     end
 
