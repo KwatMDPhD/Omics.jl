@@ -6,11 +6,16 @@ using StatsBase: mean
 
 using BioLab
 
+# TODO: Try not to access the global variables.
+# TODO: Consider also using Set.
+
 const NO_ = Vector{String}()
 
 const NO_CL_ = Dict{String, Tuple{Vararg{String}}}()
 
 const ED_ = Vector{Tuple{String, String}}()
+
+# TODO Consider returning.
 
 function _add!(no)
 
@@ -78,12 +83,6 @@ function _add!(so::Struct, ta_::Tuple)
 
 end
 
-function _add!(::Tuple, ::Tuple)
-
-    error("Can not add many-to-many edges.")
-
-end
-
 function _make_how_node(so::Struct, ho)
 
     "$so.$ho"
@@ -110,12 +109,7 @@ end
 
 macro st(sy)
 
-    # TODO
-    println("BEFORE")
-    println(sy)
     sy = esc(sy)
-    println("AFTER")
-    println(sy)
 
     quote
 
@@ -130,11 +124,9 @@ end
 macro st(sy, cl_...)
 
     # TODO
-    println("BEFORE")
-    println(sy)
+    @info "Before" sy
     sy = esc(sy)
-    println("AFTER")
-    println(sy)
+    @info "After" sy
 
     sys = string($sy)
 
@@ -149,6 +141,8 @@ macro st(sy, cl_...)
     end
 
 end
+
+# TODO Consider returning in _add! instead.
 
 function <<(so, ta)
 
@@ -200,7 +194,7 @@ function print()
 
     n_ed = length(Kumo.ED_)
 
-    "There are $n_no nodes ($n_cl classed, $n_de decreasing, and $n_in increasing) and $n_ed edges."
+    @info "Ito" n_no n_cl n_de n_in n_ed
 
 end
 
@@ -216,7 +210,7 @@ function _elementize(no::AbstractString)
 
     end
 
-    Dict("data" => Dict("id" => no, "weight" => 0.0), "classes" => cl_)
+    Dict("data" => Dict("id" => no, "weight" => 0), "classes" => cl_)
 
 end
 
@@ -237,9 +231,7 @@ function plot(
     ex = "",
 )
 
-    # TODO: Do not access the global variable.
-    # TODO: Is accessing a global variable via default keyword argument as bad?
-    no_ = [_elementize(no) for no in NO_]
+    no_ = _elementize.(NO_)
 
     n_no = length(no_)
 
@@ -249,16 +241,11 @@ function plot(
 
     end
 
-    # TODO: Do not access the global variable.
-    ed_ = [_elementize(ed) for ed in ED_]
+    ed_ = _elementize.(ED_)
 
     n_ed = length(ed_)
 
-    n_1 = BioLab.String.count(n_no, "node")
-
-    n_2 = BioLab.String.count(n_ed, "edge")
-
-    @info "Plotting $n_1 and $n_2"
+    @info "Plotting" n_no n_ed
 
     nohs = nos * 0.64
 
@@ -275,19 +262,16 @@ function plot(
                 "style" => Dict(
                     "border-width" => 1.6,
                     "border-color" => "#ebf6f7",
-                    "label" => "data(id)",
                     "font-size" => nos * 0.64,
                 ),
             ),
-            Dict("selector" => ".no", "style" => Dict("height" => nos, "width" => nos)),
+            Dict(
+                "selector" => ".no",
+                "style" => Dict("height" => nos, "width" => nos, "label" => "data(id)"),
+            ),
             Dict(
                 "selector" => ".noh",
-                "style" => Dict(
-                    "height" => nohs,
-                    "width" => nohs,
-                    "shape" => "polygon",
-                    "label" => "",
-                ),
+                "style" => Dict("height" => nohs, "width" => nohs, "shape" => "polygon"),
             ),
             Dict(
                 "selector" => ".de",
@@ -312,12 +296,12 @@ function plot(
             Dict(
                 "selector" => "edge",
                 "style" => Dict(
+                    "source-distance-from-node" => nod,
+                    "target-distance-from-node" => nod,
                     "curve-style" => "bezier",
                     "width" => nos * 0.08,
                     "target-arrow-shape" => "triangle-backcurve",
                     "arrow-scale" => 1.6,
-                    "source-distance-from-node" => nod,
-                    "target-distance-from-node" => nod,
                     "line-opacity" => 0.64,
                     "line-fill" => "linear-gradient",
                     "line-gradient-stop-colors" => ("#ffffff", "#171412"),
@@ -338,26 +322,15 @@ function plot(
 
     if !isempty(he_)
 
-        for (no, he) in zip(no_, he_)
+        for (no, he, co) in zip(no_, he_, BioLab.Plot.color(he_))
 
             no["data"]["weight"] = BioLab.String.format(he)
 
+            nos = no["id"]
+
+            push!(st_, Dict("selector" => "#$nos", "style" => Dict("background-color" => co)))
+
         end
-
-        co = copy(he_)
-
-        BioLab.Normalization.normalize_with_01!(co)
-
-        append!(
-            st_,
-            (
-                Dict(
-                    "selector" => "#$no",
-                    "style" =>
-                        Dict("background-color" => BioLab.Plot.color(fr, BioLab.Plot.COBWR)),
-                ) for (no, fr) in zip(NO_, co)
-            ),
-        )
 
     end
 
@@ -365,7 +338,7 @@ function plot(
 
         la = Dict("name" => "preset")
 
-    elseif 1 < length(ed_)
+    elseif 1 < n_ed
 
         la = Dict(
             "name" => "cose",
@@ -387,6 +360,7 @@ function plot(
 
 end
 
+# TODO: Pick up.
 function animate(gi, js, he___; pe = 1, st_ = Vector{Dict}())
 
     n = length(he___)

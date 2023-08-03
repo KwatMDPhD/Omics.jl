@@ -32,7 +32,7 @@ function error_has_key(ke_va, ke)
 
         va = ke_va[ke]
 
-        error("$ke (=> $va) already exists.")
+        error("$ke (=> $va) exists.")
 
     end
 
