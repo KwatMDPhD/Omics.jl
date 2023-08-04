@@ -74,17 +74,7 @@ const FI2 = joinpath(DW, "$NAME2.$EX2")
 
 # ---- #
 
-function read_element(js)
-
-    ty_el_ = BioLab.Dict.read(js)["elements"]
-
-    vcat(ty_el_["nodes"], ty_el_["edges"])
-
-end
-
-# ---- #
-
-const EL2_ = read_element(FI2)
+const EL2_ = BioLab.Graph._read_element(FI2)
 
 # ---- #
 
@@ -100,7 +90,7 @@ BioLab.Graph.plot(joinpath(BioLab.TE, "$NAME3.html"), EL_; la = Dict("name" => "
 
 const FI3 = joinpath(DW, "$NAME3.$EX3")
 
-@test EL2_ == read_element(FI3)
+@test EL2_ == BioLab.Graph._read_element(FI3)
 
 # ---- #
 

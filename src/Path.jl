@@ -10,7 +10,7 @@ function wait(pa; sl = 1, li = 4)
 
     se = 0
 
-    while se <= li && !ispath(pa)
+    while se < li && !ispath(pa)
 
         sleep(sl)
 

@@ -121,6 +121,14 @@ function plot(
 
 end
 
+function _read_element(js)
+
+    ty_el_ = BioLab.Dict.read(js)["elements"]
+
+    vcat(ty_el_["nodes"], ty_el_["edges"])
+
+end
+
 function position!(el_, el2_)
 
     id_el2 = Dict(el["data"]["id"] => el for el in el2_)
