@@ -16,13 +16,7 @@ end
 
 function __init__()
 
-    if isdir(TE)
-
-        rm(TE; recursive = true)
-
-    end
-
-    mkdir(TE)
+    BioLab.Path.remake_directory(TE)
 
 end
 

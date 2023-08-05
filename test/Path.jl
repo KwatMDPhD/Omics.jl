@@ -39,15 +39,23 @@ const HI = r"^\."
 
 # ---- #
 
-const DI1 = BioLab.Path.make_directory(joinpath(BioLab.TE, "directory"))
+const DI1 = BioLab.Path.remake_directory(joinpath(BioLab.TE, "remake_directory"))
 
-@test isdir(DI1)
+const FI = touch(joinpath(DI1, "file"))
 
-BioLab.Path.make_directory(DI1)
+@test BioLab.Error.@is_error BioLab.Path.remake_directory(FI)
+
+BioLab.Path.remake_directory(joinpath(DI1, "directory"))
+
+@test readdir(DI1) == ["directory", "file"]
+
+BioLab.Path.remake_directory(DI1)
+
+@test isempty(readdir(DI1))
 
 # ---- #
 
-const DI2 = mkdir(joinpath(BioLab.TE, BioLab.Time.stamp()))
+const DI2 = BioLab.Path.remake_directory(joinpath(BioLab.TE, "rank"))
 
 const CH_ = 'a':'g'
 

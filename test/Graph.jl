@@ -56,11 +56,11 @@ const NAME1 = "preset"
 
 const EX1 = "png"
 
-const HT = joinpath(BioLab.TE, "$NAME1.html")
+const HT1 = joinpath(BioLab.TE, "$NAME1.html")
 
-@test BioLab.Graph.plot(HT, EL_; la = Dict("name" => NAME1), ex = EX1) == HT
+@test BioLab.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1) == HT1
 
-const FI1 = joinpath(DW, "$NAME1.$EX1")
+@test isfile(joinpath(BioLab.TE, "$NAME1.$EX1"))
 
 # ---- #
 
@@ -68,17 +68,25 @@ const NAME2 = "cose"
 
 const EX2 = "json"
 
-BioLab.Graph.plot(joinpath(BioLab.TE, "$NAME2.html"), EL_; la = Dict("name" => NAME2), ex = EX2)
+const HT2 = joinpath(BioLab.TE, "$NAME2.html")
 
-const FI2 = joinpath(DW, "$NAME2.$EX2")
+@test BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2) == HT2
+
+const JS = joinpath(BioLab.TE, "$NAME2.$EX2")
 
 # ---- #
 
-const EL2_ = BioLab.Graph._read_element(FI2)
+const EL2_ = BioLab.Graph._read_element(JS)
+
+@test length(EL_) == length(EL2_)
+
+@test all(all(el[ke] == el2[ke] for ke in ("data",)) for (el, el2) in zip(EL_, EL2_))
 
 # ---- #
 
 BioLab.Graph.position!(EL_, EL2_)
+
+@test all(all(el[ke] == el2[ke] for ke in ("data", "position")) for (el, el2) in zip(EL_, EL2_))
 
 # ---- #
 
@@ -86,12 +94,8 @@ const NAME3 = "cose_preset"
 
 const EX3 = "json"
 
-BioLab.Graph.plot(joinpath(BioLab.TE, "$NAME3.html"), EL_; la = Dict("name" => "preset"), ex = EX3)
+const HT3 = joinpath(BioLab.TE, "$NAME3.html")
 
-const FI3 = joinpath(DW, "$NAME3.$EX3")
+@test BioLab.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3) == HT3
 
-@test EL2_ == BioLab.Graph._read_element(FI3)
-
-# ---- #
-
-foreach(rm, (FI1, FI2, FI3))
+@test EL2_ == BioLab.Graph._read_element(joinpath(BioLab.TE, "$NAME3.$EX3"))

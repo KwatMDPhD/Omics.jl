@@ -42,13 +42,17 @@ function read(di; ig_ = (), ke_ = (), ke_ar...)
 
 end
 
-function make_directory(di)
+function remake_directory(di)
 
     if isdir(di)
 
-        @warn "$di exists."
+        @info "Removing $di"
 
-        return di
+        rm(di; recursive = true)
+
+    elseif ispath(di)
+
+        error("$di is not a directory.")
 
     end
 

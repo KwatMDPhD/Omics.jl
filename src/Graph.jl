@@ -109,9 +109,19 @@ function plot(
 
         BioLab.Path.wait(fi)
 
+        fi2 = joinpath(dirname(ht), na)
+
+        if isfile(fi2)
+
+            rm(fi2)
+
+        end
+
+        mv(fi, fi2)
+
         if ex == "png"
 
-            BioLab.Path.open(fi)
+            BioLab.Path.open(fi2)
 
         end
 
