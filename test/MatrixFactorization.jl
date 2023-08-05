@@ -38,7 +38,7 @@ end
 
 const MAA = rand(7, 9)
 
-const MAW, MAH = BioLab.MatrixFactorization.factorize(MAA, 3; maxiter = 10^3)
+const MAW, MAH = BioLab.MatrixFactorization.factorize(MAA, 3; maxiter = 10^6)
 
 const MAH2 = BioLab.MatrixFactorization.solve_h(MAA, MAW)
 
