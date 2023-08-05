@@ -18,11 +18,29 @@ function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
 
 end
 
+function _align!(it::AbstractArray{Int}, ::Real)
+
+    minimum(it), maximum(it)
+
+end
+
 function _align!(fl_::AbstractVector{Float64}, st::Real)
 
-    BioLab.Normalization.normalize_with_0!(fl_)
+    if allequal(fl_)
 
-    clamp!(fl_, -st, st)
+        fl = fl_[1]
+
+        @warn "All floats are $fl."
+
+        fl_ .= 0
+
+    else
+
+        BioLab.Normalization.normalize_with_0!(fl_)
+
+        clamp!(fl_, -st, st)
+
+    end
 
     -st, st
 
@@ -32,25 +50,11 @@ function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st::Real)
 
     for fl_ in eachrow(fe_x_sa_x_fl)
 
-        if allequal(fl_)
-
-            @warn "All numbers are equal."
-
-        else
-
-            _align!(fl_, st)
-
-        end
+        _align!(fl_, st)
 
     end
 
     -st, st
-
-end
-
-function _align!(it::AbstractArray{Int}, ::Real)
-
-    minimum(it), maximum(it)
 
 end
 
@@ -285,9 +289,9 @@ function make(
 
     n_fe, n_sa = size(fe_x_sa_x_nu)
 
-    n_no = BioLab.String.count(n_fe, naf)
+    n_nos = BioLab.String.count(n_fe, naf)
 
-    @info "Matching $nat and $n_no with $fu"
+    @info "Matching $nat and $n_nos with $fu"
 
     sa_, ta_, fe_x_sa_x_nu = _order_sample(sortperm(ta_; rev), sa_, ta_, fe_x_sa_x_nu)
 
@@ -299,9 +303,9 @@ function make(
 
     if any(isb_)
 
-        n_no = BioLab.String.count(sum(isb_), "bad value")
+        n_nos = BioLab.String.count(sum(isb_), "bad value")
 
-        @warn "Found $n_no."
+        @warn "Found $n_nos."
 
     end
 
@@ -313,9 +317,9 @@ function make(
 
     if 0 < n_ma
 
-        n_no = BioLab.String.count(n_ma, "sampling")
+        n_nos = BioLab.String.count(n_ma, "sampling")
 
-        @info "Computing margin of error with $n_no"
+        @info "Computing margin of error with $n_nos"
 
         n_sm = ceil(Int, n_sa * 0.632)
 
@@ -341,9 +345,9 @@ function make(
 
     if 0 < n_pv
 
-        n_no = BioLab.String.count(n_pv, "permutation")
+        n_nos = BioLab.String.count(n_pv, "permutation")
 
-        @info "Computing p-values with $n_no"
+        @info "Computing p-values with $n_nos"
 
         co = copy(ta_)
 

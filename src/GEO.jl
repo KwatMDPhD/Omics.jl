@@ -84,7 +84,7 @@ function read(gz)
 
             else
 
-                @error "$pr did not end."
+                @warn "$pr did not end."
 
             end
 
@@ -225,7 +225,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         else
 
-            @error "A $sa characteristic lacks $de." ch_
+            @warn "A $sa characteristic lacks $de." ch_
 
         end
 
@@ -250,7 +250,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         else
 
-            @error "$sa table is empty."
+            @warn "$sa table is empty."
 
         end
 
@@ -274,7 +274,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         else
 
-            @error "$pl table is empty."
+            error("$pl table is empty.")
 
         end
 

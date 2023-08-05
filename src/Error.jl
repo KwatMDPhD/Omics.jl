@@ -48,9 +48,13 @@ function error_duplicate(co)
 
     if !allunique(co)
 
-        st = join(("$n $an" for (an, n) in BioLab.Collection.count_sort(co) if 1 < n), ".\n")
+        st_ = ("$n $an" for (an, n) in BioLab.Collection.count_sort(co) if 1 < n)
 
-        error("Has duplicates.\n$st.")
+        n_nos = BioLab.String.count(length(st_), "duplicate")
+
+        st = join(st_, ".\n")
+
+        error("Found $n_nos.\n$st.")
 
     end
 
@@ -58,17 +62,15 @@ end
 
 function error_bad(co)
 
-    id_ = findall(BioLab.Bad.is, co)
+    is_ = BioLab.Bad.is.(co)
 
-    n = sum(id_)
+    if any(is_)
 
-    if !iszero(n)
-
-        n_no = BioLab.String.count(n, "bad value")
+        n_nos = BioLab.String.count(sum(is_), "bad value")
 
         st = join(unique(co[id_]), ".\n")
 
-        error("Has $n_no.\n$st.")
+        error("Found $n_nos.\n$st.")
 
     end
 

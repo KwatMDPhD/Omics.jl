@@ -48,13 +48,11 @@ function make_directory(di)
 
         @warn "$di exists."
 
-    else
-
-        mkdir(di)
+        return di
 
     end
 
-    di
+    mkdir(di)
 
 end
 
