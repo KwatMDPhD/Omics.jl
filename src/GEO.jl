@@ -54,6 +54,8 @@ function read(gz)
 
         if startswith(li, '^')
 
+            @info li
+
             bl, th = _eachsplit(chop(li; head = 1, tail = 0))
 
             bl_th[bl][th] = OrderedDict{String, String}()
