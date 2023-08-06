@@ -62,7 +62,7 @@ end
 
 function rank(di)
 
-    flnaex_ = rsplit.(readdir(di), '.'; limit = 3)
+    flnaex_ = rsplit.(read(di), '.'; limit = 3)
 
     for (id, (fl, pr, ex)) in enumerate(sort!(flnaex_; by = flnaex -> parse(Float64, flnaex[1])))
 

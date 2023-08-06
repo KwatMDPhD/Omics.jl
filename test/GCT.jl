@@ -8,7 +8,7 @@ const DA = joinpath(BioLab._DA, "GCT")
 
 # ---- #
 
-@test readdir(DA) == ["a.gct"]
+@test BioLab.Path.read(DA) == ["a.gct"]
 
 # ---- #
 

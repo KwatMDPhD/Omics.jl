@@ -10,7 +10,7 @@ const DA = joinpath(BioLab._DA, "Dict")
 
 # ---- #
 
-@test readdir(DA) == ["example.toml", "example_1.json", "example_2.json"]
+@test BioLab.Path.read(DA) == ["example.toml", "example_1.json", "example_2.json"]
 
 # ---- #
 

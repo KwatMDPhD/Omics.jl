@@ -8,7 +8,7 @@ const DA = joinpath(BioLab._DA, "CLS")
 
 # ---- #
 
-@test readdir(DA) == ["CCLE_mRNA_20Q2_no_haem_phen.cls", "GSE76137.cls", "LPS_phen.cls"]
+@test BioLab.Path.read(DA) == ["CCLE_mRNA_20Q2_no_haem_phen.cls", "GSE76137.cls", "LPS_phen.cls"]
 
 # ---- #
 

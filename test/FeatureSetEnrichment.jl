@@ -8,7 +8,7 @@ const DA = joinpath(BioLab._DA, "FeatureSetEnrichment")
 
 # ---- #
 
-@test readdir(DA) ==
+@test BioLab.Path.read(DA) ==
       ["c2.all.v7.1.symbols.gmt", "gene_x_statistic_x_number.tsv", "h.all.v7.1.symbols.gmt"]
 
 # ---- #

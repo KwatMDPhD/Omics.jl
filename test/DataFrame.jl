@@ -10,7 +10,8 @@ const DA = joinpath(BioLab._DA, "DataFrame")
 
 # ---- #
 
-@test readdir(DA) == ["12859_2019_2886_MOESM2_ESM.xlsx", "enst_gene.tsv.gz", "titanic.tsv"]
+@test BioLab.Path.read(DA) ==
+      ["12859_2019_2886_MOESM2_ESM.xlsx", "enst_gene.tsv.gz", "titanic.tsv"]
 
 # ---- #
 

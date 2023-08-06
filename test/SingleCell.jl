@@ -8,7 +8,7 @@ const DA = joinpath(BioLab._DA, "SingleCell")
 
 # ---- #
 
-@test readdir(DA) == ["7166_mr_87_filtered", "7166_mr_96_filtered"]
+@test BioLab.Path.read(DA) == ["7166_mr_87_filtered", "7166_mr_96_filtered"]
 
 # ---- #
 

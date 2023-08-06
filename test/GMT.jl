@@ -8,7 +8,7 @@ const DA = joinpath(BioLab._DA, "GMT")
 
 # ---- #
 
-@test readdir(DA) == ["c2.all.v7.1.symbols.gmt", "h.all.v7.1.symbols.gmt"]
+@test BioLab.Path.read(DA) == ["c2.all.v7.1.symbols.gmt", "h.all.v7.1.symbols.gmt"]
 
 # ---- #
 

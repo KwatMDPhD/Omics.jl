@@ -47,11 +47,11 @@ const FI = touch(joinpath(DI1, "file"))
 
 BioLab.Path.remake_directory(joinpath(DI1, "directory"))
 
-@test readdir(DI1) == ["directory", "file"]
+@test BioLab.Path.read(DI1) == ["directory", "file"]
 
 BioLab.Path.remake_directory(DI1)
 
-@test isempty(readdir(DI1))
+@test isempty(BioLab.Path.read(DI1))
 
 # ---- #
 

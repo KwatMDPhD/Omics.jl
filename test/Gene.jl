@@ -8,7 +8,7 @@ const DA = joinpath(BioLab._DA, "Gene")
 
 # ---- #
 
-@test readdir(DA) == ["ensembl.tsv.gz", "uniprot.tsv.gz"]
+@test BioLab.Path.read(DA) == ["ensembl.tsv.gz", "uniprot.tsv.gz"]
 
 # ---- #
 

@@ -10,7 +10,7 @@ using BioLab
 
 @test basename(BioLab._DA) == "data"
 
-@test readdir(BioLab._DA) == [
+@test BioLab.Path.read(BioLab._DA) == [
     "CLS",
     "DataFrame",
     "Dict",
@@ -28,7 +28,7 @@ using BioLab
 
 @test basename(BioLab.TE) == "BioLab"
 
-@test isempty(readdir(BioLab.TE))
+@test isempty(BioLab.Path.read(BioLab.TE))
 
 # ---- #
 

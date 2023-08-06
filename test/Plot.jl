@@ -12,7 +12,7 @@ const DA = joinpath(BioLab._DA, "Plot")
 
 # ---- #
 
-@test readdir(DA) == ["1.png", "2.png"]
+@test BioLab.Path.read(DA) == ["1.png", "2.png"]
 
 # ---- #
 
