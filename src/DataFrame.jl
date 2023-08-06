@@ -34,7 +34,7 @@ function read(fi; xl = "", ke_ar...)
 
     if ex == "xlsx"
 
-        _DataFrame(readtable(fi, xl))
+        _DataFrame(readtable(fi, xl; ke_ar...))
 
     else
 
