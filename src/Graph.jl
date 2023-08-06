@@ -107,7 +107,7 @@ function plot(
 
     if !isempty(fi)
 
-        BioLab.Path.wait(fi)
+        BioLab.Path.wait(fi; li = 40)
 
         fi2 = joinpath(dirname(ht), na)
 
@@ -135,7 +135,17 @@ function _read_element(js)
 
     ty_el_ = BioLab.Dict.read(js)["elements"]
 
-    vcat(ty_el_["nodes"], ty_el_["edges"])
+    el_ = ty_el_["nodes"]
+
+    ke = "edges"
+
+    if haskey(ty_el_, ke)
+
+        append!(el_, ty_el_[ke])
+
+    end
+
+    el_
 
 end
 
