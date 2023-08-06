@@ -119,13 +119,15 @@ end
 
 function color(nu_::AbstractVector{<:Real}, co = pick_color_scheme(nu_))
 
-    if length(nu_) == 1
+    n = length(nu_)
 
-        return [color(0.5, co)]
+    if length(unique(nu_)) == 1
+
+        return fill(color(0.5, co), n)
 
     end
 
-    fl_ = Vector{Float64}(undef, length(nu_))
+    fl_ = Vector{Float64}(undef, n)
 
     copy!(fl_, nu_)
 
@@ -367,8 +369,8 @@ function plot_heat_map(
     nar = "Row",
     nac = "Column",
     colorscale = map_fraction_to_color(pick_color_scheme(z)),
-    grr_ = Vector{Int}(),
-    grc_ = Vector{Int}(),
+    grr_ = Vector{Any}(),
+    grc_ = Vector{Any}(),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -411,8 +413,18 @@ function plot_heat_map(
     n_ti = 8
 
     # TODO: Cluster within a group.
+    # TODO: Test String.
+    # TODO: Label with String.
 
     if !isempty(grr_)
+
+        if grr_ isa AbstractVector{<:AbstractString}
+
+            gr_id = Dict(gr => id for (id, gr) in enumerate(sort(unique(grr_))))
+
+            grr_ = [gr_id[gr] for gr in grr_]
+
+        end
 
         colorbarx += 0.04
 
@@ -427,6 +439,14 @@ function plot_heat_map(
     end
 
     if !isempty(grc_)
+
+        if grc_ isa AbstractVector{<:AbstractString}
+
+            gr_id = Dict(gr => id for (id, gr) in enumerate(sort(unique(grc_))))
+
+            grc_ = [gr_id[gr] for gr in grc_]
+
+        end
 
         so_ = sortperm(grc_)
 

@@ -119,11 +119,11 @@ function plot(
 
         mv(fi, fi2)
 
-        if ex == "png"
+        #if ex == "png"
 
-            BioLab.Path.open(fi2)
+        #    BioLab.Path.open(fi2)
 
-        end
+        #end
 
     end
 
