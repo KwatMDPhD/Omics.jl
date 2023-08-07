@@ -10,15 +10,15 @@ function factorize(ma, n; ke_ar...)
 
     mf = nnmf(ma, n; ke_ar...)
 
-    if mf.converged
-
-        mf.W, mf.H
-
-    else
+    if !mf.converged
 
         @warn "Did not converge. niters = $(mf.niters). objvalue = $(mf.objvalue)."
 
+        return
+
     end
+
+    mf.W, mf.H
 
 end
 
