@@ -295,15 +295,15 @@ function tabulate(bl_th; sa = "!Sample_title")
 end
 
 # TODO: Test.
-function see_characteristic(characteristic_x_sample_x_anything)
+function describe(characteristic_x_sample_x_anything)
 
     for an_ in eachrow(characteristic_x_sample_x_anything)
 
-        st = join(("$n $an" for (an, n) in BioLab.Collection.count_sort(an_[2:end])), ".\n")
-
         la = an_[1]
 
-        @info "$la\n$st."
+        st = BioLab.Collection.count_sort_string(an_[2:end])
+
+        @info "$la\n$st"
 
     end
 

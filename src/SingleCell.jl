@@ -100,9 +100,9 @@ function read(sa_di)
 
     if !allunique(fe_)
 
-        st = join(("$n $fe" for (fe, n) in BioLab.Collection.count_sort(fe_) if 1 < n), ".\n")
+        st = BioLab.Collection.count_sort_string(fe_, >(1))
 
-        @warn "Features have duplicates.\n$st."
+        @warn "Features have duplicates.\n$st"
 
         fe_, fe_x_ba_x_co = BioLab.Matrix.collapse(maximum, Int, fe_, fe_x_ba_x_co)
 

@@ -48,15 +48,11 @@ function error_duplicate(co)
 
     if !allunique(co)
 
-        an_n = BioLab.Collection.count_sort(co)
-
-        filter!(pa -> 1 < pa.second, an_n)
-
         n_nos = BioLab.String.count(length(an_n), "duplicate")
 
-        st = join(("$n $an" for (an, n) in an_n), ".\n")
+        st = BioLab.Collection.count_sort_string(co, >(1))
 
-        error("Found $n_nos.\n$st.")
+        error("Found $n_nos.\n$st")
 
     end
 
