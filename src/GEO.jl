@@ -152,6 +152,12 @@ function _map_feature(pl, co_, sp___)
 
         fu = fe -> fe
 
+    elseif it == 15048
+
+        co = "GeneSymbol"
+
+        fu = fe -> BioLab.String.split_get(fe, ' ', 1)
+
     elseif it in (7566, 7567)
 
         error("$pl is a bad platform. Avoid it.")
@@ -285,6 +291,21 @@ function tabulate(bl_th; sa = "!Sample_title")
     end
 
     _make("Characteristic", sa_, ch_st__), da_...
+
+end
+
+# TODO: Test.
+function see_characteristic(characteristic_x_sample_x_anything)
+
+    for an_ in eachrow(characteristic_x_sample_x_anything)
+
+        st = join(("$n $an" for (an, n) in BioLab.Collection.count_sort(an_[2:end])), ".\n")
+
+        la = an_[1]
+
+        @info "$la\n$st."
+
+    end
 
 end
 
