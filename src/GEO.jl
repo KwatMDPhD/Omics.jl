@@ -54,8 +54,6 @@ function read(gz)
 
         if startswith(li, '^')
 
-            @info li
-
             bl, th = _eachsplit(chop(li; head = 1, tail = 0))
 
             bl_th[bl][th] = OrderedDict{String, String}()
@@ -264,9 +262,10 @@ function tabulate(bl_th; sa = "!Sample_title")
 
     end
 
-    da_ = Vector{DataFrame}(undef, length(pl_fe_fl__))
+    # TODO: Test.
+    pl_da = Dict{String, DataFrame}()
 
-    for (idp, (pl, fe_fl__)) in enumerate(pl_fe_fl__)
+    for (pl, fe_fl__) in pl_fe_fl__
 
         da = _make(pl, sa_, fe_fl__)
 
@@ -286,11 +285,11 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         end
 
-        da_[idp] = da
+        pl_da[pl] = da
 
     end
 
-    _make("Characteristic", sa_, ch_st__), da_...
+    _make("Characteristic", sa_, ch_st__), pl_da
 
 end
 
