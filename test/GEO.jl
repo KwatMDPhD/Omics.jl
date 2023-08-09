@@ -45,35 +45,32 @@ const BL_TH = BioLab.GEO.read(GZ)
 
 # ---- #
 
-characteristic_x_sample_x_string, feature_x_sample_x_float... = BioLab.GEO.tabulate(BL_TH)
+const CHARACTERISTIC_X_SAMPLE_X_STRING, PL_DA = BioLab.GEO.tabulate(BL_TH)
 
-@test size(characteristic_x_sample_x_string) == (1, 21)
+@test size(CHARACTERISTIC_X_SAMPLE_X_STRING) == (1, 21)
 
-@test length(feature_x_sample_x_float) == 1
+@test length(PL_DA) == 1
 
-@test size(feature_x_sample_x_float[1]) == (53617, 21)
+FEATURE_X_SAMPLE_X_NUMBER = PL_DA[collect(keys(PL_DA))[1]]
 
-@test names(characteristic_x_sample_x_string)[2:end] == names(feature_x_sample_x_float[1])[2:end]
+@test size(FEATURE_X_SAMPLE_X_NUMBER) == (53617, 21)
+
+@test names(CHARACTERISTIC_X_SAMPLE_X_STRING)[2:end] == names(FEATURE_X_SAMPLE_X_NUMBER)[2:end]
 
 # 655.075 ms (4702093 allocations: 585.20 MiB)
 #@btime BioLab.GEO.tabulate($BL_TH);
 
 # ---- #
 
-for (gs, si_) in (("GSE197763", ((4, 127), nothing)), ("GSE13534", (nothing, (22283, 5))))
+for (gs, re_) in (("GSE197763", ((4, 127), (0, 0))), ("GSE13534", ((0, 0), (22283, 5))))
 
-    for (da, si) in
-        zip(BioLab.GEO.tabulate(BioLab.GEO.read(BioLab.GEO.download(BioLab.TE, gs))), si_)
+    ch_x_sa_x_st, pl_da = BioLab.GEO.tabulate(BioLab.GEO.read(BioLab.GEO.download(BioLab.TE, gs)))
 
-        if isnothing(si)
+    @test size(ch_x_sa_x_st) == re_[1]
 
-            @test isnothing(da)
+    for ((pl, fe_x_sa_x_nu), re) in zip(pl_da, re_[2:end])
 
-        else
-
-            @test size(da) == si
-
-        end
+        @test size(fe_x_sa_x_nu) == re
 
     end
 

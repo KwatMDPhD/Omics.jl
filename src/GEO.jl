@@ -194,7 +194,7 @@ function _make(nar, co_, ro_an__)
 
     if isempty(ro_)
 
-        return
+        return DataFrame()
 
     end
 
@@ -262,26 +262,29 @@ function tabulate(bl_th; sa = "!Sample_title")
 
     end
 
-    # TODO: Test.
     pl_da = Dict{String, DataFrame}()
 
     for (pl, fe_fl__) in pl_fe_fl__
 
         da = _make(pl, sa_, fe_fl__)
 
-        ke_va = bl_th["PLATFORM"][pl]
+        if !isempty(da)
 
-        if haskey(ke_va, "table")
+            ke_va = bl_th["PLATFORM"][pl]
 
-            sp___ = BioLab.String.dice(ke_va["table"])
+            if haskey(ke_va, "table")
 
-            id_fe = _map_feature(pl, sp___[1], view(sp___, 2:length(sp___)))
+                sp___ = BioLab.String.dice(ke_va["table"])
 
-            da[!, 1] = [get(id_fe, id, "_$id") for id in da[!, 1]]
+                id_fe = _map_feature(pl, sp___[1], view(sp___, 2:length(sp___)))
 
-        else
+                da[!, 1] = [get(id_fe, id, "_$id") for id in da[!, 1]]
 
-            error("$pl table is empty.")
+            else
+
+                error("$pl table is empty.")
+
+            end
 
         end
 
