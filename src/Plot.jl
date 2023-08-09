@@ -406,7 +406,7 @@ function plot_heat_map(
 
     data = Vector{Dict{String, Any}}()
 
-    colorbarx = 1
+    colorbarx = 0.97
 
     dx = 0.064
 
