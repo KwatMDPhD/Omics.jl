@@ -293,19 +293,4 @@ function tabulate(bl_th; sa = "!Sample_title")
 
 end
 
-# TODO: Test.
-function describe(characteristic_x_sample_x_anything)
-
-    for an_ in eachrow(characteristic_x_sample_x_anything)
-
-        la = an_[1]
-
-        st = BioLab.Collection.count_sort_string(an_[2:end])
-
-        @info "$la\n$st"
-
-    end
-
-end
-
 end
