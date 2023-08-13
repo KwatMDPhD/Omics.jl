@@ -58,3 +58,37 @@ for ((an1_, la_, fi, an2_), re) in (
     @assert isequal(BioLab.Target.make_any1_x_label_x_any2(an1_, la_, fi, an2_), re)
 
 end
+
+# ---- #
+
+@test BioLab.Target.make_any1_x_label_x_any2(
+    (
+        (
+            "Antigen 1",
+            "Antigen 2",
+            "Antigen 1",
+            "Antigen 2",
+            "Antigen 1",
+            "Antigen 2",
+            "Antigen 1",
+            "Antigen 2",
+        ),
+        (0, 0, 7, 7, 0, 0, 7, 7),
+    ),
+    (
+        "Sample 1",
+        "Sample 1",
+        "Sample 1",
+        "Sample 1",
+        "Sample 2",
+        "Sample 2",
+        "Sample 2",
+        "Sample 2",
+    ),
+    NaN,
+    (0, 0, 10, 100, 0, 0, 20, 200),
+) == (
+    ["Antigen 1_0", "Antigen 2_0", "Antigen 1_7", "Antigen 2_7"],
+    ["Sample 1", "Sample 2"],
+    [0.0 0.0; 0.0 0.0; 10.0 20.0; 100.0 200.0],
+)

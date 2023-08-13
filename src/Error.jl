@@ -50,7 +50,7 @@ function error_duplicate(co)
 
         n_nos = BioLab.String.count(length(an_n), "duplicate")
 
-        st = BioLab.Collection.count_sort_string(co, >(1))
+        st = BioLab.Collection.count_sort_string(co, 2)
 
         error("Found $n_nos.\n$st")
 

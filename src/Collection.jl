@@ -9,9 +9,9 @@ function count_sort(an_; rev = false)
 end
 
 # TODO: Test.
-function count_sort_string(an_, fu = n -> true)
+function count_sort_string(an_, n = 1)
 
-    join(("$n\t$an" for (an, n) in count_sort(an_; rev = true) if fu(n)), '\n')
+    join(("$n\t$an" for (an, n) in count_sort(an_; rev = true) if 0 <= n), '\n')
 
 end
 

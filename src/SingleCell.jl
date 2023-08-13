@@ -100,7 +100,7 @@ function read(sa_di)
 
     if !allunique(fe_)
 
-        st = BioLab.Collection.count_sort_string(fe_, >(1))
+        st = BioLab.Collection.count_sort_string(fe_, 2)
 
         @warn "Features have duplicates.\n$st"
 

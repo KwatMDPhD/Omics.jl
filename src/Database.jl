@@ -54,16 +54,18 @@ function rename!(fe_, fe_fe2)
 
 end
 
-function rename_collapse_log2_plot(di, fe_, fe_fe2, fe_x_sa_x_nu, lo, title_text)
+function rename_collapse_log2_plot(di, fe_, fe_x_sa_x_nu, fe_fe2, lo, title_text)
 
     BioLab.Error.error_missing(di)
+
+    BioLab.Error.error_bad(fe_)
 
     BioLab.Error.error_bad(fe_x_sa_x_nu)
 
     BioLab.Plot.plot_histogram(
         joinpath(di, "number.html"),
         (vec(fe_x_sa_x_nu),);
-        layout = Dict("title" => Dict("text" => "$title_text (raw)")),
+        layout = Dict("title" => Dict("text" => title_text)),
     )
 
     if !isempty(fe_fe2)
@@ -233,7 +235,7 @@ function get_geo(
 
     end
 
-    fe_, fe_x_sa_x_nu = rename_collapse_log2_plot(ou, fe_, fe_fe2, fe_x_sa_x_nu, lo, gs)
+    fe_, fe_x_sa_x_nu = rename_collapse_log2_plot(ou, fe_, fe_x_sa_x_nu, fe_fe2, lo, gs)
 
     nafc = BioLab.Path.clean(naf)
 

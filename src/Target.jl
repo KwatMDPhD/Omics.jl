@@ -18,9 +18,33 @@ function make_any_x_index_x_bit(an_)
 
 end
 
-function make_any1_x_label_x_any2(an1_, la_, fi, an2_)
+#function make_any1_x_label_x_any2(an1_, la_, fi, an2_)
+#
+#    an1u_ = sort!(unique(an1_))
+#
+#    lau_ = sort!(unique(la_))
+#
+#    an1_x_la_x_an2 = fill(fi, length(an1u_), length(lau_))
+#
+#    an1_id = Dict(an => id for (id, an) in enumerate(an1u_))
+#
+#    for (idl, la) in enumerate(lau_)
+#
+#        for id in findall(==(la), la_)
+#
+#            an1_x_la_x_an2[an1_id[an1_[id]], idl] = an2_[id]
+#
+#        end
+#
+#    end
+#
+#    an1u_, lau_, an1_x_la_x_an2
+#
+#end
 
-    an1u_ = sort!(unique(an1_))
+function make_any1_x_label_x_any2(an1___, la_, fi, an2_)
+
+    an1u_ = vec(collect(Iterators.ProductIterator(Tuple(sort!(unique(an1_)) for an1_ in an1___))))
 
     lau_ = sort!(unique(la_))
 
@@ -32,13 +56,13 @@ function make_any1_x_label_x_any2(an1_, la_, fi, an2_)
 
         for id in findall(==(la), la_)
 
-            an1_x_la_x_an2[an1_id[an1_[id]], idl] = an2_[id]
+            an1_x_la_x_an2[an1_id[Tuple(an1_[id] for an1_ in an1___)], idl] = an2_[id]
 
         end
 
     end
 
-    an1u_, lau_, an1_x_la_x_an2
+    join.(an1u_, '_'), lau_, an1_x_la_x_an2
 
 end
 
