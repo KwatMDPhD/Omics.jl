@@ -537,7 +537,7 @@ end
 
 function enrich(al, fe_, fe_x_sa_x_sc::AbstractMatrix, fe1___; mi = 1, ex = 1)
 
-    se_x_sa_x_en = Matrix{Float64}(undef, (length(fe1___), size(fe_x_sa_x_sc, 2)))
+    se_x_sa_x_en = Matrix{Float64}(undef, length(fe1___), size(fe_x_sa_x_sc, 2))
 
     no_ = BitVector(undef, length(fe_))
 

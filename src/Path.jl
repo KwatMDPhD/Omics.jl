@@ -90,7 +90,7 @@ function open(pa)
 
     catch
 
-        @error "Could not open $pa."
+        @warn "Could not open $pa."
 
     end
 

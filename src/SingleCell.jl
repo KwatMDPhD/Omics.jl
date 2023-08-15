@@ -90,7 +90,7 @@ function read(sa_di)
 
     @info "Combining $n_fe features and $n_ba barcodes"
 
-    fe_x_ba_x_co = zeros(Int, (n_fe, n_ba))
+    fe_x_ba_x_co = zeros(Int, n_fe, n_ba)
 
     @showprogress for (idf, idb, co) in zip(idf_, idb_, co_)
 
@@ -118,7 +118,7 @@ function target(ta_re_, sa_)
 
     ta_ = Vector{String}(undef, n_ta)
 
-    ta_x_sa_x_nu = fill(NaN, (n_ta, length(sa_)))
+    ta_x_sa_x_nu = fill(NaN, n_ta, length(sa_))
 
     for (idt, (ta, re_)) in enumerate(ta_re_)
 

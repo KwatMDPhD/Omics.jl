@@ -40,7 +40,7 @@ function collapse(fu, ty, ro_, ma)
 
     ro2_ = Vector{String}(undef, n_ro2)
 
-    ma2 = Base.Matrix{ty}(undef, (n_ro2, n_co))
+    ma2 = Base.Matrix{ty}(undef, n_ro2, n_co)
 
     for (id2, (ro, id_)) in enumerate(ro_id_)
 
