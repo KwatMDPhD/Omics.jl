@@ -8,8 +8,6 @@ using BioLab
 
 @test isconst(BioLab, :_DA)
 
-@test basename(BioLab._DA) == "data"
-
 @test BioLab.Path.read(BioLab._DA) == [
     "CLS",
     "DataFrame",
@@ -26,19 +24,15 @@ using BioLab
 
 @test isconst(BioLab, :TE)
 
-@test basename(BioLab.TE) == "BioLab"
-
 @test isempty(BioLab.Path.read(BioLab.TE))
 
 # ---- #
 
 const SR = joinpath(dirname(@__DIR__), "src")
 
-const IG_ = (r"^[!_]",)
+const MO_ = BioLab.Path.read(SR)
 
-const MO_ = BioLab.Path.read(SR; ig_ = IG_)
-
-const TE_ = BioLab.Path.read(@__DIR__; ig_ = IG_)
+const TE_ = BioLab.Path.read(@__DIR__)
 
 # ---- #
 

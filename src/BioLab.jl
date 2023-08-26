@@ -6,7 +6,7 @@ const TE = joinpath(tempdir(), "BioLab")
 
 for jl in readdir(@__DIR__)
 
-    if !startswith(jl, '_') && jl != "BioLab.jl"
+    if jl != "BioLab.jl"
 
         include(jl)
 
@@ -17,6 +17,8 @@ end
 function __init__()
 
     BioLab.Path.remake_directory(TE)
+
+    nothing
 
 end
 
