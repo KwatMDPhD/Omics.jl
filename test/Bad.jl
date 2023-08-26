@@ -52,13 +52,12 @@ for an in (
     -0.0,
     0.0,
     1.0,
-    1,
-    "Abc",
     "A",
-    "a",
-    string.("A", SP_)...,
-    string.(SP_, "A")...,
-    string.("A", SP_, "B")...,
+    "Abc",
+    string.('A', SP_)...,
+    string.(SP_, 'B')...,
+    string.('A', SP_, 'B')...,
+    1,
     'A',
 )
 
