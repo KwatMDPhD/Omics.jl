@@ -24,19 +24,19 @@ for (cl, ta, nu_) in (
 
     cl = joinpath(DA, cl)
 
-    da = BioLab.CLS.read(cl)
+    target_x_sample_x_number = BioLab.CLS.read(cl)
 
-    @test size(da, 1) == 1
+    @test size(target_x_sample_x_number, 1) == 1
 
-    @test all(co -> eltype(co) != Any, eachcol(da))
+    @test all(co -> eltype(co) != Any, eachcol(target_x_sample_x_number))
 
-    @test da[1, "Target"] == ta
+    @test target_x_sample_x_number[1, "Target"] == ta
 
-    @test collect(da[1, string.("Sample ", eachindex(nu_))]) == nu_
+    @test collect(target_x_sample_x_number[1, string.("Sample ", eachindex(nu_))]) == nu_
 
-    # 388.875 μs (6235 allocations: 530.48 KiB)
-    # 10.750 μs (99 allocations: 7.71 KiB)
-    # 10.459 μs (99 allocations: 7.66 KiB)
+    # 387.042 μs (6235 allocations: 530.48 KiB)
+    # 10.709 μs (99 allocations: 7.71 KiB)
+    # 10.416 μs (99 allocations: 7.66 KiB)
     #@btime BioLab.CLS.read($cl)
 
 end
