@@ -59,7 +59,7 @@ BioLab.DataFrame.separate(DAMS)[2][1] = ":("
 
 @test DAMS[1, 1] == "Row 1"
 
-# 2.269 μs (28 allocations: 2.08 KiB)
+# 2.208 μs (28 allocations: 2.08 KiB)
 #@btime BioLab.DataFrame.separate($DAMS);
 
 # ---- #

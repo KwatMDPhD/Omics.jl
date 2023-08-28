@@ -10,7 +10,7 @@ using Mmap: mmap
 
 using XLSX: readtable
 
-using BioLab
+using ..BioLab
 
 function make(nar, ro_, co_, ma)
 
