@@ -45,7 +45,7 @@ const DAMS = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
 @test DAMS == DataFrame(
     "Row Name" => make_axis("Row ", N_RO),
-    ("Column $id" => view(MA, :, id) for id in 1:N_CO)...,
+    (string("Column ", id) => view(MA, :, id) for id in 1:N_CO)...,
 )
 
 # 1.104 μs (22 allocations: 1.89 KiB)
