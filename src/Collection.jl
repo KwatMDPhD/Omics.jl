@@ -8,10 +8,9 @@ function count_sort(an_; rev = false)
 
 end
 
-# TODO: Test.
-function count_sort_string(an_, n = 1)
+function count_sort_string(an_; mi = 1)
 
-    join(("$n\t$an" for (an, n) in count_sort(an_; rev = true) if 0 <= n), '\n')
+    join((string(n, '\t', an) for (an, n) in count_sort(an_; rev = true) if mi <= n), '\n')
 
 end
 

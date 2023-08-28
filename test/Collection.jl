@@ -12,3 +12,13 @@ for (an_, re) in (
     @test BioLab.Collection.count_sort(an_) == re
 
 end
+
+# ---- #
+
+const AN_ = ['a', 'b', 'b', 'c', 'c', 'c']
+
+for mi in (1, 2, 3)
+
+    println(BioLab.Collection.count_sort_string(AN_; mi))
+
+end
