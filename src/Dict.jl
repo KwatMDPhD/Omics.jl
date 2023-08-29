@@ -6,29 +6,25 @@ using OrderedCollections: OrderedDict
 
 using TOML: parsefile as toml_parsefile
 
-using BioLab
+using ..BioLab
 
 function set_with_suffix!(ke_va, ke, va)
 
-    if haskey(ke_va, ke)
+    n = 1
 
-        n = 1
+    while haskey(ke_va, ke)
 
-        while haskey(ke_va, ke)
+        if isone(n)
 
-            if isone(n)
+            pr = ke
 
-                ke = "$ke.1"
+        else
 
-            end
-
-            pr = BioLab.String.split_get(ke, '.', 1)
-
-            n += 1
-
-            ke = "$pr.$n"
+            pr = rsplit(ke, '.'; limit = 2)[2]
 
         end
+
+        ke = string(pr, '.', n += 1)
 
     end
 
@@ -100,9 +96,9 @@ function is_in(an_id, an1_)
 
 end
 
-function read(pa, dicttype = OrderedDict; ke_ar...)
+function read(pa; dicttype = OrderedDict, ke_ar...)
 
-    ex = chop(splitext(pa)[2]; head = 1, tail = 0)
+    ex = BioLab.Path.get_extension(pa)
 
     if ex in ("json", "ipynb")
 
@@ -114,7 +110,7 @@ function read(pa, dicttype = OrderedDict; ke_ar...)
 
     else
 
-        error("Can not read a $ex.")
+        error(string("Can not read a ", ex, '.'))
 
     end
 

@@ -30,7 +30,7 @@ end
 
 function read(fi; xl = "", ke_ar...)
 
-    ex = chop(splitext(fi)[2]; head = 1, tail = 0)
+    ex = BioLab.Path.get_extension(fi)
 
     if ex == "xlsx"
 

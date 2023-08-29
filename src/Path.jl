@@ -1,5 +1,12 @@
 module Path
 
+# TODO: Test.
+function get_extension(pa)
+
+    chop(splitext(pa)[2]; head = 1, tail = 0)
+
+end
+
 function clean(pa)
 
     replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')

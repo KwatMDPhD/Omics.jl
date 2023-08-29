@@ -68,7 +68,11 @@ for (an_id, re) in (
     (Dict('A' => 1, 'Z' => 2, 'B' => 3), (true, false, true)),
 )
 
-    @test BioLab.Dict.is_in(an_id, AN1_) == BitVector(re)
+    is_ = BioLab.Dict.is_in(an_id, AN1_)
+
+    @test is_ isa BitVector
+
+    @test is_ == collect(re)
 
 end
 
@@ -84,7 +88,7 @@ const FE1_ = BioLab.GMT.read(joinpath(DAF, "c2.all.v7.1.symbols.gmt"))["COLLER_M
 
 # ---- #
 
-# 737.667 μs (2 allocations: 19.67 KiB)
+# 737.416 μs (2 allocations: 19.67 KiB)
 #@btime [fe in $FE1_ for fe in $FE_];
 
 # 739.250 μs (3 allocations: 6.84 KiB)
@@ -121,21 +125,29 @@ const JS1 = joinpath(DA, "example_1.json")
 
 for dicttype in (Dict, OrderedDict, OrderedDict{String, String})
 
-    @test BioLab.Dict.read(JS1, dicttype) isa dicttype
+    @test BioLab.Dict.read(JS1; dicttype) isa dicttype
 
 end
 
 # ---- #
 
-@test BioLab.Dict.read(JS1) == OrderedDict("fruit" => "Apple", "color" => "Red", "size" => "Large")
+const DIR1 = BioLab.Dict.read(JS1)
+
+@test DIR1 isa OrderedDict{String, Any}
+
+@test DIR1 == Dict("fruit" => "Apple", "color" => "Red", "size" => "Large")
 
 # ---- #
 
-@test BioLab.Dict.read(joinpath(DA, "example_2.json")) == OrderedDict{String, Any}(
-    "quiz" => Dict{String, Any}(
-        "sport" => Dict{String, Any}(
-            "q1" => Dict{String, Any}(
-                "options" => Any[
+const DIR2 = BioLab.Dict.read(joinpath(DA, "example_2.json"))
+
+@test DIR2 isa OrderedDict{String, Any}
+
+@test DIR2 == Dict(
+    "quiz" => Dict(
+        "sport" => Dict(
+            "q1" => Dict(
+                "options" => [
                     "New York Bulls",
                     "Los Angeles Kings",
                     "Golden State Warriros",
@@ -145,14 +157,14 @@ end
                 "answer" => "Huston Rocket",
             ),
         ),
-        "maths" => Dict{String, Any}(
-            "q1" => Dict{String, Any}(
-                "options" => Any["10", "11", "12", "13"],
+        "maths" => Dict(
+            "q1" => Dict(
+                "options" => ["10", "11", "12", "13"],
                 "question" => "5 + 7 = ?",
                 "answer" => "12",
             ),
-            "q2" => Dict{String, Any}(
-                "options" => Any["1", "2", "3", "4"],
+            "q2" => Dict(
+                "options" => ["1", "2", "3", "4"],
                 "question" => "12 - 8 = ?",
                 "answer" => "4",
             ),
@@ -162,18 +174,19 @@ end
 
 # ---- #
 
-@test BioLab.Dict.read(joinpath(DA, "example.toml")) == Dict{String, Any}(
-    "servers" => Dict{String, Any}(
-        "alpha" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.1"),
-        "beta" => Dict{String, Any}("dc" => "eqdc10", "ip" => "10.0.0.2"),
+const DIRT = BioLab.Dict.read(joinpath(DA, "example.toml"))
+
+@test DIRT isa Dict{String, Any}
+
+@test DIRT == Dict(
+    "servers" => Dict(
+        "alpha" => Dict("dc" => "eqdc10", "ip" => "10.0.0.1"),
+        "beta" => Dict("dc" => "eqdc10", "ip" => "10.0.0.2"),
     ),
-    "clients" => Dict{String, Any}(
-        "hosts" => ["alpha", "omega"],
-        "data" => Union{Vector{Int64}, Vector{String}}[["gamma", "delta"], [1, 2]],
-    ),
-    "owner" => Dict{String, Any}("name" => "Tom Preston-Werner"),
+    "clients" => Dict("hosts" => ["alpha", "omega"], "data" => [["gamma", "delta"], [1, 2]]),
+    "owner" => Dict("name" => "Tom Preston-Werner"),
     "title" => "TOML Example",
-    "database" => Dict{String, Any}(
+    "database" => Dict(
         "server" => "192.168.1.1",
         "connection_max" => 5000,
         "ports" => [8000, 8001, 8002],
