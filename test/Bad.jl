@@ -38,15 +38,11 @@ const SP_ = (
     "`",
 )
 
-# ---- #
-
 for an in (nothing, missing, NaN, -Inf, Inf, "", "α", "π", SP_..., SP_ .^ 2...)
 
     @test BioLab.Bad.is(an)
 
 end
-
-# ---- #
 
 for an in (
     -0.0,
