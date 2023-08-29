@@ -2,7 +2,7 @@ module FeatureSetEnrichment
 
 using ProgressMeter: @showprogress
 
-using BioLab
+using ..BioLab
 
 struct KS end
 

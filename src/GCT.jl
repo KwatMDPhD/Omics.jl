@@ -1,6 +1,6 @@
 module GCT
 
-using BioLab
+using ..BioLab
 
 function read(gc)
 

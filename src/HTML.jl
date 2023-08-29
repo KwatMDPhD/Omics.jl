@@ -1,6 +1,6 @@
 module HTML
 
-using BioLab
+using ..BioLab
 
 function make(ht, id, sr_, sc; he = 800, wi = 1280, ba = "#27221f")
 

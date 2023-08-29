@@ -10,7 +10,7 @@ using Statistics: cor
 
 using StatsBase: sample
 
-using BioLab
+using ..BioLab
 
 function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
 

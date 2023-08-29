@@ -2,7 +2,7 @@ module Simulation
 
 using Distributions: Normal
 
-using BioLab
+using ..BioLab
 
 function _mirror(n)
 

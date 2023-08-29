@@ -7,7 +7,7 @@ using GZip: open
 
 using OrderedCollections: OrderedDict
 
-using BioLab
+using ..BioLab
 
 function download(di, gs)
 

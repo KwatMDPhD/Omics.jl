@@ -1,6 +1,6 @@
 module GMT
 
-using BioLab
+using ..BioLab
 
 function read(gm)
 

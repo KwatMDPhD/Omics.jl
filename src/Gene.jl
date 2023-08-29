@@ -1,6 +1,6 @@
 module Gene
 
-using BioLab
+using ..BioLab
 
 function map_ensembl()
 

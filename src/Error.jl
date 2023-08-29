@@ -1,6 +1,6 @@
 module Error
 
-using BioLab
+using ..BioLab
 
 macro is_error(ex)
 

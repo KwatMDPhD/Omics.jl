@@ -4,7 +4,7 @@ using StatsBase: std
 
 using MultipleTesting: BenjaminiHochberg, adjust
 
-using BioLab
+using ..BioLab
 
 function get_margin_of_error(nu_, er = 0.05)
 

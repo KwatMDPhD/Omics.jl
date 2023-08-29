@@ -6,7 +6,7 @@ using Colors: Colorant, coloralpha, hex
 
 using JSON: json
 
-using BioLab
+using ..BioLab
 
 function _make_color_scheme(he_)
 

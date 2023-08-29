@@ -2,7 +2,7 @@ module Graph
 
 using JSON: json
 
-using BioLab
+using ..BioLab
 
 function plot(
     ht,
