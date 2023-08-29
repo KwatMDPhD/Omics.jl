@@ -3,7 +3,7 @@ module Database
 
 using StatsBase: median
 
-using BioLab
+using ..BioLab
 
 function describe(information_x_sample_x_anything)
 
