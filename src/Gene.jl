@@ -104,4 +104,37 @@ function map_uniprot()
 
 end
 
+# TODO: Test.
+function rename!(fe_, fe_fe2)
+
+    n_re = 0
+
+    for (id, fe) in enumerate(fe_)
+
+        if haskey(fe_fe2, fe)
+
+            fe_[id] = fe_fe2[fe]
+
+            n_re += 1
+
+        elseif startswith(fe, "ENS") && contains(fe, '.')
+
+            fe = BioLab.String.split_get(fe, '.', 1)
+
+            if haskey(fe_fe2, fe)
+
+                fe_[id] = fe_fe2[fe]
+
+                n_re += 1
+
+            end
+
+        end
+
+    end
+
+    @info string("Renamed ", n_re, " / ", length(fe_), '.')
+
+end
+
 end
