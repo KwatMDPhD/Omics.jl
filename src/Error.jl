@@ -87,7 +87,7 @@ function error_missing(pa)
 
     if !ispath(pa)
 
-        error(string(pa, " is missing."))
+        error(pa, " is missing.")
 
     end
 

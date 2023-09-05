@@ -110,7 +110,7 @@ function read(pa; dicttype = OrderedDict, ke_ar...)
 
     else
 
-        error(string("Can not read a ", ex, '.'))
+        error("Can not read a ", ex, '.')
 
     end
 

@@ -1,7 +1,5 @@
 module FeatureXSample
 
-# TODO: Test.
-
 using StatsBase: median
 
 using ..BioLab
@@ -10,11 +8,7 @@ function describe(information_x_sample_x_anything)
 
     for an_ in eachrow(information_x_sample_x_anything)
 
-        la = an_[1]
-
-        st = BioLab.Collection.count_sort_string(an_[2:end])
-
-        @info string(la, '\n', st)
+        @info string(an_[1], '\n', BioLab.Collection.count_sort_string(an_[2:end]))
 
     end
 
@@ -36,7 +30,7 @@ function error_rename_collapse_log2_plot(di, fe_, fe_x_sa_x_nu, fe_fe2, lo, titl
 
     if !isempty(fe_fe2)
 
-        rename!(fe_, fe_fe2)
+        BioLab.Gene.rename!(fe_, fe_fe2)
 
     end
 
@@ -52,7 +46,7 @@ function error_rename_collapse_log2_plot(di, fe_, fe_x_sa_x_nu, fe_fe2, lo, titl
 
         BioLab.Plot.plot_histogram(
             joinpath(di, "number_plus1_log2.html"),
-            (vec(fe_x_sa_x_nu),),
+            (vec(fe_x_sa_x_nu),);
             layout = Dict("title" => Dict("text" => string(title_text, " (+1 Log2)"))),
         )
 
