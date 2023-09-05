@@ -10,8 +10,6 @@ const GS = "GSE122404"
 
 const GZ = BioLab.GEO.download(BioLab.TE, GS)
 
-# ---- #
-
 @test isfile(GZ)
 
 # ---- #
@@ -41,7 +39,7 @@ const BL_TH = BioLab.GEO.read(GZ)
 @test length(BioLab.String.dice(BL_TH["SAMPLE"]["GSM3466115"]["table"])) == 53618
 
 # 623.414 ms (3439384 allocations: 208.13 MiB)
-#@btime BioLab.GEO.read($GZ);
+@btime BioLab.GEO.read($GZ);
 
 # ---- #
 

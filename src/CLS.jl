@@ -14,7 +14,7 @@ function read(cl)
 
     nar = "Target"
 
-    co_ = string.("Sample ", 1:n_sa3)
+    co_ = ["Sample $id" for id in 1:n_sa3]
 
     if li1 == "#numeric"
 
@@ -28,7 +28,7 @@ function read(cl)
 
         if n_sa1 != n_sa3
 
-            error("There are ", n_sa3, " samples, not matching ", n_sa1, " (from line 1).")
+            error("There are $n_sa3 samples, which do not match $n_sa1 (from line 1).")
 
         end
 
@@ -43,13 +43,7 @@ function read(cl)
         if !(n_gr1 == n_gr2 == n_gr3)
 
             error(
-                "There are ",
-                n_gr3,
-                " groups, not matching ",
-                n_gr1,
-                " (from line 1) or ",
-                n_gr2,
-                " (from line 2).",
+                "There are $n_gr3 groups, which do not match $n_gr1 (from line 1) or $n_gr2 (from line 2).",
             )
 
         end

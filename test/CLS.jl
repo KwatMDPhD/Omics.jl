@@ -32,11 +32,11 @@ for (cl, ta, nu_) in (
 
     @test target_x_sample_x_number[1, "Target"] == ta
 
-    @test collect(target_x_sample_x_number[1, string.("Sample ", eachindex(nu_))]) == nu_
+    @test collect(target_x_sample_x_number[1, ["Sample $id" for id in eachindex(nu_)]]) == nu_
 
-    # 387.042 μs (6235 allocations: 530.48 KiB)
-    # 10.709 μs (99 allocations: 7.71 KiB)
-    # 10.416 μs (99 allocations: 7.66 KiB)
+    # 391.000 μs (6234 allocations: 530.46 KiB)
+    # 10.750 μs (98 allocations: 7.70 KiB)
+    # 10.541 μs (98 allocations: 7.64 KiB)
     #@btime BioLab.CLS.read($cl)
 
 end

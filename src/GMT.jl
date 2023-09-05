@@ -4,7 +4,7 @@ using ..BioLab
 
 function read(gm)
 
-    se_ge_ = Dict{String, Vector{SubString{String}}}()
+    se_ge_ = Dict{String, Vector{String}}()
 
     for li in eachline(gm)
 

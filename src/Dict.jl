@@ -24,7 +24,7 @@ function set_with_suffix!(ke_va, ke, va)
 
         end
 
-        ke = string(pr, '.', n += 1)
+        ke = "$pr.$(n += 1)"
 
     end
 
@@ -110,7 +110,7 @@ function read(pa; dicttype = OrderedDict, ke_ar...)
 
     else
 
-        error("Can not read a ", ex, '.')
+        error("Can not read a $ex.")
 
     end
 

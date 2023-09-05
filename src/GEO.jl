@@ -13,11 +13,12 @@ function download(di, gs)
 
     BioLab.Error.error_missing(di)
 
-    gsc = chop(gs; tail = 3)
-
     gz = "$(gs)_family.soft.gz"
 
-    Base.download("ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gsc)nnn/$gs/soft/$gz", joinpath(di, gz))
+    Base.download(
+        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(chop(gs; tail = 3))nnn/$gs/soft/$gz",
+        joinpath(di, gz),
+    )
 
 end
 
@@ -36,10 +37,14 @@ end
 function read(gz)
 
     bl_th = Dict(
-        "DATABASE" => OrderedDict{String, OrderedDict{String, String}}(),
-        "SERIES" => OrderedDict{String, OrderedDict{String, String}}(),
-        "PLATFORM" => OrderedDict{String, OrderedDict{String, String}}(),
-        "SAMPLE" => OrderedDict{String, OrderedDict{String, String}}(),
+        "DATABASE" =>
+            OrderedDict{SubString{String}, OrderedDict{SubString{String}, SubString{String}}}(),
+        "SERIES" =>
+            OrderedDict{SubString{String}, OrderedDict{SubString{String}, SubString{String}}}(),
+        "PLATFORM" =>
+            OrderedDict{SubString{String}, OrderedDict{SubString{String}, SubString{String}}}(),
+        "SAMPLE" =>
+            OrderedDict{SubString{String}, OrderedDict{SubString{String}, SubString{String}}}(),
     )
 
     bl = ""
@@ -56,37 +61,43 @@ function read(gz)
 
             bl, th = _eachsplit(chop(li; head = 1, tail = 0))
 
-            bl_th[bl][th] = OrderedDict{String, String}()
+            bl_th[bl][th] = OrderedDict{SubString{String}, SubString{String}}()
 
             continue
 
         end
 
-        bll = lowercase(bl)
-
-        pr = "!$(bll)_table_"
+        pr = "!$(lowercase(bl))_table_"
 
         if startswith(li, "$(pr)begin")
 
-            blt = titlecase(bl)
+            en = "$(pr)end"
 
-            jo = join(
-                (
-                    _readline(st) for
-                    _ in 1:(1 + parse(Int, bl_th[bl][th]["!$(blt)_data_row_count"]))
-                ),
-                '\n',
-            )
+            ro_ = Vector{SubString{String}}()
 
-            if _readline(st) == "$(pr)end"
+            n_ro = 0
 
-                bl_th[bl][th]["table"] = jo
+            ro = _readline(st)
 
-            else
+            while ro != en
 
-                @warn "$pr did not end."
+                push!(ro_, ro)
+
+                n_ro += 1
+
+                ro = _readline(st)
 
             end
+
+            n_ro2 = 1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
+
+            if n_ro != n_ro2
+
+                @warn "Table has $n_ro rows, which do not match $n_ro2."
+
+            end
+
+            bl_th[bl][th]["table"] = join(ro_, '\n')
 
             continue
 

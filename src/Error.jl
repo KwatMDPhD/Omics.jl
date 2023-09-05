@@ -38,7 +38,7 @@ function error_duplicate(co)
 
         st = BioLab.Collection.count_sort_string(co; mi = 2)
 
-        error("Found ", BioLab.String.count(length(split(st, '\n')), "duplicate"), ".\n", st)
+        error("Found $(BioLab.String.count(length(split(st, '\n')), "duplicate")).\n$st")
 
     end
 
@@ -51,10 +51,7 @@ function error_bad(co)
     if !isempty(id_)
 
         error(
-            "Found ",
-            BioLab.String.count(length(id_), "bad value"),
-            ".\n",
-            join(unique(co[id_]), ".\n"),
+            "Found $(BioLab.String.count(length(id_), "bad value")).\n$(join(unique(co[id_]), ".\n")).",
         )
 
     end
@@ -65,7 +62,7 @@ function error_has_key(ke_va, ke)
 
     if haskey(ke_va, ke)
 
-        error(ke, " (=> ", ke_va[ke], ") exists.")
+        error("$ke (=> $(ke_va[ke])) exists.")
 
     end
 
@@ -77,7 +74,7 @@ function error_extension_difference(pa, ex2)
 
     if ex != ex2
 
-        error("Extensions differ. ", ex, " != ", ex2, '.')
+        error("Extensions differ. $ex != $ex2.")
 
     end
 
@@ -87,7 +84,7 @@ function error_missing(pa)
 
     if !ispath(pa)
 
-        error(pa, " is missing.")
+        error("$pa is missing.")
 
     end
 

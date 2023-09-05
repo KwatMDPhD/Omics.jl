@@ -17,7 +17,7 @@ const DA = joinpath(BioLab._DA, "DataFrame")
 
 function make_axis(pr, n)
 
-    string.(pr, 1:n)
+    ["$pr$id" for id in 1:n]
 
 end
 
@@ -45,10 +45,10 @@ const DAMS = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
 @test DAMS == DataFrame(
     "Row Name" => make_axis("Row ", N_RO),
-    (string("Column ", id) => view(MA, :, id) for id in 1:N_CO)...,
+    ("Column $id" => view(MA, :, id) for id in 1:N_CO)...,
 )
 
-# 1.104 μs (22 allocations: 1.89 KiB)
+# 1.113 μs (22 allocations: 1.89 KiB)
 #@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
@@ -59,7 +59,7 @@ BioLab.DataFrame.separate(DAMS)[2][1] = ":("
 
 @test DAMS[1, 1] == "Row 1"
 
-# 2.208 μs (28 allocations: 2.08 KiB)
+# 2.204 μs (28 allocations: 2.08 KiB)
 #@btime BioLab.DataFrame.separate($DAMS);
 
 # ---- #

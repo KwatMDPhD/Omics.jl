@@ -50,9 +50,9 @@ for an in (
     1.0,
     "A",
     "Abc",
-    string.('A', SP_)...,
-    string.(SP_, 'B')...,
-    string.('A', SP_, 'B')...,
+    ("A$sp" for sp in SP_)...,
+    ("$(sp)B" for sp in SP_)...,
+    ("A$(sp)B" for sp in SP_)...,
     1,
     'A',
 )
