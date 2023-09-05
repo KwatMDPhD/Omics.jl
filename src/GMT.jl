@@ -4,7 +4,7 @@ using ..BioLab
 
 function read(gm)
 
-    se_ge_ = Dict{String, Vector{String}}()
+    se_ge_ = Dict{String, Vector{SubString{String}}}()
 
     for li in eachline(gm)
 
@@ -16,11 +16,7 @@ function read(gm)
 
         ge_ = filter!(!isempty, view(sp_, 3:length(sp_)))
 
-        if !allunique(ge_)
-
-            error("$se has duplicated genes.")
-
-        end
+        BioLab.Error.error_duplicate(ge_)
 
         se_ge_[se] = ge_
 

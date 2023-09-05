@@ -18,8 +18,8 @@ for (gm, re) in (("h.all.v7.1.symbols.gmt", 50), ("c2.all.v7.1.symbols.gmt", 552
 
     @test length(BioLab.GMT.read(gm)) == re
 
-    # 334.208 μs (7767 allocations: 977.20 KiB)
-    # 25.456 ms (521432 allocations: 51.53 MiB)
+    # 642.625 μs (1031 allocations: 1.91 MiB)
+    # 46.110 ms (103655 allocations: 101.19 MiB)
     #@btime BioLab.GMT.read($gm)
 
 end
