@@ -30,13 +30,13 @@ function collapse(fu, ty, ro_, ma)
 
     if n_ro == n_ro2
 
-        @warn "There are no rows to collapse."
+        @warn "There is not any row to collapse."
 
         return
 
     end
 
-    @info "Collapsing using $fu and making ($n_ro --> $n_ro2) x $n_co"
+    @info string("Collapsing using ", fu, " and making (", n_ro, " --> ", n_ro2, ") x ", n_co)
 
     ro2_ = Vector{String}(undef, n_ro2)
 
@@ -46,12 +46,14 @@ function collapse(fu, ty, ro_, ma)
 
         ro2_[id2] = ro
 
-        if length(id_) == 1
+        if isone(length(id_))
 
             an_ = view(ma, id_[1], :)
 
         else
 
+            # `view` allocates one more and is slower.
+            # `fu.(` allocates six more and is slower.
             an_ = [fu(co) for co in eachcol(ma[id_, :])]
 
         end

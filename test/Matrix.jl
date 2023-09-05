@@ -35,74 +35,48 @@ for (an___, re) in (
     ),
 )
 
-    # 93.630 ns (9 allocations: 416 bytes)
-    # 24.824 ns (1 allocation: 96 bytes)
-    #
-    # 22.716 ns (1 allocation: 96 bytes)
-    # 23.738 ns (1 allocation: 96 bytes)
-    #
-    #
-    # 24.222 ns (1 allocation: 112 bytes)
-    # 25.518 ns (1 allocation: 112 bytes)
-    #
-    # 23.845 ns (1 allocation: 112 bytes)
-    # 25.058 ns (1 allocation: 112 bytes)
-    #
-    #
-    # 178.929 ns (14 allocations: 720 bytes)
-    # 575.000 ns (13 allocations: 592 bytes)
-    #
-    # 532.852 ns (12 allocations: 608 bytes)
-    # 400.205 ns (8 allocations: 416 bytes)
-    #
-    #
-    # 180.337 ns (14 allocations: 720 bytes)
-    # 572.115 ns (13 allocations: 592 bytes)
-    #
-    # 531.524 ns (12 allocations: 608 bytes)
-    # 400.210 ns (8 allocations: 416 bytes)
-    #
-    #
-    # 160.417 ns (12 allocations: 624 bytes)
-    # 280.777 ns (7 allocations: 416 bytes)
-    #
-    # 64.692 ns (2 allocations: 224 bytes)
-    # 372.956 ns (7 allocations: 416 bytes)
-    #
-    #
-    # 163.644 ns (12 allocations: 624 bytes)
-    # 281.284 ns (7 allocations: 416 bytes)
-    #
-    # 63.138 ns (2 allocations: 224 bytes)
-    # 386.757 ns (7 allocations: 416 bytes)
-    #
-    #
-    # 502.373 ns (28 allocations: 1.69 KiB)
-    # 514.911 ns (15 allocations: 928 bytes)
-    #
-    # 463.434 ns (14 allocations: 976 bytes)
-    # 664.581 ns (14 allocations: 912 bytes)
-    #
-    #
-    # 23.302 ns (1 allocation: 80 bytes)
-    # 25.309 ns (1 allocation: 80 bytes)
-    #
-    # 23.720 ns (1 allocation: 80 bytes)
-    # 25.017 ns (1 allocation: 80 bytes)
-    #
-    #
-    # 2.889 μs (62 allocations: 5.81 KiB)
-    # 600.282 ns (19 allocations: 1.06 KiB)
-    #
-    # 1.858 μs (17 allocations: 1.22 KiB)
-    # 1.371 μs (17 allocations: 1.03 KiB)
-
     for an___ in (an___, collect.(an___))
 
         for an___ in (an___, collect(an___))
 
             @test isequal(BioLab.Matrix.make(an___), re)
 
+            # 93.674 ns (9 allocations: 416 bytes)
+            # 24.933 ns (1 allocation: 96 bytes)
+            # 22.902 ns (1 allocation: 96 bytes)
+            # 24.013 ns (1 allocation: 96 bytes)
+            # 23.636 ns (1 allocation: 112 bytes)
+            # 25.518 ns (1 allocation: 112 bytes)
+            # 23.929 ns (1 allocation: 112 bytes)
+            # 25.226 ns (1 allocation: 112 bytes)
+            # 178.453 ns (14 allocations: 720 bytes)
+            # 522.031 ns (13 allocations: 592 bytes)
+            # 477.138 ns (12 allocations: 608 bytes)
+            # 371.141 ns (8 allocations: 416 bytes)
+            # 179.976 ns (14 allocations: 720 bytes)
+            # 523.340 ns (13 allocations: 592 bytes)
+            # 477.990 ns (12 allocations: 608 bytes)
+            # 368.698 ns (8 allocations: 416 bytes)
+            # 160.692 ns (12 allocations: 624 bytes)
+            # 253.521 ns (7 allocations: 416 bytes)
+            # 63.138 ns (2 allocations: 224 bytes)
+            # 339.097 ns (7 allocations: 416 bytes)
+            # 163.591 ns (12 allocations: 624 bytes)
+            # 254.107 ns (7 allocations: 416 bytes)
+            # 63.010 ns (2 allocations: 224 bytes)
+            # 347.350 ns (7 allocations: 416 bytes)
+            # 492.912 ns (28 allocations: 1.69 KiB)
+            # 476.403 ns (15 allocations: 928 bytes)
+            # 416.251 ns (14 allocations: 976 bytes)
+            # 600.614 ns (14 allocations: 912 bytes)
+            # 23.301 ns (1 allocation: 80 bytes)
+            # 25.267 ns (1 allocation: 80 bytes)
+            # 23.678 ns (1 allocation: 80 bytes)
+            # 24.891 ns (1 allocation: 80 bytes)
+            # 2.870 μs (62 allocations: 5.81 KiB)
+            # 597.612 ns (19 allocations: 1.06 KiB)
+            # 1.754 μs (17 allocations: 1.22 KiB)
+            # 1.312 μs (17 allocations: 1.03 KiB)
             #@btime BioLab.Matrix.make($an___)
 
         end
@@ -140,9 +114,9 @@ for (ro_, ro2_, ma2) in (
 
         @test BioLab.Matrix.collapse(mean, Float64, ro_, MA) == (ro2_, ma2)
 
-
-        # 734.756 ns (20 allocations: 1.31 KiB)
-        # 641.104 ns (16 allocations: 1.11 KiB)
+        # 734.460 ns (19 allocations: 1.28 KiB)
+        # 644.697 ns (15 allocations: 1.08 KiB)
+        # TODO: Comment out @info.
         #@btime BioLab.Matrix.collapse(mean, Float64, $ro_, $MA)
 
     end
