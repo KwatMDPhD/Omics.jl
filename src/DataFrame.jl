@@ -1,10 +1,10 @@
 module DataFrame
 
+using CSV: read as _read, write as _write
+
 using CodecZlib: GzipDecompressor, transcode
 
 using DataFrames: DataFrame as _DataFrame, insertcols!
-
-using CSV: read as _read, write as _write
 
 using Mmap: mmap
 

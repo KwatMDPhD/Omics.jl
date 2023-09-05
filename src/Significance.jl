@@ -1,8 +1,8 @@
 module Significance
 
-using StatsBase: std
-
 using MultipleTesting: BenjaminiHochberg, adjust
+
+using StatsBase: std
 
 using ..BioLab
 
