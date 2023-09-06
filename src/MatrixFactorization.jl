@@ -10,15 +10,15 @@ function factorize(ma, n; ke_ar...)
 
     mf = nnmf(ma, n; ke_ar...)
 
-    if !mf.converged
+    if mf.converged
+
+        mf.W, mf.H
+
+    else
 
         @warn "Did not converge. niters = $(mf.niters). objvalue = $(mf.objvalue)."
 
-        return
-
     end
-
-    mf.W, mf.H
 
 end
 
@@ -34,11 +34,11 @@ function write(
     w_,
     h_;
     no = true,
-    nar_ = string.("Row Set ", eachindex(w_)),
-    nac_ = string.("Column Set ", eachindex(h_)),
+    nar_ = ["Rows $id" for id in eachindex(w_)],
+    nac_ = ["Columns $id" for id in eachindex(h_)],
     naf = "Factor",
-    ro___ = (string.("$na ", 1:size(ma, 1)) for (ma, na) in zip(w_, nar_)),
-    co___ = (string.("$na ", 1:size(ma, 2)) for (ma, na) in zip(h_, nac_)),
+    ro___ = (["$na $id" for id in 1:size(ma, 1)] for (ma, na) in zip(w_, nar_)),
+    co___ = (["$na $id" for id in 1:size(ma, 2)] for (ma, na) in zip(h_, nac_)),
 )
 
     BioLab.Error.error_missing(di)
@@ -47,7 +47,7 @@ function write(
 
     sh = 800
 
-    fa_ = string.("$naf ", 1:size(w_[1], 2))
+    fa_ = ["$naf $id" for id in 1:size(w_[1], 2)]
 
     axis = BioLab.Dict.merge_recursively(BioLab.Plot.AXIS, Dict("dtick" => 1))
 
@@ -77,7 +77,7 @@ function write(
             layout = Dict(
                 "height" => lo,
                 "width" => sh,
-                "title" => Dict("text" => "W$id"),
+                "title" => Dict("text" => "W $id"),
                 "xaxis" => axis,
             ),
         )
@@ -110,7 +110,7 @@ function write(
             layout = Dict(
                 "height" => sh,
                 "width" => lo,
-                "title" => Dict("text" => "H$id"),
+                "title" => Dict("text" => "H $id"),
                 "yaxis" => axis,
             ),
         )

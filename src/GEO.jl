@@ -340,11 +340,11 @@ function get(
 
     bl_th = BioLab.GEO.read(gz)
 
-    characteristic_x_sample_x_anything, pl_da = BioLab.GEO.tabulate(bl_th; sa)
+    characteristic_x_sample_x_any, pl_da = BioLab.GEO.tabulate(bl_th; sa)
 
-    describe(characteristic_x_sample_x_anything)
+    describe(characteristic_x_sample_x_any)
 
-    nac, ch_, sa_, ch_x_sa_x_an = BioLab.DataFrame.separate(characteristic_x_sample_x_anything)
+    nac, ch_, sa_, ch_x_sa_x_an = BioLab.DataFrame.separate(characteristic_x_sample_x_any)
 
     replace!(ch_x_sa_x_an, missing => "")
 
@@ -385,7 +385,7 @@ function get(
     nasc = BioLab.Path.clean(nas)
 
     BioLab.DataFrame.write(
-        joinpath(ou, "characteristic_x_$(nasc)_x_anything.tsv"),
+        joinpath(ou, "characteristic_x_$(nasc)_x_any.tsv"),
         BioLab.DataFrame.make(nac, ch_, sa_, ch_x_sa_x_an),
     )
 

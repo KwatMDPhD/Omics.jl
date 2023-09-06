@@ -8,14 +8,14 @@ using BioLab
 
 const N_RO = 3
 
-const FEATURE_X_SAMPLE_X_ANYTHING = DataFrame(
+const FEATURE_X_SAMPLE_X_ANY = DataFrame(
     "Feature" => ["Feature $id" for id in 1:N_RO],
     "Column 1" => ('A':'Z')[1:N_RO],
     "Column 2" => ('A':'Z')[1:N_RO],
     "Column 3" => ('A':'Z')[(N_RO + 1):(N_RO + N_RO)],
 )
 
-BioLab.FeatureXSample.describe(FEATURE_X_SAMPLE_X_ANYTHING)
+BioLab.FeatureXSample.describe(FEATURE_X_SAMPLE_X_ANY)
 
 # ---- #
 
