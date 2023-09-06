@@ -52,23 +52,25 @@ function merge_recursively(ke1_va1, ke2_va2)
 
             if va1 isa AbstractDict && va2 isa AbstractDict
 
-                ke_va[ke] = merge_recursively(va1, va2)
+                va = merge_recursively(va1, va2)
 
             else
 
-                ke_va[ke] = va2
+                va = va2
 
             end
 
         elseif haskey(ke1_va1, ke)
 
-            ke_va[ke] = ke1_va1[ke]
+            va = ke1_va1[ke]
 
         else
 
-            ke_va[ke] = ke2_va2[ke]
+            va = ke2_va2[ke]
 
         end
+
+        ke_va[ke] = va
 
     end
 

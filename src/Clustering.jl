@@ -1,6 +1,6 @@
 module Clustering
 
-using Clustering: Hclust, cutree, hclust
+using Clustering: cutree, hclust
 
 using Distances: Euclidean, pairwise
 
@@ -10,7 +10,7 @@ function hierarchize(ma, dims; fu = Euclidean(), linkage = :ward)
 
 end
 
-function cluster(hi::Hclust, k)
+function cluster(hi, k)
 
     cutree(hi; k)
 

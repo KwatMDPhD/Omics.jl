@@ -12,6 +12,7 @@ using XLSX: readtable
 
 using ..BioLab
 
+# TODO: Check if ro_ can be a String.
 function make(nar, ro_, co_, ma)
 
     insertcols!(_DataFrame(ma, co_), 1, nar => ro_)
