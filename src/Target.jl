@@ -1,68 +1,60 @@
 module Target
 
-function make_any_x_index_x_bit(an_)
+# TODO: Consider moving to Collection.
+function _unique_sort(an_)
 
-    anu_ = sort(unique(an_))
-
-    an_id = Dict(an => id for (id, an) in enumerate(anu_))
-
-    an_x_id_x_bi = BitMatrix(undef, length(anu_), length(an_))
-
-    for (id, an) in enumerate(an_)
-
-        an_x_id_x_bi[an_id[an], id] = true
-
-    end
-
-    anu_, an_x_id_x_bi
+    sort!(unique(an_))
 
 end
 
-#function make_any1_x_label_x_any2(an1_, la_, fi, an2_)
-#
-#    an1u_ = sort!(unique(an1_))
-#
-#    lau_ = sort!(unique(la_))
-#
-#    an1_x_la_x_an2 = fill(fi, length(an1u_), length(lau_))
-#
-#    an1_id = Dict(an => id for (id, an) in enumerate(an1u_))
-#
-#    for (idl, la) in enumerate(lau_)
-#
-#        for id in findall(==(la), la_)
-#
-#            an1_x_la_x_an2[an1_id[an1_[id]], idl] = an2_[id]
-#
-#        end
-#
-#    end
-#
-#    an1u_, lau_, an1_x_la_x_an2
-#
-#end
+# TODO: Consider moving to Collection.
+function _map_index(un_)
 
-function make_any1_x_label_x_any2(an1___, la_, fi, an2_)
+    Dict(un => id for (id, un) in enumerate(un_))
 
-    an1u_ = vec(collect(Iterators.ProductIterator(Tuple(sort!(unique(an1_)) for an1_ in an1___))))
+end
 
-    lau_ = sort!(unique(la_))
+function tabulate(ro_)
 
-    an1_x_la_x_an2 = fill(fi, length(an1u_), length(lau_))
+    rou_ = _unique_sort(ro_)
 
-    an1_id = Dict(an => id for (id, an) in enumerate(an1u_))
+    ro_x_id_x_is = falses(length(rou_), length(ro_))
 
-    for (idl, la) in enumerate(lau_)
+    ro_id = _map_index(rou_)
 
-        for id in findall(==(la), la_)
+    for (id, ro) in enumerate(ro_)
 
-            an1_x_la_x_an2[an1_id[Tuple(an1_[id] for an1_ in an1___)], idl] = an2_[id]
-
-        end
+        ro_x_id_x_is[ro_id[ro], id] = true
 
     end
 
-    join.(an1u_, '_'), lau_, an1_x_la_x_an2
+    rou_, ro_x_id_x_is
+
+end
+
+function tabulate(ro___, co___, fi, an_)
+
+    ro_ = zip(ro___...)
+
+    co_ = zip(co___...)
+
+    rou_ = _unique_sort(ro_)
+
+    cou_ = _unique_sort(co_)
+
+    ro_x_co_x_an = fill(fi, length(rou_), length(cou_))
+
+    ro_id = _map_index(rou_)
+
+    co_id = _map_index(cou_)
+
+    for (ro, co, an) in zip(ro_, co_, an_)
+
+        ro_x_co_x_an[ro_id[ro], co_id[co]] = an
+
+    end
+
+    join.(rou_, '_'), join.(cou_, '_'), ro_x_co_x_an
 
 end
 

@@ -42,19 +42,19 @@ function limit(st, n)
 
     if n < length(st)
 
-        su = view(st, 1:n)
+        "$(view(st, 1:n))..."
 
-        return "$su..."
+    else
+
+        st
 
     end
-
-    st
 
 end
 
 function split_get(st, de, id)
 
-    split(st, de; limit = id + 1)[id]
+    split(st, de; limit = id)[id]
 
 end
 
@@ -82,9 +82,7 @@ function count(n, st)
 
         if endswith(st, si)
 
-            su = view(st, 1:(length(st) - length(si)))
-
-            return "$n $su$pl"
+            return "$n $(chop(st; tail=length(si)))$pl"
 
         end
 

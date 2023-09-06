@@ -8,13 +8,13 @@ function rank_in_fraction(ra)
 
     for id in 1:n
 
-        fr += 9 * 10.0^-id
+        fr += 9 * 10^-id
 
     end
 
     id = n + 1
 
-    fr += (ra % 9) * 10.0^-id
+    fr += (ra % 9) * 10^-id
 
     round(fr; digits = id)
 
@@ -36,7 +36,7 @@ end
 
 function get_extreme(n::Int, n_ex)
 
-    if n / 2 < n_ex
+    if n / 2 <= n_ex
 
         collect(1:n)
 

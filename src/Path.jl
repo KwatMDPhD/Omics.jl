@@ -1,5 +1,18 @@
 module Path
 
+function clean(na)
+
+    # TODO: Test.
+    if contains(na, '/')
+
+        error("A name can not contain any \"/\".")
+
+    end
+
+    replace(lowercase(na), r"[^.0-9_a-z]" => '_')
+
+end
+
 # TODO: Test.
 function get_extension(pa)
 
@@ -7,23 +20,15 @@ function get_extension(pa)
 
 end
 
-function clean(pa)
-
-    replace(lowercase(pa), r"[^/_.0-9a-z]" => '_')
-
-end
-
-function wait(pa; sl = 1, li = 4)
+function wait(pa; sl = 1, ma = 4)
 
     se = 0
 
-    while se < li && !ispath(pa)
+    while se < ma && !ispath(pa)
 
         sleep(sl)
 
-        se += sl
-
-        @info "Waiting for $pa ($se/$li)"
+        @info "Waiting for $pa ($(se += sl) / $ma)"
 
     end
 
@@ -67,6 +72,7 @@ function remake_directory(di)
 
 end
 
+# TODO: Consider using '.' only before an extension.
 function rank(di)
 
     flnaex_ = rsplit.(read(di), '.'; limit = 3)

@@ -6,7 +6,7 @@ function make(ht, id, sr_, sc; he = 800, wi = 1280, ba = "#27221f")
 
     if isempty(ht)
 
-        ht = joinpath(BioLab.TE, string(BioLab.Time.stamp(), ".html"))
+        ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html")
 
     end
 

@@ -4,7 +4,17 @@ using OrderedCollections: OrderedDict
 
 function make(an___)
 
-    [an___[id1][id2] for id1 in eachindex(an___), id2 in eachindex(an___[1])]
+    le_ = unique(length.(an___))
+
+    if isone(length(le_))
+
+        [an___[id1][id2] for id1 in eachindex(an___), id2 in 1:le_[1]]
+
+    else
+
+        error("Lengths differ.")
+
+    end
 
 end
 
@@ -30,13 +40,13 @@ function collapse(fu, ty, ro_, ma)
 
     if n_ro == n_ro2
 
-        @warn "There is not any row to collapse."
+        @warn "There are not any rows to collapse."
 
         return
 
     end
 
-    @info string("Collapsing using ", fu, " and making (", n_ro, " --> ", n_ro2, ") x ", n_co)
+    @info "Collapsing using $fu and making ($n_ro -->) $n_ro2 x $n_co"
 
     ro2_ = Vector{String}(undef, n_ro2)
 
@@ -58,6 +68,7 @@ function collapse(fu, ty, ro_, ma)
 
         end
 
+        # TODO: Benchmark in-place assignment.
         ma2[id2, :] = an_
 
     end

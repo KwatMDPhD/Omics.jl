@@ -14,11 +14,7 @@ function read(gm)
 
         BioLab.Error.error_has_key(se_ge_, se)
 
-        ge_ = filter!(!isempty, view(sp_, 3:length(sp_)))
-
-        BioLab.Error.error_duplicate(ge_)
-
-        se_ge_[se] = ge_
+        se_ge_[se] = filter!(!isempty, view(sp_, 3:length(sp_)))
 
     end
 
