@@ -4,11 +4,16 @@ using StatsBase: median
 
 using ..BioLab
 
-function describe(information_x_sample_x_anything)
+# TODO: Test.
+function describe(la_, an___)
 
-    for an_ in eachrow(information_x_sample_x_anything)
+    BioLab.Error.error_bad(la_)
 
-        @info "$(an_[1])\n$(BioLab.Collection.count_sort_string(an_[2:end]))"
+    for (la, an_) in zip(la_, an___)
+
+        BioLab.Error.error_bad(an_)
+
+        @info "$la\n$(BioLab.Collection.count_sort_string(an_))"
 
     end
 
