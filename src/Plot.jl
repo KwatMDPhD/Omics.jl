@@ -420,7 +420,7 @@ function plot_heat_map(
 
         if grr_ isa AbstractVector{<:AbstractString}
 
-            gr_id = Dict(gr => id for (id, gr) in enumerate(sort(unique(grr_))))
+            gr_id = BioLab.Collection.map_index(BioLab.Collection.unique_sort(grr_))
 
             grr_ = [gr_id[gr] for gr in grr_]
 
@@ -442,7 +442,7 @@ function plot_heat_map(
 
         if grc_ isa AbstractVector{<:AbstractString}
 
-            gr_id = Dict(gr => id for (id, gr) in enumerate(sort(unique(grc_))))
+            gr_id = BioLab.Collection.map_index(BioLab.Collection.unique_sort(grc_))
 
             grc_ = [gr_id[gr] for gr in grc_]
 
