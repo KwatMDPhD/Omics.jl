@@ -36,7 +36,8 @@ function read(sa_di)
                 1,
             ]
 
-        da = BioLab.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3, delim = " ")
+        # TODO
+        da = BioLab.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3)#, delim = ' ')
 
         n_fes = length(fes_)
 
@@ -46,13 +47,13 @@ function read(sa_di)
 
         if n_fes != co1
 
-            error("There are $n_fes features, which is not $co1.")
+            error("There are $n_fes features, not matching $co1.")
 
         end
 
         if n_bas != co2
 
-            error("There are $n_bas barcodes, which is not $co2.")
+            error("There are $n_bas barcodes, not matching $co2.")
 
         end
 
@@ -68,7 +69,7 @@ function read(sa_di)
 
         end
 
-        append!(ba_, string.("$sa.", bas_))
+        append!(ba_, ["$(sa)_$ba" for ba in bas_])
 
         append!(idf_, da[!, 1])
 
@@ -76,11 +77,7 @@ function read(sa_di)
 
         append!(co_, da[!, 3])
 
-        for _ in 1:n_bas
-
-            push!(sa_, sa)
-
-        end
+        append!(sa_, fill(sa, n_bas))
 
         n_ba += n_bas
 
@@ -100,9 +97,9 @@ function read(sa_di)
 
     if !allunique(fe_)
 
-        st = BioLab.Collection.count_sort_string(fe_, 2)
+        st = BioLab.Collection.count_sort_string(fe_; mi = 2)
 
-        @warn "Features have duplicates.\n$st"
+        @warn "Features have $(BioLab.String.count(length(split(st, '\n')), "duplicate")).\n$st"
 
         fe_, fe_x_ba_x_co = BioLab.Matrix.collapse(maximum, Int, fe_, fe_x_ba_x_co)
 
