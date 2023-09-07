@@ -49,7 +49,7 @@ function write(
 
     fa_ = ["$naf $id" for id in 1:size(w_[1], 2)]
 
-    axis = BioLab.Dict.merge_recursively(BioLab.Plot.AXIS, Dict("dtick" => 1))
+    axis = Dict("dtick" => 1)
 
     for (id, (w, nar, ro_)) in enumerate(zip(w_, nar_, ro___))
 

@@ -131,7 +131,7 @@ end
 
 const N_FE = 3
 
-const GFE_ = string.("Feature ", 1:N_FE)
+const GFE_ = ["Feature $id" for id in 1:N_FE]
 
 const N_GR = 4
 

@@ -250,7 +250,12 @@ BioLab.Plot.plot_heat_map("", Z)
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", Z, string.("Row ", 1:size(Z, 1)), string.("Column ", 1:size(Z, 2)))
+BioLab.Plot.plot_heat_map(
+    "",
+    Z,
+    ["Row $id" for id in 1:size(Z, 1)],
+    ["Column $id" for is in 1:size(Z, 2)],
+)
 
 # ---- #
 
@@ -281,8 +286,8 @@ BioLab.Plot.plot_heat_map("", Z2; grc_ = GRC_)
 BioLab.Plot.plot_heat_map(
     "",
     Z2,
-    string.("Y = ", Y2),
-    string.("X = ", X2);
+    ["Y = $nu" for nu in Y2],
+    ["X = $nu" for nu in X2],
     grr_ = GRR_,
     grc_ = GRC_,
 )

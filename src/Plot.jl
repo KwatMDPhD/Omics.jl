@@ -50,8 +50,6 @@ const COLORBAR = Dict(
     "tickfont" => Dict("family" => "Droid Sans Mono", "size" => 10),
 )
 
-const AXIS = Dict("automargin" => true, "showgrid" => false)
-
 const SPIKE = Dict(
     "showspikes" => true,
     "spikesnap" => "cursor",
@@ -85,7 +83,7 @@ function plot_scatter(
                 "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge_recursively(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
+        layout;
         ke_ar...,
     )
 
@@ -112,7 +110,7 @@ function plot_bar(
                 "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge_recursively(Dict("yaxis" => AXIS, "xaxis" => AXIS), layout);
+        layout;
         ke_ar...,
     )
 
@@ -156,15 +154,9 @@ function plot_histogram(
 
     layout = BioLab.Dict.merge_recursively(
         Dict(
-            "yaxis2" => BioLab.Dict.merge_recursively(
-                AXIS,
+            "yaxis2" =>
                 Dict("domain" => (fr, 1), "title" => Dict("text" => yaxis2_title_text)),
-            ),
-            "yaxis" => BioLab.Dict.merge_recursively(
-                AXIS,
-                Dict("domain" => (0, fr), "zeroline" => false, "tickvals" => ()),
-            ),
-            "xaxis" => AXIS,
+            "yaxis" => Dict("domain" => (0, fr), "zeroline" => false, "tickvals" => ()),
         ),
         layout,
     )
@@ -178,8 +170,8 @@ function plot_histogram(
         x = x_[id]
 
         le = Dict(
-            "showlegend" => showlegend,
             "legendgroup" => id,
+            "showlegend" => showlegend,
             "name" => name_[id],
             "x" => x,
             "marker" => marker_[id],
@@ -208,10 +200,10 @@ function plot_histogram(
                         "showlegend" => false,
                         "y" => fill(id, length(x)),
                         "text" => text_[id],
+                        "hoverinfo" => "name+x+text",
                         # TODO
                         #"mode" => "markers",
                         "marker" => Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
-                        "hoverinfo" => "x+text",
                     ),
                 ),
             )
@@ -243,25 +235,16 @@ function plot_heat_map(
 
     domain = (0, 0.95)
 
-    axis2 = BioLab.Dict.merge_recursively(
-        AXIS,
-        Dict("domain" => (domain[2] + 0.01, 1), "tickvals" => ()),
-    )
+    axis2 = Dict("domain" => (domain[2] + 0.01, 1), "tickvals" => ())
 
     layout = BioLab.Dict.merge_recursively(
         Dict(
-            "yaxis" => BioLab.Dict.merge_recursively(
-                AXIS,
-                Dict(
-                    "domain" => domain,
-                    "autorange" => "reversed",
-                    "title" => Dict("text" => "$nar (n = $n_ro)"),
-                ),
+            "yaxis" => Dict(
+                "domain" => domain,
+                "autorange" => "reversed",
+                "title" => Dict("text" => "$nar (n = $n_ro)"),
             ),
-            "xaxis" => BioLab.Dict.merge_recursively(
-                AXIS,
-                Dict("domain" => domain, "title" => Dict("text" => "$nac (n = $n_co)")),
-            ),
+            "xaxis" => Dict("domain" => domain, "title" => Dict("text" => "$nac (n = $n_co)")),
             "yaxis2" => BioLab.Dict.merge_recursively(axis2, Dict("autorange" => "reversed")),
             "xaxis2" => axis2,
         ),
