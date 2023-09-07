@@ -54,13 +54,20 @@ function read(di; ig_ = (), ke_ = (), ke_ar...)
 
 end
 
+# TODO: Test.
+function remove(pa; ke_ar...)
+
+    @info "Removing $pa"
+
+    rm(pa; ke_ar...)
+
+end
+
 function remake_directory(di)
 
     if isdir(di)
 
-        @info "Removing $di"
-
-        rm(di; recursive = true)
+        remove(di; recursive = true)
 
     elseif ispath(di)
 

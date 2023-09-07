@@ -37,7 +37,7 @@ function plot(
 
         if isfile(fi)
 
-            rm(fi)
+            BioLab.Path.remove(fi)
 
         end
 
@@ -51,7 +51,7 @@ function plot(
 
         else
 
-            error("Can not write a $ex.")
+            error("ex ($ex) must be json or png.")
 
         end
 
@@ -60,12 +60,6 @@ function plot(
     end
 
     id = "Cytoscape"
-
-    elj = json(el_)
-
-    stj = json(st_)
-
-    laj = json(BioLab.Dict.merge_recursively(Dict("animate" => false), la))
 
     BioLab.HTML.make(
         ht,
@@ -79,9 +73,9 @@ function plot(
         """
         var cy = cytoscape({
             container: document.getElementById("$id"),
-            elements: $elj,
-            style: $stj,
-            layout: $laj,
+            elements: $(json(el_)),
+            style: $(json(st_)),
+            layout: $(json(BioLab.Dict.merge_recursively(Dict("animate" => false), la))),
         });
 
         cy.on("mouseover", "node", function(ev) {
@@ -107,23 +101,17 @@ function plot(
 
     if !isempty(fi)
 
-        BioLab.Path.wait(fi; li = 40)
+        BioLab.Path.wait(fi; ma = 40)
 
         fi2 = joinpath(dirname(ht), na)
 
         if isfile(fi2)
 
-            rm(fi2)
+            BioLab.Path.remove(fi2)
 
         end
 
         mv(fi, fi2)
-
-        #if ex == "png"
-
-        #    BioLab.Path.open(fi2)
-
-        #end
 
     end
 

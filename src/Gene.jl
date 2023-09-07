@@ -133,7 +133,7 @@ function rename!(fe_, fe_fe2)
 
     end
 
-    @info string("Renamed ", n_re, " / ", length(fe_), '.')
+    @info "Renamed $n_re / $(length(fe_))."
 
 end
 
