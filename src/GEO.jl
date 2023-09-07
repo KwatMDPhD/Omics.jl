@@ -1,6 +1,5 @@
 module GEO
 
-# TODO: Use BioLab.DataFrame instead.
 using DataFrames: DataFrame
 
 using GZip: open
@@ -37,14 +36,10 @@ end
 function read(gz)
 
     bl_th = Dict(
-        "DATABASE" =>
-            OrderedDict{SubString{String}, OrderedDict{SubString{String}, SubString{String}}}(),
-        "SERIES" =>
-            OrderedDict{SubString{String}, OrderedDict{SubString{String}, SubString{String}}}(),
-        "PLATFORM" =>
-            OrderedDict{SubString{String}, OrderedDict{SubString{String}, SubString{String}}}(),
-        "SAMPLE" =>
-            OrderedDict{SubString{String}, OrderedDict{SubString{String}, SubString{String}}}(),
+        "DATABASE" => OrderedDict{String, OrderedDict{String, String}}(),
+        "SERIES" => OrderedDict{String, OrderedDict{String, String}}(),
+        "PLATFORM" => OrderedDict{String, OrderedDict{String, String}}(),
+        "SAMPLE" => OrderedDict{String, OrderedDict{String, String}}(),
     )
 
     bl = ""
@@ -61,7 +56,7 @@ function read(gz)
 
             bl, th = _eachsplit(chop(li; head = 1, tail = 0))
 
-            bl_th[bl][th] = OrderedDict{SubString{String}, SubString{String}}()
+            bl_th[bl][th] = OrderedDict{String, String}()
 
             continue
 
@@ -71,13 +66,13 @@ function read(gz)
 
         if startswith(li, "$(pr)begin")
 
-            en = "$(pr)end"
-
-            ro_ = Vector{SubString{String}}()
+            ro_ = Vector{String}()
 
             n_ro = 0
 
             ro = _readline(st)
+
+            en = "$(pr)end"
 
             while ro != en
 
@@ -93,7 +88,7 @@ function read(gz)
 
             if n_ro != n_ro2
 
-                @warn "Table has $n_ro rows, which do not match $n_ro2."
+                @warn "Table has $n_ro rows, not matching $n_ro2."
 
             end
 
@@ -201,38 +196,55 @@ end
 
 function _make(nar, co_, ro_an__)
 
-    ro_ = union(keys.(ro_an__)...)
+    ro_ = sort!(collect(union(keys.(ro_an__)...)))
 
-    if isempty(ro_)
+    ma = Matrix{Any}(undef, length(ro_), length(co_))
 
-        return DataFrame()
+    # TODO: Benchmark.
+    ma[:, 1] .= ro_
+
+    for (id2, ro_an) in enumerate(ro_an_)
+
+        id2 += 1
+
+        for (id1, ro) in enumerate(ro_)
+
+            if haskey(ro_an, ro)
+
+                an = ro_an[ro]
+
+            else
+
+                an = missing
+
+            end
+
+            # TODO: Benchmark.
+            ma[id1, id2] .= an
+
+        end
 
     end
 
-    DataFrame(
-        BioLab.Matrix.make([
-            vcat(ro, [get(ro_an, ro, missing) for ro_an in ro_an__]) for ro in sort!(collect(ro_))
-        ]),
-        vcat(nar, co_),
-    )
+    DataFrame(ma, vcat(nar, co_))
 
 end
 
 function tabulate(bl_th; sa = "!Sample_title")
 
-    sa_di = OrderedDict(ke_va[sa] => ke_va for ke_va in values(bl_th["SAMPLE"]))
+    sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(bl_th["SAMPLE"]))
 
-    sa_ = collect(keys(sa_di))
+    sa_ = collect(keys(sa_ke_va))
 
     ids_ = 1:length(sa_)
-
-    de = ": "
 
     ch_st__ = [Dict{String, String}() for _ in ids_]
 
     pl_fe_fl__ = Dict{String, Vector{Dict{String, Float64}}}()
 
-    for (ids, (sa, ke_va)) in enumerate(sa_di)
+    de = ": "
+
+    for (ids, (sa, ke_va)) in enumerate(sa_ke_va)
 
         ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
 
@@ -273,13 +285,13 @@ function tabulate(bl_th; sa = "!Sample_title")
 
     end
 
-    pl_da = Dict{String, DataFrame}()
+    pl_feature_x_sample_x_number = Dict{String, DataFrame}()
 
     for (pl, fe_fl__) in pl_fe_fl__
 
-        da = _make(pl, sa_, fe_fl__)
+        feature_x_sample_x_number = _make(pl, sa_, fe_fl__)
 
-        if !isempty(da)
+        if !isempty(feature_x_sample_x_number)
 
             ke_va = bl_th["PLATFORM"][pl]
 
@@ -289,6 +301,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
                 id_fe = _map_feature(pl, sp___[1], view(sp___, 2:length(sp___)))
 
+                # TODO: Consider `Gene.rename`.
                 da[!, 1] = [get(id_fe, id, "_$id") for id in da[!, 1]]
 
             else
@@ -299,11 +312,11 @@ function tabulate(bl_th; sa = "!Sample_title")
 
         end
 
-        pl_da[pl] = da
+        pl_feature_x_sample_x_number[pl] = feature_x_sample_x_number
 
     end
 
-    _make("Characteristic", sa_, ch_st__), pl_da
+    _make("Characteristic", sa_, ch_st__), pl_feature_x_sample_x_number
 
 end
 
@@ -313,14 +326,13 @@ function get(
     gs;
     re = false,
     sa = "!Sample_title",
+    # TODO: Consider selecting and replacing outside later.
     se_ = (),
     res_ = (),
     rec_ = (),
-    nas = "Sample",
     ur = "",
     fe_fe2 = Dict{String, String}(),
     lo = false,
-    naf = "Gene",
     chg = "",
 )
 
@@ -340,17 +352,15 @@ function get(
 
     bl_th = BioLab.GEO.read(gz)
 
-    characteristic_x_sample_x_any, pl_da = BioLab.GEO.tabulate(bl_th; sa)
-
-    describe(characteristic_x_sample_x_any)
+    characteristic_x_sample_x_any, pl_feature_x_sample_x_number = BioLab.GEO.tabulate(bl_th; sa)
 
     nac, ch_, sa_, ch_x_sa_x_an = BioLab.DataFrame.separate(characteristic_x_sample_x_any)
 
+    BioLab.FeatureXSample.describe(ch_, eachrow(ch_x_sa_x_an))
+
     replace!(ch_x_sa_x_an, missing => "")
 
-    si = size(ch_x_sa_x_an)
-
-    @info "Characteristic size = $si."
+    @info "Characteristic size = $(size(ch_x_sa_x_an))."
 
     if !isempty(se_)
 
@@ -360,9 +370,7 @@ function get(
 
         ch_x_sa_x_an = view(ch_x_sa_x_an, :, is_)
 
-        si = size(ch_x_sa_x_an)
-
-        @info "Characteristic size = $si."
+        @info "Characteristic size = $(size(ch_x_sa_x_an))."
 
     end
 
@@ -382,6 +390,7 @@ function get(
 
     end
 
+    nas = "Sample",
     nasc = BioLab.Path.clean(nas)
 
     BioLab.DataFrame.write(
@@ -389,7 +398,7 @@ function get(
         BioLab.DataFrame.make(nac, ch_, sa_, ch_x_sa_x_an),
     )
 
-    pl_ = collect(keys(pl_da))
+    pl_ = collect(keys(pl_feature_x_sample_x_number))
 
     n_pl = length(pl_)
 
@@ -397,7 +406,7 @@ function get(
 
         if !endswith(ur, "gz")
 
-            error("URL does not end with gz.")
+            error("ur ($ur) does not end with gz.")
 
         end
 
@@ -415,15 +424,17 @@ function get(
 
     elseif isone(n_pl)
 
-        feature_x_sample_x_number = pl_da[pl_[1]]
+        feature_x_sample_x_number = pl_feature_x_sample_x_number[pl_[1]]
 
     elseif 1 < n_pl
 
-        error("There are $n_nl platforms.")
+        error("There are $n_pl platforms.")
 
     end
 
-    _naf, fe_, sa2_, fe_x_sa2_x_nu = BioLab.DataFrame.separate(feature_x_sample_x_number)
+    naf, fe_, sa2_, fe_x_sa2_x_nu = BioLab.DataFrame.separate(feature_x_sample_x_number)
+
+    nafc = BioLab.Path.clean(naf)
 
     if !isempty(res_)
 
@@ -449,28 +460,26 @@ function get(
 
     fe_, fe_x_sa_x_nu = rename_collapse_log2_plot(ou, fe_, fe_x_sa_x_nu, fe_fe2, lo, gs)
 
-    nafc = BioLab.Path.clean(naf)
-
     pr = joinpath(ou, "$(nafc)_x_$(nasc)_x_number")
 
     BioLab.DataFrame.write("$pr.tsv", BioLab.DataFrame.make(naf, fe_, sa_, fe_x_sa_x_nu))
-
-    title_text = gs
 
     if isempty(chg)
 
         grc_ = Vector{Int}()
 
+        title_text = gs
+
     else
 
         grc_ = BioLab.String.try_parse.(view(ch_x_sa_x_an, findfirst(==(chg), ch_), :))
 
-        title_text = string(title_text, " Grouped by ", titlecase(chg))
+        title_text = "$gs (by $(titlecase(chg)))"
 
     end
 
     BioLab.Plot.plot_heat_map(
-        string(pr, ".html"),
+        "$pr.html",
         fe_x_sa_x_nu,
         fe_,
         sa_;
@@ -480,7 +489,7 @@ function get(
         layout = Dict("title" => Dict("text" => title_text)),
     )
 
-    ou, nas, sa_, nac, ch_, ch_x_sa_x_an, fe_, fe_x_sa_x_nu
+    ou, nas, sa_, ch_, ch_x_sa_x_an, fe_, fe_x_sa_x_nu
 
 end
 
