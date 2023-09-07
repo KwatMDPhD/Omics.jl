@@ -8,17 +8,11 @@ function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}
 
     id = "Plotly"
 
-    daj = json(data)
-
-    laj = json(layout)
-
-    coj = json(BioLab.Dict.merge_recursively(Dict("displaylogo" => false), config))
-
     BioLab.HTML.make(
         ht,
         id,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
-        "Plotly.newPlot(\"$id\", $daj, $laj, $coj)";
+        "Plotly.newPlot(\"$id\", $(json(data)), $(json(layout)), $(json(BioLab.Dict.merge_recursively(Dict("displaylogo" => false), config))))";
         ke_ar...,
     )
 
@@ -38,20 +32,20 @@ end
 
 function _set_name(y_)
 
-    string.("Name ", eachindex(y_))
+    ["Name $id" for id in eachindex(y_)]
 
 end
 
 function _set_marker(y_)
 
-    [Dict("color" => co) for co in color(collect(eachindex(y_)))]
+    [Dict("color" => co) for co in BioLab.Color.color(collect(eachindex(y_)))]
 
 end
 
 const COLORBAR = Dict(
     "len" => 0.5,
     "thickness" => 16,
-    "outlinecolor" => "#ebf6f7",
+    "outlinecolor" => COF,
     "title" => Dict("font" => Dict("family" => "Droid Sans Mono", "size" => 12.8)),
     "tickfont" => Dict("family" => "Droid Sans Mono", "size" => 10),
 )
@@ -73,7 +67,7 @@ function plot_scatter(
     x_ = _set_x(y_);
     text_ = _set_text(y_),
     name_ = _set_name(y_),
-    mode_ = (y -> ifelse(length(y) < 10^3, "markers+lines", "lines")).(y_),
+    mode_ = (y -> ifelse(length(y) < 1000, "markers+lines", "lines")).(y_),
     marker_ = _set_marker(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
@@ -124,7 +118,7 @@ function plot_bar(
 
 end
 
-# TODO: Plot fitted line.
+# TODO: Fit and plot a line.
 function plot_histogram(
     ht,
     x_,
@@ -177,15 +171,17 @@ function plot_histogram(
 
     data = Vector{Dict{String, Any}}()
 
-    showlegend = 1 < length(x_)
+    showlegend = 1 < n
 
     for id in 1:n
+
+        x = x_[id]
 
         le = Dict(
             "showlegend" => showlegend,
             "legendgroup" => id,
             "name" => name_[id],
-            "x" => x_[id],
+            "x" => x,
             "marker" => marker_[id],
         )
 
@@ -210,11 +206,12 @@ function plot_histogram(
                     le,
                     Dict(
                         "showlegend" => false,
-                        "y" => fill(id, length(x_[id])),
+                        "y" => fill(id, length(x)),
                         "text" => text_[id],
-                        "mode" => "markers",
+                        # TODO
+                        #"mode" => "markers",
                         "marker" => Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
-                        "hoverinfo" => "x+text+name",
+                        "hoverinfo" => "x+text",
                     ),
                 ),
             )
@@ -230,12 +227,12 @@ end
 function plot_heat_map(
     ht,
     z,
-    y = string.(1:size(z, 1), " *"),
-    x = string.("* ", 1:size(z, 2));
+    y = ["$id *" id for id in 1:size(z, 1)],
+    x = ["* $id" id for id in 1:size(z, 2)];
     text = z,
     nar = "Row",
     nac = "Column",
-    colorscale = map_fraction_to_color(pick_color_scheme(z)),
+    colorscale = BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(z)),
     grr_ = Vector{Any}(),
     grc_ = Vector{Any}(),
     layout = Dict{String, Any}(),
@@ -244,11 +241,11 @@ function plot_heat_map(
 
     n_ro, n_co = size(z)
 
-    domain1 = (0, 0.95)
+    domain = (0, 0.95)
 
     axis2 = BioLab.Dict.merge_recursively(
         AXIS,
-        Dict("domain" => (domain1[2] + 0.01, 1), "tickvals" => ()),
+        Dict("domain" => (domain[2] + 0.01, 1), "tickvals" => ()),
     )
 
     layout = BioLab.Dict.merge_recursively(
@@ -256,14 +253,14 @@ function plot_heat_map(
             "yaxis" => BioLab.Dict.merge_recursively(
                 AXIS,
                 Dict(
-                    "domain" => domain1,
+                    "domain" => domain,
                     "autorange" => "reversed",
-                    "title" => Dict("text" => "$nar (n=$n_ro)"),
+                    "title" => Dict("text" => "$nar (n = $n_ro)"),
                 ),
             ),
             "xaxis" => BioLab.Dict.merge_recursively(
                 AXIS,
-                Dict("domain" => domain1, "title" => Dict("text" => "$nac (n=$n_co)")),
+                Dict("domain" => domain, "title" => Dict("text" => "$nac (n = $n_co)")),
             ),
             "yaxis2" => BioLab.Dict.merge_recursively(axis2, Dict("autorange" => "reversed")),
             "xaxis2" => axis2,
@@ -329,11 +326,11 @@ function plot_heat_map(
         data,
         Dict(
             "type" => "heatmap",
-            "name" => "Data",
             "z" => collect(eachrow(z)),
             "y" => y,
             "x" => x,
             "text" => collect(eachrow(text)),
+            "hoverinfo" => "y+x+z+text",
             "colorscale" => colorscale,
             "colorbar" => BioLab.Dict.merge_recursively(
                 COLORBAR,
@@ -349,10 +346,9 @@ function plot_heat_map(
             Dict(
                 "xaxis" => "x2",
                 "type" => "heatmap",
-                "name" => "Row Group",
                 "z" => [[grr] for grr in grr_],
-                "hoverinfo" => "y+z+name",
-                "colorscale" => map_fraction_to_color(pick_color_scheme(grr_)),
+                "hoverinfo" => "y+z",
+                "colorscale" => BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(grr_)),
                 "colorbar" => BioLab.Dict.merge_recursively(
                     COLORBAR,
                     Dict("x" => (colorbarx += dx), "tickvals" => BioLab.Rank.range(grr_, n_ti)),
@@ -369,10 +365,9 @@ function plot_heat_map(
             Dict(
                 "yaxis" => "y2",
                 "type" => "heatmap",
-                "name" => "Column Group",
                 "z" => [grc_],
-                "hoverinfo" => "x+z+name",
-                "colorscale" => map_fraction_to_color(pick_color_scheme(grc_)),
+                "hoverinfo" => "x+z",
+                "colorscale" => BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(grc_)),
                 "colorbar" => BioLab.Dict.merge_recursively(
                     COLORBAR,
                     Dict("x" => (colorbarx += dx), "tickvals" => BioLab.Rank.range(grc_, n_ti)),
@@ -392,15 +387,13 @@ function plot_radar(
     r_;
     radialaxis_range = (0, maximum(vcat(r_...))),
     name_ = _set_name(theta_),
-    line_color_ = color(collect(eachindex(theta_))),
+    line_color_ = BioLab.Color.color(collect(eachindex(theta_))),
     fillcolor_ = line_color_,
     layout = Dict{String, Any}(),
     ke_ar...,
 )
 
-    costa = "#b83a4b"
-
-    cofai = "#ebf6f7"
+    cos = "#b83a4b"
 
     plot(
         ht,
@@ -427,29 +420,29 @@ function plot_radar(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
                         "linewidth" => 4,
-                        "linecolor" => costa,
+                        "linecolor" => cos,
                         "ticklen" => 16,
                         "tickwidth" => 2,
-                        "tickcolor" => costa,
+                        "tickcolor" => cos,
                         "tickfont" =>
                             Dict("size" => 32, "family" => "Optima", "color" => "#23191e"),
                         "gridwidth" => 2,
-                        "gridcolor" => cofai,
+                        "gridcolor" => COF,
                     ),
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
                         "linewidth" => 2,
-                        "linecolor" => costa,
+                        "linecolor" => cos,
                         "ticklen" => 8,
                         "tickwidth" => 2,
-                        "tickcolor" => costa,
+                        "tickcolor" => cos,
                         "tickfont" => Dict(
                             "size" => 16,
                             "family" => "Monospace",
                             "color" => "#1f4788",
                         ),
                         "gridwidth" => 1.6,
-                        "gridcolor" => cofai,
+                        "gridcolor" => COF,
                     ),
                 ),
                 "title" => Dict(

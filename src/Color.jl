@@ -6,6 +6,9 @@ using Colors: Colorant, coloralpha, hex
 
 using ..BioLab
 
+# TODO: Test.
+const COF = "#ebf6f7"
+
 function _make_color_scheme(he_)
 
     ColorScheme([parse(Colorant{Float64}, he) for he in he_])
