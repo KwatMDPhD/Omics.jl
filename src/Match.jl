@@ -28,9 +28,7 @@ function _align!(fl_::AbstractVector{Float64}, st::Real)
 
     if allequal(fl_)
 
-        fl = fl_[1]
-
-        @warn "All floats are $fl."
+        @warn "All floats are $(fl_[1])."
 
         fl_ .= 0
 
@@ -48,11 +46,7 @@ end
 
 function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st::Real)
 
-    for fl_ in eachrow(fe_x_sa_x_fl)
-
-        _align!(fl_, st)
-
-    end
+    foreach(fl_ -> _align!(fl_, st), eachrow(fe_x_sa_x_fl))
 
     -st, st
 
@@ -142,9 +136,9 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
         @info "Clustering within groups"
 
-        fu = BioLab.Clustering.Euclidean()
-
         id_ = Vector{Int}()
+
+        fu = BioLab.Clustering.Euclidean()
 
         for ta in unique(ta_)
 
@@ -152,7 +146,10 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
             append!(
                 id_,
-                idg_[BioLab.Clustering.hierarchize(view(fe_x_sa_x_nu, :, idg_), 2; fu).order],
+                view(
+                    idg_,
+                    BioLab.Clustering.hierarchize(view(fe_x_sa_x_nu, :, idg_), 2; fu).order,
+                ),
             )
 
         end
@@ -192,7 +189,6 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
     natl = BioLab.String.limit(nat, n_li)
 
-    # TODO: Use BioLab.Plot.AXIS?
     axis = Dict(
         "tickcolor" => "#6c9956",
         "tickfont" => Dict("family" => _FONT_FAMILY_1, "size" => _FONT_SIZE_1),
@@ -205,7 +201,6 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
                 heatmap,
                 Dict(
                     "yaxis" => "y2",
-                    "name" => "Target",
                     "y" => ["<b>$natl</b>"],
                     "x" => sa_,
                     "z" => [tac_],
@@ -213,25 +208,24 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
                     "zmin" => tai,
                     "zmax" => taa,
                     "colorscale" =>
-                        BioLab.Plot.map_fraction_to_color(BioLab.Plot.pick_color_scheme(tac_)),
+                        BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(tac_)),
                     "colorbar" => Dict("x" => -0.32, "title" => Dict("text" => "Target")),
-                    "hoverinfo" => "x+z+text+name",
+                    "hoverinfo" => "x+z+text",
                 ),
             ),
             BioLab.Dict.merge_recursively(
                 heatmap,
                 Dict(
-                    "name" => "Feature",
                     "y" => BioLab.String.limit.(fe_, n_li),
                     "x" => sa_,
                     "z" => collect(eachrow(fe_x_sa_x_nuc)),
                     "text" => collect(eachrow(fe_x_sa_x_nu)),
                     "zmin" => fei,
                     "zmax" => fea,
-                    "colorscale" => BioLab.Plot.map_fraction_to_color(
-                        BioLab.Plot.pick_color_scheme(fe_x_sa_x_nuc),
-                    ),
+                    "colorscale" =>
+                        BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(fe_x_sa_x_nuc)),
                     "colorbar" => Dict("x" => -0.24, "title" => Dict("text" => "Feature")),
+                    #"hoverinfo" => "y+x+z+text",
                 ),
             ),
         ],
@@ -275,7 +269,6 @@ function make(
     sa_,
     ta_,
     fe_x_sa_x_nu;
-    rev = false,
     n_ma = 10,
     n_pv = 10,
     n_ex = 8,
@@ -285,27 +278,23 @@ function make(
 
     BioLab.Error.error_missing(di)
 
-    pr = joinpath(di, "feature_x_statistic_x_number")
-
     n_fe, n_sa = size(fe_x_sa_x_nu)
 
     n_nos = BioLab.String.count(n_fe, naf)
 
     @info "Matching $nat and $n_nos with $fu"
 
-    sa_, ta_, fe_x_sa_x_nu = _order_sample(sortperm(ta_; rev), sa_, ta_, fe_x_sa_x_nu)
+    sa_, ta_, fe_x_sa_x_nu = _order_sample(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
 
     @info "Computing scores"
 
     sc_ = (nu_ -> fu(ta_, nu_)).(eachrow(fe_x_sa_x_nu))
 
-    isb_ = isnan.(sc_)
+    is_ = isnan.(sc_)
 
-    if any(isb_)
+    if any(is_)
 
-        n_nos = BioLab.String.count(sum(isb_), "bad value")
-
-        @warn "Found $n_nos."
+        @warn "Found $(BioLab.String.count(sum(is_), "bad value"))."
 
     end
 
@@ -317,9 +306,7 @@ function make(
 
     if 0 < n_ma
 
-        n_nos = BioLab.String.count(n_ma, "sampling")
-
-        @info "Computing margin of error with $n_nos"
+        @info "Computing margin of error with $(BioLab.String.count(n_ma, "sampling"))"
 
         n_sm = ceil(Int, n_sa * 0.632)
 
@@ -337,7 +324,7 @@ function make(
 
             end
 
-            ma_[idf] = BioLab.Significance.get_margin_of_error(ra_)
+            ma_[idf] = BioLab.Statistics.get_margin_of_error(ra_)
 
         end
 
@@ -345,9 +332,7 @@ function make(
 
     if 0 < n_pv
 
-        n_nos = BioLab.String.count(n_pv, "permutation")
-
-        @info "Computing p-values with $n_nos"
+        @info "Computing p-values with $(BioLab.String.count(n_pv, "permutation"))"
 
         co = copy(ta_)
 
@@ -367,11 +352,13 @@ function make(
 
         end
 
-        pv_, ad_ = BioLab.Significance.get_p_value_adjust(sc_, ra_)
+        pv_, ad_ = BioLab.Statistics.get_p_value(sc_, ra_)
 
     end
 
     fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
+
+    pr = joinpath(di, "feature_x_statistic_x_number")
 
     BioLab.DataFrame.write(
         "$pr.tsv",
