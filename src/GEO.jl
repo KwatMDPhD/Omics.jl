@@ -390,8 +390,7 @@ function get(
 
     end
 
-    nas = "Sample",
-    nasc = BioLab.Path.clean(nas)
+    nas = "Sample", nasc = BioLab.Path.clean(nas)
 
     BioLab.DataFrame.write(
         joinpath(ou, "characteristic_x_$(nasc)_x_any.tsv"),
