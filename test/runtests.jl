@@ -36,11 +36,7 @@ using BioLab
 
 const SR = joinpath(dirname(@__DIR__), "src")
 
-const MO_ = BioLab.Path.read(SR)
-
-const TE_ = BioLab.Path.read(@__DIR__)
-
-# ---- #
+const MO_ = filter!(!=("BioLab.jl"), BioLab.Path.read(SR))
 
 for jl in MO_
 
@@ -50,18 +46,16 @@ end
 
 # ---- #
 
-@test symdiff(MO_, TE_) == ["BioLab.jl", "runtests.jl"]
+const TE_ = filter!(!=("runtests.jl"), BioLab.Path.read(@__DIR__))
+
+@test isempty(symdiff(MO_, TE_))
 
 # ---- #
 
 for jl in TE_
 
-    if jl != "runtests.jl"
+    @info "Testing $jl"
 
-        @info "Testing $jl"
-
-        run(`julia --project $jl`)
-
-    end
+    run(`julia --project $jl`)
 
 end
