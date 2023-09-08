@@ -50,7 +50,7 @@ for co in (
         "",
         [x for _ in 1:1, x in 1:length(co)];
         text = [BioLab.Plot._make_hex(cl) for _ in 1:1, cl in co.colors],
-        colorscale = BioLab.Plot.map_fraction_to_color(co),
+        colorscale = BioLab.Plot.fractionate_to_color(co),
         layout = Dict("yaxis" => Dict("tickvals" => ()), "xaxis" => Dict("dtick" => 1)),
     )
 
@@ -85,7 +85,7 @@ for (he_, fr_) in (
     ),
 )
 
-    @test BioLab.Plot.map_fraction_to_color(BioLab.Plot._make_color_scheme(he_)) ==
+    @test BioLab.Plot.fractionate_to_color(BioLab.Plot._make_color_scheme(he_)) ==
           collect(zip(fr_, he_))
 
 end

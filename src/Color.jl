@@ -130,7 +130,7 @@ function color(nu_::AbstractVector{<:Real}, co = pick_color_scheme(nu_))
 
 end
 
-function map_fraction(co)
+function fractionate(co)
 
     collect(zip(range(0, 1, length(co)), _make_hex(rg) for rg in co))
 

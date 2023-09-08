@@ -2,6 +2,12 @@ module Normalization
 
 using StatsBase: competerank, denserank, mean, std, tiedrank
 
+function normalize_with_sum!(ar)
+
+    ar ./= sum(ar)
+
+end
+
 function normalize_with_01!(ar)
 
     mi = minimum(ar)
@@ -13,12 +19,6 @@ end
 function normalize_with_0!(ar)
 
     ar .= (ar .- mean(ar)) ./ std(ar)
-
-end
-
-function normalize_with_sum!(ar)
-
-    ar ./= sum(ar)
 
 end
 

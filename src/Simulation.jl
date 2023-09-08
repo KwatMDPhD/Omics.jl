@@ -24,7 +24,7 @@ function _concatenate(ne_, ze, po_)
 
 end
 
-function mirror(n; ze = true)
+function make_vector_mirror(n; ze = true)
 
     ne_, po_ = _mirror(n)
 
@@ -32,7 +32,7 @@ function mirror(n; ze = true)
 
 end
 
-function mirror_deep(n; ze = true)
+function make_vector_mirror_deep(n; ze = true)
 
     ne_, po_ = _mirror(n)
 
@@ -40,7 +40,7 @@ function mirror_deep(n; ze = true)
 
 end
 
-function mirror_wide(n; ze = true)
+function make_vector_mirror_wide(n; ze = true)
 
     ne_, po_ = _mirror(n)
 

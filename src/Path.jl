@@ -54,6 +54,20 @@ function read(di; ig_ = (), ke_ = (), ke_ar...)
 
 end
 
+function open(pa)
+
+    try
+
+        run(`open --background $pa`)
+
+    catch
+
+        @warn "Could not open $pa."
+
+    end
+
+end
+
 # TODO: Test.
 function remove(pa; ke_ar...)
 
@@ -99,20 +113,6 @@ function rank(di)
     end
 
     di
-
-end
-
-function open(pa)
-
-    try
-
-        run(`open --background $pa`)
-
-    catch
-
-        @warn "Could not open $pa."
-
-    end
 
 end
 

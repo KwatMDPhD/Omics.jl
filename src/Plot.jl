@@ -224,7 +224,7 @@ function plot_heat_map(
     text = z,
     nar = "Row",
     nac = "Column",
-    colorscale = BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(z)),
+    colorscale = BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(z)),
     grr_ = Vector{Any}(),
     grc_ = Vector{Any}(),
     layout = Dict{String, Any}(),
@@ -331,7 +331,7 @@ function plot_heat_map(
                 "type" => "heatmap",
                 "z" => [[grr] for grr in grr_],
                 "hoverinfo" => "y+z",
-                "colorscale" => BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(grr_)),
+                "colorscale" => BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(grr_)),
                 "colorbar" => BioLab.Dict.merge_recursively(
                     COLORBAR,
                     Dict(
@@ -353,7 +353,7 @@ function plot_heat_map(
                 "type" => "heatmap",
                 "z" => [grc_],
                 "hoverinfo" => "x+z",
-                "colorscale" => BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(grc_)),
+                "colorscale" => BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(grc_)),
                 "colorbar" => BioLab.Dict.merge_recursively(
                     COLORBAR,
                     Dict(

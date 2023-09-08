@@ -26,6 +26,20 @@ macro is(ex)
 
 end
 
+function error_bad(co)
+
+    id_ = findall(BioLab.Bad.is, co)
+
+    if !isempty(id_)
+
+        error(
+            "Found $(BioLab.String.count(length(id_), "bad value")).\n$(join(unique(co[id_]), ".\n")).",
+        )
+
+    end
+
+end
+
 function error_duplicate(co)
 
     if isempty(co)
@@ -39,20 +53,6 @@ function error_duplicate(co)
         st = BioLab.Collection.count_sort_string(co; mi = 2)
 
         error("Found $(BioLab.String.count(length(split(st, '\n')), "duplicate")).\n$st")
-
-    end
-
-end
-
-function error_bad(co)
-
-    id_ = findall(BioLab.Bad.is, co)
-
-    if !isempty(id_)
-
-        error(
-            "Found $(BioLab.String.count(length(id_), "bad value")).\n$(join(unique(co[id_]), ".\n")).",
-        )
 
     end
 

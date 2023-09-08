@@ -2,6 +2,11 @@ module Information
 
 using KernelDensity: kde
 
+# TODO
+function get_entropy(nu_)
+
+end
+
 @inline function get_kullback_leibler_divergence(nu1, nu2)
 
     nu1 * log(nu1 / nu2)
@@ -41,11 +46,6 @@ end
 @inline function get_symmetric_kullback_leibler_divergence(nu1, nu2, nu3)
 
     get_symmetric_kullback_leibler_divergence(nu1, nu3, nu2, nu3)
-
-end
-
-# TODO
-function get_entropy(nu_)
 
 end
 
