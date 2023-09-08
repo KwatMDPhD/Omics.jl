@@ -66,9 +66,9 @@ const COST = _make_color_scheme(("#8c1515", "#175e54"))
 
 const COMO = _make_color_scheme(("#fbb92d",))
 
-function _make_hex(rg)
+function _make_hex(rg, st = :AUTO)
 
-    "#$(lowercase(hex(rg)))"
+    "#$(lowercase(hex(rg, st)))"
 
 end
 
@@ -116,7 +116,7 @@ function color(nu_::AbstractVector{<:Real}, co = pick_color_scheme(nu_))
 
     if isone(length(unique(nu_)))
 
-        return fill(color(0.5, co), n)
+        return [color(0.5, co)]
 
     end
 
@@ -132,7 +132,17 @@ end
 
 function fractionate(co)
 
-    collect(zip(range(0, 1, length(co)), _make_hex(rg) for rg in co))
+    he_ = _make_hex.(co)
+
+    n = length(he_)
+
+    if isone(n)
+
+        return [(0.5, he_[1])]
+
+    end
+
+    collect(zip(range(0, 1, n), he_))
 
 end
 
