@@ -20,7 +20,7 @@ function get_extension(pa)
 
 end
 
-function wait(pa; sl = 1, ma = 4)
+function wait(pa, ma = 4; sl = 1)
 
     se = 0
 

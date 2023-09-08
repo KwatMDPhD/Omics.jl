@@ -194,7 +194,7 @@ function _map_feature(pl, co_, sp___)
 
 end
 
-function tabulate(bl_th; sa = "!Sample_title")
+function tabulate(bl_th, sa = "!Sample_title")
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(bl_th["SAMPLE"]))
 

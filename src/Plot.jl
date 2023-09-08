@@ -4,7 +4,7 @@ using JSON: json
 
 using ..BioLab
 
-function plot(ht, data, layout = Dict{String, Any}(); config = Dict{String, Any}(), ke_ar...)
+function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}(); ke_ar...)
 
     id = "Plotly"
 
@@ -61,8 +61,8 @@ const SPIKE = Dict(
 
 function plot_scatter(
     ht,
-    y_,
-    x_ = _set_x(y_);
+    y_;
+    x_ = _set_x(y_),
     text_ = _set_text(y_),
     name_ = _set_name(y_),
     mode_ = (y -> ifelse(length(y) < 1000, "markers+lines", "lines")).(y_),
@@ -218,9 +218,9 @@ end
 
 function plot_heat_map(
     ht,
-    z,
+    z;
     y = ["$id *" id for id in 1:size(z, 1)],
-    x = ["* $id" id for id in 1:size(z, 2)];
+    x = ["* $id" id for id in 1:size(z, 2)],
     text = z,
     nar = "Row",
     nac = "Column",

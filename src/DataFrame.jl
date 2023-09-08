@@ -65,11 +65,9 @@ function separate(da)
 
 end
 
-function read(fi; xl = "", ke_ar...)
+function read(fi, xl = ""; ke_ar...)
 
-    ex = BioLab.Path.get_extension(fi)
-
-    if ex == "xlsx"
+    if !isempty(xl)
 
         _DataFrame(readtable(fi, xl; ke_ar...))
 
@@ -79,7 +77,7 @@ function read(fi; xl = "", ke_ar...)
 
         it_ = mmap(fi)
 
-        if ex == "gz"
+        if BioLab.Path.get_extension(fi) == "gz"
 
             it_ = transcode(GzipDecompressor, it_)
 

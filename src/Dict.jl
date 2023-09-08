@@ -98,7 +98,7 @@ function is_in(an_id, an1_)
 
 end
 
-function read(pa; dicttype = OrderedDict, ke_ar...)
+function read(pa, dicttype = OrderedDict; ke_ar...)
 
     ex = BioLab.Path.get_extension(pa)
 
@@ -118,7 +118,7 @@ function read(pa; dicttype = OrderedDict, ke_ar...)
 
 end
 
-function write(js, ke_va; id = 2)
+function write(js, ke_va, id = 2)
 
     open(js, "w") do io
 

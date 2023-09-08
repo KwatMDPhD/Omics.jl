@@ -25,15 +25,15 @@ function unique_sort(an_)
 
 end
 
-function count_sort(an_; rev = false)
+function count_sort(an_, rev = false)
 
     sort(countmap(an_); byvalue = true, rev)
 
 end
 
-function count_sort_string(an_; mi = 1)
+function count_sort_string(an_, mi = 1)
 
-    join(("$n $an." for (an, n) in count_sort(an_; rev = true) if mi <= n), '\n')
+    join(("$n $an." for (an, n) in count_sort(an_, true) if mi <= n), '\n')
 
 end
 
