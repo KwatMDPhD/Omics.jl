@@ -12,7 +12,7 @@ function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}
         ht,
         id,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
-        "Plotly.newPlot(\"$id\", $(json(data)), $(json(layout)), $(json(BioLab.Dict.merge_recursively(Dict("displaylogo" => false), config))))";
+        "Plotly.newPlot(\"$id\", $(json(data)), $(json(layout)), $(json(merge(Dict("displaylogo" => false), config))))";
         ke_ar...,
     )
 
@@ -152,7 +152,7 @@ function plot_histogram(
 
     end
 
-    layout = BioLab.Dict.merge_recursively(
+    layout = BioLab.Dict.merge(
         Dict(
             "yaxis2" =>
                 Dict("domain" => (fr, 1), "title" => Dict("text" => yaxis2_title_text)),
@@ -179,7 +179,7 @@ function plot_histogram(
 
         push!(
             data,
-            BioLab.Dict.merge_recursively(
+            merge(
                 le,
                 Dict(
                     "yaxis" => "y2",
@@ -194,7 +194,7 @@ function plot_histogram(
 
             push!(
                 data,
-                BioLab.Dict.merge_recursively(
+                BioLab.Dict.merge(
                     le,
                     Dict(
                         "showlegend" => false,
@@ -237,7 +237,7 @@ function plot_heat_map(
 
     axis2 = Dict("domain" => (domain[2] + 0.01, 1), "tickvals" => ())
 
-    layout = BioLab.Dict.merge_recursively(
+    layout = BioLab.Dict.merge(
         Dict(
             "yaxis" => Dict(
                 "domain" => domain,
@@ -245,7 +245,7 @@ function plot_heat_map(
                 "title" => Dict("text" => "$nar (n = $n_ro)"),
             ),
             "xaxis" => Dict("domain" => domain, "title" => Dict("text" => "$nac (n = $n_co)")),
-            "yaxis2" => BioLab.Dict.merge_recursively(axis2, Dict("autorange" => "reversed")),
+            "yaxis2" => merge(axis2, Dict("autorange" => "reversed")),
             "xaxis2" => axis2,
         ),
         layout,
@@ -315,7 +315,7 @@ function plot_heat_map(
             "text" => collect(eachrow(text)),
             "hoverinfo" => "y+x+z+text",
             "colorscale" => colorscale,
-            "colorbar" => BioLab.Dict.merge_recursively(
+            "colorbar" => merge(
                 COLORBAR,
                 Dict("x" => colorbarx, "tickvals" => BioLab.Collection.range(z, n_ti)),
             ),
@@ -332,7 +332,7 @@ function plot_heat_map(
                 "z" => [[grr] for grr in grr_],
                 "hoverinfo" => "y+z",
                 "colorscale" => BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(grr_)),
-                "colorbar" => BioLab.Dict.merge_recursively(
+                "colorbar" => merge(
                     COLORBAR,
                     Dict(
                         "x" => (colorbarx += dx),
@@ -354,7 +354,7 @@ function plot_heat_map(
                 "z" => [grc_],
                 "hoverinfo" => "x+z",
                 "colorscale" => BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(grc_)),
-                "colorbar" => BioLab.Dict.merge_recursively(
+                "colorbar" => merge(
                     COLORBAR,
                     Dict(
                         "x" => (colorbarx += dx),
@@ -403,7 +403,7 @@ function plot_radar(
                 "fillcolor" => fillcolor_[id],
             ) for id in eachindex(theta_)
         ],
-        BioLab.Dict.merge_recursively(
+        BioLab.Dict.merge(
             Dict(
                 "polar" => Dict(
                     "angularaxis" => Dict(

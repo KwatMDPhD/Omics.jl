@@ -75,7 +75,7 @@ function plot(
             container: document.getElementById("$id"),
             elements: $(json(el_)),
             style: $(json(st_)),
-            layout: $(json(BioLab.Dict.merge_recursively(Dict("animate" => false), la))),
+            layout: $(json(merge(Dict("animate" => false), la))),
         });
 
         cy.on("mouseover", "node", function(ev) {

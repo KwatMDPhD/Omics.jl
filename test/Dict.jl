@@ -38,7 +38,7 @@ for (di1, di2, re) in (
     (Dict(1.0 => "Aa"), Dict(2 => chop("Bbx")), Dict{Float64, AbstractString}),
 )
 
-    @test BioLab.Dict.merge_recursively(di1, di2) isa re
+    @test BioLab.Dict.merge(di1, di2) isa re
 
 end
 
@@ -48,11 +48,11 @@ const DI1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 
 const DI2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
-@test BioLab.Dict.merge_recursively(DI1, DI2) ==
+@test BioLab.Dict.merge(DI1, DI2) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))
 
 
-@test BioLab.Dict.merge_recursively(DI2, DI1) ==
+@test BioLab.Dict.merge(DI2, DI1) ==
       Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))
 
 # ---- #

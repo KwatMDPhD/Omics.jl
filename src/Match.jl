@@ -63,10 +63,8 @@ const _FONT_SIZE_2 = 12.8
 const _ANNOTATION =
     Dict("yref" => "paper", "xref" => "paper", "showarrow" => false, "yanchor" => "middle")
 
-const _ANNOTATIONR = BioLab.Dict.merge(
-    _ANNOTATION,
-    Dict("xanchor" => "center", "font" => Dict("family" => _FONT_FAMILY_2)),
-)
+const _ANNOTATIONR =
+    merge(_ANNOTATION, Dict("xanchor" => "center", "font" => Dict("family" => _FONT_FAMILY_2)))
 
 function _get_x(id)
 
@@ -84,7 +82,7 @@ function _annotate_statistic(y, la, th, fe_, fe_x_st_x_nu)
 
             push!(
                 annotations,
-                BioLab.Dict.merge_recursively(
+                BioLab.Dict.merge(
                     _ANNOTATIONR,
                     Dict(
                         "y" => y,
@@ -109,7 +107,7 @@ function _annotate_statistic(y, la, th, fe_, fe_x_st_x_nu)
 
             push!(
                 annotations,
-                BioLab.Dict.merge_recursively(
+                BioLab.Dict.merge(
                     _ANNOTATIONR,
                     Dict(
                         "y" => y,
@@ -170,10 +168,8 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
     @info "$naf colors can range from $fei to $fea."
 
-    heatmap = Dict(
-        "type" => "heatmap",
-        "colorbar" => BioLab.Dict.merge_recursively(BioLab.Plot.COLORBAR, Dict("y" => 0.5)),
-    )
+    heatmap =
+        Dict("type" => "heatmap", "colorbar" => merge(BioLab.Plot.COLORBAR, Dict("y" => 0.5)))
 
     n_ro = length(fe_) + 2
 
@@ -197,7 +193,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
     BioLab.Plot.plot(
         ht,
         [
-            BioLab.Dict.merge_recursively(
+            BioLab.Dict.merge(
                 heatmap,
                 Dict(
                     "yaxis" => "y2",
@@ -212,7 +208,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
                     "colorbar" => Dict("x" => -0.32, "title" => Dict("text" => "Target")),
                 ),
             ),
-            BioLab.Dict.merge_recursively(
+            BioLab.Dict.merge(
                 heatmap,
                 Dict(
                     "y" => BioLab.String.limit.(fe_, n_li),
@@ -228,7 +224,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
                 ),
             ),
         ],
-        BioLab.Dict.merge_recursively(
+        BioLab.Dict.merge(
             Dict(
                 "margin" => Dict("l" => 220, "r" => 220),
                 "height" => height,
@@ -237,15 +233,11 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
                     "text" => naf,
                     "font" => Dict("family" => _FONT_FAMILY_1, "size" => _FONT_SIZE_1 * 2),
                 ),
-                "yaxis2" => BioLab.Dict.merge_recursively(axis, Dict("domain" => (1 - th, 1))),
-                "yaxis" => BioLab.Dict.merge_recursively(
-                    axis,
-                    Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed"),
-                ),
-                "xaxis" => BioLab.Dict.merge_recursively(
-                    axis,
-                    Dict("title" => Dict("text" => BioLab.String.count(n_sa, nas))),
-                ),
+                "yaxis2" => merge(axis, Dict("domain" => (1 - th, 1))),
+                "yaxis" =>
+                    merge(axis, Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed")),
+                "xaxis" =>
+                    merge(axis, Dict("title" => Dict("text" => BioLab.String.count(n_sa, nas)))),
                 "annotations" => _annotate_statistic(1 - th2 * 3, true, th, fe_, fe_x_st_x_nu),
             ),
             layout,
