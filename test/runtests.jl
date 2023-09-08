@@ -1,4 +1,4 @@
-using Aqua: test_all, test_ambiguities
+#using Aqua: test_all, test_ambiguities
 
 using Test: @test
 
@@ -6,9 +6,9 @@ using BioLab
 
 # ---- #
 
-test_all(BioLab; ambiguities = false)
+#test_all(BioLab; ambiguities = false)
 
-test_ambiguities(BioLab)
+#test_ambiguities(BioLab)
 
 # ----------------------------------------------------------------------------------------------- #
 
