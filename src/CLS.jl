@@ -20,7 +20,6 @@ function read(cl)
 
     if li1 == "#numeric"
 
-        # TODO: Check rows.
         BioLab.DataFrame.make(nar, li2c, co_, [parse(Float64, nu) for _ in id_, nu in sp3_])
 
     else

@@ -6,8 +6,6 @@ using BioLab
 
 const DA = joinpath(BioLab._DA, "CLS")
 
-# ---- #
-
 @test BioLab.Path.read(DA) == ["CCLE_mRNA_20Q2_no_haem_phen.cls", "GSE76137.cls", "LPS_phen.cls"]
 
 # ---- #
@@ -34,9 +32,9 @@ for (cl, ta, nu_) in (
 
     @test collect(target_x_sample_x_number[1, ["Sample $id" for id in eachindex(nu_)]]) == nu_
 
-    # 391.000 μs (6234 allocations: 530.46 KiB)
-    # 10.750 μs (98 allocations: 7.70 KiB)
-    # 10.541 μs (98 allocations: 7.64 KiB)
+    # 385.500 μs (6234 allocations: 530.46 KiB)
+    # 10.666 μs (98 allocations: 7.70 KiB)
+    # 10.417 μs (98 allocations: 7.64 KiB)
     #@btime BioLab.CLS.read($cl)
 
 end
