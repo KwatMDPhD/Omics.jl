@@ -20,7 +20,7 @@ function get_margin_of_error(nu_, er = 0.05)
 
 end
 
-@inline function get_p_value(n_si::Int, n_ra)
+function get_p_value(n_si::Int, n_ra)
 
     if iszero(n_si)
 
