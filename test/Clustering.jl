@@ -16,11 +16,7 @@ const MA = [
     30 30 30 30.1
 ]
 
-const FU = CorrDist()
-
 # ---- #
-
-@test BioLab.Clustering.hierarchize(MA, 1; fu = FU).order == [3, 6, 2, 5, 7, 1, 4]
 
 @test BioLab.Clustering.hierarchize(MA, 1).order == [4, 1, 2, 3, 7, 5, 6]
 
@@ -31,6 +27,12 @@ const FU = CorrDist()
 
 # ---- #
 
+const FU = CorrDist()
+
+@test BioLab.Clustering.hierarchize(MA, 1; fu = FU).order == [3, 6, 2, 5, 7, 1, 4]
+
+# ---- #
+
 for (k, re) in (
     (1, [1, 1, 1, 1, 1, 1, 1]),
     (2, [1, 1, 2, 1, 1, 2, 1]),
@@ -38,9 +40,9 @@ for (k, re) in (
     (4, [1, 2, 3, 1, 2, 3, 4]),
 )
 
-    @test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA, 1; fu = FU), k) == re
-
     @test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA, 1), k) ==
           BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(permutedims(MA), 2), k)
+
+    @test BioLab.Clustering.cluster(BioLab.Clustering.hierarchize(MA, 1; fu = FU), k) == re
 
 end
