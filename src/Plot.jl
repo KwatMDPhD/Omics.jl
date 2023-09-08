@@ -219,8 +219,8 @@ end
 function plot_heat_map(
     ht,
     z;
-    y = ["$id *" id for id in 1:size(z, 1)],
-    x = ["* $id" id for id in 1:size(z, 2)],
+    y = ["$id *" for id in 1:size(z, 1)],
+    x = ["* $id" for id in 1:size(z, 2)],
     text = z,
     nar = "Row",
     nac = "Column",

@@ -63,7 +63,7 @@ const _FONT_SIZE_2 = 12.8
 const _ANNOTATION =
     Dict("yref" => "paper", "xref" => "paper", "showarrow" => false, "yanchor" => "middle")
 
-const _ANNOTATIONR = BioLab.Dict.merge_recursively(
+const _ANNOTATIONR = BioLab.Dict.merge(
     _ANNOTATION,
     Dict("xanchor" => "center", "font" => Dict("family" => _FONT_FAMILY_2)),
 )
