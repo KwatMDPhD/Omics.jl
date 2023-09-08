@@ -50,7 +50,7 @@ function error_duplicate(co)
 
     if !allunique(co)
 
-        st = BioLab.Collection.count_sort_string(co; mi = 2)
+        st = BioLab.Collection.count_sort_string(co, 2)
 
         error("Found $(BioLab.String.count(length(split(st, '\n')), "duplicate")).\n$st")
 
