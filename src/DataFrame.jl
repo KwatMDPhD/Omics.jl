@@ -12,6 +12,42 @@ using XLSX: readtable
 
 using ..BioLab
 
+function make(nar, co_, ro_an__)
+
+    ro_ = sort!(collect(union(keys.(ro_an__)...)))
+
+    ma = Matrix{Any}(undef, length(ro_), length(co_))
+
+    # TODO: Benchmark.
+    ma[:, 1] .= ro_
+
+    for (id2, ro_an) in enumerate(ro_an_)
+
+        id2 += 1
+
+        for (id1, ro) in enumerate(ro_)
+
+            if haskey(ro_an, ro)
+
+                an = ro_an[ro]
+
+            else
+
+                an = missing
+
+            end
+
+            # TODO: Benchmark.
+            ma[id1, id2] = an
+
+        end
+
+    end
+
+    DataFrame(ma, vcat(nar, co_))
+
+end
+
 # TODO: Check if ro_ can be a String.
 function make(nar, ro_, co_, ma)
 

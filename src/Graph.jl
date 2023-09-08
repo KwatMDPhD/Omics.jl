@@ -119,7 +119,7 @@ function plot(
 
 end
 
-function _read_element(js)
+function read(js)
 
     ty_el_ = BioLab.Dict.read(js)["elements"]
 

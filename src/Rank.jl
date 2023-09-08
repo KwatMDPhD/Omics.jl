@@ -20,20 +20,6 @@ function rank_in_fraction(ra)
 
 end
 
-function range(fl::AbstractArray{Float64}, n::Int)
-
-    fl2 = view(fl, .!isnan.(fl))
-
-    Base.range(minimum(fl2), maximum(fl2), n)
-
-end
-
-function range(it::AbstractArray{Int}, ::Int)
-
-    Base.range(minimum(it), maximum(it))
-
-end
-
 function get_extreme(n::Int, n_ex)
 
     if n / 2 <= n_ex

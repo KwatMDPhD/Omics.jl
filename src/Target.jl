@@ -44,4 +44,38 @@ function tabulate(ro___, co___, fi, an_)
 
 end
 
+function tabulate(ro_re_, co_)
+
+    n_ro = length(ro_re_)
+
+    ro_ = Vector{String}(undef, n_ro)
+
+    ro_x_co_x_nu = fill(NaN, n_ro, length(co_))
+
+    for (idr, (ro, re_)) in enumerate(ro_re_)
+
+        ro_[idr] = ro
+
+        for (nu, re) in zip((0, 1), re_)
+
+            re2 = Regex(re)
+
+            for (idc, co) in enumerate(co_)
+
+                if contains(co, re2)
+
+                    ro_x_co_x_nu[idr, idc] = nu
+
+                end
+
+            end
+
+        end
+
+    end
+
+    ro_, ro_x_co_x_nu
+
+end
+
 end

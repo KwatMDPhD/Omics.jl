@@ -4,19 +4,24 @@ using StatsBase: countmap
 
 using ..BioLab
 
-# TODO: Test.
-function unique_sort(an_)
+function range(fl::AbstractArray{Float64}, n::Int)
 
-    sort!(unique(an_))
+    fl2 = view(fl, .!isnan.(fl))
+
+    Base.range(minimum(fl2), maximum(fl2), n)
+
+end
+
+function range(it::AbstractArray{Int}, ::Int)
+
+    Base.range(minimum(it), maximum(it))
 
 end
 
 # TODO: Test.
-function _map_index(un_)
+function unique_sort(an_)
 
-    BioLab.Error.error_duplicate(un_)
-
-    Dict(un => id for (id, un) in enumerate(un_))
+    sort!(unique(an_))
 
 end
 
@@ -29,6 +34,15 @@ end
 function count_sort_string(an_; mi = 1)
 
     join(("$n $an." for (an, n) in count_sort(an_; rev = true) if mi <= n), '\n')
+
+end
+
+# TODO: Test.
+function map_index(un_)
+
+    BioLab.Error.error_duplicate(un_)
+
+    Dict(un => id for (id, un) in enumerate(un_))
 
 end
 

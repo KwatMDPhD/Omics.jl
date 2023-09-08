@@ -2,7 +2,7 @@ module Error
 
 using ..BioLab
 
-macro is_error(ex)
+macro is(ex)
 
     exe = esc(ex)
 

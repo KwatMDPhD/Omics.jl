@@ -109,38 +109,4 @@ function read(sa_di)
 
 end
 
-function target(ta_re_, sa_)
-
-    n_ta = length(ta_re_)
-
-    ta_ = Vector{String}(undef, n_ta)
-
-    ta_x_sa_x_nu = fill(NaN, n_ta, length(sa_))
-
-    for (idt, (ta, re_)) in enumerate(ta_re_)
-
-        ta_[idt] = ta
-
-        for (nu, re) in zip((0, 1), re_)
-
-            re2 = Regex(re)
-
-            for (ids, sa) in enumerate(sa_)
-
-                if contains(sa, re2)
-
-                    ta_x_sa_x_nu[idt, ids] = nu
-
-                end
-
-            end
-
-        end
-
-    end
-
-    ta_, ta_x_sa_x_nu
-
-end
-
 end

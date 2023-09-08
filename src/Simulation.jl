@@ -16,7 +16,7 @@ function _mirror(n)
 
 end
 
-function _concatenate_mirror(ne_, ze, po_)
+function _concatenate(ne_, ze, po_)
 
     n = length(ne_)
 
@@ -24,23 +24,23 @@ function _concatenate_mirror(ne_, ze, po_)
 
 end
 
-function make_vector_mirror(n; ze = true)
+function mirror(n; ze = true)
 
     ne_, po_ = _mirror(n)
 
-    _concatenate_mirror(ne_, ze, po_)
+    _concatenate(ne_, ze, po_)
 
 end
 
-function make_vector_mirror_deep(n; ze = true)
+function mirror_deep(n; ze = true)
 
     ne_, po_ = _mirror(n)
 
-    _concatenate_mirror(ne_ * 2, ze, po_)
+    _concatenate(ne_ * 2, ze, po_)
 
 end
 
-function make_vector_mirror_wide(n; ze = true)
+function mirror_wide(n; ze = true)
 
     ne_, po_ = _mirror(n)
 
@@ -60,7 +60,7 @@ function make_vector_mirror_wide(n; ze = true)
 
     end
 
-    _concatenate_mirror(ne2_, ze, po_)
+    _concatenate(ne2_, ze, po_)
 
 end
 

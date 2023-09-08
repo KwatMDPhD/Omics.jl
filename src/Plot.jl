@@ -45,7 +45,7 @@ end
 const COLORBAR = Dict(
     "len" => 0.5,
     "thickness" => 16,
-    "outlinecolor" => COF,
+    "outlinecolor" => BioLab.Color.HEFA,
     "title" => Dict("font" => Dict("family" => "Droid Sans Mono", "size" => 12.8)),
     "tickfont" => Dict("family" => "Droid Sans Mono", "size" => 10),
 )
@@ -317,7 +317,7 @@ function plot_heat_map(
             "colorscale" => colorscale,
             "colorbar" => BioLab.Dict.merge_recursively(
                 COLORBAR,
-                Dict("x" => colorbarx, "tickvals" => BioLab.Rank.range(z, n_ti)),
+                Dict("x" => colorbarx, "tickvals" => BioLab.Collection.range(z, n_ti)),
             ),
         ),
     )
@@ -334,7 +334,10 @@ function plot_heat_map(
                 "colorscale" => BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(grr_)),
                 "colorbar" => BioLab.Dict.merge_recursively(
                     COLORBAR,
-                    Dict("x" => (colorbarx += dx), "tickvals" => BioLab.Rank.range(grr_, n_ti)),
+                    Dict(
+                        "x" => (colorbarx += dx),
+                        "tickvals" => BioLab.Collection.range(grr_, n_ti),
+                    ),
                 ),
             ),
         )
@@ -353,7 +356,10 @@ function plot_heat_map(
                 "colorscale" => BioLab.Color.map_fraction(BioLab.Color.pick_color_scheme(grc_)),
                 "colorbar" => BioLab.Dict.merge_recursively(
                     COLORBAR,
-                    Dict("x" => (colorbarx += dx), "tickvals" => BioLab.Rank.range(grc_, n_ti)),
+                    Dict(
+                        "x" => (colorbarx += dx),
+                        "tickvals" => BioLab.Collection.range(grc_, n_ti),
+                    ),
                 ),
             ),
         )
@@ -410,7 +416,7 @@ function plot_radar(
                         "tickfont" =>
                             Dict("size" => 32, "family" => "Optima", "color" => "#23191e"),
                         "gridwidth" => 2,
-                        "gridcolor" => COF,
+                        "gridcolor" => BioLab.Color.HEFA,
                     ),
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
@@ -425,7 +431,7 @@ function plot_radar(
                             "color" => "#1f4788",
                         ),
                         "gridwidth" => 1.6,
-                        "gridcolor" => COF,
+                        "gridcolor" => BioLab.Color.HEFA,
                     ),
                 ),
                 "title" => Dict(

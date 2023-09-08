@@ -7,7 +7,7 @@ using Colors: Colorant, coloralpha, hex
 using ..BioLab
 
 # TODO: Test.
-const COF = "#ebf6f7"
+const HEFA = "#ebf6f7"
 
 function _make_color_scheme(he_)
 
@@ -15,11 +15,11 @@ function _make_color_scheme(he_)
 
 end
 
-const COBWR = bwr
+const COBW = bwr
 
-const COPLA = plasma
+const COPA = plasma
 
-const COPL3 = _make_color_scheme((
+const COP3 = _make_color_scheme((
     "#0508b8",
     "#1910d8",
     "#3c19f0",
@@ -35,7 +35,7 @@ const COPL3 = _make_color_scheme((
     "#fec3fe",
 ))
 
-const COASP = _make_color_scheme((
+const COAS = _make_color_scheme((
     "#00936e",
     "#a4e2b4",
     "#e0f5e5",
@@ -45,7 +45,7 @@ const COASP = _make_color_scheme((
     "#ffd96a",
 ))
 
-const COPLO = _make_color_scheme((
+const COPL = _make_color_scheme((
     "#636efa",
     "#ef553b",
     "#00cc96",
@@ -58,13 +58,13 @@ const COPLO = _make_color_scheme((
     "#fecb52",
 ))
 
-const COBIN = _make_color_scheme(("#006442", "#ffb61e"))
+const COBI = _make_color_scheme(("#006442", "#ffb61e"))
 
-const COHUM = _make_color_scheme(("#4b3c39", "#ffddca"))
+const COHU = _make_color_scheme(("#4b3c39", "#ffddca"))
 
-const COSTA = _make_color_scheme(("#8c1515", "#175e54"))
+const COST = _make_color_scheme(("#8c1515", "#175e54"))
 
-const COMON = _make_color_scheme(("#fbb92d",))
+const COMO = _make_color_scheme(("#fbb92d",))
 
 function _make_hex(rg)
 
@@ -80,7 +80,7 @@ end
 
 function pick_color_scheme(::AbstractArray{Float64})
 
-    COBWR
+    COBW
 
 end
 
@@ -90,15 +90,15 @@ function pick_color_scheme(it::AbstractArray{Int})
 
     if n in (0, 1)
 
-        COMON
+        COMO
 
     elseif n == 2
 
-        COBIN
+        COBI
 
     else
 
-        COPLO
+        COPL
 
     end
 

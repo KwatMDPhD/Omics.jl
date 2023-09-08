@@ -32,7 +32,7 @@ end
 
 end
 
-function get_p_value(fu::Function, nu_, ra_)
+function get_p_value(fu, nu_, ra_)
 
     n = length(nu_)
 

@@ -5,7 +5,7 @@ using StatsBase: median
 using ..BioLab
 
 # TODO: Test.
-function describe(la_, an___)
+function error_describe(la_, an___)
 
     BioLab.Error.error_bad(la_)
 

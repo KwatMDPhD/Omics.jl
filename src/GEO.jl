@@ -194,42 +194,6 @@ function _map_feature(pl, co_, sp___)
 
 end
 
-function _make(nar, co_, ro_an__)
-
-    ro_ = sort!(collect(union(keys.(ro_an__)...)))
-
-    ma = Matrix{Any}(undef, length(ro_), length(co_))
-
-    # TODO: Benchmark.
-    ma[:, 1] .= ro_
-
-    for (id2, ro_an) in enumerate(ro_an_)
-
-        id2 += 1
-
-        for (id1, ro) in enumerate(ro_)
-
-            if haskey(ro_an, ro)
-
-                an = ro_an[ro]
-
-            else
-
-                an = missing
-
-            end
-
-            # TODO: Benchmark.
-            ma[id1, id2] .= an
-
-        end
-
-    end
-
-    DataFrame(ma, vcat(nar, co_))
-
-end
-
 function tabulate(bl_th; sa = "!Sample_title")
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(bl_th["SAMPLE"]))
@@ -289,7 +253,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
     for (pl, fe_fl__) in pl_fe_fl__
 
-        feature_x_sample_x_number = _make(pl, sa_, fe_fl__)
+        feature_x_sample_x_number = BioLab.DataFrame.make(pl, sa_, fe_fl__)
 
         if !isempty(feature_x_sample_x_number)
 
@@ -316,7 +280,7 @@ function tabulate(bl_th; sa = "!Sample_title")
 
     end
 
-    _make("Characteristic", sa_, ch_st__), pl_feature_x_sample_x_number
+    BioLab.DataFrame.make("Characteristic", sa_, ch_st__), pl_feature_x_sample_x_number
 
 end
 
@@ -356,7 +320,7 @@ function get(
 
     nac, ch_, sa_, ch_x_sa_x_an = BioLab.DataFrame.separate(characteristic_x_sample_x_any)
 
-    BioLab.FeatureXSample.describe(ch_, eachrow(ch_x_sa_x_an))
+    BioLab.FeatureXSample.error_describe(ch_, eachrow(ch_x_sa_x_an))
 
     replace!(ch_x_sa_x_an, missing => "")
 
