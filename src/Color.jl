@@ -6,7 +6,6 @@ using Colors: Colorant, coloralpha, hex
 
 using ..BioLab
 
-# TODO: Test.
 const HEFA = "#ebf6f7"
 
 function _make_color_scheme(he_)

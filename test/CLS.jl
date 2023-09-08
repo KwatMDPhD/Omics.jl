@@ -24,7 +24,7 @@ for (cl, ta, nu_) in (
 
     target_x_sample_x_number = BioLab.CLS.read(cl)
 
-    @test size(target_x_sample_x_number, 1) == 1
+    @test size(target_x_sample_x_number, 1) === 1
 
     @test all(co -> eltype(co) != Any, eachcol(target_x_sample_x_number))
 
