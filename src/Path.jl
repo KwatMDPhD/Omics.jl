@@ -5,7 +5,7 @@ function clean(na)
     # TODO: Test.
     if contains(na, '/')
 
-        error("A name can not contain any \"/\".")
+        error("na contains /.")
 
     end
 

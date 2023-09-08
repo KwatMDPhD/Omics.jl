@@ -44,7 +44,7 @@ function error_duplicate(co)
 
     if isempty(co)
 
-        error("Is empty.")
+        error("co is empty.")
 
     end
 
@@ -74,7 +74,7 @@ function error_extension_difference(pa, ex2)
 
     if ex != ex2
 
-        error("Extensions differ. $ex != $ex2.")
+        error("$ex != $ex2.")
 
     end
 

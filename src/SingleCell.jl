@@ -65,7 +65,7 @@ function read(sa_di)
 
         elseif fe_ != fes_
 
-            error("Features mismatch.")
+            error("Features differ.")
 
         end
 

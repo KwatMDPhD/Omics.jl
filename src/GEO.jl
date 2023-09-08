@@ -164,11 +164,11 @@ function _map_feature(pl, co_, sp___)
 
     elseif it in (7566, 7567)
 
-        error("$pl is a bad platform. Avoid it.")
+        error("$pl is a bad platform.")
 
     else
 
-        error("$pl is a new platform. Implement it.")
+        error("$pl is a new platform.")
 
     end
 
@@ -371,7 +371,7 @@ function get(
 
         if !endswith(ur, "gz")
 
-            error("ur ($ur) does not end with gz.")
+            error("$ur does not end with gz.")
 
         end
 
