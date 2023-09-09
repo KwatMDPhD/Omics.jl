@@ -265,8 +265,8 @@ function tabulate(bl_th, sa = "!Sample_title")
 
                 id_fe = _map_feature(pl, sp___[1], view(sp___, 2:length(sp___)))
 
-                # TODO: Consider `Gene.rename`.
-                da[!, 1] = [get(id_fe, id, "_$id") for id in da[!, 1]]
+                feature_x_sample_x_number[!, 1] =
+                    [Base.get(id_fe, id, "_$id") for id in feature_x_sample_x_number[!, 1]]
 
             else
 

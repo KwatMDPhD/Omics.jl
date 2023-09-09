@@ -15,14 +15,17 @@ const DA = joinpath(BioLab._DA, "Dict")
 const DIS = Dict("Existing" => 1)
 
 for (ke, va, re) in (
-    ("Existing", 1, Dict("Existing" => 1, "Existing.2" => 1)),
-    ("Existing", 2, Dict("Existing" => 1, "Existing.2" => 2)),
-    ("New", 3, Dict("Existing" => 1, "New" => 3)),
+    ("Existing", 2, Dict("Existing" => 1, "Existing.2" => 2, "Existing.3" => 2)),
+    ("New", 2, Dict("Existing" => 1, "New" => 2, "New.2" => 2)),
 )
 
     co = copy(DIS)
 
-    BioLab.Dict.set_with_suffix!(co, ke, va)
+    for _ in 1:2
+
+        BioLab.Dict.set_with_suffix!(co, ke, va)
+
+    end
 
     @test co == re
 

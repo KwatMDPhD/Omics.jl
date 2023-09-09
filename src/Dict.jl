@@ -20,7 +20,7 @@ function set_with_suffix!(ke_va, ke, va)
 
         else
 
-            pr = rsplit(ke, '.'; limit = 2)[2]
+            pr = rsplit(ke, '.'; limit = 2)[1]
 
         end
 
