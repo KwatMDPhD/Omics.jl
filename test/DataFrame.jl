@@ -58,7 +58,7 @@ for (ro_an__, re) in (
 
     # 1.479 μs (26 allocations: 2.33 KiB)
     # 1.450 μs (26 allocations: 2.33 KiB)
-    @btime BioLab.DataFrame.make($NAR, $co_, $ro_an__)
+    #@btime BioLab.DataFrame.make($NAR, $co_, $ro_an__)
 
 end
 
@@ -79,30 +79,30 @@ const CO_ = make_axis("Column ", N_CO)
 
 const MA = BioLab.Simulation.make_matrix_1n(Int, N_RO, N_CO)
 
-const DAM = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
+const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
-@test DAM == DataFrame(
+@test DT == DataFrame(
     NAR => make_axis("Row ", N_RO),
     ("Column $id" => view(MA, :, id) for id in 1:N_CO)...,
 )
 
 # 1.163 μs (22 allocations: 1.89 KiB)
-@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
+#@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
 
-@test BioLab.DataFrame.separate(DAM) == (NAR, RO_, CO_, MA)
+@test BioLab.DataFrame.separate(DT) == (NAR, RO_, CO_, MA)
 
 # ---- #
 
-BioLab.DataFrame.separate(DAM)[2][1] = ":("
+BioLab.DataFrame.separate(DT)[2][1] = ":("
 
-@test DAM[1, 1] === "Row 1"
+@test DT[1, 1] === "Row 1"
 
 # ---- #
 
 # 1.962 μs (28 allocations: 2.08 KiB)
-@btime BioLab.DataFrame.separate($DAM);
+#@btime BioLab.DataFrame.separate($DT);
 
 # ---- #
 
