@@ -83,7 +83,10 @@ function plot_scatter(
                 "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
-        layout;
+        BioLab.Dict.merge(
+            Dict("yaxis" => Dict("showgrid" => false), "xaxis" => Dict("showgrid" => false)),
+            layout,
+        );
         ke_ar...,
     )
 
@@ -110,7 +113,10 @@ function plot_bar(
                 "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
-        layout;
+        BioLab.Dict.merge(
+            Dict("yaxis" => Dict("showgrid" => false), "xaxis" => Dict("showgrid" => false)),
+            layout,
+        );
         ke_ar...,
     )
 
@@ -152,15 +158,6 @@ function plot_histogram(
 
     end
 
-    layout = BioLab.Dict.merge(
-        Dict(
-            "yaxis2" =>
-                Dict("domain" => (fr, 1), "title" => Dict("text" => yaxis2_title_text)),
-            "yaxis" => Dict("domain" => (0, fr), "zeroline" => false, "tickvals" => ()),
-        ),
-        layout,
-    )
-
     data = Vector{Dict{String, Any}}()
 
     showlegend = 1 < n
@@ -201,8 +198,7 @@ function plot_histogram(
                         "y" => fill(id, length(x)),
                         "text" => text_[id],
                         "hoverinfo" => "name+x+text",
-                        # TODO
-                        #"mode" => "markers",
+                        "mode" => "markers",
                         "marker" => Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
                     ),
                 ),
@@ -212,10 +208,28 @@ function plot_histogram(
 
     end
 
-    plot(ht, data, layout; ke_ar...)
+    plot(
+        ht,
+        data,
+        BioLab.Dict.merge(
+            Dict(
+                "yaxis2" => Dict(
+                    "domain" => (fr, 1),
+                    "showgrid" => false,
+                    "title" => Dict("text" => yaxis2_title_text),
+                ),
+                "yaxis" => Dict("domain" => (0, fr), "zeroline" => false, "tickvals" => ()),
+            ),
+            layout,
+        );
+        ke_ar...,
+    )
 
 end
 
+# TODO: Cluster within a group.
+# TODO: Test String.
+# TODO: Label with String.
 function plot_heat_map(
     ht,
     z;
@@ -231,37 +245,28 @@ function plot_heat_map(
     ke_ar...,
 )
 
-    n_ro, n_co = size(z)
-
-    domain = (0, 0.95)
-
-    axis2 = Dict("domain" => (domain[2] + 0.01, 1), "tickvals" => ())
-
-    layout = BioLab.Dict.merge(
-        Dict(
-            "yaxis" => Dict(
-                "domain" => domain,
-                "autorange" => "reversed",
-                "title" => Dict("text" => "$nar (n = $n_ro)"),
-            ),
-            "xaxis" => Dict("domain" => domain, "title" => Dict("text" => "$nac (n = $n_co)")),
-            "yaxis2" => merge(axis2, Dict("autorange" => "reversed")),
-            "xaxis2" => axis2,
-        ),
-        layout,
-    )
-
-    data = Vector{Dict{String, Any}}()
-
+    # TODO: Consider shifting to the right.
     colorbarx = 0.97
 
     dx = 0.064
 
     n_ti = 8
 
-    # TODO: Cluster within a group.
-    # TODO: Test String.
-    # TODO: Label with String.
+    data = [
+        Dict(
+            "type" => "heatmap",
+            "z" => collect(eachrow(z)),
+            "y" => y,
+            "x" => x,
+            "text" => collect(eachrow(text)),
+            "hoverinfo" => "y+x+z+text",
+            "colorscale" => colorscale,
+            "colorbar" => merge(
+                COLORBAR,
+                Dict("x" => colorbarx, "tickvals" => BioLab.Collection.range(z, n_ti)),
+            ),
+        ),
+    ]
 
     if !isempty(grr_)
 
@@ -282,47 +287,6 @@ function plot_heat_map(
         y = view(y, so_)
 
         z = view(z, so_, :)
-
-    end
-
-    if !isempty(grc_)
-
-        if grc_ isa AbstractVector{<:AbstractString}
-
-            gr_id = BioLab.Collection.map_index(BioLab.Collection.unique_sort(grc_))
-
-            grc_ = [gr_id[gr] for gr in grc_]
-
-        end
-
-        so_ = sortperm(grc_)
-
-        grc_ = view(grc_, so_)
-
-        x = view(x, so_)
-
-        z = view(z, :, so_)
-
-    end
-
-    push!(
-        data,
-        Dict(
-            "type" => "heatmap",
-            "z" => collect(eachrow(z)),
-            "y" => y,
-            "x" => x,
-            "text" => collect(eachrow(text)),
-            "hoverinfo" => "y+x+z+text",
-            "colorscale" => colorscale,
-            "colorbar" => merge(
-                COLORBAR,
-                Dict("x" => colorbarx, "tickvals" => BioLab.Collection.range(z, n_ti)),
-            ),
-        ),
-    )
-
-    if !isempty(grr_)
 
         push!(
             data,
@@ -346,6 +310,22 @@ function plot_heat_map(
 
     if !isempty(grc_)
 
+        if grc_ isa AbstractVector{<:AbstractString}
+
+            gr_id = BioLab.Collection.map_index(BioLab.Collection.unique_sort(grc_))
+
+            grc_ = [gr_id[gr] for gr in grc_]
+
+        end
+
+        so_ = sortperm(grc_)
+
+        grc_ = view(grc_, so_)
+
+        x = view(x, so_)
+
+        z = view(z, :, so_)
+
         push!(
             data,
             Dict(
@@ -366,7 +346,30 @@ function plot_heat_map(
 
     end
 
-    plot(ht, data, layout; ke_ar...)
+    n_ro, n_co = size(z)
+
+    domain = (0, 0.95)
+
+    axis2 = Dict("domain" => (domain[2] + 0.01, 1), "tickvals" => ())
+
+    plot(
+        ht,
+        data,
+        BioLab.Dict.merge(
+            Dict(
+                "yaxis" => Dict(
+                    "domain" => domain,
+                    "autorange" => "reversed",
+                    "title" => Dict("text" => "$nar (n = $n_ro)"),
+                ),
+                "xaxis" => Dict("domain" => domain, "title" => Dict("text" => "$nac (n = $n_co)")),
+                "yaxis2" => merge(axis2, Dict("autorange" => "reversed")),
+                "xaxis2" => axis2,
+            ),
+            layout,
+        );
+        ke_ar...,
+    )
 
 end
 

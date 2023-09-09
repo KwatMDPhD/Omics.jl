@@ -6,16 +6,16 @@ using BioLab
 
 # ---- #
 
-const N_RO = 3
+include("Bad.jl")
 
-const FEATURE_X_SAMPLE_X_ANY = DataFrame(
-    "Feature" => ["Feature $id" for id in 1:N_RO],
-    "Column 1" => ('A':'Z')[1:N_RO],
-    "Column 2" => ('A':'Z')[1:N_RO],
-    "Column 3" => ('A':'Z')[(N_RO + 1):(N_RO + N_RO)],
+@test BioLab.Error.@is BioLab.FeatureXSample.error_describe(["Label"], [BA_])
+
+# ---- #
+
+BioLab.FeatureXSample.error_describe(
+    ["Column Row", "Column 1", "Column 2", "Column 3"],
+    [["Row $id" for id in 1:3], ['A', 'B', 'C'], ['A', 'B', 'B'], ['C', 'C', 'C']],
 )
-
-BioLab.FeatureXSample.describe(FEATURE_X_SAMPLE_X_ANY)
 
 # ---- #
 
