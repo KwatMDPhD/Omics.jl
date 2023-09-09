@@ -8,8 +8,6 @@ using BioLab
 
 const DA = joinpath(BioLab._DA, "Dict")
 
-# ---- #
-
 @test BioLab.Path.read(DA) == ["example.toml", "example_1.json", "example_2.json"]
 
 # ---- #
@@ -114,18 +112,16 @@ const FE_ID = Dict(fe => id for (id, fe) in enumerate(FE_))
 # 508.250 μs (7 allocations: 800.92 KiB)
 #@btime Dict(fe => id for (id, fe) in enumerate($FE_));
 
-# 384.698 ns (2 allocations: 2.66 KiB)
+# 382.212 ns (2 allocations: 2.66 KiB)
 #@btime BioLab.Dict.is_in($FE_ID, $FE1_);
 
 # ---- #
 
 const JS1 = joinpath(DA, "example_1.json")
 
-# ---- #
+for ty in (Dict, OrderedDict, OrderedDict{String, String})
 
-for dicttype in (Dict, OrderedDict, OrderedDict{String, String})
-
-    @test BioLab.Dict.read(JS1; dicttype) isa dicttype
+    @test BioLab.Dict.read(JS1, ty) isa ty
 
 end
 
