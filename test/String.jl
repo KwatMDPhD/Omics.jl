@@ -16,7 +16,7 @@ for (nu, re) in (
     (0.000001, "1e-06"),
 )
 
-    @test BioLab.String.format(nu) == re
+    @test BioLab.String.format(nu) === re
 
 end
 
@@ -33,7 +33,7 @@ for (st, re) in (
     ("Aa", "Aa"),
 )
 
-    @test BioLab.String.try_parse(st) == re
+    @test BioLab.String.try_parse(st) === re
 
 end
 
@@ -41,7 +41,7 @@ end
 
 for (n, re) in ((0, "..."), (1, "C..."), (2, "Ca..."), (3, "Can"), (4, "Can"))
 
-    @test BioLab.String.limit("Can", n) == re
+    @test BioLab.String.limit("Can", n) === re
 
 end
 
@@ -75,7 +75,7 @@ for (si, pl) in (
 
     for (n, re) in ((-1, "-1 $si"), (0, "0 $si"), (1, "1 $si"), (2, "2 $pl"))
 
-        @test BioLab.String.count(n, si) == re
+        @test BioLab.String.count(n, si) === re
 
     end
 

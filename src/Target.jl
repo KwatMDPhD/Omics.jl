@@ -1,5 +1,7 @@
 module Target
 
+using ..BioLab
+
 function tabulate(ro_)
 
     rou_ = BioLab.Collection.unique_sort(ro_)
@@ -19,6 +21,8 @@ function tabulate(ro_)
 end
 
 function tabulate(ro___, co___, fi, an_)
+
+    BioLab.Error.error_length_difference((ro___..., co___..., an_))
 
     ro_ = zip(ro___...)
 

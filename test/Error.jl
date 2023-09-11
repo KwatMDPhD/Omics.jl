@@ -34,6 +34,22 @@ end
 
 # ---- #
 
+for co_ in (((), (1,)), ((1,), (2, 3)))
+
+    @test BioLab.Error.@is BioLab.Error.error_length_difference(co_)
+
+end
+
+# ---- #
+
+for co_ in (((), ()), ((1,), (2,)), ((1, 2), (3, 4)))
+
+    @test !BioLab.Error.@is BioLab.Error.error_length_difference(co_)
+
+end
+
+# ---- #
+
 const KE_VA = Dict("Key" => "Value")
 
 @test BioLab.Error.@is BioLab.Error.error_has_key(KE_VA, "Key")

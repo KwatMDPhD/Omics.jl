@@ -4,6 +4,7 @@ using BioLab
 
 # ---- #
 
-st = BioLab.Time.stamp()
-
-@test contains(st, r"^[\d]{4}_[\d]{1,2}_[\d]{1,2}_[\d]{1,2}_[\d]{1,2}_[\d]{1,2}_[\d]{1,3}$")
+@test contains(
+    BioLab.Time.stamp(),
+    r"^[\d]{4}_[\d]{1,2}_[\d]{1,2}_[\d]{1,2}_[\d]{1,2}_[\d]{1,2}_[\d]{1,3}$",
+)

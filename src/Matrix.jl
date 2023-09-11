@@ -4,17 +4,9 @@ using OrderedCollections: OrderedDict
 
 function make(an___)
 
-    le_ = unique(length.(an___))
+    BioLab.Error.error_length_difference(an___)
 
-    if isone(length(le_))
-
-        [an___[id1][id2] for id1 in eachindex(an___), id2 in 1:le_[1]]
-
-    else
-
-        error("Lengths differ.")
-
-    end
+    [an___[id1][id2] for id1 in eachindex(an___), id2 in 1:length(an___[1])]
 
 end
 

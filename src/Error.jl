@@ -58,6 +58,17 @@ function error_duplicate(co)
 
 end
 
+# TODO: Test.
+function error_length_difference(co_)
+
+    if !isone(length(unique(length.(co_))))
+
+        error("Lengths differ.")
+
+    end
+
+end
+
 function error_has_key(ke_va, ke)
 
     if haskey(ke_va, ke)

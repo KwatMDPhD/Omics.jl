@@ -39,20 +39,20 @@ for (ra, re) in zip(
     ),
 )
 
-    @test BioLab.Rank.rank_in_fraction(ra) == re
+    @test BioLab.Rank.rank_in_fraction(ra) === re
 
 end
 
 # ---- #
 
-const EM = Vector{Int}()
+const ID_ = Vector{Int}()
 
 # ---- #
 
 for (n, n_ex, re) in (
-    (0, 0, EM),
-    (0, 1, EM),
-    (1, 0, EM),
+    (0, 0, ID_),
+    (0, 1, ID_),
+    (1, 0, ID_),
     (5, 1, [1, 5]),
     (5, 3, [1, 2, 3, 4, 5]),
     (5, 6, [1, 2, 3, 4, 5]),
@@ -64,9 +64,9 @@ end
 
 # ---- #
 
-const CO1 = [20, 40, 60, 50, 30, 10]
+const IT_ = [20, 40, 60, 50, 30, 10]
 
-const CO2 = [
+const CH_ = [
     'b',
     'd',
     'f',
@@ -96,16 +96,16 @@ const CO2 = [
 ]
 
 for (an_, n_ex, re) in (
-    (EM, 0, EM),
-    (EM, 1, EM),
-    (CO1, 0, EM),
-    (CO1, 1, [10, 60]),
-    (CO1, 2, [10, 20, 50, 60]),
-    (CO1, length(CO1) + 1, sort(CO1)),
-    (CO2, 0, Vector{Char}()),
-    (CO2, 1, ['a', 'z']),
-    (CO2, 2, ['a', 'b', 'y', 'z']),
-    (CO2, length(CO2) + 1, sort(CO2)),
+    (ID_, 0, ID_),
+    (ID_, 1, ID_),
+    (IT_, 0, ID_),
+    (IT_, 1, [10, 60]),
+    (IT_, 2, [10, 20, 50, 60]),
+    (IT_, length(IT_) + 1, sort(IT_)),
+    (CH_, 0, Vector{Char}()),
+    (CH_, 1, ['a', 'z']),
+    (CH_, 2, ['a', 'b', 'y', 'z']),
+    (CH_, length(CH_) + 1, sort(CH_)),
 )
 
     @test view(an_, BioLab.Rank.get_extreme(an_, n_ex)) == re
