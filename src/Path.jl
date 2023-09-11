@@ -2,7 +2,6 @@ module Path
 
 function clean(na)
 
-    # TODO: Test.
     if contains(na, '/')
 
         error("na contains /.")
@@ -13,7 +12,6 @@ function clean(na)
 
 end
 
-# TODO: Test.
 function get_extension(pa)
 
     chop(splitext(pa)[2]; head = 1, tail = 0)
@@ -68,7 +66,6 @@ function open(pa)
 
 end
 
-# TODO: Test.
 function remove(pa; ke_ar...)
 
     @info "Removing $pa"

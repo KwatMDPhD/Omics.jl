@@ -22,7 +22,6 @@ function factorize(ma, n; ke_ar...)
 
 end
 
-# TODO: Improve.
 function solve_h(ma, w)
 
     clamp!(pinv(w) * ma, 0, Inf)
@@ -69,9 +68,9 @@ function write(
 
         BioLab.Plot.plot_heat_map(
             "$pr.html",
-            view(w, or_, :),
-            view(ro_, or_),
-            fa_;
+            view(w, or_, :);
+            y = view(ro_, or_),
+            x = fa_,
             nar,
             nac = naf,
             layout = Dict(
@@ -102,9 +101,9 @@ function write(
 
         BioLab.Plot.plot_heat_map(
             "$pr.html",
-            view(h, :, or_),
-            fa_,
-            view(co_, or_);
+            view(h, :, or_);
+            y = fa_,
+            x = view(co_, or_),
             nar = naf,
             nac,
             layout = Dict(
