@@ -63,13 +63,13 @@ function plot(
 
     BioLab.HTML.make(
         ht,
-        id,
         # TODO: Use the latest.
         (
             "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
             "https://cdn.rawgit.com/eligrey/FileSaver.js/master/dist/FileSaver.js",
             "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.25.0/cytoscape.min.js",
         ),
+        id,
         """
         var cy = cytoscape({
             container: document.getElementById("$id"),
@@ -101,7 +101,7 @@ function plot(
 
     if !isempty(fi)
 
-        BioLab.Path.wait(fi; ma = 40)
+        BioLab.Path.wait(fi, 40)
 
         fi2 = joinpath(dirname(ht), na)
 

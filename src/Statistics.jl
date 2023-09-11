@@ -56,8 +56,7 @@ function get_p_value(fu, nu_, ra_)
 
     ad_ = fill(NaN, n)
 
-    # TODO: Benchmark without `view`.
-    ad_[is_] .= adjust(view(pv_, is_), n, BenjaminiHochberg())
+    ad_[is_] .= adjust(pv_[is_], n, BenjaminiHochberg())
 
     pv_, ad_
 
@@ -75,7 +74,7 @@ function get_p_value(nu_::AbstractVector, ra_)
 
     ad_ = Vector{Float64}(undef, n)
 
-    for (id, (pvl, adl, pvg, adg)) in enumerate(pvl_, adl_, pvg_, adg_)
+    for (id, (pvl, adl, pvg, adg)) in enumerate(zip(pvl_, adl_, pvg_, adg_))
 
         # TODO: Check if both must come from the same side.
 

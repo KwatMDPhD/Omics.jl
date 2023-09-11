@@ -58,7 +58,7 @@ function collapse(fu, ty, ro_, ma)
 
         if isone(length(id_))
 
-            an_ = view(ma, id_[1], :)
+            an_ = ma[id_[1], :]
 
         else
 
@@ -68,7 +68,6 @@ function collapse(fu, ty, ro_, ma)
 
         end
 
-        # TODO: Benchmark in-place assignment.
         ma2[id2, :] = an_
 
     end

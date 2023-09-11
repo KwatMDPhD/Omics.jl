@@ -54,11 +54,11 @@ const DW = joinpath(homedir(), "Downloads")
 
 const NAME1 = "preset"
 
-const EX1 = "png"
-
 const HT1 = joinpath(BioLab.TE, "$NAME1.html")
 
-@test BioLab.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1) == HT1
+const EX1 = "png"
+
+@test BioLab.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1) === HT1
 
 @test isfile(joinpath(BioLab.TE, "$NAME1.$EX1"))
 
@@ -66,36 +66,44 @@ const HT1 = joinpath(BioLab.TE, "$NAME1.html")
 
 const NAME2 = "cose"
 
-const EX2 = "json"
-
 const HT2 = joinpath(BioLab.TE, "$NAME2.html")
 
-@test BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2) == HT2
+const EX2 = "json"
+
+@test BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2) === HT2
 
 const JS = joinpath(BioLab.TE, "$NAME2.$EX2")
 
 # ---- #
 
-const EL2_ = BioLab.Graph._read_element(JS)
+function is_same(el1_, el2_, ke_ = ("data",))
 
-@test length(EL_) == length(EL2_)
+    all(all(el1[ke] == el2[ke] for ke in ke_) for (el1, el2) in zip(el1_, el2_))
 
-@test all(all(el[ke] == el2[ke] for ke in ("data",)) for (el, el2) in zip(EL_, EL2_))
+end
+
+# ---- #
+
+const EL2_ = BioLab.Graph.read(JS)
+
+@test length(EL_) === length(EL2_)
+
+@test is_same(EL_, EL2_)
 
 # ---- #
 
 BioLab.Graph.position!(EL_, EL2_)
 
-@test all(all(el[ke] == el2[ke] for ke in ("data", "position")) for (el, el2) in zip(EL_, EL2_))
+@test is_same(EL_, EL2_, ("data", "position"))
 
 # ---- #
 
 const NAME3 = "cose_preset"
 
-const EX3 = "json"
-
 const HT3 = joinpath(BioLab.TE, "$NAME3.html")
 
-@test BioLab.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3) == HT3
+const EX3 = "json"
 
-@test EL2_ == BioLab.Graph._read_element(joinpath(BioLab.TE, "$NAME3.$EX3"))
+@test BioLab.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3) === HT3
+
+@test EL2_ == BioLab.Graph.read(joinpath(BioLab.TE, "$NAME3.$EX3"))
