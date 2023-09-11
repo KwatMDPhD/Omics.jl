@@ -279,7 +279,7 @@ function plot_heat_map(
 
             grr_ = [gr_id[gr] for gr in grr_]
 
-            ticktext = collect(keys(sort(gr_id; byvalue = true)))
+            ticktext = collect(keys(sort(gr_id; byvalue=true)))
 
         else
 
@@ -307,7 +307,7 @@ function plot_heat_map(
                     Dict(
                         "x" => (colorbarx += dx),
                         "tickvals" => BioLab.Collection.range(grr_, n_ti),
-                        "ticktext" => ticktext,
+                        "ticktext"=>ticktext,
                     ),
                 ),
             ),
@@ -323,7 +323,7 @@ function plot_heat_map(
 
             grc_ = [gr_id[gr] for gr in grc_]
 
-            ticktext = collect(keys(sort(gr_id; byvalue = true)))
+            ticktext = collect(keys(sort(gr_id; byvalue=true)))
 
         else
 
@@ -351,7 +351,7 @@ function plot_heat_map(
                     Dict(
                         "x" => (colorbarx += dx),
                         "tickvals" => BioLab.Collection.range(grc_, n_ti),
-                        "ticktext" => ticktext,
+                        "ticktext"=>ticktext,
                     ),
                 ),
             ),
@@ -361,11 +361,9 @@ function plot_heat_map(
 
     n_ro, n_co = size(z)
 
-    ydomain = (0, 0.939)
+    domain = (0, 0.95)
 
-    xdomain = (0, 0.955)
-
-    dd = 0.02
+    axis2 = Dict("domain" => (domain[2] + 0.01, 1), "tickvals" => ())
 
     plot(
         ht,
@@ -373,18 +371,13 @@ function plot_heat_map(
         BioLab.Dict.merge(
             Dict(
                 "yaxis" => Dict(
-                    "domain" => ydomain,
+                    "domain" => domain,
                     "autorange" => "reversed",
                     "title" => Dict("text" => "$nar (n = $n_ro)"),
                 ),
-                "xaxis" =>
-                    Dict("domain" => xdomain, "title" => Dict("text" => "$nac (n = $n_co)")),
-                "yaxis2" => Dict(
-                    "domain" => (ydomain[2] + dd, 1),
-                    "autorange" => "reversed",
-                    "tickvals" => (),
-                ),
-                "xaxis2" => Dict("domain" => (xdomain[2] + dd, 1), "tickvals" => ()),
+                "xaxis" => Dict("domain" => domain, "title" => Dict("text" => "$nac (n = $n_co)")),
+                "yaxis2" => merge(axis2, Dict("autorange" => "reversed")),
+                "xaxis2" => axis2,
             ),
             layout,
         );

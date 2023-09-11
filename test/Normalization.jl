@@ -203,7 +203,7 @@ for (fu, re) in zip(
     # 3.167 μs (24 allocations: 1.31 KiB)
     # 3.162 μs (24 allocations: 1.31 KiB)
     # 3.052 μs (24 allocations: 1.31 KiB)
-    @btime foreach($fu, eachcol(co)) setup = (co = copy($MA))
+    #@btime foreach($fu, eachcol(co)) setup = (co = copy($MA))
 
 end
 
@@ -263,6 +263,6 @@ for (fu, re) in zip(
     # 3.193 μs (24 allocations: 1.31 KiB)
     # 3.172 μs (24 allocations: 1.31 KiB)
     # 3.443 μs (24 allocations: 1.31 KiB)
-    @btime foreach($fu, eachrow(co)) setup = (co = copy($MA))
+    #@btime foreach($fu, eachrow(co)) setup = (co = copy($MA))
 
 end
