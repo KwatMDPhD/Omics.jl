@@ -2,6 +2,8 @@ module Matrix
 
 using OrderedCollections: OrderedDict
 
+using ..BioLab
+
 function make(an___)
 
     BioLab.Error.error_length_difference(an___)
