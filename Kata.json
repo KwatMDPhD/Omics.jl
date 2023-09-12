@@ -1,7 +1,7 @@
 {
   "download": {},
   "call": {
-    "update": "julia --project --eval 'using Pkg; Pkg.update(); Pkg.gc()'",
+    "update": "julia --project --eval 'using Pkg; Pkg.update()'",
     "run": "julia --project --eval 'using Pkg; Pkg.test()'"
   }
 }
