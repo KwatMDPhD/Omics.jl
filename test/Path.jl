@@ -14,7 +14,11 @@ using BioLab
 
 const EX = "extension"
 
-BioLab.Path.get_extension("file.$EX") == EX
+for pa in ("prefix.$EX", "/path/to/prefix.$EX", "s3://path/to/prefix.$EX")
+
+    @test BioLab.Path.get_extension(pa) == EX
+
+end
 
 # ---- #
 
