@@ -8,19 +8,25 @@ using StatsBase: std
 
 using ..BioLab
 
-function get_z_score(cu)
+function get_quantile(cu)
 
     quantile(Normal(), cu)
 
 end
 
-function get_margin_of_error(nu_, er = 0.05)
+function get_margin_of_error(nu_, co = 0.95)
 
-    get_z_score(1 - er / 2) * std(nu_) / sqrt(length(nu_))
+    get_quantile(0.5 + co / 2) * std(nu_) / sqrt(length(nu_))
 
 end
 
 function get_p_value(n_si::Int, n_ra)
+
+    if iszero(n_ra)
+
+        return NaN
+
+    end
 
     if iszero(n_si)
 
@@ -36,75 +42,103 @@ function get_p_value(fu, nu_, ra_)
 
     n = length(nu_)
 
-    is_ = falses(n)
+    is_ = BitVector(undef, n)
 
-    pv_ = fill(NaN, n)
+    pv_ = Vector{Float64}(undef, n)
+
+    ad_ = fill(NaN, n)
+
+    ra_ = filter(.!isnan, ra_)
 
     n_ra = length(ra_)
 
+    if iszero(n_ra)
+
+        pv_ .= NaN
+
+        return pv_, ad_
+
+    end
+
     for (id, nu) in enumerate(nu_)
 
-        if !isnan(nu)
+        if isnan(nu)
+
+            is_[id] = false
+
+            pv_[id] = NaN
+
+        else
 
             is_[id] = true
 
-            pv_[id] = get_p_value(sum(fu(nu), ra_), n_ra)
+            pv_[id] = get_p_value(sum(fu(nu), ra_; init = 0), n_ra)
 
         end
 
     end
 
-    ad_ = fill(NaN, n)
+    if any(is_)
 
-    ad_[is_] .= adjust(pv_[is_], n, BenjaminiHochberg())
+        ad_[is_] .= adjust(pv_[is_], n, BenjaminiHochberg())
+
+    end
 
     pv_, ad_
 
 end
 
-function get_p_value(nu_::AbstractVector, ra_)
+function _get_negative_positive(sc_)
 
-    pvl_, adl_ = get_p_value(<=, nu_, ra_)
+    sc_ .< 0, 0 .<= sc_
 
-    pvg_, adg_ = get_p_value(>=, nu_, ra_)
+end
 
-    n = length(nu_)
+function get_p_value(sc_, nei_, poi_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothing)
 
-    pv_ = Vector{Float64}(undef, n)
+    ne_ = Vector{Float64}()
 
-    ad_ = Vector{Float64}(undef, n)
+    po_ = Vector{Float64}()
 
-    for (id, (pvl, adl, pvg, adg)) in enumerate(zip(pvl_, adl_, pvg_, adg_))
+    for id2 in 1:size(fe_x_id_x_ra, 2), id1 in 1:size(fe_x_id_x_ra, 1)
 
-        # TODO: Check if both must come from the same side.
+        ra = fe_x_id_x_ra[id1, id2]
 
-        if pvl <= pvg
+        if isnan(ra)
 
-            pv = pvl
-
-        else
-
-            pv = pvg
+            continue
 
         end
 
-        pv_[id] = pv
+        if ra < 0
 
-        if adl <= adg
+            ra_ = ne_
 
-            ad = adl
+            fa_ = nef_
 
         else
 
-            ad = adg
+            ra_ = po_
+
+            fa_ = pof_
 
         end
 
-        ad_[id] = ad
+        if !isnothing(fa_)
+
+            ra *= fa_[id1]
+
+        end
+
+        push!(ra_, ra)
 
     end
 
-    pv_, ad_
+    nep_, nea_ = get_p_value(<=, view(sc_, nei_), ne_)
+
+    pop_, poa_ = get_p_value(>=, view(sc_, poi_), po_)
+
+    nep_, nea_, pop_, poa_
 
 end
 

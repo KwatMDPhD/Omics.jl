@@ -321,23 +321,31 @@ function make(
 
         co = copy(ta_)
 
-        ra_ = Vector{Float64}(undef, n_fe * n_pv)
-
-        idr = 0
+        fe_x_id_x_ra = Matrix{Float64}(undef, n_fe, n_pv)
 
         @showprogress for idf in 1:n_fe
 
             nu_ = view(fe_x_sa_x_nu, idf, :)
 
-            for _ in 1:n_pv
+            for id in 1:n_pv
 
-                ra_[idr += 1] = fu(shuffle!(co), nu_)
+                fe_x_id_x_ra[idf, id] = fu(shuffle!(co), nu_)
 
             end
 
         end
 
-        pv_, ad_ = BioLab.Statistics.get_p_value(sc_, ra_)
+        nei_, poi_ = BioLab.Statistics._get_negative_positive(sc_)
+
+        npv_, nad_, ppv_, pad_ = BioLab.Statistics.get_p_value(sc_, fe_x_id_x_ra; nei_, poi_)
+
+        pv_[nei_] .= npv_
+
+        pv_[poi_] .= ppv_
+
+        ad_[nei_] .= nad_
+
+        ad_[poi_] .= pad_
 
     end
 
