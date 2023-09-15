@@ -112,7 +112,7 @@ function read(pa, dicttype = OrderedDict; ke_ar...)
 
     else
 
-        error("Can not read a $ex.")
+        error("Extension `$ex` is not `json`, `ipynb`, or `toml`.")
 
     end
 

@@ -4,7 +4,7 @@ function clean(na)
 
     if contains(na, '/')
 
-        error("na contains /.")
+        error("\"$na\" contains \"/\".")
 
     end
 

@@ -164,11 +164,11 @@ function _map_feature(pl, co_, sp___)
 
     elseif it in (7566, 7567)
 
-        error("$pl is a bad platform.")
+        error("\"$pl\" is a bad platform.")
 
     else
 
-        error("$pl is a new platform.")
+        error("\"$pl\" is a new platform.")
 
     end
 
@@ -218,7 +218,7 @@ function tabulate(bl_th, sa = "!Sample_title")
 
         else
 
-            @warn "A $sa characteristic lacks $de." ch_
+            @warn "A $sa characteristic lacks \"$de\"." ch_
 
         end
 
@@ -371,7 +371,7 @@ function get(
 
         if !endswith(ur, "gz")
 
-            error("$ur does not end with gz.")
+            error("$ur is not a `gz`.")
 
         end
 

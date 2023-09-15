@@ -16,7 +16,7 @@ function factorize(ma, n; ke_ar...)
 
     else
 
-        @warn "Did not converge. niters = $(mf.niters). objvalue = $(mf.objvalue)."
+        @warn "Did not converge. `niters` = $(mf.niters). `objvalue` = $(mf.objvalue)."
 
     end
 

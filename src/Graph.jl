@@ -25,7 +25,7 @@ function plot(
 
         if isempty(ht)
 
-            error("ht is empty.")
+            error("`ht` is empty.")
 
         end
 
@@ -51,7 +51,7 @@ function plot(
 
         else
 
-            error("Can not write a $ex.")
+            error("`$ex` is not `json` or `png`.")
 
         end
 

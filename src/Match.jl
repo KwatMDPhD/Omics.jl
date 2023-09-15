@@ -265,9 +265,7 @@ function make(
 
     n_fe, n_sa = size(fe_x_sa_x_nu)
 
-    n_nos = BioLab.String.count(n_fe, naf)
-
-    @info "Matching $nat and $n_nos with $fu"
+    @info "Matching \"$nat\" and $(BioLab.String.count(n_fe, naf)) with `$fu`"
 
     sa_, ta_, fe_x_sa_x_nu = _order_sample(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
 

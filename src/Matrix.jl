@@ -40,7 +40,7 @@ function collapse(fu, ty, ro_, ma)
 
     end
 
-    @info "Collapsing using $fu and making ($n_ro -->) $n_ro2 x $n_co"
+    @info "Collapsing using `$fu` and making ($n_ro -->) $n_ro2 x $n_co"
 
     ro2_ = Vector{String}(undef, n_ro2)
 

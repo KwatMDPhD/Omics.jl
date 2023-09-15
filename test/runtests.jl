@@ -10,6 +10,8 @@ test_all(BioLab; ambiguities = false)
 
 test_ambiguities(BioLab)
 
+# ---- #
+
 # ----------------------------------------------------------------------------------------------- #
 
 @test isconst(BioLab, :_DA)
