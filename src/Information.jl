@@ -9,8 +9,7 @@ end
 
 @inline function get_kullback_leibler_divergence(nu1, nu2)
 
-    # TODO
-    nu1 * log((nu1 + 1e-16) / (nu2 + 1e-16))
+    nu1 * log(nu1 / nu2)
 
 end
 
