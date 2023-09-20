@@ -335,15 +335,15 @@ function make(
 
         nei_, poi_ = BioLab.Statistics._get_negative_positive(sc_)
 
-        npv_, nad_, ppv_, pad_ = BioLab.Statistics.get_p_value(sc_, fe_x_id_x_ra; nei_, poi_)
+        npv_, nad_, ppv_, pad_ = BioLab.Statistics.get_p_value(sc_, nei_, poi_, fe_x_id_x_ra)
 
-        pv_[nei_] .= npv_
+        pv_[nei_] = npv_
 
-        pv_[poi_] .= ppv_
+        pv_[poi_] = ppv_
 
-        ad_[nei_] .= nad_
+        ad_[nei_] = nad_
 
-        ad_[poi_] .= pad_
+        ad_[poi_] = pad_
 
     end
 

@@ -258,11 +258,11 @@ for (fu, re) in zip(
     @test isapprox(co, re; atol = 1e-5)
 
     # 28.978 ns (0 allocations: 0 bytes)
-    # 54.944 ns (0 allocations: 0 bytes)
-    # 86.719 ns (0 allocations: 0 bytes)
-    # 3.193 μs (24 allocations: 1.31 KiB)
-    # 3.172 μs (24 allocations: 1.31 KiB)
-    # 3.443 μs (24 allocations: 1.31 KiB)
+    # 56.078 ns (0 allocations: 0 bytes)
+    # 87.193 ns (0 allocations: 0 bytes)
+    # 3.141 μs (24 allocations: 1.31 KiB)
+    # 3.156 μs (24 allocations: 1.31 KiB)
+    # 3.359 μs (24 allocations: 1.31 KiB)
     #@btime foreach($fu, eachrow(co)) setup = (co = copy($MA))
 
 end

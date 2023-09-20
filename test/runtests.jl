@@ -16,17 +16,8 @@ test_ambiguities(BioLab)
 
 @test isconst(BioLab, :_DA)
 
-@test BioLab.Path.read(BioLab._DA) == [
-    "CLS",
-    "DataFrame",
-    "Dict",
-    "FeatureSetEnrichment",
-    "GCT",
-    "GMT",
-    "Gene",
-    "Plot",
-    "SingleCell",
-]
+@test BioLab.Path.read(BioLab._DA) ==
+      ["CLS", "DataFrame", "Dict", "GCT", "GMT", "Gene", "Plot", "SingleCell"]
 
 # ---- #
 

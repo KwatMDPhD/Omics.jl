@@ -104,8 +104,8 @@ for (fu, re) in (
 
     @test isequal(BioLab.Statistics.get_p_value(fu, NU_, RA_), re)
 
-    # 358.971 ns (14 allocations: 1.20 KiB)
-    # 359.572 ns (14 allocations: 1.20 KiB)
+    # 271.032 ns (10 allocations: 960 bytes)
+    # 276.541 ns (10 allocations: 960 bytes)
     #@btime BioLab.Statistics.get_p_value($fu, $NU_, $RA_)
 
 end
@@ -119,7 +119,7 @@ for (sc_, fe_x_id_x_ra, re) in
 
     @test BioLab.Statistics.get_p_value(sc_, nei_, poi_, fe_x_id_x_ra) == re
 
-    # 661.058 ns (26 allocations: 1.78 KiB)
+    # 598.395 ns (24 allocations: 1.64 KiB)
     #@btime BioLab.Statistics.get_p_value($sc_, $nei_, $poi_, $fe_x_id_x_ra)
 
 end

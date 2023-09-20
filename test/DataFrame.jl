@@ -56,8 +56,8 @@ for (ro_an__, re) in (
 
     @test isequal(BioLab.DataFrame.make(NAR, co_, ro_an__), re)
 
-    # 1.479 μs (26 allocations: 2.33 KiB)
-    # 1.450 μs (26 allocations: 2.33 KiB)
+    # 1.462 μs (26 allocations: 2.33 KiB)
+    # 1.454 μs (26 allocations: 2.33 KiB)
     #@btime BioLab.DataFrame.make($NAR, $co_, $ro_an__)
 
 end
@@ -86,7 +86,7 @@ const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
     ("Column $id" => view(MA, :, id) for id in 1:N_CO)...,
 )
 
-# 1.163 μs (22 allocations: 1.89 KiB)
+# 1.129 μs (22 allocations: 1.89 KiB)
 #@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
@@ -101,7 +101,7 @@ BioLab.DataFrame.separate(DT)[2][1] = ":("
 
 # ---- #
 
-# 1.962 μs (28 allocations: 2.08 KiB)
+# 1.908 μs (28 allocations: 2.08 KiB)
 #@btime BioLab.DataFrame.separate($DT);
 
 # ---- #

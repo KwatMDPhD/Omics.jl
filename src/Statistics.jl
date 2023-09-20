@@ -80,7 +80,7 @@ function get_p_value(fu, nu_, ra_)
 
     if any(is_)
 
-        ad_[is_] .= adjust(pv_[is_], n, BenjaminiHochberg())
+        ad_[is_] = adjust(pv_[is_], n, BenjaminiHochberg())
 
     end
 

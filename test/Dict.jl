@@ -8,7 +8,13 @@ using BioLab
 
 const DA = joinpath(BioLab._DA, "Dict")
 
-@test BioLab.Path.read(DA) == ["example.toml", "example_1.json", "example_2.json"]
+@test BioLab.Path.read(DA) == [
+    "c2.all.v7.1.symbols.gmt",
+    "example.toml",
+    "example_1.json",
+    "example_2.json",
+    "gene_x_statistic_x_number.tsv",
+]
 
 # ---- #
 
@@ -79,13 +85,11 @@ end
 
 # ---- #
 
-const DAF = joinpath(BioLab._DA, "FeatureSetEnrichment")
-
 const FE_ = reverse!(
-    BioLab.DataFrame.read(joinpath(DAF, "gene_x_statistic_x_number.tsv"); select = [1])[!, 1],
+    BioLab.DataFrame.read(joinpath(DA, "gene_x_statistic_x_number.tsv"); select = [1])[!, 1],
 )
 
-const FE1_ = BioLab.GMT.read(joinpath(DAF, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 # ---- #
 

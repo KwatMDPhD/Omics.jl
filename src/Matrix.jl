@@ -8,7 +8,7 @@ function make(an___)
 
     BioLab.Error.error_length_difference(an___)
 
-    [an___[id1][id2] for id1 in eachindex(an___), id2 in 1:length(an___[1])]
+    [an___[id1][id2] for id1 in eachindex(an___), id2 in eachindex(an___[1])]
 
 end
 
@@ -40,7 +40,7 @@ function collapse(fu, ty, ro_, ma)
 
     end
 
-    @info "Collapsing using `$fu` and making ($n_ro -->) $n_ro2 x $n_co"
+    #@info "Collapsing using `$fu` and making ($n_ro -->) $n_ro2 x $n_co"
 
     ro2_ = Vector{String}(undef, n_ro2)
 
@@ -56,8 +56,6 @@ function collapse(fu, ty, ro_, ma)
 
         else
 
-            # `view` allocates one more and is slower.
-            # `fu.(` allocates six more and is slower.
             an_ = [fu(co) for co in eachcol(ma[id_, :])]
 
         end

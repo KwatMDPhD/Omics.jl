@@ -18,7 +18,7 @@ function make(nar, co_, ro_an__)
 
     ma = Matrix{Any}(undef, length(ro_), 1 + length(co_))
 
-    ma[:, 1] .= ro_
+    ma[:, 1] = ro_
 
     for (id2, ro_an) in enumerate(ro_an__)
 

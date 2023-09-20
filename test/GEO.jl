@@ -48,7 +48,7 @@ const BL_TH = BioLab.GEO.read(GZ)
 
 # ---- #
 
-# 652.982 ms (3439280 allocations: 224.78 MiB)
+# 626.465 ms (3439280 allocations: 224.78 MiB)
 #@btime BioLab.GEO.read($GZ);
 
 # ---- #
@@ -73,7 +73,7 @@ const FEATURE_X_SAMPLE_X_NUMBER = PL_FEATURE_X_SAMPLE_X_NUMBER["GPL16686"]
 
 # ---- #
 
-# 642.669 ms (4577223 allocations: 552.76 MiB)
+# 588.533 ms (4577223 allocations: 552.76 MiB)
 #@btime BioLab.GEO.tabulate($BL_TH);
 
 # ---- #
