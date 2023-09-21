@@ -44,7 +44,7 @@ function error_duplicate(co)
 
     if isempty(co)
 
-        error("`co` is empty.")
+        error("`$co` is empty.")
 
     end
 
@@ -73,7 +73,7 @@ function error_has_key(ke_va, ke)
 
     if haskey(ke_va, ke)
 
-        error("$ke (=> $(ke_va[ke])) exists.")
+        error("`$ke` => `$(ke_va[ke])`.")
 
     end
 

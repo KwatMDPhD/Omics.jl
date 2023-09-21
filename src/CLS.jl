@@ -30,7 +30,7 @@ function read(cl)
 
         if n_sa1 != n_sa3
 
-            error("There are $n_sa3 samples, not matching $n_sa1.")
+            error("Numbers of samples differ. $n_sa1 (line 1) != $n_sa3 (line 3).")
 
         end
 
@@ -44,7 +44,9 @@ function read(cl)
 
         if !(n_gr1 == n_gr2 == n_gr3)
 
-            error("There are $n_gr3 groups, not matching $n_gr1 or $n_gr2.")
+            error(
+                "Numbers of groups differ. !($n_gr1 (line 1) == $n_gr2 (line 2) == $n_gr3 (line 3)).",
+            )
 
         end
 

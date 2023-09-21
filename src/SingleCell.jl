@@ -22,7 +22,7 @@ function read(sa_di)
 
     for (sa, di) in sa_di
 
-        @info "Reading $sa"
+        @info "Reading \"$sa\""
 
         fes_ =
             BioLab.DataFrame.read(joinpath(di, "features.tsv.gz"); header = false, select = [2])[
@@ -47,13 +47,13 @@ function read(sa_di)
 
         if n_fes != co1
 
-            error("There are $n_fes features, not matching $co1.")
+            error("Numbers of features differ. $n_fes != $co1 (matrix header).")
 
         end
 
         if n_bas != co2
 
-            error("There are $n_bas barcodes, not matching $co2.")
+            error("Numbers of barcodes differ. $n_bas != $co2 (matrix header).")
 
         end
 

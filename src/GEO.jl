@@ -84,11 +84,13 @@ function read(gz)
 
             end
 
-            n_ro2 = 1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
+            ke = "!$(titlecase(bl))_data_row_count"
+
+            n_ro2 = 1 + parse(Int, bl_th[bl][th][ke])
 
             if n_ro != n_ro2
 
-                @warn "Table has $n_ro rows, not matching $n_ro2."
+                @warn "Numbers of rows differ. $n_ro != $n_ro2 (1 + \"$ke\")."
 
             end
 
@@ -164,11 +166,11 @@ function _map_feature(pl, co_, sp___)
 
     elseif it in (7566, 7567)
 
-        error("\"$pl\" is a bad platform.")
+        error("\"$pl\" is bad.")
 
     else
 
-        error("\"$pl\" is a new platform.")
+        error("\"$pl\" is new.")
 
     end
 
@@ -218,7 +220,7 @@ function tabulate(bl_th, sa = "!Sample_title")
 
         else
 
-            @warn "A $sa characteristic lacks \"$de\"." ch_
+            @warn "\"$sa\" characteristics lack \"$de\"." ch_
 
         end
 
@@ -243,7 +245,7 @@ function tabulate(bl_th, sa = "!Sample_title")
 
         else
 
-            @warn "$sa table is empty."
+            @warn "\"$sa\" table is empty."
 
         end
 
@@ -270,7 +272,7 @@ function tabulate(bl_th, sa = "!Sample_title")
 
             else
 
-                error("$pl table is empty.")
+                error("\"$pl\" table is empty.")
 
             end
 

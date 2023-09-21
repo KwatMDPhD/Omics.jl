@@ -28,7 +28,7 @@ function _align!(fl_::AbstractVector{Float64}, st::Real)
 
     if allequal(fl_)
 
-        @warn "All floats are $(fl_[1])."
+        @warn "All numbers are $(fl_[1])."
 
         fl_ .= 0
 
@@ -160,13 +160,13 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
     tai, taa = _align!(tac_, st)
 
-    @info "$nat colors can range from $tai to $taa."
+    @info "\"$nat\" colors can range from $tai to $taa."
 
     fe_x_sa_x_nuc = copy(fe_x_sa_x_nu)
 
     fei, fea = _align!(fe_x_sa_x_nuc, st)
 
-    @info "$naf colors can range from $fei to $fea."
+    @info "\"$naf\" colors can range from $fei to $fea."
 
     heatmap =
         Dict("type" => "heatmap", "colorbar" => merge(BioLab.Plot.COLORBAR, Dict("y" => 0.5)))
@@ -269,7 +269,7 @@ function make(
 
     sa_, ta_, fe_x_sa_x_nu = _order_sample(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
 
-    @info "Computing scores"
+    @info "Calculating scores"
 
     sc_ = (nu_ -> fu(ta_, nu_)).(eachrow(fe_x_sa_x_nu))
 
@@ -277,7 +277,7 @@ function make(
 
     if any(is_)
 
-        @warn "Found $(BioLab.String.count(sum(is_), "bad value"))."
+        @warn "Scores have $(BioLab.String.count(sum(is_), "bad value"))."
 
     end
 
@@ -289,7 +289,7 @@ function make(
 
     if 0 < n_ma
 
-        @info "Computing margin of error with $(BioLab.String.count(n_ma, "sampling"))"
+        @info "Calculating the margin of errors using $(BioLab.String.count(n_ma, "sampling"))"
 
         n_sm = ceil(Int, n_sa * 0.632)
 
@@ -315,7 +315,7 @@ function make(
 
     if 0 < n_pv
 
-        @info "Computing p-values with $(BioLab.String.count(n_pv, "permutation"))"
+        @info "Calculating p-values using $(BioLab.String.count(n_pv, "permutation"))"
 
         co = copy(ta_)
 

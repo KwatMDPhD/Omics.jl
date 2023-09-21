@@ -25,7 +25,7 @@ function plot(
 
         if isempty(ht)
 
-            error("`ht` is empty.")
+            error("HTML path is empty.")
 
         end
 
