@@ -18,27 +18,27 @@ function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}
 
 end
 
-function _set_x(y_)
+function _set_x(an___)
 
-    (y -> collect(eachindex(y))).(y_)
-
-end
-
-function _set_text(y_)
-
-    [Vector{String}() for _ in eachindex(y_)]
+    [eachindex(an_) for an_ in an___]
 
 end
 
-function _set_name(y_)
+function _set_text(an___)
 
-    ["Name $id" for id in eachindex(y_)]
+    [Vector{String}() for _ in an___]
 
 end
 
-function _set_marker(y_)
+function _set_name(an___)
 
-    [Dict("color" => co) for co in BioLab.Color.color(collect(eachindex(y_)))]
+    ["Name $id" for id in eachindex(an___)]
+
+end
+
+function _set_marker(an___)
+
+    [Dict("color" => he) for he in BioLab.Color.color(eachindex(an___))]
 
 end
 
@@ -46,7 +46,7 @@ const COLORBAR = Dict(
     "len" => 0.5,
     "thickness" => 16,
     "outlinecolor" => BioLab.Color.HEFA,
-    "title" => Dict("font" => Dict("family" => "Droid Sans Mono", "size" => 12.8)),
+    "title" => Dict("font" => Dict("family" => "Droid Sans Mono", "size" => 13)),
     "tickfont" => Dict("family" => "Droid Sans Mono", "size" => 10),
 )
 
@@ -61,8 +61,8 @@ const SPIKE = Dict(
 
 function plot_scatter(
     ht,
-    y_;
-    x_ = _set_x(y_),
+    y_,
+    x_ = _set_x(y_);
     text_ = _set_text(y_),
     name_ = _set_name(y_),
     mode_ = (y -> ifelse(length(y) < 1000, "markers+lines", "lines")).(y_),
@@ -127,26 +127,34 @@ function plot_histogram(
     ht,
     x_,
     text_ = _set_text(x_);
-    rug_marker_size = ifelse(all(x -> length(x) < 100000, x_), 16, 0),
     name_ = _set_name(x_),
     marker_ = _set_marker(x_),
     histnorm = "",
     xbins_size = 0,
+    rug_marker_size = ifelse(all(x -> length(x) < 100000, x_), 16, 0),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
 
     n = length(x_)
 
-    if 0 < rug_marker_size
+    showlegend = 1 < n
 
-        fr = min(n * 0.08, 0.5)
+    id_ = eachindex(x_)
 
-    else
-
-        fr = 0
-
-    end
+    data = [
+        Dict(
+            "type" => "histogram",
+            "legendgroup" => id,
+            "name" => name_[id],
+            "showlegend" => showlegend,
+            "yaxis" => "y2",
+            "x" => x_[id],
+            "marker" => marker_[id],
+            "histnorm" => histnorm,
+            "xbins" => Dict("size" => xbins_size),
+        ) for id in id_
+    ]
 
     if isempty(histnorm)
 
@@ -158,75 +166,98 @@ function plot_histogram(
 
     end
 
-    data = Vector{Dict{String, Any}}()
+    layout = BioLab.Dict.merge(
+        Dict("yaxis2" =>
+                Dict("showgrid" => false, "title" => Dict("text" => yaxis2_title_text))),
+        layout,
+    )
 
-    showlegend = 1 < n
+    if !iszero(rug_marker_size)
 
-    for id in 1:n
-
-        x = x_[id]
-
-        le = Dict(
-            "legendgroup" => id,
-            "showlegend" => showlegend,
-            "name" => name_[id],
-            "x" => x,
-            "marker" => marker_[id],
-        )
-
-        push!(
+        append!(
             data,
-            merge(
-                le,
+            [
                 Dict(
-                    "yaxis" => "y2",
-                    "type" => "histogram",
-                    "histnorm" => histnorm,
-                    "xbins" => Dict("size" => xbins_size),
-                ),
-            ),
+                    "legendgroup" => id,
+                    "name" => name_[id],
+                    "showlegend" => false,
+                    "y" => fill(id, length(x_[id])),
+                    "x" => x_[id],
+                    "text" => text_[id],
+                    "mode" => "markers",
+                    "marker" => merge(
+                        marker_[id],
+                        Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
+                    ),
+                ) for id in id_
+            ],
         )
 
-        if 0 < rug_marker_size
+        dm = min(n * 0.04, 0.5)
 
-            push!(
-                data,
-                BioLab.Dict.merge(
-                    le,
-                    Dict(
-                        "showlegend" => false,
-                        "y" => fill(id, length(x)),
-                        "text" => text_[id],
-                        "mode" => "markers",
-                        "marker" => Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
-                    ),
-                ),
-            )
+        layout["yaxis2"]["domain"] = (dm + 0.01, 1)
 
-        end
+        layout["yaxis"] = Dict("domain" => (0, dm), "zeroline" => false, "tickvals" => ())
 
     end
 
-    plot(
-        ht,
-        data,
-        BioLab.Dict.merge(
-            Dict(
-                "yaxis2" => Dict(
-                    "domain" => (fr, 1),
-                    "showgrid" => false,
-                    "title" => Dict("text" => yaxis2_title_text),
-                ),
-                "yaxis" => Dict("domain" => (0, fr), "zeroline" => false, "tickvals" => ()),
-            ),
-            layout,
-        );
-        ke_ar...,
-    )
+    plot(ht, data, layout; ke_ar...)
 
 end
 
-# TODO: Cluster within a group.
+function _range(fl_::AbstractArray{<:AbstractFloat}, n)
+
+    mi, ma = BioLab.Collection.get_minimum_maximum(fl_)
+
+    range(mi, ma, n)
+
+end
+
+function _range(it_, ::Integer)
+
+    mi, ma = BioLab.Collection.get_minimum_maximum(it_)
+
+    range(mi, ma)
+
+end
+
+function _group(gr_, an_, ma)
+
+    if eltype(gr_) <: AbstractString
+
+        gr_id = BioLab.Collection.map_index(BioLab.Collection.unique_sort(gr_))
+
+        gr_ = [gr_id[gr] for gr in gr_]
+
+        ticktext = string.(keys(gr_id))
+
+    else
+
+        ticktext = Vector{String}()
+
+    end
+
+    id_ = BioLab.Clustering.cluster(gr_, ma)
+
+    gr_[id_], an_[id_], ma[:, id_], ticktext
+
+end
+
+function _make_group_trace!(ke_va, gr_, colorbarx, ticktext)
+
+    ke_va["type"] = "heatmap"
+
+    ke_va["colorscale"] = BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(gr_))
+
+    ke_va["colorbar"] = merge(
+        COLORBAR,
+        Dict("x" => colorbarx, "tickvals" => 1:maximum(gr_), "ticktext" => ticktext),
+    )
+
+    ke_va
+
+end
+
 function plot_heat_map(
     ht,
     z;
@@ -235,12 +266,14 @@ function plot_heat_map(
     text = z,
     nar = "Row",
     nac = "Column",
-    colorscale = BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(z)),
-    grr_ = Vector{Any}(),
-    grc_ = Vector{Any}(),
+    co = BioLab.Color.pick_color_scheme(z),
+    grr_ = (),
+    grc_ = (),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
+
+    data = Vector{Dict{String, Any}}()
 
     if isempty(grr_)
 
@@ -252,64 +285,28 @@ function plot_heat_map(
 
     end
 
+    colorbar = merge(COLORBAR, Dict("x" => colorbarx, "tickvals" => _range(z, 8)))
+
     dx = 0.08
-
-    n_ti = 8
-
-    data = [
-        Dict(
-            "type" => "heatmap",
-            "z" => collect(eachrow(z)),
-            "y" => y,
-            "x" => x,
-            "text" => collect(eachrow(text)),
-            "colorscale" => colorscale,
-            "colorbar" => merge(
-                COLORBAR,
-                Dict("x" => colorbarx, "tickvals" => BioLab.Collection.range(z, n_ti)),
-            ),
-        ),
-    ]
 
     if !isempty(grr_)
 
-        if grr_ isa AbstractVector{<:AbstractString}
+        gr_, y, z, ticktext = _group(grr_, y, permutedims(z))
 
-            gr_id = BioLab.Collection.map_index(BioLab.Collection.unique_sort(grr_))
-
-            grr_ = [gr_id[gr] for gr in grr_]
-
-            ticktext = collect(keys(sort(gr_id; byvalue = true)))
-
-        else
-
-            ticktext = ()
-
-        end
-
-        so_ = sortperm(grr_)
-
-        grr_ = view(grr_, so_)
-
-        y = view(y, so_)
-
-        z = view(z, so_, :)
+        z = permutedims(z)
 
         push!(
             data,
-            Dict(
-                "xaxis" => "x2",
-                "type" => "heatmap",
-                "z" => [[grr] for grr in grr_],
-                "colorscale" => BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(grr_)),
-                "colorbar" => merge(
-                    COLORBAR,
-                    Dict(
-                        "x" => (colorbarx += dx),
-                        "tickvals" => BioLab.Collection.range(grr_, n_ti),
-                        "ticktext" => ticktext,
-                    ),
+            _make_group_trace!(
+                Dict(
+                    "name" => "$nar Group",
+                    "xaxis" => "x2",
+                    "y" => y,
+                    "z" => [[gr] for gr in gr_],
                 ),
+                gr_,
+                colorbarx += dx,
+                ticktext,
             ),
         )
 
@@ -317,49 +314,33 @@ function plot_heat_map(
 
     if !isempty(grc_)
 
-        if grc_ isa AbstractVector{<:AbstractString}
-
-            gr_id = BioLab.Collection.map_index(BioLab.Collection.unique_sort(grc_))
-
-            grc_ = [gr_id[gr] for gr in grc_]
-
-            ticktext = collect(keys(sort(gr_id; byvalue = true)))
-
-        else
-
-            ticktext = ()
-
-        end
-
-        so_ = sortperm(grc_)
-
-        grc_ = view(grc_, so_)
-
-        x = view(x, so_)
-
-        z = view(z, :, so_)
+        gr_, x, z, ticktext = _group(grc_, x, z)
 
         push!(
             data,
-            Dict(
-                "yaxis" => "y2",
-                "type" => "heatmap",
-                "z" => [grc_],
-                "colorscale" => BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(grc_)),
-                "colorbar" => merge(
-                    COLORBAR,
-                    Dict(
-                        "x" => (colorbarx += dx),
-                        "tickvals" => BioLab.Collection.range(grc_, n_ti),
-                        "ticktext" => ticktext,
-                    ),
-                ),
+            _make_group_trace!(
+                Dict("name" => "$nac Group", "yaxis" => "y2", "x" => x, "z" => [gr_]),
+                gr_,
+                colorbarx += dx,
+                ticktext,
             ),
         )
 
     end
 
-    n_ro, n_co = size(z)
+    push!(
+        data,
+        Dict(
+            "type" => "heatmap",
+            "name" => "Data",
+            "y" => y,
+            "x" => x,
+            "z" => collect(eachrow(z)),
+            "text" => collect(eachrow(text)),
+            "colorscale" => BioLab.Color.fractionate(co),
+            "colorbar" => colorbar,
+        ),
+    )
 
     ydomain = (0, 0.939)
 
@@ -375,10 +356,12 @@ function plot_heat_map(
                 "yaxis" => Dict(
                     "domain" => ydomain,
                     "autorange" => "reversed",
-                    "title" => Dict("text" => "$nar (n = $n_ro)"),
+                    "title" => Dict("text" => "$nar (n = $(size(z, 1))"),
                 ),
-                "xaxis" =>
-                    Dict("domain" => xdomain, "title" => Dict("text" => "$nac (n = $n_co)")),
+                "xaxis" => Dict(
+                    "domain" => xdomain,
+                    "title" => Dict("text" => "$nac (n = $(size(z, 2)))"),
+                ),
                 "yaxis2" => Dict(
                     "domain" => (ydomain[2] + dd, 1),
                     "autorange" => "reversed",
@@ -395,12 +378,13 @@ end
 
 function plot_radar(
     ht,
-    theta_,
-    r_;
-    radialaxis_range = (0, maximum(vcat(r_...))),
-    name_ = _set_name(theta_),
-    line_color_ = BioLab.Color.color(collect(eachindex(theta_))),
+    ra_,
+    an_;
+    name_ = _set_name(ra_),
+    # TODO: Consider removing.
+    line_color_ = BioLab.Color.color(eachindex(ra_)),
     fillcolor_ = line_color_,
+    radialaxis_range = (0, maximum(vcat(ra_...))),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -413,34 +397,22 @@ function plot_radar(
             Dict(
                 "type" => "scatterpolar",
                 "name" => name_[id],
-                "theta" => vcat(theta_[id], theta_[id][1]),
-                "r" => vcat(r_[id], r_[id][1]),
+                "theta" => vcat(ra_[id], ra_[id][1]),
+                "r" => vcat(an_[id], an_[id][1]),
+                "marker" => Dict("size" => 4, "color" => line_color_[id]),
                 "line" => Dict(
                     "shape" => "spline",
                     "smoothing" => 0,
                     "width" => 1,
                     "color" => line_color_[id],
                 ),
-                "marker" => Dict("size" => 4, "color" => line_color_[id]),
                 "fill" => "toself",
                 "fillcolor" => fillcolor_[id],
-            ) for id in eachindex(theta_)
+            ) for id in eachindex(ra_)
         ],
         BioLab.Dict.merge(
             Dict(
                 "polar" => Dict(
-                    "angularaxis" => Dict(
-                        "direction" => "clockwise",
-                        "linewidth" => 4,
-                        "linecolor" => cos,
-                        "ticklen" => 16,
-                        "tickwidth" => 2,
-                        "tickcolor" => cos,
-                        "tickfont" =>
-                            Dict("size" => 32, "family" => "Optima", "color" => "#23191e"),
-                        "gridwidth" => 2,
-                        "gridcolor" => BioLab.Color.HEFA,
-                    ),
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
                         "linewidth" => 2,
@@ -449,19 +421,31 @@ function plot_radar(
                         "tickwidth" => 2,
                         "tickcolor" => cos,
                         "tickfont" => Dict(
-                            "size" => 16,
                             "family" => "Monospace",
+                            "size" => 16,
                             "color" => "#1f4788",
                         ),
-                        "gridwidth" => 1.6,
+                        "gridwidth" => 2,
+                        "gridcolor" => BioLab.Color.HEFA,
+                    ),
+                    "angularaxis" => Dict(
+                        "direction" => "clockwise",
+                        "linewidth" => 4,
+                        "linecolor" => cos,
+                        "ticklen" => 16,
+                        "tickwidth" => 2,
+                        "tickcolor" => cos,
+                        "tickfont" =>
+                            Dict("family" => "Optima", "size" => 32, "color" => "#23191e"),
+                        "gridwidth" => 2,
                         "gridcolor" => BioLab.Color.HEFA,
                     ),
                 ),
                 "title" => Dict(
                     "x" => 0.02,
                     "font" => Dict(
-                        "size" => 48,
                         "family" => "Times New Roman",
+                        "size" => 48,
                         "color" => "#27221f",
                     ),
                 ),
@@ -478,8 +462,6 @@ function animate(gi, pn_)
     run(`convert -delay 32 -loop 0 $pn_ $gi`)
 
     BioLab.Path.open(gi)
-
-    gi
 
 end
 

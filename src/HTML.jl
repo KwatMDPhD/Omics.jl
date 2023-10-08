@@ -2,7 +2,20 @@ module HTML
 
 using ..BioLab
 
-function make(ht, sr_, id, sc; he = 800, wi = 1280, ba = "#27221f")
+function get_height()
+
+    800
+
+end
+
+
+function get_width()
+
+    1280
+
+end
+
+function make(ht, sr_, id, sc; he = get_height(), wi = get_width(), ba = "#27221f")
 
     if isempty(ht)
 
@@ -31,8 +44,6 @@ function make(ht, sr_, id, sc; he = 800, wi = 1280, ba = "#27221f")
     )
 
     BioLab.Path.open(ht)
-
-    ht
 
 end
 

@@ -1,3 +1,4 @@
+# TODO
 using Test: @test
 
 using BioLab
@@ -6,8 +7,11 @@ using BioLab
 
 function make_directory_layout(title_text)
 
-    BioLab.Path.remake_directory(joinpath(BioLab.TE, BioLab.Path.clean(title_text))),
-    Dict("title" => Dict("text" => title_text))
+    di = joinpath(BioLab.TE, BioLab.Path.clean(title_text))
+
+    BioLab.Path.remake_directory(di)
+
+    di, Dict("title" => Dict("text" => title_text))
 
 end
 
@@ -46,10 +50,6 @@ end
 
 # ---- #
 
-@test BioLab.Error.@is BioLab.Match.make("", benchmark(1, 1, "1.02")...)
-
-# ---- #
-
 for (n_fe, n_sa) in ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000))
 
     di, layout = make_directory_layout("$n_fe x $n_sa")
@@ -62,9 +62,15 @@ end
 
 const FU, NAT, NAF, NAS, FE_, SA_, TA_, FE_X_SA_X_NU = benchmark(1, 19, "1.02")
 
+# ---- #
+
 const TAI_ = convert(Vector{Int}, TA_)
 
+# ---- #
+
 const FE_X_SA_X_IT = convert(Matrix{Int}, FE_X_SA_X_NU)
+
+# ---- #
 
 for (ta_, fe_x_sa_x_nu) in
     ((TA_, FE_X_SA_X_NU), (TAI_, FE_X_SA_X_NU), (TA_, FE_X_SA_X_IT), (TAI_, FE_X_SA_X_IT))
@@ -79,15 +85,27 @@ end
 
 const N_FE = 3
 
+# ---- #
+
 const GFE_ = ["Feature $id" for id in 1:N_FE]
+
+# ---- #
 
 const N_GR = 4
 
+# ---- #
+
 const N_RE = 6
+
+# ---- #
 
 const GSA_ = vec(["$ch $gr" for gr in 1:N_GR, ch in ('A':'Z')[1:N_RE]])
 
+# ---- #
+
 const GTA_ = repeat(1:N_GR, N_RE)
+
+# ---- #
 
 for nu_ in ((1, 1, 2, 2, 4, 8), (1, 2, 4, 8, 2, 1))
 
@@ -112,6 +130,8 @@ end
 
 const NS_ = benchmark(50000, 100, "ra")
 
+# ---- #
+
 for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10))
 
     di, layout = make_directory_layout("n_ma = $n_ma, n_pv = $n_pv")
@@ -124,6 +144,8 @@ end
 
 const NE_ = benchmark(5, 2, "1.02")
 
+# ---- #
+
 for n_ex in (0, 1, 2, 3, 6)
 
     di, layout = make_directory_layout("n_ex = $n_ex")
@@ -135,6 +157,8 @@ end
 # ---- #
 
 const ST_ = benchmark(2, 3, "ra")
+
+# ---- #
 
 for st in (0, 0.1, 1, 2, 4, 8)
 

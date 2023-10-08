@@ -8,12 +8,14 @@ using BioLab
 
 const DA = joinpath(BioLab._DA, "DataFrame")
 
+# ---- #
+
 @test BioLab.Path.read(DA) ==
       ["12859_2019_2886_MOESM2_ESM.xlsx", "enst_gene.tsv.gz", "titanic.tsv"]
 
 # ---- #
 
-function make_axis(pr, n)
+function make_axis(pr::String, n::Int)::Vector{String}
 
     ["$pr$id" for id in 1:n]
 
@@ -23,13 +25,15 @@ end
 
 const NAR = "Row Name"
 
+# ---- #
+
 for (ro_an__, re) in (
     (
-        (
+        [
             Dict("Row 1" => 1, "Row 2" => 2),
             Dict("Row 2" => 2, "Row 3" => 3),
             Dict("Row 1" => 1, "Row 2" => 2, "Row 3" => 3),
-        ),
+        ],
         DataFrame(
             NAR => ["Row 1", "Row 2", "Row 3"],
             "Column 1" => [1, 2, missing],
@@ -38,11 +42,11 @@ for (ro_an__, re) in (
         ),
     ),
     (
-        (
+        [
             Dict("Row 1" => 'a', "Row 2" => 'b'),
             Dict("Row 2" => 'b', "Row 3" => 'c'),
             Dict("Row 1" => 'a', "Row 2" => 'b', "Row 3" => 'c'),
-        ),
+        ],
         DataFrame(
             NAR => ["Row 1", "Row 2", "Row 3"],
             "Column 1" => ['a', 'b', missing],
@@ -56,38 +60,50 @@ for (ro_an__, re) in (
 
     @test isequal(BioLab.DataFrame.make(NAR, co_, ro_an__), re)
 
-    # 1.462 μs (26 allocations: 2.33 KiB)
-    # 1.454 μs (26 allocations: 2.33 KiB)
-    #@btime BioLab.DataFrame.make($NAR, $co_, $ro_an__)
+    # 1.575 μs (31 allocations: 2.47 KiB)
+    # 1.554 μs (31 allocations: 2.47 KiB)
+    @btime BioLab.DataFrame.make($NAR, $co_, $ro_an__)
 
 end
 
 # ---- #
 
-@test BioLab.DataFrame.make(NAR, "Row 1", Vector{Any}(), Vector{Any}()) ==
+@test BioLab.DataFrame.make(NAR, "Row 1", Vector{String}(), Matrix(undef, 0, 0)) ==
       DataFrame(NAR => "Row 1")
 
 # ---- #
 
 const N_RO = 3
 
+# ---- #
+
 const N_CO = 4
+
+# ---- #
 
 const RO_ = make_axis("Row ", N_RO)
 
+# ---- #
+
 const CO_ = make_axis("Column ", N_CO)
+
+# ---- #
 
 const MA = BioLab.Simulation.make_matrix_1n(Int, N_RO, N_CO)
 
+# ---- #
+
 const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
-@test DT == DataFrame(
-    NAR => make_axis("Row ", N_RO),
-    ("Column $id" => view(MA, :, id) for id in 1:N_CO)...,
-)
+# ---- #
 
-# 1.129 μs (22 allocations: 1.89 KiB)
-#@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
+@test DT ==
+      DataFrame(NAR => make_axis("Row ", N_RO), ("Column $id" => MA[:, id] for id in 1:N_CO)...)
+
+# ---- #
+
+# 1.117 μs (22 allocations: 1.89 KiB)
+@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
 
@@ -97,12 +113,14 @@ const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
 BioLab.DataFrame.separate(DT)[2][1] = ":("
 
+# ---- #
+
 @test DT[1, 1] === "Row 1"
 
 # ---- #
 
-# 1.908 μs (28 allocations: 2.08 KiB)
-#@btime BioLab.DataFrame.separate($DT);
+# 1.967 μs (28 allocations: 2.08 KiB)
+@btime BioLab.DataFrame.separate($DT);
 
 # ---- #
 
@@ -122,7 +140,11 @@ end
 
 const CO1 = 1:4
 
+# ---- #
+
 const CO2 = 1.0:4
+
+# ---- #
 
 @test eltype.(
     eachcol(

@@ -22,20 +22,44 @@ for (cu, re) in (
 
     @test isapprox(BioLab.Statistics.get_quantile(cu), re; atol = 1e-2)
 
+    # 3.333 ns (0 allocations: 0 bytes)
+    # 12.137 ns (0 allocations: 0 bytes)
+    # 12.096 ns (0 allocations: 0 bytes)
+    # 7.458 ns (0 allocations: 0 bytes)
+    # 7.173 ns (0 allocations: 0 bytes)
+    # 7.208 ns (0 allocations: 0 bytes)
+    # 7.166 ns (0 allocations: 0 bytes)
+    # 7.466 ns (0 allocations: 0 bytes)
+    # 16.868 ns (0 allocations: 0 bytes)
+    # 16.867 ns (0 allocations: 0 bytes)
+    # 5.208 ns (0 allocations: 0 bytes)
+    @btime BioLab.Statistics.get_quantile($cu)
+
 end
 
 # ---- #
 
 seed!(20230612)
 
-const NO_ = randn(1000)
+# ---- #
+
+const SA_ = randn(1000)
+
+# ---- #
 
 for (co, re) in zip(
     (0, 0.001, 0.5, 0.95, 1),
     (0.0, 4.0685463561927655e-5, 0.021895485060908795, 0.06362492851958153, Inf),
 )
 
-    @test BioLab.Statistics.get_margin_of_error(NO_, co) === re
+    @test BioLab.Statistics.get_margin_of_error(SA_, co) === re
+
+    # 527.267 ns (0 allocations: 0 bytes)
+    # 526.393 ns (0 allocations: 0 bytes)
+    # 526.398 ns (0 allocations: 0 bytes)
+    # 537.476 ns (0 allocations: 0 bytes)
+    # 521.597 ns (0 allocations: 0 bytes)
+    @btime BioLab.Statistics.get_margin_of_error($SA_, $co)
 
 end
 
@@ -48,78 +72,101 @@ for (po, re) in zip(
 
     seed!(20230612)
 
-    no_ = randn(10^po)
+    sa_ = randn(10^po)
 
-    @test isequal(BioLab.Statistics.get_margin_of_error(no_), re)
+    @test isequal(BioLab.Statistics.get_margin_of_error(sa_), re)
 
-    # 24.222 ns (0 allocations: 0 bytes)
-    # 31.396 ns (0 allocations: 0 bytes)
-    # 60.887 ns (0 allocations: 0 bytes)
-    # 537.698 ns (0 allocations: 0 bytes)
+    # 24.946 ns (0 allocations: 0 bytes)
+    # 31.475 ns (0 allocations: 0 bytes)
+    # 60.177 ns (0 allocations: 0 bytes)
+    # 537.476 ns (0 allocations: 0 bytes)
     # 3.969 μs (0 allocations: 0 bytes)
-    #@btime BioLab.Statistics.get_margin_of_error($no_)
+    @btime BioLab.Statistics.get_margin_of_error($sa_)
 
 end
 
 # ---- #
 
-@test isnan(BioLab.Statistics.get_p_value(1, 0))
+@test isone(BioLab.Statistics.get_p_value(1, 0))
 
 # ---- #
 
 const N_RA = 10
 
+# ---- #
+
 @test BioLab.Statistics.get_p_value(0, N_RA) === BioLab.Statistics.get_p_value(1, N_RA) === 0.1
 
 # ---- #
 
-@test BioLab.Statistics.get_p_value(2, N_RA) == 0.2
+@test BioLab.Statistics.get_p_value(2, N_RA) === 0.2
 
 # ---- #
 
-const NU_ = [NaN, -1, 0, 8, 9, NaN]
-
-const N = length(NU_)
-
-const RAE_ = Vector{Float64}()
-
-const NA_ = fill(NaN, N)
-
-const RA_ = [NaN, -2, -1, 0, 1, 2, 6, 7, 8, 9, 10, NaN]
+const NU_ = [-1, -0.0, 0, 1]
 
 # ---- #
 
-for (fu, re) in (
-    (
-        <=,
-        ([NaN, 0.2, 0.3, 0.8, 0.9, NaN], [NaN, 0.8999999999999999, 0.8999999999999999, 1, 1, NaN]),
-    ),
-    (
-        >=,
-        ([NaN, 0.9, 0.8, 0.3, 0.2, NaN], [NaN, 1, 1, 0.8999999999999999, 0.8999999999999999, NaN]),
-    ),
-)
+const EM_ = Vector{Float64}()
 
-    @test isequal(BioLab.Statistics.get_p_value(fu, NU_, RAE_), (NA_, NA_))
+# ---- #
 
-    @test isequal(BioLab.Statistics.get_p_value(fu, NU_, RA_), re)
+const ON_ = ones(length(NU_))
 
-    # 271.032 ns (10 allocations: 960 bytes)
-    # 276.541 ns (10 allocations: 960 bytes)
-    #@btime BioLab.Statistics.get_p_value($fu, $NU_, $RA_)
+# ---- #
+
+for fu in (<=, >=)
+
+    @test BioLab.Statistics.get_p_value(fu, NU_, EM_) == (ON_, ON_)
+
+    # 180.755 ns (6 allocations: 512 bytes)
+    # 176.657 ns (6 allocations: 512 bytes)
+    @btime BioLab.Statistics.get_p_value($fu, $NU_, $EM_)
 
 end
 
 # ---- #
 
-for (sc_, fe_x_id_x_ra, re) in
-    ((NU_, reshape(RA_, N, 2), ([1], [1], [1, 0.375, 0.25], [1, 0.5625, 0.5625])),)
+const RA_ = [-3, -2, -1, -0.0, 0, 1, 2, 3]
 
-    nei_, poi_ = BioLab.Statistics._get_negative_positive(sc_)
+# ---- #
 
-    @test BioLab.Statistics.get_p_value(sc_, nei_, poi_, fe_x_id_x_ra) == re
+const REP1_, REA1_ = [0.375, 0.625, 0.625, 0.75], [0.75, 0.75, 0.75, 0.75]
 
-    # 598.395 ns (24 allocations: 1.64 KiB)
-    #@btime BioLab.Statistics.get_p_value($sc_, $nei_, $poi_, $fe_x_id_x_ra)
+# ---- #
+
+for (fu, re) in ((<=, (REP1_, REA1_)), (>=, (reverse(REP1_), reverse(REA1_))))
+
+    @test BioLab.Statistics.get_p_value(fu, NU_, RA_) == re
+
+    # 190.497 ns (6 allocations: 512 bytes)
+    # 197.501 ns (6 allocations: 512 bytes)
+    @btime BioLab.Statistics.get_p_value($fu, $NU_, $RA_)
 
 end
+
+# ---- #
+
+const FE_X_ID_X_RA = reshape(RA_, :, 2)
+
+# ---- #
+
+const IDN_ = findall(BioLab.Number.is_negative, NU_)
+
+# ---- #
+
+const IDP_ = findall(BioLab.Number.is_positive, NU_)
+
+# ---- #
+
+const REP2_, REA2_ = [0.75, 1], [1.0, 1]
+
+# ---- #
+
+@test BioLab.Statistics.get_p_value(NU_, IDN_, IDP_, FE_X_ID_X_RA) ==
+      (REP2_, REA2_, reverse(REP2_), reverse(REA2_))
+
+# ---- #
+
+# 568.802 ns (17 allocations: 1.27 KiB)
+@btime BioLab.Statistics.get_p_value($NU_, $IDN_, $IDP_, $FE_X_ID_X_RA)

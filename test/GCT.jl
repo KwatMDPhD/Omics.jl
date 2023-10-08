@@ -6,8 +6,19 @@ using BioLab
 
 const DA = joinpath(BioLab._DA, "GCT")
 
+# ---- #
+
 @test BioLab.Path.read(DA) == ["a.gct"]
 
 # ---- #
 
-@test size(BioLab.GCT.read(joinpath(DA, "a.gct"))) == (13321, 190)
+const GC = joinpath(DA, "a.gct")
+
+# ---- #
+
+@test size(BioLab.GCT.read(GC)) === (13321, 190)
+
+# ---- #
+
+# 98.090 ms (71117 allocations: 23.64 MiB)
+@btime BioLab.GCT.read($GC);

@@ -2,11 +2,7 @@ module Matrix
 
 using OrderedCollections: OrderedDict
 
-using ..BioLab
-
 function make(an___)
-
-    BioLab.Error.error_length_difference(an___)
 
     [an___[id1][id2] for id1 in eachindex(an___), id2 in eachindex(an___[1])]
 

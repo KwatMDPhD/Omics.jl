@@ -12,19 +12,13 @@ using StatsBase: sample
 
 using ..BioLab
 
-function _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
+function _index(id_, sa_, ta_, fe_x_sa_x_nu)
 
-    view(sa_, id_), view(ta_, id_), view(fe_x_sa_x_nu, :, id_)
-
-end
-
-function _align!(it::AbstractArray{Int}, ::Real)
-
-    minimum(it), maximum(it)
+    sa_[id_], ta_[id_], fe_x_sa_x_nu[:, id_]
 
 end
 
-function _align!(fl_::AbstractVector{Float64}, st::Real)
+function _align!(fl_::AbstractVector{<:AbstractFloat}, st)
 
     if allequal(fl_)
 
@@ -44,11 +38,17 @@ function _align!(fl_::AbstractVector{Float64}, st::Real)
 
 end
 
-function _align!(fe_x_sa_x_fl::AbstractMatrix{Float64}, st::Real)
+function _align!(fe_x_sa_x_fl::AbstractMatrix{<:AbstractFloat}, st)
 
     foreach(fl_ -> _align!(fl_, st), eachrow(fe_x_sa_x_fl))
 
     -st, st
+
+end
+
+function _align!(it, ::Real)
+
+    BioLab.Collection.get_minimum_maximum(it)
 
 end
 
@@ -58,13 +58,16 @@ const _FONT_FAMILY_2 = "Droid Serif"
 
 const _FONT_SIZE_1 = 16
 
-const _FONT_SIZE_2 = 12.8
+const _FONT_SIZE_2 = 13
 
-const _ANNOTATION =
-    Dict("yref" => "paper", "xref" => "paper", "showarrow" => false, "yanchor" => "middle")
-
-const _ANNOTATIONR =
-    merge(_ANNOTATION, Dict("xanchor" => "center", "font" => Dict("family" => _FONT_FAMILY_2)))
+const _ANNOTATION = Dict(
+    "yref" => "paper",
+    "xref" => "paper",
+    "yanchor" => "middle",
+    "xanchor" => "center",
+    "showarrow" => false,
+    "font" => Dict("family" => _FONT_FAMILY_2),
+)
 
 function _get_x(id)
 
@@ -72,21 +75,22 @@ function _get_x(id)
 
 end
 
-function _annotate_statistic(y, la, th, fe_, fe_x_st_x_nu)
+# TODO: Benchmark.
+function _annotate_statistic(y, la, th, fe_, fe_x_st_x_fl)
 
     annotations = Vector{Dict{String, Any}}()
 
     if la
 
-        for (idx, text) in enumerate(("Sc (⧳)", "Pv", "Ad"))
+        for (id, text) in enumerate(("Sc (⧳)", "Pv", "Ad"))
 
             push!(
                 annotations,
                 BioLab.Dict.merge(
-                    _ANNOTATIONR,
+                    _ANNOTATION,
                     Dict(
                         "y" => y,
-                        "x" => _get_x(idx),
+                        "x" => _get_x(id),
                         "text" => "<b>$text</b>",
                         "font" => Dict("size" => _FONT_SIZE_1),
                     ),
@@ -99,19 +103,19 @@ function _annotate_statistic(y, la, th, fe_, fe_x_st_x_nu)
 
     y -= th
 
-    for idy in eachindex(fe_)
+    for id1 in eachindex(fe_)
 
-        sc, ma, pv, ad = (@sprintf("%.2g", nu) for nu in view(fe_x_st_x_nu, idy, :))
+        sc, ma, pv, ad = (@sprintf("%.2g", fl) for fl in fe_x_st_x_fl[id1, :])
 
-        for (idx, text) in enumerate(("$sc ($ma)", pv, ad))
+        for (id2, text) in enumerate(("$sc ($ma)", pv, ad))
 
             push!(
                 annotations,
                 BioLab.Dict.merge(
-                    _ANNOTATIONR,
+                    _ANNOTATION,
                     Dict(
                         "y" => y,
-                        "x" => _get_x(idx),
+                        "x" => _get_x(id2),
                         "text" => text,
                         "font" => Dict("size" => _FONT_SIZE_2),
                     ),
@@ -128,31 +132,14 @@ function _annotate_statistic(y, la, th, fe_, fe_x_st_x_nu)
 
 end
 
-function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st, layout)
+function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, layout)
 
-    if ta_ isa AbstractVector{Int}
+    if eltype(ta_) <: Integer
 
         @info "Clustering within groups"
 
-        id_ = Vector{Int}()
-
-        fu = BioLab.Clustering.Euclidean()
-
-        for ta in unique(ta_)
-
-            idg_ = findall(==(ta), ta_)
-
-            append!(
-                id_,
-                view(
-                    idg_,
-                    BioLab.Clustering.hierarchize(view(fe_x_sa_x_nu, :, idg_), 2; fu).order,
-                ),
-            )
-
-        end
-
-        sa_, ta_, fe_x_sa_x_nu = _order_sample(id_, sa_, ta_, fe_x_sa_x_nu)
+        sa_, ta_, fe_x_sa_x_nu =
+            _index(BioLab.Clustering.cluster(ta_, fe_x_sa_x_nu), sa_, ta_, fe_x_sa_x_nu)
 
     end
 
@@ -168,9 +155,6 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
     @info "\"$naf\" colors can range from $fei to $fea."
 
-    heatmap =
-        Dict("type" => "heatmap", "colorbar" => merge(BioLab.Plot.COLORBAR, Dict("y" => 0.5)))
-
     n_ro = length(fe_) + 2
 
     th = 1 / n_ro
@@ -183,8 +167,6 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
 
     n_li = 28
 
-    natl = BioLab.String.limit(nat, n_li)
-
     axis = Dict(
         "tickcolor" => "#6c9956",
         "tickfont" => Dict("family" => _FONT_FAMILY_1, "size" => _FONT_SIZE_1),
@@ -193,32 +175,36 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
     BioLab.Plot.plot(
         ht,
         [
-            BioLab.Dict.merge(
-                heatmap,
-                Dict(
-                    "yaxis" => "y2",
-                    "y" => ["<b>$natl</b>"],
-                    "x" => sa_,
-                    "z" => [tac_],
-                    "text" => [ta_],
-                    "zmin" => tai,
-                    "zmax" => taa,
-                    "colorscale" => BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(tac_)),
-                    "colorbar" => Dict("x" => -0.32, "title" => Dict("text" => "Target")),
+            Dict(
+                "type" => "heatmap",
+                "name" => "Target",
+                "yaxis" => "y2",
+                "y" => ["<b>$(BioLab.String.limit(nat, n_li))</b>"],
+                "x" => sa_,
+                "z" => [tac_],
+                "text" => [ta_],
+                "zmin" => tai,
+                "zmax" => taa,
+                "colorscale" => BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(tac_)),
+                "colorbar" => merge(
+                    BioLab.Plot.COLORBAR,
+                    Dict("y" => 0.5, "x" => -0.32, "title" => Dict("text" => "Target")),
                 ),
             ),
-            BioLab.Dict.merge(
-                heatmap,
-                Dict(
-                    "y" => BioLab.String.limit.(fe_, n_li),
-                    "x" => sa_,
-                    "z" => collect(eachrow(fe_x_sa_x_nuc)),
-                    "text" => collect(eachrow(fe_x_sa_x_nu)),
-                    "zmin" => fei,
-                    "zmax" => fea,
-                    "colorscale" =>
-                        BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(fe_x_sa_x_nuc)),
-                    "colorbar" => Dict("x" => -0.24, "title" => Dict("text" => "Feature")),
+            Dict(
+                "type" => "heatmap",
+                "name" => "Feature",
+                "y" => BioLab.String.limit.(fe_, n_li),
+                "x" => sa_,
+                "z" => collect(eachrow(fe_x_sa_x_nuc)),
+                "text" => collect(eachrow(fe_x_sa_x_nu)),
+                "zmin" => fei,
+                "zmax" => fea,
+                "colorscale" =>
+                    BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(fe_x_sa_x_nuc)),
+                "colorbar" => merge(
+                    BioLab.Plot.COLORBAR,
+                    Dict("y" => 0.5, "x" => -0.24, "title" => Dict("text" => "Feature")),
                 ),
             ),
         ],
@@ -236,7 +222,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_nu, st,
                     merge(axis, Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed")),
                 "xaxis" =>
                     merge(axis, Dict("title" => Dict("text" => BioLab.String.count(n_sa, nas)))),
-                "annotations" => _annotate_statistic(1 - th2 * 3, true, th, fe_, fe_x_st_x_nu),
+                "annotations" => _annotate_statistic(1 - th2 * 3, true, th, fe_, fe_x_st_x_fl),
             ),
             layout,
         ),
@@ -265,15 +251,15 @@ function make(
 
     n_fe, n_sa = size(fe_x_sa_x_nu)
 
-    @info "Matching \"$nat\" and $(BioLab.String.count(n_fe, naf)) with `$fu`"
+    @info "Matching \"$nat\" and $(BioLab.String.count(n_fe, "\"$naf\"")) with `$fu`"
 
-    sa_, ta_, fe_x_sa_x_nu = _order_sample(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
+    sa_, ta_, fe_x_sa_x_nu = _index(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
 
     @info "Calculating scores"
 
     sc_ = (nu_ -> fu(ta_, nu_)).(eachrow(fe_x_sa_x_nu))
 
-    is_ = isnan.(sc_)
+    is_ = BioLab.Bad.is.(sc_)
 
     if any(is_)
 
@@ -297,13 +283,13 @@ function make(
 
             ra_ = Vector{Float64}(undef, n_ma)
 
-            nu_ = view(fe_x_sa_x_nu, idf, :)
+            nu_ = fe_x_sa_x_nu[idf, :]
 
             for idr in 1:n_ma
 
                 ids_ = sample(1:n_sa, n_sm; replace = false)
 
-                ra_[idr] = fu(view(ta_, ids_), view(nu_, ids_))
+                ra_[idr] = fu(ta_[ids_], nu_[ids_])
 
             end
 
@@ -323,31 +309,33 @@ function make(
 
         @showprogress for idf in 1:n_fe
 
-            nu_ = view(fe_x_sa_x_nu, idf, :)
+            nu_ = fe_x_sa_x_nu[idf, :]
 
-            for id in 1:n_pv
+            for idr in 1:n_pv
 
-                fe_x_id_x_ra[idf, id] = fu(shuffle!(co), nu_)
+                fe_x_id_x_ra[idf, idr] = fu(shuffle!(co), nu_)
 
             end
 
         end
 
-        nei_, poi_ = BioLab.Statistics._get_negative_positive(sc_)
+        idn_ = findall(BioLab.Number.is_negative, sc_)
 
-        npv_, nad_, ppv_, pad_ = BioLab.Statistics.get_p_value(sc_, nei_, poi_, fe_x_id_x_ra)
+        idp_ = findall(BioLab.Number.is_positive, sc_)
 
-        pv_[nei_] = npv_
+        np_, na_, pp_, pa_ = BioLab.Statistics.get_p_value(sc_, idn_, idp_, fe_x_id_x_ra)
 
-        pv_[poi_] = ppv_
+        pv_[idn_] = np_
 
-        ad_[nei_] = nad_
+        pv_[idp_] = pp_
 
-        ad_[poi_] = pad_
+        ad_[idn_] = na_
+
+        ad_[idp_] = pa_
 
     end
 
-    fe_x_st_x_nu = hcat(sc_, ma_, pv_, ad_)
+    fe_x_st_x_fl = hcat(sc_, ma_, pv_, ad_)
 
     pr = joinpath(di, "feature_x_statistic_x_number")
 
@@ -357,31 +345,29 @@ function make(
             naf,
             fe_,
             ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
-            fe_x_st_x_nu,
+            fe_x_st_x_fl,
         ),
     )
 
     if 0 < n_ex
 
-        id_ = reverse!(BioLab.Rank.get_extreme(view(fe_x_st_x_nu, :, 1), n_ex))
+        id_ = reverse!(BioLab.Rank.get_extreme(fe_x_st_x_fl[:, 1], n_ex))
 
         _plot(
             "$pr.html",
             nat,
             naf,
             nas,
-            view(fe_, id_),
+            fe_[id_],
             sa_,
             ta_,
-            view(fe_x_sa_x_nu, id_, :),
-            view(fe_x_st_x_nu, id_, :),
+            fe_x_sa_x_nu[id_, :],
+            fe_x_st_x_fl[id_, :],
             st,
             layout,
         )
 
     end
-
-    fe_x_st_x_nu
 
 end
 

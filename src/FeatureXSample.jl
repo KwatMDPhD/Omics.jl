@@ -4,43 +4,66 @@ using StatsBase: median
 
 using ..BioLab
 
-function error_describe(la_, an___)
+function count(na_, an___)
 
-    BioLab.Error.error_bad(la_)
+    for (na, an_) in zip(na_, an___)
 
-    for (la, an_) in zip(la_, an___)
-
-        BioLab.Error.error_bad(an_)
-
-        @info "$la\n$(BioLab.Collection.count_sort_string(an_))"
+        @info "$na\n$(BioLab.Collection.count_sort_string(an_))"
 
     end
 
 end
 
-function error_rename_collapse_log2_plot(di, fe_, fe_x_sa_x_nu, fe_fe2, lo, title_text)
+function transform(
+    di,
+    fe_,
+    sa_,
+    fe_x_sa_x_nu;
+    fe_fe2 = Dict{String, String}(),
+    fu = median,
+    ty = Float64,
+    lo = false,
+    na = "Data",
+)
 
     BioLab.Error.error_missing(di)
 
     BioLab.Error.error_bad(fe_)
 
+    BioLab.Error.error_duplicate(fe_)
+
+    BioLab.Error.error_bad(sa_)
+
+    BioLab.Error.error_duplicate(sa_)
+
     BioLab.Error.error_bad(fe_x_sa_x_nu)
+
+    BioLab.Plot.plot_heat_map(
+        joinpath(di, "feature_x_sample_x_number.html"),
+        fe_x_sa_x_nu;
+        y = fe_,
+        x = sa_,
+        nar = "Feature",
+        nac = "Sample",
+        layout = Dict("title" => Dict("text" => na)),
+    )
 
     BioLab.Plot.plot_histogram(
         joinpath(di, "number.html"),
         (vec(fe_x_sa_x_nu),);
-        layout = Dict("title" => Dict("text" => title_text)),
+        layout = Dict("title" => Dict("text" => na)),
     )
 
     if !isempty(fe_fe2)
 
+        # TODO: Generalize the "ENSG" logic.
         BioLab.Gene.rename!(fe_, fe_fe2)
 
     end
 
     if !allunique(fe_)
 
-        fe_, fe_x_sa_x_nu = BioLab.Matrix.collapse(median, Float64, fe_, fe_x_sa_x_nu)
+        fe_, fe_x_sa_x_nu = BioLab.Matrix.collapse(fu, ty, fe_, fe_x_sa_x_nu)
 
     end
 
@@ -51,7 +74,7 @@ function error_rename_collapse_log2_plot(di, fe_, fe_x_sa_x_nu, fe_fe2, lo, titl
         BioLab.Plot.plot_histogram(
             joinpath(di, "number_plus1_log2.html"),
             (vec(fe_x_sa_x_nu),);
-            layout = Dict("title" => Dict("text" => "$title_text (+1 Log2)")),
+            layout = Dict("title" => Dict("text" => "$na (+1 Log2)")),
         )
 
     end

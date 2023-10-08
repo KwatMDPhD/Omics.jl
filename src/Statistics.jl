@@ -14,17 +14,17 @@ function get_quantile(cu)
 
 end
 
-function get_margin_of_error(nu_, co = 0.95)
+function get_margin_of_error(sa_, co = 0.95)
 
-    get_quantile(0.5 + co / 2) * std(nu_) / sqrt(length(nu_))
+    get_quantile(0.5 + co / 2) * std(sa_) / sqrt(length(sa_))
 
 end
 
-function get_p_value(n_si::Int, n_ra)
+function get_p_value(n_si, n_ra)
 
     if iszero(n_ra)
 
-        return NaN
+        return 1.0
 
     end
 
@@ -40,61 +40,17 @@ end
 
 function get_p_value(fu, nu_, ra_)
 
-    n = length(nu_)
-
-    is_ = BitVector(undef, n)
-
-    pv_ = Vector{Float64}(undef, n)
-
-    ad_ = fill(NaN, n)
-
-    ra_ = filter(.!isnan, ra_)
-
     n_ra = length(ra_)
 
-    if iszero(n_ra)
+    pv_ = [get_p_value(sum(fu(nu), ra_; init = 0), n_ra) for nu in nu_]
 
-        pv_ .= NaN
-
-        return pv_, ad_
-
-    end
-
-    for (id, nu) in enumerate(nu_)
-
-        if isnan(nu)
-
-            is_[id] = false
-
-            pv_[id] = NaN
-
-        else
-
-            is_[id] = true
-
-            pv_[id] = get_p_value(sum(fu(nu), ra_; init = 0), n_ra)
-
-        end
-
-    end
-
-    if any(is_)
-
-        ad_[is_] = adjust(pv_[is_], n, BenjaminiHochberg())
-
-    end
-
-    pv_, ad_
+    pv_, adjust(pv_, BenjaminiHochberg())
 
 end
 
-function _get_negative_positive(sc_)
+# TODO: Factor in the outer loop.
 
-    sc_ .< 0, 0 .<= sc_
-
-end
-
-function get_p_value(sc_, nei_, poi_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothing)
+function _separate(fe_x_id_x_ra, nef_, pof_)
 
     ne_ = Vector{Float64}()
 
@@ -104,13 +60,7 @@ function get_p_value(sc_, nei_, poi_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothi
 
         ra = fe_x_id_x_ra[id1, id2]
 
-        if isnan(ra)
-
-            continue
-
-        end
-
-        if ra < 0
+        if BioLab.Number.is_negative(ra)
 
             ra_ = ne_
 
@@ -134,9 +84,33 @@ function get_p_value(sc_, nei_, poi_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothi
 
     end
 
-    nep_, nea_ = get_p_value(<=, view(sc_, nei_), ne_)
+    ne_, po_
 
-    pop_, poa_ = get_p_value(>=, view(sc_, poi_), po_)
+end
+
+function get_p_value(nu_, idn_, idp_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothing)
+
+    ne_, po_ = _separate(fe_x_id_x_ra, nef_, pof_)
+
+    if isempty(idn_)
+
+        nep_, nea_ = Vector{Float64}(), Vector{Float64}()
+
+    else
+
+        nep_, nea_ = get_p_value(<=, nu_[idn_], ne_)
+
+    end
+
+    if isempty(idp_)
+
+        pop_, poa_ = Vector{Float64}(), Vector{Float64}()
+
+    else
+
+        pop_, poa_ = get_p_value(>=, nu_[idp_], po_)
+
+    end
 
     nep_, nea_, pop_, poa_
 

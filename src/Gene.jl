@@ -2,14 +2,28 @@ module Gene
 
 using ..BioLab
 
-function map_ensembl()
+function read_ensemble()
 
-    en_na = Dict{String, String}()
+    BioLab.DataFrame.read(joinpath(BioLab._DA, "Gene", "ensembl.tsv.gz"))
+
+end
+
+function read_uniprot()
+
+    BioLab.DataFrame.read(joinpath(BioLab._DA, "Gene", "uniprot.tsv.gz"))
+
+end
+
+function map_ensembl(index_x_information_x_string = read_ensemble())
+
+    en_ge = Dict{String, String}()
+
+    # TODO: Benchmark separating columns.
 
     ma = Matrix(
-        BioLab.DataFrame.read(
-            joinpath(BioLab._DA, "Gene", "ensembl.tsv.gz");
-            select = [
+        index_x_information_x_string[
+            !,
+            [
                 "Transcript stable ID version",
                 "Transcript stable ID",
                 "Transcript name",
@@ -17,32 +31,32 @@ function map_ensembl()
                 "Gene stable ID",
                 "Gene name",
             ],
-        ),
+        ],
     )
 
     n = size(ma, 2)
 
-    for an_ in eachrow(ma)
+    for st_ in eachrow(ma)
 
-        to = an_[n]
+        ge = st_[n]
 
-        if BioLab.Bad.is(to)
+        if BioLab.Bad.is(ge)
 
             continue
 
         end
 
-        for fr in view(an_, 1:(n - 1))
+        for en in st_[1:(n - 1)]
 
-            if BioLab.Bad.is(fr)
+            if BioLab.Bad.is(en)
 
                 continue
 
             end
 
-            for sp in eachsplit(fr, '|')
+            for ens in eachsplit(en, '|')
 
-                en_na[sp] = to
+                en_ge[ens] = ge
 
             end
 
@@ -50,27 +64,27 @@ function map_ensembl()
 
     end
 
-    en_na
+    en_ge
 
 end
 
-function map_uniprot()
+function map_uniprot(index_x_information_x_string = read_uniprot())
 
-    pr_di = Dict{String, Dict{String, Any}}()
+    pr_io_an = Dict{String, Dict{String, Any}}()
 
-    da = BioLab.DataFrame.read(joinpath(BioLab._DA, "Gene", "uniprot.tsv.gz"))
-
-    co_ = names(da)
+    io_ = names(index_x_information_x_string)
 
     id = 2
 
-    popat!(co_, id)
+    popat!(io_, id)
 
-    for (ro, an_) in zip(da[!, id], eachrow(Matrix(da[!, co_])))
+    pr_ = index_x_information_x_string[!, id]
 
-        co_an = Dict{String, Any}()
+    for (pr, an_) in zip(pr_, eachrow(Matrix(index_x_information_x_string[!, io_])))
 
-        for (co, an) in zip(co_, an_)
+        io_an = Dict{String, Any}()
+
+        for (io, an) in zip(io_, an_)
 
             if BioLab.Bad.is(an)
 
@@ -78,44 +92,50 @@ function map_uniprot()
 
             end
 
-            if co == "Gene Names"
+            if io == "Gene Names"
 
                 an = split(an)
 
-            elseif co == "Interacts with"
+            elseif io == "Interacts with"
 
                 an = split(an, "; ")
 
             end
 
-            co_an[co] = an
+            io_an[io] = an
 
         end
 
-        pr = chop(ro; tail = 6)
+        pr = pr[1:(end - 6)]
 
-        BioLab.Error.error_has_key(pr_di, pr)
+        # TODO: Remove.
+        BioLab.Error.error_has_key(pr_io_an, pr)
 
-        pr_di[pr] = co_an
+        pr_io_an[pr] = io_an
 
     end
 
-    pr_di
+    pr_io_an
 
 end
 
-# TODO: Test.
 function rename!(fe_, fe_fe2)
 
-    n_re = 0
+    n = 0
 
     for (id, fe) in enumerate(fe_)
+
+        if BioLab.Bad.is(fe)
+
+            continue
+
+        end
 
         if haskey(fe_fe2, fe)
 
             fe_[id] = fe_fe2[fe]
 
-            n_re += 1
+            n += 1
 
         elseif startswith(fe, "ENS") && contains(fe, '.')
 
@@ -125,7 +145,7 @@ function rename!(fe_, fe_fe2)
 
                 fe_[id] = fe_fe2[fe]
 
-                n_re += 1
+                n += 1
 
             end
 
@@ -133,7 +153,7 @@ function rename!(fe_, fe_fe2)
 
     end
 
-    @info "Renamed $n_re / $(length(fe_))."
+    @info "Renamed $n / $(length(fe_))."
 
 end
 

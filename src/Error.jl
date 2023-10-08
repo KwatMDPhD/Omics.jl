@@ -4,19 +4,17 @@ using ..BioLab
 
 macro is(ex)
 
-    exe = esc(ex)
-
     quote
 
         try
 
-            $exe
+            $(esc(ex))
 
             false
 
         catch er
 
-            @info "Errored." er
+            @error "Errored." er
 
             true
 
@@ -26,42 +24,47 @@ macro is(ex)
 
 end
 
-function error_bad(co)
+function error_empty(an_)
 
-    id_ = findall(BioLab.Bad.is, co)
+    if isempty(an_)
+
+        error("`$an_` is empty.")
+
+    end
+
+end
+
+function error_bad(an_)
+
+    id_ = findall(BioLab.Bad.is, an_)
 
     if !isempty(id_)
 
+        # TODO: Benchmark.
         error(
-            "Found $(BioLab.String.count(length(id_), "bad value")).\n$(join(unique(co[id_]), ".\n")).",
+            "Found $(BioLab.String.count(length(id_), "bad value")).\n$(join(unique(an_[id_]), ".\n")).",
         )
 
     end
 
 end
 
-function error_duplicate(co)
+function error_duplicate(an_)
 
-    if isempty(co)
+    if !allunique(an_)
 
-        error("`$co` is empty.")
+        st = BioLab.Collection.count_sort_string(an_, 2)
 
-    end
-
-    if !allunique(co)
-
-        st = BioLab.Collection.count_sort_string(co, 2)
-
-        error("Found $(BioLab.String.count(length(split(st, '\n')), "duplicate")).\n$st")
+        error("Found $(BioLab.String.count(count('\n', st) + 1, "duplicate")).\n$st")
 
     end
 
 end
 
 # TODO: Test.
-function error_length_difference(co_)
+function error_length_difference(an___)
 
-    if !isone(length(unique(length.(co_))))
+    if !isone(length(unique(length.(an___))))
 
         error("Lengths differ.")
 
@@ -79,13 +82,13 @@ function error_has_key(ke_va, ke)
 
 end
 
-function error_extension_difference(pa, ex2)
+function error_extension_difference(pa, ex)
 
-    ex = BioLab.Path.get_extension(pa)
+    pae = BioLab.Path.get_extension(pa)
 
-    if ex != ex2
+    if pae != ex
 
-        error("`$ex` != `$ex2`.")
+        error("`$pae` != `$ex`.")
 
     end
 

@@ -12,122 +12,135 @@ for (ro_, re) in (
     (['B', 'B', 'A'], (['A', 'B'], Bool[0 0 1; 1 1 0])),
 )
 
-    @assert isequal(BioLab.Target.tabulate(ro_), re)
+    @test isequal(BioLab.Target.tabulate(ro_), re)
+
+    # 244.604 ns (12 allocations: 1.02 KiB)
+    # 247.404 ns (12 allocations: 1.02 KiB)
+    # 249.304 ns (12 allocations: 1.02 KiB)
+    # 254.335 ns (12 allocations: 1.02 KiB)
+    # 256.631 ns (12 allocations: 1.02 KiB)
+    @btime BioLab.Target.tabulate($ro_)
 
 end
 
 # ---- #
 
-@test BioLab.Error.@is BioLab.Target.tabulate(
-    (["Row 1"],),
-    (["Column 1", "Column 2"],),
-    NaN,
-    [1, 2, 3],
+for (ro___, co___, fl_) in (
+    ((["Row 1"],), (["Column 1", "Column 2"],), [1, 2, 3]),
+    ((["Row 1", "Row 2"],), (["Column 1", "Column 2"],), [1, 2, 3]),
 )
 
-@test BioLab.Error.@is BioLab.Target.tabulate(
-    (["Row 1", "Row 2"],),
-    (["Column 1", "Column 2"],),
-    NaN,
-    [1, 2, 3],
-)
+    @test BioLab.Error.@is BioLab.Target.tabulate(ro___, co___, fl_)
 
-BioLab.Target.tabulate(
-    (["Row 1", "Row 2", "Row 3"],),
-    (["Column 1", "Column 2", "Column 3"],),
-    NaN,
-    [1, 2, 3],
-)
+end
 
 # ---- #
 
-for ((ro___, co___, fi, an_), re) in (
+for (ro___, co___, fl_, re) in (
     (
-        ((["Row 1", "Row 2"],), (["Label 1", "Label 1"],), 0, [1, 2]),
-        (["Row 1", "Row 2"], ["Label 1"], [1; 2;;]),
-    ),
-    (
-        ((["Row 2", "Row 1"],), (["Label 1", "Label 1"],), 0, [2, 1]),
-        (["Row 1", "Row 2"], ["Label 1"], [1; 2;;]),
-    ),
-    (
-        ((["Row 1", "Row 2", "Row 3"],), (["Label 1", "Label2", "Label 1"],), 0, [1, 2, 3]),
-        (["Row 1", "Row 2", "Row 3"], ["Label 1", "Label2"], [1 0; 0 2; 3 0]),
-    ),
-    (
-        ((["Row 3", "Row 2", "Row 1"],), (["Label 1", "Label2", "Label 1"],), 0, [1, 2, 3]),
-        (["Row 1", "Row 2", "Row 3"], ["Label 1", "Label2"], [3 0; 0 2; 1 0]),
-    ),
-    (
+        (["Row 1", "Row 2", "Row 3"],),
+        (["Column 1", "Column 2", "Column 3"],),
+        [1.0, 2, 3],
         (
-            (["Row 1", "Row 1", "Row 2", "Row 2"],),
-            (["Label 1", "Label 2", "Label 1", "Label 2"],),
-            0,
-            [1, 2, 10, 20],
+            ["Row 1", "Row 2", "Row 3"],
+            ["Column 1", "Column 2", "Column 3"],
+            [1 NaN NaN; NaN 2 NaN; NaN NaN 3],
         ),
-        (["Row 1", "Row 2"], ["Label 1", "Label 2"], [1 2; 10 20]),
     ),
     (
-        (
-            ([0, 7, 0, 7, 28],),
-            ([
-                "Participant 1",
-                "Participant 1",
-                "Participant 2",
-                "Participant 2",
-                "Participant 2",
-            ],),
-            NaN,
-            [10, 100, 20, 200, 300],
-        ),
+        (["Row 1", "Row 2"],),
+        (["Label 1", "Label 1"],),
+        [1.0, 2],
+        (["Row 1", "Row 2"], ["Label 1"], [1.0; 2;;]),
+    ),
+    (
+        (["Row 2", "Row 1"],),
+        (["Label 1", "Label 1"],),
+        [2.0, 1],
+        (["Row 1", "Row 2"], ["Label 1"], [1.0; 2;;]),
+    ),
+    (
+        (["Row 1", "Row 2", "Row 3"],),
+        (["Label 1", "Label2", "Label 1"],),
+        [1.0, 2, 3],
+        (["Row 1", "Row 2", "Row 3"], ["Label 1", "Label2"], [1  NaN; NaN 2; 3 NaN]),
+    ),
+    (
+        (["Row 3", "Row 2", "Row 1"],),
+        (["Label 1", "Label2", "Label 1"],),
+        [1.0, 2, 3],
+        (["Row 1", "Row 2", "Row 3"], ["Label 1", "Label2"], [3 NaN; NaN 2; 1 NaN]),
+    ),
+    (
+        (["Row 1", "Row 1", "Row 2", "Row 2"],),
+        (["Label 1", "Label 2", "Label 1", "Label 2"],),
+        [1.0, 2, 10, 20],
+        (["Row 1", "Row 2"], ["Label 1", "Label 2"], [1.0 2; 10 20]),
+    ),
+    (
+        ([0, 7, 0, 7, 28],),
+        (["Participant 1", "Participant 1", "Participant 2", "Participant 2", "Participant 2"],),
+        [10.0, 100, 20, 200, 300],
         (["0", "7", "28"], ["Participant 1", "Participant 2"], [10 20; 100 200; NaN 300]),
     ),
+    (
+        (
+            (
+                "Antigen 1",
+                "Antigen 2",
+                "Antigen 1",
+                "Antigen 2",
+                "Antigen 1",
+                "Antigen 2",
+                "Antigen 1",
+                "Antigen 2",
+            ),
+            (0, 0, 7, 7, 0, 0, 7, 7),
+        ),
+        ((
+            "Sample 1",
+            "Sample 1",
+            "Sample 1",
+            "Sample 1",
+            "Sample 2",
+            "Sample 2",
+            "Sample 2",
+            "Sample 2",
+        ),),
+        [0.0, 0, 10, 100, 0, 0, 20, 200],
+        (
+            ["Antigen 1_0", "Antigen 1_7", "Antigen 2_0", "Antigen 2_7"],
+            ["Sample 1", "Sample 2"],
+            [0.0 0; 10 20; 0 0; 100 200],
+        ),
+    ),
 )
 
-    @assert isequal(BioLab.Target.tabulate(ro___, co___, fi, an_), re)
+    @test isequal(BioLab.Target.tabulate(ro___, co___, fl_), re)
+
+    # 1.808 μs (71 allocations: 4.34 KiB)
+    # 1.225 μs (50 allocations: 3.56 KiB)
+    # 1.225 μs (50 allocations: 3.56 KiB)
+    # 1.637 μs (64 allocations: 4.08 KiB)
+    # 1.637 μs (64 allocations: 4.08 KiB)
+    # 1.546 μs (57 allocations: 3.81 KiB)
+    # 1.804 μs (70 allocations: 4.34 KiB)
+    # 2.704 μs (87 allocations: 5.52 KiB)
+    @btime BioLab.Target.tabulate($ro___, $co___, $fl_)
 
 end
 
 # ---- #
 
-@test BioLab.Target.tabulate(
-    (
-        (
-            "Antigen 1",
-            "Antigen 2",
-            "Antigen 1",
-            "Antigen 2",
-            "Antigen 1",
-            "Antigen 2",
-            "Antigen 1",
-            "Antigen 2",
-        ),
-        (0, 0, 7, 7, 0, 0, 7, 7),
-    ),
-    ((
-        "Sample 1",
-        "Sample 1",
-        "Sample 1",
-        "Sample 1",
-        "Sample 2",
-        "Sample 2",
-        "Sample 2",
-        "Sample 2",
-    ),),
-    NaN,
-    (0, 0, 10, 100, 0, 0, 20, 200),
-) == (
-    ["Antigen 1_0", "Antigen 1_7", "Antigen 2_0", "Antigen 2_7"],
-    ["Sample 1", "Sample 2"],
-    [0.0 0.0; 10.0 20.0; 0.0 0.0; 100.0 200.0],
-)
+for (ro_re_, co_, re) in ((
+    Dict("Target 1" => ("[12]\$", "[34]\$"), "Target 2" => ("1\$", "3\$")),
+    ("Group 1", "Group 2", "Group 3", "Group 4"),
+    (["Target 2", "Target 1"], [0 NaN 1 NaN; 0 0 1 1]),
+),)
 
-# ---- #
+    @test isequal(BioLab.Target.tabulate(ro_re_, co_), re)
 
-@test isequal(
-    BioLab.Target.tabulate(
-        Dict("Target 1" => ("[12]\$", "[34]\$"), "Target 2" => ("1\$", "3\$")),
-        ("Group 1", "Group 2", "Group 3", "Group 4"),
-    ),
-    (["Target 2", "Target 1"], [0.0 NaN 1.0 NaN; 0 0 1 1]),
-)
+    # 6.242 μs (6 allocations: 320 bytes)
+    @btime BioLab.Target.tabulate($ro_re_, $co_)
+
+end

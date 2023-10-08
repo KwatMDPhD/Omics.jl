@@ -20,9 +20,9 @@ function tabulate(ro_)
 
 end
 
-function tabulate(ro___, co___, fi, an_)
+function tabulate(ro___, co___, fl_)
 
-    BioLab.Error.error_length_difference((ro___..., co___..., an_))
+    BioLab.Error.error_length_difference((ro___..., co___..., fl_))
 
     ro_ = zip(ro___...)
 
@@ -32,19 +32,19 @@ function tabulate(ro___, co___, fi, an_)
 
     cou_ = BioLab.Collection.unique_sort(co_)
 
-    ro_x_co_x_an = fill(fi, length(rou_), length(cou_))
+    ro_x_co_x_fl = fill(NaN, length(rou_), length(cou_))
 
     ro_id = BioLab.Collection.map_index(rou_)
 
     co_id = BioLab.Collection.map_index(cou_)
 
-    for (ro, co, an) in zip(ro_, co_, an_)
+    for (ro, co, fl) in zip(ro_, co_, fl_)
 
-        ro_x_co_x_an[ro_id[ro], co_id[co]] = an
+        ro_x_co_x_fl[ro_id[ro], co_id[co]] = fl
 
     end
 
-    join.(rou_, '_'), join.(cou_, '_'), ro_x_co_x_an
+    join.(rou_, '_'), join.(cou_, '_'), ro_x_co_x_fl
 
 end
 
@@ -54,21 +54,21 @@ function tabulate(ro_re_, co_)
 
     ro_ = Vector{String}(undef, n_ro)
 
-    ro_x_co_x_nu = fill(NaN, n_ro, length(co_))
+    ro_x_co_x_fl = fill(NaN, n_ro, length(co_))
 
     for (idr, (ro, re_)) in enumerate(ro_re_)
 
         ro_[idr] = ro
 
-        for (nu, re) in zip((0, 1), re_)
+        for (fl, re) in zip((0, 1), re_)
 
-            re2 = Regex(re)
+            rre = Regex(re)
 
             for (idc, co) in enumerate(co_)
 
-                if contains(co, re2)
+                if contains(co, rre)
 
-                    ro_x_co_x_nu[idr, idc] = nu
+                    ro_x_co_x_fl[idr, idc] = fl
 
                 end
 
@@ -78,7 +78,7 @@ function tabulate(ro_re_, co_)
 
     end
 
-    ro_, ro_x_co_x_nu
+    ro_, ro_x_co_x_fl
 
 end
 

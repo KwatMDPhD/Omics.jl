@@ -12,21 +12,31 @@ using BioLab
 
 # ---- #
 
+# 446.131 ns (7 allocations: 440 bytes)
+@btime BioLab.Path.clean("a_b.c-d+e!f%g%h]iJK");
+
+# ---- #
+
 const EX = "extension"
+
+# ---- #
 
 for pa in ("prefix.$EX", "/path/to/prefix.$EX", "s3://path/to/prefix.$EX")
 
-    @test BioLab.Path.get_extension(pa) == EX
+    @test BioLab.Path.get_extension(pa) === EX
+
+    # 244.820 ns (12 allocations: 520 bytes)
+    # 251.808 ns (12 allocations: 528 bytes)
+    # 255.045 ns (12 allocations: 536 bytes)
+    @btime BioLab.Path.get_extension($pa)
 
 end
 
 # ---- #
 
-const MA = 2
-
 for sl in (1, 2, 3)
 
-    BioLab.Path.wait("missing_file", MA; sl)
+    BioLab.Path.wait("missing_file", 2; sl)
 
 end
 
@@ -34,7 +44,11 @@ end
 
 const HO = homedir()
 
+# ---- #
+
 const HI = r"^\."
+
+# ---- #
 
 @test !any(startswith('.'), BioLab.Path.read(HO; ig_ = (HI,)))
 
@@ -90,18 +104,16 @@ end
 
 # ---- #
 
-const DI = BioLab.Path.remake_directory(write_directory())
+BioLab.Path.remake_directory(write_directory())
+
+# ---- #
 
 @test BioLab.Path.read(BioLab.TE) == ["directory", "file"]
 
 # ---- #
 
-const CH_ = 'a':'g'
+BioLab.Path.remake_directory(BioLab.TE)
 
-for (nu, ch) in zip((0.7, 1, 1.1, 3, 10, 12, 24), CH_)
+# ---- #
 
-    touch(joinpath(DI, "$nu.$ch.$EX"))
-
-end
-
-@test BioLab.Path.read(BioLab.Path.rank(DI)) == ["$id.$ch.$EX" for (id, ch) in enumerate(CH_)]
+@test isempty(BioLab.Path.read(BioLab.TE))

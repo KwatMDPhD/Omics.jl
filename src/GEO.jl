@@ -15,15 +15,15 @@ function download(di, gs)
     gz = "$(gs)_family.soft.gz"
 
     Base.download(
-        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(chop(gs; tail = 3))nnn/$gs/soft/$gz",
+        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:(end - 3)])nnn/$gs/soft/$gz",
         joinpath(di, gz),
     )
 
 end
 
-function _readline(st)
+function _readline(io)
 
-    readline(st; keep = false)
+    readline(io; keep = false)
 
 end
 
@@ -46,125 +46,115 @@ function read(gz)
 
     th = ""
 
-    st = open(gz)
+    be = ""
 
-    while !eof(st)
+    io = open(gz)
 
-        li = _readline(st)
+    while !eof(io)
+
+        li = _readline(io)
 
         if startswith(li, '^')
 
-            bl, th = _eachsplit(chop(li; head = 1, tail = 0))
+            bl, th = _eachsplit(li[2:end])
 
             bl_th[bl][th] = OrderedDict{String, String}()
 
-            continue
+            be = "!$(lowercase(bl))_table_begin"
 
-        end
+        elseif startswith(li, be)
 
-        pr = "!$(lowercase(bl))_table_"
+            ta = readuntil(io, "$(be[1:(end - 5)])end\n")
 
-        if startswith(li, "$(pr)begin")
+            n_ro = count('\n', ta)
 
-            ro_ = Vector{String}()
+            n_rok = 1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
 
-            n_ro = 0
+            if n_ro == n_rok
 
-            ro = _readline(st)
+                bl_th[bl][th]["table"] = ta
 
-            en = "$(pr)end"
+            else
 
-            while ro != en
-
-                push!(ro_, ro)
-
-                n_ro += 1
-
-                ro = _readline(st)
+                @warn "\"$th\" table's numbers of rows differ. $n_ro != $n_rok."
 
             end
 
-            ke = "!$(titlecase(bl))_data_row_count"
+        else
 
-            n_ro2 = 1 + parse(Int, bl_th[bl][th][ke])
+            ke, va = _eachsplit(li)
 
-            if n_ro != n_ro2
-
-                @warn "Numbers of rows differ. $n_ro != $n_ro2 (1 + \"$ke\")."
-
-            end
-
-            bl_th[bl][th]["table"] = join(ro_, '\n')
-
-            continue
+            BioLab.Dict.set_with_suffix!(bl_th[bl][th], ke, va)
 
         end
-
-        ke, va = _eachsplit(li)
-
-        BioLab.Dict.set_with_suffix!(bl_th[bl][th], ke, va)
 
     end
 
-    close(st)
+    close(io)
 
     bl_th
 
 end
 
-function _map_feature(pl, co_, sp___)
+function _dice(ta)
 
-    it = parse(Int, chop(pl; head = 3, tail = 0))
+    split.(eachsplit(ta, '\n'; keepempty = false), '\t')
 
-    if it in (96, 97, 570, 13667)
+end
+
+function _map(pl, ta)
+
+    pli = parse(Int, pl[4:end])
+
+    if pli in (96, 97, 570, 13667)
 
         co = "Gene Symbol"
 
         fu = fe -> BioLab.String.split_get(fe, " /// ", 1)
 
-    elseif it == 13534
+    elseif pli == 13534
 
         co = "UCSC_RefGene_Name"
 
         fu = fe -> BioLab.String.split_get(fe, ';', 1)
 
-    elseif it in (5175, 6244, 11532, 17586)
+    elseif pli in (5175, 6244, 11532, 17586)
 
         co = "gene_assignment"
 
         fu = fe -> BioLab.String.split_get(fe, " // ", 2)
 
-    elseif it in (2004, 2005, 3718, 3720)
+    elseif pli in (2004, 2005, 3718, 3720)
 
         co = "Associated Gene"
 
         fu = fe -> BioLab.String.split_get(fe, " // ", 1)
 
-    elseif it in (6098, 6884, 6947, 10558, 14951)
+    elseif pli in (6098, 6884, 6947, 10558, 14951)
 
         co = "Symbol"
 
         fu = fe -> fe
 
-    elseif it == 16686
+    elseif pli == 16686
 
         co = "GB_ACC"
 
         fu = fe -> fe
 
-    elseif it == 10332
+    elseif pli == 10332
 
         co = "GENE_SYMBOL"
 
         fu = fe -> fe
 
-    elseif it == 15048
+    elseif pli == 15048
 
         co = "GeneSymbol"
 
         fu = fe -> BioLab.String.split_get(fe, ' ', 1)
 
-    elseif it in (7566, 7567)
+    elseif pli in (7566, 7567)
 
         error("\"$pl\" is bad.")
 
@@ -174,25 +164,29 @@ function _map_feature(pl, co_, sp___)
 
     end
 
-    id_fe = Dict{String, String}()
+    fe_fe2 = Dict{String, String}()
 
-    idi = findfirst(==("ID"), co_)
+    sp___ = _dice(ta)
 
-    idc = findfirst(==(co), co_)
+    sp1_ = sp___[1]
 
-    for sp_ in sp___
+    id1 = findfirst(==("ID"), sp1_)
 
-        fe = sp_[idc]
+    id2 = findfirst(==(co), sp1_)
 
-        if !BioLab.Bad.is(fe)
+    for sp_ in view(sp___, 2:length(sp___))
 
-            id_fe[sp_[idi]] = fu(fe)
+        fe2 = sp_[id2]
+
+        if !BioLab.Bad.is(fe2)
+
+            fe_fe2[sp_[id1]] = fu(fe2)
 
         end
 
     end
 
-    id_fe
+    fe_fe2
 
 end
 
@@ -200,89 +194,100 @@ function tabulate(bl_th, sa = "!Sample_title")
 
     sa_ke_va = OrderedDict(ke_va[sa] => ke_va for ke_va in values(bl_th["SAMPLE"]))
 
-    sa_ = collect(keys(sa_ke_va))
+    n = length(sa_ke_va)
 
-    ids_ = 1:length(sa_)
+    sa_ = Vector{String}(undef, n)
 
-    ch_st__ = [Dict{String, String}() for _ in ids_]
+    ch_st__ = Vector{Dict{String, String}}(undef, n)
 
     pl_fe_fl__ = Dict{String, Vector{Dict{String, Float64}}}()
 
     de = ": "
 
-    for (ids, (sa, ke_va)) in enumerate(sa_ke_va)
+    for (id, (sa, ke_va)) in enumerate(sa_ke_va)
 
-        ch_ = [va for (ke, va) in ke_va if startswith(ke, "!Sample_characteristics")]
+        sa_[id] = sa
 
-        if all(contains(de), ch_)
+        ch_st__[id] = Dict{String, String}()
 
-            merge!(ch_st__[ids], Dict(eachsplit(ch, de; limit = 2) for ch in ch_))
+        for (ke, va) in ke_va
 
-        else
+            if startswith(ke, "!Sample_characteristics")
 
-            @warn "\"$sa\" characteristics lack \"$de\"." ch_
+                if contains(va, de)
+
+                    ch, st = eachsplit(va, de; limit = 2)
+
+                    ch_st__[id][ch] = st
+
+                else
+
+                    @warn "\"$sa\" characteristic \"$va\" lacks \"$de\"."
+
+                end
+
+            end
 
         end
 
         if haskey(ke_va, "table")
 
-            sp___ = BioLab.String.dice(ke_va["table"])
-
-            idv = findfirst(==("VALUE"), sp___[1])
-
             pl = ke_va["!Sample_platform_id"]
 
             if !haskey(pl_fe_fl__, pl)
 
-                pl_fe_fl__[pl] = [Dict{String, Float64}() for _ in ids_]
+                pl_fe_fl__[pl] = Vector{Dict{String, Float64}}(undef, n)
 
             end
 
-            merge!(
-                pl_fe_fl__[pl][ids],
-                Dict(sp_[1] => parse(Float64, sp_[idv]) for sp_ in view(sp___, 2:length(sp___))),
-            )
+            sp___ = _dice(ke_va["table"])
+
+            idv = findfirst(==("VALUE"), sp___[1])
+
+            pl_fe_fl__[pl][id] =
+                Dict(sp_[1] => parse(Float64, sp_[idv]) for sp_ in view(sp___, 2:length(sp___)))
 
         else
 
-            @warn "\"$sa\" table is empty."
+            @warn "\"$sa\" lacks a table."
 
         end
 
     end
 
-    pl_feature_x_sample_x_number = Dict{String, DataFrame}()
+    na_feature_x_sample_x_any =
+        Dict("Characteristic" => BioLab.DataFrame.make("Characteristic", sa_, ch_st__))
 
     for (pl, fe_fl__) in pl_fe_fl__
 
-        feature_x_sample_x_number = BioLab.DataFrame.make(pl, sa_, fe_fl__)
+        feature_x_sample_x_float = BioLab.DataFrame.make(pl, sa_, fe_fl__)
 
-        if !isempty(feature_x_sample_x_number)
+        if !isempty(feature_x_sample_x_float)
 
             ke_va = bl_th["PLATFORM"][pl]
 
             if haskey(ke_va, "table")
 
-                sp___ = BioLab.String.dice(ke_va["table"])
+                fe_fe2 = _map(pl, ke_va["table"])
 
-                id_fe = _map_feature(pl, sp___[1], view(sp___, 2:length(sp___)))
-
-                feature_x_sample_x_number[!, 1] =
-                    [Base.get(id_fe, id, "_$id") for id in feature_x_sample_x_number[!, 1]]
+                # TODO: Benchmark a for-loop.
+                # TODO: Consider `rename`.
+                feature_x_sample_x_float[!, 1] =
+                    [Base.get(fe_fe2, id, "_$id") for id in feature_x_sample_x_float[!, 1]]
 
             else
 
-                error("\"$pl\" table is empty.")
+                error("\"$pl\" lacks a table.")
 
             end
 
         end
 
-        pl_feature_x_sample_x_number[pl] = feature_x_sample_x_number
+        na_feature_x_sample_x_any[pl] = feature_x_sample_x_float
 
     end
 
-    BioLab.DataFrame.make("Characteristic", sa_, ch_st__), pl_feature_x_sample_x_number
+    na_feature_x_sample_x_any
 
 end
 
@@ -318,25 +323,26 @@ function get(
 
     bl_th = BioLab.GEO.read(gz)
 
-    characteristic_x_sample_x_any, pl_feature_x_sample_x_number = BioLab.GEO.tabulate(bl_th; sa)
+    na_feature_x_sample_x_any = BioLab.GEO.tabulate(bl_th; sa)
 
-    nac, ch_, sa_, ch_x_sa_x_an = BioLab.DataFrame.separate(characteristic_x_sample_x_any)
+    nac, ch_, sa_, ch_x_sa_x_st =
+        BioLab.DataFrame.separate(pop!(na_feature_x_sample_x_any, "Characteristic"))
 
-    BioLab.FeatureXSample.error_describe(ch_, eachrow(ch_x_sa_x_an))
+    BioLab.FeatureXSample.count(ch_, eachrow(ch_x_sa_x_st))
 
-    replace!(ch_x_sa_x_an, missing => "")
+    replace!(ch_x_sa_x_st, missing => "")
 
-    @info "Characteristic size = $(size(ch_x_sa_x_an))."
+    @info "Characteristic size = $(size(ch_x_sa_x_st))."
 
     if !isempty(se_)
 
         is_ = (sa -> all(occursin(sa), se_)).(sa_)
 
-        sa_ = view(sa_, is_)
+        sa_ = sa_[is_]
 
-        ch_x_sa_x_an = view(ch_x_sa_x_an, :, is_)
+        ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
 
-        @info "Characteristic size = $(size(ch_x_sa_x_an))."
+        @info "Characteristic size = $(size(ch_x_sa_x_st))."
 
     end
 
@@ -352,7 +358,7 @@ function get(
 
         @info "Replacing characteristic values"
 
-        ch_x_sa_x_an = replace.(ch_x_sa_x_an, rec_...)
+        ch_x_sa_x_st = replace.(ch_x_sa_x_st, rec_...)
 
     end
 
@@ -361,11 +367,11 @@ function get(
     nasc = BioLab.Path.clean(nas)
 
     BioLab.DataFrame.write(
-        joinpath(ou, "characteristic_x_$(nasc)_x_any.tsv"),
-        BioLab.DataFrame.make(nac, ch_, sa_, ch_x_sa_x_an),
+        joinpath(ou, "characteristic_x_$(nasc)_x_string.tsv"),
+        BioLab.DataFrame.make(nac, ch_, sa_, ch_x_sa_x_st),
     )
 
-    pl_ = collect(keys(pl_feature_x_sample_x_number))
+    pl_ = collect(keys(na_feature_x_sample_x_any))
 
     n_pl = length(pl_)
 
@@ -387,11 +393,11 @@ function get(
 
         end
 
-        feature_x_sample_x_number = BioLab.DataFrame.read(gz)
+        feature_x_sample_x_float = BioLab.DataFrame.read(gz)
 
     elseif isone(n_pl)
 
-        feature_x_sample_x_number = pl_feature_x_sample_x_number[pl_[1]]
+        feature_x_sample_x_float = na_feature_x_sample_x_any[pl_[1]]
 
     elseif 1 < n_pl
 
@@ -399,7 +405,7 @@ function get(
 
     end
 
-    naf, fe_, sa2_, fe_x_sa2_x_nu = BioLab.DataFrame.separate(feature_x_sample_x_number)
+    naf, fe_, sa2_, fe_x_sa2_x_nu = BioLab.DataFrame.separate(feature_x_sample_x_float)
 
     nafc = BioLab.Path.clean(naf)
 
@@ -419,9 +425,9 @@ function get(
 
         id_ = indexin(sa_, sa2_)
 
-        sa2_ = view(sa2_, id_)
+        #sa2_ = sa2_[id_]
 
-        fe_x_sa_x_nu = view(fe_x_sa2_x_nu, :, id_)
+        fe_x_sa_x_nu = fe_x_sa2_x_nu[:, id_]
 
     end
 
@@ -439,7 +445,8 @@ function get(
 
     else
 
-        grc_ = BioLab.String.try_parse.(view(ch_x_sa_x_an, findfirst(==(chg), ch_), :))
+        # TODO: Benchmark `view`.
+        grc_ = BioLab.String.try_parse.(ch_x_sa_x_st[findfirst(==(chg), ch_), :])
 
         title_text = "$gs (by $(titlecase(chg)))"
 
@@ -447,16 +454,16 @@ function get(
 
     BioLab.Plot.plot_heat_map(
         "$pr.html",
-        fe_x_sa_x_nu,
-        fe_,
-        sa_;
+        fe_x_sa_x_nu;
+        y = fe_,
+        x = sa_,
         nar = naf,
         nac = nas,
         grc_,
         layout = Dict("title" => Dict("text" => title_text)),
     )
 
-    ou, nas, sa_, ch_, ch_x_sa_x_an, fe_, fe_x_sa_x_nu
+    ou, nas, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu
 
 end
 

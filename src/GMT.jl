@@ -14,7 +14,7 @@ function read(gm)
 
         BioLab.Error.error_has_key(se_ge_, se)
 
-        se_ge_[se] = filter!(!isempty, view(sp_, 3:length(sp_)))
+        se_ge_[se] = filter!(!isempty, sp_[3:end])
 
     end
 

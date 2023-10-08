@@ -30,15 +30,13 @@ function set_with_suffix!(ke_va, ke, va)
 
     ke_va[ke] = va
 
+    nothing
+
 end
 
 function merge(ke1_va1, ke2_va2)
 
-    ke1_ = keys(ke1_va1)
-
-    ke2_ = keys(ke2_va2)
-
-    ke_ = union(ke1_, ke2_)
+    ke_ = union(keys(ke1_va1), keys(ke2_va2))
 
     ke_va = Base.Dict{eltype(ke_), eltype(union(values(ke1_va1), values(ke2_va2)))}()
 
@@ -48,15 +46,11 @@ function merge(ke1_va1, ke2_va2)
 
             va1 = ke1_va1[ke]
 
-            va2 = ke2_va2[ke]
+            va = ke2_va2[ke]
 
-            if va1 isa AbstractDict && va2 isa AbstractDict
+            if va1 isa AbstractDict && va isa AbstractDict
 
-                va = merge(va1, va2)
-
-            else
-
-                va = va2
+                va = merge(va1, va)
 
             end
 
@@ -84,6 +78,7 @@ function is_in(an_id, an1_)
 
     for an1 in an1_
 
+        # TODO: Benchmark `missing` and `haskey`.
         id = get(an_id, an1, nothing)
 
         if !isnothing(id)
@@ -98,17 +93,17 @@ function is_in(an_id, an1_)
 
 end
 
-function read(pa, dicttype = OrderedDict; ke_ar...)
+function read(fi, dicttype = OrderedDict; ke_ar...)
 
-    ex = BioLab.Path.get_extension(pa)
+    ex = BioLab.Path.get_extension(fi)
 
     if ex in ("json", "ipynb")
 
-        json_parsefile(pa; dicttype, ke_ar...)
+        json_parsefile(fi; dicttype, ke_ar...)
 
     elseif ex == "toml"
 
-        toml_parsefile(pa; ke_ar...)
+        toml_parsefile(fi; ke_ar...)
 
     else
 
@@ -118,15 +113,14 @@ function read(pa, dicttype = OrderedDict; ke_ar...)
 
 end
 
-function write(js, ke_va, id = 2)
+# TODO: Check return type.
+function write(js, ke_va, id = 2)::Nothing
 
     open(js, "w") do io
 
         print(io, ke_va, id)
 
     end
-
-    js
 
 end
 

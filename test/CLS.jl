@@ -6,11 +6,13 @@ using BioLab
 
 const DA = joinpath(BioLab._DA, "CLS")
 
+# ---- #
+
 @test BioLab.Path.read(DA) == ["CCLE_mRNA_20Q2_no_haem_phen.cls", "GSE76137.cls", "LPS_phen.cls"]
 
 # ---- #
 
-for (cl, ta, nu_) in (
+for (cl, ta, re) in (
     (
         "CCLE_mRNA_20Q2_no_haem_phen.cls",
         "HER2",
@@ -20,21 +22,23 @@ for (cl, ta, nu_) in (
     ("LPS_phen.cls", "CNTRL_LPS", [1, 1, 1, 2, 2, 2]),
 )
 
-    cl = joinpath(DA, cl)
+    cl2 = joinpath(DA, cl)
 
-    target_x_sample_x_number = BioLab.CLS.read(cl)
+    nar, ro_, co_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.CLS.read(cl2))
 
-    @test size(target_x_sample_x_number, 1) === 1
+    @test nar === "Target"
 
-    @test all(co -> eltype(co) != Any, eachcol(target_x_sample_x_number))
+    @test ro_ == [ta]
 
-    @test target_x_sample_x_number[1, "Target"] == ta
+    @test all(startswith("Sample "), co_)
 
-    @test collect(target_x_sample_x_number[1, ["Sample $id" for id in eachindex(nu_)]]) == nu_
+    @test eltype(fe_x_sa_x_nu) === eltype(re)
 
-    # 385.500 μs (6234 allocations: 530.46 KiB)
-    # 10.666 μs (98 allocations: 7.70 KiB)
-    # 10.417 μs (98 allocations: 7.64 KiB)
-    #@btime BioLab.CLS.read($cl)
+    @test fe_x_sa_x_nu[1, eachindex(re)] == re
+
+    # 387.584 μs (6235 allocations: 530.47 KiB)
+    # 10.666 μs (99 allocations: 7.73 KiB)
+    # 10.500 μs (99 allocations: 7.67 KiB)
+    @btime BioLab.CLS.read($cl2)
 
 end

@@ -18,8 +18,6 @@ function __init__()
 
     BioLab.Path.remake_directory(TE)
 
-    nothing
-
 end
 
 end

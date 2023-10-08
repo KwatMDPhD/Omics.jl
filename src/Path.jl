@@ -14,7 +14,7 @@ end
 
 function get_extension(pa)
 
-    chop(splitext(pa)[2]; head = 1, tail = 0)
+    splitext(pa)[2][2:end]
 
 end
 
@@ -58,6 +58,8 @@ function open(pa)
 
         run(`open --background $pa`)
 
+        nothing
+
     catch
 
         @warn "Could not open $pa."
@@ -68,9 +70,9 @@ end
 
 function remove(pa; ke_ar...)
 
-    @info "Removing $pa"
-
     rm(pa; ke_ar...)
+
+    @info "Removed $pa."
 
 end
 
@@ -88,28 +90,7 @@ function remake_directory(di)
 
     mkdir(di)
 
-end
-
-# TODO: Consider using '.' only before an extension.
-function rank(di)
-
-    flnaex_ = rsplit.(read(di), '.'; limit = 3)
-
-    for (id, (fl, pr, ex)) in enumerate(sort!(flnaex_; by = flnaex -> parse(Float64, flnaex[1])))
-
-        na1 = "$fl.$pr.$ex"
-
-        na2 = "$id.$pr.$ex"
-
-        if na1 != na2
-
-            mv(joinpath(di, na1), joinpath(di, na2))
-
-        end
-
-    end
-
-    di
+    nothing
 
 end
 

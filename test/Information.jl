@@ -1,12 +1,13 @@
+# TODO
 using Test: @test
 
 using BioLab
 
 # ---- #
 
-for nu_ in (zeros(10), ones(10))
+for nu in (zeros(10), ones(10))
 
-    BioLab.Information.get_entropy(nu_)
+    BioLab.Information.get_entropy(nu)
 
 end
 
@@ -22,11 +23,17 @@ end
 
 const N = 10
 
+# ---- #
+
 const NU1_ = randn(N)
+
+# ---- #
 
 const NU2_ = randn(N)
 
-const AR_ = (
+# ---- #
+
+const NU___ = (
     (ones(3), ones(3)),
     ([1, 2, 3], [10, 20, 30]),
     (get_density(NU1_), get_density(NU2_)),
@@ -35,7 +42,7 @@ const AR_ = (
 
 # ---- #
 
-for (nu1_, nu2_) in AR_
+for (nu1_, nu2_) in NU___
 
     for fu in (
         BioLab.Information.get_kullback_leibler_divergence,
@@ -56,7 +63,7 @@ end
 
 # ---- #
 
-for (nu1_, nu2_) in AR_
+for (nu1_, nu2_) in NU___
 
     for fu in (
         BioLab.Information.get_antisymmetric_kullback_leibler_divergence,
@@ -78,20 +85,40 @@ end
 
 # ---- #
 
+# TODO
+
+# ---- #
+
 nu1_ = collect(0:10)
+
+# ---- #
 
 nu2_ = collect(0:10:100)
 
+# ---- #
+
 BioLab.Information.get_mutual_information(nu1_, nu2_)
 
-bi = BioLab.Information.kde((nu1_, nu2_), npoints = (8, 8))
+## ---- #
+#
+#bi = BioLab.Information.kde((nu2_, nu1_), npoints = (8, 8))
+#
+## ---- #
+#
+#y = collect(bi.y)
+#
+## ---- #
+#
+#x = collect(bi.x)
+#
+## ---- #
+#
+#z = bi.density
+#
+## ---- #
+#
+#BioLab.Plot.plot_heat_map("", z; y, x)
 
-y = collect(bi.y)
-
-x = collect(bi.x)
-
-z = bi.density
-
-BioLab.Plot.plot_heat_map("", z; y, x)
+# ---- #
 
 BioLab.Information.get_information_coefficient(nu1_, nu2_)

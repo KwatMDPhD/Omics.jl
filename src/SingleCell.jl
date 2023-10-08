@@ -1,26 +1,26 @@
 module SingleCell
 
-using ProgressMeter: @showprogress
-
 using ..BioLab
 
 function read(sa_di)
 
-    fe_ = Vector{String}()
+    fe_ = nothing
+
+    n_fe = 0
+
+    sa_ = Vector{String}()
 
     ba_ = Vector{String}()
 
     idf_ = Vector{Int}()
 
+    n_ba = 0
+
     idb_ = Vector{Int}()
 
     co_ = Vector{Int}()
 
-    sa_ = Vector{String}()
-
-    n_ba = 0
-
-    for (sa, di) in sa_di
+    for (sa, di) in zip(string.(keys(sa_di)), sa_di)
 
         @info "Reading \"$sa\""
 
@@ -36,14 +36,14 @@ function read(sa_di)
                 1,
             ]
 
-        # TODO
-        da = BioLab.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3)#, delim = ' ')
+        index_x_featurebarcodecount_x_it =
+            BioLab.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3)#, delim = ' ')
 
         n_fes = length(fes_)
 
         n_bas = length(bas_)
 
-        co1, co2, co3 = (parse(Int, co) for co in names(da))
+        co1, co2, co3 = (parse(Int, co) for co in names(index_x_featurebarcodecount_x_it))
 
         if n_fes != co1
 
@@ -59,9 +59,11 @@ function read(sa_di)
 
         @info "$co1 x $co2 x $co3."
 
-        if isempty(fe_)
+        if isnothing(fe_)
 
             fe_ = fes_
+
+            n_fe = n_fes
 
         elseif fe_ != fes_
 
@@ -69,27 +71,25 @@ function read(sa_di)
 
         end
 
+        append!(sa_, fill(sa, n_bas))
+
         append!(ba_, ["$(sa)_$ba" for ba in bas_])
 
-        append!(idf_, da[!, 1])
+        append!(idf_, index_x_featurebarcodecount_x_it[!, 1])
 
-        append!(idb_, da[!, 2] .+ n_ba)
-
-        append!(co_, da[!, 3])
-
-        append!(sa_, fill(sa, n_bas))
+        append!(idb_, n_ba .+ index_x_featurebarcodecount_x_it[!, 2])
 
         n_ba += n_bas
 
-    end
+        append!(co_, index_x_featurebarcodecount_x_it[!, 3])
 
-    n_fe = length(fe_)
+    end
 
     @info "Combining $n_fe features and $n_ba barcodes"
 
     fe_x_ba_x_co = zeros(Int, n_fe, n_ba)
 
-    @showprogress for (idf, idb, co) in zip(idf_, idb_, co_)
+    for (idf, idb, co) in zip(idf_, idb_, co_)
 
         fe_x_ba_x_co[idf, idb] = co
 
@@ -99,7 +99,7 @@ function read(sa_di)
 
         st = BioLab.Collection.count_sort_string(fe_, 2)
 
-        @warn "Features have $(BioLab.String.count(length(split(st, '\n')), "duplicate")).\n$st"
+        @warn "Features have $(BioLab.String.count(count('\n', st) + 1, "duplicate")).\n$st"
 
         fe_, fe_x_ba_x_co = BioLab.Matrix.collapse(maximum, Int, fe_, fe_x_ba_x_co)
 

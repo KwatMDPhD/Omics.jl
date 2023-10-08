@@ -2,45 +2,48 @@ module Collection
 
 using StatsBase: countmap
 
-using ..BioLab
+function unique_sort(an_)
 
-function range(it::AbstractArray{Int}, ::Int)
-
-    Base.range(minimum(it), maximum(it))
+    sort!(unique(an_))
 
 end
 
-function range(fl::AbstractArray{Float64}, n::Int)
+function map_index(an_)
 
-    fl2 = view(fl, .!isnan.(fl))
-
-    Base.range(minimum(fl2), maximum(fl2), n)
+    Dict(an => id for (id, an) in enumerate(an_))
 
 end
 
-function unique_sort(an_, rev = false)
+function get_minimum_maximum(an_)
 
-    sort!(unique(an_); rev)
+    mi = ma = an_[1]
 
-end
+    for id in 2:length(an_)
 
-function count_sort(an_, rev = false)
+        an = an_[id]
 
-    sort(countmap(an_); byvalue = true, rev)
+        if an < mi
+
+            mi = an
+
+        elseif ma < an
+
+            ma = an
+
+        end
+
+    end
+
+    mi, ma
 
 end
 
 function count_sort_string(an_, mi = 1)
 
-    join(("$n $an." for (an, n) in count_sort(an_, true) if mi <= n), '\n')
-
-end
-
-function map_index(un_)
-
-    BioLab.Error.error_duplicate(un_)
-
-    Dict(un => id for (id, un) in enumerate(un_))
+    join(
+        ("$n $an." for (an, n) in sort(countmap(an_); byvalue = true, rev = true) if mi <= n),
+        '\n',
+    )
 
 end
 

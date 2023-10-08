@@ -1,26 +1,36 @@
 module Simulation
 
-using Distributions: Normal
-
 using ..BioLab
 
 function _mirror(n)
 
-    ra_ = rand(Normal(), n)
+    po_ = Vector{Float64}(undef, n)
 
-    po_ = ra_ .+ (0 - minimum(ra_))
+    id = 1
+
+    po_[id] = 0
+
+    while id < n
+
+        ra = randn()
+
+        if BioLab.Number.is_positive(ra)
+
+            po_[id += 1] = ra
+
+        end
+
+    end
 
     sort!(po_)
 
-    reverse(-po_), po_
+    reverse!(-po_), po_
 
 end
 
 function _concatenate(ne_, ze, po_)
 
-    n = length(ne_)
-
-    vcat(view(ne_, 1:(n - !ze)), po_)
+    vcat(ne_[1:(end - !ze)], po_)
 
 end
 
@@ -44,28 +54,29 @@ function make_vector_mirror_wide(n, ze = true)
 
     ne_, po_ = _mirror(n)
 
-    ne2_ = Vector{Float64}(undef, n * 2 - 1)
+    new_ = Vector{Float64}(undef, n * 2 - 1)
 
     for (id, ne) in enumerate(ne_)
 
         id2 = id * 2
 
-        ne2_[id2 - 1] = ne
+        new_[id2 - 1] = ne
 
         if id < n
 
-            ne2_[id2] = (ne + ne_[id + 1]) / 2
+            new_[id2] = (ne + ne_[id + 1]) / 2
 
         end
 
     end
 
-    _concatenate(ne2_, ze, po_)
+    _concatenate(new_, ze, po_)
 
 end
 
 function make_matrix_1n(ty, n_ro, n_co)
 
+    # TODO: Benchmark `Matrix(`.
     convert(Matrix{ty}, reshape(1:(n_ro * n_co), n_ro, n_co))
 
 end

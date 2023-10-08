@@ -7,17 +7,17 @@ using ..BioLab
 function plot(
     ht,
     el_;
-    st_ = (),
+    st = Dict{String, Any}(),
     la = Dict{String, Any}(),
     ex = "",
-    pns = 1,
+    sc = 1,
     ba = "#fcfcfc",
     ke_ar...,
 )
 
     if isempty(ex)
 
-        fi = ""
+        dw = ""
 
         re = ""
 
@@ -33,11 +33,11 @@ function plot(
 
         na = "$pr.$ex"
 
-        fi = joinpath(homedir(), "Downloads", na)
+        dw = joinpath(homedir(), "Downloads", na)
 
-        if isfile(fi)
+        if isfile(dw)
 
-            BioLab.Path.remove(fi)
+            BioLab.Path.remove(dw)
 
         end
 
@@ -47,7 +47,7 @@ function plot(
 
         elseif ex == "png"
 
-            bl = "cy.png({full: true, scale: $pns, bg: \"$ba\"})"
+            bl = "cy.png({full: true, scale: $sc, bg: \"$ba\"})"
 
         else
 
@@ -74,7 +74,7 @@ function plot(
         var cy = cytoscape({
             container: document.getElementById("$id"),
             elements: $(json(el_)),
-            style: $(json(st_)),
+            style: $(json(st)),
             layout: $(json(merge(Dict("animate" => false), la))),
         });
 
@@ -99,23 +99,23 @@ function plot(
         ke_ar...,
     )
 
-    if !isempty(fi)
+    if !isempty(dw)
 
-        BioLab.Path.wait(fi, 40)
+        BioLab.Path.wait(dw, 40)
 
-        fi2 = joinpath(dirname(ht), na)
+        fi = joinpath(dirname(ht), na)
 
-        if isfile(fi2)
+        if isfile(fi)
 
-            BioLab.Path.remove(fi2)
+            BioLab.Path.remove(fi)
 
         end
 
-        mv(fi, fi2)
+        mv(dw, fi)
 
     end
 
-    ht
+    nothing
 
 end
 

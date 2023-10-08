@@ -1,26 +1,6 @@
 module Rank
 
-function rank_in_fraction(ra)
-
-    fr = 0
-
-    n = fld(ra, 9)
-
-    for id in 1:n
-
-        fr += 9 * 10.0^-id
-
-    end
-
-    id = n + 1
-
-    fr += (ra % 9) * 10.0^-id
-
-    round(fr; digits = id)
-
-end
-
-function get_extreme(n::Int, n_ex)
+function get_extreme(n::Integer, n_ex)
 
     if n / 2 <= n_ex
 
@@ -34,15 +14,9 @@ function get_extreme(n::Int, n_ex)
 
 end
 
-function get_extreme(an_::AbstractVector, n_ex)
+function get_extreme(an_, n_ex)
 
-    view(sortperm(an_), get_extreme(length(an_), n_ex))
-
-end
-
-function get_extreme(fl_::AbstractVector{Float64}, n_ex)
-
-    view(sortperm(fl_), get_extreme(length(fl_) - sum(isnan, fl_), n_ex))
+    sortperm(an_)[get_extreme(length(an_), n_ex)]
 
 end
 

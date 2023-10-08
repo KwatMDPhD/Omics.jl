@@ -4,47 +4,6 @@ using BioLab
 
 # ---- #
 
-for (ra, re) in zip(
-    0:28,
-    (
-        0.0,
-        0.1,
-        0.2,
-        0.3,
-        0.4,
-        0.5,
-        0.6,
-        0.7,
-        0.8,
-        0.9,
-        0.91,
-        0.92,
-        0.93,
-        0.94,
-        0.95,
-        0.96,
-        0.97,
-        0.98,
-        0.99,
-        0.991,
-        0.992,
-        0.993,
-        0.994,
-        0.995,
-        0.996,
-        0.997,
-        0.998,
-        0.999,
-        0.9991,
-    ),
-)
-
-    @test BioLab.Rank.rank_in_fraction(ra) === re
-
-end
-
-# ---- #
-
 const ID_ = Vector{Int}()
 
 # ---- #
@@ -60,11 +19,21 @@ for (n, n_ex, re) in (
 
     @test BioLab.Rank.get_extreme(n, n_ex) == re
 
+    # 18.662 ns (1 allocation: 64 bytes)
+    # 18.639 ns (1 allocation: 64 bytes)
+    # 58.604 ns (3 allocations: 192 bytes)
+    # 59.978 ns (3 allocations: 208 bytes)
+    # 19.915 ns (1 allocation: 96 bytes)
+    # 19.893 ns (1 allocation: 96 bytes)
+    @btime BioLab.Rank.get_extreme($n, $n_ex)
+
 end
 
 # ---- #
 
 const IT_ = [20, 40, 60, 50, 30, 10]
+
+# ---- #
 
 const CH_ = [
     'b',
@@ -95,6 +64,8 @@ const CH_ = [
     'a',
 ]
 
+# ---- #
+
 for (an_, n_ex, re) in (
     (ID_, 0, ID_),
     (ID_, 1, ID_),
@@ -108,16 +79,18 @@ for (an_, n_ex, re) in (
     (CH_, length(CH_) + 1, sort(CH_)),
 )
 
-    @test view(an_, BioLab.Rank.get_extreme(an_, n_ex)) == re
+    @test an_[BioLab.Rank.get_extreme(an_, n_ex)] == re
 
-end
-
-# ---- #
-
-const FL_ = [NaN, 1, NaN, 2, NaN, 3, NaN, 4, NaN, 5]
-
-for (n, re) in ((1, [2, 10]), (2, [2, 4, 8, 10]), (3, [2, 4, 6, 8, 10]))
-
-    @test BioLab.Rank.get_extreme(FL_, n) == re
+    # 60.232 ns (3 allocations: 192 bytes)
+    # 60.275 ns (3 allocations: 192 bytes)
+    # 122.560 ns (5 allocations: 368 bytes)
+    # 125.464 ns (5 allocations: 400 bytes)
+    # 130.898 ns (5 allocations: 464 bytes)
+    # 90.481 ns (3 allocations: 336 bytes)
+    # 312.668 ns (6 allocations: 800 bytes)
+    # 314.773 ns (6 allocations: 832 bytes)
+    # 318.133 ns (6 allocations: 896 bytes)
+    # 295.816 ns (4 allocations: 1.06 KiB)
+    @btime BioLab.Rank.get_extreme($an_, $n_ex)
 
 end

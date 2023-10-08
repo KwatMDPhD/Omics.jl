@@ -12,11 +12,16 @@ using XLSX: readtable
 
 using ..BioLab
 
+# TODO: Test.
 function make(nar, co_, ro_an__)
 
     ro_ = sort!(collect(union(keys.(ro_an__)...)))
 
-    ma = Matrix{Any}(undef, length(ro_), 1 + length(co_))
+    ma = Matrix{eltype(union((values(ro_an) for ro_an in ro_an__)...))}(
+        undef,
+        length(ro_),
+        1 + length(co_),
+    )
 
     ma[:, 1] = ro_
 
@@ -42,6 +47,7 @@ function make(nar, co_, ro_an__)
 
     end
 
+    # TODO: Check if types are known.
     _DataFrame(ma, vcat(nar, co_))
 
 end
@@ -52,13 +58,13 @@ function make(nar, ro_, co_, ma)
 
 end
 
-function separate(da)
+function separate(row_x_column_x_any)
 
-    co_ = names(da)
+    co_ = names(row_x_column_x_any)
 
     id_ = 2:length(co_)
 
-    co_[1], da[:, 1], view(co_, id_), Matrix(da[!, id_])
+    co_[1], row_x_column_x_any[:, 1], co_[id_], Matrix(row_x_column_x_any[!, id_])
 
 end
 
@@ -86,9 +92,10 @@ function read(fi, xl = ""; ke_ar...)
 
 end
 
-function write(ts, da)
+# TODO: Check return type.
+function write(ts, row_x_column_x_any)::Nothing
 
-    _write(ts, da; delim = '\t')
+    _write(ts, row_x_column_x_any; delim = '\t')
 
 end
 

@@ -4,9 +4,21 @@ using BioLab
 
 # ---- #
 
+@test BioLab.HTML.get_height() === 800
+
+# ---- #
+
+@test BioLab.HTML.get_width() === 1280
+
+# ---- #
+
 const SR_ = ("SCRIPT_SRC_1", "SCRIPT_SRC_2")
 
+# ---- #
+
 const ID = "DIV_ID"
+
+# ---- #
 
 const SC = "SCRIPT"
 
@@ -21,7 +33,7 @@ const SC = "SCRIPT"
 
 # ---- #
 
-for ba in ("#000000", "#ffffff")
+for ba in ("#ff0000", "#0000ff")
 
     BioLab.HTML.make("", SR_, ID, SC; ba)
 

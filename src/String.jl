@@ -1,21 +1,5 @@
 module String
 
-using Printf: @sprintf
-
-using ..BioLab
-
-function format(nu)
-
-    if isequal(nu, -0.0)
-
-        nu = 0.0
-
-    end
-
-    @sprintf "%.4g" nu
-
-end
-
 function try_parse(st)
 
     try
@@ -42,7 +26,7 @@ function limit(st, n)
 
     if n < length(st)
 
-        "$(view(st, 1:n))..."
+        "$(st[1:n])..."
 
     else
 
@@ -58,31 +42,30 @@ function split_get(st, de, id)
 
 end
 
-function dice(st)
-
-    split.(eachsplit(st, '\n'), '\t')
-
-end
-
 function count(n, st)
 
-    if n <= 1
+    if n < 0
+
+        error("$n is negative.")
+
+    elseif n <= 1
 
         return "$n $st"
 
     end
 
+    # TODO: Benchmark.
     if length(st) == 3 && view(st, 2:3) == "ex"
 
         return "$n $(st)es"
 
     end
 
-    for (si, pl) in (("ex", "ices"), ("ry", "ries"), ("o", "oes"))
+    for (si, n_le, pl) in (("ex", 2, "ices"), ("ry", 2, "ries"), ("o", 1, "oes"))
 
         if endswith(st, si)
 
-            return "$n $(chop(st; tail=length(si)))$pl"
+            return "$n $(st[1:(end - n_le)])$pl"
 
         end
 

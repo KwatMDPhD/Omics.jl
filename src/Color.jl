@@ -10,31 +10,11 @@ const HEFA = "#ebf6f7"
 
 function _make_color_scheme(he_)
 
-    ColorScheme([parse(Colorant{Float64}, he) for he in he_])
+    ColorScheme(parse.(Colorant, he_))
 
 end
 
-const COBW = bwr
-
-const COPA = plasma
-
-const COP3 = _make_color_scheme((
-    "#0508b8",
-    "#1910d8",
-    "#3c19f0",
-    "#6b1cfb",
-    "#981cfd",
-    "#bf1cfd",
-    "#dd2bfd",
-    "#f246fe",
-    "#fc67fd",
-    "#fe88fc",
-    "#fea5fd",
-    "#febefe",
-    "#fec3fe",
-))
-
-const COAS = _make_color_scheme((
+const COAS = _make_color_scheme([
     "#00936e",
     "#a4e2b4",
     "#e0f5e5",
@@ -42,9 +22,21 @@ const COAS = _make_color_scheme((
     "#fff8d1",
     "#ffec9f",
     "#ffd96a",
-))
+])
 
-const COPL = _make_color_scheme((
+const COBW = bwr
+
+const COPA = plasma
+
+const COMO = _make_color_scheme(["#fbb92d"])
+
+const COBI = _make_color_scheme(["#006442", "#ffb61e"])
+
+const COST = _make_color_scheme(["#8c1515", "#175e54"])
+
+const COHU = _make_color_scheme(["#4b3c39", "#ffddca"])
+
+const COPO = _make_color_scheme([
     "#636efa",
     "#ef553b",
     "#00cc96",
@@ -55,15 +47,7 @@ const COPL = _make_color_scheme((
     "#b6e880",
     "#ff97ff",
     "#fecb52",
-))
-
-const COBI = _make_color_scheme(("#006442", "#ffb61e"))
-
-const COHU = _make_color_scheme(("#4b3c39", "#ffddca"))
-
-const COST = _make_color_scheme(("#8c1515", "#175e54"))
-
-const COMO = _make_color_scheme(("#fbb92d",))
+])
 
 function _make_hex(rg, st = :AUTO)
 
@@ -77,27 +61,35 @@ function add_alpha(he, al)
 
 end
 
-function pick_color_scheme(::AbstractArray{Float64})
+function pick_color_scheme(nu_)
 
-    COBW
+    ty = eltype(nu_)
 
-end
+    if ty <: AbstractFloat
 
-function pick_color_scheme(it::AbstractArray{Int})
+        COBW
 
-    n = length(unique(it))
+    elseif ty <: Integer
 
-    if n in (0, 1)
+        n = length(unique(nu_))
 
-        COMO
+        if iszero(n) || isone(n)
 
-    elseif n == 2
+            COMO
 
-        COBI
+        elseif n == 2
+
+            COBI
+
+        else
+
+            COPO
+
+        end
 
     else
 
-        COPL
+        error("`$nu_`'s element type is not `AbstractFloat` or `Integer`.")
 
     end
 
@@ -109,9 +101,7 @@ function color(nu::Real, co)
 
 end
 
-function color(nu_::AbstractVector{<:Real}, co = pick_color_scheme(nu_))
-
-    n = length(nu_)
+function color(nu_, co = pick_color_scheme(nu_))
 
     if isone(length(unique(nu_)))
 
@@ -119,13 +109,9 @@ function color(nu_::AbstractVector{<:Real}, co = pick_color_scheme(nu_))
 
     end
 
-    fl_ = Vector{Float64}(undef, n)
+    mi, ma = BioLab.Collection.get_minimum_maximum(nu_)
 
-    copy!(fl_, nu_)
-
-    BioLab.Normalization.normalize_with_01!(fl_)
-
-    (nu -> color(nu, co)).(fl_)
+    (nu_ -> color((nu_ - mi) / (ma - mi), co)).(nu_)
 
 end
 

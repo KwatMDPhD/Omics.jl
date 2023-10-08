@@ -6,19 +6,41 @@ using BioLab
 
 @test BioLab.Error.@is error("The sky is green.")
 
+# ---- #
+
 @test !BioLab.Error.@is nothing
+
+# ---- #
+
+for em in ("", (), [])
+
+    @test BioLab.Error.@is BioLab.Error.error_empty(em)
+
+end
+
+# ---- #
+
+for an_ in ("Aa", (1,), [1])
+
+    @test !BioLab.Error.@is BioLab.Error.error_empty(an_)
+
+end
 
 # ---- #
 
 include("Bad.jl")
 
+# ---- #
+
 @test BioLab.Error.@is BioLab.Error.error_bad(BA_)
+
+# ---- #
 
 @test !BioLab.Error.@is BioLab.Error.error_bad(GO_)
 
 # ---- #
 
-for an_ in ((), ('a', 'a'), ('b', 'b', 'b', 'c', 'c', 'c', 'c'), (1, 1.0, 1 // 1, true))
+for an_ in (('a', 'a'), ('a', 'a', 'a', 'b', 'b', 'b', 'b'), (1, 1.0, 1 // 1, true))
 
     @test BioLab.Error.@is BioLab.Error.error_duplicate(an_)
 
@@ -52,21 +74,29 @@ end
 
 const KE_VA = Dict("Key" => "Value")
 
+# ---- #
+
 @test BioLab.Error.@is BioLab.Error.error_has_key(KE_VA, "Key")
+
+# ---- #
 
 @test !BioLab.Error.@is BioLab.Error.error_has_key(KE_VA, "New Key")
 
 # ---- #
 
-for pa in ("file.extension", joinpath(BioLab.TE, "file.extension"))
+const EX = "extension"
 
-    for ex in (".extension", "another_extension")
+# ---- #
+
+for pa in ("file.$EX", joinpath(BioLab.TE, "file.$EX"))
+
+    for ex in (".$EX", "another_extension")
 
         @test BioLab.Error.@is BioLab.Error.error_extension_difference(pa, ex)
 
     end
 
-    @test !BioLab.Error.@is BioLab.Error.error_extension_difference(pa, "extension")
+    @test !BioLab.Error.@is BioLab.Error.error_extension_difference(pa, EX)
 
 end
 

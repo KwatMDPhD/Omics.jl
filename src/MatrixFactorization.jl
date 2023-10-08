@@ -6,117 +6,128 @@ using NMF: nnmf
 
 using ..BioLab
 
-function factorize(ma, n; ke_ar...)
+function factorize(ma, n; init = :nndsvd, alg = :greedycd, maxiter = 10^6, tol = 1e-6, ke_ar...)
 
-    mf = nnmf(ma, n; ke_ar...)
+    re = nnmf(ma, n; init, alg, maxiter, tol, ke_ar...)
 
-    if mf.converged
+    if re.converged
 
-        mf.W, mf.H
+        re.W, re.H
 
     else
 
-        @warn "Did not converge. `niters` = $(mf.niters). `objvalue` = $(mf.objvalue)."
+        @warn "Failed to converge." re.niters re.objvalue
 
     end
 
 end
 
-function solve_h(ma, w)
+function solve_h(ma, mw)
 
-    clamp!(pinv(w) * ma, 0, Inf)
+    clamp!(pinv(mw) * ma, 0, Inf)
 
 end
 
 function write(
     di,
-    w_,
-    h_;
-    no = true,
-    nar_ = ["Rows $id" for id in eachindex(w_)],
-    nac_ = ["Columns $id" for id in eachindex(h_)],
+    ma;
+    nal = "Label",
     naf = "Factor",
-    ro___ = (["$na $id" for id in 1:size(ma, 1)] for (ma, na) in zip(w_, nar_)),
-    co___ = (["$na $id" for id in 1:size(ma, 2)] for (ma, na) in zip(h_, nac_)),
+    la_ = ["$nal $id" for id in 1:maximum(size(ma))],
+    fa_ = ["$naf $id" for id in 1:minimum(size(ma))],
+    no = true,
+    lo = BioLab.HTML.get_width(),
+    sh = BioLab.HTML.get_height(),
 )
 
     BioLab.Error.error_missing(di)
 
-    lo = 1280
+    id = findmax(size(ma))[2]
 
-    sh = 800
+    if isone(id)
 
-    fa_ = ["$naf $id" for id in 1:size(w_[1], 2)]
+        wh = "W"
 
-    axis = Dict("dtick" => 1)
+        nar = nal
 
-    for (id, (w, nar, ro_)) in enumerate(zip(w_, nar_, ro___))
+        nac = naf
 
-        pr = joinpath(di, "row$(id)_x_factor_x_positive")
+        ro_ = la_
 
-        BioLab.DataFrame.write("$pr.tsv", BioLab.DataFrame.make(nar, ro_, fa_, w))
+        co_ = fa_
 
-        or_ = BioLab.Clustering.hierarchize(w, 1).order
+        ma2 = permutedims(ma)
 
-        if no
+    else
 
-            w = copy(w)
+        wh = "H"
 
-            foreach(BioLab.Normalization.normalize_with_0!, eachrow(w))
+        nar = naf
 
-        end
+        nac = nal
 
-        BioLab.Plot.plot_heat_map(
-            "$pr.html",
-            view(w, or_, :);
-            y = view(ro_, or_),
-            x = fa_,
-            nar,
-            nac = naf,
-            layout = Dict(
-                "height" => lo,
-                "width" => sh,
-                "title" => Dict("text" => "W $id"),
-                "xaxis" => axis,
-            ),
-        )
+        ro_ = fa_
+
+        co_ = la_
+
+        ma2 = ma
 
     end
 
-    for (id, (h, nac, co_)) in enumerate(zip(h_, nac_, co___))
+    pr = joinpath(di, lowercase(wh))
 
-        pr = joinpath(di, "factor_x_column$(id)_x_positive")
+    BioLab.DataFrame.write("$pr.tsv", BioLab.DataFrame.make(nar, ro_, co_, ma))
 
-        BioLab.DataFrame.write("$pr.tsv", BioLab.DataFrame.make(naf, fa_, co_, h))
+    id_ = BioLab.Clustering.hierarchize(ma2).order
 
-        or_ = BioLab.Clustering.hierarchize(h, 2).order
+    if isone(id)
 
-        if no
+        ma = ma[id_, :]
 
-            h = copy(h)
+        ro_ = ro_[id_]
 
-            foreach(BioLab.Normalization.normalize_with_0!, eachcol(h))
+        ea = eachrow
 
-        end
+        height, width = lo, sh
 
-        BioLab.Plot.plot_heat_map(
-            "$pr.html",
-            view(h, :, or_);
-            y = fa_,
-            x = view(co_, or_),
-            nar = naf,
-            nac,
-            layout = Dict(
-                "height" => sh,
-                "width" => lo,
-                "title" => Dict("text" => "H $id"),
-                "yaxis" => axis,
-            ),
-        )
+        ax = "x"
+
+    else
+
+        ma = ma[:, id_]
+
+        co_ = co_[id_]
+
+        ea = eachcol
+
+        height, width = sh, lo
+
+        ax = "y"
 
     end
 
-    di
+    if no
+
+        ma = copy(ma)
+
+        foreach(BioLab.Normalization.normalize_with_0!, ea(ma))
+
+    end
+
+    BioLab.Plot.plot_heat_map(
+        "$pr.html",
+        ma;
+        y = ro_,
+        x = co_,
+        nar,
+        nac,
+        layout = Dict(
+            "height" => height,
+            "width" => width,
+            "title" => Dict("text" => wh),
+            "$(ax)axis" => Dict("dtick" => 1),
+        ),
+    )
 
 end
 

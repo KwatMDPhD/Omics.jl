@@ -4,7 +4,7 @@ using BioLab
 
 # ---- #
 
-const EL_ = Vector{Dict{String, Any}}([
+const EL_ = [
     Dict(
         "data" => Dict("id" => "A"),
         "position" => Dict("y" => 0, "x" => 0),
@@ -44,7 +44,7 @@ const EL_ = Vector{Dict{String, Any}}([
         "data" => Dict("id" => "H", "source" => "F", "target" => "G"),
         "style" => Dict("line-color" => "#6c9956"),
     ),
-])
+]
 
 # ---- #
 
@@ -54,11 +54,19 @@ const DW = joinpath(homedir(), "Downloads")
 
 const NAME1 = "preset"
 
+# ---- #
+
 const HT1 = joinpath(BioLab.TE, "$NAME1.html")
+
+# ---- #
 
 const EX1 = "png"
 
+# ---- #
+
 @test BioLab.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1) === HT1
+
+# ---- #
 
 @test isfile(joinpath(BioLab.TE, "$NAME1.$EX1"))
 
@@ -66,11 +74,19 @@ const EX1 = "png"
 
 const NAME2 = "cose"
 
+# ---- #
+
 const HT2 = joinpath(BioLab.TE, "$NAME2.html")
+
+# ---- #
 
 const EX2 = "json"
 
+# ---- #
+
 @test BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2) === HT2
+
+# ---- #
 
 const JS = joinpath(BioLab.TE, "$NAME2.$EX2")
 
@@ -85,6 +101,8 @@ end
 # ---- #
 
 const EL2_ = BioLab.Graph.read(JS)
+
+# ---- #
 
 @test length(EL_) === length(EL2_)
 
