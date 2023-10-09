@@ -41,7 +41,7 @@ const SP_ = (
 # ---- #
 
 const BA_ = (
-    # 0.875 ns (0 allocations: 0 bytes)
+    # 0.833 ns (0 allocations: 0 bytes)
     nothing,
     # 0.875 ns (0 allocations: 0 bytes)
     missing,
@@ -51,12 +51,12 @@ const BA_ = (
     Inf,
     # 1.791 ns (0 allocations: 0 bytes)
     "",
-    # 42.171 ns (0 allocations: 0 bytes)
+    # 41.918 ns (0 allocations: 0 bytes)
     "α",
     "π",
-    # 41.582 ns (0 allocations: 0 bytes)
+    # 41.288 ns (0 allocations: 0 bytes)
     SP_...,
-    # 42.540 ns (0 allocations: 0 bytes)
+    # 42.213 ns (0 allocations: 0 bytes)
     SP_ .^ 2...,
 )
 
@@ -66,7 +66,7 @@ for ba in BA_
 
     @test BioLab.Bad.is(ba)
 
-    @btime BioLab.Bad.is($ba)
+    #@btime BioLab.Bad.is($ba)
 
 end
 
@@ -80,13 +80,14 @@ const GO_ = (
     -0.0,
     0.0,
     1.0,
-    # 40.660 ns (0 allocations: 0 bytes)
+    # 40.112 ns (0 allocations: 0 bytes)
     "A",
+    # 40.152 ns (0 allocations: 0 bytes)
     "Abc",
     ("A$sp" for sp in SP_)...,
-    # 42.172 ns (0 allocations: 0 bytes)
+    # 41.877 ns (0 allocations: 0 bytes)
     ("$(sp)B" for sp in SP_)...,
-    # 40.657 ns (0 allocations: 0 bytes)
+    # 40.152 ns (0 allocations: 0 bytes)
     ("A$(sp)B" for sp in SP_)...,
 )
 
@@ -96,6 +97,6 @@ for go in GO_
 
     @test !BioLab.Bad.is(go)
 
-    @btime BioLab.Bad.is($go)
+    #@btime BioLab.Bad.is($go)
 
 end
