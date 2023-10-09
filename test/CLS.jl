@@ -22,9 +22,9 @@ for (cl, ta, re) in (
     ("LPS_phen.cls", "CNTRL_LPS", [1, 1, 1, 2, 2, 2]),
 )
 
-    cl2 = joinpath(DA, cl)
+    dcl = joinpath(DA, cl)
 
-    nar, ro_, co_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.CLS.read(cl2))
+    nar, ro_, co_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.CLS.read(dcl))
 
     @test nar === "Target"
 
@@ -36,9 +36,9 @@ for (cl, ta, re) in (
 
     @test fe_x_sa_x_nu[1, eachindex(re)] == re
 
-    # 387.584 μs (6235 allocations: 530.47 KiB)
-    # 10.666 μs (99 allocations: 7.73 KiB)
-    # 10.500 μs (99 allocations: 7.67 KiB)
-    @btime BioLab.CLS.read($cl2)
+    # 409.500 μs (6235 allocations: 530.47 KiB)
+    # 9.875 μs (99 allocations: 7.73 KiB)
+    # 9.750 μs (99 allocations: 7.67 KiB)
+    @btime BioLab.CLS.read($dcl)
 
 end
