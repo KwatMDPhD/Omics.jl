@@ -25,25 +25,27 @@ const DIS = Dict("Existing" => 1)
 # ---- #
 
 for (ke, va, re) in (
-    ("Existing", 2, Dict("Existing" => 1, "Existing.2" => 2, "Existing.3" => 2)),
-    ("New", 2, Dict("Existing" => 1, "New" => 2, "New.2" => 2)),
+    (
+        "Existing",
+        2,
+        Dict("Existing" => 1, "Existing.2" => 2, "Existing.3" => 2, "Existing.4" => 2),
+    ),
+    ("New", 2, Dict("Existing" => 1, "New" => 2, "New.2" => 2, "New.3" => 2)),
 )
 
     co = copy(DIS)
 
-    for _ in 1:2
+    for _ in 1:3
 
         BioLab.Dict.set_with_suffix!(co, ke, va)
-
-        # 125.000 ns (5 allocations: 256 bytes)
-        # 125.000 ns (5 allocations: 256 bytes)
-        # 0.001 ns (0 allocations: 0 bytes)
-        # 0.001 ns (0 allocations: 0 bytes)
-        @btime BioLab.Dict.set_with_suffix!(co, $ke, $va) setup = (co = copy($DIS)) evals = 1
 
     end
 
     @test co == re
+
+    # 125.000 ns (5 allocations: 256 bytes)
+    # 0.001 ns (0 allocations: 0 bytes)
+    #@btime BioLab.Dict.set_with_suffix!(co, $ke, $va) setup = (co = copy($DIS)) evals = 1
 
 end
 
@@ -76,9 +78,9 @@ for (di1, di2, re) in (
 
     @test BioLab.Dict.merge(di1, di2) == re
 
-    # 1.692 μs (32 allocations: 2.86 KiB)
-    # 1.696 μs (32 allocations: 2.86 KiB)
-    @btime BioLab.Dict.merge($di1, $di2)
+    # 1.700 μs (32 allocations: 2.86 KiB)
+    # 1.729 μs (32 allocations: 2.86 KiB)
+    #@btime BioLab.Dict.merge($di1, $di2)
 
 end
 
@@ -117,13 +119,13 @@ const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MY
 
 # ---- #
 
-# 739.125 μs (2 allocations: 19.67 KiB)
-@btime [fe in $FE1_ for fe in $FE_];
+# 687.375 μs (2 allocations: 19.67 KiB)
+#@btime [fe in $FE1_ for fe in $FE_];
 
 # ---- #
 
-# 739.042 μs (3 allocations: 6.84 KiB)
-@btime in($FE1_).($FE_);
+# 689.208 μs (3 allocations: 6.84 KiB)
+#@btime in($FE1_).($FE_);
 
 # ---- #
 
@@ -131,18 +133,18 @@ const FE1S = Set(FE1_)
 
 # ---- #
 
-# 443.813 ns (7 allocations: 1.13 KiB)
-@btime Set($FE1_);
+# 442.131 ns (7 allocations: 1.13 KiB)
+#@btime Set($FE1_);
 
 # ---- #
 
-# 458.125 μs (2 allocations: 19.67 KiB)
-@btime [fe in $FE1S for fe in $FE_];
+# 465.708 μs (2 allocations: 19.67 KiB)
+#@btime [fe in $FE1S for fe in $FE_];
 
 # ---- #
 
-# 462.917 μs (3 allocations: 6.84 KiB)
-@btime in($FE1S).($FE_);
+# 468.833 μs (3 allocations: 6.84 KiB)
+#@btime in($FE1S).($FE_);
 
 # ---- #
 
@@ -151,7 +153,7 @@ const FE_ID = BioLab.Collection.map_index(FE_)
 # ---- #
 
 # 510.958 μs (7 allocations: 800.92 KiB)
-@btime BioLab.Collection.map_index($FE_);
+#@btime BioLab.Collection.map_index($FE_);
 
 # ---- #
 
@@ -159,19 +161,19 @@ for ke in ("Missing", "GPI")
 
     # 8.675 ns (0 allocations: 0 bytes)
     # 9.425 ns (0 allocations: 0 bytes)
-    # 12.930 ns (0 allocations: 0 bytes)
-    # 10.468 ns (0 allocations: 0 bytes)
+    # 13.555 ns (0 allocations: 0 bytes)
+    # 11.094 ns (0 allocations: 0 bytes)
 
-    @btime $ke in $FE1S
+    #@btime $ke in $FE1S
 
-    @btime haskey($FE_ID, $ke)
+    #@btime haskey($FE_ID, $ke)
 
 end
 
 # ---- #
 
-# 387.168 ns (2 allocations: 2.66 KiB)
-@btime BioLab.Dict.is_in($FE_ID, $FE1_);
+# 362.582 ns (2 allocations: 2.66 KiB)
+#@btime BioLab.Dict.is_in($FE_ID, $FE1_);
 
 # ---- #
 
@@ -270,10 +272,17 @@ const DIW = Dict(
     "episode" => 1030,
 )
 
+# ---- #
+
+const JSW = joinpath(BioLab.TE, "write_read.json")
 
 # ---- #
 
-const DIWR = BioLab.Dict.read(BioLab.Dict.write(joinpath(BioLab.TE, "write_read.json"), DIW))
+BioLab.Dict.write(JSW, DIW)
+
+# ---- #
+
+const DIWR = BioLab.Dict.read(JSW)
 
 # ---- #
 
