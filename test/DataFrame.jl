@@ -15,6 +15,23 @@ const DA = joinpath(BioLab._DA, "DataFrame")
 
 # ---- #
 
+const NAR = "Row Name"
+
+# ---- #
+
+@test BioLab.DataFrame.make(NAR, "Row 1", Vector{String}(), Matrix(undef, 0, 0)) ==
+      DataFrame(NAR => "Row 1")
+
+# ---- #
+
+const N_RO = 3
+
+# ---- #
+
+const N_CO = 4
+
+# ---- #
+
 function make_axis(pr::String, n::Int)::Vector{String}
 
     ["$pr$id" for id in 1:n]
@@ -23,7 +40,29 @@ end
 
 # ---- #
 
-const NAR = "Row Name"
+const RO_ = make_axis("Row ", N_RO)
+
+# ---- #
+
+const CO_ = make_axis("Column ", N_CO)
+
+# ---- #
+
+const MA = BioLab.Simulation.make_matrix_1n(Int, N_RO, N_CO)
+
+# ---- #
+
+const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
+
+# ---- #
+
+@test DT ==
+      DataFrame(NAR => make_axis("Row ", N_RO), ("Column $id" => MA[:, id] for id in 1:N_CO)...)
+
+# ---- #
+
+# 1.108 μs (22 allocations: 1.89 KiB)
+#@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
 
@@ -60,50 +99,11 @@ for (ro_an__, re) in (
 
     @test isequal(BioLab.DataFrame.make(NAR, co_, ro_an__), re)
 
-    # 1.575 μs (31 allocations: 2.47 KiB)
-    # 1.554 μs (31 allocations: 2.47 KiB)
-    @btime BioLab.DataFrame.make($NAR, $co_, $ro_an__)
+    # 1.908 μs (46 allocations: 3.36 KiB)
+    # 1.967 μs (46 allocations: 3.19 KiB)
+    #@btime BioLab.DataFrame.make($NAR, $co_, $ro_an__)
 
 end
-
-# ---- #
-
-@test BioLab.DataFrame.make(NAR, "Row 1", Vector{String}(), Matrix(undef, 0, 0)) ==
-      DataFrame(NAR => "Row 1")
-
-# ---- #
-
-const N_RO = 3
-
-# ---- #
-
-const N_CO = 4
-
-# ---- #
-
-const RO_ = make_axis("Row ", N_RO)
-
-# ---- #
-
-const CO_ = make_axis("Column ", N_CO)
-
-# ---- #
-
-const MA = BioLab.Simulation.make_matrix_1n(Int, N_RO, N_CO)
-
-# ---- #
-
-const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
-
-# ---- #
-
-@test DT ==
-      DataFrame(NAR => make_axis("Row ", N_RO), ("Column $id" => MA[:, id] for id in 1:N_CO)...)
-
-# ---- #
-
-# 1.117 μs (22 allocations: 1.89 KiB)
-@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
 
@@ -119,8 +119,8 @@ BioLab.DataFrame.separate(DT)[2][1] = ":("
 
 # ---- #
 
-# 1.967 μs (28 allocations: 2.08 KiB)
-@btime BioLab.DataFrame.separate($DT);
+# 1.938 μs (28 allocations: 2.08 KiB)
+#@btime BioLab.DataFrame.separate($DT);
 
 # ---- #
 
@@ -138,26 +138,28 @@ end
 
 # ---- #
 
-const CO1 = 1:4
+const TS = joinpath(BioLab.TE, "write.tsv")
 
 # ---- #
 
-const CO2 = 1.0:4
+const COI_ = 1:4
 
 # ---- #
 
-@test eltype.(
-    eachcol(
-        BioLab.DataFrame.read(
-            BioLab.DataFrame.write(
-                joinpath(BioLab.TE, "write.tsv"),
-                DataFrame(
-                    "Column 1" => CO1,
-                    "Column 2" => CO2,
-                    "Column 3" => string.(CO1),
-                    "Column 4" => string.(CO2),
-                ),
-            ),
-        ),
-    )
-) == [Int, Float64, Int, Float64]
+const COF_ = 1.0:4
+
+# ---- #
+
+BioLab.DataFrame.write(
+    TS,
+    DataFrame(
+        "Column Int" => COI_,
+        "Column Float" => COF_,
+        "Column Int String" => string.(COI_),
+        "Column Float String" => string.(COF_),
+    ),
+)
+
+# ---- #
+
+@test eltype.(eachcol(BioLab.DataFrame.read(TS))) == [Int, Float64, Int, Float64]

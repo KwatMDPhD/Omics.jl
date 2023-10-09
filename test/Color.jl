@@ -149,6 +149,11 @@ end
 
 # ---- #
 
+# 691.839 ns (25 allocations: 1.29 KiB)
+#@btime BioLab.Color.color($ID_, $CO);
+
+# ---- #
+
 for (he_, fr_) in (
     ([BioLab.Color.HEFA], (0.5,)),
     (["#000000", "#ffffff"], (0, 1)),
@@ -161,6 +166,16 @@ for (he_, fr_) in (
     ),
 )
 
-    @test BioLab.Color.fractionate(BioLab.Color._make_color_scheme(he_)) == collect(zip(fr_, he_))
+    co = BioLab.Color._make_color_scheme(he_)
+
+    @test BioLab.Color.fractionate(co) == collect(zip(fr_, he_))
+
+    # 251.433 ns (10 allocations: 456 bytes)
+    # 489.533 ns (17 allocations: 720 bytes)
+    # 662.420 ns (24 allocations: 1016 bytes)
+    # 828.270 ns (31 allocations: 1.25 KiB)
+    # 991.700 ns (38 allocations: 1.54 KiB)
+    # 1.146 μs (45 allocations: 1.80 KiB)
+    #@btime BioLab.Color.fractionate($co)
 
 end

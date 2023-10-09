@@ -32,7 +32,7 @@ for (di, re) in ((2, [4, 1, 2, 3, 7, 5, 6]), (1, [1, 3, 2, 4]))
 
     # 1.733 μs (38 allocations: 4.54 KiB)
     # 1.225 μs (35 allocations: 3.04 KiB)
-    @btime BioLab.Clustering.hierarchize($ma)
+    #@btime BioLab.Clustering.hierarchize($ma)
 
 end
 
@@ -61,7 +61,7 @@ for (k, re) in (
     # 431.187 ns (16 allocations: 1.22 KiB)
     # 397.592 ns (15 allocations: 1.16 KiB)
     # 345.735 ns (13 allocations: 1.05 KiB)
-    @btime BioLab.Clustering.cluster($hc, $k)
+    #@btime BioLab.Clustering.cluster($hc, $k)
 
 end
 
@@ -88,6 +88,6 @@ for (co_, ma, re) in (
     # 2.824 μs (88 allocations: 7.56 KiB)
     # 2.819 μs (88 allocations: 7.56 KiB)
     # 2.843 μs (88 allocations: 7.56 KiB)
-    @btime BioLab.Clustering.order($co_, $ma)
+    #@btime BioLab.Clustering.order($co_, $ma)
 
 end
