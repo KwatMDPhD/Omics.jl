@@ -19,9 +19,9 @@ function download(di, gs)
 
 end
 
-function _eachsplit(li, de)
+function _eachsplit(st, de)
 
-    eachsplit(li, de; limit = 2)
+    eachsplit(st, de; limit = 2)
 
 end
 
@@ -62,15 +62,15 @@ function read(gz)
 
             n_ro = count('\n', ta)
 
-            n_rok = 1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
+            n_rod = 1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
 
-            if n_ro == n_rok
+            if n_ro == n_rod
 
                 bl_th[bl][th]["_ta"] = ta
 
             else
 
-                @warn "\"$th\" table's numbers of rows differ. $n_ro != $n_rok."
+                @warn "\"$th\" table's numbers of rows differ. $n_ro != $n_rod."
 
             end
 
@@ -106,13 +106,53 @@ function read(gz)
 
 end
 
+function get_sample(sa_ke_va, sa = "!Sample_title")
+
+    [ke_va[sa] for ke_va in values(sa_ke_va)]
+
+end
+
+function tabulate(sa_ke_va)
+
+    ke_va__ = values(sa_ke_va)
+
+    ch_ = Vector{String}()
+
+    for ke_va in ke_va__
+
+        for ke in keys(ke_va)
+
+            if startswith(ke, "_ch")
+
+                push!(ch_, ke)
+
+            end
+
+        end
+
+    end
+
+    ch_ = sort!(unique!(ch_))
+
+    ch_x_sa_x_st = [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
+
+    for (id, ch) in enumerate(ch_)
+
+        ch_[id] = titlecase(ch[5:end])
+
+    end
+
+    ch_, ch_x_sa_x_st
+
+end
+
 function _dice(ta)
 
     split.(eachsplit(ta, '\n'; keepempty = false), '\t')
 
 end
 
-function _map(pl_va)
+function tabulate(pl_va, sa_ke_va)
 
     pl = pl_va["!Platform_geo_accession"]
 
@@ -122,47 +162,49 @@ function _map(pl_va)
 
     end
 
-    pli = parse(Int, pl[4:end])
+    it = parse(Int, pl[4:end])
+
+    co = ""
 
     fu = identity
 
-    if pli == 16686
+    if it == 16686
 
         co = "GB_ACC"
 
-    elseif pli == 10332
+    elseif it == 10332
 
         co = "GENE_SYMBOL"
 
-    elseif pli in (6098, 6884, 6947, 10558, 14951)
+    elseif it in (6098, 6884, 6947, 10558, 14951)
 
         co = "Symbol"
 
-    elseif pli == 15048
+    elseif it == 15048
 
         co = "GeneSymbol"
 
         fu = fe -> BioLab.String.split_get(fe, ' ', 1)
 
-    elseif pli == 13534
+    elseif it == 13534
 
         co = "UCSC_RefGene_Name"
 
         fu = fe -> BioLab.String.split_get(fe, ';', 1)
 
-    elseif pli in (2004, 2005, 3718, 3720)
+    elseif it in (2004, 2005, 3718, 3720)
 
         co = "Associated Gene"
 
         fu = fe -> BioLab.String.split_get(fe, " // ", 1)
 
-    elseif pli in (5175, 6244, 11532, 17586)
+    elseif it in (5175, 6244, 11532, 17586)
 
         co = "gene_assignment"
 
         fu = fe -> BioLab.String.split_get(fe, " // ", 2)
 
-    elseif pli in (96, 97, 570, 13667)
+    elseif it in (96, 97, 570, 13667)
 
         co = "Gene Symbol"
 
@@ -194,53 +236,11 @@ function _map(pl_va)
 
     end
 
-    fe_, fe2_
-
-end
-
-function get_sample(sa_ke_va, sa = "!Sample_title")
-
-    [ke_va[sa] for ke_va in values(sa_ke_va)]
-
-end
-
-function tabulate(sa_ke_va)
-
-    ke_va__ = values(sa_ke_va)
-
-    # TODO: Benchmark `Vector`.
-    ch = Set{String}()
-
-    for ke_va in ke_va__
-
-        for ke in keys(ke_va)
-
-            if startswith(ke, "_ch")
-
-                push!(ch, ke)
-
-            end
-
-        end
-
-    end
-
-    ch_ = sort!(collect(ch))
-
-    # TODO: Benchmark `fill`.
-    [titlecase(ch[5:end]) for ch in ch_], [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
-
-end
-
-function tabulate(pl_va, sa_ke_va)
-
-    fe_, fe2_ = _map(pl_va)
-
     fe_x_sa_x_fl = fill(NaN, length(fe_), length(sa_ke_va))
 
     fe_id = BioLab.Collection.map_index(fe_)
 
-    for (id, (sa, ke_va)) in enumerate(sa_ke_va)
+    for (ids, (sa, ke_va)) in enumerate(sa_ke_va)
 
         if haskey(ke_va, "_ta")
 
@@ -250,7 +250,7 @@ function tabulate(pl_va, sa_ke_va)
 
             for sp_ in view(sp___, 2:length(sp___))
 
-                fe_x_sa_x_fl[fe_id[sp_[1]], id] = parse(Float64, sp_[idv])
+                fe_x_sa_x_fl[fe_id[sp_[1]], ids] = parse(Float64, sp_[idv])
 
             end
 

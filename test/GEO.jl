@@ -73,10 +73,6 @@ const SAR_ = [
 
 # ---- #
 
-const N_SA = length(SAR_)
-
-# ---- #
-
 @test [va for (ke, va) in BL_TH["SERIES"][GS] if startswith(ke, "!Series_sample_id")] == SAR_
 
 # ---- #
@@ -119,7 +115,7 @@ const SA = SAR_[1]
 
 # ---- #
 
-# 11.912 ms (107248 allocations: 16.70 MiB)
+# 11.494 ms (107248 allocations: 16.70 MiB)
 @btime BioLab.GEO._dice($(SA_KE_VA[SA]["_ta"]));
 
 # ---- #
@@ -128,11 +124,15 @@ const SA_ = BioLab.GEO.get_sample(SA_KE_VA)
 
 # ---- #
 
+const N_SA = length(SAR_)
+
+# ---- #
+
 @test length(SA_) === N_SA
 
 # ---- #
 
-# 318.148 ns (1 allocation: 208 bytes)
+# 315.928 ns (1 allocation: 208 bytes)
 @btime BioLab.GEO.get_sample($SA_KE_VA);
 
 # ---- #
@@ -145,7 +145,7 @@ const CH_, CH_X_SA_X_ST = BioLab.GEO.tabulate(SA_KE_VA)
 
 # ---- #
 
-# 4.143 μs (13 allocations: 1016 bytes)
+# 3.885 μs (10 allocations: 968 bytes)
 @btime BioLab.GEO.tabulate($SA_KE_VA);
 
 # ---- #
@@ -158,7 +158,7 @@ const FE_, FE_X_SA_X_FL = BioLab.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
-# 380.442 ms (2378551 allocations: 366.52 MiB)
+# 365.049 ms (2378551 allocations: 366.52 MiB)
 @btime BioLab.GEO.tabulate($KE_VA, $SA_KE_VA);
 
 # ---- #
