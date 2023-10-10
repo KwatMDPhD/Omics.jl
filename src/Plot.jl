@@ -205,7 +205,7 @@ function plot_histogram(
 
 end
 
-function _range(fl_::AbstractArray{<:AbstractFloat}, n)
+function _range(fl_::AbstractArray{<:AbstractFloat}, n::Integer)
 
     mi, ma = BioLab.Collection.get_minimum_maximum(fl_)
 

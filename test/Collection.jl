@@ -23,7 +23,7 @@ for (an_, re) in (
         # 139.327 ns (6 allocations: 448 bytes)
         # 129.703 ns (6 allocations: 448 bytes)
         # 130.521 ns (6 allocations: 448 bytes)
-        #@btime BioLab.Collection.unique_sort($an2_)
+        @btime BioLab.Collection.unique_sort($an2_)
 
     end
 
@@ -44,7 +44,7 @@ for (an_, re) in (
         # 102.304 ns (4 allocations: 480 bytes)
         # 101.007 ns (4 allocations: 480 bytes)
         # 102.437 ns (4 allocations: 480 bytes)
-        #@btime BioLab.Collection.map_index($an2_)
+        @btime BioLab.Collection.map_index($an2_)
 
     end
 
@@ -66,7 +66,7 @@ for (an_, re) in (((NaN,), (NaN, NaN)), ((-1, 1), (-1, 1)), ((-1, -2), (-2, -1))
         # 1.791 ns (0 allocations: 0 bytes)
         # 1.458 ns (0 allocations: 0 bytes)
         # 1.792 ns (0 allocations: 0 bytes)
-        #@btime BioLab.Collection.get_minimum_maximum($an2_)
+        @btime BioLab.Collection.get_minimum_maximum($an2_)
 
     end
 
@@ -93,7 +93,7 @@ for (an_, re) in (
         # 8.194 μs (55 allocations: 3.47 KiB)
         # 7.989 μs (50 allocations: 3.20 KiB)
         # 7.986 μs (50 allocations: 3.20 KiB)
-        #@btime BioLab.Collection.count_sort_string($an2_)
+        @btime BioLab.Collection.count_sort_string($an2_)
 
     end
 

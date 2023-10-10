@@ -39,6 +39,6 @@ for (cl, ta, re) in (
     # 409.500 μs (6235 allocations: 530.47 KiB)
     # 9.875 μs (99 allocations: 7.73 KiB)
     # 9.750 μs (99 allocations: 7.67 KiB)
-    #@btime BioLab.CLS.read($dcl)
+    @btime BioLab.CLS.read($dcl)
 
 end

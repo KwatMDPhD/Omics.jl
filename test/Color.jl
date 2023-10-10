@@ -150,7 +150,7 @@ end
 # ---- #
 
 # 691.839 ns (25 allocations: 1.29 KiB)
-#@btime BioLab.Color.color($ID_, $CO);
+@btime BioLab.Color.color($ID_, $CO);
 
 # ---- #
 
@@ -176,6 +176,6 @@ for (he_, fr_) in (
     # 828.270 ns (31 allocations: 1.25 KiB)
     # 991.700 ns (38 allocations: 1.54 KiB)
     # 1.146 μs (45 allocations: 1.80 KiB)
-    #@btime BioLab.Color.fractionate($co)
+    @btime BioLab.Color.fractionate($co)
 
 end

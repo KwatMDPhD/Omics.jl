@@ -56,17 +56,17 @@ end
 
 # ---- #
 
-for co_ in (((), (1,)), ((1,), (2, 3)))
+for an___ in (((), (1,)), ((1,), (2, 3)))
 
-    @test BioLab.Error.@is BioLab.Error.error_length_difference(co_)
+    @test BioLab.Error.@is BioLab.Error.error_length_difference(an___)
 
 end
 
 # ---- #
 
-for co_ in (((), ()), ((1,), (2,)), ((1, 2), (3, 4)))
+for an___ in (((), ()), ((1,), (2,)), ((1, 2), (3, 4)))
 
-    @test !BioLab.Error.@is BioLab.Error.error_length_difference(co_)
+    @test !BioLab.Error.@is BioLab.Error.error_length_difference(an___)
 
 end
 

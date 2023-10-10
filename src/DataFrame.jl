@@ -18,36 +18,6 @@ function make(nar, ro_, co_, ma)
 
 end
 
-function make(nar, co_, ro_an__)
-
-    ro_ = sort(collect(union(keys.(ro_an__)...)))
-
-    ma = Matrix{Union{Missing, eltype(union((values(ro_an) for ro_an in ro_an__)...))}}(
-        undef,
-        length(ro_),
-        length(co_),
-    )
-
-    for (id2, ro_an) in enumerate(ro_an__), (id1, ro) in enumerate(ro_)
-
-        if haskey(ro_an, ro)
-
-            an = ro_an[ro]
-
-        else
-
-            an = missing
-
-        end
-
-        ma[id1, id2] = an
-
-    end
-
-    make(nar, ro_, co_, ma)
-
-end
-
 function separate(row_x_column_x_any)
 
     co_ = names(row_x_column_x_any)

@@ -66,7 +66,7 @@ for ba in BA_
 
     @test BioLab.Bad.is(ba)
 
-    #@btime BioLab.Bad.is($ba)
+    @btime BioLab.Bad.is($ba)
 
 end
 
@@ -97,6 +97,6 @@ for go in GO_
 
     @test !BioLab.Bad.is(go)
 
-    #@btime BioLab.Bad.is($go)
+    @btime BioLab.Bad.is($go)
 
 end

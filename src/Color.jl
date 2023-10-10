@@ -89,7 +89,7 @@ function pick_color_scheme(nu_)
 
     else
 
-        error("`$nu_`'s element type is not `AbstractFloat` or `Integer`.")
+        error("`$nu_`'s element type `$ty` is not `AbstractFloat` or `Integer`.")
 
     end
 

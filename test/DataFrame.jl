@@ -62,12 +62,14 @@ const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 # ---- #
 
 # 1.108 μs (22 allocations: 1.89 KiB)
-#@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
+@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
 
-for (ro_an__, re) in (
+for (ty, mi, ro_an__, re) in (
     (
+        Any,
+        missing,
         [
             Dict("Row 1" => 1, "Row 2" => 2),
             Dict("Row 2" => 2, "Row 3" => 3),
@@ -81,6 +83,8 @@ for (ro_an__, re) in (
         ),
     ),
     (
+        Any,
+        missing,
         [
             Dict("Row 1" => 'a', "Row 2" => 'b'),
             Dict("Row 2" => 'b', "Row 3" => 'c'),
@@ -97,11 +101,11 @@ for (ro_an__, re) in (
 
     co_ = make_axis("Column ", length(ro_an__))
 
-    @test isequal(BioLab.DataFrame.make(NAR, co_, ro_an__), re)
+    @test isequal(BioLab.DataFrame.make(ty, mi, NAR, co_, ro_an__), re)
 
-    # 1.908 μs (46 allocations: 3.36 KiB)
-    # 1.967 μs (46 allocations: 3.19 KiB)
-    #@btime BioLab.DataFrame.make($NAR, $co_, $ro_an__)
+    # 1.571 μs (33 allocations: 2.61 KiB)
+    # 1.508 μs (33 allocations: 2.61 KiB)
+    @btime BioLab.DataFrame.make($ty, $mi, $NAR, $co_, $ro_an__)
 
 end
 
@@ -120,7 +124,7 @@ BioLab.DataFrame.separate(DT)[2][1] = ":("
 # ---- #
 
 # 1.938 μs (28 allocations: 2.08 KiB)
-#@btime BioLab.DataFrame.separate($DT);
+@btime BioLab.DataFrame.separate($DT);
 
 # ---- #
 

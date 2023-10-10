@@ -9,6 +9,10 @@ const GS = "GSE122404"
 # ---- #
 
 const GZ = BioLab.GEO.download(BioLab.TE, GS)
+#const GZ = cp(
+#    joinpath(homedir(), "Downloads", "GSE122404_family.soft.gz"),
+#    joinpath(BioLab.TE, "GSE122404_family.soft.gz"),
+#)
 
 # ---- #
 
@@ -20,7 +24,7 @@ const BL_TH = BioLab.GEO.read(GZ)
 
 # ---- #
 
-@test length(BL_TH["DATABASE"]) === 1
+@test collect(keys(BL_TH["DATABASE"])) == ["GeoMiame"]
 
 # ---- #
 
@@ -28,102 +32,164 @@ const BL_TH = BioLab.GEO.read(GZ)
 
 # ---- #
 
-@test length(BL_TH["SERIES"]) === 1
+@test collect(keys(BL_TH["SERIES"])) == [GS]
 
 # ---- #
 
-@test length(BL_TH["SERIES"]["GSE122404"]) === 44
+@test length(BL_TH["SERIES"][GS]) === 44
 
 # ---- #
 
-@test length(BL_TH["PLATFORM"]) === 1
+const PL = "GPL16686"
 
 # ---- #
 
-@test length(BL_TH["PLATFORM"]["GPL16686"]) === 47
+@test BL_TH["SERIES"][GS]["!Series_platform_id"] === PL
 
 # ---- #
 
-@test length(BioLab.GEO._dice(BL_TH["PLATFORM"]["GPL16686"]["table"])) === 53982
+const SAR_ = [
+    "GSM3466115"
+    "GSM3466116"
+    "GSM3466117"
+    "GSM3466118"
+    "GSM3466119"
+    "GSM3466120"
+    "GSM3466121"
+    "GSM3466122"
+    "GSM3466123"
+    "GSM3466124"
+    "GSM3466125"
+    "GSM3466126"
+    "GSM3466127"
+    "GSM3466128"
+    "GSM3466129"
+    "GSM3466130"
+    "GSM3466131"
+    "GSM3466132"
+    "GSM3466133"
+    "GSM3466134"
+]
 
 # ---- #
 
-@test length(BL_TH["SAMPLE"]) === 20
+const N_SA = length(SAR_)
 
 # ---- #
 
-@test length(BL_TH["SAMPLE"]["GSM3466115"]) === 36
+@test [va for (ke, va) in BL_TH["SERIES"][GS] if startswith(ke, "!Series_sample_id")] == SAR_
 
 # ---- #
 
-@test length(BioLab.GEO._dice(BL_TH["SAMPLE"]["GSM3466115"]["table"])) === 53618
+@test BL_TH["SERIES"][GS]["!Series_supplementary_file"] ===
+      "ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE122nnn/$GS/suppl/GSE122404_RAW.tar"
 
 # ---- #
 
-# 426.919 ms (11344 allocations: 27.75 MiB)
+@test collect(keys(BL_TH["PLATFORM"])) == [PL]
+
+# ---- #
+
+const KE_VA = BL_TH["PLATFORM"][PL]
+
+# ---- #
+
+@test length(KE_VA) === 47
+
+# ---- #
+
+const SA_KE_VA = BL_TH["SAMPLE"]
+
+# ---- #
+
+@test collect(keys(SA_KE_VA)) == SAR_
+
+# ---- #
+
+const SA = SAR_[1]
+
+# ---- #
+
+@test length(SA_KE_VA[SA]) === 36
+
+# ---- #
+
+# 426.335 ms (12218 allocations: 27.78 MiB)
 @btime BioLab.GEO.read($GZ);
 
 # ---- #
 
-# 33.420 ms (107976 allocations: 16.79 MiB)
-@btime BioLab.GEO._dice($(BL_TH["PLATFORM"]["GPL16686"]["table"]));
+# 11.912 ms (107248 allocations: 16.70 MiB)
+@btime BioLab.GEO._dice($(SA_KE_VA[SA]["_ta"]));
 
 # ---- #
 
-# 11.501 ms (107248 allocations: 16.70 MiB)
-@btime BioLab.GEO._dice($(BL_TH["SAMPLE"]["GSM3466115"]["table"]));
+const SA_ = BioLab.GEO.get_sample(SA_KE_VA)
 
 # ---- #
 
-const NA_FEATURE_X_SAMPLE_X_ANY = BioLab.GEO.tabulate(BL_TH)
+@test length(SA_) === N_SA
 
 # ---- #
 
-@test length(NA_FEATURE_X_SAMPLE_X_ANY) === 2
+# 318.148 ns (1 allocation: 208 bytes)
+@btime BioLab.GEO.get_sample($SA_KE_VA);
 
 # ---- #
 
-const CHARACTERISTIC_X_SAMPLE_X_STRING = NA_FEATURE_X_SAMPLE_X_ANY["Characteristic"]
+const CH_, CH_X_SA_X_ST = BioLab.GEO.tabulate(SA_KE_VA)
 
 # ---- #
 
-const FEATURE_X_SAMPLE_X_NUMBER = NA_FEATURE_X_SAMPLE_X_ANY["GPL16686"]
+@test size(CH_X_SA_X_ST) === (length(CH_), N_SA)
 
 # ---- #
 
-@test size(CHARACTERISTIC_X_SAMPLE_X_STRING) === (1, 21)
+# 4.143 μs (13 allocations: 1016 bytes)
+@btime BioLab.GEO.tabulate($SA_KE_VA);
 
 # ---- #
 
-@test size(FEATURE_X_SAMPLE_X_NUMBER) === (53617, 21)
+const FE_, FE_X_SA_X_FL = BioLab.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
-@test names(CHARACTERISTIC_X_SAMPLE_X_STRING)[2:end] == names(FEATURE_X_SAMPLE_X_NUMBER)[2:end]
+@test size(FE_X_SA_X_FL) === (length(FE_), N_SA)
 
 # ---- #
 
-# 571.793 ms (4576264 allocations: 552.70 MiB)
-@btime BioLab.GEO.tabulate($BL_TH);
+# 380.442 ms (2378551 allocations: 366.52 MiB)
+@btime BioLab.GEO.tabulate($KE_VA, $SA_KE_VA);
 
 # ---- #
 
-for (gs, re) in (
-    ("GSE197763", Dict("Characteristic" => (4, 127))),
-    ("GSE13534", Dict("Characteristic" => (0, 5), "GPL96" => (22283, 5))),
+for (gs, re, pl_re) in (
+    ("GSE197763", (4, 126), Dict("GPL18573" => (), "GPL24676" => ())),
+    ("GSE13534", (0, 4), Dict("GPL96" => (22283, 4))),
 )
 
-    na_feature_x_sample_x_any =
-        BioLab.GEO.tabulate(BioLab.GEO.read(BioLab.GEO.download(BioLab.TE, gs)))
+    bl_th = BioLab.GEO.read(BioLab.GEO.download(BioLab.TE, gs))
 
-    for (ke, si) in re
+    sa_ke_va = bl_th["SAMPLE"]
 
-        @test size(na_feature_x_sample_x_any[ke]) === si
+    ch_, ch_x_sa_x_st = BioLab.GEO.tabulate(sa_ke_va)
+
+    @test size(ch_x_sa_x_st) === re
+
+    for (pl, re) in pl_re
+
+        if isempty(re)
+
+            @test BioLab.Error.@is BioLab.GEO.tabulate(bl_th["PLATFORM"][pl], sa_ke_va)
+
+        else
+
+            fe_, fe_x_sa_x_fl = BioLab.GEO.tabulate(bl_th["PLATFORM"][pl], sa_ke_va)
+
+            @test size(fe_x_sa_x_fl) === re
+
+        end
 
     end
 
 end
-
-# ---- #
-
-BioLab.GEO.get

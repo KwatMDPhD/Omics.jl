@@ -49,5 +49,5 @@ const FE2U_ = replace.(FEU_, "Feature" => "New Feature")
     fu = BioLab.FeatureXSample.median,
     ty = Float64,
     lo = true,
-    title_text = "Test",
+    na = "Test",
 ) == (FE2U_, Matrix(reshape([0.0, 1, 2, 3], :, 1)))

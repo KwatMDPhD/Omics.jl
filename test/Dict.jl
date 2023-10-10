@@ -45,7 +45,7 @@ for (ke, va, re) in (
 
     # 125.000 ns (5 allocations: 256 bytes)
     # 0.001 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Dict.set_with_suffix!(co, $ke, $va) setup = (co = copy($DIS)) evals = 1
+    @btime BioLab.Dict.set_with_suffix!(co, $ke, $va) setup = (co = copy($DIS)) evals = 1
 
 end
 
@@ -80,7 +80,7 @@ for (di1, di2, re) in (
 
     # 1.700 μs (32 allocations: 2.86 KiB)
     # 1.729 μs (32 allocations: 2.86 KiB)
-    #@btime BioLab.Dict.merge($di1, $di2)
+    @btime BioLab.Dict.merge($di1, $di2)
 
 end
 
@@ -120,12 +120,12 @@ const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MY
 # ---- #
 
 # 687.375 μs (2 allocations: 19.67 KiB)
-#@btime [fe in $FE1_ for fe in $FE_];
+@btime [fe in $FE1_ for fe in $FE_];
 
 # ---- #
 
 # 689.208 μs (3 allocations: 6.84 KiB)
-#@btime in($FE1_).($FE_);
+@btime in($FE1_).($FE_);
 
 # ---- #
 
@@ -134,17 +134,17 @@ const FE1S = Set(FE1_)
 # ---- #
 
 # 442.131 ns (7 allocations: 1.13 KiB)
-#@btime Set($FE1_);
+@btime Set($FE1_);
 
 # ---- #
 
 # 465.708 μs (2 allocations: 19.67 KiB)
-#@btime [fe in $FE1S for fe in $FE_];
+@btime [fe in $FE1S for fe in $FE_];
 
 # ---- #
 
 # 468.833 μs (3 allocations: 6.84 KiB)
-#@btime in($FE1S).($FE_);
+@btime in($FE1S).($FE_);
 
 # ---- #
 
@@ -153,7 +153,7 @@ const FE_ID = BioLab.Collection.map_index(FE_)
 # ---- #
 
 # 510.958 μs (7 allocations: 800.92 KiB)
-#@btime BioLab.Collection.map_index($FE_);
+@btime BioLab.Collection.map_index($FE_);
 
 # ---- #
 
@@ -164,16 +164,16 @@ for ke in ("Missing", "GPI")
     # 13.555 ns (0 allocations: 0 bytes)
     # 11.094 ns (0 allocations: 0 bytes)
 
-    #@btime $ke in $FE1S
+    @btime $ke in $FE1S
 
-    #@btime haskey($FE_ID, $ke)
+    @btime haskey($FE_ID, $ke)
 
 end
 
 # ---- #
 
 # 362.582 ns (2 allocations: 2.66 KiB)
-#@btime BioLab.Dict.is_in($FE_ID, $FE1_);
+@btime BioLab.Dict.is_in($FE_ID, $FE1_);
 
 # ---- #
 
