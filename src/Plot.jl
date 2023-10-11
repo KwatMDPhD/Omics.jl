@@ -237,7 +237,7 @@ function _group(gr_, an_, ma)
 
     end
 
-    id_ = BioLab.Clustering.cluster(gr_, ma)
+    id_ = BioLab.Clustering.order(gr_, ma)
 
     gr_[id_], an_[id_], ma[:, id_], ticktext
 
@@ -379,7 +379,6 @@ function plot_radar(
     ra_,
     an_;
     name_ = _set_name(ra_),
-    # TODO: Consider removing.
     line_color_ = BioLab.Color.color(eachindex(ra_)),
     fillcolor_ = line_color_,
     radialaxis_range = (0, maximum(vcat(ra_...))),
@@ -395,9 +394,9 @@ function plot_radar(
             Dict(
                 "type" => "scatterpolar",
                 "name" => name_[id],
-                "theta" => vcat(ra_[id], ra_[id][1]),
-                "r" => vcat(an_[id], an_[id][1]),
-                "marker" => Dict("size" => 4, "color" => line_color_[id]),
+                "r" => vcat(ra_[id], ra_[id][1]),
+                "theta" => vcat(an_[id], an_[id][1]),
+                "marker" => Dict("size" => 4.8, "color" => line_color_[id]),
                 "line" => Dict(
                     "shape" => "spline",
                     "smoothing" => 0,

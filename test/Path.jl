@@ -12,7 +12,7 @@ using BioLab
 
 # ---- #
 
-# 446.131 ns (7 allocations: 440 bytes)
+# 444.657 ns (7 allocations: 440 bytes)
 @btime BioLab.Path.clean("a_b.c-d+e!f%g%h]iJK");
 
 # ---- #
@@ -25,9 +25,9 @@ for pa in ("prefix.$EX", "/path/to/prefix.$EX", "s3://path/to/prefix.$EX")
 
     @test BioLab.Path.get_extension(pa) === EX
 
-    # 244.820 ns (12 allocations: 520 bytes)
-    # 251.808 ns (12 allocations: 528 bytes)
-    # 255.045 ns (12 allocations: 536 bytes)
+    # 243.972 ns (12 allocations: 520 bytes)
+    # 250.446 ns (12 allocations: 528 bytes)
+    # 253.569 ns (12 allocations: 536 bytes)
     @btime BioLab.Path.get_extension($pa)
 
 end

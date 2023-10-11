@@ -44,14 +44,14 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     BioLab.MatrixFactorization.write(di, mh2; naf = "Solved")
 
-    # 9.708 μs (58 allocations: 6.95 KiB)
-    # 2.107 μs (23 allocations: 2.78 KiB)
-    # 224.167 μs (128 allocations: 40.97 KiB)
-    # 3.162 μs (23 allocations: 4.33 KiB)
-    # 2.902 s (4331 allocations: 221.99 MiB)
-    # 147.084 μs (24 allocations: 172.08 KiB)
-    # 17.079 s (32566 allocations: 912.93 MiB)
-    # 194.834 μs (27 allocations: 329.34 KiB)
+    # 10.584 μs (58 allocations: 6.95 KiB)
+    # 2.088 μs (23 allocations: 2.78 KiB)
+    # 223.250 μs (128 allocations: 40.97 KiB)
+    # 3.141 μs (23 allocations: 4.33 KiB)
+    # 2.868 s (4331 allocations: 221.99 MiB)
+    # 134.000 μs (24 allocations: 172.08 KiB)
+    # 7.702 s (12949 allocations: 363.06 MiB)
+    # 284.209 μs (27 allocations: 329.34 KiB)
 
     @btime BioLab.MatrixFactorization.factorize($ma, $n_fa)
 
@@ -77,11 +77,27 @@ BioLab.Path.remake_directory(DI)
 
 # ---- #
 
-@test BioLab.MatrixFactorization.write(DI, MW) === DI
+function exist(na)
+
+    isfile(joinpath(DI, na))
+
+end
 
 # ---- #
 
-@test BioLab.MatrixFactorization.write(DI, MH) === DI
+BioLab.MatrixFactorization.write(DI, MW)
+
+# ---- #
+
+@test all(exist, ("w.tsv", "w.html"))
+
+# ---- #
+
+BioLab.MatrixFactorization.write(DI, MH)
+
+# ---- #
+
+@test all(exist, ("h.tsv", "h.html"))
 
 # ---- #
 

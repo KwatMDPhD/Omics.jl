@@ -14,11 +14,11 @@ for (ro_, re) in (
 
     @test isequal(BioLab.Target.tabulate(ro_), re)
 
-    # 244.604 ns (12 allocations: 1.02 KiB)
-    # 247.404 ns (12 allocations: 1.02 KiB)
-    # 249.304 ns (12 allocations: 1.02 KiB)
-    # 254.335 ns (12 allocations: 1.02 KiB)
-    # 256.631 ns (12 allocations: 1.02 KiB)
+    # 228.533 ns (12 allocations: 1.02 KiB)
+    # 240.220 ns (12 allocations: 1.02 KiB)
+    # 240.423 ns (12 allocations: 1.02 KiB)
+    # 247.063 ns (12 allocations: 1.02 KiB)
+    # 247.389 ns (12 allocations: 1.02 KiB)
     @btime BioLab.Target.tabulate($ro_)
 
 end

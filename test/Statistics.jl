@@ -119,7 +119,7 @@ for fu in (<=, >=)
 
     @test BioLab.Statistics.get_p_value(fu, NU_, EM_) == (ON_, ON_)
 
-    # 180.755 ns (6 allocations: 512 bytes)
+    # 178.058 ns (6 allocations: 512 bytes)
     # 176.657 ns (6 allocations: 512 bytes)
     @btime BioLab.Statistics.get_p_value($fu, $NU_, $EM_)
 
@@ -140,7 +140,7 @@ for (fu, re) in ((<=, (REP1_, REA1_)), (>=, (reverse(REP1_), reverse(REA1_))))
     @test BioLab.Statistics.get_p_value(fu, NU_, RA_) == re
 
     # 190.497 ns (6 allocations: 512 bytes)
-    # 197.501 ns (6 allocations: 512 bytes)
+    # 196.370 ns (6 allocations: 512 bytes)
     @btime BioLab.Statistics.get_p_value($fu, $NU_, $RA_)
 
 end
@@ -168,5 +168,5 @@ const REP2_, REA2_ = [0.75, 1], [1.0, 1]
 
 # ---- #
 
-# 568.802 ns (17 allocations: 1.27 KiB)
-@btime BioLab.Statistics.get_p_value($NU_, $IDN_, $IDP_, $FE_X_ID_X_RA)
+# 463.010 ns (17 allocations: 1.27 KiB)
+@btime BioLab.Statistics.get_p_value($NU_, $IDN_, $IDP_, $FE_X_ID_X_RA);

@@ -17,7 +17,7 @@ end
 
 # ---- #
 
-function benchmark(n_fe, n_sa, ho)
+function benchmark(ho, n_fe, n_sa)
 
     if ho == "1.02"
 
@@ -41,8 +41,8 @@ function benchmark(n_fe, n_sa, ho)
     "TargetTargetTargetTargetTargetTargetTargetTarget",
     "Feature",
     "Sample",
-    ["Feature $id" for id in 1:n_fe],
-    ["Sample $id" for id in 1:n_sa],
+    (id -> "Feature $id").(1:n_fe),
+    (id -> "Sample $id").(1:n_sa),
     ta_,
     fe_x_sa_x_nu
 
@@ -54,13 +54,13 @@ for (n_fe, n_sa) in ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 
 
     di, layout = make_directory_layout("$n_fe x $n_sa")
 
-    BioLab.Match.make(di, benchmark(n_fe, n_sa, "ra")...; layout)
+    BioLab.Match.make(di, benchmark("ra", n_fe, n_sa)...; layout)
 
 end
 
 # ---- #
 
-const FU, NAT, NAF, NAS, FE_, SA_, TA_, FE_X_SA_X_NU = benchmark(1, 19, "1.02")
+const FU, NAT, NAF, NAS, FE_, SA_, TA_, FE_X_SA_X_NU = benchmark("1.02", 1, 19)
 
 # ---- #
 
@@ -128,7 +128,7 @@ end
 
 # ---- #
 
-const NS_ = benchmark(50000, 100, "ra")
+const NS_ = benchmark("ra", 50000, 100)
 
 # ---- #
 
@@ -142,7 +142,7 @@ end
 
 # ---- #
 
-const NE_ = benchmark(5, 2, "1.02")
+const NE_ = benchmark("1.02", 5, 2)
 
 # ---- #
 
@@ -156,7 +156,7 @@ end
 
 # ---- #
 
-const ST_ = benchmark(2, 3, "ra")
+const ST_ = benchmark("ra", 2, 3)
 
 # ---- #
 

@@ -18,7 +18,7 @@ function _index(id_, sa_, ta_, fe_x_sa_x_nu)
 
 end
 
-function _align!(fl_::AbstractVector{<:AbstractFloat}, st)
+function _align!(fl_::AbstractVector{<:AbstractFloat}, st::Real)
 
     if allequal(fl_)
 
@@ -38,7 +38,7 @@ function _align!(fl_::AbstractVector{<:AbstractFloat}, st)
 
 end
 
-function _align!(fe_x_sa_x_fl::AbstractMatrix{<:AbstractFloat}, st)
+function _align!(fe_x_sa_x_fl::AbstractMatrix{<:AbstractFloat}, st::Real)
 
     foreach(fl_ -> _align!(fl_, st), eachrow(fe_x_sa_x_fl))
 
@@ -139,7 +139,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
         @info "Clustering within groups"
 
         sa_, ta_, fe_x_sa_x_nu =
-            _index(BioLab.Clustering.cluster(ta_, fe_x_sa_x_nu), sa_, ta_, fe_x_sa_x_nu)
+            _index(BioLab.Clustering.order(ta_, fe_x_sa_x_nu), sa_, ta_, fe_x_sa_x_nu)
 
     end
 

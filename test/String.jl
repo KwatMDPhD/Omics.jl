@@ -18,13 +18,13 @@ for (st, re) in (
     @test BioLab.String.try_parse(st) === re
 
     # 41.414 ns (0 allocations: 0 bytes)
-    # 47.228 ns (0 allocations: 0 bytes)
-    # 46.596 ns (0 allocations: 0 bytes)
-    # 138.125 μs (2 allocations: 48 bytes)
-    # 138.209 μs (2 allocations: 48 bytes)
-    # 356.500 μs (20 allocations: 848 bytes)
-    # 284.750 μs (8 allocations: 352 bytes)
-    # 356.917 μs (20 allocations: 848 bytes)
+    # 46.932 ns (0 allocations: 0 bytes)
+    # 45.753 ns (0 allocations: 0 bytes)
+    # 135.750 μs (2 allocations: 48 bytes)
+    # 135.666 μs (2 allocations: 48 bytes)
+    # 349.375 μs (20 allocations: 848 bytes)
+    # 276.458 μs (8 allocations: 352 bytes)
+    # 349.875 μs (20 allocations: 848 bytes)
     @btime BioLab.String.try_parse($st)
 
 end
@@ -60,7 +60,7 @@ const DE = '.'
 
 for (id, re) in ((1, "a"), (16, "p"), (26, "z"))
 
-    @test BioLab.String.split_get(STS, DE, id) === re
+    @test BioLab.String.split_get(STS, DE, id) == re
 
     # 87.813 ns (2 allocations: 272 bytes)
     # 475.551 ns (3 allocations: 1.25 KiB)
@@ -75,7 +75,7 @@ end
 
 # ---- #
 
-for (si, pl) in (
+for (st, re) in (
     ("vertex", "vertices"),
     ("edge", "edges"),
     ("sex", "sexes"),
@@ -83,26 +83,26 @@ for (si, pl) in (
     ("hero", "heroes"),
 )
 
-    for (n, re) in ((0, "0 $si"), (1, "1 $si"), (2, "2 $pl"))
+    for (n, re) in ((0, "0 $st"), (1, "1 $st"), (2, "2 $re"))
 
-        @test BioLab.String.count(n, si) === re
+        @test BioLab.String.count(n, st) === re
 
-        # 111.801 ns (5 allocations: 248 bytes)
-        # 112.297 ns (5 allocations: 248 bytes)
-        # 209.785 ns (9 allocations: 440 bytes)
-        # 110.558 ns (5 allocations: 248 bytes)
-        # 111.081 ns (5 allocations: 248 bytes)
-        # 195.687 ns (8 allocations: 408 bytes)
-        # 109.943 ns (5 allocations: 248 bytes)
-        # 110.424 ns (5 allocations: 248 bytes)
-        # 140.589 ns (5 allocations: 248 bytes)
-        # 109.795 ns (5 allocations: 256 bytes)
-        # 109.885 ns (5 allocations: 256 bytes)
-        # 216.325 ns (9 allocations: 440 bytes)
-        # 110.618 ns (5 allocations: 248 bytes)
-        # 111.141 ns (5 allocations: 248 bytes)
-        # 220.643 ns (9 allocations: 432 bytes)
-        @btime BioLab.String.count($n, $si)
+        # 107.608 ns (5 allocations: 248 bytes)
+        # 108.737 ns (5 allocations: 248 bytes)
+        # 216.267 ns (9 allocations: 440 bytes)
+        # 106.441 ns (5 allocations: 248 bytes)
+        # 106.938 ns (5 allocations: 248 bytes)
+        # 201.341 ns (8 allocations: 408 bytes)
+        # 105.837 ns (5 allocations: 248 bytes)
+        # 106.620 ns (5 allocations: 248 bytes)
+        # 134.434 ns (5 allocations: 248 bytes)
+        # 106.263 ns (5 allocations: 256 bytes)
+        # 106.323 ns (5 allocations: 256 bytes)
+        # 224.372 ns (9 allocations: 440 bytes)
+        # 106.441 ns (5 allocations: 248 bytes)
+        # 106.894 ns (5 allocations: 248 bytes)
+        # 227.280 ns (9 allocations: 432 bytes)
+        @btime BioLab.String.count($n, $st)
 
     end
 

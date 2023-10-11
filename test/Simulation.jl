@@ -31,25 +31,25 @@ seed!(20230827)
 
 # ---- #
 
-const POC_ = sort!(rand(1000))
+const PO_ = sort!(rand(1000))
 
 # ---- #
 
-POC_ .= POC_ .- minimum(POC_)
+PO_ .-= minimum(PO_)
 
 # ---- #
 
-const NEC_ = reverse!(-POC_)
+const NE_ = reverse!(-PO_)
 
 # ---- #
 
-for (ze, re) in ((false, vcat(NEC_[1:(end - 1)], POC_)), (true, vcat(NEC_, POC_)))
+for (ze, re) in ((false, vcat(NE_[1:(end - 1)], PO_)), (true, vcat(NE_, PO_)))
 
-    @test BioLab.Simulation._concatenate(NEC_, ze, POC_) == re
+    @test BioLab.Simulation._concatenate(NE_, ze, PO_) == re
 
     # 614.460 ns (2 allocations: 23.69 KiB)
     # 546.306 ns (2 allocations: 23.69 KiB)
-    @btime BioLab.Simulation._concatenate($NEC_, $ze, $POC_)
+    @btime BioLab.Simulation._concatenate($NE_, $ze, $PO_)
 
 end
 

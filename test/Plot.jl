@@ -159,8 +159,8 @@ const THETA60 = 0:60:360
 
 BioLab.Plot.plot_radar(
     "",
-    [THETA30, THETA45, THETA60],
-    [eachindex(THETA30), eachindex(THETA45), eachindex(THETA60)];
+    [eachindex(THETA30), eachindex(THETA45), eachindex(THETA60)],
+    [THETA30, THETA45, THETA60];
     name_ = [30, 45, 60],
     layout = Dict("title" => Dict("text" => "Title Text")),
 )
@@ -171,4 +171,8 @@ const GI = joinpath(BioLab.TE, "animate.gif")
 
 # ---- #
 
-@test BioLab.Plot.animate(GI, (joinpath(DA, "$pn.png") for pn in 1:2)) === GI
+BioLab.Plot.animate(GI, (joinpath(DA, "$pn.png") for pn in 1:2))
+
+# ---- #
+
+@test isfile(GI)
