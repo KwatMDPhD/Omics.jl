@@ -9,10 +9,6 @@ const GS = "GSE122404"
 # ---- #
 
 const GZ = BioLab.GEO.download(BioLab.TE, GS)
-#const GZ = cp(
-#    joinpath(homedir(), "Downloads", "GSE122404_family.soft.gz"),
-#    joinpath(BioLab.TE, "GSE122404_family.soft.gz"),
-#)
 
 # ---- #
 
@@ -48,7 +44,7 @@ const PL = "GPL16686"
 
 # ---- #
 
-const SAR_ = [
+const SM_ = [
     "GSM3466115"
     "GSM3466116"
     "GSM3466117"
@@ -73,7 +69,7 @@ const SAR_ = [
 
 # ---- #
 
-@test [va for (ke, va) in BL_TH["SERIES"][GS] if startswith(ke, "!Series_sample_id")] == SAR_
+@test [va for (ke, va) in BL_TH["SERIES"][GS] if startswith(ke, "!Series_sample_id")] == SM_
 
 # ---- #
 
@@ -98,11 +94,11 @@ const SA_KE_VA = BL_TH["SAMPLE"]
 
 # ---- #
 
-@test collect(keys(SA_KE_VA)) == SAR_
+@test collect(keys(SA_KE_VA)) == SM_
 
 # ---- #
 
-const SA = SAR_[1]
+const SA = SM_[1]
 
 # ---- #
 
@@ -124,7 +120,7 @@ const SA_ = BioLab.GEO.get_sample(SA_KE_VA)
 
 # ---- #
 
-const N_SA = length(SAR_)
+const N_SA = length(SM_)
 
 # ---- #
 
@@ -132,7 +128,7 @@ const N_SA = length(SAR_)
 
 # ---- #
 
-# 315.140 ns (1 allocation: 208 bytes)
+# 314.734 ns (1 allocation: 208 bytes)
 @btime BioLab.GEO.get_sample($SA_KE_VA);
 
 # ---- #
@@ -178,13 +174,15 @@ for (gs, re, pl_re) in (
 
     for (pl, re) in pl_re
 
+        ke_va = bl_th["PLATFORM"][pl]
+
         if isempty(re)
 
-            @test BioLab.Error.@is BioLab.GEO.tabulate(bl_th["PLATFORM"][pl], sa_ke_va)
+            @test BioLab.Error.@is BioLab.GEO.tabulate(ke_va, sa_ke_va)
 
         else
 
-            fe_, fe_x_sa_x_fl = BioLab.GEO.tabulate(bl_th["PLATFORM"][pl], sa_ke_va)
+            fe_, fe_x_sa_x_fl = BioLab.GEO.tabulate(ke_va, sa_ke_va)
 
             @test size(fe_x_sa_x_fl) === re
 

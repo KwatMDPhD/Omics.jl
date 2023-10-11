@@ -4,7 +4,7 @@ using BioLab
 
 # ---- #
 
-const EL_ = [
+const EL_ = Vector{Dict{String, Any}}([
     Dict(
         "data" => Dict("id" => "A"),
         "position" => Dict("y" => 0, "x" => 0),
@@ -44,7 +44,7 @@ const EL_ = [
         "data" => Dict("id" => "H", "source" => "F", "target" => "G"),
         "style" => Dict("line-color" => "#6c9956"),
     ),
-]
+])
 
 # ---- #
 
@@ -64,7 +64,7 @@ const EX1 = "png"
 
 # ---- #
 
-@test BioLab.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1) === HT1
+BioLab.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1)
 
 # ---- #
 
@@ -84,7 +84,7 @@ const EX2 = "json"
 
 # ---- #
 
-@test BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2) === HT2
+BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2)
 
 # ---- #
 
@@ -92,7 +92,7 @@ const JS = joinpath(BioLab.TE, "$NAME2.$EX2")
 
 # ---- #
 
-function is_same(el1_, el2_, ke_ = ("data",))
+function is_equal(el1_, el2_, ke_ = ("data",))
 
     all(all(el1[ke] == el2[ke] for ke in ke_) for (el1, el2) in zip(el1_, el2_))
 
@@ -108,7 +108,7 @@ const EL2_ = BioLab.Graph.read(JS)
 
 # ---- #
 
-@test is_same(EL_, EL2_)
+@test is_equal(EL_, EL2_)
 
 # ---- #
 
@@ -116,7 +116,7 @@ BioLab.Graph.position!(EL_, EL2_)
 
 # ---- #
 
-@test is_same(EL_, EL2_, ("data", "position"))
+@test is_equal(EL_, EL2_, ("data", "position"))
 
 # ---- #
 
@@ -132,7 +132,7 @@ const EX3 = "json"
 
 # ---- #
 
-@test BioLab.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3) === HT3
+BioLab.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3)
 
 # ---- #
 

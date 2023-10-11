@@ -14,7 +14,7 @@ const DA = joinpath(BioLab._DA, "Gene")
 
 function is_type(da)
 
-    all(eltype(co) <: Union{Missing, AbstractString} for co in eachcol(da))
+    all(co -> eltype(co) <: Union{Missing, AbstractString}, eachcol(da))
 
 end
 
@@ -44,17 +44,17 @@ const UN = BioLab.Gene.read_uniprot()
 
 # ---- #
 
-const EN_NA = BioLab.Gene.map_ensembl(EN)
+const EN_GE = BioLab.Gene.map_ensembl(EN)
 
 # ---- #
 
-@test length(EN_NA) === 788360
+@test length(EN_GE) === 788360
 
 # ---- #
 
 for (ke, va) in (("GPI-214", "GPI"), ("ENST00000303227", "GLOD5"), ("ENST00000592956.1", "SYT5"))
 
-    @test EN_NA[ke] === va
+    @test EN_GE[ke] === va
 
 end
 
@@ -65,15 +65,15 @@ end
 
 # ---- #
 
-const PR_DI = BioLab.Gene.map_uniprot(UN)
+const PR_IO_AN = BioLab.Gene.map_uniprot(UN)
 
 # ---- #
 
-@test length(PR_DI) === 20398
+@test length(PR_IO_AN) === 20398
 
 # ---- #
 
-@test PR_DI["CD8A"]["Gene Names"] == ["CD8A", "MAL"]
+@test PR_IO_AN["CD8A"]["Gene Names"] == ["CD8A", "MAL"]
 
 # ---- #
 
@@ -104,7 +104,7 @@ const FEG_ = FE_[.!BioLab.Bad.is.(FE_)]
 # ---- #
 
 # [ Info: Renamed 2784600 / 2784600.
-BioLab.Gene.rename!(FEG_, EN_NA)
+BioLab.Gene.rename!(FEG_, EN_GE)
 
 # ---- #
 
@@ -113,4 +113,4 @@ disable_logging(Info)
 # ---- #
 
 # 203.208 ms (2784600 allocations: 66.17 MiB)
-@btime BioLab.Gene.rename!($FEG_, $EN_NA);
+@btime BioLab.Gene.rename!($FEG_, $EN_GE);

@@ -51,10 +51,10 @@ const BA_ = (
     Inf,
     # 1.791 ns (0 allocations: 0 bytes)
     "",
-    # 41.918 ns (0 allocations: 0 bytes)
+    # 41.792 ns (0 allocations: 0 bytes)
     "α",
     "π",
-    # 41.288 ns (0 allocations: 0 bytes)
+    # 41.204 ns (0 allocations: 0 bytes)
     SP_...,
     # 42.213 ns (0 allocations: 0 bytes)
     SP_ .^ 2...,
@@ -66,7 +66,7 @@ for ba in BA_
 
     @test BioLab.Bad.is(ba)
 
-    @btime BioLab.Bad.is($ba)
+    #@btime BioLab.Bad.is($ba)
 
 end
 
@@ -82,7 +82,6 @@ const GO_ = (
     1.0,
     # 40.112 ns (0 allocations: 0 bytes)
     "A",
-    # 40.152 ns (0 allocations: 0 bytes)
     "Abc",
     ("A$sp" for sp in SP_)...,
     # 41.877 ns (0 allocations: 0 bytes)
@@ -97,6 +96,6 @@ for go in GO_
 
     @test !BioLab.Bad.is(go)
 
-    @btime BioLab.Bad.is($go)
+    #@btime BioLab.Bad.is($go)
 
 end

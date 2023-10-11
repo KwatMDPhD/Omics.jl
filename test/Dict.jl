@@ -124,11 +124,6 @@ const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MY
 
 # ---- #
 
-# TODO
-@btime in($FE1_);
-
-# ---- #
-
 # 689.208 μs (3 allocations: 6.84 KiB)
 @btime in($FE1_).($FE_);
 
@@ -145,11 +140,6 @@ const FE1S = Set(FE1_)
 
 # 465.708 μs (2 allocations: 19.67 KiB)
 @btime [fe in $FE1S for fe in $FE_];
-
-# ---- #
-
-# TODO
-@btime in($FE1S);
 
 # ---- #
 
@@ -199,7 +189,7 @@ end
 
 # ---- #
 
-for (pa, ty, re) in (
+for (fi, ty, re) in (
     (JS1, OrderedDict{String, Any}, Dict("fruit" => "Apple", "color" => "Red", "size" => "Large")),
     (
         joinpath(DA, "example_2.json"),
@@ -255,13 +245,17 @@ for (pa, ty, re) in (
     ),
 )
 
-    di = BioLab.Dict.read(pa)
+    ke_va = BioLab.Dict.read(fi)
 
-    @test di isa ty
+    @test ke_va isa ty
 
-    @test di == re
+    @test ke_va == re
 
 end
+
+# ---- #
+
+const JSW = joinpath(BioLab.TE, "write_read.json")
 
 # ---- #
 
@@ -281,10 +275,6 @@ const DIW = Dict(
     ],
     "episode" => 1030,
 )
-
-# ---- #
-
-const JSW = joinpath(BioLab.TE, "write_read.json")
 
 # ---- #
 

@@ -8,6 +8,7 @@ using BioLab
 
 # ---- #
 
+# TODO: Remove.
 @test BioLab.Color.HEFA === "#ebf6f7"
 
 # ---- #
