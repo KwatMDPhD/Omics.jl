@@ -132,7 +132,7 @@ const N_SA = length(SAR_)
 
 # ---- #
 
-# 315.928 ns (1 allocation: 208 bytes)
+# 315.140 ns (1 allocation: 208 bytes)
 @btime BioLab.GEO.get_sample($SA_KE_VA);
 
 # ---- #
