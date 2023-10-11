@@ -111,7 +111,7 @@ function color(nu_, co = pick_color_scheme(nu_))
 
     mi, ma = BioLab.Collection.get_minimum_maximum(nu_)
 
-    (nu_ -> color((nu_ - mi) / (ma - mi), co)).(nu_)
+    (nu -> color((nu - mi) / (ma - mi), co)).(nu_)
 
 end
 

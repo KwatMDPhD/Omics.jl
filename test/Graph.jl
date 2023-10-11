@@ -106,11 +106,15 @@ const EL2_ = BioLab.Graph.read(JS)
 
 @test length(EL_) === length(EL2_)
 
+# ---- #
+
 @test is_same(EL_, EL2_)
 
 # ---- #
 
 BioLab.Graph.position!(EL_, EL2_)
+
+# ---- #
 
 @test is_same(EL_, EL2_, ("data", "position"))
 
@@ -118,10 +122,18 @@ BioLab.Graph.position!(EL_, EL2_)
 
 const NAME3 = "cose_preset"
 
+# ---- #
+
 const HT3 = joinpath(BioLab.TE, "$NAME3.html")
+
+# ---- #
 
 const EX3 = "json"
 
+# ---- #
+
 @test BioLab.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3) === HT3
+
+# ---- #
 
 @test EL2_ == BioLab.Graph.read(joinpath(BioLab.TE, "$NAME3.$EX3"))

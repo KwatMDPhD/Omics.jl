@@ -53,9 +53,9 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
     # 17.079 s (32566 allocations: 912.93 MiB)
     # 194.834 μs (27 allocations: 329.34 KiB)
 
-    #@btime BioLab.MatrixFactorization.factorize($ma, $n_fa)
+    @btime BioLab.MatrixFactorization.factorize($ma, $n_fa)
 
-    #@btime BioLab.MatrixFactorization.solve_h($ma, $mw)
+    @btime BioLab.MatrixFactorization.solve_h($ma, $mw)
 
 end
 

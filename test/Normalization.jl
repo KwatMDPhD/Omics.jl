@@ -29,7 +29,7 @@ for (nu, re) in zip(
     # 25.216 ns (0 allocations: 0 bytes)
     # 26.788 ns (0 allocations: 0 bytes)
     # 29.648 ns (0 allocations: 0 bytes)
-    @btime BioLab.Normalization.normalize_with_0!(co) setup = (co = copy($nu))
+    @btime BioLab.Normalization.normalize_with_0!(co) setup = (co = copy($nu)) evals = 1
 
 end
 
@@ -46,7 +46,7 @@ for (nu, re) in zip(NU_, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1], [0 0.4 0
     # 10.667 ns (0 allocations: 0 bytes)
     # 12.262 ns (0 allocations: 0 bytes)
     # 16.642 ns (0 allocations: 0 bytes)
-    @btime BioLab.Normalization.normalize_with_01!(co) setup = (co = copy($nu))
+    @btime BioLab.Normalization.normalize_with_01!(co) setup = (co = copy($nu)) evals = 1
 
 end
 
@@ -78,7 +78,7 @@ for (nu, re) in zip(
 
     # 7.167 ns (0 allocations: 0 bytes)
     # 10.208 ns (0 allocations: 0 bytes)
-    @btime BioLab.Normalization.normalize_with_sum!(co) setup = (co = copy($nu))
+    @btime BioLab.Normalization.normalize_with_sum!(co) setup = (co = copy($nu)) evals = 1
 
 end
 
@@ -105,7 +105,7 @@ for (nu, re) in zip(
     # 10.667 ns (0 allocations: 0 bytes)
     # 12.303 ns (0 allocations: 0 bytes)
     # 16.616 ns (0 allocations: 0 bytes)
-    @btime BioLab.Normalization.normalize_with_01!(co) setup = (co = copy($nu))
+    @btime BioLab.Normalization.normalize_with_01!(co) setup = (co = copy($nu)) evals = 1
 
 end
 
@@ -125,7 +125,7 @@ for (nu, re) in zip(ARR_, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
     # 253.758 ns (2 allocations: 224 bytes)
     # 320.052 ns (6 allocations: 432 bytes)
-    @btime BioLab.Normalization.normalize_with_1223!(co) setup = (co = copy($nu))
+    @btime BioLab.Normalization.normalize_with_1223!(co) setup = (co = copy($nu)) evals = 1
 
 end
 
@@ -141,7 +141,7 @@ for (nu, re) in zip(ARR_, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
 
     # 251.995 ns (2 allocations: 224 bytes)
     # 324.631 ns (6 allocations: 432 bytes)
-    @btime BioLab.Normalization.normalize_with_1224!(co) setup = (co = copy($nu))
+    @btime BioLab.Normalization.normalize_with_1224!(co) setup = (co = copy($nu)) evals = 1
 
 end
 
@@ -157,7 +157,7 @@ for (nu, re) in zip(ARR_, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
 
     # 256.456 ns (2 allocations: 224 bytes)
     # 326.849 ns (6 allocations: 432 bytes)
-    @btime BioLab.Normalization.normalize_with_125254!(co) setup = (co = float.($nu))
+    @btime BioLab.Normalization.normalize_with_125254!(co) setup = (co = float.($nu)) evals = 1
 
 end
 
@@ -245,7 +245,7 @@ for (fu, re) in zip(
     # 3.130 μs (24 allocations: 1.31 KiB)
     # 3.162 μs (24 allocations: 1.31 KiB)
     # 3.182 μs (24 allocations: 1.31 KiB)
-    @btime foreach($fu, eachcol(co)) setup = (co = copy($MA))
+    @btime foreach($fu, eachcol(co)) setup = (co = copy($MA)) evals = 1
 
 end
 
@@ -312,6 +312,6 @@ for (fu, re) in zip(
     # 3.130 μs (24 allocations: 1.31 KiB)
     # 3.135 μs (24 allocations: 1.31 KiB)
     # 3.208 μs (24 allocations: 1.31 KiB)
-    @btime foreach($fu, eachrow(co)) setup = (co = copy($MA))
+    @btime foreach($fu, eachrow(co)) setup = (co = copy($MA)) evals = 1
 
 end

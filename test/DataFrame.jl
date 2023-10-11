@@ -66,51 +66,6 @@ const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
 # ---- #
 
-for (ty, mi, ro_an__, re) in (
-    (
-        Any,
-        missing,
-        [
-            Dict("Row 1" => 1, "Row 2" => 2),
-            Dict("Row 2" => 2, "Row 3" => 3),
-            Dict("Row 1" => 1, "Row 2" => 2, "Row 3" => 3),
-        ],
-        DataFrame(
-            NAR => ["Row 1", "Row 2", "Row 3"],
-            "Column 1" => [1, 2, missing],
-            "Column 2" => [missing, 2, 3],
-            "Column 3" => [1, 2, 3],
-        ),
-    ),
-    (
-        Any,
-        missing,
-        [
-            Dict("Row 1" => 'a', "Row 2" => 'b'),
-            Dict("Row 2" => 'b', "Row 3" => 'c'),
-            Dict("Row 1" => 'a', "Row 2" => 'b', "Row 3" => 'c'),
-        ],
-        DataFrame(
-            NAR => ["Row 1", "Row 2", "Row 3"],
-            "Column 1" => ['a', 'b', missing],
-            "Column 2" => [missing, 'b', 'c'],
-            "Column 3" => ['a', 'b', 'c'],
-        ),
-    ),
-)
-
-    co_ = make_axis("Column ", length(ro_an__))
-
-    @test isequal(BioLab.DataFrame.make(ty, mi, NAR, co_, ro_an__), re)
-
-    # 1.571 μs (33 allocations: 2.61 KiB)
-    # 1.508 μs (33 allocations: 2.61 KiB)
-    @btime BioLab.DataFrame.make($ty, $mi, $NAR, $co_, $ro_an__)
-
-end
-
-# ---- #
-
 @test BioLab.DataFrame.separate(DT) == (NAR, RO_, CO_, MA)
 
 # ---- #

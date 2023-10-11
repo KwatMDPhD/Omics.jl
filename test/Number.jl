@@ -4,24 +4,24 @@ using BioLab
 
 # ---- #
 
-for nu in (-2.0, -2, -1.0, -1, -0.0)
+for ne in (-2.0, -2, -1.0, -1, -0.0)
 
-    @test BioLab.Number.is_negative(nu)
+    @test BioLab.Number.is_negative(ne)
 
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
-    @btime BioLab.Number.is_negative($nu)
+    @btime BioLab.Number.is_negative($ne)
 
 end
 
 # ---- #
 
-for nu in (2.0, 2, 1.0, 1, 0.0, 0)
+for po in (2.0, 2, 1.0, 1, 0.0, 0)
 
-    @test BioLab.Number.is_positive(nu)
+    @test BioLab.Number.is_positive(po)
 
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
@@ -29,6 +29,6 @@ for nu in (2.0, 2, 1.0, 1, 0.0, 0)
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
-    @btime BioLab.Number.is_positive($nu)
+    @btime BioLab.Number.is_positive($po)
 
 end
