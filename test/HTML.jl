@@ -4,11 +4,17 @@ using BioLab
 
 # ---- #
 
+# TODO: Remove.
 @test BioLab.HTML.get_height() === 800
 
 # ---- #
 
+# TODO: Remove.
 @test BioLab.HTML.get_width() === 1280
+
+# ---- #
+
+const HT = joinpath(BioLab.TE, "name.html")
 
 # ---- #
 
@@ -24,12 +30,11 @@ const SC = "SCRIPT"
 
 # ---- #
 
-@test dirname(BioLab.HTML.make("", SR_, ID, SC)) === BioLab.TE
+BioLab.HTML.make(HT, SR_, ID, SC)
 
 # ---- #
 
-@test length(readlines(BioLab.HTML.make(joinpath(BioLab.TE, "name.html"), SR_, ID, SC))) ===
-      10 + length(SR_)
+@test length(readlines(HT)) === 10 + length(SR_)
 
 # ---- #
 

@@ -5,9 +5,9 @@ using BioLab
 
 # ---- #
 
-for nu in (zeros(10), ones(10))
+for nu_ in (zeros(10), ones(10))
 
-    BioLab.Information.get_entropy(nu)
+    BioLab.Information.get_entropy(nu_)
 
 end
 
@@ -99,25 +99,25 @@ nu2_ = collect(0:10:100)
 
 BioLab.Information.get_mutual_information(nu1_, nu2_)
 
-## ---- #
-#
-#bi = BioLab.Information.kde((nu2_, nu1_), npoints = (8, 8))
-#
-## ---- #
-#
-#y = collect(bi.y)
-#
-## ---- #
-#
-#x = collect(bi.x)
-#
-## ---- #
-#
-#z = bi.density
-#
-## ---- #
-#
-#BioLab.Plot.plot_heat_map("", z; y, x)
+# ---- #
+
+bi = BioLab.Information.kde((nu2_, nu1_), npoints = (8, 8))
+
+# ---- #
+
+y = collect(bi.y)
+
+# ---- #
+
+x = collect(bi.x)
+
+# ---- #
+
+z = bi.density
+
+# ---- #
+
+BioLab.Plot.plot_heat_map("", z; y, x)
 
 # ---- #
 
