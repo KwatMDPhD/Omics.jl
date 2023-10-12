@@ -21,7 +21,7 @@ end
 
 function _eachsplit(st, de)
 
-    eachsplit(st, de; limit = 2)
+    (string(st) for st in eachsplit(st, de; limit = 2))
 
 end
 
@@ -136,6 +136,7 @@ function tabulate(sa_ke_va)
 
     ch_x_sa_x_st = [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
 
+    # TODO: Benchmark.
     for (id, ch) in enumerate(ch_)
 
         ch_[id] = titlecase(ch[5:end])
@@ -152,11 +153,11 @@ function _dice(ta)
 
 end
 
-function tabulate(pl_va, sa_ke_va)
+function _map(ke_va)
 
-    pl = pl_va["!Platform_geo_accession"]
+    pl = ke_va["!Platform_geo_accession"]
 
-    if !haskey(pl_va, "_ta")
+    if !haskey(ke_va, "_ta")
 
         error("\"$pl\" lacks a table.")
 
@@ -216,31 +217,39 @@ function tabulate(pl_va, sa_ke_va)
 
     end
 
-    sp___ = _dice(pl_va["_ta"])
+    sp___ = _dice(ke_va["_ta"])
 
     sp1_ = sp___[1]
 
     id = findfirst(==("ID"), sp1_)
 
-    id2 = findfirst(==(co), sp1_)
+    idc = findfirst(==(co), sp1_)
 
     fe_ = Vector{String}()
 
-    fe2_ = Vector{String}()
+    fec_ = Vector{String}()
 
     for sp_ in view(sp___, 2:length(sp___))
 
         push!(fe_, sp_[id])
 
-        push!(fe2_, fu(sp_[id2]))
+        push!(fec_, fu(sp_[idc]))
 
     end
 
+    fe_, fec_
+
+end
+
+function tabulate(ke_va, sa_ke_va)
+
+    fe_, fec_ = _map(ke_va)
+
     fe_x_sa_x_fl = fill(NaN, length(fe_), length(sa_ke_va))
 
-    fe_id = BioLab.Collection.map_index(fe_)
+    fe_id = Dict(fe => id for (id, fe) in enumerate(fe_))
 
-    for (ids, (sa, ke_va)) in enumerate(sa_ke_va)
+    for (id, (sa, ke_va)) in enumerate(sa_ke_va)
 
         if haskey(ke_va, "_ta")
 
@@ -250,7 +259,7 @@ function tabulate(pl_va, sa_ke_va)
 
             for sp_ in view(sp___, 2:length(sp___))
 
-                fe_x_sa_x_fl[fe_id[sp_[1]], ids] = parse(Float64, sp_[idv])
+                fe_x_sa_x_fl[fe_id[sp_[1]], id] = parse(Float64, sp_[idv])
 
             end
 
@@ -262,7 +271,7 @@ function tabulate(pl_va, sa_ke_va)
 
     end
 
-    fe2_, fe_x_sa_x_fl
+    fec_, fe_x_sa_x_fl
 
 end
 
