@@ -1,5 +1,6 @@
 module Color
 
+using Base: _getch
 using ColorSchemes: ColorScheme, bwr, plasma
 
 using Colors: Colorant, coloralpha, hex
@@ -33,7 +34,7 @@ const COBW = bwr
 
 const COPA = plasma
 
-const COMO = _make_color_scheme(["#fbb92d"])
+const COMO = _make_color_scheme(["#fc7f31"])
 
 const COBI = _make_color_scheme(["#006442", "#ffb61e"])
 
@@ -62,6 +63,12 @@ function add_alpha(he, al)
 
 end
 
+function _get_n_unique(an_)
+
+    length(unique(an_))
+
+end
+
 function pick_color_scheme(nu_)
 
     ty = eltype(nu_)
@@ -72,7 +79,7 @@ function pick_color_scheme(nu_)
 
     elseif ty <: Integer
 
-        n = length(unique(nu_))
+        n = _get_n_unique(nu_)
 
         if iszero(n) || isone(n)
 
@@ -104,7 +111,7 @@ end
 
 function color(nu_, co = pick_color_scheme(nu_))
 
-    if isone(length(unique(nu_)))
+    if isone(_get_n_unique(nu_))
 
         return [color(0.5, co)]
 
@@ -124,7 +131,9 @@ function fractionate(co)
 
     if isone(n)
 
-        return [(0.5, he_[1])]
+        push!(he_, he_[1])
+
+        n += 1
 
     end
 

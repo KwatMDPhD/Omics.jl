@@ -78,7 +78,7 @@ end
 # ---- #
 
 for (fu, an_) in (
-    (isnothing, (nothing, 0)),
+    (isnothing, (nothing,)),
     (ismissing, (missing,)),
     (isnan, (NaN,)),
     (isinf, (-Inf, Inf)),

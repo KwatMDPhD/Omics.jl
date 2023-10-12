@@ -14,7 +14,7 @@ macro is(ex)
 
         catch er
 
-            @error "Errored." er
+            @info "Caught an error." er
 
             true
 
@@ -40,7 +40,7 @@ function error_duplicate(an_)
 
         st = BioLab.Collection.count_sort_string(an_, 2)
 
-        error("Found $(BioLab.String.count(count('\n', st) + 1, "duplicate")).\n$st")
+        error("Found $(BioLab.String.count(count('\n', st), "duplicate")).\n$st")
 
     end
 
@@ -52,16 +52,16 @@ function error_bad(fu, an_)
 
     if !isempty(id_)
 
+        de = ".\n"
+
         error(
-            "Found $(BioLab.String.count(length(id_), "bad value")).\n$(join(unique(an_[id_]), ".\n")).",
+            "Found $(BioLab.String.count(length(id_), "bad value"))$de$(join(unique(view(an_, id_)), de))$de",
         )
 
     end
 
 end
 
-
-# TODO: Test.
 function error_length_difference(an___)
 
     if !isone(length(unique(length.(an___))))
@@ -98,7 +98,7 @@ function error_missing(pa)
 
     if !ispath(pa)
 
-        error("$pa is missing.")
+        error("Missing $pa.")
 
     end
 

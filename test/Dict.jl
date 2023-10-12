@@ -20,7 +20,7 @@ const DA = joinpath(BioLab._DA, "Dict")
 
 # ---- #
 
-const DIS = Dict("Existing" => 1)
+const KES_VA = Dict("Existing" => 1)
 
 # ---- #
 
@@ -33,54 +33,54 @@ for (ke, va, re) in (
     ("New", 2, Dict("Existing" => 1, "New" => 2, "New.2" => 2, "New.3" => 2)),
 )
 
-    co = copy(DIS)
+    ke_va = copy(KES_VA)
 
     for _ in 1:3
 
-        BioLab.Dict.set_with_suffix!(co, ke, va)
+        BioLab.Dict.set_with_suffix!(ke_va, ke, va)
 
     end
 
-    @test co == re
+    @test ke_va == re
 
     # 125.000 ns (5 allocations: 256 bytes)
     # 0.001 ns (0 allocations: 0 bytes)
-    @btime BioLab.Dict.set_with_suffix!(co, $ke, $va) setup = (co = copy($DIS)) evals = 1
+    #@btime BioLab.Dict.set_with_suffix!(ke_va, $ke, $va) setup = (ke_va = copy($KES_VA)) evals = 1
 
 end
 
 # ---- #
 
-for (di1, di2, re) in (
+for (ke1_va, ke2_va, re) in (
     (Dict(1 => 'a'), Dict(2 => 'b'), Dict{Int, Char}),
     (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Float64, Any}),
-    (Dict(1.0 => "Aa"), Dict(2 => view("Bb", 1:2)), Dict{Float64, AbstractString}),
+    (Dict(1 => "Aa"), Dict(2.0 => view("Bb", 1:2)), Dict{Float64, AbstractString}),
 )
 
-    @test BioLab.Dict.merge(di1, di2) isa re
+    @test typeof(BioLab.Dict.merge(ke1_va, ke2_va)) === re
 
 end
 
 # ---- #
 
-const DI1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
+const KE1_VA = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 
 # ---- #
 
-const DI2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
+const KE2_VA = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
 # ---- #
 
-for (di1, di2, re) in (
-    (DI1, DI2, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))),
-    (DI2, DI1, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))),
+for (KE1_VA, KE2_VA, re) in (
+    (KE1_VA, KE2_VA, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))),
+    (KE2_VA, KE1_VA, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))),
 )
 
-    @test BioLab.Dict.merge(di1, di2) == re
+    @test BioLab.Dict.merge(KE1_VA, KE2_VA) == re
 
-    # 1.700 μs (32 allocations: 2.86 KiB)
-    # 1.729 μs (32 allocations: 2.86 KiB)
-    @btime BioLab.Dict.merge($di1, $di2)
+    # 1.679 μs (32 allocations: 2.86 KiB)
+    # 1.654 μs (32 allocations: 2.86 KiB)
+    #@btime BioLab.Dict.merge($KE1_VA, $KE2_VA)
 
 end
 
@@ -101,7 +101,7 @@ for (an_id, re) in (
 
     is_ = BioLab.Dict.is_in(an_id, AN1_)
 
-    @test is_ isa BitVector
+    @test typeof(is_) === BitVector
 
     @test is_ == collect(re)
 
@@ -119,13 +119,13 @@ const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MY
 
 # ---- #
 
-# 687.375 μs (2 allocations: 19.67 KiB)
-@btime [fe in $FE1_ for fe in $FE_];
+# 686.792 μs (2 allocations: 19.67 KiB)
+#@btime [fe in $FE1_ for fe in $FE_];
 
 # ---- #
 
-# 689.208 μs (3 allocations: 6.84 KiB)
-@btime in($FE1_).($FE_);
+# 683.000 μs (3 allocations: 6.84 KiB)
+#@btime in($FE1_).($FE_);
 
 # ---- #
 
@@ -133,27 +133,27 @@ const FE1S = Set(FE1_)
 
 # ---- #
 
-# 442.131 ns (7 allocations: 1.13 KiB)
-@btime Set($FE1_);
+# 441.081 ns (7 allocations: 1.13 KiB)
+#@btime Set($FE1_);
 
 # ---- #
 
-# 465.708 μs (2 allocations: 19.67 KiB)
-@btime [fe in $FE1S for fe in $FE_];
+# 462.833 μs (2 allocations: 19.67 KiB)
+#@btime [fe in $FE1S for fe in $FE_];
 
 # ---- #
 
-# 468.833 μs (3 allocations: 6.84 KiB)
-@btime in($FE1S).($FE_);
+# 467.542 μs (3 allocations: 6.84 KiB)
+#@btime in($FE1S).($FE_);
 
 # ---- #
 
-const FE_ID = BioLab.Collection.map_index(FE_)
+const FE_ID = Dict(fe => id for (id, fe) in enumerate(FE_))
 
 # ---- #
 
-# 510.958 μs (7 allocations: 800.92 KiB)
-@btime BioLab.Collection.map_index($FE_);
+# 513.250 μs (7 allocations: 800.92 KiB)
+#@btime Dict(fe => id for (id, fe) in enumerate($FE_));
 
 # ---- #
 
@@ -164,16 +164,16 @@ for ke in ("Missing", "GPI")
     # 13.555 ns (0 allocations: 0 bytes)
     # 11.094 ns (0 allocations: 0 bytes)
 
-    @btime $ke in $FE1S
+    #@btime $ke in $FE1S
 
-    @btime haskey($FE_ID, $ke)
+    #@btime haskey($FE_ID, $ke)
 
 end
 
 # ---- #
 
-# 362.582 ns (2 allocations: 2.66 KiB)
-@btime BioLab.Dict.is_in($FE_ID, $FE1_);
+# 362.577 ns (2 allocations: 2.66 KiB)
+#@btime BioLab.Dict.is_in($FE_ID, $FE1_);
 
 # ---- #
 
@@ -181,9 +181,9 @@ const JS1 = joinpath(DA, "example_1.json")
 
 # ---- #
 
-for ty in (Dict, OrderedDict, OrderedDict{String, String})
+for ty in (Dict{String, Any}, OrderedDict{String, Any}, OrderedDict{String, String})
 
-    @test BioLab.Dict.read(JS1, ty) isa ty
+    @test typeof(BioLab.Dict.read(JS1, ty)) === ty
 
 end
 
@@ -247,7 +247,7 @@ for (fi, ty, re) in (
 
     ke_va = BioLab.Dict.read(fi)
 
-    @test ke_va isa ty
+    @test typeof(ke_va) === ty
 
     @test ke_va == re
 
@@ -259,7 +259,7 @@ const JSW = joinpath(BioLab.TE, "write_read.json")
 
 # ---- #
 
-const DIW = Dict(
+const KEW_VA = Dict(
     "Luffy" => "Pirate King",
     "Crews" => [
         "Luffy",
@@ -278,16 +278,16 @@ const DIW = Dict(
 
 # ---- #
 
-BioLab.Dict.write(JSW, DIW)
+BioLab.Dict.write(JSW, KEW_VA)
 
 # ---- #
 
-const DIWR = BioLab.Dict.read(JSW)
+const KEWR_VA = BioLab.Dict.read(JSW)
 
 # ---- #
 
-@test typeof(DIW) != typeof(DIWR)
+@test typeof(KEW_VA) != typeof(KEWR_VA)
 
 # ---- #
 
-@test DIW == DIWR
+@test KEW_VA == KEWR_VA
