@@ -28,27 +28,25 @@ function separate(row_x_column_x_any)
 
 end
 
-function read(fi, xl = ""; ke_ar...)
+function read(fi; ke_ar...)
 
-    if isempty(xl)
+    BioLab.Error.error_missing(fi)
 
-        BioLab.Error.error_missing(fi)
+    it_ = mmap(fi)
 
-        it_ = mmap(fi)
+    if BioLab.Path.get_extension(fi) == "gz"
 
-        if BioLab.Path.get_extension(fi) == "gz"
-
-            it_ = transcode(GzipDecompressor, it_)
-
-        end
-
-        _read(it_, _DataFrame; ke_ar...)
-
-    else
-
-        _DataFrame(readtable(fi, xl; ke_ar...))
+        it_ = transcode(GzipDecompressor, it_)
 
     end
+
+    _read(it_, _DataFrame; ke_ar...)
+
+end
+
+function read(xl, sh; ke_ar...)
+
+    _DataFrame(readtable(xl, sh; ke_ar...))
 
 end
 

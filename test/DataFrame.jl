@@ -34,7 +34,7 @@ const N_CO = 4
 
 function make_axis(pr::String, n::Int)::Vector{String}
 
-    ["$pr$id" for id in 1:n]
+    (id -> "$pr$id").(1:n)
 
 end
 
@@ -62,7 +62,7 @@ const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 # ---- #
 
 # 1.108 μs (22 allocations: 1.89 KiB)
-@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
+#@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
 
@@ -70,7 +70,7 @@ const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
 # ---- #
 
-BioLab.DataFrame.separate(DT)[2][1] = ":("
+BioLab.DataFrame.separate(DT)[2][1] = ""
 
 # ---- #
 
@@ -79,7 +79,7 @@ BioLab.DataFrame.separate(DT)[2][1] = ":("
 # ---- #
 
 # 1.938 μs (28 allocations: 2.08 KiB)
-@btime BioLab.DataFrame.separate($DT);
+#@btime BioLab.DataFrame.separate($DT);
 
 # ---- #
 
@@ -101,21 +101,21 @@ const TS = joinpath(BioLab.TE, "write.tsv")
 
 # ---- #
 
-const COI_ = 1:4
+const IT_ = 1:4
 
 # ---- #
 
-const COF_ = 1.0:4
+const FL_ = 1.0:4
 
 # ---- #
 
 BioLab.DataFrame.write(
     TS,
     DataFrame(
-        "Column Int" => COI_,
-        "Column Float" => COF_,
-        "Column Int String" => string.(COI_),
-        "Column Float String" => string.(COF_),
+        "Column Int" => IT_,
+        "Column Float" => FL_,
+        "Column Int String" => string.(IT_),
+        "Column Float String" => string.(FL_),
     ),
 )
 

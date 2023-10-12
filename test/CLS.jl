@@ -36,9 +36,9 @@ for (cl, ta, re) in (
 
     @test ta_x_sa_x_nu[1, eachindex(re)] == re
 
-    # 389.167 μs (6235 allocations: 530.47 KiB)
-    # 9.833 μs (99 allocations: 7.73 KiB)
-    # 9.708 μs (99 allocations: 7.67 KiB)
+    # 390.542 μs (6235 allocations: 530.47 KiB)
+    # 9.791 μs (99 allocations: 7.73 KiB)
+    # 9.625 μs (99 allocations: 7.67 KiB)
     #@btime BioLab.CLS.read($cl)
 
 end

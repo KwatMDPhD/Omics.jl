@@ -54,7 +54,7 @@ function read(cl)
 
         end
 
-        gr_id = BioLab.Collection.map_index(gr_)
+        gr_id = Dict(gr => id for (id, gr) in enumerate(gr_))
 
         BioLab.DataFrame.make(nar, join(gr_, '_'), co_, _make_matrix(st -> gr_id[st], li3_))
 
