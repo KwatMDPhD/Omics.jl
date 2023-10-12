@@ -1,5 +1,3 @@
-using ColorSchemes: bwr, plasma
-
 using Colors: RGB
 
 using Test: @test
@@ -8,12 +6,7 @@ using BioLab
 
 # ---- #
 
-# TODO: Remove.
-@test BioLab.Color.HEFA === "#ebf6f7"
-
-# ---- #
-
-const HE_ = ["#ff71fb", "#fcc9b9", "#c91f37"]
+const HE_ = ["#ff0000", "#00ff00", "#0000ff"]
 
 # ---- #
 
@@ -21,50 +14,52 @@ const CO = BioLab.Color._make_color_scheme(HE_)
 
 # ---- #
 
-@test length(CO) === length(HE_)
+const N = length(CO)
+
+# ---- #
+
+@test N === length(HE_)
 
 # ---- #
 
 for co in (
+    BioLab.Color._make_color_scheme([
+        BioLab.Color.HEFA,
+        BioLab.Color.HEAG,
+        BioLab.Color.HEAY,
+        BioLab.Color.HEBL,
+        BioLab.Color.HERE,
+        BioLab.Color.HESR,
+        BioLab.Color.HESG,
+    ]),
     BioLab.Color.COAS,
     BioLab.Color.COBW,
     BioLab.Color.COPA,
     BioLab.Color.COMO,
     BioLab.Color.COBI,
-    BioLab.Color.COST,
-    BioLab.Color.COHU,
     BioLab.Color.COPO,
 )
 
     BioLab.Plot.plot_heat_map(
         "",
         Matrix(reshape(1:length(co), 1, :));
-        text = Matrix(reshape(co.colors, 1, :)),
+        text = [BioLab.Color._make_hex(rg) for _ in 1:1, rg in co.colors],
         co,
-        layout = Dict("yaxis" => Dict("tickvals" => ()), "xaxis" => Dict("dtick" => 1)),
     )
 
 end
 
 # ---- #
 
-const HER_ = ("#ff0000", "#00ff00", "#0000ff")
-
-# ---- #
-
-for (rg, re) in zip((RGB(1, 0, 0), RGB(0, 1, 0), RGB(0, 0, 1)), HER_)
+for (rg, re) in zip((RGB(1, 0, 0), RGB(0, 1, 0), RGB(0, 0, 1)), HE_)
 
     @test BioLab.Color._make_hex(rg) === re
-
-    @test BioLab.Color._make_hex(rg, :RGB) ===
-          BioLab.Color._make_hex(rg, :rgb) ===
-          join(re[[1, 2, 4, 6]])
 
 end
 
 # ---- #
 
-for he in HER_, (al, re) in ((0, "00"), (0.5, "80"), (1, "ff"))
+for he in HE_, (al, re) in ((0, "00"), (0.5, "80"), (1, "ff"))
 
     @test BioLab.Color.add_alpha(he, al) === "$he$re"
 
@@ -93,7 +88,7 @@ end
 
 # ---- #
 
-const N = length(CO)
+const HEH = HE_[Int(round(N / 2))]
 
 # ---- #
 
@@ -101,13 +96,13 @@ for id in (-1, 0, N + 1)
 
     @test BioLab.Error.@is CO[id]
 
-    @test BioLab.Color.color([id], CO) == [HE_[2]]
+    @test BioLab.Color.color([id], CO) == [HEH]
 
 end
 
 # ---- #
 
-const ID_ = collect(eachindex(HE_))
+const ID_ = collect(1:N)
 
 # ---- #
 
@@ -115,7 +110,7 @@ for (id, re) in zip(ID_, HE_)
 
     @test BioLab.Color.color(id, CO) === re
 
-    @test BioLab.Color.color([id], CO) == [HE_[2]]
+    @test BioLab.Color.color([id], CO) == [HEH]
 
 end
 
@@ -125,44 +120,44 @@ end
 
 # ---- #
 
-@test BioLab.Color.color([NaN], CO) == [HE_[2]]
+@test BioLab.Color.color([NaN], CO) == [HEH]
 
 # ---- #
 
 for (fl, re) in zip(
     (-Inf, -0.1, 0.0, 0.01, 0.5, 0.99, 1.0, 1.1, Inf),
-    (HE_[1], HE_[1], HE_[1], "#ff73fa", HE_[2], "#ca223a", HE_[3], HE_[3], HE_[3]),
+    (HE_[1], HE_[1], HE_[1], "#fa0500", HEH, "#0005fa", HE_[N], HE_[N], HE_[N]),
 )
 
     @test BioLab.Color.color(fl, CO) === re
 
-    @test BioLab.Color.color([fl], CO) == [HE_[2]]
+    @test BioLab.Color.color([fl], CO) == [HEH]
 
 end
 
 # ---- #
 
-@test BioLab.Color.color(ID_, CO) == collect(HE_)
+@test BioLab.Color.color(ID_, CO) == HE_
 
 # ---- #
 
-@test BioLab.Color.color(vcat(ID_, N + 1), CO) == [HE_[1], "#fdaccf", "#eb908e", HE_[end]]
+@test BioLab.Color.color(vcat(ID_, N + 1), CO) == [HE_[1], "#55aa00", "#00aa55", HE_[N]]
 
 # ---- #
 
-# 693.709 ns (25 allocations: 1.29 KiB)
-@btime BioLab.Color.color($ID_, $CO);
+# 607.244 ns (25 allocations: 1.29 KiB)
+#@btime BioLab.Color.color($ID_, $CO);
 
 # ---- #
 
 for (he_, fr_) in (
-    ([BioLab.Color.HEFA], (0.5,)),
-    (["#000000", "#ffffff"], (0, 1)),
-    (["#ff0000", "#00ff00", "#0000ff"], (0, 0.5, 1)),
-    (["#ff0000", "#00ff00", "#0000ff", "#f0000f"], (0, 1 / 3, 2 / 3, 1)),
-    (["#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0"], (0, 0.25, 0.5, 0.75, 1)),
+    (["#000001"], (0.5,)),
+    (["#000001", "#000002"], (0, 1)),
+    (["#000001", "#000002", "#000003"], (0, 0.5, 1)),
+    (["#000001", "#000002", "#000003", "#000004"], (0, 1 / 3, 2 / 3, 1)),
+    (["#000001", "#000002", "#000003", "#000004", "#000005"], (0, 0.25, 0.5, 0.75, 1)),
     (
-        ["#ff0000", "#00ff00", "#0000ff", "#f0000f", "#0f00f0", "#00ff00"],
+        ["#000001", "#000002", "#000003", "#000004", "#000005", "#000006"],
         (0, 0.2, 0.4, 0.6, 0.8, 1),
     ),
 )
@@ -171,12 +166,12 @@ for (he_, fr_) in (
 
     @test BioLab.Color.fractionate(co) == collect(zip(fr_, he_))
 
-    # 257.622 ns (10 allocations: 456 bytes)
-    # 518.741 ns (17 allocations: 720 bytes)
-    # 707.690 ns (24 allocations: 1016 bytes)
-    # 888.889 ns (31 allocations: 1.25 KiB)
-    # 1.087 μs (38 allocations: 1.54 KiB)
-    # 1.262 μs (45 allocations: 1.80 KiB)
-    @btime BioLab.Color.fractionate($co)
+    # 220.274 ns (10 allocations: 456 bytes)
+    # 470.449 ns (17 allocations: 720 bytes)
+    # 634.673 ns (24 allocations: 1016 bytes)
+    # 785.526 ns (31 allocations: 1.25 KiB)
+    # 942.043 ns (38 allocations: 1.54 KiB)
+    # 1.104 μs (45 allocations: 1.80 KiB)
+    #@btime BioLab.Color.fractionate($co)
 
 end

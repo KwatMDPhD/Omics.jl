@@ -8,21 +8,26 @@ using ..BioLab
 
 const HEFA = "#ebf6f7"
 
+const HEAG = "#00936e"
+
+const HEAY = "#ffd96a"
+
+const HEBL = "#1993ff"
+
+const HERE = "#ff1992"
+
+const HESR = "#8c1515"
+
+const HESG = "#175e54"
+
 function _make_color_scheme(he_)
 
     ColorScheme(parse.(Colorant, he_))
 
 end
 
-const COAS = _make_color_scheme([
-    "#00936e",
-    "#a4e2b4",
-    "#e0f5e5",
-    "#ffffff",
-    "#fff8d1",
-    "#ffec9f",
-    "#ffd96a",
-])
+const COAS =
+    _make_color_scheme([HEAG, "#a4e2b4", "#e0f5e5", "#ffffff", "#fff8d1", "#ffec9f", HEAY])
 
 const COBW = bwr
 
@@ -31,10 +36,6 @@ const COPA = plasma
 const COMO = _make_color_scheme(["#fbb92d"])
 
 const COBI = _make_color_scheme(["#006442", "#ffb61e"])
-
-const COST = _make_color_scheme(["#8c1515", "#175e54"])
-
-const COHU = _make_color_scheme(["#4b3c39", "#ffddca"])
 
 const COPO = _make_color_scheme([
     "#636efa",
@@ -49,9 +50,9 @@ const COPO = _make_color_scheme([
     "#fecb52",
 ])
 
-function _make_hex(rg, st = :AUTO)
+function _make_hex(rg)
 
-    "#$(lowercase(hex(rg, st)))"
+    "#$(lowercase(hex(rg, :AUTO)))"
 
 end
 
