@@ -24,7 +24,7 @@ for (cl, ta, re) in (
 
     cl = joinpath(DA, cl)
 
-    nar, ro_, co_, fe_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.CLS.read(cl))
+    nar, ro_, co_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.CLS.read(cl))
 
     @test nar === "Target"
 
@@ -32,13 +32,13 @@ for (cl, ta, re) in (
 
     @test all(startswith("Sample "), co_)
 
-    @test eltype(fe_x_sa_x_nu) === eltype(re)
+    @test eltype(ta_x_sa_x_nu) === eltype(re)
 
-    @test fe_x_sa_x_nu[1, eachindex(re)] == re
+    @test ta_x_sa_x_nu[1, eachindex(re)] == re
 
-    # 409.500 μs (6235 allocations: 530.47 KiB)
-    # 9.875 μs (99 allocations: 7.73 KiB)
-    # 9.750 μs (99 allocations: 7.67 KiB)
+    # 389.167 μs (6235 allocations: 530.47 KiB)
+    # 9.833 μs (99 allocations: 7.73 KiB)
+    # 9.708 μs (99 allocations: 7.67 KiB)
     @btime BioLab.CLS.read($cl)
 
 end

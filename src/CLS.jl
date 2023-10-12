@@ -2,6 +2,12 @@ module CLS
 
 using ..BioLab
 
+function _make_matrix(fu, st_)
+
+    [fu(st) for _ in 1:1, st in st_]
+
+end
+
 function read(cl)
 
     li1, li2, li3 = readlines(cl)
@@ -14,13 +20,11 @@ function read(cl)
 
     nar = "Target"
 
-    co_ = ["Sample $id" for id in 1:n_sa3]
-
-    id_ = 1:1
+    co_ = (id -> "Sample $id").(1:n_sa3)
 
     if li1 == "#numeric"
 
-        BioLab.DataFrame.make(nar, li2, co_, [parse(Float64, st) for _ in id_, st in li3_])
+        BioLab.DataFrame.make(nar, li2, co_, _make_matrix(st -> parse(Float64, st), li3_))
 
     else
 
@@ -52,7 +56,7 @@ function read(cl)
 
         gr_id = BioLab.Collection.map_index(gr_)
 
-        BioLab.DataFrame.make(nar, join(gr_, '_'), co_, [gr_id[st] for _ in id_, st in li3_])
+        BioLab.DataFrame.make(nar, join(gr_, '_'), co_, _make_matrix(st -> gr_id[st], li3_))
 
     end
 
