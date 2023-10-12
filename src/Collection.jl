@@ -2,12 +2,6 @@ module Collection
 
 using StatsBase: countmap
 
-function map_index(an_)
-
-    Dict(an => id for (id, an) in enumerate(an_))
-
-end
-
 function get_minimum_maximum(an_)
 
     mi = ma = an_[1]
@@ -34,10 +28,7 @@ end
 
 function count_sort_string(an_, mi = 1)
 
-    join(
-        ("$n $an." for (an, n) in sort(countmap(an_); byvalue = true, rev = true) if mi <= n),
-        '\n',
-    )
+    join("$n $an.\n" for (an, n) in sort(countmap(an_); byvalue = true, rev = true) if mi <= n)
 
 end
 
