@@ -8,7 +8,9 @@ using ..BioLab
 
 const _FU = Euclidean()
 
-function hierarchize(ma, fu = _FU, linkage = :ward)
+const _LI = :ward
+
+function hierarchize(ma, fu = _FU, linkage = _LI)
 
     hclust(pairwise(fu, ma); linkage)
 
@@ -20,15 +22,15 @@ function cluster(hc, k)
 
 end
 
-function order(co_, ma, fu = _FU; ke_ar...)
+function order(co_, ma, fu = _FU, linkage = _LI)
 
     id_ = Vector{Int}()
 
-    for co in BioLab.Collection.unique_sort(co_)
+    for co in sort!(unique(co_))
 
         idc_ = findall(==(co), co_)
 
-        append!(id_, idc_[hierarchize(ma[:, idc_], fu; ke_ar...).order])
+        append!(id_, idc_[hierarchize(ma[:, idc_], fu, linkage).order])
 
     end
 

@@ -29,9 +29,9 @@ for (di, re) in ((2, [4, 1, 2, 3, 7, 5, 6]), (1, [1, 3, 2, 4]))
 
     @test BioLab.Clustering.hierarchize(ma).order == re
 
-    # 1.733 μs (38 allocations: 4.54 KiB)
-    # 1.225 μs (35 allocations: 3.04 KiB)
-    @btime BioLab.Clustering.hierarchize($ma)
+    # 1.704 μs (38 allocations: 4.54 KiB)
+    # 1.204 μs (35 allocations: 3.04 KiB)
+    #@btime BioLab.Clustering.hierarchize($ma)
 
 end
 
@@ -45,8 +45,8 @@ const FU = CorrDist()
 
 # ---- #
 
-# 2.167 μs (47 allocations: 5.29 KiB)
-@btime BioLab.Clustering.hierarchize($MA, $FU);
+# 1.954 μs (47 allocations: 5.29 KiB)
+#@btime BioLab.Clustering.hierarchize($MA, $FU);
 
 # ---- #
 
@@ -61,11 +61,11 @@ for (k, re) in (
 
     @test BioLab.Clustering.cluster(hc, k) == re
 
-    # 460.234 ns (17 allocations: 1.25 KiB)
-    # 431.187 ns (16 allocations: 1.22 KiB)
-    # 397.592 ns (15 allocations: 1.16 KiB)
-    # 345.735 ns (13 allocations: 1.05 KiB)
-    @btime BioLab.Clustering.cluster($hc, $k)
+    # 455.371 ns (17 allocations: 1.25 KiB)
+    # 427.136 ns (16 allocations: 1.22 KiB)
+    # 389.851 ns (15 allocations: 1.16 KiB)
+    # 337.516 ns (13 allocations: 1.05 KiB)
+    #@btime BioLab.Clustering.cluster($hc, $k)
 
 end
 
@@ -82,12 +82,12 @@ for (co_, ma, re) in (
 
     @test BioLab.Clustering.order(co_, ma) == re
 
-    # 2.773 μs (88 allocations: 7.56 KiB)
-    # 2.801 μs (88 allocations: 7.56 KiB)
-    # 2.810 μs (88 allocations: 7.56 KiB)
-    # 2.824 μs (88 allocations: 7.56 KiB)
-    # 2.819 μs (88 allocations: 7.56 KiB)
-    # 2.843 μs (88 allocations: 7.56 KiB)
-    @btime BioLab.Clustering.order($co_, $ma)
+    # 2.704 μs (88 allocations: 7.56 KiB)
+    # 2.708 μs (88 allocations: 7.56 KiB)
+    # 2.713 μs (88 allocations: 7.56 KiB)
+    # 2.750 μs (88 allocations: 7.56 KiB)
+    # 2.718 μs (88 allocations: 7.56 KiB)
+    # 2.727 μs (88 allocations: 7.56 KiB)
+    #@btime BioLab.Clustering.order($co_, $ma)
 
 end

@@ -2,12 +2,6 @@ module Collection
 
 using StatsBase: countmap
 
-function unique_sort(an_)
-
-    sort!(unique(an_))
-
-end
-
 function map_index(an_)
 
     Dict(an => id for (id, an) in enumerate(an_))
