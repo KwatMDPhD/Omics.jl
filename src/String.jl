@@ -1,5 +1,11 @@
 module String
 
+function is_bad(st::AbstractString)
+
+    isempty(st) || contains(st, r"^[^0-9A-Za-z]+$")
+
+end
+
 function try_parse(st)
 
     try

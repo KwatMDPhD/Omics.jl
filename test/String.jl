@@ -4,6 +4,89 @@ using BioLab
 
 # ---- #
 
+const SP_ = (
+    " ",
+    "!",
+    "\"",
+    "#",
+    "%",
+    "&",
+    "'",
+    "(",
+    ")",
+    "*",
+    "+",
+    ",",
+    "-",
+    ".",
+    "/",
+    ":",
+    ";",
+    "<",
+    "=",
+    ">",
+    "?",
+    "@",
+    "[",
+    "]",
+    "^",
+    "_",
+    "`",
+    "{",
+    "|",
+    "}",
+    "~",
+)
+
+# ---- #
+
+const BA_ = (
+    # 1.791 ns (0 allocations: 0 bytes)
+    "",
+    # 41.792 ns (0 allocations: 0 bytes)
+    "α",
+    "π",
+    # 41.204 ns (0 allocations: 0 bytes)
+    SP_...,
+    # 42.213 ns (0 allocations: 0 bytes)
+    SP_ .^ 2...,
+)
+
+# ---- #
+
+for ba in BA_
+
+    @test BioLab.String.is_bad(ba)
+
+    @btime BioLab.String.is_bad($ba)
+
+end
+
+# ---- #
+
+const GO_ = (
+    # 40.112 ns (0 allocations: 0 bytes)
+    "A",
+    "Abc",
+    ("A$sp" for sp in SP_)...,
+    # 41.877 ns (0 allocations: 0 bytes)
+    ("$(sp)B" for sp in SP_)...,
+    # 40.152 ns (0 allocations: 0 bytes)
+    ("A$(sp)B" for sp in SP_)...,
+)
+
+# ---- #
+
+for go in GO_
+
+    @test !BioLab.String.is_bad(go)
+
+    @btime BioLab.String.is_bad($go)
+
+end
+
+# ---- #
+
 for (st, re) in (
     ("0", 0),
     ("-0.0", 0),

@@ -34,21 +34,6 @@ function error_empty(an_)
 
 end
 
-function error_bad(an_)
-
-    id_ = findall(BioLab.Bad.is, an_)
-
-    if !isempty(id_)
-
-        # TODO: Benchmark.
-        error(
-            "Found $(BioLab.String.count(length(id_), "bad value")).\n$(join(unique(an_[id_]), ".\n")).",
-        )
-
-    end
-
-end
-
 function error_duplicate(an_)
 
     if !allunique(an_)
@@ -60,6 +45,21 @@ function error_duplicate(an_)
     end
 
 end
+
+function error_bad(fu, an_)
+
+    id_ = findall(fu, an_)
+
+    if !isempty(id_)
+
+        error(
+            "Found $(BioLab.String.count(length(id_), "bad value")).\n$(join(unique(an_[id_]), ".\n")).",
+        )
+
+    end
+
+end
+
 
 # TODO: Test.
 function error_length_difference(an___)

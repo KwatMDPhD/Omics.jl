@@ -18,8 +18,6 @@ function map_ensembl(index_x_information_x_string = read_ensemble())
 
     en_ge = Dict{String, String}()
 
-    # TODO: Benchmark separating columns.
-
     ma = Matrix(
         index_x_information_x_string[
             !,
@@ -40,19 +38,13 @@ function map_ensembl(index_x_information_x_string = read_ensemble())
 
         ge = st_[n]
 
-        if BioLab.Bad.is(ge)
+        if ismissing(ge)
 
             continue
 
         end
 
         for en in st_[1:(n - 1)]
-
-            if BioLab.Bad.is(en)
-
-                continue
-
-            end
 
             for ens in eachsplit(en, '|')
 
@@ -86,7 +78,7 @@ function map_uniprot(index_x_information_x_string = read_uniprot())
 
         for (io, an) in zip(io_, an_)
 
-            if BioLab.Bad.is(an)
+            if ismissing(an)
 
                 continue
 
@@ -108,9 +100,6 @@ function map_uniprot(index_x_information_x_string = read_uniprot())
 
         pr = pr[1:(end - 6)]
 
-        # TODO: Remove.
-        BioLab.Error.error_has_key(pr_io_an, pr)
-
         pr_io_an[pr] = io_an
 
     end
@@ -124,12 +113,6 @@ function rename!(fe_, fe_fe2)
     n = 0
 
     for (id, fe) in enumerate(fe_)
-
-        if BioLab.Bad.is(fe)
-
-            continue
-
-        end
 
         if haskey(fe_fe2, fe)
 

@@ -259,11 +259,11 @@ function make(
 
     sc_ = (nu_ -> fu(ta_, nu_)).(eachrow(fe_x_sa_x_nu))
 
-    is_ = BioLab.Bad.is.(sc_)
+    is_ = isnan.(sc_)
 
     if any(is_)
 
-        @warn "Scores have $(BioLab.String.count(sum(is_), "bad value"))."
+        @warn "Scores have $(BioLab.String.count(sum(is_), "NaN"))."
 
     end
 

@@ -12,7 +12,7 @@ using BioLab
 
 # ---- #
 
-for em in ("", (), [])
+for em in ("", (), [], Set(), Dict())
 
     @test BioLab.Error.@is BioLab.Error.error_empty(em)
 
@@ -20,7 +20,7 @@ end
 
 # ---- #
 
-for an_ in ("Aa", (1,), [1])
+for an_ in (" ", (nothing,), [nothing], Set((nothing,)), Dict(nothing => nothing))
 
     @test !BioLab.Error.@is BioLab.Error.error_empty(an_)
 
@@ -28,45 +28,94 @@ end
 
 # ---- #
 
-include("Bad.jl")
+for an_ in (
+    ('a', 'b', 'b', 'c', 'c', 'c'),
+    (1, 1.0, 1 // 1, true),
+    (
+        nothing,
+        nothing,
+        missing,
+        missing,
+        missing,
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        -Inf,
+        -Inf,
+        -Inf,
+        -Inf,
+        -Inf,
+        Inf,
+        Inf,
+        Inf,
+        Inf,
+        Inf,
+        Inf,
+    ),
+)
 
-# ---- #
+    for an2_ in (an_, collect(an_))
 
-@test BioLab.Error.@is BioLab.Error.error_bad(BA_)
+        @test BioLab.Error.@is BioLab.Error.error_duplicate(an2_)
 
-# ---- #
-
-@test !BioLab.Error.@is BioLab.Error.error_bad(GO_)
-
-# ---- #
-
-for an_ in (('a', 'a'), ('a', 'a', 'a', 'b', 'b', 'b', 'b'), (1, 1.0, 1 // 1, true))
-
-    @test BioLab.Error.@is BioLab.Error.error_duplicate(an_)
+    end
 
 end
 
 # ---- #
 
-for an_ in (('a',), ('a', 'b'), (1, 2))
+for an_ in (('a', 'b', 'c'), (1,), (nothing, missing, NaN, -Inf, Inf))
 
-    @test !BioLab.Error.@is BioLab.Error.error_duplicate(an_)
+    for an2_ in (an_, collect(an_))
 
-end
+        @test !BioLab.Error.@is BioLab.Error.error_duplicate(an2_)
 
-# ---- #
-
-for an___ in (((), (1,)), ((1,), (2, 3)))
-
-    @test BioLab.Error.@is BioLab.Error.error_length_difference(an___)
+    end
 
 end
 
 # ---- #
 
-for an___ in (((), ()), ((1,), (2,)), ((1, 2), (3, 4)))
+for (fu, an_) in (
+    (isnothing, (nothing, 0)),
+    (ismissing, (missing,)),
+    (isnan, (NaN,)),
+    (isinf, (-Inf, Inf)),
+    (BioLab.String.is_bad, ("", " ", "!")),
+)
 
-    @test !BioLab.Error.@is BioLab.Error.error_length_difference(an___)
+    for an2_ in (an_, collect(an_))
+
+        @test BioLab.Error.@is BioLab.Error.error_bad(fu, an2_)
+
+    end
+
+    @test !BioLab.Error.@is BioLab.Error.error_bad(fu, Vector{Any}())
+
+end
+
+# ---- #
+
+for an___ in (((), (1,)), ((1,), (1, 1)))
+
+    for an2___ in (an___, collect(an___))
+
+        @test BioLab.Error.@is BioLab.Error.error_length_difference(an2___)
+
+    end
+
+end
+
+# ---- #
+
+for an___ in (((), ()), ((1,), (1,)), ((1, 1), (1, 1)))
+
+    for an2___ in (an___, collect(an___))
+
+        @test !BioLab.Error.@is BioLab.Error.error_length_difference(an2___)
+
+    end
 
 end
 

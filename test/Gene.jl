@@ -12,9 +12,17 @@ const DA = joinpath(BioLab._DA, "Gene")
 
 # ---- #
 
-function is_type(da)
+function is_missing_string(da)
 
     all(co -> eltype(co) <: Union{Missing, AbstractString}, eachcol(da))
+
+end
+
+# ---- #
+
+function has_bad(da)
+
+    any(co -> any(BioLab.String.is_bad, skipmissing(co)), eachcol(da))
 
 end
 
@@ -28,7 +36,11 @@ const EN = BioLab.Gene.read_ensemble()
 
 # ---- #
 
-@test is_type(EN)
+@test is_missing_string(EN)
+
+# ---- #
+
+@test !has_bad(EN)
 
 # ---- #
 
@@ -40,7 +52,15 @@ const UN = BioLab.Gene.read_uniprot()
 
 # ---- #
 
-@test is_type(UN)
+@test is_missing_string(UN)
+
+# ---- #
+
+@test !has_bad(UN)
+
+# ---- #
+
+@test allunique(UN[!, 2])
 
 # ---- #
 
@@ -60,7 +80,7 @@ end
 
 # ---- #
 
-# 2.646 s (40077165 allocations: 2.27 GiB)
+# 2.275 s (36735645 allocations: 2.17 GiB)
 @btime BioLab.Gene.map_ensembl($EN);
 
 # ---- #
@@ -77,7 +97,7 @@ const PR_IO_AN = BioLab.Gene.map_uniprot(UN)
 
 # ---- #
 
-# 61.372 ms (1632064 allocations: 94.68 MiB)
+# 56.019 ms (1632064 allocations: 94.68 MiB)
 @btime BioLab.Gene.map_uniprot($UN);
 
 # ---- #
@@ -99,7 +119,7 @@ const FE_ = vec(
 
 # ---- #
 
-const FEG_ = FE_[.!BioLab.Bad.is.(FE_)]
+const FEG_ = FE_[.!ismissing.(FE_)]
 
 # ---- #
 
@@ -112,5 +132,5 @@ disable_logging(Info)
 
 # ---- #
 
-# 203.208 ms (2784600 allocations: 66.17 MiB)
+# 45.327 ms (0 allocations: 0 bytes)
 @btime BioLab.Gene.rename!($FEG_, $EN_GE);
