@@ -4,8 +4,6 @@ using Clustering: cutree, hclust
 
 using Distances: Euclidean, pairwise
 
-using ..BioLab
-
 const _FU = Euclidean()
 
 const _LI = :ward

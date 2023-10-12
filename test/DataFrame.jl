@@ -32,7 +32,7 @@ const N_CO = 4
 
 # ---- #
 
-function make_axis(pr::String, n::Int)::Vector{String}
+function make_axis(pr, n)
 
     (id -> "$pr$id").(1:n)
 
