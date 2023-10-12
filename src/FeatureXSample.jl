@@ -29,13 +29,15 @@ function transform(
 
     BioLab.Error.error_missing(di)
 
-    BioLab.Error.error_bad(fe_)
-
-    BioLab.Error.error_bad(sa_)
+    foreach(fu -> BioLab.Error.error_bad(fu, fe_), (isnothing, ismissing, BioLab.String.is_bad))
 
     BioLab.Error.error_duplicate(sa_)
 
-    BioLab.Error.error_bad(fe_x_sa_x_nu)
+    foreach(fu -> BioLab.Error.error_bad(fu, sa_), (isnothing, ismissing, BioLab.String.is_bad))
+
+    foreach(fu -> BioLab.Error.error_bad(fu, fe_x_sa_x_nu), (isnothing, ismissing, isnan, isinf))
+
+    layout = Dict("title" => Dict("text" => na))
 
     BioLab.Plot.plot_heat_map(
         joinpath(di, "feature_x_sample_x_number.html"),
@@ -44,14 +46,10 @@ function transform(
         x = sa_,
         nar = "Feature",
         nac = "Sample",
-        layout = Dict("title" => Dict("text" => na)),
+        layout,
     )
 
-    BioLab.Plot.plot_histogram(
-        joinpath(di, "number.html"),
-        (vec(fe_x_sa_x_nu),);
-        layout = Dict("title" => Dict("text" => na)),
-    )
+    BioLab.Plot.plot_histogram(joinpath(di, "number.html"), (vec(fe_x_sa_x_nu),); layout)
 
     if !isempty(fe_fe2)
 

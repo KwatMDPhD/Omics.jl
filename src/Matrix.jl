@@ -30,9 +30,7 @@ function collapse(fu, ty, ro_, ma)
 
     if n_ro == n_ro2
 
-        @warn "There are not any rows to collapse."
-
-        return
+        error("There are not any rows to collapse.")
 
     end
 

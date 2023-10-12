@@ -1,6 +1,6 @@
 module String
 
-function is_bad(st::AbstractString)
+function is_bad(st)
 
     isempty(st) || contains(st, r"^[^0-9A-Za-z]+$")
 

@@ -24,7 +24,7 @@ BioLab.FeatureXSample.count(
 
 # ---- #
 
-const FE_ = ["Feature $nu" for nu in (1, 1, 2, 3, 2, 3, 4)]
+const FE_ = (nu -> "Feature $nu").([1, 1, 2, 3, 2, 3, 4])
 
 # ---- #
 
