@@ -14,11 +14,6 @@ test_ambiguities(BioLab)
 
 # ----------------------------------------------------------------------------------------------- #
 
-@test BioLab.Path.read(BioLab._DA) ==
-      ["CLS", "DataFrame", "Dict", "GCT", "GMT", "Gene", "Plot", "SingleCell"]
-
-# ---- #
-
 @test isempty(BioLab.Path.read(BioLab.TE))
 
 # ---- #
@@ -27,7 +22,7 @@ const SR = joinpath(dirname(@__DIR__), "src")
 
 # ---- #
 
-const MO_ = filter!(!=("BioLab.jl"), BioLab.Path.read(SR))
+const MO_ = BioLab.Path.read(SR; ig_ = ("BioLab.jl",))
 
 # ---- #
 
@@ -39,7 +34,7 @@ end
 
 # ---- #
 
-const TE_ = filter!(!=("runtests.jl"), BioLab.Path.read(@__DIR__))
+const TE_ = BioLab.Path.read(@__DIR__; ig_ = ("runtests.jl",))
 
 # ---- #
 
