@@ -109,10 +109,6 @@ BioLab.MatrixFactorization.write(DI, MH)
 
 # ---- #
 
-# TODO
-
-# ---- #
-
 ma = rand(4, 8)
 
 # ---- #

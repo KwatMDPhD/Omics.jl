@@ -2,7 +2,6 @@ module Information
 
 using KernelDensity: kde
 
-# TODO
 function get_entropy(nu_)
 
 end
@@ -37,12 +36,10 @@ end
 
 end
 
-# TODO
 function get_mutual_information(nu1_, nu2_)
 
 end
 
-# TODO
 function get_information_coefficient(nu1_, nu2_)
 
 end

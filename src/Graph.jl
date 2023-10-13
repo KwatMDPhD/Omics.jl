@@ -29,9 +29,7 @@ function plot(
 
         end
 
-        pr = splitext(basename(ht))[1]
-
-        na = "$pr.$ex"
+        na = "$(splitext(basename(ht))[1]).$ex"
 
         dw = joinpath(homedir(), "Downloads", na)
 

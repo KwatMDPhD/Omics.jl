@@ -1,4 +1,3 @@
-# TODO
 using Test: @test
 
 using BioLab
@@ -82,10 +81,6 @@ for (nu1_, nu2_) in NU___
     end
 
 end
-
-# ---- #
-
-# TODO
 
 # ---- #
 
