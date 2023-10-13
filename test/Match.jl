@@ -18,7 +18,7 @@ end
 
 function benchmark(ho, n_fe, n_sa)
 
-    if ho == "1.02"
+    if ho == "f12"
 
         ta_ = collect(1.0:n_sa)
 
@@ -33,7 +33,7 @@ function benchmark(ho, n_fe, n_sa)
     end
 
     BioLab.Match.cor,
-    "TargetTargetTargetTargetTargetTargetTargetTarget",
+    "1234567890123456789012345678901234567890",
     "Feature",
     "Sample",
     (id -> "Feature $id").(1:n_fe),
@@ -46,7 +46,7 @@ end
 # ---- #
 
 for (n_fe, n_sa) in
-    ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), (100000, 1000))
+    ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), (100000, 100))
 
     di, layout = make_directory_layout("$n_fe x $n_sa")
 
@@ -56,7 +56,7 @@ end
 
 # ---- #
 
-const FU, NAT, NAF, NAS, FE_, SA_, TA_, FE_X_SA_X_NU = benchmark("1.02", 1, 19)
+const FU, NAT, NAF, NAS, FE_, SA_, TA_, FE_X_SA_X_NU = benchmark("f12", 1, 19)
 
 # ---- #
 
@@ -138,7 +138,7 @@ end
 
 # ---- #
 
-const NE_ = benchmark("1.02", 5, 2)
+const NE_ = benchmark("f12", 5, 2)
 
 # ---- #
 

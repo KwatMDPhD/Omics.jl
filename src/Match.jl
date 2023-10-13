@@ -67,7 +67,7 @@ const _ANNOTATION = Dict(
 
 function _ax(id)
 
-    0.97 + id * 0.088
+    0.977 + id * 0.088
 
 end
 
@@ -151,7 +151,7 @@ function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, l
 
     th2 = th / 2
 
-    n_li = 28
+    n_li = 30
 
     axis = Dict(
         "tickcolor" => "#6c9956",
@@ -208,7 +208,10 @@ function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, l
                     merge(axis, Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed")),
                 "xaxis" => merge(
                     axis,
-                    Dict("title" => Dict("text" => BioLab.String.count(length(sa_), nas))),
+                    Dict(
+                        "automargin" => true,
+                        "title" => Dict("text" => BioLab.String.count(length(sa_), nas)),
+                    ),
                 ),
                 "annotations" => _an(1 - th2 * 3, true, th, fe_, fe_x_st_x_fl),
             ),
