@@ -70,9 +70,10 @@ function map_uniprot(index_x_information_x_string = read_uniprot())
 
     popat!(io_, id)
 
-    pr_ = index_x_information_x_string[!, id]
-
-    for (pr, an_) in zip(pr_, eachrow(Matrix(index_x_information_x_string[!, io_])))
+    for (pr, an_) in zip(
+        index_x_information_x_string[!, id],
+        eachrow(Matrix(index_x_information_x_string[!, io_])),
+    )
 
         io_an = Dict{String, Any}()
 
@@ -98,9 +99,7 @@ function map_uniprot(index_x_information_x_string = read_uniprot())
 
         end
 
-        pr = pr[1:(end - 6)]
-
-        pr_io_an[pr] = io_an
+        pr_io_an[pr[1:(end - 6)]] = io_an
 
     end
 
