@@ -12,7 +12,7 @@ function read(cl)
 
     li1, li2, li3 = readlines(cl)
 
-    li2 = li2[2:end]
+    li2 = view(li2, 2:length(li2))
 
     li3_ = split(li3)
 

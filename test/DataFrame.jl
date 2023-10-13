@@ -56,13 +56,15 @@ const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
 # ---- #
 
-@test DT ==
-      DataFrame(NAR => make_axis("Row ", N_RO), ("Column $id" => MA[:, id] for id in 1:N_CO)...)
+@test DT == DataFrame(
+    NAR => make_axis("Row ", N_RO),
+    ("Column $id" => view(MA, :, id) for id in 1:N_CO)...,
+)
 
 # ---- #
 
 # 1.108 μs (22 allocations: 1.89 KiB)
-#@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
+@btime BioLab.DataFrame.make($NAR, $RO_, $CO_, $MA);
 
 # ---- #
 
@@ -79,7 +81,7 @@ BioLab.DataFrame.separate(DT)[2][1] = ""
 # ---- #
 
 # 1.938 μs (28 allocations: 2.08 KiB)
-#@btime BioLab.DataFrame.separate($DT);
+@btime BioLab.DataFrame.separate($DT);
 
 # ---- #
 

@@ -42,7 +42,9 @@ function read(gz)
 
     io = open(gz)
 
-    de = ": "
+    de1 = " = "
+
+    de2 = ": "
 
     while !eof(io)
 
@@ -50,7 +52,7 @@ function read(gz)
 
         if startswith(li, '^')
 
-            bl, th = _eachsplit(li[2:end], " = ")
+            bl, th = _eachsplit(view(li, 2:length(li)), de1)
 
             bl_th[bl][th] = OrderedDict{String, String}()
 
@@ -76,19 +78,19 @@ function read(gz)
 
         else
 
-            ke, va = _eachsplit(li, " = ")
+            ke, va = _eachsplit(li, de1)
 
             if startswith(ke, "!Sample_characteristics")
 
-                if contains(va, de)
+                if contains(va, de2)
 
-                    pr, va = _eachsplit(va, de)
+                    pr, va = _eachsplit(va, de2)
 
                     ke = "_ch.$pr"
 
                 else
 
-                    @warn "\"$va\" lacks \"$de\"."
+                    @warn "\"$va\" lacks \"$de2\"."
 
                 end
 
@@ -136,10 +138,9 @@ function tabulate(sa_ke_va)
 
     ch_x_sa_x_st = [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
 
-    # TODO: Benchmark.
     for (id, ch) in enumerate(ch_)
 
-        ch_[id] = titlecase(ch[5:end])
+        ch_[id] = titlecase(view(ch, 5:length(ch)))
 
     end
 
@@ -163,7 +164,7 @@ function _map(ke_va)
 
     end
 
-    it = parse(Int, pl[4:end])
+    it = parse(Int, view(pl, 4:length(pl)))
 
     co = ""
 

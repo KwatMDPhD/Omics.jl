@@ -34,11 +34,11 @@ for (cl, ta, re) in (
 
     @test eltype(ta_x_sa_x_nu) === eltype(re)
 
-    @test ta_x_sa_x_nu[1, eachindex(re)] == re
+    @test view(ta_x_sa_x_nu, 1, eachindex(re)) == re
 
-    # 390.542 μs (6235 allocations: 530.47 KiB)
-    # 9.791 μs (99 allocations: 7.73 KiB)
-    # 9.625 μs (99 allocations: 7.67 KiB)
-    #@btime BioLab.CLS.read($cl)
+    # 387.792 μs (6234 allocations: 530.46 KiB)
+    # 9.917 μs (98 allocations: 7.70 KiB)
+    # 9.750 μs (98 allocations: 7.64 KiB)
+    @btime BioLab.CLS.read($cl)
 
 end

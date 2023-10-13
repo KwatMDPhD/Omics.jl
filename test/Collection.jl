@@ -18,7 +18,7 @@ for (an_, re) in (((NaN,), (NaN, NaN)), ((-1, 1), (-1, 1)), ((-1, -2), (-2, -1))
         # 1.792 ns (0 allocations: 0 bytes)
         # 1.500 ns (0 allocations: 0 bytes)
         # 1.792 ns (0 allocations: 0 bytes)
-        #@btime BioLab.Collection.get_minimum_maximum($an2_)
+        @btime BioLab.Collection.get_minimum_maximum($an2_)
 
     end
 
@@ -45,7 +45,7 @@ for (an_, re) in (
         # 7.972 μs (52 allocations: 3.39 KiB)
         # 7.802 μs (47 allocations: 3.12 KiB)
         # 7.739 μs (47 allocations: 3.12 KiB)
-        #@btime BioLab.Collection.count_sort_string($an2_)
+        @btime BioLab.Collection.count_sort_string($an2_)
 
     end
 

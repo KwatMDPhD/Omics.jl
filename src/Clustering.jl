@@ -28,7 +28,7 @@ function order(co_, ma, fu = _FU, linkage = _LI)
 
         idc_ = findall(==(co), co_)
 
-        append!(id_, idc_[hierarchize(ma[:, idc_], fu, linkage).order])
+        append!(id_, view(idc_, hierarchize(ma[:, idc_], fu, linkage).order))
 
     end
 
