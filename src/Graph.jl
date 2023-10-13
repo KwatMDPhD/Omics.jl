@@ -9,9 +9,9 @@ function plot(
     el_;
     st = Dict{String, Any}(),
     la = Dict{String, Any}(),
+    ba = "#fcfcfc",
     ex = "",
     sc = 1,
-    ba = "#fcfcfc",
     ke_ar...,
 )
 

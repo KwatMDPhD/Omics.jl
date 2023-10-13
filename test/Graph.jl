@@ -88,7 +88,11 @@ BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2)
 
 # ---- #
 
-const JS = joinpath(BioLab.TE, "$NAME2.$EX2")
+const EL2_ = BioLab.Graph.read(joinpath(BioLab.TE, "$NAME2.$EX2"))
+
+# ---- #
+
+@test length(EL_) === length(EL2_)
 
 # ---- #
 
@@ -97,14 +101,6 @@ function is_equal(el1_, el2_, ke_ = ("data",))
     all(all(el1[ke] == el2[ke] for ke in ke_) for (el1, el2) in zip(el1_, el2_))
 
 end
-
-# ---- #
-
-const EL2_ = BioLab.Graph.read(JS)
-
-# ---- #
-
-@test length(EL_) === length(EL2_)
 
 # ---- #
 

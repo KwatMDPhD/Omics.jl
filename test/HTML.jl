@@ -4,25 +4,15 @@ using BioLab
 
 # ---- #
 
-# TODO: Remove.
-@test BioLab.HTML.get_height() === 800
-
-# ---- #
-
-# TODO: Remove.
-@test BioLab.HTML.get_width() === 1280
-
-# ---- #
-
 const HT = joinpath(BioLab.TE, "name.html")
 
 # ---- #
 
-const SR_ = ("SCRIPT_SRC_1", "SCRIPT_SRC_2")
+const SR_ = ("SRC_1", "SRC_2")
 
 # ---- #
 
-const ID = "DIV_ID"
+const ID = "ID"
 
 # ---- #
 

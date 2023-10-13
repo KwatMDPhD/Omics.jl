@@ -2,20 +2,11 @@ module HTML
 
 using ..BioLab
 
-function get_height()
+const HE = 800
 
-    800
+const WI = 1280
 
-end
-
-
-function get_width()
-
-    1280
-
-end
-
-function make(ht, sr_, id, sc; he = get_height(), wi = get_width(), ba = "#27221f")
+function make(ht, sr_, id, sc; he = HE, wi = WI, ba = "#27221f")
 
     if isempty(ht)
 
