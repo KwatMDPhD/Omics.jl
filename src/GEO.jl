@@ -19,7 +19,7 @@ function download(di, gs)
 
 end
 
-function _eachsplit(st, de)
+function _sp(st, de)
 
     (string(st) for st in eachsplit(st, de; limit = 2))
 
@@ -52,7 +52,7 @@ function read(gz)
 
         if startswith(li, '^')
 
-            bl, th = _eachsplit(view(li, 2:length(li)), de1)
+            bl, th = _sp(view(li, 2:length(li)), de1)
 
             bl_th[bl][th] = OrderedDict{String, String}()
 
@@ -78,13 +78,13 @@ function read(gz)
 
         else
 
-            ke, va = _eachsplit(li, de1)
+            ke, va = _sp(li, de1)
 
             if startswith(ke, "!Sample_characteristics")
 
                 if contains(va, de2)
 
-                    pr, va = _eachsplit(va, de2)
+                    pr, va = _sp(va, de2)
 
                     ke = "_ch.$pr"
 
@@ -148,13 +148,13 @@ function tabulate(sa_ke_va)
 
 end
 
-function _dice(ta)
+function _di(ta)
 
     split.(eachsplit(ta, '\n'; keepempty = false), '\t')
 
 end
 
-function _map(ke_va)
+function _fe(ke_va)
 
     pl = ke_va["!Platform_geo_accession"]
 
@@ -218,7 +218,7 @@ function _map(ke_va)
 
     end
 
-    sp___ = _dice(ke_va["_ta"])
+    sp___ = _di(ke_va["_ta"])
 
     sp1_ = sp___[1]
 
@@ -244,7 +244,7 @@ end
 
 function tabulate(ke_va, sa_ke_va)
 
-    fe_, fec_ = _map(ke_va)
+    fe_, fec_ = _fe(ke_va)
 
     fe_x_sa_x_fl = fill(NaN, length(fe_), length(sa_ke_va))
 
@@ -254,7 +254,7 @@ function tabulate(ke_va, sa_ke_va)
 
         if haskey(ke_va, "_ta")
 
-            sp___ = _dice(ke_va["_ta"])
+            sp___ = _di(ke_va["_ta"])
 
             idv = findfirst(==("VALUE"), sp___[1])
 

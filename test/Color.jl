@@ -10,7 +10,7 @@ const HE_ = ["#ff0000", "#00ff00", "#0000ff"]
 
 # ---- #
 
-const CO = BioLab.Color._make_color_scheme(HE_)
+const CO = BioLab.Color._co(HE_)
 
 # ---- #
 
@@ -23,7 +23,7 @@ const N = length(CO)
 # ---- #
 
 for co in (
-    BioLab.Color._make_color_scheme([
+    BioLab.Color._co([
         BioLab.Color.HEFA,
         BioLab.Color.HEAG,
         BioLab.Color.HEAY,
@@ -43,7 +43,7 @@ for co in (
     BioLab.Plot.plot_heat_map(
         "",
         Matrix(reshape(1:length(co), 1, :));
-        text = [BioLab.Color._make_hex(rg) for _ in 1:1, rg in co.colors],
+        text = [BioLab.Color._he(rg) for _ in 1:1, rg in co.colors],
         co,
     )
 
@@ -53,7 +53,7 @@ end
 
 for (rg, re) in zip((RGB(1, 0, 0), RGB(0, 1, 0), RGB(0, 0, 1)), HE_)
 
-    @test BioLab.Color._make_hex(rg) === re
+    @test BioLab.Color._he(rg) === re
 
 end
 
@@ -162,7 +162,7 @@ for (he_, fr_) in (
     ),
 )
 
-    co = BioLab.Color._make_color_scheme(he_)
+    co = BioLab.Color._co(he_)
 
     if isone(length(he_))
 
