@@ -45,8 +45,11 @@ end
 
 # ---- #
 
-for (n_fe, n_sa) in
-    ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), (100000, 100))
+const SI = 100000, 100
+
+# ---- #
+
+for (n_fe, n_sa) in ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), SI)
 
     di, layout = make_directory_layout("$n_fe x $n_sa")
 
@@ -91,15 +94,15 @@ const N_GR = 4
 
 # ---- #
 
-const N_RE = 6
+const N_CH = 6
 
 # ---- #
 
-const GSA_ = vec(["$ch $gr" for gr in 1:N_GR, ch in ('A':'Z')[1:N_RE]])
+const GSA_ = vec(["$gr$ch" for gr in 1:N_GR, ch in ('A':'Z')[1:N_CH]])
 
 # ---- #
 
-const GTA_ = repeat(1:N_GR, N_RE)
+const GR_ = repeat(1:N_GR, N_CH)
 
 # ---- #
 
@@ -115,7 +118,7 @@ for nu_ in ((1, 1, 2, 2, 4, 8), (1, 2, 4, 8, 2, 1))
         "Sample",
         GFE_,
         GSA_,
-        GTA_,
+        GR_,
         hcat((fill(nu, N_FE, N_GR) for nu in nu_)...);
         layout,
     )
@@ -124,11 +127,11 @@ end
 
 # ---- #
 
-const NS_ = benchmark("ra", 100000, 1000)
+const NS_ = benchmark("ra", SI...)
 
 # ---- #
 
-for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10))
+for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10), (30, 30))
 
     di, layout = make_directory_layout("n_ma = $n_ma, n_pv = $n_pv")
 
