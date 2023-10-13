@@ -12,13 +12,13 @@ using StatsBase: sample
 
 using ..BioLab
 
-function _index(id_, sa_, ta_, fe_x_sa_x_nu)
+function _co(id_, sa_, ta_, fe_x_sa_x_nu)
 
     sa_[id_], ta_[id_], fe_x_sa_x_nu[:, id_]
 
 end
 
-function _align!(fl_::AbstractVector{<:AbstractFloat}, st::Real)
+function _ra!(fl_::AbstractVector{<:AbstractFloat}, st::Real)
 
     if allequal(fl_)
 
@@ -38,27 +38,23 @@ function _align!(fl_::AbstractVector{<:AbstractFloat}, st::Real)
 
 end
 
-function _align!(fe_x_sa_x_fl::AbstractMatrix{<:AbstractFloat}, st::Real)
+function _ra!(fe_x_sa_x_fl::AbstractMatrix{<:AbstractFloat}, st::Real)
 
-    foreach(fl_ -> _align!(fl_, st), eachrow(fe_x_sa_x_fl))
+    foreach(fl_ -> _ra!(fl_, st), eachrow(fe_x_sa_x_fl))
 
     -st, st
 
 end
 
-function _align!(it, ::Real)
+function _ra!(it, ::Real)
 
     BioLab.Collection.get_minimum_maximum(it)
 
 end
 
-const _FONT_FAMILY_1 = "Gravitas One"
+const _FONT_FAMILY = "Gravitas One"
 
-const _FONT_FAMILY_2 = "Droid Serif"
-
-const _FONT_SIZE_1 = 16
-
-const _FONT_SIZE_2 = 13
+const _FONT_SIZE = 16
 
 const _ANNOTATION = Dict(
     "yref" => "paper",
@@ -66,17 +62,16 @@ const _ANNOTATION = Dict(
     "yanchor" => "middle",
     "xanchor" => "center",
     "showarrow" => false,
-    "font" => Dict("family" => _FONT_FAMILY_2),
+    "font" => Dict("family" => "Droid Serif"),
 )
 
-function _get_x(id)
+function _ax(id)
 
     0.97 + id * 0.088
 
 end
 
-# TODO: Benchmark.
-function _annotate_statistic(y, la, th, fe_, fe_x_st_x_fl)
+function _an(y, la, th, fe_, fe_x_st_x_fl)
 
     annotations = Vector{Dict{String, Any}}()
 
@@ -90,9 +85,9 @@ function _annotate_statistic(y, la, th, fe_, fe_x_st_x_fl)
                     _ANNOTATION,
                     Dict(
                         "y" => y,
-                        "x" => _get_x(id),
+                        "x" => _ax(id),
                         "text" => "<b>$text</b>",
-                        "font" => Dict("size" => _FONT_SIZE_1),
+                        "font" => Dict("size" => _FONT_SIZE),
                     ),
                 ),
             )
@@ -103,22 +98,17 @@ function _annotate_statistic(y, la, th, fe_, fe_x_st_x_fl)
 
     y -= th
 
-    for id1 in eachindex(fe_)
+    for id in eachindex(fe_)
 
-        sc, ma, pv, ad = (@sprintf("%.2g", fl) for fl in fe_x_st_x_fl[id1, :])
+        sc, ma, pv, ad = (@sprintf("%.2g", fl) for fl in view(fe_x_st_x_fl, id, :))
 
-        for (id2, text) in enumerate(("$sc ($ma)", pv, ad))
+        for (id, text) in enumerate(("$sc ($ma)", pv, ad))
 
             push!(
                 annotations,
                 BioLab.Dict.merge(
                     _ANNOTATION,
-                    Dict(
-                        "y" => y,
-                        "x" => _get_x(id2),
-                        "text" => text,
-                        "font" => Dict("size" => _FONT_SIZE_2),
-                    ),
+                    Dict("y" => y, "x" => _ax(id), "text" => text, "font" => Dict("size" => 13)),
                 ),
             )
 
@@ -132,26 +122,26 @@ function _annotate_statistic(y, la, th, fe_, fe_x_st_x_fl)
 
 end
 
-function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, layout)
+function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, layout)
 
     if eltype(ta_) <: Integer
 
         @info "Clustering within groups"
 
         sa_, ta_, fe_x_sa_x_nu =
-            _index(BioLab.Clustering.order(ta_, fe_x_sa_x_nu), sa_, ta_, fe_x_sa_x_nu)
+            _co(BioLab.Clustering.order(ta_, fe_x_sa_x_nu), sa_, ta_, fe_x_sa_x_nu)
 
     end
 
     tac_ = copy(ta_)
 
-    tai, taa = _align!(tac_, st)
-
-    @info "\"$nat\" colors can range from $tai to $taa."
-
     fe_x_sa_x_nuc = copy(fe_x_sa_x_nu)
 
-    fei, fea = _align!(fe_x_sa_x_nuc, st)
+    tai, taa = _ra!(tac_, st)
+
+    fei, fea = _ra!(fe_x_sa_x_nuc, st)
+
+    @info "\"$nat\" colors can range from $tai to $taa."
 
     @info "\"$naf\" colors can range from $fei to $fea."
 
@@ -161,15 +151,11 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
 
     th2 = th / 2
 
-    height = max(640, 40 * n_ro)
-
-    n_sa = length(sa_)
-
     n_li = 28
 
     axis = Dict(
         "tickcolor" => "#6c9956",
-        "tickfont" => Dict("family" => _FONT_FAMILY_1, "size" => _FONT_SIZE_1),
+        "tickfont" => Dict("family" => _FONT_FAMILY, "size" => _FONT_SIZE),
     )
 
     BioLab.Plot.plot(
@@ -211,18 +197,20 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
         BioLab.Dict.merge(
             Dict(
                 "margin" => Dict("l" => 220, "r" => 220),
-                "height" => height,
-                "width" => 1200,
+                "height" => max(640, 40 * n_ro),
+                "width" => BioLab.HTML.WI,
                 "title" => Dict(
                     "text" => naf,
-                    "font" => Dict("family" => _FONT_FAMILY_1, "size" => _FONT_SIZE_1 * 2),
+                    "font" => Dict("family" => _FONT_FAMILY, "size" => _FONT_SIZE * 2),
                 ),
                 "yaxis2" => merge(axis, Dict("domain" => (1 - th, 1))),
                 "yaxis" =>
                     merge(axis, Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed")),
-                "xaxis" =>
-                    merge(axis, Dict("title" => Dict("text" => BioLab.String.count(n_sa, nas)))),
-                "annotations" => _annotate_statistic(1 - th2 * 3, true, th, fe_, fe_x_st_x_fl),
+                "xaxis" => merge(
+                    axis,
+                    Dict("title" => Dict("text" => BioLab.String.count(length(sa_), nas))),
+                ),
+                "annotations" => _an(1 - th2 * 3, true, th, fe_, fe_x_st_x_fl),
             ),
             layout,
         ),
@@ -253,7 +241,7 @@ function make(
 
     @info "Matching \"$nat\" and $(BioLab.String.count(n_fe, "\"$naf\"")) with `$fu`"
 
-    sa_, ta_, fe_x_sa_x_nu = _index(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
+    sa_, ta_, fe_x_sa_x_nu = _co(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
 
     @info "Calculating scores"
 
@@ -277,23 +265,27 @@ function make(
 
         @info "Calculating the margin of errors using $(BioLab.String.count(n_ma, "sampling"))"
 
-        n_sm = ceil(Int, n_sa * 0.632)
+        ra_ = Vector{Float64}(undef, n_ma)
 
-        @showprogress for idf in 1:n_fe
+        id_ = 1:n_sa
 
-            ra_ = Vector{Float64}(undef, n_ma)
+        n_sm = round(Int, n_sa * 0.632)
 
-            nu_ = fe_x_sa_x_nu[idf, :]
+        ids_ = Vector{Int}(undef, n_sm)
 
-            for idr in 1:n_ma
+        @showprogress for id in 1:n_fe
 
-                ids_ = sample(1:n_sa, n_sm; replace = false)
+            nu_ = fe_x_sa_x_nu[id, :]
 
-                ra_[idr] = fu(ta_[ids_], nu_[ids_])
+            for id in 1:n_ma
+
+                ids_ .= sample(id_, n_sm; replace = false)
+
+                ra_[id] = fu(ta_[ids_], nu_[ids_])
 
             end
 
-            ma_[idf] = BioLab.Statistics.get_margin_of_error(ra_)
+            ma_[id] = BioLab.Statistics.get_margin_of_error(ra_)
 
         end
 
@@ -351,9 +343,9 @@ function make(
 
     if 0 < n_ex
 
-        id_ = reverse!(BioLab.Rank.get_extreme(fe_x_st_x_fl[:, 1], n_ex))
+        id_ = reverse!(BioLab.Rank.get_extreme(sc_, n_ex))
 
-        _plot(
+        _pl(
             "$pr.html",
             nat,
             naf,

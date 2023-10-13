@@ -30,10 +30,6 @@ function benchmark(ho, n_fe, n_sa)
 
         fe_x_sa_x_nu = randn(n_fe, n_sa)
 
-    else
-
-        error()
-
     end
 
     BioLab.Match.cor,
@@ -49,7 +45,8 @@ end
 
 # ---- #
 
-for (n_fe, n_sa) in ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000))
+for (n_fe, n_sa) in
+    ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), (100000, 1000))
 
     di, layout = make_directory_layout("$n_fe x $n_sa")
 
@@ -86,7 +83,7 @@ const N_FE = 3
 
 # ---- #
 
-const GFE_ = ["Feature $id" for id in 1:N_FE]
+const GFE_ = (id -> "Feature $id").(1:N_FE)
 
 # ---- #
 
@@ -127,7 +124,7 @@ end
 
 # ---- #
 
-const NS_ = benchmark("ra", 50000, 100)
+const NS_ = benchmark("ra", 100000, 1000)
 
 # ---- #
 
