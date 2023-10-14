@@ -76,8 +76,7 @@ end
 
 function make_matrix_1n(ty, n_ro, n_co)
 
-    # TODO: Benchmark `Matrix(`.
-    convert(Matrix{ty}, reshape(1:(n_ro * n_co), n_ro, n_co))
+    Matrix{ty}(reshape(1:(n_ro * n_co), n_ro, n_co))
 
 end
 

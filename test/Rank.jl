@@ -79,7 +79,7 @@ for (an_, n_ex, re) in (
     (CH_, length(CH_) + 1, sort(CH_)),
 )
 
-    @test an_[BioLab.Rank.get_extreme(an_, n_ex)] == re
+    @test view(an_, BioLab.Rank.get_extreme(an_, n_ex)) == re
 
     # 60.232 ns (3 allocations: 192 bytes)
     # 60.275 ns (3 allocations: 192 bytes)

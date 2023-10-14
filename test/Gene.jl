@@ -123,7 +123,6 @@ const FEG_ = FE_[.!ismissing.(FE_)]
 
 # ---- #
 
-# [ Info: Renamed 2784600 / 2784600.
 BioLab.Gene.rename!(FEG_, EN_GE)
 
 # ---- #

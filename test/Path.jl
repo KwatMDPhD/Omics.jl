@@ -58,15 +58,15 @@ const HI = r"^\."
 
 # ---- #
 
-@test isempty(BioLab.Path.read(HO; ig_ = (HI,), ke_ = (HI,)))
-
-# ---- #
-
 @test all(na -> isuppercase(na[1]), BioLab.Path.read(HO; ke_ = (r"^[A-Z]",)))
 
 # ---- #
 
 @test BioLab.Path.read(HO; ke_ = (r"^Downloads$",)) == ["Downloads"]
+
+# ---- #
+
+@test isempty(BioLab.Path.read(HO; ig_ = (HI,), ke_ = (HI,)))
 
 # ---- #
 

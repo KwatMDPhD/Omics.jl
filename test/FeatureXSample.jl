@@ -4,19 +4,6 @@ using BioLab
 
 # ---- #
 
-# ┌ Info: Column Row
-# │ 1 Row 3.
-# │ 1 Row 2.
-# └ 1 Row 1.
-# ┌ Info: Column 1
-# │ 1 C.
-# │ 1 A.
-# └ 1 B.
-# ┌ Info: Column 2
-# │ 2 B.
-# └ 1 A.
-# ┌ Info: Column 3
-# └ 3 C.
 BioLab.FeatureXSample.count(
     ("Column Row", "Column 1", "Column 2", "Column 3"),
     ((id -> "Row $id").(1:3), ['A', 'B', 'C'], ['A', 'B', 'B'], ['C', 'C', 'C']),

@@ -20,13 +20,13 @@ end
 
 function wait(pa, ma = 4; sl = 1)
 
-    se = 0
+    su = 0
 
-    while se < ma && !ispath(pa)
+    while su < ma && !ispath(pa)
 
         sleep(sl)
 
-        @info "Waiting for $pa ($(se += sl) / $ma)"
+        @info "Waiting for $pa ($(su += sl) / $ma)"
 
     end
 
