@@ -43,10 +43,10 @@ for (ke, va, re) in (
 
     @test ke_va == re
 
-    # 125.000 ns (5 allocations: 256 bytes)
-    # 0.001 ns (0 allocations: 0 bytes)
+    # 141.736 μs (4121 allocations: 275.38 KiB)
+    # 141.367 μs (4112 allocations: 270.93 KiB)
     @btime BioLab.Dict.set_with_suffix!(ke_va, $ke, $va) setup = (ke_va = copy($KES_VA)) evals =
-        100
+        1000
 
 end
 

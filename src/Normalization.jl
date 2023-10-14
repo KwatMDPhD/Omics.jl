@@ -44,27 +44,31 @@ function normalize_with_logistic!(nu_)
 
 end
 
+function _no!(fu, nu_)
+
+    for (id, nu) in enumerate(fu(nu_))
+
+        nu_[id] = nu
+
+    end
+
+end
+
 function normalize_with_1223!(nu_)
 
-    nu_ .= denserank(nu_)
-
-    nothing
+    _no!(denserank, nu_)
 
 end
 
 function normalize_with_1224!(nu_)
 
-    nu_ .= competerank(nu_)
-
-    nothing
+    _no!(competerank, nu_)
 
 end
 
 function normalize_with_125254!(nu_)
 
-    nu_ .= tiedrank(nu_)
-
-    nothing
+    _no!(tiedrank, nu_)
 
 end
 
