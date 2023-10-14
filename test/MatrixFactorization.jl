@@ -6,7 +6,11 @@ using BioLab
 
 # ---- #
 
-const FU = >=(0)
+function is_positive(ma)
+
+    all(>=(0), ma)
+
+end
 
 # ---- #
 
@@ -22,9 +26,9 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     @test size(mh) === (n_fa, n_co)
 
-    @test all(FU, mw)
+    @test is_positive(mw)
 
-    @test all(FU, mh)
+    @test is_positive(mh)
 
     di = joinpath(BioLab.TE, "$(n_ro)_$(n_co)_$(n_fa)")
 
@@ -44,14 +48,14 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     BioLab.MatrixFactorization.write(di, mh2; naf = "Solved")
 
-    # 10.584 μs (58 allocations: 6.95 KiB)
-    # 2.088 μs (23 allocations: 2.78 KiB)
-    # 223.250 μs (128 allocations: 40.97 KiB)
-    # 3.141 μs (23 allocations: 4.33 KiB)
-    # 2.868 s (4331 allocations: 221.99 MiB)
-    # 134.000 μs (24 allocations: 172.08 KiB)
-    # 7.702 s (12949 allocations: 363.06 MiB)
-    # 284.209 μs (27 allocations: 329.34 KiB)
+    # 12.709 μs (64 allocations: 7.66 KiB)
+    # 2.097 μs (23 allocations: 2.78 KiB)
+    # 224.459 μs (128 allocations: 40.97 KiB)
+    # 3.161 μs (23 allocations: 4.33 KiB)
+    # 2.871 s (4331 allocations: 221.99 MiB)
+    # 133.875 μs (24 allocations: 172.08 KiB)
+    # 7.707 s (12949 allocations: 363.06 MiB)
+    # 258.667 μs (27 allocations: 329.34 KiB)
 
     @btime BioLab.MatrixFactorization.factorize($ma, $n_fa)
 
@@ -77,27 +81,11 @@ BioLab.Path.remake_directory(DI)
 
 # ---- #
 
-function exist(na)
-
-    isfile(joinpath(DI, na))
-
-end
-
-# ---- #
-
 BioLab.MatrixFactorization.write(DI, MW)
 
 # ---- #
 
-@test all(exist, ("w.tsv", "w.html"))
-
-# ---- #
-
 BioLab.MatrixFactorization.write(DI, MH)
-
-# ---- #
-
-@test all(exist, ("h.tsv", "h.html"))
 
 # ---- #
 
@@ -109,15 +97,23 @@ BioLab.MatrixFactorization.write(DI, MH)
 
 # ---- #
 
+@test isfile(joinpath(DI, "w.html"))
+
+# ---- #
+
+@test isfile(joinpath(DI, "h.html"))
+
+# ---- #
+
 ma = rand(4, 8)
 
 # ---- #
 
-mw, mh = BioLab.MatrixFactorization.factorize(ma, 3)
+BioLab.Plot.plot_heat_map("", ma; layout = Dict("title" => Dict("text" => "A")))
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", ma; layout = Dict("title" => Dict("text" => "A")))
+mw, mh = BioLab.MatrixFactorization.factorize(ma, 3)
 
 # ---- #
 

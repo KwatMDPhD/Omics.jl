@@ -33,11 +33,11 @@ function write(
     ma;
     nal = "Label",
     naf = "Factor",
-    la_ = ["$nal $id" for id in 1:maximum(size(ma))],
-    fa_ = ["$naf $id" for id in 1:minimum(size(ma))],
+    la_ = (id -> "$nal $id").(1:maximum(size(ma))),
+    fa_ = (id -> "$naf $id").(1:minimum(size(ma))),
     no = true,
-    lo = BioLab.HTML.get_width(),
-    sh = BioLab.HTML.get_height(),
+    lo = BioLab.HTML.WI,
+    sh = BioLab.HTML.HE,
 )
 
     BioLab.Error.error_missing(di)
@@ -107,8 +107,6 @@ function write(
     end
 
     if no
-
-        ma = copy(ma)
 
         foreach(BioLab.Normalization.normalize_with_0!, ea(ma))
 
