@@ -205,15 +205,7 @@ function plot_histogram(
 
 end
 
-function _range(fl_::AbstractArray{<:AbstractFloat}, n::Integer)
-
-    mi, ma = BioLab.Collection.get_minimum_maximum(fl_)
-
-    range(mi, ma, n)
-
-end
-
-function _range(it_, ::Integer)
+function _it(it_)
 
     mi, ma = BioLab.Collection.get_minimum_maximum(it_)
 
@@ -221,37 +213,41 @@ function _range(it_, ::Integer)
 
 end
 
-function _group(gr_, an_, ma)
+function _it(fl_::AbstractArray{<:AbstractFloat})
 
-    if eltype(gr_) <: AbstractString
+    mi, ma = BioLab.Collection.get_minimum_maximum(fl_)
 
-        gr_id = BioLab.Collection.map_index(BioLab.Collection.unique_sort(gr_))
-
-        gr_ = [gr_id[gr] for gr in gr_]
-
-        ticktext = string.(keys(gr_id))
-
-    else
-
-        ticktext = Vector{String}()
-
-    end
-
-    id_ = BioLab.Clustering.order(gr_, ma)
-
-    gr_[id_], an_[id_], ma[:, id_], ticktext
+    range(mi, ma, 8)
 
 end
 
-function _make_group_trace!(ke_va, gr_, colorbarx, ticktext)
+function _gr(it_::AbstractVector{<:Integer}, an_, ma, ticktext = Vector{String}())
+
+    id_ = BioLab.Clustering.order(it_, ma)
+
+    it_[id_], an_[id_], ma[:, id_], ticktext
+
+end
+
+function _gr(st_, an_, ma)
+
+    un_ = sort!(unique(st_))
+
+    st_id = Dict(st => id for (id, st) in enumerate(un_))
+
+    _gr([st_id[st] for st in st_], an_, ma, un_)
+
+end
+
+function _he!(ke_va, it_, colorbarx, ticktext)
 
     ke_va["type"] = "heatmap"
 
-    ke_va["colorscale"] = BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(gr_))
+    ke_va["colorscale"] = BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(it_))
 
     ke_va["colorbar"] = merge(
         COLORBAR,
-        Dict("x" => colorbarx, "tickvals" => 1:maximum(gr_), "ticktext" => ticktext),
+        Dict("x" => colorbarx, "tickvals" => 1:maximum(it_), "ticktext" => ticktext),
     )
 
     ke_va
@@ -261,19 +257,17 @@ end
 function plot_heat_map(
     ht,
     z;
-    y = ["$id *" for id in 1:size(z, 1)],
-    x = ["* $id" for id in 1:size(z, 2)],
+    y = (id -> "$id *").(1:size(z, 1)),
+    x = (id -> "* $id").(1:size(z, 2)),
     text = z,
     nar = "Row",
     nac = "Column",
     co = BioLab.Color.pick_color_scheme(z),
-    grr_ = (),
-    grc_ = (),
+    grr_ = Vector{Int}(),
+    grc_ = Vector{Int}(),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
-
-    data = Vector{Dict{String, Any}}()
 
     if isempty(grr_)
 
@@ -285,25 +279,31 @@ function plot_heat_map(
 
     end
 
-    colorbar = merge(COLORBAR, Dict("x" => colorbarx, "tickvals" => _range(z, 8)))
+    data = [
+        Dict(
+            "type" => "heatmap",
+            "name" => "Data",
+            "y" => y,
+            "x" => x,
+            "z" => collect(eachrow(z)),
+            "text" => collect(eachrow(text)),
+            "colorscale" => BioLab.Color.fractionate(co),
+            "colorbar" => merge(COLORBAR, Dict("x" => colorbarx, "tickvals" => _it(z))),
+        ),
+    ]
 
     dx = 0.08
 
     if !isempty(grr_)
 
-        gr_, y, z, ticktext = _group(grr_, y, permutedims(z))
+        gr_, y, z, ticktext = _gr(grr_, y, permutedims(z))
 
         z = permutedims(z)
 
         push!(
             data,
-            _make_group_trace!(
-                Dict(
-                    "name" => "$nar Group",
-                    "xaxis" => "x2",
-                    "y" => y,
-                    "z" => [[gr] for gr in gr_],
-                ),
+            _he!(
+                Dict("name" => "$nar Group", "xaxis" => "x2", "y" => y, "z" => collect.(gr_)),
                 gr_,
                 colorbarx += dx,
                 ticktext,
@@ -314,11 +314,11 @@ function plot_heat_map(
 
     if !isempty(grc_)
 
-        gr_, x, z, ticktext = _group(grc_, x, z)
+        gr_, x, z, ticktext = _gr(grc_, x, z)
 
         push!(
             data,
-            _make_group_trace!(
+            _he!(
                 Dict("name" => "$nac Group", "yaxis" => "y2", "x" => x, "z" => [gr_]),
                 gr_,
                 colorbarx += dx,
@@ -327,20 +327,6 @@ function plot_heat_map(
         )
 
     end
-
-    push!(
-        data,
-        Dict(
-            "type" => "heatmap",
-            "name" => "Data",
-            "y" => y,
-            "x" => x,
-            "z" => collect(eachrow(z)),
-            "text" => collect(eachrow(text)),
-            "colorscale" => BioLab.Color.fractionate(co),
-            "colorbar" => colorbar,
-        ),
-    )
 
     ydomain = (0, 0.939)
 
@@ -374,6 +360,12 @@ function plot_heat_map(
 
 end
 
+function _ti(an_)
+
+    vcat(an_, an_[1])
+
+end
+
 function plot_radar(
     ht,
     ra_,
@@ -386,7 +378,7 @@ function plot_radar(
     ke_ar...,
 )
 
-    cos = "#b83a4b"
+    co = "#b83a4b"
 
     plot(
         ht,
@@ -394,8 +386,8 @@ function plot_radar(
             Dict(
                 "type" => "scatterpolar",
                 "name" => name_[id],
-                "r" => vcat(ra_[id], ra_[id][1]),
-                "theta" => vcat(an_[id], an_[id][1]),
+                "r" => _ti(ra_[id]),
+                "theta" => _ti(an_[id]),
                 "marker" => Dict("size" => 4.8, "color" => line_color_[id]),
                 "line" => Dict(
                     "shape" => "spline",
@@ -413,10 +405,10 @@ function plot_radar(
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
                         "linewidth" => 2,
-                        "linecolor" => cos,
+                        "linecolor" => co,
                         "ticklen" => 8,
                         "tickwidth" => 2,
-                        "tickcolor" => cos,
+                        "tickcolor" => co,
                         "tickfont" => Dict(
                             "family" => "Monospace",
                             "size" => 16,
@@ -428,10 +420,10 @@ function plot_radar(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
                         "linewidth" => 4,
-                        "linecolor" => cos,
+                        "linecolor" => co,
                         "ticklen" => 16,
                         "tickwidth" => 2,
-                        "tickcolor" => cos,
+                        "tickcolor" => co,
                         "tickfont" =>
                             Dict("family" => "Optima", "size" => 32, "color" => "#23191e"),
                         "gridwidth" => 2,
