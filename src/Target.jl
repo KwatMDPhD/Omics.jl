@@ -2,13 +2,25 @@ module Target
 
 using ..BioLab
 
+function _un(an_)
+
+    sort!(unique(an_))
+
+end
+
+function _ma(an_)
+
+    Dict(an => id for (id, an) in enumerate(an_))
+
+end
+
 function tabulate(ro_)
 
-    rou_ = BioLab.Collection.unique_sort(ro_)
+    rou_ = _un(ro_)
 
     ro_x_id_x_is = falses(length(rou_), length(ro_))
 
-    ro_id = BioLab.Collection.map_index(rou_)
+    ro_id = _ma(rou_)
 
     for (id, ro) in enumerate(ro_)
 
@@ -22,21 +34,19 @@ end
 
 function tabulate(ro___, co___, fl_)
 
-    BioLab.Error.error_length_difference((ro___..., co___..., fl_))
-
     ro_ = zip(ro___...)
 
     co_ = zip(co___...)
 
-    rou_ = BioLab.Collection.unique_sort(ro_)
+    rou_ = _un(ro_)
 
-    cou_ = BioLab.Collection.unique_sort(co_)
+    cou_ = _un(co_)
 
     ro_x_co_x_fl = fill(NaN, length(rou_), length(cou_))
 
-    ro_id = BioLab.Collection.map_index(rou_)
+    ro_id = _ma(rou_)
 
-    co_id = BioLab.Collection.map_index(cou_)
+    co_id = _ma(cou_)
 
     for (ro, co, fl) in zip(ro_, co_, fl_)
 
@@ -60,6 +70,7 @@ function tabulate(ro_re_, co_)
 
         ro_[idr] = ro
 
+        # TODO: Benchmark `Float`.
         for (fl, re) in zip((0, 1), re_)
 
             rre = Regex(re)

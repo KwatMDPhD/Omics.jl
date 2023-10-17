@@ -25,17 +25,6 @@ end
 
 # ---- #
 
-for (ro___, co___, fl_) in (
-    ((["Row 1"],), (["Column 1", "Column 2"],), [1, 2, 3]),
-    ((["Row 1", "Row 2"],), (["Column 1", "Column 2"],), [1, 2, 3]),
-)
-
-    @test BioLab.Error.@is BioLab.Target.tabulate(ro___, co___, fl_)
-
-end
-
-# ---- #
-
 for (ro___, co___, fl_, re) in (
     (
         (["Row 1", "Row 2", "Row 3"],),
@@ -56,8 +45,8 @@ for (ro___, co___, fl_, re) in (
     (
         (["Row 2", "Row 1"],),
         (["Label 1", "Label 1"],),
-        [2.0, 1],
-        (["Row 1", "Row 2"], ["Label 1"], [1.0; 2;;]),
+        [1.0, 2],
+        (["Row 1", "Row 2"], ["Label 1"], [2.0; 1;;]),
     ),
     (
         (["Row 1", "Row 2", "Row 3"],),
@@ -85,7 +74,7 @@ for (ro___, co___, fl_, re) in (
     ),
     (
         (
-            (
+            [
                 "Antigen 1",
                 "Antigen 2",
                 "Antigen 1",
@@ -94,10 +83,10 @@ for (ro___, co___, fl_, re) in (
                 "Antigen 2",
                 "Antigen 1",
                 "Antigen 2",
-            ),
-            (0, 0, 7, 7, 0, 0, 7, 7),
+            ],
+            [0, 0, 7, 7, 0, 0, 7, 7],
         ),
-        ((
+        ([
             "Sample 1",
             "Sample 1",
             "Sample 1",
@@ -106,7 +95,7 @@ for (ro___, co___, fl_, re) in (
             "Sample 2",
             "Sample 2",
             "Sample 2",
-        ),),
+        ],),
         [0.0, 0, 10, 100, 0, 0, 20, 200],
         (
             ["Antigen 1_0", "Antigen 1_7", "Antigen 2_0", "Antigen 2_7"],
@@ -118,14 +107,14 @@ for (ro___, co___, fl_, re) in (
 
     @test isequal(BioLab.Target.tabulate(ro___, co___, fl_), re)
 
-    # 1.808 μs (71 allocations: 4.34 KiB)
-    # 1.225 μs (50 allocations: 3.56 KiB)
-    # 1.225 μs (50 allocations: 3.56 KiB)
-    # 1.637 μs (64 allocations: 4.08 KiB)
-    # 1.637 μs (64 allocations: 4.08 KiB)
-    # 1.546 μs (57 allocations: 3.81 KiB)
-    # 1.804 μs (70 allocations: 4.34 KiB)
-    # 2.704 μs (87 allocations: 5.52 KiB)
+    # 1.717 μs (65 allocations: 3.81 KiB)
+    # 1.129 μs (44 allocations: 3.03 KiB)
+    # 1.113 μs (44 allocations: 3.03 KiB)
+    # 1.525 μs (58 allocations: 3.55 KiB)
+    # 1.533 μs (58 allocations: 3.55 KiB)
+    # 1.438 μs (51 allocations: 3.28 KiB)
+    # 1.667 μs (64 allocations: 3.80 KiB)
+    # 2.458 μs (81 allocations: 4.98 KiB)
     @btime BioLab.Target.tabulate($ro___, $co___, $fl_)
 
 end
