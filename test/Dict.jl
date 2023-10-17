@@ -1,4 +1,4 @@
-using OrderedCollections: OrderedDict
+using orderedcollections: ordereddict
 
 using Test: @test
 
@@ -45,7 +45,7 @@ for (ke, va, re) in (
 
     # 141.736 μs (4121 allocations: 275.38 KiB)
     # 141.367 μs (4112 allocations: 270.93 KiB)
-    @btime BioLab.Dict.set_with_suffix!(ke_va, $ke, $va) setup = (ke_va = copy($KES_VA)) evals =
+    @btime BioLab.Dict.set_with_suffix!(ke_va, $ke, $va) setup = (ke_va = copy(KES_VA)) evals =
         1000
 
 end
@@ -72,16 +72,16 @@ const KE2_VA = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
 # ---- #
 
-for (KE1_VA, KE2_VA, re) in (
+for (ke1_va, ke2_va, re) in (
     (KE1_VA, KE2_VA, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))),
     (KE2_VA, KE1_VA, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))),
 )
 
-    @test BioLab.Dict.merge(KE1_VA, KE2_VA) == re
+    @test BioLab.Dict.merge(ke1_va, ke2_va) == re
 
     # 1.679 μs (32 allocations: 2.86 KiB)
     # 1.654 μs (32 allocations: 2.86 KiB)
-    @btime BioLab.Dict.merge($KE1_VA, $KE2_VA)
+    @btime BioLab.Dict.merge($ke1_va, $ke2_va)
 
 end
 
@@ -121,12 +121,12 @@ const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MY
 # ---- #
 
 # 686.792 μs (2 allocations: 19.67 KiB)
-@btime [fe in $FE1_ for fe in $FE_];
+@btime [fe in FE1_ for fe in FE_];
 
 # ---- #
 
 # 683.000 μs (3 allocations: 6.84 KiB)
-@btime in($FE1_).($FE_);
+@btime in(FE1_).(FE_);
 
 # ---- #
 
@@ -135,17 +135,17 @@ const FE1S = Set(FE1_)
 # ---- #
 
 # 441.081 ns (7 allocations: 1.13 KiB)
-@btime Set($FE1_);
+@btime Set(FE1_);
 
 # ---- #
 
 # 462.833 μs (2 allocations: 19.67 KiB)
-@btime [fe in $FE1S for fe in $FE_];
+@btime [fe in FE1S for fe in FE_];
 
 # ---- #
 
 # 467.542 μs (3 allocations: 6.84 KiB)
-@btime in($FE1S).($FE_);
+@btime in(FE1S).(FE_);
 
 # ---- #
 
@@ -154,7 +154,7 @@ const FE_ID = Dict(fe => id for (id, fe) in enumerate(FE_))
 # ---- #
 
 # 513.250 μs (7 allocations: 800.92 KiB)
-@btime Dict(fe => id for (id, fe) in enumerate($FE_));
+@btime Dict(fe => id for (id, fe) in enumerate(FE_));
 
 # ---- #
 
@@ -165,16 +165,16 @@ for ke in ("Missing", "GPI")
     # 13.555 ns (0 allocations: 0 bytes)
     # 11.094 ns (0 allocations: 0 bytes)
 
-    @btime $ke in $FE1S
+    @btime $ke in FE1S
 
-    @btime haskey($FE_ID, $ke)
+    @btime haskey(FE_ID, $ke)
 
 end
 
 # ---- #
 
 # 362.577 ns (2 allocations: 2.66 KiB)
-@btime BioLab.Dict.is_in($FE_ID, $FE1_);
+@btime BioLab.Dict.is_in(FE_ID, FE1_);
 
 # ---- #
 

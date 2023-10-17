@@ -107,7 +107,7 @@ const SA = SM_[1]
 # ---- #
 
 # 587.236 ms (10649 allocations: 27.73 MiB)
-@btime BioLab.GEO.read($GZ);
+@btime BioLab.GEO.read(GZ);
 
 # ---- #
 
@@ -129,7 +129,7 @@ const N_SA = length(SM_)
 # ---- #
 
 # 314.062 ns (1 allocation: 208 bytes)
-@btime BioLab.GEO.get_sample($SA_KE_VA);
+@btime BioLab.GEO.get_sample(SA_KE_VA);
 
 # ---- #
 
@@ -142,7 +142,7 @@ const CH_, CH_X_SA_X_ST = BioLab.GEO.tabulate(SA_KE_VA)
 # ---- #
 
 # 3.854 μs (9 allocations: 936 bytes)
-@btime BioLab.GEO.tabulate($SA_KE_VA);
+@btime BioLab.GEO.tabulate(SA_KE_VA);
 
 # ---- #
 
@@ -155,7 +155,7 @@ const FE_, FE_X_SA_X_FL = BioLab.GEO.tabulate(KE_VA, SA_KE_VA)
 # ---- #
 
 # 360.595 ms (2378550 allocations: 366.52 MiB)
-@btime BioLab.GEO.tabulate($KE_VA, $SA_KE_VA);
+@btime BioLab.GEO.tabulate(KE_VA, SA_KE_VA);
 
 # ---- #
 

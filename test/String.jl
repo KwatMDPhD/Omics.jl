@@ -58,7 +58,7 @@ for ba in BA_
 
     @test BioLab.String.is_bad(ba)
 
-    #@btime BioLab.String.is_bad($ba)
+    @btime BioLab.String.is_bad($ba)
 
 end
 
@@ -81,7 +81,7 @@ for go in GO_
 
     @test !BioLab.String.is_bad(go)
 
-    #@btime BioLab.String.is_bad($go)
+    @btime BioLab.String.is_bad($go)
 
 end
 
@@ -108,7 +108,7 @@ for (st, re) in (
     # 349.375 μs (20 allocations: 848 bytes)
     # 276.458 μs (8 allocations: 352 bytes)
     # 349.875 μs (20 allocations: 848 bytes)
-    #@btime BioLab.String.try_parse($st)
+    @btime BioLab.String.try_parse($st)
 
 end
 
@@ -127,7 +127,7 @@ for (n, re) in ((0, "..."), (1, "C..."), (2, "Ca..."), (3, "Can"), (4, "Can"))
     # 39.608 ns (2 allocations: 48 bytes)
     # 4.875 ns (0 allocations: 0 bytes)
     # 4.875 ns (0 allocations: 0 bytes)
-    @btime BioLab.String.limit($STL, $n)
+    @btime BioLab.String.limit(STL, $n)
 
 end
 
@@ -148,7 +148,7 @@ for (id, re) in ((1, "a"), (16, "p"), (26, "z"))
     # 87.813 ns (2 allocations: 272 bytes)
     # 475.551 ns (3 allocations: 1.25 KiB)
     # 687.358 ns (3 allocations: 1.25 KiB)
-    @btime BioLab.String.split_get($STS, $DE, $id)
+    @btime BioLab.String.split_get(STS, DE, $id)
 
 end
 

@@ -33,7 +33,7 @@ for (cu, re) in (
     # 16.868 ns (0 allocations: 0 bytes)
     # 16.867 ns (0 allocations: 0 bytes)
     # 5.208 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Statistics.get_quantile($cu)
+    @btime BioLab.Statistics.get_quantile($cu)
 
 end
 
@@ -55,7 +55,7 @@ for (po, re) in zip(
     # 60.177 ns (0 allocations: 0 bytes)
     # 537.476 ns (0 allocations: 0 bytes)
     # 3.969 μs (0 allocations: 0 bytes)
-    #@btime BioLab.Statistics.get_margin_of_error($sa_)
+    @btime BioLab.Statistics.get_margin_of_error($sa_)
 
 end
 
@@ -81,7 +81,7 @@ for (co, re) in zip(
     # 526.398 ns (0 allocations: 0 bytes)
     # 537.476 ns (0 allocations: 0 bytes)
     # 521.597 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Statistics.get_margin_of_error($SA_, $co)
+    @btime BioLab.Statistics.get_margin_of_error(SA_, $co)
 
 end
 
@@ -102,7 +102,7 @@ for (n_si, re) in ((0, 0.1), (1, 0.1), (2, 0.2))
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.458 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Statistics.get_p_value($n_si, $N_RA)
+    @btime BioLab.Statistics.get_p_value($n_si, N_RA)
 
 end
 
@@ -126,7 +126,7 @@ for fu in (<=, >=)
 
     # 178.058 ns (6 allocations: 512 bytes)
     # 176.657 ns (6 allocations: 512 bytes)
-    #@btime BioLab.Statistics.get_p_value($fu, $NU_, $EM_)
+    @btime BioLab.Statistics.get_p_value(fu, NU_, EM_)
 
 end
 
@@ -146,7 +146,7 @@ for (fu, re) in ((<=, (REP1_, REA1_)), (>=, (reverse(REP1_), reverse(REA1_))))
 
     # 179.745 ns (6 allocations: 512 bytes)
     # 187.944 ns (6 allocations: 512 bytes)
-    #@btime BioLab.Statistics.get_p_value($fu, $NU_, $RA_)
+    @btime BioLab.Statistics.get_p_value(fu, NU_, RA_)
 
 end
 
@@ -174,4 +174,4 @@ const REP2_, REA2_ = [0.75, 1], [1.0, 1]
 # ---- #
 
 # 446.338 ns (17 allocations: 1.27 KiB)
-#@btime BioLab.Statistics.get_p_value($NU_, $IDN_, $IDP_, $FE_X_ID_X_RA);
+@btime BioLab.Statistics.get_p_value(NU_, IDN_, IDP_, FE_X_ID_X_RA);

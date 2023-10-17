@@ -76,7 +76,7 @@ for (ro_, ro2_, ma2) in (
 
         # 714.072 ns (19 allocations: 1.28 KiB)
         # 617.494 ns (15 allocations: 1.08 KiB)
-        @btime BioLab.Matrix.collapse(mean, Float64, $ro_, $MA)
+        @btime BioLab.Matrix.collapse(mean, Float64, $ro_, MA)
 
     end
 

@@ -146,7 +146,7 @@ end
 # ---- #
 
 # 607.244 ns (25 allocations: 1.29 KiB)
-@btime BioLab.Color.color($ID_, $CO);
+@btime BioLab.Color.color(ID_, CO);
 
 # ---- #
 

@@ -246,7 +246,7 @@ for (fu, re) in zip(
     # 3.067 μs (24 allocations: 1.31 KiB)
     # 3.069 μs (24 allocations: 1.31 KiB)
     # 3.054 μs (24 allocations: 1.31 KiB)
-    @btime foreach($fu, ea_) setup = (ea_ = eachcol(copy($MA))) evals = 1000
+    @btime foreach(fu, ea_) setup = (ea_ = eachcol(copy(MA))) evals = 1000
 
 end
 
@@ -313,6 +313,6 @@ for (fu, re) in zip(
     # 3.106 μs (24 allocations: 1.31 KiB)
     # 3.116 μs (24 allocations: 1.31 KiB)
     # 3.418 μs (24 allocations: 1.31 KiB)
-    @btime foreach($fu, ea_) setup = (ea_ = eachrow(copy($MA))) evals = 1000
+    @btime foreach(fu, ea_) setup = (ea_ = eachrow(copy(MA))) evals = 1000
 
 end
