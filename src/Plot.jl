@@ -42,12 +42,6 @@ function _ma(an___)
 
 end
 
-function _le(an___)
-
-    1 < length(an___)
-
-end
-
 const COLORBAR = Dict(
     "len" => 0.5,
     "thickness" => 16,
@@ -79,14 +73,11 @@ function plot_scatter(
     ke_ar...,
 )
 
-    #showlegend = _le(y_)
-
     plot(
         ht,
         [
             Dict(
                 "name" => name_[id],
-                #"showlegend" => showlegend,
                 "y" => y_[id],
                 "x" => x_[id],
                 "text" => text_[id],
@@ -110,15 +101,12 @@ function plot_bar(
     ke_ar...,
 )
 
-    #showlegend = _le(y_)
-
     plot(
         ht,
         [
             Dict(
                 "type" => "bar",
                 "name" => name_[id],
-                #"showlegend" => showlegend,
                 "y" => y_[id],
                 "x" => x_[id],
                 "marker" => marker_[id],
@@ -144,7 +132,9 @@ function plot_histogram(
     ke_ar...,
 )
 
-    showlegend = _le(x_)
+    n = length(x_)
+
+    showlegend = 1 < n
 
     id_ = eachindex(x_)
 
@@ -174,6 +164,8 @@ function plot_histogram(
 
     if !iszero(rug_marker_size)
 
+        # TODO: Show overlapping texts.
+
         append!(
             data,
             [
@@ -193,7 +185,7 @@ function plot_histogram(
             ],
         )
 
-        dm = min(length(x_) * 0.04, 0.5)
+        dm = min(n * 0.04, 0.5)
 
         layout["yaxis"] = Dict("domain" => (0, dm), "zeroline" => false, "tickvals" => ())
 
@@ -279,18 +271,9 @@ function plot_heat_map(
 
     end
 
-    data = [
-        Dict(
-            "type" => "heatmap",
-            "name" => "Data",
-            "y" => y,
-            "x" => x,
-            "z" => collect(eachrow(z)),
-            "text" => collect(eachrow(text)),
-            "colorscale" => BioLab.Color.fractionate(co),
-            "colorbar" => merge(COLORBAR, Dict("x" => colorbarx, "tickvals" => _it(z))),
-        ),
-    ]
+    colorbarx1 = colorbarx
+
+    data = Vector{Dict{String, Any}}()
 
     dx = 0.08
 
@@ -303,7 +286,12 @@ function plot_heat_map(
         push!(
             data,
             _he!(
-                Dict("name" => "$nar Group", "xaxis" => "x2", "y" => y, "z" => collect.(gr_)),
+                Dict(
+                    "name" => "$nar Group",
+                    "xaxis" => "x2",
+                    "y" => y,
+                    "z" => [[gr] for gr in gr_],
+                ),
                 gr_,
                 colorbarx += dx,
                 ticktext,
@@ -328,11 +316,27 @@ function plot_heat_map(
 
     end
 
-    ydomain = (0, 0.939)
+    push!(
+        data,
+        Dict(
+            "type" => "heatmap",
+            "name" => "Data",
+            "y" => y,
+            "x" => x,
+            "z" => collect(eachrow(z)),
+            "text" => collect(eachrow(text)),
+            "colorscale" => BioLab.Color.fractionate(co),
+            "colorbar" => merge(COLORBAR, Dict("x" => colorbarx1, "tickvals" => _it(z))),
+        ),
+    )
 
-    xdomain = (0, 0.955)
+    ddy = 0.02
 
-    dd = 0.02
+    ddx = 0.016
+
+    ydomain = (0, 1 - 2ddy)
+
+    xdomain = (0, 1 - 2ddx)
 
     plot(
         ht,
@@ -347,11 +351,11 @@ function plot_heat_map(
                 "xaxis" =>
                     Dict("domain" => xdomain, "title" => Dict("text" => "$nac ($(size(z, 2)))")),
                 "yaxis2" => Dict(
-                    "domain" => (ydomain[2] + dd, 1),
+                    "domain" => (ydomain[2] + ddy, 1),
                     "autorange" => "reversed",
                     "tickvals" => (),
                 ),
-                "xaxis2" => Dict("domain" => (xdomain[2] + dd, 1), "tickvals" => ()),
+                "xaxis2" => Dict("domain" => (xdomain[2] + ddx, 1), "tickvals" => ()),
             ),
             layout,
         );

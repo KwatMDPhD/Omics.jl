@@ -40,6 +40,10 @@ const Y_ = [[-2, -1], [-1, 0, 1, 2]]
 
 # ---- #
 
+BioLab.Plot.plot_scatter("", Y_[1:1])
+
+# ---- #
+
 BioLab.Plot.plot_scatter("", Y_)
 
 # ---- #
@@ -48,8 +52,12 @@ BioLab.Plot.plot_scatter(
     "",
     Y_,
     Y_,
-    marker_ = (Dict("size" => 40, "color" => "#ff0000"), Dict("size" => 80, "color" => "#0000ff")),
+    marker_ = (Dict("size" => 80, "color" => "#ff0000"), Dict("size" => 40, "color" => "#0000ff")),
 )
+
+# ---- #
+
+BioLab.Plot.plot_bar("", Y_[1:1])
 
 # ---- #
 
@@ -75,6 +83,10 @@ const HIX_ = [[-2], [-1, -1, 0, 0], [1, 1, 1, 2, 2, 2, 3, 3, 3]]
 
 # ---- #
 
+BioLab.Plot.plot_histogram("", HIX_[1:1])
+
+# ---- #
+
 BioLab.Plot.plot_histogram("", HIX_)
 
 # ---- #
@@ -84,7 +96,7 @@ for xbins_size in (0, 1)
     BioLab.Plot.plot_histogram(
         "",
         HIX_,
-        [["1A"], ["2A", "2B"], ["3A", "3B", "3C"]];
+        [["$ch$id" for id in eachindex(x)] for (x, ch) in zip(HIX_, ('A', 'B', 'C'))];
         xbins_size,
         layout = Dict("title" => Dict("text" => "xbins_size = $xbins_size")),
     )
@@ -97,15 +109,19 @@ const Z = BioLab.Simulation.make_matrix_1n(Float64, 2, 4)
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", Z)
+const Y = (id -> "Row $id").(1:size(Z, 1))
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", Z; y = ["Row $id" for id in 1:size(Z, 1)])
+const X = (id -> "Column $id").(1:size(Z, 2))
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", Z; x = ["Column $id" for id in 1:size(Z, 2)])
+for (y, x) in (((), ()), (Y, ()), ((), X), (Y, X))
+
+    BioLab.Plot.plot_heat_map("", Z; y, x)
+
+end
 
 # ---- #
 
@@ -130,17 +146,17 @@ const GRC_ = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2]
 # ---- #
 
 for (grr_, grc_) in (
-    (GRR_, ()),
-    ((), GRC_),
+    (GRR_, Vector{Int}()),
+    (Vector{Int}(), GRC_),
     (GRR_, GRC_),
-    (["Row Group $id" for id in GRR_], ["Column Group $id" for id in GRC_]),
+    ((id -> "Row Group $id").(GRR_), (id -> "Column Group $id").(GRC_)),
 )
 
     BioLab.Plot.plot_heat_map(
         "",
         ZG;
-        y = ["Y = $nu" for nu in YG],
-        x = ["X = $nu" for nu in XG],
+        y = (nu -> "Y = $nu").(YG),
+        x = (nu -> "X = $nu").(XG),
         grr_,
         grc_,
     )
