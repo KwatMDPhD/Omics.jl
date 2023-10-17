@@ -40,7 +40,11 @@ const Y_ = [[-2, -1], [0, 1, 2]]
 
 # ---- #
 
-BioLab.Plot.plot_scatter("", Y_)
+@btime BioLab.Plot.plot_scatter("", $Y_);
+
+# ---- #
+
+@btime BioLab.Plot.plot_scatter2("", $Y_);
 
 # ---- #
 

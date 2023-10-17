@@ -12,33 +12,39 @@ function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}
         ht,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
         id,
-        "Plotly.newPlot(\"$id\", $(json(data)), $(json(layout)), $(json(merge(Dict("displaylogo" => false), config))))";
+        "Plotly.newPlot(\"$id\", $(json(data)), $(json(layout)), $(json(merge!(Dict("displaylogo" => false), config))))";
         ke_ar...,
     )
 
 end
 
-function _set_x(an___)
+function _x(an___)
 
-    [eachindex(an_) for an_ in an___]
+    eachindex.(an___)
 
 end
 
-function _set_text(an___)
+function _te(an___)
 
     [Vector{String}() for _ in an___]
 
 end
 
-function _set_name(an___)
+function _na(an___)
 
-    ["Name $id" for id in eachindex(an___)]
+    (id -> "Name $id").(eachindex(an___))
 
 end
 
-function _set_marker(an___)
+function _ma(an___)
 
-    [Dict("color" => he) for he in BioLab.Color.color(eachindex(an___))]
+    (he -> Dict("color" => he)).(BioLab.Color.color(eachindex(an___)))
+
+end
+
+function _le(an___)
+
+    1 < length(an___)
 
 end
 
@@ -59,23 +65,28 @@ const SPIKE = Dict(
     "spikecolor" => "#561649",
 )
 
+const _AX = Dict("showgrid" => false)
+
 function plot_scatter(
     ht,
     y_,
-    x_ = _set_x(y_);
-    text_ = _set_text(y_),
-    name_ = _set_name(y_),
+    x_ = _x(y_);
+    text_ = _te(y_),
+    name_ = _na(y_),
     mode_ = (y -> ifelse(length(y) < 1000, "markers+lines", "lines")).(y_),
-    marker_ = _set_marker(y_),
+    marker_ = _ma(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
+
+    #showlegend = _le(y_)
 
     plot(
         ht,
         [
             Dict(
                 "name" => name_[id],
+                #"showlegend" => showlegend,
                 "y" => y_[id],
                 "x" => x_[id],
                 "text" => text_[id],
@@ -83,10 +94,7 @@ function plot_scatter(
                 "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(
-            Dict("yaxis" => Dict("showgrid" => false), "xaxis" => Dict("showgrid" => false)),
-            layout,
-        );
+        BioLab.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
         ke_ar...,
     )
 
@@ -95,12 +103,14 @@ end
 function plot_bar(
     ht,
     y_,
-    x_ = _set_x(y_);
-    name_ = _set_name(y_),
-    marker_ = _set_marker(y_),
+    x_ = _x(y_);
+    name_ = _na(y_),
+    marker_ = _ma(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
+
+    #showlegend = _le(y_)
 
     plot(
         ht,
@@ -108,15 +118,13 @@ function plot_bar(
             Dict(
                 "type" => "bar",
                 "name" => name_[id],
+                #"showlegend" => showlegend,
                 "y" => y_[id],
                 "x" => x_[id],
                 "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(
-            Dict("yaxis" => Dict("showgrid" => false), "xaxis" => Dict("showgrid" => false)),
-            layout,
-        );
+        BioLab.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
         ke_ar...,
     )
 
@@ -126,9 +134,9 @@ end
 function plot_histogram(
     ht,
     x_,
-    text_ = _set_text(x_);
-    name_ = _set_name(x_),
-    marker_ = _set_marker(x_),
+    text_ = _te(x_);
+    name_ = _na(x_),
+    marker_ = _ma(x_),
     histnorm = "",
     xbins_size = 0,
     rug_marker_size = ifelse(all(x -> length(x) < 100000, x_), 16, 0),
@@ -136,9 +144,7 @@ function plot_histogram(
     ke_ar...,
 )
 
-    n = length(x_)
-
-    showlegend = 1 < n
+    showlegend = _le(x_)
 
     id_ = eachindex(x_)
 
@@ -156,19 +162,13 @@ function plot_histogram(
         ) for id in id_
     ]
 
-    if isempty(histnorm)
-
-        yaxis2_title_text = "Count"
-
-    else
-
-        yaxis2_title_text = titlecase(histnorm)
-
-    end
-
     layout = BioLab.Dict.merge(
-        Dict("yaxis2" =>
-                Dict("showgrid" => false, "title" => Dict("text" => yaxis2_title_text))),
+        Dict(
+            "yaxis2" => Dict(
+                "showgrid" => false,
+                "title" => Dict("text" => ifelse(isemtpy, "Count", titlecase(histnorm))),
+            ),
+        ),
         layout,
     )
 
@@ -193,11 +193,11 @@ function plot_histogram(
             ],
         )
 
-        dm = min(n * 0.04, 0.5)
-
-        layout["yaxis2"]["domain"] = (dm + 0.01, 1)
+        dm = min(length(x_) * 0.04, 0.5)
 
         layout["yaxis"] = Dict("domain" => (0, dm), "zeroline" => false, "tickvals" => ())
+
+        layout["yaxis2"]["domain"] = (dm + 0.01, 1)
 
     end
 
@@ -378,7 +378,7 @@ function plot_radar(
     ht,
     ra_,
     an_;
-    name_ = _set_name(ra_),
+    name_ = _na(ra_),
     line_color_ = BioLab.Color.color(eachindex(ra_)),
     fillcolor_ = line_color_,
     radialaxis_range = (0, maximum(vcat(ra_...))),
