@@ -36,15 +36,11 @@ BioLab.Plot.plot("", DATA, LAYOUT, Dict("editable" => true))
 
 # ---- #
 
-const Y_ = [[-2, -1], [0, 1, 2]]
+const Y_ = [[-2, -1], [-1, 0, 1, 2]]
 
 # ---- #
 
-@btime BioLab.Plot.plot_scatter("", $Y_);
-
-# ---- #
-
-@btime BioLab.Plot.plot_scatter2("", $Y_);
+BioLab.Plot.plot_scatter("", Y_)
 
 # ---- #
 
@@ -61,13 +57,17 @@ BioLab.Plot.plot_bar("", Y_)
 
 # ---- #
 
-BioLab.Plot.plot_bar(
-    "",
-    Y_,
-    Y_;
-    name_ = ["Jonathan", "Joseph", "Jotaro"],
-    layout = Dict("barmode" => "group", "title" => Dict("text" => "barmode = group")),
-)
+for barmode in ("group", "stack")
+
+    BioLab.Plot.plot_bar(
+        "",
+        Y_,
+        Y_;
+        name_ = ["Jonathan", "Joseph", "Jotaro"],
+        layout = Dict("barmode" => barmode, "title" => Dict("text" => "barmode = $barmode")),
+    )
+
+end
 
 # ---- #
 

@@ -166,7 +166,7 @@ function plot_histogram(
         Dict(
             "yaxis2" => Dict(
                 "showgrid" => false,
-                "title" => Dict("text" => ifelse(isemtpy, "Count", titlecase(histnorm))),
+                "title" => Dict("text" => ifelse(isempty(histnorm), "Count", titlecase(histnorm))),
             ),
         ),
         layout,
