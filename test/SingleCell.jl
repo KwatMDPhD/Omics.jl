@@ -35,5 +35,9 @@ disable_logging(Warn)
 
 # ---- #
 
-# 7.407 s (48499827 allocations: 9.42 GiB)
-@btime BioLab.SingleCell.read($SA_DI);
+# 7.164 s (48442102 allocations: 7.47 GiB)
+@btime BioLab.SingleCell.read(SA_DI);
+
+# ---- #
+
+disable_logging(Debug)

@@ -14,46 +14,48 @@ function read(sa_di)
 
     idf_ = Vector{Int}()
 
-    n_ba = 0
-
     idb_ = Vector{Int}()
+
+    n_ba = 0
 
     co_ = Vector{Int}()
 
-    for (sa, di) in zip(string.(keys(sa_di)), sa_di)
+    for (sy, di) in zip(keys(sa_di), sa_di)
+
+        sa = string(sy)
 
         @info "Reading \"$sa\""
 
-        fes_ =
+        saf_ =
             BioLab.DataFrame.read(joinpath(di, "features.tsv.gz"); header = false, select = [2])[
                 !,
                 1,
             ]
 
-        bas_ =
+        sab_ =
             BioLab.DataFrame.read(joinpath(di, "barcodes.tsv.gz"); header = false, select = [1])[
                 !,
                 1,
             ]
 
+        n_saf = length(saf_)
+
+        n_sab = length(sab_)
+
         index_x_featurebarcodecount_x_it =
-            BioLab.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3)#, delim = ' ')
+            BioLab.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3)
 
-        n_fes = length(fes_)
+        co1, co2, co3 = names(index_x_featurebarcodecount_x_it)
 
-        n_bas = length(bas_)
+        if n_saf != parse(Int, co1)
 
-        co1, co2, co3 = (parse(Int, co) for co in names(index_x_featurebarcodecount_x_it))
-
-        if n_fes != co1
-
-            error("Numbers of features differ. $n_fes != $co1 (matrix header).")
+            error("Numbers of features differ. $n_saf != $co1.")
 
         end
 
-        if n_bas != co2
+        if n_sab != parse(Int, co2)
 
-            error("Numbers of barcodes differ. $n_bas != $co2 (matrix header).")
+            error("Numbers of barcodes differ. $n_sab != $co2.")
 
         end
 
@@ -61,25 +63,25 @@ function read(sa_di)
 
         if isnothing(fe_)
 
-            fe_ = fes_
+            fe_ = saf_
 
-            n_fe = n_fes
+            n_fe = n_saf
 
-        elseif fe_ != fes_
+        elseif fe_ != saf_
 
             error("Features differ.")
 
         end
 
-        append!(sa_, fill(sa, n_bas))
+        append!(sa_, fill(sa, n_sab))
 
-        append!(ba_, ["$(sa)_$ba" for ba in bas_])
+        append!(ba_, (ba -> "$(sa)_$ba").(sab_))
 
         append!(idf_, index_x_featurebarcodecount_x_it[!, 1])
 
         append!(idb_, n_ba .+ index_x_featurebarcodecount_x_it[!, 2])
 
-        n_ba += n_bas
+        n_ba += n_sab
 
         append!(co_, index_x_featurebarcodecount_x_it[!, 3])
 
@@ -97,9 +99,13 @@ function read(sa_di)
 
     if !allunique(fe_)
 
-        st = BioLab.Collection.count_sort_string(fe_, 2)
+        @warn begin
 
-        @warn "Features have $(BioLab.String.count(count('\n', st) + 1, "duplicate")).\n$st"
+            st = BioLab.Collection.count_sort_string(fe_, 2)
+
+            "Features have $(BioLab.String.count(count('\n', st), "duplicate")).\n$st"
+
+        end
 
         fe_, fe_x_ba_x_co = BioLab.Matrix.collapse(maximum, Int, fe_, fe_x_ba_x_co)
 
