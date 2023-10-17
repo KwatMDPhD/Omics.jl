@@ -40,9 +40,7 @@ end
 
 function get_p_value(fu, nu_, ra_)
 
-    n_ra = length(ra_)
-
-    pv_ = [get_p_value(sum(fu(nu), ra_; init = 0), n_ra) for nu in nu_]
+    pv_ = (nu -> get_p_value(sum(fu(nu), ra_; init = 0), length(ra_))).(nu_)
 
     pv_, adjust(pv_, BenjaminiHochberg())
 
@@ -50,7 +48,7 @@ end
 
 # TODO: Factor in the outer loop.
 
-function _separate(fe_x_id_x_ra, nef_, pof_)
+function _si(fe_x_id_x_ra, nef_, pof_)
 
     ne_ = Vector{Float64}()
 
@@ -90,7 +88,7 @@ end
 
 function get_p_value(nu_, idn_, idp_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothing)
 
-    ne_, po_ = _separate(fe_x_id_x_ra, nef_, pof_)
+    ne_, po_ = _si(fe_x_id_x_ra, nef_, pof_)
 
     if isempty(idn_)
 

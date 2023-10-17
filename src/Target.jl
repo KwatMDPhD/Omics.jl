@@ -1,7 +1,5 @@
 module Target
 
-using ..BioLab
-
 function _un(an_)
 
     sort!(unique(an_))
