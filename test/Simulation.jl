@@ -45,11 +45,11 @@ const NE_ = reverse!(-PO_)
 
 for (ze, re) in ((false, vcat(view(NE_, 1:(length(NE_) - 1)), PO_)), (true, vcat(NE_, PO_)))
 
-    @test BioLab.Simulation._concatenate(NE_, ze, PO_) == re
+    @test BioLab.Simulation._co(NE_, ze, PO_) == re
 
     # 554.614 ns (2 allocations: 23.69 KiB)
     # 585.966 ns (2 allocations: 23.69 KiB)
-    #@btime BioLab.Simulation._concatenate($NE_, $ze, $PO_)
+    #@btime BioLab.Simulation._co($NE_, $ze, $PO_)
 
 end
 
