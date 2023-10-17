@@ -58,7 +58,7 @@ for ba in BA_
 
     @test BioLab.String.is_bad(ba)
 
-    @btime BioLab.String.is_bad($ba)
+    #@btime BioLab.String.is_bad($ba)
 
 end
 
@@ -81,7 +81,7 @@ for go in GO_
 
     @test !BioLab.String.is_bad(go)
 
-    @btime BioLab.String.is_bad($go)
+    #@btime BioLab.String.is_bad($go)
 
 end
 
@@ -108,7 +108,7 @@ for (st, re) in (
     # 349.375 μs (20 allocations: 848 bytes)
     # 276.458 μs (8 allocations: 352 bytes)
     # 349.875 μs (20 allocations: 848 bytes)
-    @btime BioLab.String.try_parse($st)
+    #@btime BioLab.String.try_parse($st)
 
 end
 
@@ -154,10 +154,6 @@ end
 
 # ---- #
 
-@test BioLab.Error.@is BioLab.String.count(-1, "Car")
-
-# ---- #
-
 for (st, re) in (
     ("vertex", "vertices"),
     ("edge", "edges"),
@@ -166,25 +162,45 @@ for (st, re) in (
     ("hero", "heroes"),
 )
 
-    for (n, re) in ((0, "0 $st"), (1, "1 $st"), (2, "2 $re"))
+    for n in (-2, -1, 0, 1, 2)
 
-        @test BioLab.String.count(n, st) === re
+        if abs(n) <= 1
 
-        # 107.608 ns (5 allocations: 248 bytes)
-        # 108.737 ns (5 allocations: 248 bytes)
-        # 216.267 ns (9 allocations: 440 bytes)
-        # 106.441 ns (5 allocations: 248 bytes)
-        # 106.938 ns (5 allocations: 248 bytes)
-        # 201.341 ns (8 allocations: 408 bytes)
-        # 105.837 ns (5 allocations: 248 bytes)
-        # 106.620 ns (5 allocations: 248 bytes)
-        # 134.434 ns (5 allocations: 248 bytes)
-        # 106.263 ns (5 allocations: 256 bytes)
-        # 106.323 ns (5 allocations: 256 bytes)
-        # 224.372 ns (9 allocations: 440 bytes)
-        # 106.441 ns (5 allocations: 248 bytes)
-        # 106.894 ns (5 allocations: 248 bytes)
-        # 227.280 ns (9 allocations: 432 bytes)
+            re2 = st
+
+        else
+
+            re2 = re
+
+        end
+
+        @test BioLab.String.count(n, st) === "$n $re2"
+
+        # 239.914 ns (9 allocations: 440 bytes)
+        # 131.135 ns (5 allocations: 248 bytes)
+        # 130.096 ns (5 allocations: 248 bytes)
+        # 130.379 ns (5 allocations: 248 bytes)
+        # 239.104 ns (9 allocations: 440 bytes)
+        # 224.981 ns (8 allocations: 408 bytes)
+        # 130.502 ns (5 allocations: 248 bytes)
+        # 128.943 ns (5 allocations: 248 bytes)
+        # 129.326 ns (5 allocations: 248 bytes)
+        # 223.849 ns (8 allocations: 408 bytes)
+        # 156.984 ns (5 allocations: 248 bytes)
+        # 129.233 ns (5 allocations: 248 bytes)
+        # 128.273 ns (5 allocations: 248 bytes)
+        # 128.613 ns (5 allocations: 248 bytes)
+        # 156.250 ns (5 allocations: 248 bytes)
+        # 248.344 ns (9 allocations: 440 bytes)
+        # 129.576 ns (5 allocations: 256 bytes)
+        # 129.138 ns (5 allocations: 256 bytes)
+        # 128.762 ns (5 allocations: 256 bytes)
+        # 247.172 ns (9 allocations: 440 bytes)
+        # 251.016 ns (9 allocations: 432 bytes)
+        # 129.860 ns (5 allocations: 248 bytes)
+        # 128.903 ns (5 allocations: 248 bytes)
+        # 129.279 ns (5 allocations: 248 bytes)
+        # 250.228 ns (9 allocations: 432 bytes)
         @btime BioLab.String.count($n, $st)
 
     end

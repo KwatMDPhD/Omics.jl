@@ -50,17 +50,12 @@ end
 
 function count(n, st)
 
-    if n < 0
-
-        error("$n is negative.")
-
-    elseif n <= 1
+    if iszero(n) || isone(abs(n))
 
         return "$n $st"
 
     end
 
-    # TODO: Benchmark.
     if length(st) == 3 && view(st, 2:3) == "ex"
 
         return "$n $(st)es"

@@ -66,12 +66,13 @@ function tabulate(ro_re_, co_)
 
     ro_x_co_x_fl = fill(NaN, n_ro, length(co_))
 
+    fl_ = (0.0, 1.0)
+
     for (idr, (ro, re_)) in enumerate(ro_re_)
 
         ro_[idr] = ro
 
-        # TODO: Benchmark `Float`.
-        for (fl, re) in zip((0, 1), re_)
+        for (fl, re) in zip(fl_, re_)
 
             rre = Regex(re)
 
