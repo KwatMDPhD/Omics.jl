@@ -2,7 +2,7 @@ module Simulation
 
 using ..BioLab
 
-function _mirror(n)
+function _mi(n)
 
     po_ = Vector{Float64}(undef, n)
 
@@ -28,7 +28,7 @@ function _mirror(n)
 
 end
 
-function _concatenate(ne_, ze, po_)
+function _co(ne_, ze, po_)
 
     vcat(ne_[1:(end - !ze)], po_)
 
@@ -36,23 +36,23 @@ end
 
 function make_vector_mirror(n, ze = true)
 
-    ne_, po_ = _mirror(n)
+    ne_, po_ = _mi(n)
 
-    _concatenate(ne_, ze, po_)
+    _co(ne_, ze, po_)
 
 end
 
 function make_vector_mirror_deep(n, ze = true)
 
-    ne_, po_ = _mirror(n)
+    ne_, po_ = _mi(n)
 
-    _concatenate(ne_ * 2, ze, po_)
+    _co(ne_ * 2, ze, po_)
 
 end
 
 function make_vector_mirror_wide(n, ze = true)
 
-    ne_, po_ = _mirror(n)
+    ne_, po_ = _mi(n)
 
     new_ = Vector{Float64}(undef, n * 2 - 1)
 
@@ -70,7 +70,7 @@ function make_vector_mirror_wide(n, ze = true)
 
     end
 
-    _concatenate(new_, ze, po_)
+    _co(new_, ze, po_)
 
 end
 
