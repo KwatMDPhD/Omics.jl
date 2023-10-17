@@ -46,7 +46,7 @@ const FU = CorrDist()
 # ---- #
 
 # 1.954 μs (47 allocations: 5.29 KiB)
-@btime BioLab.Clustering.hierarchize($MA, $FU);
+@btime BioLab.Clustering.hierarchize(MA, FU);
 
 # ---- #
 

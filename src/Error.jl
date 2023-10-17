@@ -55,7 +55,7 @@ function error_bad(fu, an_)
         de = ".\n"
 
         error(
-            "Found $(BioLab.String.count(length(id_), "bad value"))$de$(join(unique(view(an_, id_)), de))$de",
+            "Found $(BioLab.String.count(length(id_), "bad value"))$de$(join(unique(an_[id_]), de))$de",
         )
 
     end
