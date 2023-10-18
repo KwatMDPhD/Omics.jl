@@ -112,8 +112,7 @@ function read(fi, dicttype = OrderedDict; ke_ar...)
 
 end
 
-# TODO: Check return type.
-function write(js, ke_va, id = 2)::Nothing
+function write(js, ke_va, id = 2)
 
     open(js, "w") do io
 

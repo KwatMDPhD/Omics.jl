@@ -1,4 +1,4 @@
-using orderedcollections: ordereddict
+using OrderedCollections: OrderedDict
 
 using Test: @test
 
@@ -44,9 +44,9 @@ for (ke, va, re) in (
     @test ke_va == re
 
     # 141.736 μs (4121 allocations: 275.38 KiB)
-    # 141.367 μs (4112 allocations: 270.93 KiB)
-    @btime BioLab.Dict.set_with_suffix!(ke_va, $ke, $va) setup = (ke_va = copy(KES_VA)) evals =
-        1000
+    # 138.961 μs (4112 allocations: 270.93 KiB)
+    #@btime BioLab.Dict.set_with_suffix!(ke_va, $ke, $va) setup = (ke_va = copy(KES_VA)) evals =
+    #    1000
 
 end
 
@@ -81,30 +81,48 @@ for (ke1_va, ke2_va, re) in (
 
     # 1.679 μs (32 allocations: 2.86 KiB)
     # 1.654 μs (32 allocations: 2.86 KiB)
-    @btime BioLab.Dict.merge($ke1_va, $ke2_va)
+    #@btime BioLab.Dict.merge($ke1_va, $ke2_va)
 
 end
 
 # ---- #
 
-const AN1_ = ['A', 'B']
+const AN1_ = ('A', 'B')
 
 # ---- #
 
 for (an_id, re) in (
-    (Dict(), ()),
-    (Dict('A' => 1), (true,)),
-    (Dict('B' => 1), (true,)),
-    (Dict('Z' => 1), (false,)),
-    (Dict('A' => 1, 'B' => 2, 'Z' => 3), (true, true, false)),
-    (Dict('A' => 1, 'Z' => 2, 'B' => 3), (true, false, true)),
+    (Dict(), BitVector()),
+    (Dict('A' => 1), [true]),
+    (Dict('B' => 1), [true]),
+    (Dict('Z' => 1), [false]),
+    (Dict('A' => 1, 'B' => 2, 'Z' => 3), [true, true, false]),
+    (Dict('A' => 1, 'Z' => 2, 'B' => 3), [true, false, true]),
 )
 
-    is_ = BioLab.Dict.is_in(an_id, AN1_)
+    for an1_ in (AN1_, collect(AN1_))
 
-    @test typeof(is_) === BitVector
+        is_ = BioLab.Dict.is_in(an_id, an1_)
 
-    @test is_ == collect(re)
+        @test typeof(is_) === BitVector
+
+        @test is_ == re
+
+        # 35.792 ns (2 allocations: 96 bytes)
+        # 37.340 ns (2 allocations: 96 bytes)
+        # 31.900 ns (2 allocations: 96 bytes)
+        # 34.743 ns (2 allocations: 96 bytes)
+        # 31.899 ns (2 allocations: 96 bytes)
+        # 33.157 ns (2 allocations: 96 bytes)
+        # 31.019 ns (2 allocations: 96 bytes)
+        # 33.316 ns (2 allocations: 96 bytes)
+        # 31.061 ns (2 allocations: 96 bytes)
+        # 32.277 ns (2 allocations: 96 bytes)
+        # 30.936 ns (2 allocations: 96 bytes)
+        # 33.408 ns (2 allocations: 96 bytes)
+        #@btime BioLab.Dict.is_in($an_id, $an1_)
+
+    end
 
 end
 
@@ -120,13 +138,10 @@ const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MY
 
 # ---- #
 
-# 686.792 μs (2 allocations: 19.67 KiB)
-@btime [fe in FE1_ for fe in FE_];
-
-# ---- #
-
-# 683.000 μs (3 allocations: 6.84 KiB)
-@btime in(FE1_).(FE_);
+# 695.792 μs (6 allocations: 6.91 KiB)
+#@btime in(FE1_).(FE_);
+# 689.250 μs (3 allocations: 6.84 KiB)
+#@btime in($FE1_).($FE_);
 
 # ---- #
 
@@ -134,18 +149,15 @@ const FE1S = Set(FE1_)
 
 # ---- #
 
-# 441.081 ns (7 allocations: 1.13 KiB)
-@btime Set(FE1_);
+# 441.500 ns (7 allocations: 1.13 KiB)
+#@btime Set(FE1_);
 
 # ---- #
 
-# 462.833 μs (2 allocations: 19.67 KiB)
-@btime [fe in FE1S for fe in FE_];
-
-# ---- #
-
-# 467.542 μs (3 allocations: 6.84 KiB)
-@btime in(FE1S).(FE_);
+# 484.334 μs (6 allocations: 6.91 KiB)
+#@btime in(FE1S).(FE_);
+# 470.709 μs (3 allocations: 6.84 KiB)
+#@btime in($FE1S).($FE_);
 
 # ---- #
 
@@ -153,28 +165,13 @@ const FE_ID = Dict(fe => id for (id, fe) in enumerate(FE_))
 
 # ---- #
 
-# 513.250 μs (7 allocations: 800.92 KiB)
-@btime Dict(fe => id for (id, fe) in enumerate(FE_));
-
-# ---- #
-
-for ke in ("Missing", "GPI")
-
-    # 8.675 ns (0 allocations: 0 bytes)
-    # 9.425 ns (0 allocations: 0 bytes)
-    # 13.555 ns (0 allocations: 0 bytes)
-    # 11.094 ns (0 allocations: 0 bytes)
-
-    @btime $ke in FE1S
-
-    @btime haskey(FE_ID, $ke)
-
-end
+# 511.625 μs (7 allocations: 800.92 KiB)
+#@btime Dict(fe => id for (id, fe) in enumerate(FE_));
 
 # ---- #
 
 # 362.577 ns (2 allocations: 2.66 KiB)
-@btime BioLab.Dict.is_in(FE_ID, FE1_);
+#@btime BioLab.Dict.is_in(FE_ID, FE1_);
 
 # ---- #
 
