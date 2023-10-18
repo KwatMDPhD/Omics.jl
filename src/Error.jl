@@ -14,7 +14,7 @@ macro is(ex)
 
         catch er
 
-            @info "Caught an error." er
+            @info "Caught." er
 
             true
 
@@ -55,7 +55,7 @@ function error_bad(fu, an_)
         de = ".\n"
 
         error(
-            "Found $(BioLab.String.count(length(id_), "bad value"))$de$(join(unique(an_[id_]), de))$de",
+            "Found $(BioLab.String.count(lastindex(id_), "bad value"))$de$(join(unique(an_[id_]), de))$de",
         )
 
     end
@@ -64,7 +64,7 @@ end
 
 function error_length_difference(an___)
 
-    if !isone(length(unique(length.(an___))))
+    if !isone(lastindex(unique(lastindex.(an___))))
 
         error("Lengths differ.")
 
