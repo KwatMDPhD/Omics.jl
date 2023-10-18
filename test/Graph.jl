@@ -92,7 +92,7 @@ const EL2_ = BioLab.Graph.read(joinpath(BioLab.TE, "$NAME2.$EX2"))
 
 # ---- #
 
-@test length(EL_) === length(EL2_)
+@test lastindex(EL_) === lastindex(EL2_)
 
 # ---- #
 
