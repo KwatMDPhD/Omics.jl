@@ -6,7 +6,7 @@ function get_minimum_maximum(an_)
 
     mi = ma = an_[1]
 
-    for id in 2:length(an_)
+    for id in 2:lastindex(an_)
 
         an = an_[id]
 
