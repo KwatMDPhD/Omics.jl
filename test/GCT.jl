@@ -20,5 +20,5 @@ const GC = joinpath(DA, "a.gct")
 
 # ---- #
 
-# 98.090 ms (71117 allocations: 23.64 MiB)
-@btime BioLab.GCT.read(GC);
+# 97.734 ms (71117 allocations: 23.64 MiB)
+#@btime BioLab.GCT.read(GC);
