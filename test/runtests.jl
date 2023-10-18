@@ -28,7 +28,9 @@ const MO_ = BioLab.Path.read(SR; ig_ = ("BioLab.jl",))
 
 for jl in MO_
 
-    @test jl[1:(end - 3)] === readline(joinpath(SR, jl))[8:end]
+    li = readline(joinpath(SR, jl))
+
+    @test view(jl, 1:(lastindex(jl) - 3)) === view(li, 8:lastindex(li))
 
 end
 
