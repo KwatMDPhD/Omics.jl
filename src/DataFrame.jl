@@ -22,7 +22,7 @@ function separate(row_x_column_x_any)
 
     co_ = names(row_x_column_x_any)
 
-    id_ = 2:length(co_)
+    id_ = 2:lastindex(co_)
 
     co_[1], row_x_column_x_any[:, 1], co_[id_], Matrix(row_x_column_x_any[!, id_])
 

@@ -64,7 +64,7 @@ const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 # ---- #
 
 # 1.108 μs (22 allocations: 1.89 KiB)
-@btime BioLab.DataFrame.make(NAR, RO_, CO_, MA);
+#@btime BioLab.DataFrame.make(NAR, RO_, CO_, MA);
 
 # ---- #
 
@@ -81,7 +81,7 @@ BioLab.DataFrame.separate(DT)[2][1] = ""
 # ---- #
 
 # 1.938 μs (28 allocations: 2.08 KiB)
-@btime BioLab.DataFrame.separate(DT);
+#@btime BioLab.DataFrame.separate(DT);
 
 # ---- #
 
