@@ -24,7 +24,7 @@ BioLab.HTML.make(HT, SR_, ID, SC)
 
 # ---- #
 
-@test length(readlines(HT)) === 10 + length(SR_)
+@test lastindex(readlines(HT)) === 10 + lastindex(SR_)
 
 # ---- #
 
