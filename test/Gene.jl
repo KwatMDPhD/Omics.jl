@@ -12,7 +12,7 @@ const DA = joinpath(BioLab._DA, "Gene")
 
 # ---- #
 
-function is_missing_string(da)
+function is_missing_or_string(da)
 
     all(co -> eltype(co) <: Union{Missing, AbstractString}, eachcol(da))
 
@@ -20,7 +20,7 @@ end
 
 # ---- #
 
-function has_bad(da)
+function has_bad_string(da)
 
     any(co -> any(BioLab.String.is_bad, skipmissing(co)), eachcol(da))
 
@@ -36,11 +36,11 @@ const EN = BioLab.Gene.read_ensemble()
 
 # ---- #
 
-@test is_missing_string(EN)
+@test is_missing_or_string(EN)
 
 # ---- #
 
-@test !has_bad(EN)
+@test !has_bad_string(EN)
 
 # ---- #
 
@@ -52,11 +52,11 @@ const UN = BioLab.Gene.read_uniprot()
 
 # ---- #
 
-@test is_missing_string(UN)
+@test is_missing_or_string(UN)
 
 # ---- #
 
-@test !has_bad(UN)
+@test !has_bad_string(UN)
 
 # ---- #
 
@@ -80,7 +80,7 @@ end
 
 # ---- #
 
-# 2.222 s (36735645 allocations: 2.17 GiB)
+# 2.187 s (36735645 allocations: 2.17 GiB)
 @btime BioLab.Gene.map_ensembl(EN);
 
 # ---- #

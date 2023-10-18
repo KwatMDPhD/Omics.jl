@@ -12,11 +12,11 @@ function read(cl)
 
     li1, li2, li3 = readlines(cl)
 
-    li2 = view(li2, 2:length(li2))
+    li2 = view(li2, 2:lastindex(li2))
 
     li3_ = split(li3)
 
-    n_sa3 = length(li3_)
+    n_sa3 = lastindex(li3_)
 
     nar = "Target"
 
@@ -40,11 +40,11 @@ function read(cl)
 
         n_gr1 = parse(Int, li1_[2])
 
-        gr_ = string.(split(li2))
+        gr_ = split(li2)
 
-        n_gr2 = length(gr_)
+        n_gr2 = lastindex(gr_)
 
-        n_gr3 = length(unique(li3_))
+        n_gr3 = lastindex(unique(li3_))
 
         if !(n_gr1 == n_gr2 == n_gr3)
 

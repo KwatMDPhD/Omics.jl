@@ -13,7 +13,7 @@ function download(di, gs)
     gz = "$(gs)_family.soft.gz"
 
     Base.download(
-        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(gs[1:(end - 3)])nnn/$gs/soft/$gz",
+        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(view(gs, 1:(lastindex(gs) - 3)))nnn/$gs/soft/$gz",
         joinpath(di, gz),
     )
 
