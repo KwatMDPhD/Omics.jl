@@ -16,7 +16,7 @@ end
 
 function get_extreme(an_, n_ex)
 
-    sortperm(an_)[get_extreme(length(an_), n_ex)]
+    sortperm(an_)[get_extreme(lastindex(an_), n_ex)]
 
 end
 

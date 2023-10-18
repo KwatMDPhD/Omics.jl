@@ -25,7 +25,7 @@ for (n, n_ex, re) in (
     # 59.978 ns (3 allocations: 208 bytes)
     # 19.915 ns (1 allocation: 96 bytes)
     # 19.893 ns (1 allocation: 96 bytes)
-    @btime BioLab.Rank.get_extreme($n, $n_ex)
+    #@btime BioLab.Rank.get_extreme($n, $n_ex)
 
 end
 
@@ -72,25 +72,25 @@ for (an_, n_ex, re) in (
     (IT_, 0, ID_),
     (IT_, 1, [10, 60]),
     (IT_, 2, [10, 20, 50, 60]),
-    (IT_, length(IT_) + 1, sort(IT_)),
+    (IT_, lastindex(IT_) + 1, sort(IT_)),
     (CH_, 0, Vector{Char}()),
     (CH_, 1, ['a', 'z']),
     (CH_, 2, ['a', 'b', 'y', 'z']),
-    (CH_, length(CH_) + 1, sort(CH_)),
+    (CH_, lastindex(CH_) + 1, sort(CH_)),
 )
 
     @test view(an_, BioLab.Rank.get_extreme(an_, n_ex)) == re
 
-    # 60.232 ns (3 allocations: 192 bytes)
-    # 60.275 ns (3 allocations: 192 bytes)
-    # 122.560 ns (5 allocations: 368 bytes)
-    # 125.464 ns (5 allocations: 400 bytes)
-    # 130.898 ns (5 allocations: 464 bytes)
-    # 90.481 ns (3 allocations: 336 bytes)
-    # 312.668 ns (6 allocations: 800 bytes)
-    # 314.773 ns (6 allocations: 832 bytes)
-    # 318.133 ns (6 allocations: 896 bytes)
-    # 295.816 ns (4 allocations: 1.06 KiB)
-    @btime BioLab.Rank.get_extreme($an_, $n_ex)
+    # 59.997 ns (3 allocations: 192 bytes)
+    # 59.954 ns (3 allocations: 192 bytes)
+    # 122.611 ns (5 allocations: 368 bytes)
+    # 125.232 ns (5 allocations: 400 bytes)
+    # 130.663 ns (5 allocations: 464 bytes)
+    # 90.387 ns (3 allocations: 336 bytes)
+    # 315.751 ns (6 allocations: 800 bytes)
+    # 321.528 ns (6 allocations: 832 bytes)
+    # 323.645 ns (6 allocations: 896 bytes)
+    # 305.556 ns (4 allocations: 1.06 KiB)
+    #@btime BioLab.Rank.get_extreme($an_, $n_ex)
 
 end

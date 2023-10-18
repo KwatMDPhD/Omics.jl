@@ -67,7 +67,7 @@ function plot_scatter(
     x_ = _x(y_);
     text_ = _te(y_),
     name_ = _na(y_),
-    mode_ = (y -> ifelse(length(y) < 1000, "markers+lines", "lines")).(y_),
+    mode_ = (y -> ifelse(lastindex(y) < 1000, "markers+lines", "lines")).(y_),
     marker_ = _ma(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
@@ -127,12 +127,12 @@ function plot_histogram(
     marker_ = _ma(x_),
     histnorm = "",
     xbins_size = 0,
-    rug_marker_size = ifelse(all(x -> length(x) < 100000, x_), 16, 0),
+    rug_marker_size = ifelse(all(x -> lastindex(x) < 100000, x_), 16, 0),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
 
-    n = length(x_)
+    n = lastindex(x_)
 
     showlegend = 1 < n
 
@@ -173,7 +173,7 @@ function plot_histogram(
                     "legendgroup" => id,
                     "name" => name_[id],
                     "showlegend" => false,
-                    "y" => fill(id, length(x_[id])),
+                    "y" => fill(id, lastindex(x_[id])),
                     "x" => x_[id],
                     "text" => text_[id],
                     "mode" => "markers",

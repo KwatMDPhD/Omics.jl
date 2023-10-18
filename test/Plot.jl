@@ -40,7 +40,7 @@ const Y_ = [[-2, -1], [-1, 0, 1, 2]]
 
 # ---- #
 
-BioLab.Plot.plot_scatter("", Y_[1:1])
+BioLab.Plot.plot_scatter("", view(Y_, 1:1))
 
 # ---- #
 
@@ -57,7 +57,7 @@ BioLab.Plot.plot_scatter(
 
 # ---- #
 
-BioLab.Plot.plot_bar("", Y_[1:1])
+BioLab.Plot.plot_bar("", view(Y_, 1:1))
 
 # ---- #
 
@@ -83,7 +83,7 @@ const HIX_ = [[-2], [-1, -1, 0, 0], [1, 1, 1, 2, 2, 2, 3, 3, 3]]
 
 # ---- #
 
-BioLab.Plot.plot_histogram("", HIX_[1:1])
+BioLab.Plot.plot_histogram("", view(HIX_, 1:1))
 
 # ---- #
 
