@@ -40,7 +40,7 @@ function read(cl)
 
         n_gr1 = parse(Int, li1_[2])
 
-        gr_ = split(li2)
+        gr_ = string.(split(li2))
 
         n_gr2 = length(gr_)
 
