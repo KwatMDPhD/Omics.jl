@@ -50,16 +50,18 @@ function read(gz)
 
         li = readline(io; keep = false)
 
-        if startswith(li, '^')
+        if li[1] == '^'
 
-            bl, th = _sp(view(li, 2:length(li)), de1)
+            bl, th = _sp(view(li, 2:lastindex(li)), de1)
 
             bl_th[bl][th] = OrderedDict{String, String}()
 
             be = "!$(lowercase(bl))_table_begin"
 
-        elseif startswith(li, be)
+        elseif li == be
 
+            # TODO: Understand why `view` is slower.
+            #ta = readuntil(io, "$(view(be, 1:(lastindex(be) - 5)))end\n")
             ta = readuntil(io, "$(be[1:(end - 5)])end\n")
 
             n_ro = count('\n', ta)
@@ -140,7 +142,7 @@ function tabulate(sa_ke_va)
 
     for (id, ch) in enumerate(ch_)
 
-        ch_[id] = titlecase(view(ch, 5:length(ch)))
+        ch_[id] = titlecase(view(ch, 5:lastindex(ch)))
 
     end
 
@@ -164,7 +166,7 @@ function _fe(ke_va)
 
     end
 
-    it = parse(Int, view(pl, 4:length(pl)))
+    it = parse(Int, view(pl, 4:lastindex(pl)))
 
     co = ""
 
@@ -230,7 +232,7 @@ function _fe(ke_va)
 
     fec_ = Vector{String}()
 
-    for sp_ in view(sp___, 2:length(sp___))
+    for sp_ in view(sp___, 2:lastindex(sp___))
 
         push!(fe_, sp_[id])
 
@@ -246,7 +248,7 @@ function tabulate(ke_va, sa_ke_va)
 
     fe_, fec_ = _fe(ke_va)
 
-    fe_x_sa_x_fl = fill(NaN, length(fe_), length(sa_ke_va))
+    fe_x_sa_x_fl = fill(NaN, lastindex(fe_), length(sa_ke_va))
 
     fe_id = Dict(fe => id for (id, fe) in enumerate(fe_))
 
@@ -258,7 +260,7 @@ function tabulate(ke_va, sa_ke_va)
 
             idv = findfirst(==("VALUE"), sp___[1])
 
-            for sp_ in view(sp___, 2:length(sp___))
+            for sp_ in view(sp___, 2:lastindex(sp___))
 
                 fe_x_sa_x_fl[fe_id[sp_[1]], id] = parse(Float64, sp_[idv])
 
