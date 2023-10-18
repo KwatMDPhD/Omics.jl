@@ -145,7 +145,7 @@ function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, l
 
     @info "\"$naf\" colors can range from $fei to $fea."
 
-    n_ro = length(fe_) + 2
+    n_ro = lastindex(fe_) + 2
 
     th = 1 / n_ro
 
@@ -210,7 +210,7 @@ function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, l
                     axis,
                     Dict(
                         "automargin" => true,
-                        "title" => Dict("text" => BioLab.String.count(length(sa_), nas)),
+                        "title" => Dict("text" => BioLab.String.count(lastindex(sa_), nas)),
                     ),
                 ),
                 "annotations" => _an(1 - th2 * 3, true, th, fe_, fe_x_st_x_fl),
