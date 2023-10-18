@@ -14,11 +14,11 @@ const CO = BioLab.Color._co(HE_)
 
 # ---- #
 
-const N = length(CO)
+const N = lastindex(CO)
 
 # ---- #
 
-@test N === length(HE_)
+@test N === lastindex(HE_)
 
 # ---- #
 
@@ -42,7 +42,7 @@ for co in (
 
     BioLab.Plot.plot_heat_map(
         "",
-        Matrix(reshape(1:length(co), 1, :));
+        Matrix(reshape(1:lastindex(co), 1, :));
         text = [BioLab.Color._he(rg) for _ in 1:1, rg in co.colors],
         co,
     )
@@ -145,8 +145,8 @@ end
 
 # ---- #
 
-# 607.244 ns (25 allocations: 1.29 KiB)
-@btime BioLab.Color.color(ID_, CO);
+# 615.420 ns (25 allocations: 1.29 KiB)
+#@btime BioLab.Color.color(ID_, CO);
 
 # ---- #
 
@@ -164,7 +164,7 @@ for (he_, fr_) in (
 
     co = BioLab.Color._co(he_)
 
-    if isone(length(he_))
+    if isone(lastindex(he_))
 
         push!(he_, he_[1])
 
@@ -172,12 +172,12 @@ for (he_, fr_) in (
 
     @test BioLab.Color.fractionate(co) == collect(zip(fr_, he_))
 
-    # 337.521 ns (11 allocations: 552 bytes)
-    # 475.210 ns (17 allocations: 720 bytes)
-    # 646.085 ns (24 allocations: 1016 bytes)
-    # 794.737 ns (31 allocations: 1.25 KiB)
-    # 944.429 ns (38 allocations: 1.54 KiB)
-    # 1.100 μs (45 allocations: 1.80 KiB)
-    @btime BioLab.Color.fractionate($co)
+    # 339.673 ns (11 allocations: 552 bytes)
+    # 461.526 ns (17 allocations: 720 bytes)
+    # 638.554 ns (24 allocations: 1016 bytes)
+    # 802.648 ns (31 allocations: 1.25 KiB)
+    # 949.261 ns (38 allocations: 1.54 KiB)
+    # 1.104 μs (45 allocations: 1.80 KiB)
+    #@btime BioLab.Color.fractionate($co)
 
 end

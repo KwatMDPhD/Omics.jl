@@ -64,7 +64,7 @@ end
 
 function _nu(an_)
 
-    length(unique(an_))
+    lastindex(unique(an_))
 
 end
 
@@ -126,7 +126,7 @@ function fractionate(co)
 
     he_ = _he.(co)
 
-    n = length(he_)
+    n = lastindex(he_)
 
     if isone(n)
 
