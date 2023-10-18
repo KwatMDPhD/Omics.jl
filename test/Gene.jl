@@ -72,16 +72,16 @@ const EN_GE = BioLab.Gene.map_ensembl(EN)
 
 # ---- #
 
-for (ke, va) in (("GPI-214", "GPI"), ("ENST00000303227", "GLOD5"), ("ENST00000592956.1", "SYT5"))
+for (en, ge) in (("GPI-214", "GPI"), ("ENST00000303227", "GLOD5"), ("ENST00000592956.1", "SYT5"))
 
-    @test EN_GE[ke] === va
+    @test EN_GE[en] === ge
 
 end
 
 # ---- #
 
-# 2.187 s (36735645 allocations: 2.17 GiB)
-@btime BioLab.Gene.map_ensembl(EN);
+# 2.155 s (36735645 allocations: 2.17 GiB)
+#@btime BioLab.Gene.map_ensembl(EN);
 
 # ---- #
 
@@ -98,7 +98,7 @@ const PR_IO_AN = BioLab.Gene.map_uniprot(UN)
 # ---- #
 
 # 55.693 ms (1632064 allocations: 94.68 MiB)
-@btime BioLab.Gene.map_uniprot(UN);
+#@btime BioLab.Gene.map_uniprot(UN);
 
 # ---- #
 
@@ -132,4 +132,4 @@ disable_logging(Info)
 # ---- #
 
 # 45.327 ms (0 allocations: 0 bytes)
-@btime BioLab.Gene.rename!(FEG_, EN_GE);
+#@btime BioLab.Gene.rename!(FEG_, EN_GE);

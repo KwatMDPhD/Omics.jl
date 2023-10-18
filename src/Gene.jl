@@ -135,7 +135,7 @@ function rename!(fe_, fe_fe2)
 
     end
 
-    @info "Renamed $n / $(length(fe_))."
+    @info "Renamed $n / $(lastindex(fe_))."
 
 end
 
