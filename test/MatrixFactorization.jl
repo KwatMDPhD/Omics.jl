@@ -48,18 +48,18 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     BioLab.MatrixFactorization.write(di, mh2; naf = "Solved")
 
-    # 12.709 μs (64 allocations: 7.66 KiB)
-    # 2.097 μs (23 allocations: 2.78 KiB)
-    # 224.459 μs (128 allocations: 40.97 KiB)
-    # 3.161 μs (23 allocations: 4.33 KiB)
-    # 2.871 s (4331 allocations: 221.99 MiB)
-    # 133.875 μs (24 allocations: 172.08 KiB)
-    # 7.707 s (12949 allocations: 363.06 MiB)
-    # 258.667 μs (27 allocations: 329.34 KiB)
+    # 9.417 μs (58 allocations: 6.95 KiB)
+    # 2.296 μs (23 allocations: 2.78 KiB)
+    # 224.125 μs (128 allocations: 40.97 KiB)
+    # 3.448 μs (23 allocations: 4.33 KiB)
+    # 2.898 s (4331 allocations: 221.99 MiB)
+    # 149.166 μs (24 allocations: 172.08 KiB)
+    # 7.837 s (12949 allocations: 363.06 MiB)
+    # 302.458 μs (27 allocations: 329.34 KiB)
 
-    @btime BioLab.MatrixFactorization.factorize($ma, $n_fa)
+    #@btime BioLab.MatrixFactorization.factorize($ma, $n_fa)
 
-    @btime BioLab.MatrixFactorization.solve_h($ma, $mw)
+    #@btime BioLab.MatrixFactorization.solve_h($ma, $mw)
 
 end
 

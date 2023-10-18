@@ -84,7 +84,7 @@ function write(
 
         ma = ma[id_, :]
 
-        ro_ = view(ro_, id_)
+        ro_ = ro_[id_]
 
         ea = eachrow
 
@@ -96,7 +96,7 @@ function write(
 
         ma = ma[:, id_]
 
-        co_ = view(co_, id_)
+        co_ = co_[id_]
 
         ea = eachcol
 
