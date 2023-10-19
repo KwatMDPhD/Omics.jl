@@ -1,14 +1,14 @@
 module Number
 
-function is_negative(fl::AbstractFloat)
+function is_negative(it)
 
-    fl < 0 || fl === -0.0
+    it < 0
 
 end
 
-function is_negative(it::Integer)
+function is_negative(fl::AbstractFloat)
 
-    it < 0
+    fl < 0 || fl === -0.0
 
 end
 

@@ -6,18 +6,6 @@ using BioLab
 
 # ---- #
 
-function make_directory_layout(title_text)
-
-    di = joinpath(BioLab.TE, BioLab.Path.clean(title_text))
-
-    BioLab.Path.remake_directory(di)
-
-    di, Dict("title" => Dict("text" => title_text))
-
-end
-
-# ---- #
-
 function benchmark(ho, n_fe, n_sa)
 
     if ho == "f12"
@@ -54,6 +42,18 @@ BioLab.Match.make(BioLab.TE, benchmark("f12", 1, 2)...)
 for ex in ("tsv", "html")
 
     @test isfile(joinpath(BioLab.TE, "feature_x_statistic_x_number.$ex"))
+
+end
+
+# ---- #
+
+function make_directory_layout(title_text)
+
+    di = joinpath(BioLab.TE, BioLab.Path.clean(title_text))
+
+    BioLab.Path.remake_directory(di)
+
+    di, Dict("title" => Dict("text" => title_text))
 
 end
 

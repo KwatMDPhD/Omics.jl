@@ -14,14 +14,6 @@ end
 
 # ---- #
 
-function get_density(nu_)
-
-    BioLab.Information.kde(nu_).density
-
-end
-
-# ---- #
-
 const N = 10
 
 # ---- #
@@ -31,6 +23,14 @@ const NU1_ = randn(N)
 # ---- #
 
 const NU2_ = randn(N)
+
+# ---- #
+
+function get_density(nu_)
+
+    BioLab.Information.kde(nu_).density
+
+end
 
 # ---- #
 
