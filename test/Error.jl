@@ -91,7 +91,7 @@ for (fu, an_) in (
 
     end
 
-    @test !BioLab.Error.@is BioLab.Error.error_bad(fu, Vector{Any}())
+    @test !BioLab.Error.@is BioLab.Error.error_bad(fu, Any[])
 
 end
 

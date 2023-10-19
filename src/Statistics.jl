@@ -50,9 +50,9 @@ end
 
 function _si(fe_x_id_x_ra, nef_, pof_)
 
-    ne_ = Vector{Float64}()
+    ne_ = Float64[]
 
-    po_ = Vector{Float64}()
+    po_ = Float64[]
 
     for id2 in 1:size(fe_x_id_x_ra, 2), id1 in 1:size(fe_x_id_x_ra, 1)
 
@@ -92,7 +92,7 @@ function get_p_value(nu_, idn_, idp_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothi
 
     if isempty(idn_)
 
-        nep_, nea_ = Vector{Float64}(), Vector{Float64}()
+        nep_, nea_ = Float64[], Float64[]
 
     else
 
@@ -102,7 +102,7 @@ function get_p_value(nu_, idn_, idp_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothi
 
     if isempty(idp_)
 
-        pop_, poa_ = Vector{Float64}(), Vector{Float64}()
+        pop_, poa_ = Float64[], Float64[]
 
     else
 

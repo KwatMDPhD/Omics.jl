@@ -8,17 +8,17 @@ function read(sa_di)
 
     n_fe = 0
 
-    sa_ = Vector{String}()
+    sa_ = String[]
 
-    ba_ = Vector{String}()
+    ba_ = String[]
 
-    idf_ = Vector{Int}()
+    idf_ = Int[]
 
-    idb_ = Vector{Int}()
+    idb_ = Int[]
 
     n_ba = 0
 
-    co_ = Vector{Int}()
+    co_ = Int[]
 
     for (sy, di) in zip(keys(sa_di), sa_di)
 

@@ -120,7 +120,7 @@ function tabulate(sa_ke_va)
 
     ke_va__ = values(sa_ke_va)
 
-    ch_ = Vector{String}()
+    ch_ = String[]
 
     for ke_va in ke_va__
 
@@ -228,9 +228,9 @@ function _fe(ke_va)
 
     idc = findfirst(==(co), sp1_)
 
-    fe_ = Vector{String}()
+    fe_ = String[]
 
-    fec_ = Vector{String}()
+    fec_ = String[]
 
     for sp_ in view(sp___, 2:lastindex(sp___))
 

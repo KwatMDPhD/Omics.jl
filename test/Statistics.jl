@@ -112,7 +112,7 @@ const NU_ = [-1, -0.0, 0, 1]
 
 # ---- #
 
-const EM_ = Vector{Float64}()
+const EM_ = Float64[]
 
 # ---- #
 

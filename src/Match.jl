@@ -73,7 +73,7 @@ end
 
 function _an(y, la, th, fe_, fe_x_st_x_fl)
 
-    annotations = Vector{Dict{String, Any}}()
+    annotations = Dict{String, Any}[]
 
     if la
 

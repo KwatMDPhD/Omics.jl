@@ -19,7 +19,7 @@ const NAR = "Row Name"
 
 # ---- #
 
-@test BioLab.DataFrame.make(NAR, "Row 1", Vector{String}(), Matrix(undef, 0, 0)) ==
+@test BioLab.DataFrame.make(NAR, "Row 1", String[], Matrix(undef, 0, 0)) ==
       DataFrame(NAR => "Row 1")
 
 # ---- #

@@ -34,7 +34,7 @@ end
 
 function read(di; ig_ = (), ke_ = (), ke_ar...)
 
-    pa_ = Vector{String}()
+    pa_ = String[]
 
     for pa in readdir(di; ke_ar...)
 

@@ -4,7 +4,7 @@ using BioLab
 
 # ---- #
 
-const ID_ = Vector{Int}()
+const ID_ = Int[]
 
 # ---- #
 
@@ -73,7 +73,7 @@ for (an_, n_ex, re) in (
     (IT_, 1, [10, 60]),
     (IT_, 2, [10, 20, 50, 60]),
     (IT_, lastindex(IT_) + 1, sort(IT_)),
-    (CH_, 0, Vector{Char}()),
+    (CH_, 0, Char[]),
     (CH_, 1, ['a', 'z']),
     (CH_, 2, ['a', 'b', 'y', 'z']),
     (CH_, lastindex(CH_) + 1, sort(CH_)),

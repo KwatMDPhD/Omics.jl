@@ -16,7 +16,7 @@ function collapse(fu, ty, ro_, ma)
 
         if !haskey(ro_id_, ro)
 
-            ro_id_[ro] = Vector{Int}()
+            ro_id_[ro] = Int[]
 
         end
 

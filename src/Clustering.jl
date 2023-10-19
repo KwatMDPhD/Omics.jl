@@ -22,7 +22,7 @@ end
 
 function order(co_, ma, fu = _FU, linkage = _LI)
 
-    id_ = Vector{Int}()
+    id_ = Int[]
 
     for co in sort!(unique(co_))
 

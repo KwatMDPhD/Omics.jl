@@ -154,8 +154,8 @@ const GRC_ = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2]
 # ---- #
 
 for (grr_, grc_) in (
-    (GRR_, Vector{Int}()),
-    (Vector{Int}(), GRC_),
+    (GRR_, Int[]),
+    (Int[], GRC_),
     (GRR_, GRC_),
     ((id -> "Row Group $id").(GRR_), (id -> "Column Group $id").(GRC_)),
 )

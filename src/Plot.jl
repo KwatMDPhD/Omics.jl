@@ -32,7 +32,7 @@ end
 
 function _te(an___)
 
-    [Vector{String}() for _ in an___]
+    [String[] for _ in an___]
 
 end
 
@@ -219,7 +219,7 @@ function _it(fl_::AbstractArray{<:AbstractFloat})
 
 end
 
-function _gr(it_::AbstractVector{<:Integer}, an_, ma, ticktext = Vector{String}())
+function _gr(it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
 
     id_ = BioLab.Clustering.order(it_, ma)
 
@@ -261,8 +261,8 @@ function plot_heat_map(
     nar = "Row",
     nac = "Column",
     co = BioLab.Color.pick_color_scheme(z),
-    grr_ = Vector{Int}(),
-    grc_ = Vector{Int}(),
+    grr_ = Int[],
+    grc_ = Int[],
     layout = _make_element,
     ke_ar...,
 )
@@ -279,7 +279,7 @@ function plot_heat_map(
 
     colorbarx1 = colorbarx
 
-    data = Vector{Dict{String, Any}}()
+    data = Dict{String, Any}[]
 
     dx = 0.08
 
