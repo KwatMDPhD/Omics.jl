@@ -35,7 +35,7 @@ for (an___, re) in (
     # 23.720 ns (1 allocation: 80 bytes)
     # 33.492 ns (1 allocation: 96 bytes)
     # 63.733 ns (2 allocations: 176 bytes)
-    @btime BioLab.Matrix.make($an___)
+    #@btime BioLab.Matrix.make($an___)
 
 end
 
@@ -49,7 +49,7 @@ const MA = [
 
 # ---- #
 
-disable_logging(Info)
+#disable_logging(Info)
 
 # ---- #
 
@@ -74,9 +74,9 @@ for (ro_, ro2_, ma2) in (
 
         @test BioLab.Matrix.collapse(mean, Float64, ro_, MA) == (ro2_, ma2)
 
-        # 714.072 ns (19 allocations: 1.28 KiB)
-        # 617.494 ns (15 allocations: 1.08 KiB)
-        @btime BioLab.Matrix.collapse(mean, Float64, $ro_, MA)
+        # 745.798 ns (19 allocations: 1.28 KiB)
+        # 647.755 ns (15 allocations: 1.08 KiB)
+        #@btime BioLab.Matrix.collapse(mean, Float64, $ro_, MA)
 
     end
 
@@ -88,15 +88,15 @@ for n in (100, 1000, 10000, 20000)
 
     seed!(20230920)
 
-    # 29.250 μs (375 allocations: 127.28 KiB)
-    # 2.965 ms (1797 allocations: 11.92 MiB)
-    # 569.893 ms (2770 allocations: 815.50 MiB)
-    # 2.389 s (3103 allocations: 3.08 GiB)
-    @btime BioLab.Matrix.collapse(
-        mean,
-        Float64,
-        $([join(rand('A':'G', 3)) for _ in 1:n]),
-        $(rand(n, n)),
-    )
+    # 28.958 μs (375 allocations: 127.28 KiB)
+    # 3.111 ms (1797 allocations: 11.92 MiB)
+    # 578.509 ms (2770 allocations: 815.50 MiB)
+    # 2.380 s (3103 allocations: 3.08 GiB)
+    #@btime BioLab.Matrix.collapse(
+    #    mean,
+    #    Float64,
+    #    $([join(rand('A':'G', 3)) for _ in 1:n]),
+    #    $(rand(n, n)),
+    #)
 
 end

@@ -30,7 +30,7 @@ for jl in MO_
 
     li = readline(joinpath(SR, jl))
 
-    @test view(jl, 1:(lastindex(jl) - 3)) === view(li, 8:lastindex(li))
+    @test view(jl, 1:(lastindex(jl) - 3)) == view(li, 8:lastindex(li))
 
 end
 

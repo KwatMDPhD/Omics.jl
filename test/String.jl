@@ -134,8 +134,8 @@ end
 
 # ---- #
 
-# 1.675 μs (5 allocations: 97.91 KiB)
-@btime BioLab.String.limit($(repeat('a', 100001)), 100000);
+# 1.667 μs (5 allocations: 97.91 KiB)
+#@btime BioLab.String.limit($(repeat('a', 100001)), 100000);
 
 # ---- #
 

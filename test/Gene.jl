@@ -127,7 +127,7 @@ BioLab.Gene.rename!(FEG_, EN_GE)
 
 # ---- #
 
-disable_logging(Info)
+#disable_logging(Info)
 
 # ---- #
 

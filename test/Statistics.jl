@@ -99,9 +99,9 @@ for (n_si, re) in ((0, 0.1), (1, 0.1), (2, 0.2))
 
     @test BioLab.Statistics.get_p_value(n_si, N_RA) === re
 
+    # 1.500 ns (0 allocations: 0 bytes)
+    # 1.500 ns (0 allocations: 0 bytes)
     # 1.458 ns (0 allocations: 0 bytes)
-    # 1.500 ns (0 allocations: 0 bytes)
-    # 1.500 ns (0 allocations: 0 bytes)
     #@btime BioLab.Statistics.get_p_value($n_si, N_RA)
 
 end
@@ -126,7 +126,7 @@ for fu in (<=, >=)
 
     # 162.996 ns (6 allocations: 512 bytes)
     # 162.854 ns (6 allocations: 512 bytes)
-    @btime BioLab.Statistics.get_p_value($fu, NU_, EM_)
+    #@btime BioLab.Statistics.get_p_value($fu, NU_, EM_)
 
 end
 
@@ -146,7 +146,7 @@ for (fu, re) in ((<=, (REP1_, REA1_)), (>=, (reverse(REP1_), reverse(REA1_))))
 
     # 178.959 ns (6 allocations: 512 bytes)
     # 185.096 ns (6 allocations: 512 bytes)
-    @btime BioLab.Statistics.get_p_value($fu, NU_, RA_)
+    #@btime BioLab.Statistics.get_p_value($fu, NU_, RA_)
 
 end
 
@@ -173,5 +173,5 @@ const REP2_, REA2_ = [0.75, 1], [1.0, 1]
 
 # ---- #
 
-# 475.856 ns (17 allocations: 1.27 KiB)
+# 447.601 ns (17 allocations: 1.27 KiB)
 #@btime BioLab.Statistics.get_p_value(NU_, IDN_, IDP_, FE_X_ID_X_RA);
