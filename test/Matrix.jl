@@ -74,8 +74,8 @@ for (ro_, ro2_, ma2) in (
 
         @test BioLab.Matrix.collapse(mean, Float64, ro_, MA) == (ro2_, ma2)
 
-        # 745.798 ns (19 allocations: 1.28 KiB)
-        # 647.755 ns (15 allocations: 1.08 KiB)
+        # 742.211 ns (19 allocations: 1.28 KiB)
+        # 650.307 ns (15 allocations: 1.08 KiB)
         #@btime BioLab.Matrix.collapse(mean, Float64, $ro_, MA)
 
     end
@@ -88,10 +88,10 @@ for n in (100, 1000, 10000, 20000)
 
     seed!(20230920)
 
-    # 28.958 μs (375 allocations: 127.28 KiB)
-    # 3.111 ms (1797 allocations: 11.92 MiB)
-    # 578.509 ms (2770 allocations: 815.50 MiB)
-    # 2.380 s (3103 allocations: 3.08 GiB)
+    # 29.041 μs (375 allocations: 127.28 KiB)
+    # 2.913 ms (1797 allocations: 11.92 MiB)
+    # 576.514 ms (2770 allocations: 815.50 MiB)
+    # 2.391 s (3103 allocations: 3.08 GiB)
     #@btime BioLab.Matrix.collapse(
     #    mean,
     #    Float64,

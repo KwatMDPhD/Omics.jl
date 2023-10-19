@@ -67,7 +67,7 @@ const _ANNOTATION = Dict(
 
 function _ax(id)
 
-    0.977 + id * 0.088
+    0.977 + 0.088id
 
 end
 
@@ -197,15 +197,14 @@ function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, l
         BioLab.Dict.merge(
             Dict(
                 "margin" => Dict("l" => 220, "r" => 220),
-                "height" => max(640, 40 * n_ro),
+                "height" => max(640, 40n_ro),
                 "width" => BioLab.HTML.WI,
                 "title" => Dict(
                     "text" => naf,
-                    "font" => Dict("family" => _FONT_FAMILY, "size" => _FONT_SIZE * 2),
+                    "font" => Dict("family" => _FONT_FAMILY, "size" => 2_FONT_SIZE),
                 ),
                 "yaxis2" => merge(axis, Dict("domain" => (1 - th, 1))),
-                "yaxis" =>
-                    merge(axis, Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed")),
+                "yaxis" => merge(axis, Dict("domain" => (0, 1 - 2th), "autorange" => "reversed")),
                 "xaxis" => merge(
                     axis,
                     Dict(
@@ -213,7 +212,7 @@ function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, l
                         "title" => Dict("text" => BioLab.String.count(lastindex(sa_), nas)),
                     ),
                 ),
-                "annotations" => _an(1 - th2 * 3, true, th, fe_, fe_x_st_x_fl),
+                "annotations" => _an(1 - 3th2, true, th, fe_, fe_x_st_x_fl),
             ),
             layout,
         ),
@@ -272,7 +271,7 @@ function make(
 
         id_ = 1:n_sa
 
-        n_sm = round(Int, n_sa * 0.632)
+        n_sm = round(Int, 0.632n_sa)
 
         ids_ = Vector{Int}(undef, n_sm)
 

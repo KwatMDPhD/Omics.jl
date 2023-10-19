@@ -46,7 +46,7 @@ function make_vector_mirror_deep(n, ze = true)
 
     ne_, po_ = _mi(n)
 
-    _co(ne_ * 2, ze, po_)
+    _co(2ne_, ze, po_)
 
 end
 
@@ -54,11 +54,11 @@ function make_vector_mirror_wide(n, ze = true)
 
     ne_, po_ = _mi(n)
 
-    new_ = Vector{Float64}(undef, n * 2 - 1)
+    new_ = Vector{Float64}(undef, 2n - 1)
 
     for (id, ne) in enumerate(ne_)
 
-        id2 = id * 2
+        id2 = 2id
 
         new_[id2 - 1] = ne
 

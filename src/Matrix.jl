@@ -44,7 +44,7 @@ function collapse(fu, ty, ro_, ma)
 
         ro2_[id2] = ro
 
-        if isone(length(id_))
+        if isone(lastindex(id_))
 
             an_ = view(ma, id_[1], :)
 

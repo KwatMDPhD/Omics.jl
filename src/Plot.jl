@@ -185,7 +185,7 @@ function plot_histogram(
             ],
         )
 
-        dm = min(n * 0.04, 0.5)
+        dm = min(0.04n, 0.5)
 
         layout["yaxis"] = Dict("domain" => (0, dm), "zeroline" => false, "tickvals" => ())
 
@@ -249,8 +249,8 @@ end
 function plot_heat_map(
     ht,
     z;
-    y = (id -> "$id *").(1:size(z, 1)),
-    x = (id -> "* $id").(1:size(z, 2)),
+    y = (id -> "$id ▶︎").(1:size(z, 1)),
+    x = (id -> "▲ $id").(1:size(z, 2)),
     text = z,
     nar = "Row",
     nac = "Column",

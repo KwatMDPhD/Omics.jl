@@ -73,7 +73,7 @@ end
 
 # ---- #
 
-for (ze, re) in ((false, vcat(view(REN, 1:(N - 1)) * 2, REP)), (true, vcat(REN * 2, REP)))
+for (ze, re) in ((false, vcat(2view(REN, 1:(N - 1)), REP)), (true, vcat(2REN, REP)))
 
     seed!(20230827)
 

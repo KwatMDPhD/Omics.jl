@@ -16,7 +16,7 @@ end
 
 function get_margin_of_error(sa_, co = 0.95)
 
-    get_quantile(0.5 + co / 2) * std(sa_) / sqrt(lastindex(sa_))
+    get_quantile(0.5 + 0.5co) * std(sa_) / sqrt(lastindex(sa_))
 
 end
 
