@@ -38,9 +38,9 @@ function read(sa_di)
                 1,
             ]
 
-        n_saf = length(saf_)
+        n_saf = lastindex(saf_)
 
-        n_sab = length(sab_)
+        n_sab = lastindex(sab_)
 
         index_x_featurebarcodecount_x_it =
             BioLab.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3)

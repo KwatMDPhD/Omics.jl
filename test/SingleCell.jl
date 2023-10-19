@@ -23,11 +23,11 @@ const FE_, BA_, FE_X_BA_X_CO, SA_ = BioLab.SingleCell.read(SA_DI)
 
 # ---- #
 
-@test (length(FE_), length(BA_)) === size(FE_X_BA_X_CO) === (56858, 5158)
+@test (lastindex(FE_), lastindex(BA_)) === size(FE_X_BA_X_CO) === (56858, 5158)
 
 # ---- #
 
-@test length(BA_) === length(SA_)
+@test lastindex(BA_) === lastindex(SA_)
 
 # ---- #
 
@@ -35,9 +35,5 @@ disable_logging(Warn)
 
 # ---- #
 
-# 7.164 s (48442102 allocations: 7.47 GiB)
-@btime BioLab.SingleCell.read(SA_DI);
-
-# ---- #
-
-disable_logging(Debug)
+# 7.158 s (48442102 allocations: 7.47 GiB)
+#@btime BioLab.SingleCell.read(SA_DI);
