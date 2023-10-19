@@ -44,7 +44,7 @@ function normalize_with_logistic!(nu_)
 
 end
 
-function _no!(fu, nu_)
+function _update!(fu, nu_)
 
     for (id, nu) in enumerate(fu(nu_))
 
@@ -56,19 +56,19 @@ end
 
 function normalize_with_1223!(nu_)
 
-    _no!(denserank, nu_)
+    _update!(denserank, nu_)
 
 end
 
 function normalize_with_1224!(nu_)
 
-    _no!(competerank, nu_)
+    _update!(competerank, nu_)
 
 end
 
 function normalize_with_125254!(nu_)
 
-    _no!(tiedrank, nu_)
+    _update!(tiedrank, nu_)
 
 end
 

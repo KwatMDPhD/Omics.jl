@@ -108,7 +108,7 @@ const SA = SM_[1]
 # ---- #
 
 # 11.490 ms (107248 allocations: 16.70 MiB)
-#@btime BioLab.GEO._di($(SA_KE_VA[SA]["_ta"]));
+#@btime BioLab.GEO._dice($(SA_KE_VA[SA]["_ta"]));
 
 # ---- #
 

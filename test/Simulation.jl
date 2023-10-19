@@ -22,12 +22,12 @@ seed!(20230827)
 
 # ---- #
 
-@test BioLab.Simulation._mi(N) == (REN, REP)
+@test BioLab.Simulation._mirror(N) == (REN, REP)
 
 # ---- #
 
 # 85.753 ns (2 allocations: 160 bytes)
-#@btime BioLab.Simulation._mi(N);
+#@btime BioLab.Simulation._mirror(N);
 
 # ---- #
 
@@ -49,11 +49,11 @@ const NE_ = reverse!(-PO_)
 
 for (ze, re) in ((false, vcat(view(NE_, 1:(NC - 1)), PO_)), (true, vcat(NE_, PO_)))
 
-    @test BioLab.Simulation._co(NE_, ze, PO_) == re
+    @test BioLab.Simulation._concatenate(NE_, ze, PO_) == re
 
     # 565.304 ns (2 allocations: 23.69 KiB)
     # 559.394 ns (2 allocations: 23.69 KiB)
-    #@btime BioLab.Simulation._co(NE_, $ze, PO_)
+    #@btime BioLab.Simulation._concatenate(NE_, $ze, PO_)
 
 end
 

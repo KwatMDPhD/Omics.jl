@@ -18,25 +18,25 @@ function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}
 
 end
 
-function _x(an___)
+function _initialize_x(an___)
 
     eachindex.(an___)
 
 end
 
-function _te(an___)
+function _initialize_text(an___)
 
     (_ -> String[]).(eachindex(an___))
 
 end
 
-function _na(an___)
+function _initialize_name(an___)
 
     (id -> "Name $id").(eachindex(an___))
 
 end
 
-function _ma(an___)
+function _initialize_marker(an___)
 
     (he -> Dict("color" => he)).(BioLab.Color.color(eachindex(an___)))
 
@@ -64,11 +64,11 @@ const _AX = Dict("showgrid" => false)
 function plot_scatter(
     ht,
     y_,
-    x_ = _x(y_);
-    text_ = _te(y_),
-    name_ = _na(y_),
+    x_ = _initialize_x(y_);
+    text_ = _initialize_text(y_),
+    name_ = _initialize_name(y_),
     mode_ = (y -> ifelse(lastindex(y) < 1000, "markers+lines", "lines")).(y_),
-    marker_ = _ma(y_),
+    marker_ = _initialize_marker(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -94,9 +94,9 @@ end
 function plot_bar(
     ht,
     y_,
-    x_ = _x(y_);
-    name_ = _na(y_),
-    marker_ = _ma(y_),
+    x_ = _initialize_x(y_);
+    name_ = _initialize_name(y_),
+    marker_ = _initialize_marker(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -122,9 +122,9 @@ end
 function plot_histogram(
     ht,
     x_,
-    text_ = _te(x_);
-    name_ = _na(x_),
-    marker_ = _ma(x_),
+    text_ = _initialize_text(x_);
+    name_ = _initialize_name(x_),
+    marker_ = _initialize_marker(x_),
     histnorm = "",
     xbins_size = 0,
     rug_marker_size = ifelse(all(x -> lastindex(x) < 100000, x_), 16, 0),
@@ -202,23 +202,7 @@ function plot_histogram(
 
 end
 
-function _it(it_)
-
-    mi, ma = BioLab.Collection.get_minimum_maximum(it_)
-
-    range(mi, ma)
-
-end
-
-function _it(fl_::AbstractVecOrMat{<:AbstractFloat})
-
-    mi, ma = BioLab.Collection.get_minimum_maximum(fl_)
-
-    range(mi, ma, 8)
-
-end
-
-function _gr(it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
+function _group(it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
 
     id_ = BioLab.Clustering.order(it_, ma)
 
@@ -226,17 +210,17 @@ function _gr(it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
 
 end
 
-function _gr(st_, an_, ma)
+function _group(st_, an_, ma)
 
     un_ = sort!(unique(st_))
 
     st_id = Dict(st => id for (id, st) in enumerate(un_))
 
-    _gr([st_id[st] for st in st_], an_, ma, un_)
+    _group([st_id[st] for st in st_], an_, ma, un_)
 
 end
 
-function _he!(ke_va, it_, colorbarx, ticktext)
+function _make_group_heat_map!(ke_va, it_, colorbarx, ticktext)
 
     ke_va["type"] = "heatmap"
 
@@ -284,13 +268,13 @@ function plot_heat_map(
 
     if !isempty(grr_)
 
-        gr_, y, z, ticktext = _gr(grr_, y, permutedims(z))
+        gr_, y, z, ticktext = _group(grr_, y, permutedims(z))
 
         z = permutedims(z)
 
         push!(
             data,
-            _he!(
+            _make_group_heat_map!(
                 Dict(
                     "name" => "$nar Group",
                     "xaxis" => "x2",
@@ -307,17 +291,27 @@ function plot_heat_map(
 
     if !isempty(grc_)
 
-        gr_, x, z, ticktext = _gr(grc_, x, z)
+        gr_, x, z, ticktext = _group(grc_, x, z)
 
         push!(
             data,
-            _he!(
+            _make_group_heat_map!(
                 Dict("name" => "$nac Group", "yaxis" => "y2", "x" => x, "z" => [gr_]),
                 gr_,
                 colorbarx += dx,
                 ticktext,
             ),
         )
+
+    end
+
+    if eltype(z) <: AbstractFloat
+
+        length, step = 8, nothing
+
+    else
+
+        length, step = nothing, 1
 
     end
 
@@ -331,7 +325,14 @@ function plot_heat_map(
             "z" => collect(eachrow(z)),
             "text" => collect(eachrow(text)),
             "colorscale" => BioLab.Color.fractionate(co),
-            "colorbar" => merge(COLORBAR, Dict("x" => colorbarx1, "tickvals" => _it(z))),
+            "colorbar" => merge(
+                COLORBAR,
+                Dict(
+                    "x" => colorbarx1,
+                    "tickvals" =>
+                        range(BioLab.Collection.get_minimum_maximum(z)...; length, step),
+                ),
+            ),
         ),
     )
 
@@ -369,7 +370,7 @@ function plot_heat_map(
 
 end
 
-function _ti(an_)
+function _tie(an_)
 
     vcat(an_, an_[1])
 
@@ -379,7 +380,7 @@ function plot_radar(
     ht,
     ra_,
     an_;
-    name_ = _na(ra_),
+    name_ = _initialize_name(ra_),
     line_color_ = BioLab.Color.color(eachindex(ra_)),
     fillcolor_ = line_color_,
     radialaxis_range = (0, maximum(vcat(ra_...))),
@@ -395,8 +396,8 @@ function plot_radar(
             Dict(
                 "type" => "scatterpolar",
                 "name" => name_[id],
-                "r" => _ti(ra_[id]),
-                "theta" => _ti(an_[id]),
+                "r" => _tie(ra_[id]),
+                "theta" => _tie(an_[id]),
                 "marker" => Dict("size" => 4.8, "color" => line_color_[id]),
                 "line" => Dict(
                     "shape" => "spline",

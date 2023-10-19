@@ -48,7 +48,7 @@ end
 
 # TODO: Factor in the outer loop.
 
-function _si(fe_x_id_x_ra, nef_, pof_)
+function _separate(fe_x_id_x_ra, nef_, pof_)
 
     ne_ = Float64[]
 
@@ -88,7 +88,7 @@ end
 
 function get_p_value(nu_, idn_, idp_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothing)
 
-    ne_, po_ = _si(fe_x_id_x_ra, nef_, pof_)
+    ne_, po_ = _separate(fe_x_id_x_ra, nef_, pof_)
 
     if isempty(idn_)
 

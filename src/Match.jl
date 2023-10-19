@@ -12,19 +12,19 @@ using StatsBase: sample
 
 using ..BioLab
 
-function _co(id_, sa_, ta_, fe_x_sa_x_nu)
+function _order(id_, sa_, ta_, fe_x_sa_x_nu)
 
     sa_[id_], ta_[id_], fe_x_sa_x_nu[:, id_]
 
 end
 
-function _ra!(it, ::Real)
+function _align!(it, ::Real)
 
     BioLab.Collection.get_minimum_maximum(it)
 
 end
 
-function _ra!(fl_::AbstractVector{<:AbstractFloat}, st::Real)
+function _align!(fl_::AbstractVector{<:AbstractFloat}, st::Real)
 
     if allequal(fl_)
 
@@ -44,9 +44,9 @@ function _ra!(fl_::AbstractVector{<:AbstractFloat}, st::Real)
 
 end
 
-function _ra!(fe_x_sa_x_fl::AbstractMatrix{<:AbstractFloat}, st::Real)
+function _align!(fe_x_sa_x_fl::AbstractMatrix{<:AbstractFloat}, st::Real)
 
-    foreach(fl_ -> _ra!(fl_, st), eachrow(fe_x_sa_x_fl))
+    foreach(fl_ -> _align!(fl_, st), eachrow(fe_x_sa_x_fl))
 
     -st, st
 
@@ -65,13 +65,13 @@ const _ANNOTATION = Dict(
     "font" => Dict("family" => "Droid Serif"),
 )
 
-function _ax(id)
+function _get_x(id)
 
     0.977 + 0.088id
 
 end
 
-function _an(y, la, th, fe_, fe_x_st_x_fl)
+function _annotate(y, la, th, fe_, fe_x_st_x_fl)
 
     annotations = Dict{String, Any}[]
 
@@ -85,7 +85,7 @@ function _an(y, la, th, fe_, fe_x_st_x_fl)
                     _ANNOTATION,
                     Dict(
                         "y" => y,
-                        "x" => _ax(id),
+                        "x" => _get_x(id),
                         "text" => "<b>$text</b>",
                         "font" => Dict("size" => _FONT_SIZE),
                     ),
@@ -108,7 +108,12 @@ function _an(y, la, th, fe_, fe_x_st_x_fl)
                 annotations,
                 BioLab.Dict.merge(
                     _ANNOTATION,
-                    Dict("y" => y, "x" => _ax(id), "text" => text, "font" => Dict("size" => 13)),
+                    Dict(
+                        "y" => y,
+                        "x" => _get_x(id),
+                        "text" => text,
+                        "font" => Dict("size" => 13),
+                    ),
                 ),
             )
 
@@ -122,14 +127,14 @@ function _an(y, la, th, fe_, fe_x_st_x_fl)
 
 end
 
-function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, layout)
+function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, layout)
 
     if eltype(ta_) <: Integer
 
         @info "Clustering within groups"
 
         sa_, ta_, fe_x_sa_x_nu =
-            _co(BioLab.Clustering.order(ta_, fe_x_sa_x_nu), sa_, ta_, fe_x_sa_x_nu)
+            _order(BioLab.Clustering.order(ta_, fe_x_sa_x_nu), sa_, ta_, fe_x_sa_x_nu)
 
     end
 
@@ -137,9 +142,9 @@ function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, l
 
     fe_x_sa_x_nuc = copy(fe_x_sa_x_nu)
 
-    tai, taa = _ra!(tac_, st)
+    tai, taa = _align!(tac_, st)
 
-    fei, fea = _ra!(fe_x_sa_x_nuc, st)
+    fei, fea = _align!(fe_x_sa_x_nuc, st)
 
     @info "\"$nat\" colors can range from $tai to $taa."
 
@@ -212,7 +217,7 @@ function _pl(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, l
                         "title" => Dict("text" => BioLab.String.count(lastindex(sa_), nas)),
                     ),
                 ),
-                "annotations" => _an(1 - 3th2, true, th, fe_, fe_x_st_x_fl),
+                "annotations" => _annotate(1 - 3th2, true, th, fe_, fe_x_st_x_fl),
             ),
             layout,
         ),
@@ -243,7 +248,7 @@ function make(
 
     @info "Matching \"$nat\" and $(BioLab.String.count(n_fe, "\"$naf\"")) with `$fu`"
 
-    sa_, ta_, fe_x_sa_x_nu = _co(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
+    sa_, ta_, fe_x_sa_x_nu = _order(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
 
     @info "Calculating scores"
 
@@ -347,7 +352,7 @@ function make(
 
         id_ = reverse!(BioLab.Rank.get_extreme(sc_, n_ex))
 
-        _pl(
+        _plot(
             "$pr.html",
             nat,
             naf,

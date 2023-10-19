@@ -19,7 +19,7 @@ for n in (10, 100, 1000)
     # 172.545 ns (1 allocation: 144 bytes)
     # 1.346 μs (1 allocation: 896 bytes)
     # 13.334 μs (1 allocation: 7.94 KiB)
-    #@btime BioLab.CLS._ma(st -> parse(Float64, st), $st_)
+    #@btime BioLab.CLS._make_matrix(st -> parse(Float64, st), $st_)
 
 end
 

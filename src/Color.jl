@@ -21,23 +21,24 @@ const HESR = "#8c1515"
 
 const HESG = "#175e54"
 
-function _co(he_)
+function _make_color_scheme(he_)
 
     ColorScheme(parse.(Colorant, he_))
 
 end
 
-const COAS = _co([HEAG, "#a4e2b4", "#e0f5e5", "#ffffff", "#fff8d1", "#ffec9f", HEAY])
+const COAS =
+    _make_color_scheme([HEAG, "#a4e2b4", "#e0f5e5", "#ffffff", "#fff8d1", "#ffec9f", HEAY])
 
 const COBW = bwr
 
 const COPA = plasma
 
-const COMO = _co(["#fc7f31"])
+const COMO = _make_color_scheme(["#fc7f31"])
 
-const COBI = _co(["#006442", "#ffb61e"])
+const COBI = _make_color_scheme(["#006442", "#ffb61e"])
 
-const COPO = _co([
+const COPO = _make_color_scheme([
     "#636efa",
     "#ef553b",
     "#00cc96",
@@ -50,7 +51,7 @@ const COPO = _co([
     "#fecb52",
 ])
 
-function _he(rg)
+function _hexify(rg)
 
     "#$(lowercase(hex(rg, :AUTO)))"
 
@@ -58,11 +59,11 @@ end
 
 function add_alpha(he, al)
 
-    _he(coloralpha(parse(Colorant, he), al))
+    _hexify(coloralpha(parse(Colorant, he), al))
 
 end
 
-function _nu(an_)
+function _count_unique(an_)
 
     lastindex(unique(an_))
 
@@ -78,7 +79,7 @@ function pick_color_scheme(nu_)
 
     elseif ty <: Integer
 
-        n = _nu(nu_)
+        n = _count_unique(nu_)
 
         if iszero(n) || isone(n)
 
@@ -104,13 +105,13 @@ end
 
 function color(nu::Real, co)
 
-    _he(co[nu])
+    _hexify(co[nu])
 
 end
 
 function color(nu_, co = pick_color_scheme(nu_))
 
-    if isone(_nu(nu_))
+    if isone(_count_unique(nu_))
 
         return [color(0.5, co)]
 
@@ -124,7 +125,7 @@ end
 
 function fractionate(co)
 
-    he_ = _he.(co)
+    he_ = _hexify.(co)
 
     n = lastindex(he_)
 
