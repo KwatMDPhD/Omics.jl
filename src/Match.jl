@@ -234,7 +234,7 @@ function make(
     n_pv = 10,
     n_ex = 8,
     st = 4,
-    layout = BioLab.Plot._make_element(),
+    layout = Dict{String, Any}(),
 )
 
     BioLab.Error.error_missing(di)

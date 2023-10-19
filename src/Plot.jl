@@ -4,13 +4,7 @@ using JSON: json
 
 using ..BioLab
 
-function _make_element()
-
-    Dict{String, Any}()
-
-end
-
-function plot(ht, data, layout = _make_element, config = _make_element; ke_ar...)
+function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}(); ke_ar...)
 
     id = "Plotly"
 
@@ -75,7 +69,7 @@ function plot_scatter(
     name_ = _na(y_),
     mode_ = (y -> ifelse(lastindex(y) < 1000, "markers+lines", "lines")).(y_),
     marker_ = _ma(y_),
-    layout = _make_element,
+    layout = Dict{String, Any}(),
     ke_ar...,
 )
 
@@ -103,7 +97,7 @@ function plot_bar(
     x_ = _x(y_);
     name_ = _na(y_),
     marker_ = _ma(y_),
-    layout = _make_element,
+    layout = Dict{String, Any}(),
     ke_ar...,
 )
 
@@ -134,7 +128,7 @@ function plot_histogram(
     histnorm = "",
     xbins_size = 0,
     rug_marker_size = ifelse(all(x -> lastindex(x) < 100000, x_), 16, 0),
-    layout = _make_element,
+    layout = Dict{String, Any}(),
     ke_ar...,
 )
 
@@ -268,7 +262,7 @@ function plot_heat_map(
     co = BioLab.Color.pick_color_scheme(z),
     grr_ = Int[],
     grc_ = Int[],
-    layout = _make_element,
+    layout = Dict{String, Any}(),
     ke_ar...,
 )
 
@@ -389,7 +383,7 @@ function plot_radar(
     line_color_ = BioLab.Color.color(eachindex(ra_)),
     fillcolor_ = line_color_,
     radialaxis_range = (0, maximum(vcat(ra_...))),
-    layout = _make_element,
+    layout = Dict{String, Any}(),
     ke_ar...,
 )
 
