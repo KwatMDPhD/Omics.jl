@@ -11,5 +11,5 @@ using BioLab
 
 # ---- #
 
-# 3.401 μs (73 allocations: 3.84 KiB)
-@btime BioLab.Time.stamp();
+# 3.328 μs (73 allocations: 3.84 KiB)
+#@btime BioLab.Time.stamp();

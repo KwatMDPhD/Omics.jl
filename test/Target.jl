@@ -107,15 +107,15 @@ for (ro___, co___, fl_, re) in (
 
     @test isequal(BioLab.Target.tabulate(ro___, co___, fl_), re)
 
-    # 1.746 μs (65 allocations: 3.81 KiB)
+    # 1.729 μs (65 allocations: 3.81 KiB)
     # 1.167 μs (44 allocations: 3.03 KiB)
-    # 1.150 μs (44 allocations: 3.03 KiB)
-    # 1.554 μs (58 allocations: 3.55 KiB)
-    # 1.562 μs (58 allocations: 3.55 KiB)
-    # 1.475 μs (51 allocations: 3.28 KiB)
-    # 1.742 μs (64 allocations: 3.80 KiB)
-    # 2.569 μs (81 allocations: 4.98 KiB)
-    @btime BioLab.Target.tabulate($ro___, $co___, $fl_)
+    # 1.171 μs (44 allocations: 3.03 KiB)
+    # 1.571 μs (58 allocations: 3.55 KiB)
+    # 1.558 μs (58 allocations: 3.55 KiB)
+    # 1.462 μs (51 allocations: 3.28 KiB)
+    # 1.725 μs (64 allocations: 3.80 KiB)
+    # 2.551 μs (81 allocations: 4.98 KiB)
+    #@btime BioLab.Target.tabulate($ro___, $co___, $fl_)
 
 end
 
@@ -130,6 +130,6 @@ for (ro_re_, co_, re) in ((
     @test isequal(BioLab.Target.tabulate(ro_re_, co_), re)
 
     # 6.242 μs (6 allocations: 320 bytes)
-    @btime BioLab.Target.tabulate($ro_re_, $co_)
+    #@btime BioLab.Target.tabulate($ro_re_, $co_)
 
 end

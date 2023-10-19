@@ -16,7 +16,7 @@ function tabulate(ro_)
 
     rou_ = _un(ro_)
 
-    ro_x_id_x_is = falses(length(rou_), length(ro_))
+    ro_x_id_x_is = falses(lastindex(rou_), lastindex(ro_))
 
     ro_id = _ma(rou_)
 
@@ -40,7 +40,7 @@ function tabulate(ro___, co___, fl_)
 
     cou_ = _un(co_)
 
-    ro_x_co_x_fl = fill(NaN, length(rou_), length(cou_))
+    ro_x_co_x_fl = fill(NaN, lastindex(rou_), lastindex(cou_))
 
     ro_id = _ma(rou_)
 
@@ -62,7 +62,7 @@ function tabulate(ro_re_, co_)
 
     ro_ = Vector{String}(undef, n_ro)
 
-    ro_x_co_x_fl = fill(NaN, n_ro, length(co_))
+    ro_x_co_x_fl = fill(NaN, n_ro, lastindex(co_))
 
     fl_ = (0.0, 1.0)
 
