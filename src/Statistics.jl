@@ -16,7 +16,7 @@ end
 
 function get_margin_of_error(sa_, co = 0.95)
 
-    get_quantile(0.5 + co / 2) * std(sa_) / sqrt(length(sa_))
+    get_quantile(0.5 + co / 2) * std(sa_) / sqrt(lastindex(sa_))
 
 end
 
@@ -40,7 +40,7 @@ end
 
 function get_p_value(fu, nu_, ra_)
 
-    pv_ = (nu -> get_p_value(sum(fu(nu), ra_; init = 0), length(ra_))).(nu_)
+    pv_ = (nu -> get_p_value(sum(fu(nu), ra_; init = 0), lastindex(ra_))).(nu_)
 
     pv_, adjust(pv_, BenjaminiHochberg())
 
