@@ -30,9 +30,9 @@ end
 
 function limit(st, n)
 
-    if n < length(st)
+    if n < lastindex(st)
 
-        "$(st[1:n])..."
+        "$(view(st, 1:n))..."
 
     else
 
@@ -56,7 +56,7 @@ function count(n, st)
 
     end
 
-    if length(st) == 3 && view(st, 2:3) == "ex"
+    if lastindex(st) == 3 && view(st, 2:3) == "ex"
 
         return "$n $(st)es"
 
@@ -66,7 +66,8 @@ function count(n, st)
 
         if endswith(st, si)
 
-            return "$n $(st[1:(end - n_le)])$pl"
+
+            return "$n $(view(st, 1:(lastindex(st) - n_le)))$pl"
 
         end
 
