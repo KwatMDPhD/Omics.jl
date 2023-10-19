@@ -47,6 +47,18 @@ end
 
 # ---- #
 
+BioLab.Match.make(BioLab.TE, benchmark("f12", 1, 2)...)
+
+# ---- #
+
+for ex in ("tsv", "html")
+
+    @test isfile(joinpath(BioLab.TE, "feature_x_statistic_x_number.$ex"))
+
+end
+
+# ---- #
+
 const SI = 100000, 100
 
 # ---- #

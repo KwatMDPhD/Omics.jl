@@ -38,3 +38,12 @@ const FE2U_ = replace.(FEU_, "Feature" => "New Feature")
     lo = true,
     na = "Test",
 ) == (FE2U_, [0.0; 1; 2; 3;;])
+
+
+# ---- #
+
+for fi in ("feature_x_sample_x_number.html", "number.html", "number_plus1_log2.html")
+
+    @test isfile(joinpath(BioLab.TE, fi))
+
+end

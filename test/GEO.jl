@@ -12,10 +12,6 @@ const GZ = BioLab.GEO.download(BioLab.TE, GS)
 
 # ---- #
 
-@test isfile(GZ)
-
-# ---- #
-
 const BL_TH = BioLab.GEO.read(GZ)
 
 # ---- #

@@ -68,6 +68,10 @@ BioLab.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1)
 
 # ---- #
 
+@test isfile(HT1)
+
+# ---- #
+
 @test isfile(joinpath(BioLab.TE, "$NAME1.$EX1"))
 
 # ---- #
@@ -85,6 +89,10 @@ const EX2 = "json"
 # ---- #
 
 BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2)
+
+# ---- #
+
+@test isfile(HT2)
 
 # ---- #
 
@@ -129,6 +137,10 @@ const EX3 = "json"
 # ---- #
 
 BioLab.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3)
+
+# ---- #
+
+@test isfile(HT3)
 
 # ---- #
 

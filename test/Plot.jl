@@ -16,7 +16,15 @@ const DATA = [Dict{String, Any}()]
 
 # ---- #
 
-BioLab.Plot.plot(joinpath(BioLab.TE, "plot.html"), DATA)
+const HT = joinpath(BioLab.TE, "plot.html")
+
+# ---- #
+
+BioLab.Plot.plot(HT, DATA)
+
+# ---- #
+
+@test isfile(HT)
 
 # ---- #
 
