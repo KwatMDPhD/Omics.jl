@@ -18,6 +18,12 @@ function _co(id_, sa_, ta_, fe_x_sa_x_nu)
 
 end
 
+function _ra!(it, ::Real)
+
+    BioLab.Collection.get_minimum_maximum(it)
+
+end
+
 function _ra!(fl_::AbstractVector{<:AbstractFloat}, st::Real)
 
     if allequal(fl_)
@@ -43,12 +49,6 @@ function _ra!(fe_x_sa_x_fl::AbstractMatrix{<:AbstractFloat}, st::Real)
     foreach(fl_ -> _ra!(fl_, st), eachrow(fe_x_sa_x_fl))
 
     -st, st
-
-end
-
-function _ra!(it, ::Real)
-
-    BioLab.Collection.get_minimum_maximum(it)
 
 end
 
@@ -234,7 +234,7 @@ function make(
     n_pv = 10,
     n_ex = 8,
     st = 4,
-    layout = Dict{String, Any}(),
+    layout = BioLab.Plot._make_element(),
 )
 
     BioLab.Error.error_missing(di)

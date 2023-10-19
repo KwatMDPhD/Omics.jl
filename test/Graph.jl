@@ -4,7 +4,7 @@ using BioLab
 
 # ---- #
 
-const EL_ = Vector{Dict{String, Any}}([
+const EL_ = Dict{String, Any}[
     Dict(
         "data" => Dict("id" => "A"),
         "position" => Dict("y" => 0, "x" => 0),
@@ -44,7 +44,7 @@ const EL_ = Vector{Dict{String, Any}}([
         "data" => Dict("id" => "H", "source" => "F", "target" => "G"),
         "style" => Dict("line-color" => "#6c9956"),
     ),
-])
+]
 
 # ---- #
 

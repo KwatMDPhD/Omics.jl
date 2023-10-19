@@ -211,7 +211,7 @@ function _it(it_)
 
 end
 
-function _it(fl_::AbstractArray{<:AbstractFloat})
+function _it(fl_::AbstractVecOrMat{<:AbstractFloat})
 
     mi, ma = BioLab.Collection.get_minimum_maximum(fl_)
 
