@@ -20,7 +20,7 @@ for (cu, re) in (
     (1, Inf),
 )
 
-    @test isapprox(BioLab.Statistics.get_quantile(cu), re; atol = 1e-2)
+    @test isapprox(BioLab.Statistics.get_quantile(cu), re; atol = 0.01)
 
     # 3.333 ns (0 allocations: 0 bytes)
     # 12.137 ns (0 allocations: 0 bytes)
@@ -39,14 +39,14 @@ end
 
 # ---- #
 
-for (po, re) in zip(
-    0:4,
+for (n, re) in zip(
+    (1, 10, 100, 1000, 10000),
     (NaN, 0.6189908521765288, 0.1900545163940193, 0.06362492851958153, 0.019426335022525613),
 )
 
     seed!(20230612)
 
-    sa_ = randn(10^po)
+    sa_ = randn(n)
 
     @test isequal(BioLab.Statistics.get_margin_of_error(sa_), re)
 

@@ -32,7 +32,7 @@ end
 
 function _te(an___)
 
-    [String[] for _ in an___]
+    (_ -> String[]).(eachindex(an___))
 
 end
 
@@ -158,13 +158,18 @@ function plot_histogram(
         ) for id in id_
     ]
 
+    if isempty(histnorm)
+
+        title_text = "Count"
+
+    else
+
+        title_text = titlecase(histnorm)
+
+    end
+
     layout = BioLab.Dict.merge(
-        Dict(
-            "yaxis2" => Dict(
-                "showgrid" => false,
-                "title" => Dict("text" => ifelse(isempty(histnorm), "Count", titlecase(histnorm))),
-            ),
-        ),
+        Dict("yaxis2" => Dict("showgrid" => false, "title" => Dict("text" => title_text))),
         layout,
     )
 

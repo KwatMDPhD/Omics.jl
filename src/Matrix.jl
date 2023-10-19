@@ -26,40 +26,45 @@ function collapse(fu, ty, ro_, ma)
 
     n_ro, n_co = size(ma)
 
-    n_ro2 = length(ro_id_)
+    n_roc = length(ro_id_)
 
-    if n_ro == n_ro2
+    if n_ro == n_roc
 
         error("There are not any rows to collapse.")
 
     end
 
-    @info "Collapsing using `$fu` and making ($n_ro -->) $n_ro2 x $n_co"
+    @info "Collapsing using `$fu` and making ($n_ro -->) $n_roc x $n_co"
 
-    ro2_ = Vector{String}(undef, n_ro2)
+    roc_ = Vector{String}(undef, n_roc)
 
-    ma2 = Base.Matrix{ty}(undef, n_ro2, n_co)
+    mac = Base.Matrix{ty}(undef, n_roc, n_co)
 
-    for (id2, (ro, id_)) in enumerate(ro_id_)
+    for (idc, (ro, id_)) in enumerate(ro_id_)
 
-        ro2_[id2] = ro
+        roc_[idc] = ro
 
-        if isone(lastindex(id_))
+        is = isone(lastindex(id_))
 
-            an_ = view(ma, id_[1], :)
+        for (id2, an_) in enumerate(eachcol(ma[id_, :]))
 
-        else
+            if is
 
-            # TODO: Understand why broadcasting is so much slower.
-            an_ = [fu(co) for co in eachcol(ma[id_, :])]
+                an = an_[1]
+
+            else
+
+                an = fu(an_)
+
+            end
+
+            mac[idc, id2] = an
 
         end
 
-        ma2[id2, :] = an_
-
     end
 
-    ro2_, ma2
+    roc_, mac
 
 end
 

@@ -53,7 +53,7 @@ const MA = [
 
 # ---- #
 
-for (ro_, ro2_, ma2) in (
+for (ro_, roc_, mac) in (
     (["Row 1", "Row 2", "Row 3"], nothing, nothing),
     (
         ["Row 1", "Row 1", "Row 2"],
@@ -66,16 +66,16 @@ for (ro_, ro2_, ma2) in (
     (["Row 1", "Row 1", "Row 1"], ["Row 1"], [37.0 74]),
 )
 
-    if isnothing(ro2_)
+    if isnothing(roc_)
 
         @test BioLab.Error.@is BioLab.Matrix.collapse(mean, Float64, ro_, MA)
 
     else
 
-        @test BioLab.Matrix.collapse(mean, Float64, ro_, MA) == (ro2_, ma2)
+        @test BioLab.Matrix.collapse(mean, Float64, ro_, MA) == (roc_, mac)
 
-        # 742.211 ns (19 allocations: 1.28 KiB)
-        # 650.307 ns (15 allocations: 1.08 KiB)
+        # 752.855 ns (18 allocations: 1.23 KiB)
+        # 614.460 ns (15 allocations: 1.02 KiB)
         #@btime BioLab.Matrix.collapse(mean, Float64, $ro_, MA)
 
     end

@@ -6,7 +6,15 @@ using NMF: nnmf
 
 using ..BioLab
 
-function factorize(ma, n; init = :nndsvd, alg = :greedycd, maxiter = 10^6, tol = 1e-6, ke_ar...)
+function factorize(
+    ma,
+    n;
+    init = :nndsvd,
+    alg = :greedycd,
+    maxiter = 1000000,
+    tol = 0.000001,
+    ke_ar...,
+)
 
     re = nnmf(ma, n; init, alg, maxiter, tol, ke_ar...)
 

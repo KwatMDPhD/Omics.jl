@@ -40,7 +40,7 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     mh2 = BioLab.MatrixFactorization.solve_h(ma, mw)
 
-    @test isapprox(mh, mh2; rtol = 1e-0)
+    @test isapprox(mh, mh2; rtol = 1)
 
     di = "$(di)_solved"
 

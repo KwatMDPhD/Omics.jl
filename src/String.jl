@@ -66,7 +66,6 @@ function count(n, st)
 
         if endswith(st, si)
 
-
             return "$n $(view(st, 1:(lastindex(st) - n_le)))$pl"
 
         end

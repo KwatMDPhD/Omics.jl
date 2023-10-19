@@ -104,7 +104,7 @@ for xbins_size in (0, 1)
     BioLab.Plot.plot_histogram(
         "",
         HIX_,
-        [["$ch$id" for id in eachindex(x)] for (x, ch) in zip(HIX_, ('A', 'B', 'C'))];
+        [(id -> "$ch$id").(eachindex(x)) for (x, ch) in zip(HIX_, ('A', 'B', 'C'))];
         xbins_size,
         layout = Dict("title" => Dict("text" => "xbins_size = $xbins_size")),
     )

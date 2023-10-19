@@ -107,7 +107,7 @@ const SA = SM_[1]
 
 # ---- #
 
-# 11.492 ms (107248 allocations: 16.70 MiB)
+# 11.490 ms (107248 allocations: 16.70 MiB)
 #@btime BioLab.GEO._di($(SA_KE_VA[SA]["_ta"]));
 
 # ---- #
@@ -156,7 +156,7 @@ const FE_, FE_X_SA_X_FL = BioLab.GEO.tabulate(KE_VA, SA_KE_VA)
 # ---- #
 
 for (gs, re, pl_re) in (
-    ("GSE197763", (4, 126), Dict("GPL18573" => (), "GPL24676" => ())),
+    ("GSE197763", (4, 126), Dict("GPL18573" => nothing, "GPL24676" => nothing)),
     ("GSE13534", (0, 4), Dict("GPL96" => (22283, 4))),
 )
 
@@ -172,7 +172,7 @@ for (gs, re, pl_re) in (
 
         ke_va = bl_th["PLATFORM"][pl]
 
-        if isempty(re)
+        if isnothing(re)
 
             @test BioLab.Error.@is BioLab.GEO.tabulate(ke_va, sa_ke_va)
 
