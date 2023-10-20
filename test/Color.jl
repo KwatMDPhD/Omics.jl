@@ -145,7 +145,7 @@ end
 
 # ---- #
 
-# 615.178 ns (25 allocations: 1.29 KiB)
+# 644.442 ns (25 allocations: 1.29 KiB)
 #@btime BioLab.Color.color(ID_, CO);
 
 # ---- #
