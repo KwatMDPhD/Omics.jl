@@ -141,6 +141,8 @@ const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MY
 # 695.792 μs (6 allocations: 6.91 KiB)
 #@btime in(FE1_).(FE_);
 # 689.250 μs (3 allocations: 6.84 KiB)
+#@btime in($FE1_).(FE_);
+#@btime in(FE1_).($FE_);
 #@btime in($FE1_).($FE_);
 
 # ---- #
@@ -157,6 +159,8 @@ const FE1S = Set(FE1_)
 # 484.334 μs (6 allocations: 6.91 KiB)
 #@btime in(FE1S).(FE_);
 # 461.583 μs (3 allocations: 6.84 KiB)
+#@btime in($FE1S).(FE_);
+#@btime in(FE1S).($FE_);
 #@btime in($FE1S).($FE_);
 
 # ---- #
