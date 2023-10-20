@@ -14,7 +14,7 @@ const DA = joinpath(BioLab._DA, "CLS")
 
 for n in (10, 100, 1000)
 
-    st_ = string.((1:n))
+    st_ = string.(1:n)
 
     # 172.545 ns (1 allocation: 144 bytes)
     # 1.346 μs (1 allocation: 896 bytes)
