@@ -101,7 +101,11 @@ for an___ in (((), (1,)), ((1,), (1, 1)))
 
     for an2___ in (an___, collect(an___))
 
-        @test BioLab.Error.@is BioLab.Error.error_length_difference(an2___)
+        for an3___ in (an2___, collect.(an2___))
+
+            @test BioLab.Error.@is BioLab.Error.error_length_difference(an3___)
+
+        end
 
     end
 
@@ -113,7 +117,11 @@ for an___ in (((), ()), ((1,), (1,)), ((1, 1), (1, 1)))
 
     for an2___ in (an___, collect(an___))
 
-        @test !BioLab.Error.@is BioLab.Error.error_length_difference(an2___)
+        for an3___ in (an2___, collect.(an2___))
+
+            @test !BioLab.Error.@is BioLab.Error.error_length_difference(an3___)
+
+        end
 
     end
 
