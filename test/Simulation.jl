@@ -51,8 +51,8 @@ for (ze, re) in ((false, vcat(view(NE_, 1:(NC - 1)), PO_)), (true, vcat(NE_, PO_
 
     @test BioLab.Simulation._concatenate(NE_, ze, PO_) == re
 
-    # 565.304 ns (2 allocations: 23.69 KiB)
-    # 559.394 ns (2 allocations: 23.69 KiB)
+    # 590.534 ns (2 allocations: 23.69 KiB)
+    # 592.091 ns (2 allocations: 23.69 KiB)
     #@btime BioLab.Simulation._concatenate(NE_, $ze, PO_)
 
 end
@@ -65,7 +65,7 @@ for (ze, re) in ((false, vcat(view(REN, 1:(N - 1)), REP)), (true, vcat(REN, REP)
 
     @test BioLab.Simulation.make_vector_mirror(N, ze) == re
 
-    # 136.146 ns (4 allocations: 336 bytes)
+    # 136.120 ns (4 allocations: 336 bytes)
     # 135.816 ns (4 allocations: 352 bytes)
     #@btime BioLab.Simulation.make_vector_mirror(N, $ze)
 
@@ -79,8 +79,8 @@ for (ze, re) in ((false, vcat(2view(REN, 1:(N - 1)), REP)), (true, vcat(2REN, RE
 
     @test BioLab.Simulation.make_vector_mirror_deep(N, ze) == re
 
-    # 156.501 ns (5 allocations: 416 bytes)
-    # 156.970 ns (5 allocations: 432 bytes)
+    # 156.134 ns (5 allocations: 416 bytes)
+    # 156.595 ns (5 allocations: 432 bytes)
     #@btime BioLab.Simulation.make_vector_mirror_deep(N, $ze)
 
 end
@@ -117,7 +117,7 @@ for (ty, re) in ((Int, MA), (Float64, convert(Matrix{Float64}, MA)))
 
     @test BioLab.Simulation.make_matrix_1n(ty, N_RO, N_CO) == re
 
-    # 88.900 ns (1 allocation: 112 bytes)
+    # 88.802 ns (1 allocation: 112 bytes)
     # 88.363 ns (1 allocation: 112 bytes)
     #@btime BioLab.Simulation.make_matrix_1n($ty, N_RO, N_CO)
 

@@ -71,7 +71,7 @@ for (nu1_, nu2_) in NU___
         BioLab.Information.get_symmetric_kullback_leibler_divergence,
     )
 
-        nu3_ = (nu1_ + nu2_) / 2
+        nu3_ = 0.5(nu1_ + nu2_)
 
         BioLab.Plot.plot_scatter(
             "",

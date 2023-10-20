@@ -43,7 +43,7 @@ for (ke, va, re) in (
 
     @test ke_va == re
 
-    # 141.736 μs (4121 allocations: 275.38 KiB)
+    # 138.633 μs (4121 allocations: 275.38 KiB)
     # 138.961 μs (4112 allocations: 270.93 KiB)
     #@btime BioLab.Dict.set_with_suffix!(ke_va, $ke, $va) setup = (ke_va = copy(KES_VA)) evals =
     #    1000
@@ -111,15 +111,15 @@ for (an_id, re) in (
         # 35.792 ns (2 allocations: 96 bytes)
         # 37.340 ns (2 allocations: 96 bytes)
         # 31.900 ns (2 allocations: 96 bytes)
-        # 34.743 ns (2 allocations: 96 bytes)
+        # 33.199 ns (2 allocations: 96 bytes)
         # 31.899 ns (2 allocations: 96 bytes)
         # 33.157 ns (2 allocations: 96 bytes)
         # 31.019 ns (2 allocations: 96 bytes)
         # 33.316 ns (2 allocations: 96 bytes)
         # 31.061 ns (2 allocations: 96 bytes)
-        # 32.277 ns (2 allocations: 96 bytes)
+        # 31.984 ns (2 allocations: 96 bytes)
         # 30.936 ns (2 allocations: 96 bytes)
-        # 33.408 ns (2 allocations: 96 bytes)
+        # 32.151 ns (2 allocations: 96 bytes)
         #@btime BioLab.Dict.is_in($an_id, $an1_)
 
     end
@@ -156,7 +156,7 @@ const FE1S = Set(FE1_)
 
 # 484.334 μs (6 allocations: 6.91 KiB)
 #@btime in(FE1S).(FE_);
-# 470.709 μs (3 allocations: 6.84 KiB)
+# 461.583 μs (3 allocations: 6.84 KiB)
 #@btime in($FE1S).($FE_);
 
 # ---- #
@@ -165,7 +165,7 @@ const FE_ID = Dict(fe => id for (id, fe) in enumerate(FE_))
 
 # ---- #
 
-# 511.625 μs (7 allocations: 800.92 KiB)
+# 510.875 μs (7 allocations: 800.92 KiB)
 #@btime Dict(fe => id for (id, fe) in enumerate(FE_));
 
 # ---- #

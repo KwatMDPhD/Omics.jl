@@ -88,7 +88,7 @@ end
 
 # ---- #
 
-const HEH = HE_[Int(round(N / 2))]
+const HEH = HE_[Int(round(0.5N))]
 
 # ---- #
 
@@ -145,7 +145,7 @@ end
 
 # ---- #
 
-# 615.420 ns (25 allocations: 1.29 KiB)
+# 615.178 ns (25 allocations: 1.29 KiB)
 #@btime BioLab.Color.color(ID_, CO);
 
 # ---- #

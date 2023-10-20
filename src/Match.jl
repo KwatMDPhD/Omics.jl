@@ -154,7 +154,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
 
     th = 1 / n_ro
 
-    th2 = th / 2
+    th2 = 0.5th
 
     n_li = 30
 
