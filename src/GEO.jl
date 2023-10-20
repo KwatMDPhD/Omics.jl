@@ -172,29 +172,11 @@ function _map_feature(ke_va)
 
     fu = identity
 
-    if it == 16686
+    if it == 96 || it == 97 || it == 570 || it == 13667
 
-        co = "GB_ACC"
+        co = "Gene Symbol"
 
-    elseif it == 10332
-
-        co = "GENE_SYMBOL"
-
-    elseif it == 6098 || it == 6884 || it == 6947 || it == 10558 || it == 14951
-
-        co = "Symbol"
-
-    elseif it == 15048
-
-        co = "GeneSymbol"
-
-        fu = fe -> BioLab.String.split_get(fe, ' ', 1)
-
-    elseif it == 13534
-
-        co = "UCSC_RefGene_Name"
-
-        fu = fe -> BioLab.String.split_get(fe, ';', 1)
+        fu = fe -> BioLab.String.split_get(fe, " /// ", 1)
 
     elseif it == 2004 || it == 2005 || it == 3718 || it == 3720
 
@@ -208,11 +190,29 @@ function _map_feature(ke_va)
 
         fu = fe -> BioLab.String.split_get(fe, " // ", 2)
 
-    elseif it == 96 || it == 97 || it == 570 || it == 13667
+    elseif it == 6098 || it == 6884 || it == 6947 || it == 10558 || it == 14951
 
-        co = "Gene Symbol"
+        co = "Symbol"
 
-        fu = fe -> BioLab.String.split_get(fe, " /// ", 1)
+    elseif it == 10332
+
+        co = "GENE_SYMBOL"
+
+    elseif it == 13534
+
+        co = "UCSC_RefGene_Name"
+
+        fu = fe -> BioLab.String.split_get(fe, ';', 1)
+
+    elseif it == 15048
+
+        co = "GeneSymbol"
+
+        fu = fe -> BioLab.String.split_get(fe, ' ', 1)
+
+    elseif it == 16686
+
+        co = "GB_ACC"
 
     else
 
