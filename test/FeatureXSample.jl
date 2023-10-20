@@ -4,10 +4,22 @@ using BioLab
 
 # ---- #
 
-BioLab.FeatureXSample.count(
-    ("Column Row", "Column 1", "Column 2", "Column 3"),
-    ((id -> "Row $id").(1:3), ['A', 'B', 'C'], ['A', 'B', 'B'], ['C', 'C', 'C']),
-)
+for (na_, an___) in ((
+    ("Row", "Column 1", "Column 2", "Column 3"),
+    ((1, 2, 3), ('A', 'B', 'C'), ('A', 'B', 'B'), ('C', 'C', 'C')),
+),)
+
+    for (na2_, an2___) in ((na_, an___), (collect(na_), collect(an___)))
+
+        for an3___ in (an2___, collect.(an2___))
+
+            BioLab.FeatureXSample.count(na2_, an3___)
+
+        end
+
+    end
+
+end
 
 # ---- #
 

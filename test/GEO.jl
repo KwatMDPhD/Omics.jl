@@ -102,7 +102,7 @@ const SA = SM_[1]
 
 # ---- #
 
-# 587.236 ms (10649 allocations: 27.73 MiB)
+# 587.219 ms (10649 allocations: 27.73 MiB)
 #@btime BioLab.GEO.read(GZ);
 
 # ---- #
@@ -155,9 +155,9 @@ const FE_, FE_X_SA_X_FL = BioLab.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
-for (gs, re, pl_re) in (
-    ("GSE197763", (4, 126), Dict("GPL18573" => nothing, "GPL24676" => nothing)),
-    ("GSE13534", (0, 4), Dict("GPL96" => (22283, 4))),
+for (gs, re, pl_re...) in (
+    ("GSE197763", (4, 126), "GPL18573" => nothing, "GPL24676" => nothing),
+    ("GSE13534", (0, 4), "GPL96" => (22283, 4)),
 )
 
     bl_th = BioLab.GEO.read(BioLab.GEO.download(BioLab.TE, gs))
