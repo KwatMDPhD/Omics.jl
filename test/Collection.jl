@@ -8,7 +8,7 @@ for (an_, re) in (((NaN,), (NaN, NaN)), ((-1, 1), (-1, 1)), ((-1, -2), (-2, -1))
 
     for an2_ in (an_, collect(an_))
 
-        @test isequal(BioLab.Collection.get_minimum_maximum(an2_), re)
+        @test BioLab.Collection.get_minimum_maximum(an2_) === re
 
         # 1.500 ns (0 allocations: 0 bytes)
         # 1.791 ns (0 allocations: 0 bytes)
@@ -35,7 +35,7 @@ for (an_, re) in (
 
     for an2_ in (an_, collect(an_))
 
-        @test BioLab.Collection.count_sort_string(an2_) == re
+        @test BioLab.Collection.count_sort_string(an2_) === re
 
         # 8.125 μs (61 allocations: 3.98 KiB)
         # 8.111 μs (61 allocations: 3.98 KiB)
