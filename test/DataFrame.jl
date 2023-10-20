@@ -80,7 +80,7 @@ BioLab.DataFrame.separate(DT)[2][1] = ""
 
 # ---- #
 
-# 1.938 μs (28 allocations: 2.08 KiB)
+# 2.000 μs (28 allocations: 2.08 KiB)
 #@btime BioLab.DataFrame.separate(DT);
 
 # ---- #
