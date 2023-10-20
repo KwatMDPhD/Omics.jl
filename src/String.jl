@@ -50,29 +50,35 @@ end
 
 function count(n, st)
 
+    n_ch = lastindex(st)
+
     if iszero(n) || isone(abs(n))
 
-        return "$n $st"
+        pl = st
+
+    elseif n_ch == 3 && view(st, 2:3) == "ex"
+
+        pl = "$(st)es"
+
+    elseif endswith(st, "ex")
+
+        pl = "$(view(st, 1:(n_ch - 2)))ices"
+
+    elseif endswith(st, "ry")
+
+        pl = "$(view(st, 1:(n_ch - 2)))ries"
+
+    elseif endswith(st, "o")
+
+        pl = "$(view(st, 1:(n_ch - 1)))oes"
+
+    else
+
+        pl = "$(st)s"
 
     end
 
-    if lastindex(st) == 3 && view(st, 2:3) == "ex"
-
-        return "$n $(st)es"
-
-    end
-
-    for (si, n_le, pl) in (("ex", 2, "ices"), ("ry", 2, "ries"), ("o", 1, "oes"))
-
-        if endswith(st, si)
-
-            return "$n $(view(st, 1:(lastindex(st) - n_le)))$pl"
-
-        end
-
-    end
-
-    "$n $(st)s"
+    "$n $pl"
 
 end
 

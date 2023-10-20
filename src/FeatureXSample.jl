@@ -28,13 +28,27 @@ function transform(
 
     BioLab.Error.error_missing(di)
 
-    foreach(fu -> BioLab.Error.error_bad(fu, fe_), (isnothing, ismissing, BioLab.String.is_bad))
+    BioLab.Error.error_bad(isnothing, fe_)
+
+    BioLab.Error.error_bad(ismissing, fe_)
+
+    BioLab.Error.error_bad(BioLab.String.is_bad, fe_)
 
     BioLab.Error.error_duplicate(sa_)
 
-    foreach(fu -> BioLab.Error.error_bad(fu, sa_), (isnothing, ismissing, BioLab.String.is_bad))
+    BioLab.Error.error_bad(isnothing, sa_)
 
-    foreach(fu -> BioLab.Error.error_bad(fu, fe_x_sa_x_nu), (isnothing, ismissing, isnan, isinf))
+    BioLab.Error.error_bad(ismissing, sa_)
+
+    BioLab.Error.error_bad(BioLab.String.is_bad, sa_)
+
+    BioLab.Error.error_bad(isnothing, fe_x_sa_x_nu)
+
+    BioLab.Error.error_bad(ismissing, fe_x_sa_x_nu)
+
+    BioLab.Error.error_bad(isnan, fe_x_sa_x_nu)
+
+    BioLab.Error.error_bad(isinf, fe_x_sa_x_nu)
 
     layout = Dict("title" => Dict("text" => na))
 

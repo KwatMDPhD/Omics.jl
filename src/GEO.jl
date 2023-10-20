@@ -180,7 +180,7 @@ function _map_feature(ke_va)
 
         co = "GENE_SYMBOL"
 
-    elseif it in (6098, 6884, 6947, 10558, 14951)
+    elseif it == 6098 || it == 6884 || it == 6947 || it == 10558 || it == 14951
 
         co = "Symbol"
 
@@ -196,19 +196,19 @@ function _map_feature(ke_va)
 
         fu = fe -> BioLab.String.split_get(fe, ';', 1)
 
-    elseif it in (2004, 2005, 3718, 3720)
+    elseif it == 2004 || it == 2005 || it == 3718 || it == 3720
 
         co = "Associated Gene"
 
         fu = fe -> BioLab.String.split_get(fe, " // ", 1)
 
-    elseif it in (5175, 6244, 11532, 17586)
+    elseif it == 5175 || it == 6244 || it == 11532 || it == 17586
 
         co = "gene_assignment"
 
         fu = fe -> BioLab.String.split_get(fe, " // ", 2)
 
-    elseif it in (96, 97, 570, 13667)
+    elseif it == 96 || it == 97 || it == 570 || it == 13667
 
         co = "Gene Symbol"
 

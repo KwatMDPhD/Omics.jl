@@ -64,7 +64,7 @@ function make_vector_mirror_wide(n, ze = true)
 
         if id < n
 
-            new_[id2] = (ne + ne_[id + 1]) / 2
+            new_[id2] = 0.5(ne + ne_[id + 1])
 
         end
 

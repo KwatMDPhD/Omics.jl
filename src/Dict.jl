@@ -96,7 +96,7 @@ function read(fi, dicttype = OrderedDict; ke_ar...)
 
     ex = BioLab.Path.get_extension(fi)
 
-    if ex in ("json", "ipynb")
+    if ex == "json" || ex == "ipynb"
 
         json_parsefile(fi; dicttype, ke_ar...)
 

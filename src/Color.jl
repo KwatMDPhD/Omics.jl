@@ -1,6 +1,5 @@
 module Color
 
-using Base: _getch
 using ColorSchemes: ColorScheme, bwr, plasma
 
 using Colors: Colorant, coloralpha, hex
