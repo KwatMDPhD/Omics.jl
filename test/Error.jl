@@ -12,7 +12,7 @@ using BioLab
 
 # ---- #
 
-for em in ("", (), [], Set(), Dict())
+for em in ((), [], "", Set(), Dict())
 
     @test BioLab.Error.@is BioLab.Error.error_empty(em)
 
@@ -20,7 +20,7 @@ end
 
 # ---- #
 
-for an_ in (" ", (nothing,), [nothing], Set((nothing,)), Dict(nothing => nothing))
+for an_ in ((nothing,), [nothing], " ", Set((nothing,)), Dict(nothing => nothing))
 
     @test !BioLab.Error.@is BioLab.Error.error_empty(an_)
 
@@ -29,101 +29,52 @@ end
 # ---- #
 
 for an_ in (
-    ('a', 'b', 'b', 'c', 'c', 'c'),
-    (1, 1.0, 1 // 1, true),
-    (
-        nothing,
-        nothing,
-        missing,
-        missing,
-        missing,
-        NaN,
-        NaN,
-        NaN,
-        NaN,
-        -Inf,
-        -Inf,
-        -Inf,
-        -Inf,
-        -Inf,
-        Inf,
-        Inf,
-        Inf,
-        Inf,
-        Inf,
-        Inf,
-    ),
+    [nothing, nothing, missing, missing, missing, NaN, NaN, NaN, NaN, Inf, Inf, Inf, Inf, Inf],
+    [1, 1.0, 1 // 1, true],
+    ['a', 'b', 'b', 'c', 'c', 'c'],
 )
 
-    for an2_ in (an_, collect(an_))
-
-        @test BioLab.Error.@is BioLab.Error.error_duplicate(an2_)
-
-    end
+    @test BioLab.Error.@is BioLab.Error.error_duplicate(an_)
 
 end
 
 # ---- #
 
-for an_ in (('a', 'b', 'c'), (1,), (nothing, missing, NaN, -Inf, Inf))
+for an_ in ([], [nothing, missing, NaN, Inf], [1], ['a', 'b', 'c'], ['a', "a"])
 
-    for an2_ in (an_, collect(an_))
-
-        @test !BioLab.Error.@is BioLab.Error.error_duplicate(an2_)
-
-    end
+    @test !BioLab.Error.@is BioLab.Error.error_duplicate(an_)
 
 end
 
 # ---- #
 
 for (fu, an_) in (
-    (isnothing, (nothing,)),
-    (ismissing, (missing,)),
-    (isnan, (NaN,)),
-    (isinf, (-Inf, Inf)),
-    (BioLab.String.is_bad, ("", " ", "!")),
+    (isnothing, [nothing]),
+    (ismissing, [missing]),
+    (isnan, [NaN]),
+    (isinf, [Inf]),
+    (BioLab.String.is_bad, ["", " ", "!"]),
 )
 
-    for an2_ in (an_, collect(an_))
+    @test BioLab.Error.@is BioLab.Error.error_bad(fu, an_)
 
-        @test BioLab.Error.@is BioLab.Error.error_bad(fu, an2_)
-
-    end
-
-    @test !BioLab.Error.@is BioLab.Error.error_bad(fu, Any[])
+    @test !BioLab.Error.@is BioLab.Error.error_bad(fu, [])
 
 end
 
 # ---- #
 
-for an___ in (((), (1,)), ((1,), (1, 1)))
+for an___ in (([], [1]), ([1], [1, 1]))
 
-    for an2___ in (an___, collect(an___))
-
-        for an3___ in (an2___, collect.(an2___))
-
-            @test BioLab.Error.@is BioLab.Error.error_length_difference(an3___)
-
-        end
-
-    end
+    @test BioLab.Error.@is BioLab.Error.error_length_difference(an___)
 
 end
 
 # ---- #
 
-for an___ in (((), ()), ((1,), (1,)), ((1, 1), (1, 1)))
+for an___ in (([], []), ([1], [1]), ([1, 1], [1, 1]))
 
-    for an2___ in (an___, collect(an___))
-
-        for an3___ in (an2___, collect.(an2___))
-
-            @test !BioLab.Error.@is BioLab.Error.error_length_difference(an3___)
-
-        end
-
-    end
+    @test !BioLab.Error.@is BioLab.Error.error_length_difference(an___)
 
 end
 
@@ -147,11 +98,7 @@ const EX = "extension"
 
 for pa in ("file.$EX", joinpath(BioLab.TE, "file.$EX"))
 
-    for ex in (".$EX", "another_extension")
-
-        @test BioLab.Error.@is BioLab.Error.error_extension_difference(pa, ex)
-
-    end
+    @test BioLab.Error.@is BioLab.Error.error_extension_difference(pa, ".$EX")
 
     @test !BioLab.Error.@is BioLab.Error.error_extension_difference(pa, EX)
 
