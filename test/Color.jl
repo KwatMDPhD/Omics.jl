@@ -67,22 +67,16 @@ end
 
 # ---- #
 
-const N_ = (0, 1, 2, 3)
-
-# ---- #
-
-for n in N_
-
-    @test BioLab.Color.pick_color_scheme(rand(n)) === BioLab.Color.COBW
-
-end
-
-# ---- #
-
-for (n, re) in
-    zip(N_, (BioLab.Color.COMO, BioLab.Color.COMO, BioLab.Color.COBI, BioLab.Color.COPO))
+for (n, re) in (
+    (0, BioLab.Color.COMO),
+    (1, BioLab.Color.COMO),
+    (2, BioLab.Color.COBI),
+    (3, BioLab.Color.COPO),
+)
 
     @test BioLab.Color.pick_color_scheme(rand(Int, n)) === re
+
+    @test BioLab.Color.pick_color_scheme(rand(n)) === BioLab.Color.COBW
 
 end
 
@@ -124,9 +118,16 @@ end
 
 # ---- #
 
-for (fl, re) in zip(
-    (-Inf, -0.1, 0.0, 0.01, 0.5, 0.99, 1.0, 1.1, Inf),
-    (HE_[1], HE_[1], HE_[1], "#fa0500", HEH, "#0005fa", HE_[N], HE_[N], HE_[N]),
+for (fl, re) in (
+    (-Inf, HE_[1]),
+    (-0.1, HE_[1]),
+    (0.0, HE_[1]),
+    (0.01, "#fa0500"),
+    (0.5, HEH),
+    (0.99, "#0005fa"),
+    (1.0, HE_[N]),
+    (1.1, HE_[N]),
+    (Inf, HE_[N]),
 )
 
     @test BioLab.Color.color(fl, CO) === re
@@ -150,16 +151,13 @@ end
 
 # ---- #
 
-for (he_, fr_) in (
-    (["#000001"], (0.0, 1.0)),
-    (["#000001", "#000002"], (0.0, 1.0)),
-    (["#000001", "#000002", "#000003"], (0.0, 0.5, 1.0)),
-    (["#000001", "#000002", "#000003", "#000004"], (0.0, 1 / 3, 2 / 3, 1.0)),
-    (["#000001", "#000002", "#000003", "#000004", "#000005"], (0.0, 0.25, 0.5, 0.75, 1.0)),
-    (
-        ["#000001", "#000002", "#000003", "#000004", "#000005", "#000006"],
-        (0, 0.2, 0.4, 0.6, 0.8, 1),
-    ),
+for he_ in (
+    ["#000001"],
+    ["#000001", "#000002"],
+    ["#000001", "#000002", "#000003"],
+    ["#000001", "#000002", "#000003", "#000004"],
+    ["#000001", "#000002", "#000003", "#000004", "#000005"],
+    ["#000001", "#000002", "#000003", "#000004", "#000005", "#000006"],
 )
 
     co = BioLab.Color._make_color_scheme(he_)
@@ -170,14 +168,14 @@ for (he_, fr_) in (
 
     end
 
-    @test BioLab.Color.fractionate(co) == collect(zip(fr_, he_))
+    @test BioLab.Color.fractionate(co) == collect(zip(range(0, 1, lastindex(he_)), he_))
 
-    # 339.673 ns (11 allocations: 552 bytes)
-    # 461.526 ns (17 allocations: 720 bytes)
-    # 638.554 ns (24 allocations: 1016 bytes)
-    # 802.648 ns (31 allocations: 1.25 KiB)
-    # 949.261 ns (38 allocations: 1.54 KiB)
-    # 1.104 μs (45 allocations: 1.80 KiB)
+    # 320.566 ns (11 allocations: 552 bytes)
+    # 472.362 ns (17 allocations: 720 bytes)
+    # 649.242 ns (24 allocations: 1016 bytes)
+    # 807.471 ns (31 allocations: 1.25 KiB)
+    # 973.059 ns (38 allocations: 1.54 KiB)
+    # 1.133 μs (45 allocations: 1.80 KiB)
     #@btime BioLab.Color.fractionate($co)
 
 end
