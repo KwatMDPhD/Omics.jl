@@ -57,7 +57,7 @@ for (nu_, re) in zip(
     NU___,
     (
         [0, 0.3333333333333333, 0.6666666666666666],
-        (),
+        nothing,
         [
             0.047619047619047616 0.14285714285714285 0.23809523809523808
             0.09523809523809523 0.19047619047619047 0.2857142857142857
@@ -65,7 +65,7 @@ for (nu_, re) in zip(
     ),
 )
 
-    if isempty(re)
+    if isnothing(re)
 
         continue
 
@@ -246,7 +246,7 @@ for (fu, re) in zip(
     # 3.067 μs (24 allocations: 1.31 KiB)
     # 3.069 μs (24 allocations: 1.31 KiB)
     # 3.054 μs (24 allocations: 1.31 KiB)
-    #@btime foreach($fu, ea_) setup = (ea_ = eachcol(copy(MA))) evals = 1000
+    #@btime foreach($fu, ea_) setup = (ea_ = eachcol($co)) evals = 1000
 
 end
 
@@ -313,6 +313,6 @@ for (fu, re) in zip(
     # 3.106 μs (24 allocations: 1.31 KiB)
     # 3.116 μs (24 allocations: 1.31 KiB)
     # 3.418 μs (24 allocations: 1.31 KiB)
-    #@btime foreach($fu, ea_) setup = (ea_ = eachrow(copy(MA))) evals = 1000
+    #@btime foreach($fu, ea_) setup = (ea_ = eachrow($co)) evals = 1000
 
 end
