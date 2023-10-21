@@ -127,9 +127,9 @@ BioLab.Gene.rename!(FEG_, EN_GE)
 
 # ---- #
 
-#disable_logging(Info)
+disable_logging(Info)
 
 # ---- #
 
-# 45.317 ms (0 allocations: 0 bytes)
+# 45.191 ms (0 allocations: 0 bytes)
 #@btime BioLab.Gene.rename!(FEG_, EN_GE);
