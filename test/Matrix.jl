@@ -8,34 +8,74 @@ using BioLab
 
 # ---- #
 
-for (an___, re) in (
-    (([1, 2, 3], [4, 5, 6]), [1 2 3; 4 5 6]),
-    (([1, 2.0, 3], [4, 5, 6]), [1 2.0 3; 4 5 6]),
-    (([1, nothing, 3], [4, 5, 6]), [1 nothing 3; 4 5 6]),
-    (([1, missing, 3], [4, 5, 6]), [1 missing 3; 4 5 6]),
-    (([1, NaN, 3], [4, 5, 6]), [1 NaN 3; 4 5 6]),
-    (([1, -Inf, 3], [4, 5, 6]), [1 -Inf 3; 4 5 6]),
-    (([1, Inf, 3], [4, 5, 6]), [1 Inf 3; 4 5 6]),
-    (([1, nothing, missing], [NaN, -Inf, Inf]), [1 nothing missing; NaN -Inf Inf]),
-    ((['1', '2', '3'], ['4', '5', '6']), ['1' '2' '3'; '4' '5' '6']),
-    ((["Aa", "Bb", "Cc"], ["Dd", "Ee", "Ff"]), ["Aa" "Bb" "Cc"; "Dd" "Ee" "Ff"]),
-    ((['1', '2', '3'], ["Dd", "Ee", "Ff"]), ['1' '2' '3'; "Dd" "Ee" "Ff"]),
+const TU = (4, 5, 6)
+
+# ---- #
+
+const VE = collect(TU)
+
+# ---- #
+
+for (an___, ty, re) in (
+    (((1, 2, 3), TU), nothing, [1 2 3; 4 5 6]),
+    (([1, 2, 3], VE), nothing, [1 2 3; 4 5 6]),
+    (((1.0, 2.0, 3.0), TU), Matrix{Real}, [1 2.0 3; 4 5 6]),
+    (([1.0, 2, 3], VE), Matrix{Real}, [1 2.0 3; 4 5 6]),
+    (((1, nothing, 3), TU), nothing, [1 nothing 3; 4 5 6]),
+    (([1, nothing, 3], VE), nothing, [1 nothing 3; 4 5 6]),
+    (((1, missing, 3), TU), nothing, [1 missing 3; 4 5 6]),
+    (([1, missing, 3], VE), nothing, [1 missing 3; 4 5 6]),
+    (((1.0, NaN, 3.0), TU), Matrix{Real}, [1 NaN 3; 4 5 6]),
+    (([1.0, NaN, 3.0], VE), Matrix{Real}, [1 NaN 3; 4 5 6]),
+    (((1.0, Inf, 3.0), TU), Matrix{Real}, [1 Inf 3; 4 5 6]),
+    (([1.0, Inf, 3.0], VE), Matrix{Real}, [1 Inf 3; 4 5 6]),
+    (
+        ((1, nothing, missing), (2, NaN, Inf)),
+        Matrix{Union{Nothing, Missing, Real}},
+        [1 nothing missing; 2 NaN Inf],
+    ),
+    (
+        ([1, nothing, missing], [2, NaN, Inf]),
+        Matrix{Union{Nothing, Missing, Real}},
+        [1 nothing missing; 2 NaN Inf],
+    ),
+    (((1, nothing, missing), ("", NaN, Inf)), nothing, [1 nothing missing; "" NaN Inf]),
+    (([1, nothing, missing], ["", NaN, Inf]), nothing, [1 nothing missing; "" NaN Inf]),
+    ((('1', '2', '3'), ('4', '5', '6')), nothing, ['1' '2' '3'; '4' '5' '6']),
+    ((['1', '2', '3'], ['4', '5', '6']), nothing, ['1' '2' '3'; '4' '5' '6']),
+    ((("Aa", "Bb", "Cc"), ("Dd", "Ee", "Ff")), Matrix{String}, ["Aa" "Bb" "Cc"; "Dd" "Ee" "Ff"]),
+    ((["Aa", "Bb", "Cc"], ["Dd", "Ee", "Ff"]), Matrix{String}, ["Aa" "Bb" "Cc"; "Dd" "Ee" "Ff"]),
+    ((('1', '2', '3'), ("Dd", "Ee", "Ff")), Matrix{Any}, ['1' '2' '3'; "Dd" "Ee" "Ff"]),
+    ((['1', '2', '3'], ["Dd", "Ee", "Ff"]), Matrix{Any}, ['1' '2' '3'; "Dd" "Ee" "Ff"]),
 )
 
-    @test isequal(BioLab.Matrix.make(an___), re)
+    @warn ""
+    for an2___ in (an___, collect(an___))
 
-    # 24.054 ns (1 allocation: 112 bytes)
-    # 75.275 ns (5 allocations: 256 bytes)
-    # 63.010 ns (2 allocations: 224 bytes)
-    # 62.988 ns (2 allocations: 224 bytes)
-    # 73.741 ns (5 allocations: 256 bytes)
-    # 75.266 ns (5 allocations: 256 bytes)
-    # 75.309 ns (5 allocations: 256 bytes)
-    # 544.561 ns (17 allocations: 880 bytes)
-    # 23.720 ns (1 allocation: 80 bytes)
-    # 33.492 ns (1 allocation: 96 bytes)
-    # 63.733 ns (2 allocations: 176 bytes)
-    #@btime BioLab.Matrix.make($an___)
+        for an3___ in (an2___, collect.(an2___))
+            @info "" an3___ typeof(an3___)
+
+            if isnothing(ty)
+
+                ret = typeof(re)
+
+            else
+
+                ret = ty
+
+            end
+
+            ma = BioLab.Matrix.make(an3___)
+
+            @test typeof(ma) === ret
+
+            @test isequal(ma, re)
+
+            #@btime BioLab.Matrix.make($an3___)
+
+        end
+
+    end
 
 end
 
@@ -49,7 +89,7 @@ const MA = [
 
 # ---- #
 
-#disable_logging(Info)
+disable_logging(Info)
 
 # ---- #
 

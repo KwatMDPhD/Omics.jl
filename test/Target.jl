@@ -14,11 +14,11 @@ for (ro_, re) in (
 
     @test isequal(BioLab.Target.tabulate(ro_), re)
 
-    # 257.553 ns (12 allocations: 1.02 KiB)
-    # 271.870 ns (12 allocations: 1.02 KiB)
-    # 273.962 ns (12 allocations: 1.02 KiB)
-    # 277.397 ns (12 allocations: 1.02 KiB)
-    # 275.026 ns (12 allocations: 1.02 KiB)
+    # 251.482 ns (12 allocations: 1.02 KiB)
+    # 281.098 ns (12 allocations: 1.02 KiB)
+    # 289.963 ns (12 allocations: 1.02 KiB)
+    # 271.729 ns (12 allocations: 1.02 KiB)
+    # 277.253 ns (12 allocations: 1.02 KiB)
     #@btime BioLab.Target.tabulate($ro_)
 
 end
@@ -122,14 +122,19 @@ end
 # ---- #
 
 for (ro_re_, co_, re) in ((
-    Dict("Target 1" => ("[12]\$", "[34]\$"), "Target 2" => ("1\$", "3\$")),
-    ("Group 1", "Group 2", "Group 3", "Group 4"),
+    Dict(
+        # Tuple!
+        "Target 1" => ("[12]\$", "[34]\$"),
+        # Tuple!
+        "Target 2" => ("1\$", "3\$"),
+    ),
+    ["Group 1", "Group 2", "Group 3", "Group 4"],
     (["Target 2", "Target 1"], [0 NaN 1 NaN; 0 0 1 1]),
 ),)
 
     @test isequal(BioLab.Target.tabulate(ro_re_, co_), re)
 
-    # 6.242 μs (6 allocations: 320 bytes)
+    # 6.258 μs (6 allocations: 320 bytes)
     #@btime BioLab.Target.tabulate($ro_re_, $co_)
 
 end
