@@ -44,23 +44,18 @@ function collapse(fu, ty, ro_, ma)
 
         roc_[idc] = ro
 
-        is = isone(lastindex(id_))
+        if isone(lastindex(id_))
 
-        for (id2, an_) in enumerate(eachcol(ma[id_, :]))
+            an_ = view(ma, id_[1], :)
 
-            if is
+        else
 
-                an = an_[1]
-
-            else
-
-                an = fu(an_)
-
-            end
-
-            mac[idc, id2] = an
+            # TODO: Understand why broadcasting is so much slower.
+            an_ = [fu(co) for co in eachcol(ma[id_, :])]
 
         end
+
+        mac[idc, :] = an_
 
     end
 
