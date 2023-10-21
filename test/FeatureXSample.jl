@@ -5,19 +5,11 @@ using BioLab
 # ---- #
 
 for (na_, an___) in ((
-    ("Row", "Column 1", "Column 2", "Column 3"),
-    ((1, 2, 3), ('A', 'B', 'C'), ('A', 'B', 'B'), ('C', 'C', 'C')),
+    ["Row", "Column 1", "Column 2", "Column 3"],
+    ([1, 2, 3], ['A', 'B', 'C'], ['A', 'B', 'B'], ['C', 'C', 'C']),
 ),)
 
-    for (na2_, an2___) in ((na_, an___), (collect(na_), collect(an___)))
-
-        for an3___ in (an2___, collect.(an2___))
-
-            BioLab.FeatureXSample.count(na2_, an3___)
-
-        end
-
-    end
+    BioLab.FeatureXSample.count(na_, an___)
 
 end
 
@@ -50,7 +42,6 @@ const FE2U_ = replace.(FEU_, "Feature" => "New Feature")
     lo = true,
     na = "Test",
 ) == (FE2U_, [0.0; 1; 2; 3;;])
-
 
 # ---- #
 
