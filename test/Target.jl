@@ -122,12 +122,7 @@ end
 # ---- #
 
 for (ro_re_, co_, re) in ((
-    Dict(
-        # Tuple!
-        "Target 1" => ("[12]\$", "[34]\$"),
-        # Tuple!
-        "Target 2" => ("1\$", "3\$"),
-    ),
+    Dict("Target 1" => ("[12]\$", "[34]\$"), "Target 2" => ("1\$", "3\$")),
     ["Group 1", "Group 2", "Group 3", "Group 4"],
     (["Target 2", "Target 1"], [0 NaN 1 NaN; 0 0 1 1]),
 ),)

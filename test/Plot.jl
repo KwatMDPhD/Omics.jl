@@ -44,7 +44,6 @@ BioLab.Plot.plot("", DATA, LAYOUT, Dict("editable" => true))
 
 # ---- #
 
-# Tuple!
 const Y_ = ([-2, -1], [-1, 0, 1, 2])
 
 # ---- #
@@ -65,7 +64,6 @@ BioLab.Plot.plot_scatter(
     "",
     Y_,
     Y_,
-    # Tuple!
     marker_ = (Dict("size" => 80, "color" => "#ff0000"), Dict("size" => 40, "color" => "#0000ff")),
 )
 
@@ -85,7 +83,6 @@ for barmode in ("group", "stack")
         "",
         Y_,
         Y_;
-        # Tuple!
         name_ = ("Jonathan", "Joseph", "Jotaro"),
         layout = Dict("barmode" => barmode, "title" => Dict("text" => "barmode = $barmode")),
     )
@@ -94,7 +91,6 @@ end
 
 # ---- #
 
-# Tuple!
 const HIX_ = ([-2], [-1, -1, 0, 0], [1, 1, 1, 2, 2, 2, 3, 3, 3])
 
 # ---- #
@@ -112,7 +108,6 @@ for xbins_size in (0, 1)
     BioLab.Plot.plot_histogram(
         "",
         HIX_,
-        # Tuple!
         Tuple((id -> "$ch$id").(eachindex(x)) for (x, ch) in zip(HIX_, ('A', 'B', 'C')));
         xbins_size,
         layout = Dict("title" => Dict("text" => "xbins_size = $xbins_size")),

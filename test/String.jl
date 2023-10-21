@@ -4,7 +4,6 @@ using BioLab
 
 # ---- #
 
-# Tuple!
 const SP_ = (
     " ",
     "!",
@@ -41,7 +40,6 @@ const SP_ = (
 
 # ---- #
 
-# Tuple!
 const BA_ = (
     # 1.791 ns (0 allocations: 0 bytes)
     "",
@@ -66,7 +64,6 @@ end
 
 # ---- #
 
-# Tuple!
 const GO_ = (
     # 40.152 ns (0 allocations: 0 bytes)
     "A",
