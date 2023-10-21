@@ -51,8 +51,8 @@ for (ze, re) in ((false, vcat(view(NE_, 1:(NC - 1)), PO_)), (true, vcat(NE_, PO_
 
     @test BioLab.Simulation._concatenate(NE_, ze, PO_) == re
 
-    # 590.534 ns (2 allocations: 23.69 KiB)
-    # 592.091 ns (2 allocations: 23.69 KiB)
+    # 552.419 ns (2 allocations: 23.69 KiB)
+    # 537.500 ns (2 allocations: 23.69 KiB)
     #@btime BioLab.Simulation._concatenate(NE_, $ze, PO_)
 
 end
@@ -73,7 +73,11 @@ end
 
 # ---- #
 
-for (ze, re) in ((false, vcat(2view(REN, 1:(N - 1)), REP)), (true, vcat(2REN, REP)))
+const REND = 2REN
+
+# ---- #
+
+for (ze, re) in ((false, vcat(view(REND, 1:(N - 1)), REP)), (true, vcat(REND, REP)))
 
     seed!(20230827)
 
