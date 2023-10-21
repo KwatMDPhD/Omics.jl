@@ -63,7 +63,7 @@ const DT = BioLab.DataFrame.make(NAR, RO_, CO_, MA)
 
 # ---- #
 
-# 1.108 μs (22 allocations: 1.89 KiB)
+# 1.125 μs (22 allocations: 1.89 KiB)
 #@btime BioLab.DataFrame.make(NAR, RO_, CO_, MA);
 
 # ---- #

@@ -87,7 +87,7 @@ end
 
 # ---- #
 
-const AN1_ = ('A', 'B')
+const AN1_ = ['A', 'B']
 
 # ---- #
 
@@ -100,29 +100,19 @@ for (an_id, re) in (
     (Dict('A' => 1, 'Z' => 2, 'B' => 3), [true, false, true]),
 )
 
-    for an1_ in (AN1_, collect(AN1_))
+    is_ = BioLab.Dict.is_in(an_id, AN1_)
 
-        is_ = BioLab.Dict.is_in(an_id, an1_)
+    @test typeof(is_) === BitVector
 
-        @test typeof(is_) === BitVector
+    @test is_ == re
 
-        @test is_ == re
-
-        # 35.792 ns (2 allocations: 96 bytes)
-        # 37.340 ns (2 allocations: 96 bytes)
-        # 31.900 ns (2 allocations: 96 bytes)
-        # 33.199 ns (2 allocations: 96 bytes)
-        # 31.899 ns (2 allocations: 96 bytes)
-        # 33.157 ns (2 allocations: 96 bytes)
-        # 31.019 ns (2 allocations: 96 bytes)
-        # 33.316 ns (2 allocations: 96 bytes)
-        # 31.061 ns (2 allocations: 96 bytes)
-        # 31.984 ns (2 allocations: 96 bytes)
-        # 30.936 ns (2 allocations: 96 bytes)
-        # 32.151 ns (2 allocations: 96 bytes)
-        #@btime BioLab.Dict.is_in($an_id, $an1_)
-
-    end
+    # 37.387 ns (2 allocations: 96 bytes)
+    # 33.157 ns (2 allocations: 96 bytes)
+    # 33.199 ns (2 allocations: 96 bytes)
+    # 32.235 ns (2 allocations: 96 bytes)
+    # 32.277 ns (2 allocations: 96 bytes)
+    # 32.109 ns (2 allocations: 96 bytes)
+    #@btime BioLab.Dict.is_in($an_id, AN1_)
 
 end
 
