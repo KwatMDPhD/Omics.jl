@@ -35,5 +35,5 @@ const FE_, BA_, FE_X_BA_X_CO, SA_ = BioLab.SingleCell.read(SA_DI)
 
 # ---- #
 
-# 7.162 s (48442102 allocations: 7.47 GiB)
+# 7.126 s (48442102 allocations: 7.47 GiB)
 #@btime BioLab.SingleCell.read(SA_DI);
