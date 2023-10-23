@@ -1,19 +1,19 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
-@test BioLab.Error.@is BioLab.Path.clean(@__DIR__)
+@test Nucleus.Error.@is Nucleus.Path.clean(@__DIR__)
 
 # ---- #
 
-@test BioLab.Path.clean("a_b.c-d+e!f%g%h]iJK") === "a_b.c_d_e_f_g_h_ijk"
+@test Nucleus.Path.clean("a_b.c-d+e!f%g%h]iJK") === "a_b.c_d_e_f_g_h_ijk"
 
 # ---- #
 
 # 444.657 ns (7 allocations: 440 bytes)
-#@btime BioLab.Path.clean("a_b.c-d+e!f%g%h]iJK");
+#@btime Nucleus.Path.clean("a_b.c-d+e!f%g%h]iJK");
 
 # ---- #
 
@@ -23,12 +23,12 @@ const EX = "extension"
 
 for pa in ("prefix.$EX", "/path/to/prefix.$EX", "s3://path/to/prefix.$EX")
 
-    @test BioLab.Path.get_extension(pa) === EX
+    @test Nucleus.Path.get_extension(pa) === EX
 
     # 244.123 ns (12 allocations: 520 bytes)
     # 250.791 ns (12 allocations: 528 bytes)
     # 253.944 ns (12 allocations: 536 bytes)
-    #@btime BioLab.Path.get_extension($pa)
+    #@btime Nucleus.Path.get_extension($pa)
 
 end
 
@@ -36,7 +36,7 @@ end
 
 for sl in (1, 2, 3)
 
-    BioLab.Path.wait("missing_file", 2; sl)
+    Nucleus.Path.wait("missing_file", 2; sl)
 
 end
 
@@ -50,33 +50,33 @@ const HI = r"^\."
 
 # ---- #
 
-@test !any(startswith('.'), BioLab.Path.read(HO; ig_ = (HI,)))
+@test !any(startswith('.'), Nucleus.Path.read(HO; ig_ = (HI,)))
 
 # ---- #
 
-@test all(startswith('.'), BioLab.Path.read(HO; ke_ = (HI,)))
+@test all(startswith('.'), Nucleus.Path.read(HO; ke_ = (HI,)))
 
 # ---- #
 
-@test all(na -> isuppercase(na[1]), BioLab.Path.read(HO; ke_ = (r"^[A-Z]",)))
+@test all(na -> isuppercase(na[1]), Nucleus.Path.read(HO; ke_ = (r"^[A-Z]",)))
 
 # ---- #
 
-@test BioLab.Path.read(HO; ke_ = (r"^Downloads$",)) == ["Downloads"]
+@test Nucleus.Path.read(HO; ke_ = (r"^Downloads$",)) == ["Downloads"]
 
 # ---- #
 
-@test isempty(BioLab.Path.read(HO; ig_ = (HI,), ke_ = (HI,)))
+@test isempty(Nucleus.Path.read(HO; ig_ = (HI,), ke_ = (HI,)))
 
 # ---- #
 
-BioLab.Path.open(BioLab.TE)
+Nucleus.Path.open(Nucleus.TE)
 
 # ---- #
 
 function write_file()
 
-    touch(joinpath(BioLab.TE, "file"))
+    touch(joinpath(Nucleus.TE, "file"))
 
 end
 
@@ -84,7 +84,7 @@ end
 
 function write_directory()
 
-    mkdir(joinpath(BioLab.TE, "directory"))
+    mkdir(joinpath(Nucleus.TE, "directory"))
 
 end
 
@@ -92,28 +92,28 @@ end
 
 for pa in (write_file(), write_directory())
 
-    BioLab.Path.remove(pa)
+    Nucleus.Path.remove(pa)
 
-    @test BioLab.Error.@is BioLab.Path.remove(pa)
+    @test Nucleus.Error.@is Nucleus.Path.remove(pa)
 
 end
 
 # ---- #
 
-@test BioLab.Error.@is BioLab.Path.remake_directory(write_file())
+@test Nucleus.Error.@is Nucleus.Path.remake_directory(write_file())
 
 # ---- #
 
-BioLab.Path.remake_directory(write_directory())
+Nucleus.Path.remake_directory(write_directory())
 
 # ---- #
 
-@test BioLab.Path.read(BioLab.TE) == ["directory", "file"]
+@test Nucleus.Path.read(Nucleus.TE) == ["directory", "file"]
 
 # ---- #
 
-BioLab.Path.remake_directory(BioLab.TE)
+Nucleus.Path.remake_directory(Nucleus.TE)
 
 # ---- #
 
-@test isempty(BioLab.Path.read(BioLab.TE))
+@test isempty(Nucleus.Path.read(Nucleus.TE))

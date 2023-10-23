@@ -1,14 +1,14 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
-const DA = joinpath(BioLab._DA, "GCT")
+const DA = joinpath(Nucleus._DA, "GCT")
 
 # ---- #
 
-@test BioLab.Path.read(DA) == ["a.gct"]
+@test Nucleus.Path.read(DA) == ["a.gct"]
 
 # ---- #
 
@@ -16,9 +16,9 @@ const GC = joinpath(DA, "a.gct")
 
 # ---- #
 
-@test size(BioLab.GCT.read(GC)) === (13321, 190)
+@test size(Nucleus.GCT.read(GC)) === (13321, 190)
 
 # ---- #
 
 # 97.734 ms (71117 allocations: 23.64 MiB)
-#@btime BioLab.GCT.read(GC);
+#@btime Nucleus.GCT.read(GC);

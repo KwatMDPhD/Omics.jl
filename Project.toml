@@ -1,7 +1,7 @@
-name = "BioLab"
-uuid = "1fe83854-81c0-42f7-afc9-71ba9af673ca"
+name = "Nucleus"
+uuid = "ef0d6b11-c3c3-4448-b7ee-336ac2b00706"
 authors = ["KwatMDPhD <kwat.me@icloud.com>"]
-version = "0.14.0"
+version = "0.15.0"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"

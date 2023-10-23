@@ -1,19 +1,19 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
 for ne in (-2.0, -2, -1.0, -1, -0.0)
 
-    @test BioLab.Number.is_negative(ne)
+    @test Nucleus.Number.is_negative(ne)
 
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.458 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Number.is_negative($ne)
+    #@btime Nucleus.Number.is_negative($ne)
 
 end
 
@@ -21,7 +21,7 @@ end
 
 for po in (2.0, 2, 1.0, 1, 0.0, 0)
 
-    @test BioLab.Number.is_positive(po)
+    @test Nucleus.Number.is_positive(po)
 
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
@@ -29,6 +29,6 @@ for po in (2.0, 2, 1.0, 1, 0.0, 0)
     # 1.500 ns (0 allocations: 0 bytes)
     # 1.458 ns (0 allocations: 0 bytes)
     # 1.500 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Number.is_positive($po)
+    #@btime Nucleus.Number.is_positive($po)
 
 end

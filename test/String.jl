@@ -1,6 +1,6 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
@@ -56,9 +56,9 @@ const BA_ = (
 
 for ba in BA_
 
-    @test BioLab.String.is_bad(ba)
+    @test Nucleus.String.is_bad(ba)
 
-    #@btime BioLab.String.is_bad($ba)
+    #@btime Nucleus.String.is_bad($ba)
 
 end
 
@@ -79,9 +79,9 @@ const GO_ = (
 
 for go in GO_
 
-    @test !BioLab.String.is_bad(go)
+    @test !Nucleus.String.is_bad(go)
 
-    #@btime BioLab.String.is_bad($go)
+    #@btime Nucleus.String.is_bad($go)
 
 end
 
@@ -98,7 +98,7 @@ for (st, re) in (
     ("1/2", "1/2"),
 )
 
-    @test BioLab.String.try_parse(st) === re
+    @test Nucleus.String.try_parse(st) === re
 
     # 41.498 ns (0 allocations: 0 bytes)
     # 46.932 ns (0 allocations: 0 bytes)
@@ -108,7 +108,7 @@ for (st, re) in (
     # 279.250 μs (8 allocations: 352 bytes)
     # 356.500 μs (20 allocations: 848 bytes)
     # 356.583 μs (20 allocations: 848 bytes)
-    #@btime BioLab.String.try_parse($st)
+    #@btime Nucleus.String.try_parse($st)
 
 end
 
@@ -120,21 +120,21 @@ const STL = "Can"
 
 for (n, re) in ((0, "..."), (1, "C..."), (2, "Ca..."), (3, "Can"), (4, "Can"))
 
-    @test BioLab.String.limit(STL, n) === re
+    @test Nucleus.String.limit(STL, n) === re
 
     # 42.339 ns (5 allocations: 184 bytes)
     # 45.416 ns (5 allocations: 184 bytes)
     # 45.079 ns (5 allocations: 184 bytes)
     # 3.333 ns (0 allocations: 0 bytes)
     # 3.333 ns (0 allocations: 0 bytes)
-    #@btime BioLab.String.limit(STL, $n)
+    #@btime Nucleus.String.limit(STL, $n)
 
 end
 
 # ---- #
 
 # 1.667 μs (5 allocations: 97.91 KiB)
-#@btime BioLab.String.limit($(repeat('a', 100001)), 100000);
+#@btime Nucleus.String.limit($(repeat('a', 100001)), 100000);
 
 # ---- #
 
@@ -148,13 +148,13 @@ const DE = '.'
 
 for (id, re) in ((1, "a"), (2, "b"), (3, "c"), (26, "z"))
 
-    @test BioLab.String.split_get(STS, DE, id) == re
+    @test Nucleus.String.split_get(STS, DE, id) == re
 
     # 89.596 ns (2 allocations: 272 bytes)
     # 116.793 ns (2 allocations: 272 bytes)
     # 140.534 ns (2 allocations: 272 bytes)
     # 686.947 ns (3 allocations: 1.25 KiB)
-    #@btime BioLab.String.split_get(STS, DE, $id)
+    #@btime Nucleus.String.split_get(STS, DE, $id)
 
 end
 
@@ -180,7 +180,7 @@ for (st, re) in (
 
         end
 
-        @test BioLab.String.count(n, st) === "$n $re2"
+        @test Nucleus.String.count(n, st) === "$n $re2"
 
         # 163.158 ns (10 allocations: 448 bytes)
         # 162.318 ns (10 allocations: 448 bytes)
@@ -207,7 +207,7 @@ for (st, re) in (
         # 111.801 ns (5 allocations: 248 bytes)
         # 110.872 ns (5 allocations: 248 bytes)
         # 110.392 ns (5 allocations: 248 bytes)
-        #@btime BioLab.String.count($n, $st)
+        #@btime Nucleus.String.count($n, $st)
 
     end
 

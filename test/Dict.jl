@@ -2,15 +2,15 @@ using OrderedCollections: OrderedDict
 
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
-const DA = joinpath(BioLab._DA, "Dict")
+const DA = joinpath(Nucleus._DA, "Dict")
 
 # ---- #
 
-@test BioLab.Path.read(DA) == [
+@test Nucleus.Path.read(DA) == [
     "c2.all.v7.1.symbols.gmt",
     "example.toml",
     "example_1.json",
@@ -37,7 +37,7 @@ for (ke, va, re) in (
 
     for _ in 1:3
 
-        BioLab.Dict.set_with_suffix!(ke_va, ke, va)
+        Nucleus.Dict.set_with_suffix!(ke_va, ke, va)
 
     end
 
@@ -45,7 +45,7 @@ for (ke, va, re) in (
 
     # 138.633 μs (4121 allocations: 275.38 KiB)
     # 138.961 μs (4112 allocations: 270.93 KiB)
-    #@btime BioLab.Dict.set_with_suffix!(ke_va, $ke, $va) setup = (ke_va = copy(KES_VA)) evals =
+    #@btime Nucleus.Dict.set_with_suffix!(ke_va, $ke, $va) setup = (ke_va = copy(KES_VA)) evals =
     #    1000
 
 end
@@ -58,7 +58,7 @@ for (ke1_va, ke2_va, re) in (
     (Dict(1 => "Aa"), Dict(2.0 => view("Bb", 1:2)), Dict{Float64, AbstractString}),
 )
 
-    @test typeof(BioLab.Dict.merge(ke1_va, ke2_va)) === re
+    @test typeof(Nucleus.Dict.merge(ke1_va, ke2_va)) === re
 
 end
 
@@ -77,11 +77,11 @@ for (ke1_va, ke2_va, re) in (
     (KE2_VA, KE1_VA, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))),
 )
 
-    @test BioLab.Dict.merge(ke1_va, ke2_va) == re
+    @test Nucleus.Dict.merge(ke1_va, ke2_va) == re
 
     # 1.679 μs (32 allocations: 2.86 KiB)
     # 1.654 μs (32 allocations: 2.86 KiB)
-    #@btime BioLab.Dict.merge($ke1_va, $ke2_va)
+    #@btime Nucleus.Dict.merge($ke1_va, $ke2_va)
 
 end
 
@@ -100,7 +100,7 @@ for (an_id, re) in (
     (Dict('A' => 1, 'Z' => 2, 'B' => 3), [true, false, true]),
 )
 
-    is_ = BioLab.Dict.is_in(an_id, AN1_)
+    is_ = Nucleus.Dict.is_in(an_id, AN1_)
 
     @test typeof(is_) === BitVector
 
@@ -112,19 +112,19 @@ for (an_id, re) in (
     # 32.235 ns (2 allocations: 96 bytes)
     # 32.277 ns (2 allocations: 96 bytes)
     # 32.109 ns (2 allocations: 96 bytes)
-    #@btime BioLab.Dict.is_in($an_id, AN1_)
+    #@btime Nucleus.Dict.is_in($an_id, AN1_)
 
 end
 
 # ---- #
 
 const FE_ = reverse!(
-    BioLab.DataFrame.read(joinpath(DA, "gene_x_statistic_x_number.tsv"); select = [1])[!, 1],
+    Nucleus.DataFrame.read(joinpath(DA, "gene_x_statistic_x_number.tsv"); select = [1])[!, 1],
 )
 
 # ---- #
 
-const FE1_ = BioLab.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
+const FE1_ = Nucleus.GMT.read(joinpath(DA, "c2.all.v7.1.symbols.gmt"))["COLLER_MYC_TARGETS_UP"]
 
 # ---- #
 
@@ -165,7 +165,7 @@ const FE_ID = Dict(fe => id for (id, fe) in enumerate(FE_))
 # ---- #
 
 # 362.577 ns (2 allocations: 2.66 KiB)
-#@btime BioLab.Dict.is_in(FE_ID, FE1_);
+#@btime Nucleus.Dict.is_in(FE_ID, FE1_);
 
 # ---- #
 
@@ -175,7 +175,7 @@ const JS1 = joinpath(DA, "example_1.json")
 
 for ty in (Dict{String, Any}, OrderedDict{String, Any}, OrderedDict{String, String})
 
-    @test typeof(BioLab.Dict.read(JS1, ty)) === ty
+    @test typeof(Nucleus.Dict.read(JS1, ty)) === ty
 
 end
 
@@ -237,7 +237,7 @@ for (fi, ty, re) in (
     ),
 )
 
-    ke_va = BioLab.Dict.read(fi)
+    ke_va = Nucleus.Dict.read(fi)
 
     @test typeof(ke_va) === ty
 
@@ -247,7 +247,7 @@ end
 
 # ---- #
 
-const JSW = joinpath(BioLab.TE, "write_read.json")
+const JSW = joinpath(Nucleus.TE, "write_read.json")
 
 # ---- #
 
@@ -270,11 +270,11 @@ const KEW_VA = Dict(
 
 # ---- #
 
-BioLab.Dict.write(JSW, KEW_VA)
+Nucleus.Dict.write(JSW, KEW_VA)
 
 # ---- #
 
-const KEWR_VA = BioLab.Dict.read(JSW)
+const KEWR_VA = Nucleus.Dict.read(JSW)
 
 # ---- #
 

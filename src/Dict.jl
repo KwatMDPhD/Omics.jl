@@ -6,7 +6,7 @@ using OrderedCollections: OrderedDict
 
 using TOML: parsefile as toml_parsefile
 
-using ..BioLab
+using ..Nucleus
 
 function set_with_suffix!(ke_va, ke, va)
 
@@ -94,7 +94,7 @@ end
 
 function read(fi, dicttype = OrderedDict; ke_ar...)
 
-    ex = BioLab.Path.get_extension(fi)
+    ex = Nucleus.Path.get_extension(fi)
 
     if ex == "json" || ex == "ipynb"
 

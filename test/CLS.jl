@@ -1,14 +1,14 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
-const DA = joinpath(BioLab._DA, "CLS")
+const DA = joinpath(Nucleus._DA, "CLS")
 
 # ---- #
 
-@test BioLab.Path.read(DA) == ["CCLE_mRNA_20Q2_no_haem_phen.cls", "GSE76137.cls", "LPS_phen.cls"]
+@test Nucleus.Path.read(DA) == ["CCLE_mRNA_20Q2_no_haem_phen.cls", "GSE76137.cls", "LPS_phen.cls"]
 
 # ---- #
 
@@ -19,7 +19,7 @@ for n in (10, 100, 1000)
     # 172.545 ns (1 allocation: 144 bytes)
     # 1.346 μs (1 allocation: 896 bytes)
     # 13.334 μs (1 allocation: 7.94 KiB)
-    #@btime BioLab.CLS._make_matrix(st -> parse(Float64, st), $st_)
+    #@btime Nucleus.CLS._make_matrix(st -> parse(Float64, st), $st_)
 
 end
 
@@ -37,7 +37,7 @@ for (cl, ta, re) in (
 
     cl = joinpath(DA, cl)
 
-    nar, ro_, co_, ta_x_sa_x_nu = BioLab.DataFrame.separate(BioLab.CLS.read(cl))
+    nar, ro_, co_, ta_x_sa_x_nu = Nucleus.DataFrame.separate(Nucleus.CLS.read(cl))
 
     @test nar === "Target"
 
@@ -52,6 +52,6 @@ for (cl, ta, re) in (
     # 387.667 μs (6234 allocations: 530.46 KiB)
     # 9.875 μs (98 allocations: 7.70 KiB)
     # 9.666 μs (98 allocations: 7.64 KiB)
-    #@btime BioLab.CLS.read($cl)
+    #@btime Nucleus.CLS.read($cl)
 
 end

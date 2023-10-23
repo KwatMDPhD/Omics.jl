@@ -1,10 +1,10 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
-const HT = joinpath(BioLab.TE, "name.html")
+const HT = joinpath(Nucleus.TE, "name.html")
 
 # ---- #
 
@@ -20,7 +20,7 @@ const SC = "SCRIPT"
 
 # ---- #
 
-BioLab.HTML.make(HT, SR_, ID, SC)
+Nucleus.HTML.make(HT, SR_, ID, SC)
 
 # ---- #
 
@@ -30,6 +30,6 @@ BioLab.HTML.make(HT, SR_, ID, SC)
 
 for ba in ("#ff0000", "#0000ff")
 
-    BioLab.HTML.make("", SR_, ID, SC; ba)
+    Nucleus.HTML.make("", SR_, ID, SC; ba)
 
 end

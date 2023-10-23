@@ -1,6 +1,6 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
@@ -17,7 +17,7 @@ for (n, n_ex, re) in (
     (5, 6, [1, 2, 3, 4, 5]),
 )
 
-    @test BioLab.Rank.get_extreme(n, n_ex) == re
+    @test Nucleus.Rank.get_extreme(n, n_ex) == re
 
     # 18.662 ns (1 allocation: 64 bytes)
     # 18.639 ns (1 allocation: 64 bytes)
@@ -25,7 +25,7 @@ for (n, n_ex, re) in (
     # 59.978 ns (3 allocations: 208 bytes)
     # 19.915 ns (1 allocation: 96 bytes)
     # 19.893 ns (1 allocation: 96 bytes)
-    #@btime BioLab.Rank.get_extreme($n, $n_ex)
+    #@btime Nucleus.Rank.get_extreme($n, $n_ex)
 
 end
 
@@ -79,7 +79,7 @@ for (an_, n_ex, re) in (
     (CH_, lastindex(CH_) + 1, sort(CH_)),
 )
 
-    @test view(an_, BioLab.Rank.get_extreme(an_, n_ex)) == re
+    @test view(an_, Nucleus.Rank.get_extreme(an_, n_ex)) == re
 
     # 61.227 ns (3 allocations: 192 bytes)
     # 61.227 ns (3 allocations: 192 bytes)
@@ -91,6 +91,6 @@ for (an_, n_ex, re) in (
     # 318.731 ns (6 allocations: 832 bytes)
     # 320.415 ns (6 allocations: 896 bytes)
     # 300.299 ns (4 allocations: 1.06 KiB)
-    #@btime BioLab.Rank.get_extreme($an_, $n_ex)
+    #@btime Nucleus.Rank.get_extreme($an_, $n_ex)
 
 end

@@ -1,6 +1,6 @@
 module HTML
 
-using ..BioLab
+using ..Nucleus
 
 const HE = 800
 
@@ -10,7 +10,7 @@ function make(ht, sr_, id, sc; he = HE, wi = WI, ba = "#27221f")
 
     if isempty(ht)
 
-        ht = joinpath(BioLab.TE, "$(BioLab.Time.stamp()).html")
+        ht = joinpath(Nucleus.TE, "$(Nucleus.Time.stamp()).html")
 
     end
 
@@ -34,7 +34,7 @@ function make(ht, sr_, id, sc; he = HE, wi = WI, ba = "#27221f")
         ),
     )
 
-    BioLab.Path.open(ht)
+    Nucleus.Path.open(ht)
 
 end
 

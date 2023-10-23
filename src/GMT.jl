@@ -1,6 +1,6 @@
 module GMT
 
-using ..BioLab
+using ..Nucleus
 
 function read(gm)
 
@@ -12,7 +12,7 @@ function read(gm)
 
         se = sp_[1]
 
-        BioLab.Error.error_has_key(se_ge_, se)
+        Nucleus.Error.error_has_key(se_ge_, se)
 
         se_ge_[se] = filter!(!isempty, view(sp_, 3:lastindex(sp_)))
 

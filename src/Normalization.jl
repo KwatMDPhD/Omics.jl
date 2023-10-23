@@ -2,7 +2,7 @@ module Normalization
 
 using StatsBase: competerank, denserank, mean, std, tiedrank
 
-using ..BioLab
+using ..Nucleus
 
 function normalize_with_0!(nu_)
 
@@ -14,7 +14,7 @@ end
 
 function normalize_with_01!(nu_)
 
-    mi, ma = BioLab.Collection.get_minimum_maximum(nu_)
+    mi, ma = Nucleus.Collection.get_minimum_maximum(nu_)
 
     ra = ma - mi
 

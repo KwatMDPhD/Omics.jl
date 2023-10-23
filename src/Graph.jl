@@ -2,7 +2,7 @@ module Graph
 
 using JSON: json
 
-using ..BioLab
+using ..Nucleus
 
 function plot(
     ht,
@@ -35,7 +35,7 @@ function plot(
 
         if isfile(dw)
 
-            BioLab.Path.remove(dw)
+            Nucleus.Path.remove(dw)
 
         end
 
@@ -59,7 +59,7 @@ function plot(
 
     id = "Cytoscape"
 
-    BioLab.HTML.make(
+    Nucleus.HTML.make(
         ht,
         # TODO: Use the latest.
         (
@@ -99,13 +99,13 @@ function plot(
 
     if !isempty(dw)
 
-        BioLab.Path.wait(dw, 40)
+        Nucleus.Path.wait(dw, 40)
 
         fi = joinpath(dirname(ht), na)
 
         if isfile(fi)
 
-            BioLab.Path.remove(fi)
+            Nucleus.Path.remove(fi)
 
         end
 
@@ -119,7 +119,7 @@ end
 
 function read(js)
 
-    ty_el_ = BioLab.Dict.read(js)["elements"]
+    ty_el_ = Nucleus.Dict.read(js)["elements"]
 
     el_ = ty_el_["nodes"]
 

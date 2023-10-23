@@ -2,13 +2,13 @@ module FeatureXSample
 
 using StatsBase: median
 
-using ..BioLab
+using ..Nucleus
 
 function count(na_, an___)
 
     for (na, an_) in zip(na_, an___)
 
-        @info "$na\n$(BioLab.Collection.count_sort_string(an_))"
+        @info "$na\n$(Nucleus.Collection.count_sort_string(an_))"
 
     end
 
@@ -26,33 +26,33 @@ function transform(
     na = "Data",
 )
 
-    BioLab.Error.error_missing(di)
+    Nucleus.Error.error_missing(di)
 
-    BioLab.Error.error_bad(isnothing, fe_)
+    Nucleus.Error.error_bad(isnothing, fe_)
 
-    BioLab.Error.error_bad(ismissing, fe_)
+    Nucleus.Error.error_bad(ismissing, fe_)
 
-    BioLab.Error.error_bad(BioLab.String.is_bad, fe_)
+    Nucleus.Error.error_bad(Nucleus.String.is_bad, fe_)
 
-    BioLab.Error.error_duplicate(sa_)
+    Nucleus.Error.error_duplicate(sa_)
 
-    BioLab.Error.error_bad(isnothing, sa_)
+    Nucleus.Error.error_bad(isnothing, sa_)
 
-    BioLab.Error.error_bad(ismissing, sa_)
+    Nucleus.Error.error_bad(ismissing, sa_)
 
-    BioLab.Error.error_bad(BioLab.String.is_bad, sa_)
+    Nucleus.Error.error_bad(Nucleus.String.is_bad, sa_)
 
-    BioLab.Error.error_bad(isnothing, fe_x_sa_x_nu)
+    Nucleus.Error.error_bad(isnothing, fe_x_sa_x_nu)
 
-    BioLab.Error.error_bad(ismissing, fe_x_sa_x_nu)
+    Nucleus.Error.error_bad(ismissing, fe_x_sa_x_nu)
 
-    BioLab.Error.error_bad(isnan, fe_x_sa_x_nu)
+    Nucleus.Error.error_bad(isnan, fe_x_sa_x_nu)
 
-    BioLab.Error.error_bad(isinf, fe_x_sa_x_nu)
+    Nucleus.Error.error_bad(isinf, fe_x_sa_x_nu)
 
     layout = Dict("title" => Dict("text" => na))
 
-    BioLab.Plot.plot_heat_map(
+    Nucleus.Plot.plot_heat_map(
         joinpath(di, "feature_x_sample_x_number.html"),
         fe_x_sa_x_nu;
         y = fe_,
@@ -62,18 +62,18 @@ function transform(
         layout,
     )
 
-    BioLab.Plot.plot_histogram(joinpath(di, "number.html"), (vec(fe_x_sa_x_nu),); layout)
+    Nucleus.Plot.plot_histogram(joinpath(di, "number.html"), (vec(fe_x_sa_x_nu),); layout)
 
     if !isempty(fe_fe2)
 
         # TODO: Generalize the "ENSG" logic.
-        BioLab.Gene.rename!(fe_, fe_fe2)
+        Nucleus.Gene.rename!(fe_, fe_fe2)
 
     end
 
     if !allunique(fe_)
 
-        fe_, fe_x_sa_x_nu = BioLab.Matrix.collapse(fu, ty, fe_, fe_x_sa_x_nu)
+        fe_, fe_x_sa_x_nu = Nucleus.Matrix.collapse(fu, ty, fe_, fe_x_sa_x_nu)
 
     end
 
@@ -81,7 +81,7 @@ function transform(
 
         fe_x_sa_x_nu .= log2.(fe_x_sa_x_nu .+ 1)
 
-        BioLab.Plot.plot_histogram(
+        Nucleus.Plot.plot_histogram(
             joinpath(di, "number_plus1_log2.html"),
             (vec(fe_x_sa_x_nu),);
             layout = Dict("title" => Dict("text" => "$na (+1 Log2)")),

@@ -10,7 +10,7 @@ using Mmap: mmap
 
 using XLSX: readtable
 
-using ..BioLab
+using ..Nucleus
 
 function make(nar, ro_, co_, ma)
 
@@ -30,11 +30,11 @@ end
 
 function read(fi; ke_ar...)
 
-    BioLab.Error.error_missing(fi)
+    Nucleus.Error.error_missing(fi)
 
     it_ = mmap(fi)
 
-    if BioLab.Path.get_extension(fi) == "gz"
+    if Nucleus.Path.get_extension(fi) == "gz"
 
         it_ = transcode(GzipDecompressor, it_)
 

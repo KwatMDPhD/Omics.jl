@@ -2,13 +2,13 @@ module Plot
 
 using JSON: json
 
-using ..BioLab
+using ..Nucleus
 
 function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}(); ke_ar...)
 
     id = "Plotly"
 
-    BioLab.HTML.make(
+    Nucleus.HTML.make(
         ht,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
         id,
@@ -38,14 +38,14 @@ end
 
 function _initialize_marker(an___)
 
-    (he -> Dict("color" => he)).(BioLab.Color.color(eachindex(an___)))
+    (he -> Dict("color" => he)).(Nucleus.Color.color(eachindex(an___)))
 
 end
 
 const COLORBAR = Dict(
     "len" => 0.5,
     "thickness" => 16,
-    "outlinecolor" => BioLab.Color.HEFA,
+    "outlinecolor" => Nucleus.Color.HEFA,
     "title" => Dict("font" => Dict("family" => "Droid Sans Mono", "size" => 13)),
     "tickfont" => Dict("family" => "Droid Sans Mono", "size" => 10),
 )
@@ -85,7 +85,7 @@ function plot_scatter(
                 "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
+        Nucleus.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
         ke_ar...,
     )
 
@@ -112,7 +112,7 @@ function plot_bar(
                 "marker" => marker_[id],
             ) for id in eachindex(y_)
         ],
-        BioLab.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
+        Nucleus.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
         ke_ar...,
     )
 
@@ -162,7 +162,7 @@ function plot_histogram(
 
     end
 
-    layout = BioLab.Dict.merge(
+    layout = Nucleus.Dict.merge(
         Dict("yaxis2" => Dict("showgrid" => false, "title" => Dict("text" => title_text))),
         layout,
     )
@@ -204,7 +204,7 @@ end
 
 function _group(it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
 
-    id_ = BioLab.Clustering.order(it_, ma)
+    id_ = Nucleus.Clustering.order(it_, ma)
 
     it_[id_], an_[id_], ma[:, id_], ticktext
 
@@ -224,7 +224,7 @@ function _make_group_heat_map!(ke_va, it_, colorbarx, ticktext)
 
     ke_va["type"] = "heatmap"
 
-    ke_va["colorscale"] = BioLab.Color.fractionate(BioLab.Color.pick_color_scheme(it_))
+    ke_va["colorscale"] = Nucleus.Color.fractionate(Nucleus.Color.pick_color_scheme(it_))
 
     ke_va["colorbar"] = merge(
         COLORBAR,
@@ -243,7 +243,7 @@ function plot_heat_map(
     text = z,
     nar = "Row",
     nac = "Column",
-    co = BioLab.Color.pick_color_scheme(z),
+    co = Nucleus.Color.pick_color_scheme(z),
     grr_ = Int[],
     grc_ = Int[],
     layout = Dict{String, Any}(),
@@ -324,13 +324,13 @@ function plot_heat_map(
             "x" => x,
             "z" => collect(eachrow(z)),
             "text" => collect(eachrow(text)),
-            "colorscale" => BioLab.Color.fractionate(co),
+            "colorscale" => Nucleus.Color.fractionate(co),
             "colorbar" => merge(
                 COLORBAR,
                 Dict(
                     "x" => colorbarx1,
                     "tickvals" =>
-                        range(BioLab.Collection.get_minimum_maximum(z)...; length, step),
+                        range(Nucleus.Collection.get_minimum_maximum(z)...; length, step),
                 ),
             ),
         ),
@@ -347,7 +347,7 @@ function plot_heat_map(
     plot(
         ht,
         data,
-        BioLab.Dict.merge(
+        Nucleus.Dict.merge(
             Dict(
                 "yaxis" => Dict(
                     "domain" => ydomain,
@@ -381,7 +381,7 @@ function plot_radar(
     ra_,
     an_;
     name_ = _initialize_name(ra_),
-    line_color_ = BioLab.Color.color(eachindex(ra_)),
+    line_color_ = Nucleus.Color.color(eachindex(ra_)),
     fillcolor_ = line_color_,
     radialaxis_range = (0, maximum(vcat(ra_...))),
     layout = Dict{String, Any}(),
@@ -409,7 +409,7 @@ function plot_radar(
                 "fillcolor" => fillcolor_[id],
             ) for id in eachindex(ra_)
         ],
-        BioLab.Dict.merge(
+        Nucleus.Dict.merge(
             Dict(
                 "polar" => Dict(
                     "radialaxis" => Dict(
@@ -425,7 +425,7 @@ function plot_radar(
                             "color" => "#1f4788",
                         ),
                         "gridwidth" => 2,
-                        "gridcolor" => BioLab.Color.HEFA,
+                        "gridcolor" => Nucleus.Color.HEFA,
                     ),
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
@@ -437,7 +437,7 @@ function plot_radar(
                         "tickfont" =>
                             Dict("family" => "Optima", "size" => 32, "color" => "#23191e"),
                         "gridwidth" => 2,
-                        "gridcolor" => BioLab.Color.HEFA,
+                        "gridcolor" => Nucleus.Color.HEFA,
                     ),
                 ),
                 "title" => Dict(
@@ -460,7 +460,7 @@ function animate(gi, pn_)
 
     run(`convert -delay 32 -loop 0 $pn_ $gi`)
 
-    BioLab.Path.open(gi)
+    Nucleus.Path.open(gi)
 
 end
 

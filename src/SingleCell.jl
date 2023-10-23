@@ -1,6 +1,6 @@
 module SingleCell
 
-using ..BioLab
+using ..Nucleus
 
 function read(sa_di)
 
@@ -27,13 +27,13 @@ function read(sa_di)
         @info "Reading \"$sa\""
 
         saf_ =
-            BioLab.DataFrame.read(joinpath(di, "features.tsv.gz"); header = false, select = [2])[
+            Nucleus.DataFrame.read(joinpath(di, "features.tsv.gz"); header = false, select = [2])[
                 !,
                 1,
             ]
 
         sab_ =
-            BioLab.DataFrame.read(joinpath(di, "barcodes.tsv.gz"); header = false, select = [1])[
+            Nucleus.DataFrame.read(joinpath(di, "barcodes.tsv.gz"); header = false, select = [1])[
                 !,
                 1,
             ]
@@ -43,7 +43,7 @@ function read(sa_di)
         n_sab = lastindex(sab_)
 
         index_x_featurebarcodecount_x_it =
-            BioLab.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3)
+            Nucleus.DataFrame.read(joinpath(di, "matrix.mtx.gz"); header = 3)
 
         co1, co2, co3 = names(index_x_featurebarcodecount_x_it)
 
@@ -101,13 +101,13 @@ function read(sa_di)
 
         @warn begin
 
-            st = BioLab.Collection.count_sort_string(fe_, 2)
+            st = Nucleus.Collection.count_sort_string(fe_, 2)
 
-            "Features have $(BioLab.String.count(count('\n', st), "duplicate")).\n$st"
+            "Features have $(Nucleus.String.count(count('\n', st), "duplicate")).\n$st"
 
         end
 
-        fe_, fe_x_ba_x_co = BioLab.Matrix.collapse(maximum, Int, fe_, fe_x_ba_x_co)
+        fe_, fe_x_ba_x_co = Nucleus.Matrix.collapse(maximum, Int, fe_, fe_x_ba_x_co)
 
     end
 

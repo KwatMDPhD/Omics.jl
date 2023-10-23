@@ -1,6 +1,6 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
@@ -56,7 +56,7 @@ const NAME1 = "preset"
 
 # ---- #
 
-const HT1 = joinpath(BioLab.TE, "$NAME1.html")
+const HT1 = joinpath(Nucleus.TE, "$NAME1.html")
 
 # ---- #
 
@@ -64,7 +64,7 @@ const EX1 = "png"
 
 # ---- #
 
-BioLab.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1)
+Nucleus.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1)
 
 # ---- #
 
@@ -72,7 +72,7 @@ BioLab.Graph.plot(HT1, EL_; la = Dict("name" => NAME1), ex = EX1)
 
 # ---- #
 
-@test isfile(joinpath(BioLab.TE, "$NAME1.$EX1"))
+@test isfile(joinpath(Nucleus.TE, "$NAME1.$EX1"))
 
 # ---- #
 
@@ -80,7 +80,7 @@ const NAME2 = "cose"
 
 # ---- #
 
-const HT2 = joinpath(BioLab.TE, "$NAME2.html")
+const HT2 = joinpath(Nucleus.TE, "$NAME2.html")
 
 # ---- #
 
@@ -88,7 +88,7 @@ const EX2 = "json"
 
 # ---- #
 
-BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2)
+Nucleus.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2)
 
 # ---- #
 
@@ -96,7 +96,7 @@ BioLab.Graph.plot(HT2, EL_; la = Dict("name" => NAME2), ex = EX2)
 
 # ---- #
 
-const EL2_ = BioLab.Graph.read(joinpath(BioLab.TE, "$NAME2.$EX2"))
+const EL2_ = Nucleus.Graph.read(joinpath(Nucleus.TE, "$NAME2.$EX2"))
 
 # ---- #
 
@@ -116,7 +116,7 @@ end
 
 # ---- #
 
-BioLab.Graph.position!(EL_, EL2_)
+Nucleus.Graph.position!(EL_, EL2_)
 
 # ---- #
 
@@ -128,7 +128,7 @@ const NAME3 = "cose_preset"
 
 # ---- #
 
-const HT3 = joinpath(BioLab.TE, "$NAME3.html")
+const HT3 = joinpath(Nucleus.TE, "$NAME3.html")
 
 # ---- #
 
@@ -136,7 +136,7 @@ const EX3 = "json"
 
 # ---- #
 
-BioLab.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3)
+Nucleus.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3)
 
 # ---- #
 
@@ -144,4 +144,4 @@ BioLab.Graph.plot(HT3, EL_; la = Dict("name" => "preset"), ex = EX3)
 
 # ---- #
 
-@test EL2_ == BioLab.Graph.read(joinpath(BioLab.TE, "$NAME3.$EX3"))
+@test EL2_ == Nucleus.Graph.read(joinpath(Nucleus.TE, "$NAME3.$EX3"))

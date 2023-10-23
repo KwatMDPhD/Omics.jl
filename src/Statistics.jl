@@ -6,7 +6,7 @@ using MultipleTesting: BenjaminiHochberg, adjust
 
 using StatsBase: std
 
-using ..BioLab
+using ..Nucleus
 
 function get_quantile(cu)
 
@@ -58,7 +58,7 @@ function _separate(fe_x_id_x_ra, nef_, pof_)
 
         ra = fe_x_id_x_ra[id1, id2]
 
-        if BioLab.Number.is_negative(ra)
+        if Nucleus.Number.is_negative(ra)
 
             ra_ = ne_
 

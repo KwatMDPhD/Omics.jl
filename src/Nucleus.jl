@@ -1,12 +1,12 @@
-module BioLab
+module Nucleus
 
 const _DA = joinpath(dirname(@__DIR__), "data")
 
-const TE = joinpath(tempdir(), "BioLab")
+const TE = joinpath(tempdir(), "Nucleus")
 
 for jl in readdir(@__DIR__)
 
-    if jl != "BioLab.jl"
+    if jl != "Nucleus.jl"
 
         include(jl)
 
@@ -16,7 +16,7 @@ end
 
 function __init__()
 
-    BioLab.Path.remake_directory(TE)
+    Nucleus.Path.remake_directory(TE)
 
 end
 

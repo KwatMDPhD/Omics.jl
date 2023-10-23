@@ -1,14 +1,14 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
-const DA = joinpath(BioLab._DA, "Gene")
+const DA = joinpath(Nucleus._DA, "Gene")
 
 # ---- #
 
-@test BioLab.Path.read(DA) == ["ensembl.tsv.gz", "uniprot.tsv.gz"]
+@test Nucleus.Path.read(DA) == ["ensembl.tsv.gz", "uniprot.tsv.gz"]
 
 # ---- #
 
@@ -22,13 +22,13 @@ end
 
 function has_bad_string(da)
 
-    any(co -> any(BioLab.String.is_bad, skipmissing(co)), eachcol(da))
+    any(co -> any(Nucleus.String.is_bad, skipmissing(co)), eachcol(da))
 
 end
 
 # ---- #
 
-const EN = BioLab.Gene.read_ensemble()
+const EN = Nucleus.Gene.read_ensemble()
 
 # ---- #
 
@@ -44,7 +44,7 @@ const EN = BioLab.Gene.read_ensemble()
 
 # ---- #
 
-const UN = BioLab.Gene.read_uniprot()
+const UN = Nucleus.Gene.read_uniprot()
 
 # ---- #
 
@@ -64,7 +64,7 @@ const UN = BioLab.Gene.read_uniprot()
 
 # ---- #
 
-const EN_GE = BioLab.Gene.map_ensembl(EN)
+const EN_GE = Nucleus.Gene.map_ensembl(EN)
 
 # ---- #
 
@@ -81,11 +81,11 @@ end
 # ---- #
 
 # 2.155 s (36735645 allocations: 2.17 GiB)
-#@btime BioLab.Gene.map_ensembl(EN);
+#@btime Nucleus.Gene.map_ensembl(EN);
 
 # ---- #
 
-const PR_IO_AN = BioLab.Gene.map_uniprot(UN)
+const PR_IO_AN = Nucleus.Gene.map_uniprot(UN)
 
 # ---- #
 
@@ -98,7 +98,7 @@ const PR_IO_AN = BioLab.Gene.map_uniprot(UN)
 # ---- #
 
 # 55.693 ms (1632064 allocations: 94.68 MiB)
-#@btime BioLab.Gene.map_uniprot(UN);
+#@btime Nucleus.Gene.map_uniprot(UN);
 
 # ---- #
 
@@ -123,13 +123,13 @@ const FEG_ = FE_[.!ismissing.(FE_)]
 
 # ---- #
 
-BioLab.Gene.rename!(FEG_, EN_GE)
+Nucleus.Gene.rename!(FEG_, EN_GE)
 
 # ---- #
 
-disable_logging(Info)
+#disable_logging(Info)
 
 # ---- #
 
 # 45.191 ms (0 allocations: 0 bytes)
-#@btime BioLab.Gene.rename!(FEG_, EN_GE);
+#@btime Nucleus.Gene.rename!(FEG_, EN_GE);

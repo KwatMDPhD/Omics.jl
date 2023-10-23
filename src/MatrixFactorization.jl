@@ -4,7 +4,7 @@ using LinearAlgebra: pinv
 
 using NMF: nnmf
 
-using ..BioLab
+using ..Nucleus
 
 function factorize(
     ma,
@@ -44,11 +44,11 @@ function write(
     la_ = (id -> "$nal $id").(1:maximum(size(ma))),
     fa_ = (id -> "$naf $id").(1:minimum(size(ma))),
     no = true,
-    lo = BioLab.HTML.WI,
-    sh = BioLab.HTML.HE,
+    lo = Nucleus.HTML.WI,
+    sh = Nucleus.HTML.HE,
 )
 
-    BioLab.Error.error_missing(di)
+    Nucleus.Error.error_missing(di)
 
     id = findmax(size(ma))[2]
 
@@ -84,9 +84,9 @@ function write(
 
     pr = joinpath(di, lowercase(wh))
 
-    BioLab.DataFrame.write("$pr.tsv", BioLab.DataFrame.make(nar, ro_, co_, ma))
+    Nucleus.DataFrame.write("$pr.tsv", Nucleus.DataFrame.make(nar, ro_, co_, ma))
 
-    id_ = BioLab.Clustering.hierarchize(ma2).order
+    id_ = Nucleus.Clustering.hierarchize(ma2).order
 
     if isone(id)
 
@@ -116,11 +116,11 @@ function write(
 
     if no
 
-        foreach(BioLab.Normalization.normalize_with_0!, ea(ma))
+        foreach(Nucleus.Normalization.normalize_with_0!, ea(ma))
 
     end
 
-    BioLab.Plot.plot_heat_map(
+    Nucleus.Plot.plot_heat_map(
         "$pr.html",
         ma;
         y = ro_,

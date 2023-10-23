@@ -1,14 +1,14 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
-const DA = joinpath(BioLab._DA, "SingleCell")
+const DA = joinpath(Nucleus._DA, "SingleCell")
 
 # ---- #
 
-@test BioLab.Path.read(DA) == ["7166_mr_87_filtered", "7166_mr_96_filtered"]
+@test Nucleus.Path.read(DA) == ["7166_mr_87_filtered", "7166_mr_96_filtered"]
 
 # ---- #
 
@@ -19,7 +19,7 @@ const SA_DI = (
 
 # ---- #
 
-const FE_, BA_, FE_X_BA_X_CO, SA_ = BioLab.SingleCell.read(SA_DI)
+const FE_, BA_, FE_X_BA_X_CO, SA_ = Nucleus.SingleCell.read(SA_DI)
 
 # ---- #
 
@@ -36,4 +36,4 @@ const FE_, BA_, FE_X_BA_X_CO, SA_ = BioLab.SingleCell.read(SA_DI)
 # ---- #
 
 # 7.126 s (48442102 allocations: 7.47 GiB)
-#@btime BioLab.SingleCell.read(SA_DI);
+#@btime Nucleus.SingleCell.read(SA_DI);

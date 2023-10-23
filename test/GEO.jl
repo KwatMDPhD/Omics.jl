@@ -1,6 +1,6 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
@@ -8,11 +8,11 @@ const GS = "GSE122404"
 
 # ---- #
 
-const GZ = BioLab.GEO.download(BioLab.TE, GS)
+const GZ = Nucleus.GEO.download(Nucleus.TE, GS)
 
 # ---- #
 
-const BL_TH = BioLab.GEO.read(GZ)
+const BL_TH = Nucleus.GEO.read(GZ)
 
 # ---- #
 
@@ -103,16 +103,16 @@ const SA = SM_[1]
 # ---- #
 
 # 587.219 ms (10649 allocations: 27.73 MiB)
-#@btime BioLab.GEO.read(GZ);
+#@btime Nucleus.GEO.read(GZ);
 
 # ---- #
 
 # 11.487 ms (107248 allocations: 16.70 MiB)
-#@btime BioLab.GEO._dice($(SA_KE_VA[SA]["_ta"]));
+#@btime Nucleus.GEO._dice($(SA_KE_VA[SA]["_ta"]));
 
 # ---- #
 
-const SA_ = BioLab.GEO.get_sample(SA_KE_VA)
+const SA_ = Nucleus.GEO.get_sample(SA_KE_VA)
 
 # ---- #
 
@@ -125,11 +125,11 @@ const N_SA = lastindex(SM_)
 # ---- #
 
 # 314.062 ns (1 allocation: 208 bytes)
-#@btime BioLab.GEO.get_sample(SA_KE_VA);
+#@btime Nucleus.GEO.get_sample(SA_KE_VA);
 
 # ---- #
 
-const CH_, CH_X_SA_X_ST = BioLab.GEO.tabulate(SA_KE_VA)
+const CH_, CH_X_SA_X_ST = Nucleus.GEO.tabulate(SA_KE_VA)
 
 # ---- #
 
@@ -138,11 +138,11 @@ const CH_, CH_X_SA_X_ST = BioLab.GEO.tabulate(SA_KE_VA)
 # ---- #
 
 # 3.854 μs (9 allocations: 936 bytes)
-#@btime BioLab.GEO.tabulate(SA_KE_VA);
+#@btime Nucleus.GEO.tabulate(SA_KE_VA);
 
 # ---- #
 
-const FE_, FE_X_SA_X_FL = BioLab.GEO.tabulate(KE_VA, SA_KE_VA)
+const FE_, FE_X_SA_X_FL = Nucleus.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
@@ -151,7 +151,7 @@ const FE_, FE_X_SA_X_FL = BioLab.GEO.tabulate(KE_VA, SA_KE_VA)
 # ---- #
 
 # 360.595 ms (2378550 allocations: 366.52 MiB)
-#@btime BioLab.GEO.tabulate(KE_VA, SA_KE_VA);
+#@btime Nucleus.GEO.tabulate(KE_VA, SA_KE_VA);
 
 # ---- #
 
@@ -160,11 +160,11 @@ for (gs, re, pl_re...) in (
     ("GSE13534", (0, 4), "GPL96" => (22283, 4)),
 )
 
-    bl_th = BioLab.GEO.read(BioLab.GEO.download(BioLab.TE, gs))
+    bl_th = Nucleus.GEO.read(Nucleus.GEO.download(Nucleus.TE, gs))
 
     sa_ke_va = bl_th["SAMPLE"]
 
-    ch_, ch_x_sa_x_st = BioLab.GEO.tabulate(sa_ke_va)
+    ch_, ch_x_sa_x_st = Nucleus.GEO.tabulate(sa_ke_va)
 
     @test size(ch_x_sa_x_st) === re
 
@@ -174,11 +174,11 @@ for (gs, re, pl_re...) in (
 
         if isnothing(re)
 
-            @test BioLab.Error.@is BioLab.GEO.tabulate(ke_va, sa_ke_va)
+            @test Nucleus.Error.@is Nucleus.GEO.tabulate(ke_va, sa_ke_va)
 
         else
 
-            fe_, fe_x_sa_x_fl = BioLab.GEO.tabulate(ke_va, sa_ke_va)
+            fe_, fe_x_sa_x_fl = Nucleus.GEO.tabulate(ke_va, sa_ke_va)
 
             @test size(fe_x_sa_x_fl) === re
 

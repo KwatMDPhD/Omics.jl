@@ -1,6 +1,6 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
@@ -12,14 +12,14 @@ for (ro_, re) in (
     (['B', 'B', 'A'], (['A', 'B'], Bool[0 0 1; 1 1 0])),
 )
 
-    @test isequal(BioLab.Target.tabulate(ro_), re)
+    @test isequal(Nucleus.Target.tabulate(ro_), re)
 
     # 251.482 ns (12 allocations: 1.02 KiB)
     # 281.098 ns (12 allocations: 1.02 KiB)
     # 289.963 ns (12 allocations: 1.02 KiB)
     # 271.729 ns (12 allocations: 1.02 KiB)
     # 277.253 ns (12 allocations: 1.02 KiB)
-    #@btime BioLab.Target.tabulate($ro_)
+    #@btime Nucleus.Target.tabulate($ro_)
 
 end
 
@@ -105,7 +105,7 @@ for (ro___, co___, fl_, re) in (
     ),
 )
 
-    @test isequal(BioLab.Target.tabulate(ro___, co___, fl_), re)
+    @test isequal(Nucleus.Target.tabulate(ro___, co___, fl_), re)
 
     # 1.729 μs (65 allocations: 3.81 KiB)
     # 1.167 μs (44 allocations: 3.03 KiB)
@@ -115,7 +115,7 @@ for (ro___, co___, fl_, re) in (
     # 1.462 μs (51 allocations: 3.28 KiB)
     # 1.725 μs (64 allocations: 3.80 KiB)
     # 2.551 μs (81 allocations: 4.98 KiB)
-    #@btime BioLab.Target.tabulate($ro___, $co___, $fl_)
+    #@btime Nucleus.Target.tabulate($ro___, $co___, $fl_)
 
 end
 
@@ -127,9 +127,9 @@ for (ro_re_, co_, re) in ((
     (["Target 2", "Target 1"], [0 NaN 1 NaN; 0 0 1 1]),
 ),)
 
-    @test isequal(BioLab.Target.tabulate(ro_re_, co_), re)
+    @test isequal(Nucleus.Target.tabulate(ro_re_, co_), re)
 
     # 6.258 μs (6 allocations: 320 bytes)
-    #@btime BioLab.Target.tabulate($ro_re_, $co_)
+    #@btime Nucleus.Target.tabulate($ro_re_, $co_)
 
 end

@@ -2,7 +2,7 @@
 
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
@@ -12,17 +12,17 @@ function benchmark(ho, n_fe, n_sa)
 
         ta_ = collect(1.0:n_sa)
 
-        fe_x_sa_x_nu = BioLab.Simulation.make_matrix_1n(Float64, n_fe, n_sa)
+        fe_x_sa_x_nu = Nucleus.Simulation.make_matrix_1n(Float64, n_fe, n_sa)
 
     elseif ho == "ra"
 
-        ta_ = BioLab.Simulation.make_vector_mirror(cld(n_sa, 2), iseven(n_sa))
+        ta_ = Nucleus.Simulation.make_vector_mirror(cld(n_sa, 2), iseven(n_sa))
 
         fe_x_sa_x_nu = randn(n_fe, n_sa)
 
     end
 
-    BioLab.Match.cor,
+    Nucleus.Match.cor,
     "1234567890123456789012345678901234567890",
     "Feature",
     "Sample",
@@ -35,13 +35,13 @@ end
 
 # ---- #
 
-BioLab.Match.make(BioLab.TE, benchmark("f12", 1, 2)...)
+Nucleus.Match.make(Nucleus.TE, benchmark("f12", 1, 2)...)
 
 # ---- #
 
 for ex in ("tsv", "html")
 
-    @test isfile(joinpath(BioLab.TE, "feature_x_statistic_x_number.$ex"))
+    @test isfile(joinpath(Nucleus.TE, "feature_x_statistic_x_number.$ex"))
 
 end
 
@@ -49,9 +49,9 @@ end
 
 function make_directory_layout(title_text)
 
-    di = joinpath(BioLab.TE, BioLab.Path.clean(title_text))
+    di = joinpath(Nucleus.TE, Nucleus.Path.clean(title_text))
 
-    BioLab.Path.remake_directory(di)
+    Nucleus.Path.remake_directory(di)
 
     di, Dict("title" => Dict("text" => title_text))
 
@@ -67,7 +67,7 @@ for (n_fe, n_sa) in ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 
 
     di, layout = make_directory_layout("$n_fe x $n_sa")
 
-    BioLab.Match.make(di, benchmark("ra", n_fe, n_sa)...; layout)
+    Nucleus.Match.make(di, benchmark("ra", n_fe, n_sa)...; layout)
 
 end
 
@@ -90,7 +90,7 @@ for (ta_, fe_x_sa_x_nu) in
 
     di, layout = make_directory_layout("$(eltype(ta_)) x $(eltype(fe_x_sa_x_nu))")
 
-    BioLab.Match.make(di, FU, NAT, NAF, NAS, FE_, SA_, ta_, fe_x_sa_x_nu; layout)
+    Nucleus.Match.make(di, FU, NAT, NAF, NAS, FE_, SA_, ta_, fe_x_sa_x_nu; layout)
 
 end
 
@@ -124,9 +124,9 @@ for nu_ in ((1, 1, 2, 2, 4, 8), (1, 2, 4, 8, 2, 1))
 
     di, layout = make_directory_layout(string(nu_))
 
-    BioLab.Match.make(
+    Nucleus.Match.make(
         di,
-        BioLab.Match.cor,
+        Nucleus.Match.cor,
         "Group",
         "Feature",
         "Sample",
@@ -149,7 +149,7 @@ for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10), (30, 30))
 
     di, layout = make_directory_layout("n_ma = $n_ma, n_pv = $n_pv")
 
-    BioLab.Match.make(di, NS_...; n_ma, n_pv, layout)
+    Nucleus.Match.make(di, NS_...; n_ma, n_pv, layout)
 
 end
 
@@ -163,7 +163,7 @@ for n_ex in (0, 1, 2, 3, 6)
 
     di, layout = make_directory_layout("n_ex = $n_ex")
 
-    BioLab.Match.make(di, NE_...; n_ex, layout)
+    Nucleus.Match.make(di, NE_...; n_ex, layout)
 
 end
 
@@ -177,6 +177,6 @@ for st in (0, 0.1, 1, 2, 4, 8)
 
     di, layout = make_directory_layout("st = $st")
 
-    BioLab.Match.make(di, ST_...; st, layout)
+    Nucleus.Match.make(di, ST_...; st, layout)
 
 end

@@ -4,7 +4,7 @@ using StatsBase: mean
 
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
@@ -36,7 +36,7 @@ for (an___, ty, re) in (
 
     end
 
-    ma = BioLab.Matrix.make(an___)
+    ma = Nucleus.Matrix.make(an___)
 
     @test eltype(ma) == ty
 
@@ -53,7 +53,7 @@ for (an___, ty, re) in (
     # 23.637 ns (1 allocation: 80 bytes)
     # 33.527 ns (1 allocation: 96 bytes)
     # 63.903 ns (2 allocations: 176 bytes)
-    #@btime BioLab.Matrix.make($an___)
+    #@btime Nucleus.Matrix.make($an___)
 
 end
 
@@ -86,15 +86,15 @@ for (ro_, roc_, mac) in (
 
     if isnothing(roc_)
 
-        @test BioLab.Error.@is BioLab.Matrix.collapse(mean, Float64, ro_, MA)
+        @test Nucleus.Error.@is Nucleus.Matrix.collapse(mean, Float64, ro_, MA)
 
     else
 
-        @test BioLab.Matrix.collapse(mean, Float64, ro_, MA) == (roc_, mac)
+        @test Nucleus.Matrix.collapse(mean, Float64, ro_, MA) == (roc_, mac)
 
         # 751.078 ns (19 allocations: 1.28 KiB)
         # 659.063 ns (15 allocations: 1.08 KiB)
-        #@btime BioLab.Matrix.collapse(mean, Float64, $ro_, MA)
+        #@btime Nucleus.Matrix.collapse(mean, Float64, $ro_, MA)
 
     end
 
@@ -110,7 +110,7 @@ for n in (100, 1000, 10000, 20000)
     # 3.042 ms (1797 allocations: 11.92 MiB)
     # 572.708 ms (2770 allocations: 815.50 MiB)
     # 2.396 s (3103 allocations: 3.08 GiB)
-    #@btime BioLab.Matrix.collapse(
+    #@btime Nucleus.Matrix.collapse(
     #    mean,
     #    Float64,
     #    $([join(rand('A':'G', 3)) for _ in 1:n]),

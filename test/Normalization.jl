@@ -1,11 +1,11 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
 const NU___ =
-    ([0.0, 1, 2], [-1, 0, 0.3333333333333333, 1], BioLab.Simulation.make_matrix_1n(Float64, 2, 3))
+    ([0.0, 1, 2], [-1, 0, 0.3333333333333333, 1], Nucleus.Simulation.make_matrix_1n(Float64, 2, 3))
 
 # ---- #
 
@@ -23,14 +23,14 @@ for (nu_, re) in zip(
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_0!(co)
+    Nucleus.Normalization.normalize_with_0!(co)
 
     @test co == re
 
     # 25.291 ns (0 allocations: 0 bytes)
     # 26.833 ns (0 allocations: 0 bytes)
     # 29.666 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Normalization.normalize_with_0!(co) setup = (co = copy($nu_)) evals = 1000
+    #@btime Nucleus.Normalization.normalize_with_0!(co) setup = (co = copy($nu_)) evals = 1000
 
 end
 
@@ -40,14 +40,14 @@ for (nu_, re) in zip(NU___, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1], [0 0.
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_01!(co)
+    Nucleus.Normalization.normalize_with_01!(co)
 
     @test co == re
 
     # 10.625 ns (0 allocations: 0 bytes)
     # 12.291 ns (0 allocations: 0 bytes)
     # 16.625 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Normalization.normalize_with_01!(co) setup = (co = copy($nu_)) evals = 1000
+    #@btime Nucleus.Normalization.normalize_with_01!(co) setup = (co = copy($nu_)) evals = 1000
 
 end
 
@@ -73,13 +73,13 @@ for (nu_, re) in zip(
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_sum!(co)
+    Nucleus.Normalization.normalize_with_sum!(co)
 
     @test co == re
 
     # 7.291 ns (0 allocations: 0 bytes)
     # 10.208 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Normalization.normalize_with_sum!(co) setup = (co = copy($nu_)) evals = 1000
+    #@btime Nucleus.Normalization.normalize_with_sum!(co) setup = (co = copy($nu_)) evals = 1000
 
 end
 
@@ -99,14 +99,14 @@ for (nu_, re) in zip(
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_logistic!(co)
+    Nucleus.Normalization.normalize_with_logistic!(co)
 
     @test co == re
 
     # 21.708 ns (0 allocations: 0 bytes)
     # 22.000 ns (0 allocations: 0 bytes)
     # 23.916 ns (0 allocations: 0 bytes)
-    #@btime BioLab.Normalization.normalize_with_logistic!(co) setup = (co = copy($nu_)) evals = 1000
+    #@btime Nucleus.Normalization.normalize_with_logistic!(co) setup = (co = copy($nu_)) evals = 1000
 
 end
 
@@ -120,13 +120,13 @@ for (nu_, re) in zip(ARR_, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_1223!(co)
+    Nucleus.Normalization.normalize_with_1223!(co)
 
     @test co == re
 
     # 240.791 ns (2 allocations: 224 bytes)
     # 283.750 ns (6 allocations: 432 bytes)
-    #@btime BioLab.Normalization.normalize_with_1223!(co) setup = (co = copy($nu_)) evals = 1000
+    #@btime Nucleus.Normalization.normalize_with_1223!(co) setup = (co = copy($nu_)) evals = 1000
 
 end
 
@@ -136,13 +136,13 @@ for (nu_, re) in zip(ARR_, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
 
     co = copy(nu_)
 
-    BioLab.Normalization.normalize_with_1224!(co)
+    Nucleus.Normalization.normalize_with_1224!(co)
 
     @test co == re
 
     # 240.209 ns (2 allocations: 224 bytes)
     # 284.917 ns (6 allocations: 432 bytes)
-    #@btime BioLab.Normalization.normalize_with_1224!(co) setup = (co = copy($nu_)) evals = 1000
+    #@btime Nucleus.Normalization.normalize_with_1224!(co) setup = (co = copy($nu_)) evals = 1000
 
 end
 
@@ -152,26 +152,26 @@ for (nu_, re) in zip(ARR_, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
 
     co = float.(nu_)
 
-    BioLab.Normalization.normalize_with_125254!(co)
+    Nucleus.Normalization.normalize_with_125254!(co)
 
     @test co == re
 
     # 248.542 ns (2 allocations: 224 bytes)
     # 296.500 ns (6 allocations: 432 bytes)
-    #@btime BioLab.Normalization.normalize_with_125254!(co) setup = (co = float.($nu_)) evals = 1000
+    #@btime Nucleus.Normalization.normalize_with_125254!(co) setup = (co = float.($nu_)) evals = 1000
 
 end
 
 # ---- #
 
 const FU_ = (
-    BioLab.Normalization.normalize_with_0!,
-    BioLab.Normalization.normalize_with_01!,
-    BioLab.Normalization.normalize_with_sum!,
-    BioLab.Normalization.normalize_with_logistic!,
-    BioLab.Normalization.normalize_with_1223!,
-    BioLab.Normalization.normalize_with_1224!,
-    BioLab.Normalization.normalize_with_125254!,
+    Nucleus.Normalization.normalize_with_0!,
+    Nucleus.Normalization.normalize_with_01!,
+    Nucleus.Normalization.normalize_with_sum!,
+    Nucleus.Normalization.normalize_with_logistic!,
+    Nucleus.Normalization.normalize_with_1223!,
+    Nucleus.Normalization.normalize_with_1224!,
+    Nucleus.Normalization.normalize_with_125254!,
 )
 
 # ---- #

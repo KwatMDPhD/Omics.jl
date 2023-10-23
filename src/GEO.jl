@@ -4,11 +4,11 @@ using GZip: open
 
 using OrderedCollections: OrderedDict
 
-using ..BioLab
+using ..Nucleus
 
 function download(di, gs)
 
-    BioLab.Error.error_missing(di)
+    Nucleus.Error.error_missing(di)
 
     gz = "$(gs)_family.soft.gz"
 
@@ -98,7 +98,7 @@ function read(gz)
 
             end
 
-            BioLab.Dict.set_with_suffix!(bl_th[bl][th], ke, va)
+            Nucleus.Dict.set_with_suffix!(bl_th[bl][th], ke, va)
 
         end
 
@@ -176,19 +176,19 @@ function _map_feature(ke_va)
 
         co = "Gene Symbol"
 
-        fu = fe -> BioLab.String.split_get(fe, " /// ", 1)
+        fu = fe -> Nucleus.String.split_get(fe, " /// ", 1)
 
     elseif it == 2004 || it == 2005 || it == 3718 || it == 3720
 
         co = "Associated Gene"
 
-        fu = fe -> BioLab.String.split_get(fe, " // ", 1)
+        fu = fe -> Nucleus.String.split_get(fe, " // ", 1)
 
     elseif it == 5175 || it == 6244 || it == 11532 || it == 17586
 
         co = "gene_assignment"
 
-        fu = fe -> BioLab.String.split_get(fe, " // ", 2)
+        fu = fe -> Nucleus.String.split_get(fe, " // ", 2)
 
     elseif it == 6098 || it == 6884 || it == 6947 || it == 10558 || it == 14951
 
@@ -202,13 +202,13 @@ function _map_feature(ke_va)
 
         co = "UCSC_RefGene_Name"
 
-        fu = fe -> BioLab.String.split_get(fe, ';', 1)
+        fu = fe -> Nucleus.String.split_get(fe, ';', 1)
 
     elseif it == 15048
 
         co = "GeneSymbol"
 
-        fu = fe -> BioLab.String.split_get(fe, ' ', 1)
+        fu = fe -> Nucleus.String.split_get(fe, ' ', 1)
 
     elseif it == 16686
 

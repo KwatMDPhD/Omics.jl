@@ -1,14 +1,14 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
-const DA = joinpath(BioLab._DA, "Plot")
+const DA = joinpath(Nucleus._DA, "Plot")
 
 # ---- #
 
-@test BioLab.Path.read(DA) == ["1.png", "2.png"]
+@test Nucleus.Path.read(DA) == ["1.png", "2.png"]
 
 # ---- #
 
@@ -16,11 +16,11 @@ const DATA = [Dict{String, Any}()]
 
 # ---- #
 
-const HT = joinpath(BioLab.TE, "plot.html")
+const HT = joinpath(Nucleus.TE, "plot.html")
 
 # ---- #
 
-BioLab.Plot.plot(HT, DATA)
+Nucleus.Plot.plot(HT, DATA)
 
 # ---- #
 
@@ -36,11 +36,11 @@ const LAYOUT = Dict(
 
 # ---- #
 
-BioLab.Plot.plot("", DATA, LAYOUT)
+Nucleus.Plot.plot("", DATA, LAYOUT)
 
 # ---- #
 
-BioLab.Plot.plot("", DATA, LAYOUT, Dict("editable" => true))
+Nucleus.Plot.plot("", DATA, LAYOUT, Dict("editable" => true))
 
 # ---- #
 
@@ -52,15 +52,15 @@ const Y1_ = Y_[1:1]
 
 # ---- #
 
-BioLab.Plot.plot_scatter("", Y1_)
+Nucleus.Plot.plot_scatter("", Y1_)
 
 # ---- #
 
-BioLab.Plot.plot_scatter("", Y_)
+Nucleus.Plot.plot_scatter("", Y_)
 
 # ---- #
 
-BioLab.Plot.plot_scatter(
+Nucleus.Plot.plot_scatter(
     "",
     Y_,
     Y_,
@@ -69,17 +69,17 @@ BioLab.Plot.plot_scatter(
 
 # ---- #
 
-BioLab.Plot.plot_bar("", Y1_)
+Nucleus.Plot.plot_bar("", Y1_)
 
 # ---- #
 
-BioLab.Plot.plot_bar("", Y_)
+Nucleus.Plot.plot_bar("", Y_)
 
 # ---- #
 
 for barmode in ("group", "stack")
 
-    BioLab.Plot.plot_bar(
+    Nucleus.Plot.plot_bar(
         "",
         Y_,
         Y_;
@@ -95,17 +95,17 @@ const HIX_ = ([-2], [-1, -1, 0, 0], [1, 1, 1, 2, 2, 2, 3, 3, 3])
 
 # ---- #
 
-BioLab.Plot.plot_histogram("", HIX_[1:1])
+Nucleus.Plot.plot_histogram("", HIX_[1:1])
 
 # ---- #
 
-BioLab.Plot.plot_histogram("", HIX_)
+Nucleus.Plot.plot_histogram("", HIX_)
 
 # ---- #
 
 for xbins_size in (0, 1)
 
-    BioLab.Plot.plot_histogram(
+    Nucleus.Plot.plot_histogram(
         "",
         HIX_,
         Tuple((id -> "$ch$id").(eachindex(x)) for (x, ch) in zip(HIX_, ('A', 'B', 'C')));
@@ -117,7 +117,7 @@ end
 
 # ---- #
 
-const Z = BioLab.Simulation.make_matrix_1n(Float64, 2, 4)
+const Z = Nucleus.Simulation.make_matrix_1n(Float64, 2, 4)
 
 # ---- #
 
@@ -135,7 +135,7 @@ const X = (id -> "Column $id").(1:size(Z, 2))
 
 for (y, x) in ((LA_, LA_), (Y, LA_), (LA_, X), (Y, X))
 
-    BioLab.Plot.plot_heat_map("", Z; y, x)
+    Nucleus.Plot.plot_heat_map("", Z; y, x)
 
 end
 
@@ -172,7 +172,7 @@ for (grr_, grc_) in (
     ((id -> "Row Group $id").(GRR_), (id -> "Column Group $id").(GRC_)),
 )
 
-    BioLab.Plot.plot_heat_map(
+    Nucleus.Plot.plot_heat_map(
         "",
         ZG;
         y = (nu -> "Y = $nu").(YG),
@@ -197,7 +197,7 @@ const THETA60 = 0:60:360
 
 # ---- #
 
-BioLab.Plot.plot_radar(
+Nucleus.Plot.plot_radar(
     "",
     (eachindex(THETA30), eachindex(THETA45), eachindex(THETA60)),
     (THETA30, THETA45, THETA60);
@@ -207,11 +207,11 @@ BioLab.Plot.plot_radar(
 
 # ---- #
 
-const GI = joinpath(BioLab.TE, "animate.gif")
+const GI = joinpath(Nucleus.TE, "animate.gif")
 
 # ---- #
 
-BioLab.Plot.animate(GI, (joinpath(DA, "$pn.png") for pn in 1:2))
+Nucleus.Plot.animate(GI, (joinpath(DA, "$pn.png") for pn in 1:2))
 
 # ---- #
 

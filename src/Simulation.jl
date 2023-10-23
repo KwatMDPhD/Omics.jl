@@ -1,6 +1,6 @@
 module Simulation
 
-using ..BioLab
+using ..Nucleus
 
 function _mirror(n)
 
@@ -14,7 +14,7 @@ function _mirror(n)
 
         ra = randn()
 
-        if BioLab.Number.is_positive(ra)
+        if Nucleus.Number.is_positive(ra)
 
             po_[id += 1] = ra
 

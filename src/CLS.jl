@@ -1,6 +1,6 @@
 module CLS
 
-using ..BioLab
+using ..Nucleus
 
 function _make_matrix(fu, st_)
 
@@ -24,7 +24,7 @@ function read(cl)
 
     if li1 == "#numeric"
 
-        BioLab.DataFrame.make(nar, li22, co_, _make_matrix(st -> parse(Float64, st), li3_))
+        Nucleus.DataFrame.make(nar, li22, co_, _make_matrix(st -> parse(Float64, st), li3_))
 
     else
 
@@ -56,7 +56,7 @@ function read(cl)
 
         gr_id = Dict(gr => id for (id, gr) in enumerate(gr_))
 
-        BioLab.DataFrame.make(nar, join(gr_, '_'), co_, _make_matrix(st -> gr_id[st], li3_))
+        Nucleus.DataFrame.make(nar, join(gr_, '_'), co_, _make_matrix(st -> gr_id[st], li3_))
 
     end
 

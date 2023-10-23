@@ -1,16 +1,16 @@
 module Gene
 
-using ..BioLab
+using ..Nucleus
 
 function read_ensemble()
 
-    BioLab.DataFrame.read(joinpath(BioLab._DA, "Gene", "ensembl.tsv.gz"))
+    Nucleus.DataFrame.read(joinpath(Nucleus._DA, "Gene", "ensembl.tsv.gz"))
 
 end
 
 function read_uniprot()
 
-    BioLab.DataFrame.read(joinpath(BioLab._DA, "Gene", "uniprot.tsv.gz"))
+    Nucleus.DataFrame.read(joinpath(Nucleus._DA, "Gene", "uniprot.tsv.gz"))
 
 end
 
@@ -121,7 +121,7 @@ function rename!(fe_, fe_fe2)
 
         elseif startswith(fe, "ENS") && contains(fe, '.')
 
-            fe = BioLab.String.split_get(fe, '.', 1)
+            fe = Nucleus.String.split_get(fe, '.', 1)
 
             if haskey(fe_fe2, fe)
 

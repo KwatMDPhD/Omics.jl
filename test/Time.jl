@@ -1,15 +1,15 @@
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
 @test contains(
-    BioLab.Time.stamp(),
+    Nucleus.Time.stamp(),
     r"^[\d]{4}_[\d]{1,2}_[\d]{1,2}_[\d]{1,2}_[\d]{1,2}_[\d]{1,2}_[\d]{1,3}$",
 )
 
 # ---- #
 
 # 3.547 μs (73 allocations: 3.84 KiB)
-#@btime BioLab.Time.stamp();
+#@btime Nucleus.Time.stamp();

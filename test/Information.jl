@@ -2,13 +2,13 @@
 
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
 for nu_ in (zeros(10), ones(10))
 
-    BioLab.Information.get_entropy(nu_)
+    Nucleus.Information.get_entropy(nu_)
 
 end
 
@@ -28,7 +28,7 @@ const NU2_ = randn(N)
 
 function get_density(nu_)
 
-    BioLab.Information.kde(nu_).density
+    Nucleus.Information.kde(nu_).density
 
 end
 
@@ -46,12 +46,12 @@ const NU___ = (
 for (nu1_, nu2_) in NU___
 
     for fu in (
-        BioLab.Information.get_kullback_leibler_divergence,
-        BioLab.Information.get_thermodynamic_depth,
-        BioLab.Information.get_thermodynamic_breadth,
+        Nucleus.Information.get_kullback_leibler_divergence,
+        Nucleus.Information.get_thermodynamic_depth,
+        Nucleus.Information.get_thermodynamic_breadth,
     )
 
-        BioLab.Plot.plot_scatter(
+        Nucleus.Plot.plot_scatter(
             "",
             (nu1_, nu2_, fu.(nu1_, nu2_));
             name_ = (1, 2, "Result"),
@@ -67,13 +67,13 @@ end
 for (nu1_, nu2_) in NU___
 
     for fu in (
-        BioLab.Information.get_antisymmetric_kullback_leibler_divergence,
-        BioLab.Information.get_symmetric_kullback_leibler_divergence,
+        Nucleus.Information.get_antisymmetric_kullback_leibler_divergence,
+        Nucleus.Information.get_symmetric_kullback_leibler_divergence,
     )
 
         nu3_ = 0.5(nu1_ + nu2_)
 
-        BioLab.Plot.plot_scatter(
+        Nucleus.Plot.plot_scatter(
             "",
             (nu1_, nu2_, nu3_, fu.(nu1_, nu2_, nu3_));
             name_ = (1, 2, 3, "Result"),
@@ -94,11 +94,11 @@ nu2_ = collect(0:10:100)
 
 # ---- #
 
-BioLab.Information.get_mutual_information(nu1_, nu2_)
+Nucleus.Information.get_mutual_information(nu1_, nu2_)
 
 # ---- #
 
-bi = BioLab.Information.kde((nu2_, nu1_), npoints = (8, 8))
+bi = Nucleus.Information.kde((nu2_, nu1_), npoints = (8, 8))
 
 # ---- #
 
@@ -114,8 +114,8 @@ z = bi.density
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", z; y, x)
+Nucleus.Plot.plot_heat_map("", z; y, x)
 
 # ---- #
 
-BioLab.Information.get_information_coefficient(nu1_, nu2_)
+Nucleus.Information.get_information_coefficient(nu1_, nu2_)

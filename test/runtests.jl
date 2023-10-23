@@ -2,19 +2,19 @@ using Aqua: test_all, test_ambiguities
 
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
-test_all(BioLab; ambiguities = false)
+test_all(Nucleus; ambiguities = false)
 
-test_ambiguities(BioLab)
+test_ambiguities(Nucleus)
 
 # ---- #
 
 # ----------------------------------------------------------------------------------------------- #
 
-@test isempty(BioLab.Path.read(BioLab.TE))
+@test isempty(Nucleus.Path.read(Nucleus.TE))
 
 # ---- #
 
@@ -22,7 +22,7 @@ const SR = joinpath(dirname(@__DIR__), "src")
 
 # ---- #
 
-const MO_ = BioLab.Path.read(SR; ig_ = ("BioLab.jl",))
+const MO_ = Nucleus.Path.read(SR; ig_ = ("Nucleus.jl",))
 
 # ---- #
 
@@ -36,7 +36,7 @@ end
 
 # ---- #
 
-const TE_ = BioLab.Path.read(@__DIR__; ig_ = ("runtests.jl",))
+const TE_ = Nucleus.Path.read(@__DIR__; ig_ = ("runtests.jl",))
 
 # ---- #
 

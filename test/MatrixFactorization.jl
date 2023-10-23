@@ -2,7 +2,7 @@ using Random: seed!
 
 using Test: @test
 
-using BioLab
+using Nucleus
 
 # ---- #
 
@@ -20,7 +20,7 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     ma = rand(n_ro, n_co)
 
-    mw, mh = BioLab.MatrixFactorization.factorize(ma, n_fa)
+    mw, mh = Nucleus.MatrixFactorization.factorize(ma, n_fa)
 
     @test size(mw) === (n_ro, n_fa)
 
@@ -30,23 +30,23 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     @test is_positive(mh)
 
-    di = joinpath(BioLab.TE, "$(n_ro)_$(n_co)_$(n_fa)")
+    di = joinpath(Nucleus.TE, "$(n_ro)_$(n_co)_$(n_fa)")
 
-    BioLab.Path.remake_directory(di)
+    Nucleus.Path.remake_directory(di)
 
-    BioLab.MatrixFactorization.write(di, mw)
+    Nucleus.MatrixFactorization.write(di, mw)
 
-    BioLab.MatrixFactorization.write(di, mh)
+    Nucleus.MatrixFactorization.write(di, mh)
 
-    mh2 = BioLab.MatrixFactorization.solve_h(ma, mw)
+    mh2 = Nucleus.MatrixFactorization.solve_h(ma, mw)
 
     @test isapprox(mh, mh2; rtol = 1)
 
     di = "$(di)_solved"
 
-    BioLab.Path.remake_directory(di)
+    Nucleus.Path.remake_directory(di)
 
-    BioLab.MatrixFactorization.write(di, mh2; naf = "Solved")
+    Nucleus.MatrixFactorization.write(di, mh2; naf = "Solved")
 
     # 9.417 μs (58 allocations: 6.95 KiB)
     # 2.116 μs (23 allocations: 2.78 KiB)
@@ -57,43 +57,43 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
     # 7.915 s (12949 allocations: 363.06 MiB)
     # 288.292 μs (27 allocations: 329.34 KiB)
 
-    #@btime BioLab.MatrixFactorization.factorize($ma, $n_fa)
+    #@btime Nucleus.MatrixFactorization.factorize($ma, $n_fa)
 
-    #@btime BioLab.MatrixFactorization.solve_h($ma, $mw)
+    #@btime Nucleus.MatrixFactorization.solve_h($ma, $mw)
 
 end
 
 # ---- #
 
-const MW = BioLab.Simulation.make_matrix_1n(Float64, 3, 2)
+const MW = Nucleus.Simulation.make_matrix_1n(Float64, 3, 2)
 
 # ---- #
 
-const MH = BioLab.Simulation.make_matrix_1n(Float64, 2, 3)
+const MH = Nucleus.Simulation.make_matrix_1n(Float64, 2, 3)
 
 # ---- #
 
-const DI = joinpath(BioLab.TE, "write")
+const DI = joinpath(Nucleus.TE, "write")
 
 # ---- #
 
-BioLab.Path.remake_directory(DI)
+Nucleus.Path.remake_directory(DI)
 
 # ---- #
 
-BioLab.MatrixFactorization.write(DI, MW)
+Nucleus.MatrixFactorization.write(DI, MW)
 
 # ---- #
 
-BioLab.MatrixFactorization.write(DI, MH)
+Nucleus.MatrixFactorization.write(DI, MH)
 
 # ---- #
 
-@test MW == Matrix(BioLab.DataFrame.read(joinpath(DI, "w.tsv"))[!, 2:end])
+@test MW == Matrix(Nucleus.DataFrame.read(joinpath(DI, "w.tsv"))[!, 2:end])
 
 # ---- #
 
-@test MH == Matrix(BioLab.DataFrame.read(joinpath(DI, "h.tsv"))[!, 2:end])
+@test MH == Matrix(Nucleus.DataFrame.read(joinpath(DI, "h.tsv"))[!, 2:end])
 
 # ---- #
 
@@ -109,11 +109,11 @@ ma = rand(4, 8)
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", ma; layout = Dict("title" => Dict("text" => "A")))
+Nucleus.Plot.plot_heat_map("", ma; layout = Dict("title" => Dict("text" => "A")))
 
 # ---- #
 
-mw, mh = BioLab.MatrixFactorization.factorize(ma, 3)
+mw, mh = Nucleus.MatrixFactorization.factorize(ma, 3)
 
 # ---- #
 
@@ -121,7 +121,7 @@ mwh = mw * mh
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", mwh; layout = Dict("title" => Dict("text" => "W x H")))
+Nucleus.Plot.plot_heat_map("", mwh; layout = Dict("title" => Dict("text" => "W x H")))
 
 # ---- #
 
@@ -133,11 +133,11 @@ ml = copy(mwh)
 
 # ---- #
 
-BioLab.Normalization.normalize_with_logistic!(ml)
+Nucleus.Normalization.normalize_with_logistic!(ml)
 
 # ---- #
 
-BioLab.Plot.plot_heat_map("", ml; layout = Dict("title" => Dict("text" => "Logistic")))
+Nucleus.Plot.plot_heat_map("", ml; layout = Dict("title" => Dict("text" => "Logistic")))
 
 # ---- #
 

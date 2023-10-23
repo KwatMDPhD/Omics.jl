@@ -1,6 +1,6 @@
 module Error
 
-using ..BioLab
+using ..Nucleus
 
 macro is(ex)
 
@@ -38,9 +38,9 @@ function error_duplicate(an_)
 
     if !allunique(an_)
 
-        st = BioLab.Collection.count_sort_string(an_, 2)
+        st = Nucleus.Collection.count_sort_string(an_, 2)
 
-        error("Found $(BioLab.String.count(count('\n', st), "duplicate")).\n$st")
+        error("Found $(Nucleus.String.count(count('\n', st), "duplicate")).\n$st")
 
     end
 
@@ -55,7 +55,7 @@ function error_bad(fu, an_)
         de = ".\n"
 
         error(
-            "Found $(BioLab.String.count(lastindex(id_), "bad value"))$de$(join(unique(an_[id_]), de))$de",
+            "Found $(Nucleus.String.count(lastindex(id_), "bad value"))$de$(join(unique(an_[id_]), de))$de",
         )
 
     end
@@ -84,7 +84,7 @@ end
 
 function error_extension_difference(pa, ex)
 
-    pae = BioLab.Path.get_extension(pa)
+    pae = Nucleus.Path.get_extension(pa)
 
     if pae != ex
 

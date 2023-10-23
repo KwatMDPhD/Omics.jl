@@ -4,7 +4,7 @@ using ColorSchemes: ColorScheme, bwr, plasma
 
 using Colors: Colorant, coloralpha, hex
 
-using ..BioLab
+using ..Nucleus
 
 const HEFA = "#ebf6f7"
 
@@ -116,7 +116,7 @@ function color(nu_, co = pick_color_scheme(nu_))
 
     end
 
-    mi, ma = BioLab.Collection.get_minimum_maximum(nu_)
+    mi, ma = Nucleus.Collection.get_minimum_maximum(nu_)
 
     (nu -> color((nu - mi) / (ma - mi), co)).(nu_)
 
