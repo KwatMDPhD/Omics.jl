@@ -107,7 +107,7 @@ const SA = SM_[1]
 
 # ---- #
 
-# 11.487 ms (107248 allocations: 16.70 MiB)
+# 11.466 ms (107248 allocations: 16.70 MiB)
 #@btime Nucleus.GEO._dice($(SA_KE_VA[SA]["_ta"]));
 
 # ---- #

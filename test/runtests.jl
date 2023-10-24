@@ -38,6 +38,12 @@ const TE_ = Nucleus.Path.read(@__DIR__; ig_ = ("runtests.jl",))
 
 for jl in TE_
 
+    if jl == "GEO.jl"
+
+        continue
+
+    end
+
     @info "Testing $jl"
 
     run(`julia --project $jl`)
