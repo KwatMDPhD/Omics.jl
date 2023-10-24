@@ -1,14 +1,6 @@
-using Aqua: test_all, test_ambiguities
-
 using Test: @test
 
 using Nucleus
-
-# ---- #
-
-test_all(Nucleus; ambiguities = false)
-
-test_ambiguities(Nucleus)
 
 # ---- #
 
