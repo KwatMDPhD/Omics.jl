@@ -63,7 +63,7 @@ const DT = Nucleus.DataFrame.make(NAR, RO_, CO_, MA)
 
 # ---- #
 
-# 1.125 μs (22 allocations: 1.89 KiB)
+# 1.133 μs (22 allocations: 1.89 KiB)
 #@btime Nucleus.DataFrame.make(NAR, RO_, CO_, MA);
 
 # ---- #
@@ -80,22 +80,38 @@ Nucleus.DataFrame.separate(DT)[2][1] = ""
 
 # ---- #
 
-# 2.000 μs (28 allocations: 2.08 KiB)
+# 2.231 μs (28 allocations: 2.08 KiB)
 #@btime Nucleus.DataFrame.separate(DT);
 
 # ---- #
 
 for (na, re) in (("titanic.tsv", (1309, 15)), ("enst_gene.tsv.gz", (256183, 2)))
 
-    @test size(Nucleus.DataFrame.read(joinpath(DA, na))) === re
+    fi = joinpath(DA, na)
+
+    da = Nucleus.DataFrame.read(fi)
+
+    @test size(da) === re
+
+    @test isequal(Nucleus.DataFrame.separate(da), Nucleus.DataFrame.separate(fi))
 
 end
 
 # ---- #
 
-@test size(
-    Nucleus.DataFrame.read(joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx"), "HumanSpecific Genes"),
-) === (873, 8)
+const XL = joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx")
+
+# ---- #
+
+const DAX = Nucleus.DataFrame.read(XL, "HumanSpecific Genes")
+
+# ---- #
+
+@test size(DAX) === (873, 8)
+
+# ---- #
+
+@test Nucleus.DataFrame.separate(DAX) == Nucleus.DataFrame.separate(XL, "HumanSpecific Genes")
 
 # ---- #
 
@@ -103,21 +119,13 @@ const TS = joinpath(Nucleus.TE, "write.tsv")
 
 # ---- #
 
-const IT_ = 1:4
-
-# ---- #
-
-const FL_ = 1.0:4
-
-# ---- #
-
 Nucleus.DataFrame.write(
     TS,
     DataFrame(
-        "Column Int" => IT_,
-        "Column Float" => FL_,
-        "Column Int String" => string.(IT_),
-        "Column Float String" => string.(FL_),
+        "Column Int" => 1:4,
+        "Column Float" => 1.0:4,
+        "Column Int String" => string.(1:4),
+        "Column Float String" => string.(1.0:4),
     ),
 )
 

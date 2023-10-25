@@ -4,7 +4,7 @@ using CSV: read as _read, write as _write
 
 using CodecZlib: GzipDecompressor, transcode
 
-using DataFrames: DataFrame as _DataFrame, insertcols!
+using DataFrames: AbstractDataFrame, DataFrame as _DataFrame, insertcols!
 
 using Mmap: mmap
 
@@ -18,13 +18,19 @@ function make(nar, ro_, co_, ma)
 
 end
 
-function separate(row_x_column_x_any)
+function separate(row_x_column_x_any::AbstractDataFrame)
 
     co_ = names(row_x_column_x_any)
 
     id_ = 2:lastindex(co_)
 
     co_[1], row_x_column_x_any[:, 1], co_[id_], Matrix(row_x_column_x_any[!, id_])
+
+end
+
+function separate(ar_...; ke_ar...)
+
+    separate(read(ar_...; ke_ar...))
 
 end
 

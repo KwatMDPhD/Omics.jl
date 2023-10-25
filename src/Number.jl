@@ -12,10 +12,4 @@ function is_negative(fl::AbstractFloat)
 
 end
 
-function is_positive(nu)
-
-    !is_negative(nu)
-
-end
-
 end

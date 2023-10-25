@@ -166,7 +166,7 @@ const IDN_ = findall(Nucleus.Number.is_negative, NU_)
 
 # ---- #
 
-const IDP_ = findall(Nucleus.Number.is_positive, NU_)
+const IDP_ = findall(!Nucleus.Number.is_negative, NU_)
 
 # ---- #
 

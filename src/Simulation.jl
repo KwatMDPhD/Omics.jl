@@ -14,7 +14,7 @@ function _mirror(n)
 
         ra = randn()
 
-        if Nucleus.Number.is_positive(ra)
+        if !Nucleus.Number.is_negative(ra)
 
             po_[id += 1] = ra
 

@@ -320,7 +320,7 @@ function make(
 
         idn_ = findall(Nucleus.Number.is_negative, sc_)
 
-        idp_ = findall(Nucleus.Number.is_positive, sc_)
+        idp_ = findall(!Nucleus.Number.is_negative, sc_)
 
         np_, na_, pp_, pa_ = Nucleus.Statistics.get_p_value(sc_, idn_, idp_, fe_x_id_x_ra)
 

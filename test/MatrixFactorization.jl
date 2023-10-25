@@ -8,7 +8,7 @@ using Nucleus
 
 function is_positive(ma)
 
-    all(>=(0), ma)
+    all(!Nucleus.Number.is_negative, ma)
 
 end
 
