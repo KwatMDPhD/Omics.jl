@@ -87,31 +87,15 @@ Nucleus.DataFrame.separate(DT)[2][1] = ""
 
 for (na, re) in (("titanic.tsv", (1309, 15)), ("enst_gene.tsv.gz", (256183, 2)))
 
-    fi = joinpath(DA, na)
-
-    da = Nucleus.DataFrame.read(fi)
-
-    @test size(da) === re
-
-    @test isequal(Nucleus.DataFrame.separate(da), Nucleus.DataFrame.separate(fi))
+    @test size(Nucleus.DataFrame.read(joinpath(DA, na))) === re
 
 end
 
 # ---- #
 
-const XL = joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx")
-
-# ---- #
-
-const DAX = Nucleus.DataFrame.read(XL, "HumanSpecific Genes")
-
-# ---- #
-
-@test size(DAX) === (873, 8)
-
-# ---- #
-
-@test Nucleus.DataFrame.separate(DAX) == Nucleus.DataFrame.separate(XL, "HumanSpecific Genes")
+@test size(
+    Nucleus.DataFrame.read(joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx"), "HumanSpecific Genes"),
+) === (873, 8)
 
 # ---- #
 
@@ -132,3 +116,11 @@ Nucleus.DataFrame.write(
 # ---- #
 
 @test eltype.(eachcol(Nucleus.DataFrame.read(TS))) == [Int, Float64, Int, Float64]
+
+# ---- #
+
+Nucleus.DataFrame.write(TS, NAR, RO_, CO_, MA)
+
+# ---- #
+
+@test Nucleus.DataFrame.separate(TS) == (NAR, RO_, CO_, MA)

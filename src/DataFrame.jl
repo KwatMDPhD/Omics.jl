@@ -28,12 +28,6 @@ function separate(row_x_column_x_any::AbstractDataFrame)
 
 end
 
-function separate(ar_...; ke_ar...)
-
-    separate(read(ar_...; ke_ar...))
-
-end
-
 function read(fi; ke_ar...)
 
     Nucleus.Error.error_missing(fi)
@@ -56,11 +50,23 @@ function read(xl, sh; ke_ar...)
 
 end
 
+function separate(ar_...; ke_ar...)
+
+    separate(read(ar_...; ke_ar...))
+
+end
+
 function write(ts, row_x_column_x_any)
 
     _write(ts, row_x_column_x_any; delim = '\t')
 
     nothing
+
+end
+
+function write(ts, nar, ro_, co_, ma)
+
+    write(ts, make(nar, ro_, co_, ma))
 
 end
 

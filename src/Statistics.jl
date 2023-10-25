@@ -46,67 +46,29 @@ function get_p_value(fu, nu_, ra_)
 
 end
 
-# TODO: Factor in the outer loop.
+# TODO: Test.
 
-function _separate(fe_x_id_x_ra, nef_, pof_)
+function get_p_value(nu_, nei_, poi_, fe_x_id_x_ra)
 
-    ne_ = Float64[]
+    ne_, po_ = Nucleus.Number.separate(fe_x_id_x_ra)
 
-    po_ = Float64[]
-
-    for id2 in 1:size(fe_x_id_x_ra, 2), id1 in 1:size(fe_x_id_x_ra, 1)
-
-        ra = fe_x_id_x_ra[id1, id2]
-
-        if Nucleus.Number.is_negative(ra)
-
-            ra_ = ne_
-
-            fa_ = nef_
-
-        else
-
-            ra_ = po_
-
-            fa_ = pof_
-
-        end
-
-        if !isnothing(fa_)
-
-            ra *= fa_[id1]
-
-        end
-
-        push!(ra_, ra)
-
-    end
-
-    ne_, po_
-
-end
-
-function get_p_value(nu_, idn_, idp_, fe_x_id_x_ra; nef_ = nothing, pof_ = nothing)
-
-    ne_, po_ = _separate(fe_x_id_x_ra, nef_, pof_)
-
-    if isempty(idn_)
+    if isempty(nei_)
 
         nep_, nea_ = Float64[], Float64[]
 
     else
 
-        nep_, nea_ = get_p_value(<=, nu_[idn_], ne_)
+        nep_, nea_ = get_p_value(<=, nu_[nei_], ne_)
 
     end
 
-    if isempty(idp_)
+    if isempty(poi_)
 
         pop_, poa_ = Float64[], Float64[]
 
     else
 
-        pop_, poa_ = get_p_value(>=, nu_[idp_], po_)
+        pop_, poa_ = get_p_value(>=, nu_[poi_], po_)
 
     end
 

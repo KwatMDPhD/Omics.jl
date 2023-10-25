@@ -340,12 +340,10 @@ function make(
 
     Nucleus.DataFrame.write(
         "$pr.tsv",
-        Nucleus.DataFrame.make(
-            naf,
-            fe_,
-            ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
-            fe_x_st_x_fl,
-        ),
+        naf,
+        fe_,
+        ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
+        fe_x_st_x_fl,
     )
 
     if 0 < n_ex

@@ -84,7 +84,7 @@ function write(
 
     pr = joinpath(di, lowercase(wh))
 
-    Nucleus.DataFrame.write("$pr.tsv", Nucleus.DataFrame.make(nar, ro_, co_, ma))
+    Nucleus.DataFrame.write("$pr.tsv", nar, ro_, co_, ma)
 
     id_ = Nucleus.Clustering.hierarchize(ma2).order
 
