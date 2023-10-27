@@ -20,6 +20,10 @@ const HESR = "#8c1515"
 
 const HESG = "#175e54"
 
+const HEGE = "#20d9ba"
+
+const HEGP = "#9017e6"
+
 function _make_color_scheme(he_)
 
     ColorScheme(parse.(Colorant, he_))

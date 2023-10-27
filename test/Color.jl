@@ -31,6 +31,8 @@ for co in (
         Nucleus.Color.HERE,
         Nucleus.Color.HESR,
         Nucleus.Color.HESG,
+        Nucleus.Color.HESE,
+        Nucleus.Color.HESP,
     ]),
     Nucleus.Color.COAS,
     Nucleus.Color.COBW,

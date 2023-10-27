@@ -4,10 +4,11 @@ using JSON: json
 
 using ..Nucleus
 
+# TODO: Test `st_`.
 function plot(
     ht,
     el_;
-    st = Dict{String, Any}(),
+    st_ = Dict{String, Any}(),
     la = Dict{String, Any}(),
     ba = "#fcfcfc",
     ex = "",
@@ -72,7 +73,7 @@ function plot(
         var cy = cytoscape({
             container: document.getElementById("$id"),
             elements: $(json(el_)),
-            style: $(json(st)),
+            style: $(json(st_)),
             layout: $(json(merge(Dict("animate" => false), la))),
         });
 
@@ -119,7 +120,7 @@ end
 
 function read(js)
 
-    ty_el_ = Nucleus.Dict.read(js)["elements"]
+    ty_el_ = Nucleus.Dict.read(js, Dict{String, Any})["elements"]
 
     el_ = ty_el_["nodes"]
 
