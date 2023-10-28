@@ -133,6 +133,7 @@ for nu_ in ((1, 1, 2, 2, 4, 8), (1, 2, 4, 8, 2, 1))
         GFE_,
         GSA_,
         GR_,
+        # TODO: Improve.
         hcat((fill(nu, N_FE, N_GR) for nu in nu_)...);
         layout,
     )

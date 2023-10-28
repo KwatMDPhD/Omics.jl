@@ -1,4 +1,4 @@
-using Random: seed!
+using Random: randstring, seed!
 
 using StatsBase: mean
 
@@ -42,17 +42,17 @@ for (an___, ty, re) in (
 
     @test isequal(ma, re)
 
-    # 23.971 ns (1 allocation: 112 bytes)
-    # 75.309 ns (5 allocations: 256 bytes)
-    # 62.968 ns (2 allocations: 224 bytes)
-    # 63.265 ns (2 allocations: 224 bytes)
-    # 75.317 ns (5 allocations: 256 bytes)
-    # 75.274 ns (5 allocations: 256 bytes)
-    # 545.904 ns (17 allocations: 880 bytes)
-    # 210.339 ns (7 allocations: 432 bytes)
-    # 23.637 ns (1 allocation: 80 bytes)
-    # 33.527 ns (1 allocation: 96 bytes)
-    # 63.903 ns (2 allocations: 176 bytes)
+    # 23.929 ns (1 allocation: 112 bytes)
+    # 73.826 ns (5 allocations: 256 bytes)
+    # 63.540 ns (2 allocations: 224 bytes)
+    # 63.053 ns (2 allocations: 224 bytes)
+    # 75.403 ns (5 allocations: 256 bytes)
+    # 75.352 ns (5 allocations: 256 bytes)
+    # 577.410 ns (17 allocations: 880 bytes)
+    # 225.091 ns (7 allocations: 432 bytes)
+    # 23.636 ns (1 allocation: 80 bytes)
+    # 33.493 ns (1 allocation: 96 bytes)
+    # 63.265 ns (2 allocations: 176 bytes)
     #@btime Nucleus.Matrix.make($an___)
 
 end
@@ -92,8 +92,8 @@ for (ro_, roc_, mac) in (
 
         @test Nucleus.Matrix.collapse(mean, Float64, ro_, MA) == (roc_, mac)
 
-        # 751.078 ns (19 allocations: 1.28 KiB)
-        # 659.063 ns (15 allocations: 1.08 KiB)
+        # 743.345 ns (19 allocations: 1.28 KiB)
+        # 659.544 ns (15 allocations: 1.08 KiB)
         #@btime Nucleus.Matrix.collapse(mean, Float64, $ro_, MA)
 
     end
@@ -102,18 +102,22 @@ end
 
 # ---- #
 
+const CH_ = ('A', 'B', 'C', 'D', 'E', 'F', 'G')
+
+# ---- #
+
 for n in (100, 1000, 10000, 20000)
 
     seed!(20230920)
 
-    # 33.166 μs (375 allocations: 127.28 KiB)
-    # 3.042 ms (1797 allocations: 11.92 MiB)
-    # 572.708 ms (2770 allocations: 815.50 MiB)
-    # 2.396 s (3103 allocations: 3.08 GiB)
+    # 29.959 μs (375 allocations: 127.28 KiB)
+    # 3.002 ms (1797 allocations: 11.92 MiB)
+    # 605.107 ms (2770 allocations: 815.50 MiB)
+    # 2.437 s (3103 allocations: 3.08 GiB)
     #@btime Nucleus.Matrix.collapse(
     #    mean,
     #    Float64,
-    #    $([join(rand('A':'G', 3)) for _ in 1:n]),
+    #    $([randstring(CH_, 3) for _ in 1:n]),
     #    $(rand(n, n)),
     #)
 

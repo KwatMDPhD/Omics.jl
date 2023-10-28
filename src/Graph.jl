@@ -4,7 +4,6 @@ using JSON: json
 
 using ..Nucleus
 
-# TODO: Test `st_`.
 function plot(
     ht,
     el_;
@@ -62,11 +61,10 @@ function plot(
 
     Nucleus.HTML.make(
         ht,
-        # TODO: Use the latest.
         (
-            "http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js",
-            "https://cdn.rawgit.com/eligrey/FileSaver.js/master/dist/FileSaver.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.25.0/cytoscape.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js",
         ),
         id,
         """

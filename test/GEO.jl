@@ -155,9 +155,9 @@ const FE_, FE_X_SA_X_FL = Nucleus.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
-for (gs, re, pl_re...) in (
-    ("GSE197763", (4, 126), "GPL18573" => nothing, "GPL24676" => nothing),
-    ("GSE13534", (0, 4), "GPL96" => (22283, 4)),
+for (gs, re, pl_re) in (
+    ("GSE197763", (4, 126), ("GPL18573" => nothing, "GPL24676" => nothing)),
+    ("GSE13534", (0, 4), ("GPL96" => (22283, 4),)),
 )
 
     bl_th = Nucleus.GEO.read(Nucleus.GEO.download(Nucleus.TE, gs))
