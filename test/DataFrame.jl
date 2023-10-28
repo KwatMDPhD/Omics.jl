@@ -32,19 +32,11 @@ const N_CO = 4
 
 # ---- #
 
-function make_axis(pr, n)
-
-    (id -> "$pr$id").(1:n)
-
-end
+const RO_ = (id -> "Row $id").(1:N_RO)
 
 # ---- #
 
-const RO_ = make_axis("Row ", N_RO)
-
-# ---- #
-
-const CO_ = make_axis("Column ", N_CO)
+const CO_ = (id -> "Column $id").(1:N_CO)
 
 # ---- #
 
@@ -56,10 +48,7 @@ const DT = Nucleus.DataFrame.make(NAR, RO_, CO_, MA)
 
 # ---- #
 
-@test DT == DataFrame(
-    NAR => make_axis("Row ", N_RO),
-    ("Column $id" => view(MA, :, id) for id in 1:N_CO)...,
-)
+@test DT == DataFrame(NAR => RO_, ("Column $id" => view(MA, :, id) for id in 1:N_CO)...)
 
 # ---- #
 

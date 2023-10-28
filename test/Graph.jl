@@ -104,15 +104,15 @@ const EL2_ = Nucleus.Graph.read(joinpath(Nucleus.TE, "$NAME2.$EX2"))
 
 # ---- #
 
-function is_equal(el1_, el2_, ke_ = ("data",))
+function test_element(el1_, el2_, ke_)
 
-    all(all(el1[ke] == el2[ke] for ke in ke_) for (el1, el2) in zip(el1_, el2_))
+    @test all(all(el1[ke] == el2[ke] for ke in ke_) for (el1, el2) in zip(el1_, el2_))
 
 end
 
 # ---- #
 
-@test is_equal(EL_, EL2_)
+test_element(EL_, EL2_, ("data",))
 
 # ---- #
 
@@ -120,7 +120,7 @@ Nucleus.Graph.position!(EL_, EL2_)
 
 # ---- #
 
-@test is_equal(EL_, EL2_, ("data", "position"))
+test_element(EL_, EL2_, ("data", "position"))
 
 # ---- #
 

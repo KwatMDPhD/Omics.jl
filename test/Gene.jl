@@ -12,17 +12,17 @@ const DA = joinpath(Nucleus._DA, "Gene")
 
 # ---- #
 
-function is_missing_or_string(da)
+function test_data_frame(da, si)
 
-    all(co -> eltype(co) <: Union{Missing, AbstractString}, eachcol(da))
+    @test size(da) === si
 
-end
+    for co in eachcol(da)
 
-# ---- #
+        @test eltype(co) <: Union{Missing, AbstractString}
 
-function has_bad_string(da)
+        @test !any(Nucleus.String.is_bad, skipmissing(co))
 
-    any(co -> any(Nucleus.String.is_bad, skipmissing(co)), eachcol(da))
+    end
 
 end
 
@@ -32,15 +32,7 @@ const EN = Nucleus.Gene.read_ensemble()
 
 # ---- #
 
-@test size(EN) === (591229, 10)
-
-# ---- #
-
-@test is_missing_or_string(EN)
-
-# ---- #
-
-@test !has_bad_string(EN)
+test_data_frame(EN, (591229, 10))
 
 # ---- #
 
@@ -48,15 +40,7 @@ const UN = Nucleus.Gene.read_uniprot()
 
 # ---- #
 
-@test size(UN) === (20398, 7)
-
-# ---- #
-
-@test is_missing_or_string(UN)
-
-# ---- #
-
-@test !has_bad_string(UN)
+test_data_frame(UN, (20398, 7))
 
 # ---- #
 

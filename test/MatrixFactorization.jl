@@ -6,14 +6,6 @@ using Nucleus
 
 # ---- #
 
-function is_positive(ma)
-
-    all(!Nucleus.Number.is_negative, ma)
-
-end
-
-# ---- #
-
 for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10))
 
     seed!(20230928)
@@ -26,9 +18,11 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     @test size(mh) === (n_fa, n_co)
 
-    @test is_positive(mw)
+    for ma in (mw, mh)
 
-    @test is_positive(mh)
+        @test all(!Nucleus.Number.is_negative, ma)
+
+    end
 
     di = joinpath(Nucleus.TE, "$(n_ro)_$(n_co)_$(n_fa)")
 
