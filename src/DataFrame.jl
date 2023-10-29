@@ -50,17 +50,17 @@ function read(xl, sh; ke_ar...)
 
 end
 
-function separate(ar_...; ke_ar...)
-
-    separate(read(ar_...; ke_ar...))
-
-end
-
 function write(ts, row_x_column_x_any)
 
     _write(ts, row_x_column_x_any; delim = '\t')
 
     nothing
+
+end
+
+function separate(ar_...; ke_ar...)
+
+    separate(read(ar_...; ke_ar...))
 
 end
 

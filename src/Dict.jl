@@ -14,17 +14,7 @@ function set_with_suffix!(ke_va, ke, va)
 
     while haskey(ke_va, ke)
 
-        if isone(n)
-
-            pr = ke
-
-        else
-
-            pr = rsplit(ke, '.'; limit = 2)[1]
-
-        end
-
-        ke = "$pr.$(n += 1)"
+        ke = "$(isone(n) ? ke : rsplit(ke, '.'; limit = 2)[1]).$(n += 1)"
 
     end
 
