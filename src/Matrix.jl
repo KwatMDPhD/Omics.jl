@@ -44,8 +44,8 @@ function collapse(fu, ty, ro_, ma)
 
         roc_[idc] = ro
 
-        # TODO: Understand why broadcasting is so much slower.
-        mac[idc, :] = isone(lastindex(id_)) ? view(ma, id_[1], :) : [fu(co) for co in eachcol(ma[id_, :])]
+        mac[idc, :] =
+            isone(lastindex(id_)) ? view(ma, id_[1], :) : [fu(co) for co in eachcol(ma[id_, :])]
 
     end
 

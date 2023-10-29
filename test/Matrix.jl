@@ -42,17 +42,17 @@ for (an___, ty, re) in (
 
     @test isequal(ma, re)
 
-    # 23.929 ns (1 allocation: 112 bytes)
-    # 73.826 ns (5 allocations: 256 bytes)
-    # 63.540 ns (2 allocations: 224 bytes)
-    # 63.053 ns (2 allocations: 224 bytes)
-    # 75.403 ns (5 allocations: 256 bytes)
-    # 75.352 ns (5 allocations: 256 bytes)
-    # 577.410 ns (17 allocations: 880 bytes)
-    # 225.091 ns (7 allocations: 432 bytes)
+    # 24.222 ns (1 allocation: 112 bytes)
+    # 75.266 ns (5 allocations: 256 bytes)
+    # 63.052 ns (2 allocations: 224 bytes)
+    # 63.010 ns (2 allocations: 224 bytes)
+    # 75.266 ns (5 allocations: 256 bytes)
+    # 75.266 ns (5 allocations: 256 bytes)
+    # 552.199 ns (17 allocations: 880 bytes)
+    # 218.967 ns (7 allocations: 432 bytes)
     # 23.636 ns (1 allocation: 80 bytes)
-    # 33.493 ns (1 allocation: 96 bytes)
-    # 63.265 ns (2 allocations: 176 bytes)
+    # 33.442 ns (1 allocation: 96 bytes) 
+    # 63.180 ns (2 allocations: 176 bytes)
     #@btime Nucleus.Matrix.make($an___)
 
 end
@@ -67,7 +67,7 @@ const MA = [
 
 # ---- #
 
-#disable_logging(Info)
+disable_logging(Info)
 
 # ---- #
 
@@ -94,7 +94,7 @@ for (ro_, roc_, mac) in (
 
         # 700.395 ns (19 allocations: 1.28 KiB)
         # 602.744 ns (15 allocations: 1.08 KiB)
-        @btime Nucleus.Matrix.collapse(mean, Float64, $ro_, MA)
+        #@btime Nucleus.Matrix.collapse(mean, Float64, $ro_, MA)
 
     end
 
@@ -110,10 +110,10 @@ for n in (100, 1000, 10000, 20000)
 
     seed!(20230920)
 
-    # 29.959 μs (375 allocations: 127.28 KiB)
-    # 3.002 ms (1797 allocations: 11.92 MiB)
-    # 605.107 ms (2770 allocations: 815.50 MiB)
-    # 2.437 s (3103 allocations: 3.08 GiB)
+    # 29.250 μs (375 allocations: 127.28 KiB)
+    # 2.975 ms (1797 allocations: 11.92 MiB)
+    # 569.579 ms (2770 allocations: 815.50 MiB)
+    # 2.397 s (3103 allocations: 3.08 GiB)
     #@btime Nucleus.Matrix.collapse(
     #    mean,
     #    Float64,
