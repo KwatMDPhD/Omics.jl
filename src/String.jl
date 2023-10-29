@@ -30,15 +30,7 @@ end
 
 function limit(st, n)
 
-    if n < lastindex(st)
-
-        "$(view(st, 1:n))..."
-
-    else
-
-        st
-
-    end
+    n < lastindex(st) ? "$(view(st, 1:n))..." : st
 
 end
 

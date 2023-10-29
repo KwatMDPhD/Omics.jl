@@ -67,7 +67,7 @@ const MA = [
 
 # ---- #
 
-disable_logging(Info)
+#disable_logging(Info)
 
 # ---- #
 

@@ -67,7 +67,7 @@ function plot_scatter(
     x_ = _initialize_x(y_);
     text_ = _initialize_text(y_),
     name_ = _initialize_name(y_),
-    mode_ = (y -> ifelse(lastindex(y) < 1000, "markers+lines", "lines")).(y_),
+    mode_ = (y -> lastindex(y) < 1000 ? "markers+lines" : "lines").(y_),
     marker_ = _initialize_marker(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
@@ -127,7 +127,7 @@ function plot_histogram(
     marker_ = _initialize_marker(x_),
     histnorm = "",
     xbins_size = 0,
-    rug_marker_size = ifelse(all(x -> lastindex(x) < 100000, x_), 16, 0),
+    rug_marker_size = all(x -> lastindex(x) < 100000, x_) ? 16 : 0,
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -152,18 +152,13 @@ function plot_histogram(
         ) for id in id_
     ]
 
-    if isempty(histnorm)
-
-        title_text = "Count"
-
-    else
-
-        title_text = titlecase(histnorm)
-
-    end
-
     layout = Nucleus.Dict.merge(
-        Dict("yaxis2" => Dict("showgrid" => false, "title" => Dict("text" => title_text))),
+        Dict(
+            "yaxis2" => Dict(
+                "showgrid" => false,
+                "title" => Dict("text" => isempty(histnorm) ? "Count" : titlecase(histnorm)),
+            ),
+        ),
         layout,
     )
 
@@ -250,15 +245,7 @@ function plot_heat_map(
     ke_ar...,
 )
 
-    if isempty(grr_)
-
-        colorbarx = 0.97
-
-    else
-
-        colorbarx = 1.024
-
-    end
+    colorbarx = isempty(grr_) ? 0.97 : 1.024
 
     colorbarx1 = colorbarx
 
@@ -307,11 +294,15 @@ function plot_heat_map(
 
     if eltype(z) <: AbstractFloat
 
-        length, step = 8, nothing
+        length = 8
+
+        step = nothing
 
     else
 
-        length, step = nothing, 1
+        length = nothing
+
+        step = 1
 
     end
 

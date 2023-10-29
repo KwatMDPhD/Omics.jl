@@ -13,7 +13,6 @@ function is_negative(fl::AbstractFloat)
 end
 
 # TODO: Test.
-# TODO: Benchmark `fl_`.
 function separate(nu_)
 
     ne_ = Float64[]
@@ -22,17 +21,7 @@ function separate(nu_)
 
     for nu in nu_
 
-        if is_negative(nu)
-
-            fl_ = ne_
-
-        else
-
-            fl_ = po_
-
-        end
-
-        push!(fl_, nu)
+        push!(is_negative(nu) ? ne_ : po_, nu)
 
     end
 

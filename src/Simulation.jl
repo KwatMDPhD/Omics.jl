@@ -8,7 +8,7 @@ function _mirror(n)
 
     id = 1
 
-    po_[id] = 0
+    po_[id] = 0.0
 
     while id < n
 

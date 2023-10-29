@@ -54,7 +54,9 @@ function get_p_value(nu_, nei_, poi_, fe_x_id_x_ra)
 
     if isempty(nei_)
 
-        nep_, nea_ = Float64[], Float64[]
+        nep_ = Float64[]
+
+        nea_ = Float64[]
 
     else
 
@@ -64,7 +66,9 @@ function get_p_value(nu_, nei_, poi_, fe_x_id_x_ra)
 
     if isempty(poi_)
 
-        pop_, poa_ = Float64[], Float64[]
+        pop_ = Float64[]
+
+        poa_ = Float64[]
 
     else
 

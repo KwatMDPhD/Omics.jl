@@ -127,28 +127,16 @@ function _annotate(y, la, th, fe_, fe_x_st_x_fl)
 
 end
 
-function _plot(
-    ht,
-    nat,
-    naf,
-    nas,
-    fe_,
-    sa_,
-    ta_::AbstractVector{<:Integer},
-    fe_x_sa_x_nu,
-    fe_x_st_x_fl,
-    st,
-    layout,
-)
-
-    sa_, ta_, fe_x_sa_x_nu =
-        _order(Nucleus.Clustering.order(ta_, fe_x_sa_x_nu), sa_, ta_, fe_x_sa_x_nu)
-
-    _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, layout)
-
-end
-
 function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, layout)
+
+    if eltype(ta_) <: Integer
+
+        @info "Clustering within groups"
+
+        sa_, ta_, fe_x_sa_x_nu =
+            _order(Nucleus.Clustering.order(ta_, fe_x_sa_x_nu), sa_, ta_, fe_x_sa_x_nu)
+
+    end
 
     tac_ = copy(ta_)
 
