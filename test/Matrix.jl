@@ -92,9 +92,9 @@ for (ro_, roc_, mac) in (
 
         @test Nucleus.Matrix.collapse(mean, Float64, ro_, MA) == (roc_, mac)
 
-        # 743.345 ns (19 allocations: 1.28 KiB)
-        # 659.544 ns (15 allocations: 1.08 KiB)
-        #@btime Nucleus.Matrix.collapse(mean, Float64, $ro_, MA)
+        # 700.395 ns (19 allocations: 1.28 KiB)
+        # 602.744 ns (15 allocations: 1.08 KiB)
+        @btime Nucleus.Matrix.collapse(mean, Float64, $ro_, MA)
 
     end
 
