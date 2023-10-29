@@ -52,7 +52,7 @@ const DT = Nucleus.DataFrame.make(NAR, RO_, CO_, MA)
 
 # ---- #
 
-# 1.133 μs (22 allocations: 1.89 KiB)
+# 1.125 μs (22 allocations: 1.89 KiB)
 #@btime Nucleus.DataFrame.make(NAR, RO_, CO_, MA);
 
 # ---- #
