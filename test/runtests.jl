@@ -2,8 +2,6 @@ using Test: @test
 
 using Nucleus
 
-# ---- #
-
 # ----------------------------------------------------------------------------------------------- #
 
 @test isempty(Nucleus.Path.read(Nucleus.TE))
