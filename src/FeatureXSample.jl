@@ -79,6 +79,8 @@ function transform(
 
     if lo
 
+        @info "Log2ing"
+
         fe_x_sa_x_nu .= log2.(fe_x_sa_x_nu .+ 1)
 
         Nucleus.Plot.plot_histogram(

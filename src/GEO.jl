@@ -106,6 +106,14 @@ function read(gz)
 
     close(io)
 
+    pl_ = keys(bl_th["PLATFORM"])
+
+    if !isone(length(pl_))
+
+        @warn "There is not one platform: $pl_."
+
+    end
+
     bl_th
 
 end
@@ -234,9 +242,13 @@ function _map_feature(ke_va)
 
     for sp_ in view(sp___, 2:lastindex(sp___))
 
-        push!(fe_, sp_[id])
+        fe = sp_[id]
 
-        push!(fec_, fu(sp_[idc]))
+        fec = fu(sp_[idc])
+
+        push!(fe_, fe)
+
+        push!(fec_, isempty(fec) ? fe : fec)
 
     end
 
@@ -248,11 +260,15 @@ function tabulate(ke_va, sa_ke_va)
 
     fe_, fec_ = _map_feature(ke_va)
 
-    fe_x_sa_x_fl = fill(NaN, lastindex(fe_), length(sa_ke_va))
+    n = lastindex(fe_)
+
+    fe_x_sa_x_fl = Matrix{Float64}(undef, n, length(sa_ke_va))
+
+    is_ = falses(n)
 
     fe_id = Dict(fe => id for (id, fe) in enumerate(fe_))
 
-    for (id, (sa, ke_va)) in enumerate(sa_ke_va)
+    for (ids, (sa, ke_va)) in enumerate(sa_ke_va)
 
         if haskey(ke_va, "_ta")
 
@@ -262,7 +278,11 @@ function tabulate(ke_va, sa_ke_va)
 
             for sp_ in view(sp___, 2:lastindex(sp___))
 
-                fe_x_sa_x_fl[fe_id[sp_[1]], id] = parse(Float64, sp_[idv])
+                idf = fe_id[sp_[1]]
+
+                fe_x_sa_x_fl[idf, ids] = parse(Float64, sp_[idv])
+
+                is_[idf] = true
 
             end
 
@@ -274,7 +294,7 @@ function tabulate(ke_va, sa_ke_va)
 
     end
 
-    fec_, fe_x_sa_x_fl
+    fec_[is_], fe_x_sa_x_fl[is_, :]
 
 end
 

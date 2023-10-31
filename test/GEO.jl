@@ -102,12 +102,12 @@ const SA = SM_[1]
 
 # ---- #
 
-# 587.219 ms (10649 allocations: 27.73 MiB)
+# 599.145 ms (10649 allocations: 27.73 MiB)
 #@btime Nucleus.GEO.read(GZ);
 
 # ---- #
 
-# 11.466 ms (107248 allocations: 16.70 MiB)
+# 11.806 ms (107248 allocations: 16.70 MiB)
 #@btime Nucleus.GEO._dice($(SA_KE_VA[SA]["_ta"]));
 
 # ---- #
@@ -124,7 +124,7 @@ const N_SA = lastindex(SM_)
 
 # ---- #
 
-# 314.062 ns (1 allocation: 208 bytes)
+# 319.382 ns (1 allocation: 208 bytes)
 #@btime Nucleus.GEO.get_sample(SA_KE_VA);
 
 # ---- #
@@ -137,7 +137,7 @@ const CH_, CH_X_SA_X_ST = Nucleus.GEO.tabulate(SA_KE_VA)
 
 # ---- #
 
-# 3.854 μs (9 allocations: 936 bytes)
+# 3.896 μs (9 allocations: 936 bytes)
 #@btime Nucleus.GEO.tabulate(SA_KE_VA);
 
 # ---- #
@@ -150,7 +150,7 @@ const FE_, FE_X_SA_X_FL = Nucleus.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
-# 360.595 ms (2378550 allocations: 366.52 MiB)
+# 388.193 ms (2451272 allocations: 377.34 MiB)
 #@btime Nucleus.GEO.tabulate(KE_VA, SA_KE_VA);
 
 # ---- #
