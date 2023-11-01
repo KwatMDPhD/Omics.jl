@@ -343,10 +343,14 @@ function plot_heat_map(
                 "yaxis" => Dict(
                     "domain" => ydomain,
                     "autorange" => "reversed",
+                    "automargin" => true,
                     "title" => Dict("text" => "$nar ($(size(z, 1)))"),
                 ),
-                "xaxis" =>
-                    Dict("domain" => xdomain, "title" => Dict("text" => "$nac ($(size(z, 2)))")),
+                "xaxis" => Dict(
+                    "domain" => xdomain,
+                    "automargin" => true,
+                    "title" => Dict("text" => "$nac ($(size(z, 2)))"),
+                ),
                 "yaxis2" => Dict(
                     "domain" => (ydomain[2] + ddy, 1),
                     "autorange" => "reversed",
