@@ -117,7 +117,7 @@ function _intersect(co1_, co2_, ro_x_co1_x_an, ro_x_co2_x_an)
 
     end
 
-    @info st
+    @info "🪞 $st" co_
 
     co_, ro_x_co1_x_an[:, indexin(co_, co1_)], ro_x_co2_x_an[:, indexin(co_, co2_)]
 
@@ -163,11 +163,11 @@ function get_geo(
 
     sa_ = Nucleus.GEO.get_sample(sa_ke_va, ke)
 
-    @info "Sample" sa_
+    @info "👯‍♀️ Sample" sa_
 
-    ch_, ch_x_sa_x_an = Nucleus.GEO.tabulate(sa_ke_va)
+    ch_, ch_x_sa_x_st = Nucleus.GEO.tabulate(sa_ke_va)
 
-    @info "Characteristic" ch_ ch_x_sa_x_an
+    @info "👙 Characteristic" ch_ ch_x_sa_x_st
 
     if isempty(ur)
 
@@ -203,11 +203,11 @@ function get_geo(
 
     end
 
-    @info "Feature" fe_ saf_ fe_x_sa_x_nu
+    @info "🧬 Feature" fe_ saf_ fe_x_sa_x_nu
 
     if sa_ != saf_
 
-        sa_, ch_x_sa_x_an, fe_x_sa_x_nu = _intersect(sa_, saf_, ch_x_sa_x_an, fe_x_sa_x_nu)
+        sa_, ch_x_sa_x_st, fe_x_sa_x_nu = _intersect(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_nu)
 
     end
 
@@ -217,11 +217,11 @@ function get_geo(
 
         sa_ = sa_[is_]
 
-        ch_x_sa_x_an = ch_x_sa_x_an[:, is_]
+        ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
 
         fe_x_sa_x_nu = fe_x_sa_x_nu[:, is_]
 
-        @info "Selected sample" sa_
+        @info "🏩 Selected sample" sa_
 
     end
 
@@ -233,7 +233,7 @@ function get_geo(
 
     if !isempty(chr_)
 
-        foreach(rec -> replace!(ch_x_sa_x_an, rec), chr_)
+        replace!(ch_x_sa_x_st, chr_...)
 
     end
 
@@ -242,16 +242,16 @@ function get_geo(
     nasc = Nucleus.Path.clean(nas)
 
     Nucleus.DataFrame.write(
-        joinpath(di, "characteristic_x_$(nasc)_x_any.tsv"),
+        joinpath(di, "characteristic_x_$(nasc)_x_string.tsv"),
         "Characteristic",
         ch_,
         sa_,
-        ch_x_sa_x_an,
+        ch_x_sa_x_st,
     )
 
-    count(ch_, eachrow(ch_x_sa_x_an))
+    count(ch_, eachrow(ch_x_sa_x_st))
 
-    pr = joinpath(di, "$(Nucleus.Path.clean(pl))_x_$(nasc)_x_number")
+    pr = joinpath(di, "$(lowercase(pl))_x_$(nasc)_x_number")
 
     Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
 
@@ -263,7 +263,7 @@ function get_geo(
 
     else
 
-        grc_ = ch_x_sa_x_an[findfirst(==(ch), ch_), :]
+        grc_ = ch_x_sa_x_st[findfirst(==(ch), ch_), :]
 
         title_text = "$gs (by $(titlecase(ch)))"
 
@@ -280,7 +280,7 @@ function get_geo(
         layout = Dict("title" => Dict("text" => title_text)),
     )
 
-    sa_, ch_, ch_x_sa_x_an, fe_, fe_x_sa_x_nu
+    di, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu
 
 end
 
