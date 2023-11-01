@@ -123,10 +123,10 @@ function get_geo(
     pl = "";
     re = false,
     ke = Nucleus.GEO.KE,
-    sas_ = (),
-    chr_ = (),
+    se_ = (),
+    rec_ = (),
     ur = "",
-    sar_ = (),
+    res_ = (),
     fe_fe2 = Dict{String, String}(),
     lo = false,
     ch = "",
@@ -156,9 +156,9 @@ function get_geo(
 
     sa_ = Nucleus.GEO.get_sample(sa_ke_va, ke)
 
-    if !isempty(sas_)
+    if !isempty(se_)
 
-        is_ = (ke -> all(occursin(ke), sas_)).(sa_)
+        is_ = (ke -> all(occursin(ke), se_)).(sa_)
 
         sa_ = sa_[is_]
 
@@ -172,11 +172,11 @@ function get_geo(
 
     count(ch_, eachrow(ch_x_sa_x_an))
 
-    if !isempty(chr_)
+    if !isempty(rec_)
 
         @info "Replacing characteristic strings"
 
-        ch_x_sa_x_an = replace.(ch_x_sa_x_an, chr_...)
+        ch_x_sa_x_an = replace.(ch_x_sa_x_an, rec_...)
 
     end
 
@@ -216,17 +216,19 @@ function get_geo(
 
     end
 
+    @info "Feature size = $(size(ch_x_sa_x_an))."
+
     if sa_ != saf_
 
         sa_, ch_x_sa_x_an, fe_x_sa_x_nu = _intersect(sa_, saf_, ch_x_sa_x_an, fe_x_sa_x_nu)
 
     end
 
-    if !isempty(sar_)
+    if !isempty(res_)
 
         @info "Replacing sample strings"
 
-        sa_ = replace.(sa_, sar_...)
+        sa_ = replace.(sa_, res_...)
 
     end
 
