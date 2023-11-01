@@ -267,6 +267,7 @@ function plot_heat_map(
                     "xaxis" => "x2",
                     "y" => y,
                     "z" => [[gr] for gr in gr_],
+                    "hoverinfo" => "y+z",
                 ),
                 gr_,
                 colorbarx += dx,
@@ -283,7 +284,13 @@ function plot_heat_map(
         push!(
             data,
             _make_group_heat_map!(
-                Dict("name" => "$nac Group", "yaxis" => "y2", "x" => x, "z" => [gr_]),
+                Dict(
+                    "name" => "$nac Group",
+                    "yaxis" => "y2",
+                    "x" => x,
+                    "z" => [gr_],
+                    "hoverinfo" => "x+z",
+                ),
                 gr_,
                 colorbarx += dx,
                 ticktext,

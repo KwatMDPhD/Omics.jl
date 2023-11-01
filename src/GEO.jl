@@ -114,7 +114,7 @@ function read(gz)
 
     if !isone(length(pl_))
 
-        @warn "There is not one platform: $pl_."
+        @warn "There is not one platform. $pl_."
 
     end
 

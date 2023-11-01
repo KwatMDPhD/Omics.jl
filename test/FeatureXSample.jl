@@ -15,6 +15,10 @@ end
 
 # ---- #
 
+const DI = joinpath(homedir(), "Downloads")
+
+# ---- #
+
 const FE_ = (id -> "Feature $id").([1, 1, 2, 3, 2, 3, 4])
 
 # ---- #
@@ -32,7 +36,7 @@ const FE2U_ = replace.(FEU_, "Feature" => "New Feature")
 # ---- #
 
 @test Nucleus.FeatureXSample.transform(
-    Nucleus.TE,
+    DI,
     FE_,
     SA_,
     [-1.0; 1; 0; -2; 2; 8; 7;;],
@@ -40,20 +44,18 @@ const FE2U_ = replace.(FEU_, "Feature" => "New Feature")
     fu = Nucleus.FeatureXSample.median,
     ty = Float64,
     lo = true,
-    na = "Test",
+    naf = "FF",
+    nas = "SS",
+    nan = "NN",
 ) == (FE2U_, [0.0; 1; 2; 3;;])
 
 # ---- #
 
-for fi in ("feature_x_sample_x_number.html", "number.html", "number_plus1_log2.html")
+for fi in ("ff_x_ss_x_nn.html", "ffssnn.html", "ffssnn_plus1_log2.html")
 
-    @test isfile(joinpath(Nucleus.TE, fi))
+    @test isfile(joinpath(DI, fi))
 
 end
-
-# ---- #
-
-const DI = joinpath(homedir(), "Downloads")
 
 # ---- #
 
@@ -61,13 +63,13 @@ const GS = "GSE14577"
 
 # ---- #
 
-@test Nucleus.Error.@is Nucleus.FeatureXSample.get_geo(DI, GS, "")
+@test Nucleus.Error.@is Nucleus.FeatureXSample.get_geo(DI, GS)
 
 # ---- #
 
-for pl in ("GPL96", "GPL96")
+for pl in ("GPL96", "GPL97")
 
-    Nucleus.FeatureXSample.get_geo(DI, GS, pl)
+    Nucleus.FeatureXSample.get_geo(DI, GS, pl; nas = "$(pl)Sample")
 
 end
 
@@ -87,6 +89,14 @@ for (gs, ur, lo, ch) in (
 
     @info gs
 
-    Nucleus.FeatureXSample.get_geo(DI, gs; ur, lo, ch)
+    di = joinpath(DI, gs)
+
+    if !isdir(di)
+
+        mkdir(di)
+
+    end
+
+    Nucleus.FeatureXSample.get_geo(di, gs; ur, lo, ch)
 
 end
