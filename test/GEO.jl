@@ -102,12 +102,12 @@ const SA = SM_[1]
 
 # ---- #
 
-# 599.145 ms (10649 allocations: 27.73 MiB)
+# 586.897 ms (10649 allocations: 27.73 MiB)
 #@btime Nucleus.GEO.read(GZ);
 
 # ---- #
 
-# 11.806 ms (107248 allocations: 16.70 MiB)
+# 11.500 ms (107248 allocations: 16.70 MiB)
 #@btime Nucleus.GEO._dice($(SA_KE_VA[SA]["_ta"]));
 
 # ---- #
@@ -124,7 +124,7 @@ const N_SA = lastindex(SM_)
 
 # ---- #
 
-# 319.382 ns (1 allocation: 208 bytes)
+# 314.583 ns (1 allocation: 208 bytes)
 #@btime Nucleus.GEO.get_sample(SA_KE_VA);
 
 # ---- #
@@ -137,12 +137,12 @@ const CH_, CH_X_SA_X_ST = Nucleus.GEO.tabulate(SA_KE_VA)
 
 # ---- #
 
-# 3.896 μs (9 allocations: 936 bytes)
+# 3.849 μs (9 allocations: 936 bytes)
 #@btime Nucleus.GEO.tabulate(SA_KE_VA);
 
 # ---- #
 
-const FE_, FE_X_SA_X_FL = Nucleus.GEO.tabulate(KE_VA, SA_KE_VA)
+const FE_, SAF_, FE_X_SA_X_FL = Nucleus.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
@@ -150,7 +150,7 @@ const FE_, FE_X_SA_X_FL = Nucleus.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
-# 388.193 ms (2451272 allocations: 377.34 MiB)
+# 377.900 ms (2577473 allocations: 383.85 MiB)
 #@btime Nucleus.GEO.tabulate(KE_VA, SA_KE_VA);
 
 # ---- #
@@ -163,6 +163,8 @@ for (gs, re, pl_re) in (
     bl_th = Nucleus.GEO.read(Nucleus.GEO.download(Nucleus.TE, gs))
 
     sa_ke_va = bl_th["SAMPLE"]
+
+    sa_ = Nucleus.GEO.get_sample(sa_ke_va)
 
     ch_, ch_x_sa_x_st = Nucleus.GEO.tabulate(sa_ke_va)
 
@@ -178,7 +180,9 @@ for (gs, re, pl_re) in (
 
         else
 
-            fe_, fe_x_sa_x_fl = Nucleus.GEO.tabulate(ke_va, sa_ke_va)
+            fe_, saf_, fe_x_sa_x_fl = Nucleus.GEO.tabulate(ke_va, sa_ke_va)
+
+            @test sa_ == saf_
 
             @test size(fe_x_sa_x_fl) === re
 

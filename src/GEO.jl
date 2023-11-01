@@ -1,10 +1,14 @@
 module GEO
 
+using Downloads: download as downloads_download
+
 using GZip: open
 
 using OrderedCollections: OrderedDict
 
 using ..Nucleus
+
+const KE = "!Sample_title"
 
 function download(di, gs)
 
@@ -12,7 +16,7 @@ function download(di, gs)
 
     gz = "$(gs)_family.soft.gz"
 
-    Base.download(
+    downloads_download.(
         "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(view(gs, 1:(lastindex(gs) - 3)))nnn/$gs/soft/$gz",
         joinpath(di, gz),
     )
@@ -118,9 +122,9 @@ function read(gz)
 
 end
 
-function get_sample(sa_ke_va, sa = "!Sample_title")
+function get_sample(sa_ke_va, ke = KE)
 
-    [ke_va[sa] for ke_va in values(sa_ke_va)]
+    [ke_va[ke] for ke_va in values(sa_ke_va)]
 
 end
 
@@ -164,15 +168,7 @@ function _dice(ta)
 
 end
 
-function _map_feature(ke_va)
-
-    pl = ke_va["!Platform_geo_accession"]
-
-    if !haskey(ke_va, "_ta")
-
-        error("\"$pl\" lacks a table.")
-
-    end
+function _map_feature(pl, ta)
 
     it = parse(Int, view(pl, 4:lastindex(pl)))
 
@@ -185,12 +181,6 @@ function _map_feature(ke_va)
         co = "Gene Symbol"
 
         fu = fe -> Nucleus.String.split_get(fe, " /// ", 1)
-
-    elseif it == 2004 || it == 2005 || it == 3718 || it == 3720
-
-        co = "Associated Gene"
-
-        fu = fe -> Nucleus.String.split_get(fe, " // ", 1)
 
     elseif it == 5175 || it == 6244 || it == 11532 || it == 17586
 
@@ -205,12 +195,6 @@ function _map_feature(ke_va)
     elseif it == 10332
 
         co = "GENE_SYMBOL"
-
-    elseif it == 13534
-
-        co = "UCSC_RefGene_Name"
-
-        fu = fe -> Nucleus.String.split_get(fe, ';', 1)
 
     elseif it == 15048
 
@@ -228,73 +212,111 @@ function _map_feature(ke_va)
 
     end
 
-    sp___ = _dice(ke_va["_ta"])
+    li_ = _dice(ta)
 
-    sp1_ = sp___[1]
+    # TODO: Remove.
 
-    id = findfirst(==("ID"), sp1_)
+    he = li_[1]
 
-    idc = findfirst(==(co), sp1_)
+    idi = findfirst(==("ID"), he)
+    @assert isone(idi)
 
-    fe_ = String[]
+    idc = findfirst(==(co), he)
 
-    fec_ = String[]
+    n_li = lastindex(li_)
 
-    for sp_ in view(sp___, 2:lastindex(sp___))
+    n_fe = n_li - 1
 
-        fe = sp_[id]
+    fe_id = Dict{String, Int}()
 
-        fec = fu(sp_[idc])
+    # TODO: Understand why `String[]` is faster.
+    fec_ = Vector{String}(undef, n_fe)
 
-        push!(fe_, fe)
+    for (id, li) in enumerate(view(li_, 2:n_li))
 
-        push!(fec_, isempty(fec) ? fe : fec)
+        fe = li[idi]
+
+        fec = li[idc]
+
+        fe_id[fe] = id
+
+        fec_[id] = Nucleus.String.is_bad(fec) ? "_$fe" : fu(fec)
 
     end
 
-    fe_, fec_
+    n_fe, fe_id, fec_
 
 end
 
-function tabulate(ke_va, sa_ke_va)
+function tabulate(ke_va, sa_ke_va, ke = KE)
 
-    fe_, fec_ = _map_feature(ke_va)
+    pl = ke_va["!Platform_geo_accession"]
 
-    n = lastindex(fe_)
+    if !haskey(ke_va, "_ta")
 
-    fe_x_sa_x_fl = Matrix{Float64}(undef, n, length(sa_ke_va))
-
-    is_ = falses(n)
-
-    fe_id = Dict(fe => id for (id, fe) in enumerate(fe_))
-
-    for (ids, (sa, ke_va)) in enumerate(sa_ke_va)
-
-        if haskey(ke_va, "_ta")
-
-            sp___ = _dice(ke_va["_ta"])
-
-            idv = findfirst(==("VALUE"), sp___[1])
-
-            for sp_ in view(sp___, 2:lastindex(sp___))
-
-                idf = fe_id[sp_[1]]
-
-                fe_x_sa_x_fl[idf, ids] = parse(Float64, sp_[idv])
-
-                is_[idf] = true
-
-            end
-
-        else
-
-            @warn "\"$sa\" lacks a table."
-
-        end
+        error("\"$pl\" lacks a table.")
 
     end
 
-    fec_[is_], fe_x_sa_x_fl[is_, :]
+    n_fe, fe_id, fec_ = _map_feature(pl, ke_va["_ta"])
+
+    n_sa = length(sa_ke_va)
+
+    sa_ = Vector{String}(undef, n_sa)
+
+    fe_x_sa_x_fl = Matrix{Float64}(undef, n_fe, n_sa)
+
+    isf_ = falses(n_fe)
+
+    iss_ = BitVector(undef, n_sa)
+
+    for (ids, ke_va) in enumerate(values(sa_ke_va))
+
+        sa = ke_va[ke]
+
+        if !haskey(ke_va, "_ta")
+
+            error("\"$sa\" lacks a table.")
+
+        end
+
+        if ke_va["!Sample_platform_id"] == pl
+
+            li_ = _dice(ke_va["_ta"])
+
+            idv = findfirst(==("VALUE"), li_[1])
+
+            for li in view(li_, 2:lastindex(li_))
+
+                st = li[idv]
+
+                if !isempty(st)
+
+                    idf = fe_id[li[1]]
+
+                    fe_x_sa_x_fl[idf, ids] = parse(Float64, st)
+
+                    isf_[idf] = true
+
+                end
+
+            end
+
+            sa_[ids] = sa
+
+            is = true
+
+        else
+
+            is = false
+
+        end
+
+        iss_[ids] = is
+
+    end
+
+    fec_[isf_], sa_[iss_], fe_x_sa_x_fl[isf_, iss_]
 
 end
 

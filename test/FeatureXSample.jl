@@ -50,3 +50,43 @@ for fi in ("feature_x_sample_x_number.html", "number.html", "number_plus1_log2.h
     @test isfile(joinpath(Nucleus.TE, fi))
 
 end
+
+# ---- #
+
+const DI = joinpath(homedir(), "Downloads")
+
+# ---- #
+
+const GS = "GSE14577"
+
+# ---- #
+
+@test Nucleus.Error.@is Nucleus.FeatureXSample.get_geo(DI, GS, "")
+
+# ---- #
+
+for pl in ("GPL96", "GPL96")
+
+    Nucleus.FeatureXSample.get_geo(DI, GS, pl)
+
+end
+
+# ---- #
+
+for (gs, ur, lo, ch) in (
+    ("GSE16059", "", false, "Diagnonsis"),
+    ("GSE67311", "", false, "Irritable Bowel Syndrome"),
+    (
+        "GSE128078",
+        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE128nnn/GSE128078/suppl/GSE128078%5FFES%5Fisoforms%5FFPKM%2Etxt%2Egz",
+        true,
+        "Disease State",
+    ),
+    #("GSE130353", "", false, ""),
+)
+
+    @info gs
+
+    Nucleus.FeatureXSample.get_geo(DI, gs; ur, lo, ch)
+
+end
