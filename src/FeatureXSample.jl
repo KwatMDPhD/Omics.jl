@@ -216,7 +216,7 @@ function get_geo(
 
     end
 
-    @info "Feature size = $(size(ch_x_sa_x_an))."
+    @info "Feature size = $(size(fe_x_sa_x_nu))."
 
     if sa_ != saf_
 
@@ -242,7 +242,7 @@ function get_geo(
         ch_x_sa_x_an,
     )
 
-    pr = joinpath(ou, "feature_x_sample_x_number")
+    pr = joinpath(ou, "$(lowercase(pl))_x_sample_x_number")
 
     Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
 
