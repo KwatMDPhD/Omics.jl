@@ -59,7 +59,7 @@ const SPIKE = Dict(
     "spikecolor" => "#561649",
 )
 
-const _AX = Dict("showgrid" => false)
+const _AX = Dict("showgrid" => false, "automargin" => true)
 
 function plot_scatter(
     ht,
