@@ -141,6 +141,14 @@ function get_geo(
 
     Nucleus.Error.error_missing(di)
 
+    di = joinpath(di, lowercase(gs))
+
+    if !isdir(di) || re
+
+        Nucleus.Path.remake_directory(di)
+
+    end
+
     gz = joinpath(di, "$(gs)_family.soft.gz")
 
     if !isfile(gz) || re

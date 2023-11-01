@@ -89,14 +89,6 @@ for (gs, ur, lo, ch) in (
 
     @info gs
 
-    di = joinpath(DI, gs)
-
-    if !isdir(di)
-
-        mkdir(di)
-
-    end
-
-    Nucleus.FeatureXSample.get_geo(di, gs; ur, lo, ch)
+    Nucleus.FeatureXSample.get_geo(DI, gs; ur, lo, ch)
 
 end
