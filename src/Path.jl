@@ -76,22 +76,4 @@ function remove(pa; ke_ar...)
 
 end
 
-function remake_directory(di)
-
-    if isdir(di)
-
-        remove(di; recursive = true)
-
-    elseif ispath(di)
-
-        error("$di is not a directory.")
-
-    end
-
-    mkdir(di)
-
-    nothing
-
-end
-
 end

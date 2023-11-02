@@ -1,10 +1,8 @@
 module Nucleus
 
-using Random: randstring
-
 const _DA = joinpath(dirname(@__DIR__), "data")
 
-const TE = joinpath(tempdir(), "Nucleus$(randstring(8))")
+const TE = joinpath(tempdir(), "Nucleus")
 
 for jl in readdir(@__DIR__)
 
@@ -18,7 +16,13 @@ end
 
 function __init__()
 
-    Nucleus.Path.remake_directory(TE)
+    if isdir(TE)
+
+        rm(TE; recursive = true)
+
+    end
+
+    mkdir(TE)
 
 end
 

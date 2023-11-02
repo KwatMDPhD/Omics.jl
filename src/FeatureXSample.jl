@@ -145,7 +145,7 @@ function get_geo(
 
     if !isdir(di) || re
 
-        Nucleus.Path.remake_directory(di)
+        mkdir(di)
 
     end
 

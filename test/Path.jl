@@ -74,46 +74,10 @@ Nucleus.Path.open(Nucleus.TE)
 
 # ---- #
 
-function write_file()
-
-    touch(joinpath(Nucleus.TE, "file"))
-
-end
-
-# ---- #
-
-function write_directory()
-
-    mkdir(joinpath(Nucleus.TE, "directory"))
-
-end
-
-# ---- #
-
-for pa in (write_file(), write_directory())
+for pa in (touch(joinpath(Nucleus.TE, "file")), mkdir(joinpath(Nucleus.TE, "directory")))
 
     Nucleus.Path.remove(pa)
 
     @test Nucleus.Error.@is Nucleus.Path.remove(pa)
 
 end
-
-# ---- #
-
-@test Nucleus.Error.@is Nucleus.Path.remake_directory(write_file())
-
-# ---- #
-
-Nucleus.Path.remake_directory(write_directory())
-
-# ---- #
-
-@test Nucleus.Path.read(Nucleus.TE) == ["directory", "file"]
-
-# ---- #
-
-Nucleus.Path.remake_directory(Nucleus.TE)
-
-# ---- #
-
-@test isempty(Nucleus.Path.read(Nucleus.TE))

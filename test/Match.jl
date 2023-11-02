@@ -1,12 +1,19 @@
-# TODO: Benchmark.
-
 using Test: @test
 
 using Nucleus
 
 # ---- #
 
-function benchmark(ho, n_fe, n_sa)
+function make_output_argument(title_text)
+
+    mkdir(joinpath(Nucleus.TE, Nucleus.Path.clean(title_text))),
+    Dict("title" => Dict("text" => title_text))
+
+end
+
+# ---- #
+
+function make_argument(ho, n_fe, n_sa)
 
     if ho == "f12"
 
@@ -35,7 +42,7 @@ end
 
 # ---- #
 
-Nucleus.Match.make(Nucleus.TE, benchmark("f12", 1, 2)...)
+Nucleus.Match.make(Nucleus.TE, make_argument("f12", 1, 2)...)
 
 # ---- #
 
@@ -47,33 +54,21 @@ end
 
 # ---- #
 
-function make_directory_layout(title_text)
-
-    di = joinpath(Nucleus.TE, Nucleus.Path.clean(title_text))
-
-    Nucleus.Path.remake_directory(di)
-
-    di, Dict("title" => Dict("text" => title_text))
-
-end
-
-# ---- #
-
 const SI = 100000, 100
 
 # ---- #
 
 for (n_fe, n_sa) in ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), SI)
 
-    di, layout = make_directory_layout("$n_fe x $n_sa")
+    di, layout = make_output_argument("$n_fe x $n_sa")
 
-    Nucleus.Match.make(di, benchmark("ra", n_fe, n_sa)...; layout)
+    Nucleus.Match.make(di, make_argument("ra", n_fe, n_sa)...; layout)
 
 end
 
 # ---- #
 
-const FU, NAT, NAF, NAS, FE_, SA_, TA_, FE_X_SA_X_NU = benchmark("f12", 1, 19)
+const FU, NAT, NAF, NAS, FE_, SA_, TA_, FE_X_SA_X_NU = make_argument("f12", 1, 19)
 
 # ---- #
 
@@ -88,7 +83,7 @@ const FE_X_SA_X_IT = convert(Matrix{Int}, FE_X_SA_X_NU)
 for (ta_, fe_x_sa_x_nu) in
     ((TA_, FE_X_SA_X_NU), (TAI_, FE_X_SA_X_NU), (TA_, FE_X_SA_X_IT), (TAI_, FE_X_SA_X_IT))
 
-    di, layout = make_directory_layout("$(eltype(ta_)) x $(eltype(fe_x_sa_x_nu))")
+    di, layout = make_output_argument("$(eltype(ta_)) x $(eltype(fe_x_sa_x_nu))")
 
     Nucleus.Match.make(di, FU, NAT, NAF, NAS, FE_, SA_, ta_, fe_x_sa_x_nu; layout)
 
@@ -122,7 +117,7 @@ const GR_ = repeat(1:N_GR, N_CH)
 
 for nu_ in ((1, 1, 2, 2, 4, 8), (1, 2, 4, 8, 2, 1))
 
-    di, layout = make_directory_layout(string(nu_))
+    di, layout = make_output_argument(string(nu_))
 
     Nucleus.Match.make(
         di,
@@ -133,7 +128,6 @@ for nu_ in ((1, 1, 2, 2, 4, 8), (1, 2, 4, 8, 2, 1))
         GFE_,
         GSA_,
         GR_,
-        # TODO: Improve.
         hcat((fill(nu, N_FE, N_GR) for nu in nu_)...);
         layout,
     )
@@ -142,13 +136,13 @@ end
 
 # ---- #
 
-const NS_ = benchmark("ra", SI...)
+const NS_ = make_argument("ra", SI...)
 
 # ---- #
 
 for (n_ma, n_pv) in ((0, 0), (0, 10), (10, 0), (10, 10), (30, 30))
 
-    di, layout = make_directory_layout("n_ma = $n_ma, n_pv = $n_pv")
+    di, layout = make_output_argument("n_ma = $n_ma, n_pv = $n_pv")
 
     Nucleus.Match.make(di, NS_...; n_ma, n_pv, layout)
 
@@ -156,13 +150,13 @@ end
 
 # ---- #
 
-const NE_ = benchmark("f12", 5, 2)
+const NE_ = make_argument("f12", 5, 2)
 
 # ---- #
 
 for n_ex in (0, 1, 2, 3, 6)
 
-    di, layout = make_directory_layout("n_ex = $n_ex")
+    di, layout = make_output_argument("n_ex = $n_ex")
 
     Nucleus.Match.make(di, NE_...; n_ex, layout)
 
@@ -170,13 +164,13 @@ end
 
 # ---- #
 
-const ST_ = benchmark("ra", 2, 3)
+const ST_ = make_argument("ra", 2, 3)
 
 # ---- #
 
 for st in (0, 0.1, 1, 2, 4, 8)
 
-    di, layout = make_directory_layout("st = $st")
+    di, layout = make_output_argument("st = $st")
 
     Nucleus.Match.make(di, ST_...; st, layout)
 

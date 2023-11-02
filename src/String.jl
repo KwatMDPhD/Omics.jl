@@ -1,8 +1,16 @@
 module String
 
+using Random: randstring
+
 function is_bad(st)
 
     isempty(st) || contains(st, r"^[^0-9A-Za-z]+$")
+
+end
+
+function make(ar_...)
+
+    randstring(ar_...)
 
 end
 

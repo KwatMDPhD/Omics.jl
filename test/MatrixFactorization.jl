@@ -24,9 +24,7 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     end
 
-    di = joinpath(Nucleus.TE, "$(n_ro)_$(n_co)_$(n_fa)")
-
-    Nucleus.Path.remake_directory(di)
+    di = mkdir(joinpath(Nucleus.TE, "$(n_ro)_$(n_co)_$(n_fa)"))
 
     Nucleus.MatrixFactorization.write(di, mw)
 
@@ -36,11 +34,7 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     @test isapprox(mh, mh2; rtol = 1)
 
-    di = "$(di)_solved"
-
-    Nucleus.Path.remake_directory(di)
-
-    Nucleus.MatrixFactorization.write(di, mh2; naf = "Solved")
+    Nucleus.MatrixFactorization.write(mkdir("$(di)_solved"), mh2; naf = "Solved")
 
     # 9.417 μs (58 allocations: 6.95 KiB)
     # 2.116 μs (23 allocations: 2.78 KiB)
@@ -67,11 +61,7 @@ const MH = Nucleus.Simulation.make_matrix_1n(Float64, 2, 3)
 
 # ---- #
 
-const DI = joinpath(Nucleus.TE, "write")
-
-# ---- #
-
-Nucleus.Path.remake_directory(DI)
+const DI = mkdir(joinpath(Nucleus.TE, "write"))
 
 # ---- #
 

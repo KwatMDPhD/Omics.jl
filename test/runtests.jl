@@ -4,7 +4,7 @@ using Nucleus
 
 # ----------------------------------------------------------------------------------------------- #
 
-@test isempty(Nucleus.Path.read(Nucleus.TE))
+@test isempty(readdir(Nucleus.TE))
 
 # ---- #
 

@@ -1,4 +1,4 @@
-using Random: randstring, seed!
+using Random: seed!
 
 using StatsBase: mean
 
@@ -117,7 +117,8 @@ for n in (100, 1000, 10000, 20000)
     #@btime Nucleus.Matrix.collapse(
     #    mean,
     #    Float64,
-    #    $([randstring(CH_, 3) for _ in 1:n]),
+    #    # TODO
+    #    $([Nucleus.String.make(CH_, 3) for _ in 1:n]),
     #    $(rand(n, n)),
     #)
 

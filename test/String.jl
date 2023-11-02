@@ -1,5 +1,7 @@
 using Test: @test
 
+using Random: seed!
+
 using Nucleus
 
 # ---- #
@@ -82,6 +84,18 @@ for go in GO_
     @test !Nucleus.String.is_bad(go)
 
     #@btime Nucleus.String.is_bad($go)
+
+end
+
+# ---- #
+
+seed!(20231102)
+
+# ---- #
+
+for (ar_, re) in (((), "TJRIUDqZ"), ((('A', 'C', 'G', 'T'),), "CGCCGTTG"), (('A':'Z', 2), "WP"))
+
+    @test Nucleus.String.make(ar_...) === re
 
 end
 
