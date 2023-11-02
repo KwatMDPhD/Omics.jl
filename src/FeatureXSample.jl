@@ -127,7 +127,6 @@ function get_geo(
     di,
     gs,
     pl = "";
-    re = false,
     ke = Nucleus.GEO.KE,
     ur = "",
     sas_ = (),
@@ -143,7 +142,7 @@ function get_geo(
 
     di = joinpath(di, lowercase(gs))
 
-    if !isdir(di) || re
+    if !isdir(di)
 
         mkdir(di)
 
@@ -151,7 +150,7 @@ function get_geo(
 
     gz = joinpath(di, "$(gs)_family.soft.gz")
 
-    if !isfile(gz) || re
+    if !isfile(gz)
 
         Nucleus.GEO.download(di, gs)
 
@@ -191,7 +190,7 @@ function get_geo(
 
         gz = joinpath(di, "$gs.tsv.gz")
 
-        if !isfile(gz) || re
+        if !isfile(gz)
 
             download(ur, gz)
 
