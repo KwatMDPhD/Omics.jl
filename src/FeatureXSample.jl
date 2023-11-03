@@ -134,8 +134,8 @@ function get_geo(
     chr_ = (),
     fe_fe2 = Dict{String, String}(),
     lo = false,
-    ch = "",
     nas = "Sample",
+    ch = "",
 )
 
     Nucleus.Error.error_missing(di)
@@ -238,10 +238,12 @@ function get_geo(
 
     fe_, fe_x_sa_x_nu = transform(di, fe_, sa_, fe_x_sa_x_nu; fe_fe2, lo, naf = pl, nas)
 
+    plc = lowercase(pl)
+
     nasc = Nucleus.Path.clean(nas)
 
     Nucleus.DataFrame.write(
-        joinpath(di, "characteristic_x_$(nasc)_x_string.tsv"),
+        joinpath(di, "characteristic_x_$(isempty(ur) ? plc : "")$(nasc)_x_string.tsv"),
         "Characteristic",
         ch_,
         sa_,
@@ -250,7 +252,7 @@ function get_geo(
 
     count(ch_, eachrow(ch_x_sa_x_st))
 
-    pr = joinpath(di, "$(lowercase(pl))_x_$(nasc)_x_number")
+    pr = joinpath(di, "$(plc)_x_$(nasc)_x_number")
 
     Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
 

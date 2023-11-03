@@ -327,8 +327,11 @@ function plot_heat_map(
                 COLORBAR,
                 Dict(
                     "x" => colorbarx1,
-                    "tickvals" =>
-                        range(Nucleus.Collection.get_minimum_maximum(z)...; length, step),
+                    "tickvals" => range(
+                        Nucleus.Collection.get_minimum_maximum(view(z, .!isnan.(z)))...;
+                        length,
+                        step,
+                    ),
                 ),
             ),
         ),
