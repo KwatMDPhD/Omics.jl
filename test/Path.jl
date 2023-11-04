@@ -8,12 +8,14 @@ using Nucleus
 
 # ---- #
 
-@test Nucleus.Path.clean("a_b.c-d+e!f%g%h]iJK") === "a_b.c_d_e_f_g_h_ijk"
+for (na, re) in (("A_b.C-d+E!f%G%h]IjK", "a_b.c_d_e_f_g_h_ijk"),)
 
-# ---- #
+    @test Nucleus.Path.clean(na) === re
 
-# 444.657 ns (7 allocations: 440 bytes)
-#@btime Nucleus.Path.clean("a_b.c-d+e!f%g%h]iJK");
+    # 443.601 ns (7 allocations: 440 bytes)
+    #@btime Nucleus.Path.clean($na)
+
+end
 
 # ---- #
 

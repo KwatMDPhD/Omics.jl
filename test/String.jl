@@ -89,6 +89,17 @@ end
 
 # ---- #
 
+for (st, re) in (("A_b.C-d+E!f%G%h]IjK", "A_b.C_d_E_f_G_h_IjK"),)
+
+    @test Nucleus.String.clean(st) === re
+
+    # 338.470 ns (4 allocations: 232 bytes)
+    #@btime Nucleus.String.clean($st)
+
+end
+
+# ---- #
+
 seed!(20231102)
 
 # ---- #

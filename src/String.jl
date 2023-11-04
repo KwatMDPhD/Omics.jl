@@ -8,6 +8,12 @@ function is_bad(st)
 
 end
 
+function clean(st)
+
+    replace(st, r"[^._0-9A-Za-z]" => '_')
+
+end
+
 function make(ar_...)
 
     randstring(ar_...)

@@ -1,5 +1,7 @@
 module Path
 
+using ..Nucleus
+
 function clean(na)
 
     if contains(na, '/')
@@ -8,7 +10,7 @@ function clean(na)
 
     end
 
-    replace(lowercase(na), r"[^.0-9_a-z]" => '_')
+    Nucleus.String.clean(lowercase(na))
 
 end
 
