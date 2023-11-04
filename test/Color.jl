@@ -1,8 +1,10 @@
-using Colors: RGB
-
 using Test: @test
 
 using Nucleus
+
+# ---- #
+
+using Colors: RGB
 
 # ---- #
 

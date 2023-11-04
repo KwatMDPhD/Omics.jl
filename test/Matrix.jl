@@ -1,10 +1,12 @@
-using Random: seed!
-
-using StatsBase: mean
-
 using Test: @test
 
 using Nucleus
+
+# ---- #
+
+using Random: seed!
+
+using StatsBase: mean
 
 # ---- #
 
@@ -110,14 +112,13 @@ for n in (100, 1000, 10000, 20000)
 
     seed!(20230920)
 
-    # 29.250 μs (375 allocations: 127.28 KiB)
+    # 28.791 μs (375 allocations: 127.28 KiB)
     # 2.975 ms (1797 allocations: 11.92 MiB)
     # 569.579 ms (2770 allocations: 815.50 MiB)
     # 2.397 s (3103 allocations: 3.08 GiB)
     #@btime Nucleus.Matrix.collapse(
     #    mean,
     #    Float64,
-    #    # TODO
     #    $([Nucleus.String.make(CH_, 3) for _ in 1:n]),
     #    $(rand(n, n)),
     #)

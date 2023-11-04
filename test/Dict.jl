@@ -1,8 +1,10 @@
-using OrderedCollections: OrderedDict
-
 using Test: @test
 
 using Nucleus
+
+# ---- #
+
+using OrderedCollections: OrderedDict
 
 # ---- #
 

@@ -1,5 +1,7 @@
 module Collection
 
+using OrderedCollections: OrderedDict
+
 using StatsBase: countmap
 
 function get_minimum_maximum(an_)
@@ -23,6 +25,26 @@ function get_minimum_maximum(an_)
     end
 
     mi, ma
+
+end
+
+function map_index(an_)
+
+    an_id_ = OrderedDict{eltype(an_), Vector{Int}}()
+
+    for (id, an) in enumerate(an_)
+
+        if !haskey(an_id_, an)
+
+            an_id_[an] = Int[]
+
+        end
+
+        push!(an_id_[an], id)
+
+    end
+
+    an_id_
 
 end
 

@@ -8,7 +8,19 @@ const GS = "GSE122404"
 
 # ---- #
 
-const GZ = Nucleus.GEO.download(Nucleus.TE, GS)
+const DI = joinpath(homedir(), "Downloads")
+
+# ---- #
+
+const GZ = joinpath(DI, "$(GS)_family.soft.gz")
+
+# ---- #
+
+if !isfile(GZ)
+
+    @test Nucleus.GEO.download(DI, GS) === GZ
+
+end
 
 # ---- #
 
@@ -150,7 +162,7 @@ const FE_, SAF_, FE_X_SA_X_FL = Nucleus.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
-# 377.900 ms (2577473 allocations: 383.85 MiB)
+# 380.880 ms (2577472 allocations: 383.85 MiB)
 #@btime Nucleus.GEO.tabulate(KE_VA, SA_KE_VA);
 
 # ---- #
@@ -160,7 +172,15 @@ for (gs, re, pl_re) in (
     ("GSE13534", (0, 4), ("GPL96" => (22283, 4),)),
 )
 
-    bl_th = Nucleus.GEO.read(Nucleus.GEO.download(Nucleus.TE, gs))
+    gz = joinpath(DI, "$(gs)_family.soft.gz")
+
+    if !isfile(gz)
+
+        @test Nucleus.GEO.download(DI, gs) === gz
+
+    end
+
+    bl_th = Nucleus.GEO.read(gz)
 
     sa_ke_va = bl_th["SAMPLE"]
 
@@ -180,14 +200,48 @@ for (gs, re, pl_re) in (
 
         else
 
-            fe_, saf_, fe_x_sa_x_fl = Nucleus.GEO.tabulate(ke_va, sa_ke_va)
+            fe_, is_, fe_x_sa_x_fl = Nucleus.GEO.tabulate(ke_va, sa_ke_va)
 
-            @test sa_ == saf_
+            @test view(sa_, is_) == sa_
 
             @test size(fe_x_sa_x_fl) === re
 
         end
 
     end
+
+end
+
+# ---- #
+
+const GS2 = "GSE14577"
+
+# ---- #
+
+@test Nucleus.Error.@is Nucleus.GEO.write(DI, GS2)
+
+# ---- #
+
+for pl in ("GPL96", "GPL97")
+
+    Nucleus.GEO.write(DI, GS2, pl; nas = "$(pl)Sample")
+
+end
+
+# ---- #
+
+for (gs, ur, lo, ch) in (
+    ("GSE16059", "", false, "Diagnonsis"),
+    ("GSE67311", "", false, "Irritable Bowel Syndrome"),
+    (
+        "GSE128078",
+        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE128nnn/GSE128078/suppl/GSE128078%5FFES%5Fisoforms%5FFPKM%2Etxt%2Egz",
+        true,
+        "Disease State",
+    ),
+    #("GSE130353", "", false, ""),
+)
+
+    Nucleus.GEO.write(DI, gs; ur, lo, ch)
 
 end

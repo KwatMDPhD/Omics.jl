@@ -214,8 +214,6 @@ function _map_feature(pl, ta)
 
     li_ = _dice(ta)
 
-    # TODO: Remove.
-
     he = li_[1]
 
     idi = findfirst(==("ID"), he)
@@ -248,7 +246,7 @@ function _map_feature(pl, ta)
 
 end
 
-function tabulate(ke_va, sa_ke_va, ke = KE)
+function tabulate(ke_va, sa_ke_va)
 
     pl = ke_va["!Platform_geo_accession"]
 
@@ -270,9 +268,7 @@ function tabulate(ke_va, sa_ke_va, ke = KE)
 
     iss_ = BitVector(undef, n_sa)
 
-    for (ids, ke_va) in enumerate(values(sa_ke_va))
-
-        sa = ke_va[ke]
+    for (ids, (sa, ke_va)) in enumerate(sa_ke_va)
 
         if !haskey(ke_va, "_ta")
 
@@ -316,7 +312,167 @@ function tabulate(ke_va, sa_ke_va, ke = KE)
 
     end
 
-    fec_[isf_], sa_[iss_], fe_x_sa_x_fl[isf_, iss_]
+    fec_[isf_], iss_, fe_x_sa_x_fl[isf_, iss_]
+
+end
+
+function write(
+    di,
+    gs,
+    pl = "";
+    ke = KE,
+    ur = "",
+    sas_ = (),
+    sar_ = (),
+    chr_ = (),
+    fe_fe2 = Dict{String, String}(),
+    lo = false,
+    nas = "Sample",
+    ch = "",
+)
+
+    Nucleus.Error.error_missing(di)
+
+    di = Nucleus.Path.establish(joinpath(di, lowercase(gs)))
+
+    gz = joinpath(di, "$(gs)_family.soft.gz")
+
+    if !isfile(gz)
+
+        download(di, gs)
+
+    end
+
+    bl_th = read(gz)
+
+    sa_ke_va = bl_th["SAMPLE"]
+
+    sa_ = get_sample(sa_ke_va, ke)
+
+    @info "👯‍♀️ Sample" sa_
+
+    ch_, ch_x_sa_x_st = tabulate(sa_ke_va)
+
+    @info "👙 Characteristic" ch_ ch_x_sa_x_st
+
+    if isempty(ur)
+
+        if isempty(pl)
+
+            pl_ = collect(keys(bl_th["PLATFORM"]))
+
+            if !isone(lastindex(pl_))
+
+                error("There is not one platform. $pl_.")
+
+            end
+
+            pl = pl_[1]
+
+        end
+
+        fe_, is_, fe_x_sa_x_nu = tabulate(bl_th["PLATFORM"][pl], sa_ke_va)
+
+        saf_ = sa_[is_]
+
+    else
+
+        gz = joinpath(di, "$gs.tsv.gz")
+
+        if !isfile(gz)
+
+            download(ur, gz)
+
+        end
+
+        pl = "Feature"
+
+        _naf, fe_, saf_, fe_x_sa_x_nu = Nucleus.DataFrame.separate(gz)
+
+    end
+
+    @info "🧬 Feature" fe_ saf_ fe_x_sa_x_nu
+
+    if sa_ != saf_
+
+        sa_, ch_x_sa_x_st, fe_x_sa_x_nu =
+            Nucleus.FeatureXSample.match(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_nu)
+
+    end
+
+    if !isempty(sas_)
+
+        is_ = (sa -> all(occursin(sa), sas_)).(sa_)
+
+        sa_ = sa_[is_]
+
+        ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
+
+        fe_x_sa_x_nu = fe_x_sa_x_nu[:, is_]
+
+        @info "🏩 Selected sample" sa_
+
+    end
+
+    if !isempty(sar_)
+
+        sa_ = replace.(sa_, sar_...)
+
+    end
+
+    if !isempty(chr_)
+
+        replace!(ch_x_sa_x_st, chr_...)
+
+    end
+
+    fe_, fe_x_sa_x_nu =
+        Nucleus.FeatureXSample.transform(di, fe_, sa_, fe_x_sa_x_nu; fe_fe2, lo, naf = pl, nas)
+
+    plc = lowercase(pl)
+
+    nasc = Nucleus.Path.clean(nas)
+
+    Nucleus.DataFrame.write(
+        joinpath(di, "characteristic_x_$(isempty(ur) ? plc : "")$(nasc)_x_string.tsv"),
+        "Characteristic",
+        ch_,
+        sa_,
+        ch_x_sa_x_st,
+    )
+
+    Nucleus.FeatureXSample.summarize(ch_, eachrow(ch_x_sa_x_st))
+
+    pr = joinpath(di, "$(plc)_x_$(nasc)_x_number")
+
+    Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
+
+    if isempty(ch)
+
+        grc_ = Int[]
+
+        title_text = gs
+
+    else
+
+        grc_ = ch_x_sa_x_st[findfirst(==(ch), ch_), :]
+
+        title_text = "$gs (by $(titlecase(ch)))"
+
+    end
+
+    Nucleus.Plot.plot_heat_map(
+        "$pr.html",
+        fe_x_sa_x_nu;
+        y = fe_,
+        x = sa_,
+        nar = pl,
+        nac = nas,
+        grc_,
+        layout = Dict("title" => Dict("text" => title_text)),
+    )
+
+    di, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu
 
 end
 

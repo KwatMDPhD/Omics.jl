@@ -6,13 +6,31 @@ using StatsBase: median
 
 using ..Nucleus
 
-function count(na_, an___)
+function summarize(na_, an___)
 
     for (na, an_) in zip(na_, an___)
 
         println("🔦 $na\n$(Nucleus.Collection.count_sort_string(an_))")
 
     end
+
+end
+
+function match(co1_, co2_, ro_x_co1_x_an, ro_x_co2_x_an)
+
+    co_ = intersect(co1_, co2_)
+
+    n = lastindex(co_)
+
+    if iszero(n)
+
+        error("0.")
+
+    end
+
+    @info "🪞 $(lastindex(co1_)) ∩ $(lastindex(co2_)) = $n." co_
+
+    co_, ro_x_co1_x_an[:, indexin(co_, co1_)], ro_x_co2_x_an[:, indexin(co_, co2_)]
 
 end
 
@@ -100,188 +118,6 @@ function transform(
     end
 
     fe_, fe_x_sa_x_nu
-
-end
-
-function _intersect(co1_, co2_, ro_x_co1_x_an, ro_x_co2_x_an)
-
-    co_ = intersect(co1_, co2_)
-
-    n = lastindex(co_)
-
-    st = "$(lastindex(co1_)) ∩ $(lastindex(co2_)) = $n."
-
-    if iszero(n)
-
-        error(st)
-
-    end
-
-    @info "🪞 $st" co_
-
-    co_, ro_x_co1_x_an[:, indexin(co_, co1_)], ro_x_co2_x_an[:, indexin(co_, co2_)]
-
-end
-
-function get_geo(
-    di,
-    gs,
-    pl = "";
-    ke = Nucleus.GEO.KE,
-    ur = "",
-    sas_ = (),
-    sar_ = (),
-    chr_ = (),
-    fe_fe2 = Dict{String, String}(),
-    lo = false,
-    nas = "Sample",
-    ch = "",
-)
-
-    Nucleus.Error.error_missing(di)
-
-    di = joinpath(di, lowercase(gs))
-
-    if !isdir(di)
-
-        mkdir(di)
-
-    end
-
-    gz = joinpath(di, "$(gs)_family.soft.gz")
-
-    if !isfile(gz)
-
-        Nucleus.GEO.download(di, gs)
-
-    end
-
-    bl_th = Nucleus.GEO.read(gz)
-
-    sa_ke_va = bl_th["SAMPLE"]
-
-    sa_ = Nucleus.GEO.get_sample(sa_ke_va, ke)
-
-    @info "👯‍♀️ Sample" sa_
-
-    ch_, ch_x_sa_x_st = Nucleus.GEO.tabulate(sa_ke_va)
-
-    @info "👙 Characteristic" ch_ ch_x_sa_x_st
-
-    if isempty(ur)
-
-        if isempty(pl)
-
-            pl_ = collect(keys(bl_th["PLATFORM"]))
-
-            if !isone(lastindex(pl_))
-
-                error("There is not one platform. $pl_.")
-
-            end
-
-            pl = pl_[1]
-
-        end
-
-        fe_, saf_, fe_x_sa_x_nu = Nucleus.GEO.tabulate(bl_th["PLATFORM"][pl], sa_ke_va, ke)
-
-    else
-
-        gz = joinpath(di, "$gs.tsv.gz")
-
-        if !isfile(gz)
-
-            download(ur, gz)
-
-        end
-
-        pl = "Feature"
-
-        _naf, fe_, saf_, fe_x_sa_x_nu = Nucleus.DataFrame.separate(gz)
-
-    end
-
-    @info "🧬 Feature" fe_ saf_ fe_x_sa_x_nu
-
-    if sa_ != saf_
-
-        sa_, ch_x_sa_x_st, fe_x_sa_x_nu = _intersect(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_nu)
-
-    end
-
-    if !isempty(sas_)
-
-        is_ = (sa -> all(occursin(sa), sas_)).(sa_)
-
-        sa_ = sa_[is_]
-
-        ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
-
-        fe_x_sa_x_nu = fe_x_sa_x_nu[:, is_]
-
-        @info "🏩 Selected sample" sa_
-
-    end
-
-    if !isempty(sar_)
-
-        sa_ = replace.(sa_, sar_...)
-
-    end
-
-    if !isempty(chr_)
-
-        replace!(ch_x_sa_x_st, chr_...)
-
-    end
-
-    fe_, fe_x_sa_x_nu = transform(di, fe_, sa_, fe_x_sa_x_nu; fe_fe2, lo, naf = pl, nas)
-
-    plc = lowercase(pl)
-
-    nasc = Nucleus.Path.clean(nas)
-
-    Nucleus.DataFrame.write(
-        joinpath(di, "characteristic_x_$(isempty(ur) ? plc : "")$(nasc)_x_string.tsv"),
-        "Characteristic",
-        ch_,
-        sa_,
-        ch_x_sa_x_st,
-    )
-
-    count(ch_, eachrow(ch_x_sa_x_st))
-
-    pr = joinpath(di, "$(plc)_x_$(nasc)_x_number")
-
-    Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
-
-    if isempty(ch)
-
-        grc_ = Int[]
-
-        title_text = gs
-
-    else
-
-        grc_ = ch_x_sa_x_st[findfirst(==(ch), ch_), :]
-
-        title_text = "$gs (by $(titlecase(ch)))"
-
-    end
-
-    Nucleus.Plot.plot_heat_map(
-        "$pr.html",
-        fe_x_sa_x_nu;
-        y = fe_,
-        x = sa_,
-        nar = pl,
-        nac = nas,
-        grc_,
-        layout = Dict("title" => Dict("text" => title_text)),
-    )
-
-    di, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu
 
 end
 

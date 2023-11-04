@@ -1,6 +1,6 @@
 module Matrix
 
-using OrderedCollections: OrderedDict
+using ..Nucleus
 
 function make(an___)
 
@@ -10,46 +10,34 @@ end
 
 function collapse(fu, ty, ro_, ma)
 
-    ro_id_ = OrderedDict{String, Vector{Int}}()
-
-    for (id, ro) in enumerate(ro_)
-
-        if !haskey(ro_id_, ro)
-
-            ro_id_[ro] = Int[]
-
-        end
-
-        push!(ro_id_[ro], id)
-
-    end
-
     n_ro, n_co = size(ma)
 
-    n_roc = length(ro_id_)
+    ro_id_ = Nucleus.Collection.map_index(ro_)
 
-    if n_ro == n_roc
+    n_ro2 = length(ro_id_)
+
+    if n_ro == n_ro2
 
         error("There are not any rows to collapse.")
 
     end
 
-    @info "Collapsing using `$fu` and making ($n_ro -->) $n_roc x $n_co"
+    @info "Collapsing using `$fu` and making ($n_ro -->) $n_ro2 x $n_co"
 
-    roc_ = Vector{String}(undef, n_roc)
+    ro2_ = Vector{String}(undef, n_ro2)
 
-    mac = Base.Matrix{ty}(undef, n_roc, n_co)
+    ma2 = Base.Matrix{ty}(undef, n_ro2, n_co)
 
-    for (idc, (ro, id_)) in enumerate(ro_id_)
+    for (id, (ro, id_)) in enumerate(ro_id_)
 
-        roc_[idc] = ro
+        ro2_[id] = ro
 
-        mac[idc, :] =
+        ma2[id, :] =
             isone(lastindex(id_)) ? view(ma, id_[1], :) : [fu(co) for co in eachcol(ma[id_, :])]
 
     end
 
-    roc_, mac
+    ro2_, ma2
 
 end
 

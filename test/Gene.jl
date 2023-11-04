@@ -69,15 +69,15 @@ end
 
 # ---- #
 
-const PR_IO_AN = Nucleus.Gene.map_uniprot(UN)
+const PR_IR_AN = Nucleus.Gene.map_uniprot(UN)
 
 # ---- #
 
-@test length(PR_IO_AN) === 20398
+@test length(PR_IR_AN) === 20398
 
 # ---- #
 
-@test PR_IO_AN["CD8A"]["Gene Names"] == ["CD8A", "MAL"]
+@test PR_IR_AN["CD8A"]["Gene Names"] == ["CD8A", "MAL"]
 
 # ---- #
 

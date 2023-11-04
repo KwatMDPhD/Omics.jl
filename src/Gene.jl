@@ -62,22 +62,22 @@ end
 
 function map_uniprot(index_x_information_x_string = read_uniprot())
 
-    pr_io_an = Dict{String, Dict{String, Any}}()
+    pr_ir_an = Dict{String, Dict{String, Any}}()
 
-    io_ = names(index_x_information_x_string)
+    ir_ = names(index_x_information_x_string)
 
     id = 2
 
-    popat!(io_, id)
+    popat!(ir_, id)
 
     for (pr, an_) in zip(
         index_x_information_x_string[!, id],
-        eachrow(Matrix(index_x_information_x_string[!, io_])),
+        eachrow(Matrix(index_x_information_x_string[!, ir_])),
     )
 
-        io_an = Dict{String, Any}()
+        ir_an = Dict{String, Any}()
 
-        for (io, an) in zip(io_, an_)
+        for (ir, an) in zip(ir_, an_)
 
             if ismissing(an)
 
@@ -85,25 +85,25 @@ function map_uniprot(index_x_information_x_string = read_uniprot())
 
             end
 
-            if io == "Gene Names"
+            if ir == "Gene Names"
 
                 an = split(an)
 
-            elseif io == "Interacts with"
+            elseif ir == "Interacts with"
 
                 an = split(an, "; ")
 
             end
 
-            io_an[io] = an
+            ir_an[ir] = an
 
         end
 
-        pr_io_an[pr[1:(end - 6)]] = io_an
+        pr_ir_an[pr[1:(end - 6)]] = ir_an
 
     end
 
-    pr_io_an
+    pr_ir_an
 
 end
 

@@ -1,8 +1,10 @@
-using Distances: CorrDist
-
 using Test: @test
 
 using Nucleus
+
+# ---- #
+
+using Distances: CorrDist
 
 # ---- #
 

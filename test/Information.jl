@@ -1,10 +1,10 @@
-# TODO: Benchmark.
-
 using Test: @test
 
 using Nucleus
 
 # ---- #
+
+# TODO: Benchmark.
 
 for nu_ in (zeros(10), ones(10))
 

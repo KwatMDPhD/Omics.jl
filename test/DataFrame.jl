@@ -1,8 +1,10 @@
-using DataFrames: DataFrame
-
 using Test: @test
 
 using Nucleus
+
+# ---- #
+
+using DataFrames: DataFrame
 
 # ---- #
 

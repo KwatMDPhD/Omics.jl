@@ -35,7 +35,7 @@ function plot(
 
         if isfile(dw)
 
-            Nucleus.Path.remove(dw)
+            rm(dw)
 
         end
 
@@ -104,7 +104,7 @@ function plot(
 
         if isfile(fi)
 
-            Nucleus.Path.remove(fi)
+            rm(fi)
 
         end
 

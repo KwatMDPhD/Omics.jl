@@ -1,8 +1,10 @@
-using Random: seed!
-
 using Test: @test
 
 using Nucleus
+
+# ---- #
+
+using Random: seed!
 
 # ---- #
 

@@ -9,13 +9,38 @@ for (na_, an___) in ((
     ([1, 2, 3], ['A', 'B', 'C'], ['A', 'B', 'B'], ['C', 'C', 'C']),
 ),)
 
-    Nucleus.FeatureXSample.count(na_, an___)
+    Nucleus.FeatureXSample.summarize(na_, an___)
 
 end
 
 # ---- #
 
-const DI = joinpath(homedir(), "Downloads")
+@test Nucleus.Error.@is Nucleus.FeatureXSample.match(1:2, 3:5, [1 2], [3 4 5])
+
+# ---- #
+
+#disable_logging(Info)
+
+# ---- #
+
+for (co1_, co2_, ro_x_co1_x_an, ro_x_co2_x_an, re) in (
+    (1:1, 1:2, [1;;], [1 2], (1:1, [1;;], [1;;])),
+    (1:2, 1:2, [1 2], [1 2], (1:2, [1 2], [1 2])),
+    (1:3, 2:4, [1 2 3], [2 3 4], (2:3, [2 3], [2 3])),
+)
+
+    @test Nucleus.FeatureXSample.match(co1_, co2_, ro_x_co1_x_an, ro_x_co2_x_an) == re
+
+    # 277.354 ns (14 allocations: 1.38 KiB)
+    # 287.865 ns (14 allocations: 1.41 KiB)
+    # 317.308 ns (14 allocations: 1.41 KiB)
+    #@btime Nucleus.FeatureXSample.match($co1_, $co2_, $ro_x_co1_x_an, $ro_x_co2_x_an)
+
+end
+
+# ---- #
+
+#disable_logging(Debug)
 
 # ---- #
 
@@ -36,10 +61,10 @@ const FE2U_ = replace.(FEU_, "Feature" => "New Feature")
 # ---- #
 
 @test Nucleus.FeatureXSample.transform(
-    DI,
+    Nucleus.TE,
     FE_,
     SA_,
-    [-1.0; 1; 0; -2; 2; 8; 7;;],
+    [-1.0; 1; 0; -2; 2; 8; 7;;];
     fe_fe2 = Dict(zip(FEU_, FE2U_)),
     fu = Nucleus.FeatureXSample.median,
     ty = Float64,
@@ -53,42 +78,6 @@ const FE2U_ = replace.(FEU_, "Feature" => "New Feature")
 
 for fi in ("ff_x_ss_x_nn.html", "ffssnn.html", "ffssnn_plus1_log2.html")
 
-    @test isfile(joinpath(DI, fi))
-
-end
-
-# ---- #
-
-const GS = "GSE14577"
-
-# ---- #
-
-@test Nucleus.Error.@is Nucleus.FeatureXSample.get_geo(DI, GS)
-
-# ---- #
-
-for pl in ("GPL96", "GPL97")
-
-    Nucleus.FeatureXSample.get_geo(DI, GS, pl; nas = "$(pl)Sample")
-
-end
-
-# ---- #
-
-for (gs, ur, lo, ch) in (
-    ("GSE16059", "", false, "Diagnonsis"),
-    ("GSE67311", "", false, "Irritable Bowel Syndrome"),
-    (
-        "GSE128078",
-        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE128nnn/GSE128078/suppl/GSE128078%5FFES%5Fisoforms%5FFPKM%2Etxt%2Egz",
-        true,
-        "Disease State",
-    ),
-    #("GSE130353", "", false, ""),
-)
-
-    @info gs
-
-    Nucleus.FeatureXSample.get_geo(DI, gs; ur, lo, ch)
+    @test isfile(joinpath(Nucleus.TE, fi))
 
 end

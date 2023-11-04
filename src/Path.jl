@@ -70,11 +70,15 @@ function open(pa)
 
 end
 
-function remove(pa; ke_ar...)
+function establish(di)
 
-    rm(pa; ke_ar...)
+    if !isdir(di)
 
-    @info "Removed $pa."
+        mkdir(di)
+
+    end
+
+    di
 
 end
 

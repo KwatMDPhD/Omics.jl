@@ -4,7 +4,7 @@ using Nucleus
 
 # ---- #
 
-@test Nucleus.Error.@is Nucleus.Path.clean(@__DIR__)
+@test Nucleus.Error.@is Nucleus.Path.clean("a/b")
 
 # ---- #
 
@@ -76,10 +76,8 @@ Nucleus.Path.open(Nucleus.TE)
 
 # ---- #
 
-for pa in (touch(joinpath(Nucleus.TE, "file")), mkdir(joinpath(Nucleus.TE, "directory")))
+for na in ("twice", "twice", "once")
 
-    Nucleus.Path.remove(pa)
-
-    @test Nucleus.Error.@is Nucleus.Path.remove(pa)
+    @test isdir(Nucleus.Path.establish(joinpath(Nucleus.TE, na)))
 
 end
