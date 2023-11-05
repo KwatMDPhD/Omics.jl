@@ -30,11 +30,25 @@ function tabulate(ro_)
 
 end
 
+function _fuse(an___)
+
+    if isone(lastindex(an___))
+
+        an___[1]
+
+    else
+
+        zip(an___...)
+
+    end
+
+end
+
 function tabulate(ro___, co___, fl_)
 
-    ro_ = zip(ro___...)
+    ro_ = _fuse(ro___)
 
-    co_ = zip(co___...)
+    co_ = _fuse(co___)
 
     rou_ = _sort_unique(ro_)
 
@@ -52,7 +66,7 @@ function tabulate(ro___, co___, fl_)
 
     end
 
-    join.(rou_, '_'), join.(cou_, '_'), ro_x_co_x_fl
+    rou_, cou_, ro_x_co_x_fl
 
 end
 

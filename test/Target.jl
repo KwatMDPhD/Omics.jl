@@ -14,11 +14,11 @@ for (ro_, re) in (
 
     @test isequal(Nucleus.Target.tabulate(ro_), re)
 
-    # 251.482 ns (12 allocations: 1.02 KiB)
-    # 281.098 ns (12 allocations: 1.02 KiB)
-    # 289.963 ns (12 allocations: 1.02 KiB)
-    # 271.729 ns (12 allocations: 1.02 KiB)
-    # 277.253 ns (12 allocations: 1.02 KiB)
+    # 221.509 ns (12 allocations: 1.02 KiB)
+    # 234.589 ns (12 allocations: 1.02 KiB)
+    # 235.336 ns (12 allocations: 1.02 KiB)
+    # 242.029 ns (12 allocations: 1.02 KiB)
+    # 242.593 ns (12 allocations: 1.02 KiB)
     #@btime Nucleus.Target.tabulate($ro_)
 
 end
@@ -70,7 +70,7 @@ for (ro___, co___, fl_, re) in (
         ([0, 7, 0, 7, 28],),
         (["Participant 1", "Participant 1", "Participant 2", "Participant 2", "Participant 2"],),
         [10.0, 100, 20, 200, 300],
-        (["0", "7", "28"], ["Participant 1", "Participant 2"], [10 20; 100 200; NaN 300]),
+        ([0, 7, 28], ["Participant 1", "Participant 2"], [10 20; 100 200; NaN 300]),
     ),
     (
         (
@@ -98,7 +98,7 @@ for (ro___, co___, fl_, re) in (
         ],),
         [0.0, 0, 10, 100, 0, 0, 20, 200],
         (
-            ["Antigen 1_0", "Antigen 1_7", "Antigen 2_0", "Antigen 2_7"],
+            [("Antigen 1", 0), ("Antigen 1", 7), ("Antigen 2", 0), ("Antigen 2", 7)],
             ["Sample 1", "Sample 2"],
             [0.0 0; 10 20; 0 0; 100 200],
         ),
@@ -107,14 +107,14 @@ for (ro___, co___, fl_, re) in (
 
     @test isequal(Nucleus.Target.tabulate(ro___, co___, fl_), re)
 
-    # 1.729 μs (65 allocations: 3.81 KiB)
-    # 1.167 μs (44 allocations: 3.03 KiB)
-    # 1.171 μs (44 allocations: 3.03 KiB)
-    # 1.571 μs (58 allocations: 3.55 KiB)
-    # 1.558 μs (58 allocations: 3.55 KiB)
-    # 1.462 μs (51 allocations: 3.28 KiB)
-    # 1.725 μs (64 allocations: 3.80 KiB)
-    # 2.551 μs (81 allocations: 4.98 KiB)
+    # 636.725 ns (21 allocations: 2.16 KiB)
+    # 548.797 ns (21 allocations: 2.11 KiB)
+    # 550.358 ns (21 allocations: 2.11 KiB)
+    # 629.935 ns (21 allocations: 2.14 KiB)
+    # 636.411 ns (21 allocations: 2.14 KiB)
+    # 680.921 ns (21 allocations: 2.12 KiB)
+    # 622.093 ns (21 allocations: 2.19 KiB)
+    # 1.092 μs (21 allocations: 2.55 KiB)
     #@btime Nucleus.Target.tabulate($ro___, $co___, $fl_)
 
 end
@@ -129,7 +129,7 @@ for (ro_re_, co_, re) in ((
 
     @test isequal(Nucleus.Target.tabulate(ro_re_, co_), re)
 
-    # 6.258 μs (6 allocations: 320 bytes)
+    # 6.233 μs (6 allocations: 320 bytes)
     #@btime Nucleus.Target.tabulate($ro_re_, $co_)
 
 end
