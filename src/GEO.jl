@@ -396,7 +396,7 @@ function write(
     if sa_ != saf_
 
         sa_, ch_x_sa_x_st, fe_x_sa_x_nu =
-            Nucleus.FeatureXSample.match(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_nu)
+            Nucleus.FeatureXSample.intersect_column(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_nu)
 
     end
 
@@ -426,8 +426,15 @@ function write(
 
     end
 
-    fe_, fe_x_sa_x_nu =
-        Nucleus.FeatureXSample.transform(di, fe_, sa_, fe_x_sa_x_nu; fe_fe2, lo, naf = pl, nas)
+    fe_, fe_x_sa_x_nu = Nucleus.FeatureXSample.transform(
+        fe_,
+        sa_,
+        fe_x_sa_x_nu;
+        ro_ro2 = fe_fe2,
+        lo,
+        nar = pl,
+        nac = nas,
+    )
 
     nasc = Nucleus.Path.clean(nas)
 
@@ -439,7 +446,7 @@ function write(
         ch_x_sa_x_st,
     )
 
-    Nucleus.FeatureXSample.summarize(ch_, eachrow(ch_x_sa_x_st))
+    Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
 
     pr = joinpath(di, "$(lowercase(pl))_x_$(nasc)_x_number")
 

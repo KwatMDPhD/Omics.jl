@@ -62,7 +62,6 @@ function intersect_column!(co___, ma_)
 
 end
 
-# TODO: Remove (also from `GEO`).
 function intersect_column(co1_, co2_, ma1, ma2)
 
     ma_ = [ma1, ma2]
