@@ -40,7 +40,7 @@ function _log_intersection(an___, it_)
 
     n = lastindex(it_)
 
-    @info "$(join((lastindex(an_) for an_ in an___), " ∩ ")) = $n." it_
+    @info "👯 $(join((lastindex(an_) for an_ in an___), " ∩ ")) = $n." it_
 
     _error_0(n)
 
@@ -62,10 +62,10 @@ function intersect_column!(co___, ma_)
 
 end
 
-# TODO: Remove.
-function intersect_column(co1_, co2_, ro_x_co1_x_an, ro_x_co2_x_an)
+# TODO: Remove (also from `GEO`).
+function intersect_column(co1_, co2_, ma1, ma2)
 
-    ma_ = [ro_x_co1_x_an, ro_x_co2_x_an]
+    ma_ = [ma1, ma2]
 
     it_ = intersect_column!((co1_, co2_), ma_)
 
@@ -79,7 +79,7 @@ function write_block(ts_, nar_, ro___, co_, ma_)
 
         Nucleus.DataFrame.write(ts, nar, ro_, co_, ma)
 
-        @info ts nar ro_ co_ ma
+        @info "📝 $ts." nar ro_ co_ ma
 
     end
 
@@ -89,7 +89,7 @@ function count_unique(na_, an___)
 
     for (na, an_) in zip(na_, an___)
 
-        @info "$na\n$(Nucleus.Collection.count_sort_string(an_))"
+        @info "🔦 $na\n$(Nucleus.Collection.count_sort_string(an_))"
 
     end
 
@@ -159,7 +159,7 @@ function transform(
 
     end
 
-    _plot(ro_x_co_x_nu, ro_, co_, nar, nac, "$nan (Final)")
+    _plot(ro_x_co_x_nu, ro_, co_, nar, nac, "$nan (Transformed)")
 
     ro_, ro_x_co_x_nu
 

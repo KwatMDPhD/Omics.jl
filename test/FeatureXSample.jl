@@ -25,13 +25,18 @@ for (id, (ro_, co_)) in enumerate((
     (["F 3 1", "F 3 2"], ["S3", "S4", "S5", "S6"]),
 ))
 
-    ts = joinpath(Nucleus.TE, "$id.tsv")
-
-    nar = "Feature Set $id"
-
-    ma = Nucleus.Simulation.make_matrix_1n(Int, lastindex(ro_), lastindex(co_))
-
-    Nucleus.FeatureXSample.push_block!(TS_, NAR_, RO___, CO___, MA_, ts, nar, ro_, co_, ma)
+    Nucleus.FeatureXSample.push_block!(
+        TS_,
+        NAR_,
+        RO___,
+        CO___,
+        MA_,
+        joinpath(Nucleus.TE, "$id.tsv"),
+        "Feature Set $id",
+        ro_,
+        co_,
+        Nucleus.Simulation.make_matrix_1n(Int, lastindex(ro_), lastindex(co_)),
+    )
 
 end
 
@@ -47,13 +52,13 @@ end
 
 for ze in (0, 0.0)
 
-    @test Nucleus.Error.@is Nucleus.FeatureXSample._error_0(0)
+    @test Nucleus.Error.@is Nucleus.FeatureXSample._error_0(ze)
 
 end
 
 # ---- #
 
-for nu in (1, 2.0)
+for nu in (1, 2.0, NaN, Inf)
 
     @test !Nucleus.Error.@is Nucleus.FeatureXSample._error_0(nu)
 
@@ -85,18 +90,18 @@ end
 
 # ---- #
 
-for (co1_, co2_, ro_x_co1_x_an, ro_x_co2_x_an, re) in (
+for (co1_, co2_, ma1, ma2, re) in (
     (1:1, 1:2, [1;;], [1 2], (1:1, [1;;], [1;;])),
     (1:2, 1:2, [1 2], [1 2], (1:2, [1 2], [1 2])),
     (1:3, 2:4, [1 2 3], [2 3 4], (2:3, [2 3], [2 3])),
 )
 
-    @test Nucleus.FeatureXSample.intersect_column(co1_, co2_, ro_x_co1_x_an, ro_x_co2_x_an) == re
+    @test Nucleus.FeatureXSample.intersect_column(co1_, co2_, ma1, ma2) == re
 
     # 441.919 ns (16 allocations: 1.52 KiB)
     # 458.122 ns (16 allocations: 1.55 KiB)
     # 488.186 ns (16 allocations: 1.55 KiB)
-    #@btime Nucleus.FeatureXSample.intersect_column($co1_, $co2_, $ro_x_co1_x_an, $ro_x_co2_x_an)
+    #@btime Nucleus.FeatureXSample.intersect_column($co1_, $co2_, $ma1, $ma2)
 
 end
 
@@ -144,7 +149,15 @@ const RO2U_ = replace.(ROU_, "Row" => "New Row")
 @test Nucleus.FeatureXSample.transform(
     RO_,
     (id -> "Column $id").(1:3),
-    [-1.0; 1; 0; -2; 2; 8; 7;;];
+    reshape([2^po - 1 for po in 1:21], 7, 3);
     ro_ro2 = Dict(zip(ROU_, RO2U_)),
     lo = true,
-) == (RO2U_, [0.0; 1; 2; 3;;])
+) == (
+    RO2U_,
+    [
+        1.584962500721156 8.584962500721156 15.584962500721156
+        4.321928094887363 11.321928094887362 18.32192809488736
+        5.321928094887363 12.321928094887362 19.32192809488736
+        7 14 21
+    ],
+)
