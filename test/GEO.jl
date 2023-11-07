@@ -8,17 +8,17 @@ const GS = "GSE122404"
 
 # ---- #
 
-const DI = joinpath(homedir(), "Downloads")
+const DW = joinpath(homedir(), "Downloads")
 
 # ---- #
 
-const GZ = joinpath(DI, "$(GS)_family.soft.gz")
+const GZ = joinpath(DW, "$(GS)_family.soft.gz")
 
 # ---- #
 
 if !isfile(GZ)
 
-    @test Nucleus.GEO.download(DI, GS) === GZ
+    @test Nucleus.GEO.download(DW, GS) === GZ
 
 end
 
@@ -114,7 +114,7 @@ const SA = SM_[1]
 
 # ---- #
 
-# 586.897 ms (10649 allocations: 27.73 MiB)
+# 586.246 ms (10649 allocations: 27.73 MiB)
 #@btime Nucleus.GEO.read(GZ);
 
 # ---- #
@@ -162,7 +162,7 @@ const FE_, SAF_, FE_X_SA_X_FL = Nucleus.GEO.tabulate(KE_VA, SA_KE_VA)
 
 # ---- #
 
-# 380.880 ms (2577472 allocations: 383.85 MiB)
+# 377.606 ms (2541408 allocations: 383.30 MiB)
 #@btime Nucleus.GEO.tabulate(KE_VA, SA_KE_VA);
 
 # ---- #
@@ -172,11 +172,11 @@ for (gs, re, pl_re) in (
     ("GSE13534", (0, 4), ("GPL96" => (22283, 4),)),
 )
 
-    gz = joinpath(DI, "$(gs)_family.soft.gz")
+    gz = joinpath(DW, "$(gs)_family.soft.gz")
 
     if !isfile(gz)
 
-        @test Nucleus.GEO.download(DI, gs) === gz
+        @test Nucleus.GEO.download(DW, gs) === gz
 
     end
 
@@ -218,30 +218,33 @@ const GS2 = "GSE14577"
 
 # ---- #
 
-@test Nucleus.Error.@is Nucleus.GEO.write(DI, GS2)
+@test Nucleus.Error.@is Nucleus.GEO.write(DW, GS2)
 
 # ---- #
 
 for pl in ("GPL96", "GPL97")
 
-    Nucleus.GEO.write(DI, GS2, pl; nas = "$(pl)Sample")
+    Nucleus.GEO.write(DW, GS2, pl)
 
 end
 
 # ---- #
 
-for (gs, ur, lo, ch) in (
+for (gs, ts, lo, ch) in (
     ("GSE16059", "", false, "Diagnonsis"),
     ("GSE67311", "", false, "Irritable Bowel Syndrome"),
     (
         "GSE128078",
-        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE128nnn/GSE128078/suppl/GSE128078%5FFES%5Fisoforms%5FFPKM%2Etxt%2Egz",
+        download(
+            "ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE128nnn/GSE128078/suppl/GSE128078%5FFES%5Fisoforms%5FFPKM%2Etxt%2Egz",
+            joinpath(DW, "feature.txt.gz"),
+        ),
         true,
         "Disease State",
     ),
     #("GSE130353", "", false, ""),
 )
 
-    Nucleus.GEO.write(DI, gs; ur, lo, ch)
+    Nucleus.GEO.write(DW, gs; ts, lo, nas = "$(lowercase(gs))sample", ch)
 
 end

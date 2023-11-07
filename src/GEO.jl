@@ -38,17 +38,13 @@ function read(gz)
         "SAMPLE" => OrderedDict{String, OrderedDict{String, String}}(),
     )
 
-    bl = ""
-
-    th = ""
-
-    be = ""
+    bl = th = be = ""
 
     io = open(gz)
 
-    de1 = " = "
+    dek = " = "
 
-    de2 = ": "
+    dec = ": "
 
     while !eof(io)
 
@@ -56,7 +52,7 @@ function read(gz)
 
         if li[1] == '^'
 
-            bl, th = _split(view(li, 2:lastindex(li)), de1)
+            bl, th = _split(view(li, 2:lastindex(li)), dek)
 
             bl_th[bl][th] = OrderedDict{String, String}()
 
@@ -70,33 +66,33 @@ function read(gz)
 
             n_ro = count('\n', ta)
 
-            n_rod = 1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
+            n_rok = 1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
 
-            if n_ro == n_rod
+            if n_ro == n_rok
 
                 bl_th[bl][th]["_ta"] = ta
 
             else
 
-                @warn "\"$th\" table's numbers of rows differ. $n_ro != $n_rod."
+                @warn "\"$th\" table's numbers of rows differ. $n_ro != $n_rok."
 
             end
 
         else
 
-            ke, va = _split(li, de1)
+            ke, va = _split(li, dek)
 
             if startswith(ke, "!Sample_characteristics")
 
-                if contains(va, de2)
+                if contains(va, dec)
 
-                    pr, va = _split(va, de2)
+                    pr, va = _split(va, dec)
 
                     ke = "_ch.$pr"
 
                 else
 
-                    @warn "\"$va\" lacks \"$de2\"."
+                    @warn "\"$va\" lacks \"$dec\"."
 
                 end
 
@@ -130,9 +126,9 @@ end
 
 function tabulate(sa_ke_va)
 
-    ke_va__ = values(sa_ke_va)
-
     ch_ = String[]
+
+    ke_va__ = values(sa_ke_va)
 
     for ke_va in ke_va__
 
@@ -176,13 +172,14 @@ function _map_feature(pl, ta)
 
     fu = identity
 
-    if it == 96 || it == 97 || it == 570 || it == 13667
+    # TODO: Check.
+    if it == 96 || it == 97 || it == 570 || it == 13667 || it == 15207
 
         co = "Gene Symbol"
 
         fu = fe -> Nucleus.String.split_get(fe, " /// ", 1)
 
-    elseif it == 5175 || it == 6244 || it == 11532 || it == 17586
+    elseif it == 5175 || it == 6244 || it == 11532 || it == 17586 || it == 23126
 
         co = "gene_assignment"
 
@@ -202,9 +199,19 @@ function _map_feature(pl, ta)
 
         fu = fe -> Nucleus.String.split_get(fe, ' ', 1)
 
+    elseif it == 16209
+
+        co = "gene_assignment"
+
+        fu = fe -> Nucleus.String.split_get(Nucleus.String.split_get(fe, " /// ", 1), " // ", 2)
+
     elseif it == 16686
 
         co = "GB_ACC"
+
+    elseif it == 25336
+
+        co = "ORF"
 
     else
 
@@ -214,13 +221,6 @@ function _map_feature(pl, ta)
 
     li_ = _dice(ta)
 
-    he = li_[1]
-
-    idi = findfirst(==("ID"), he)
-    @assert isone(idi)
-
-    idc = findfirst(==(co), he)
-
     n_li = lastindex(li_)
 
     n_fe = n_li - 1
@@ -228,21 +228,52 @@ function _map_feature(pl, ta)
     fe_id = Dict{String, Int}()
 
     # TODO: Understand why `String[]` is faster.
-    fec_ = Vector{String}(undef, n_fe)
+    fe2_ = Vector{String}(undef, n_fe)
+
+    id2 = findfirst(==(co), li_[1])
 
     for (id, li) in enumerate(view(li_, 2:n_li))
 
-        fe = li[idi]
-
-        fec = li[idc]
+        fe = li[1]
 
         fe_id[fe] = id
 
-        fec_[id] = Nucleus.String.is_bad(fec) ? "_$fe" : fu(fec)
+        fe2 = li[id2]
+
+        if Nucleus.String.is_bad(fe2)
+
+            fe2_[id] = "_$fe"
+
+        else
+
+            # TODO: Benchmark variable collision.
+            fe2 = fu(fe2)
+
+            if Nucleus.String.is_bad(fe2)
+
+                fe2_[id] = "_$fe"
+
+            else
+
+                fe2_[id] = fe2
+
+            end
+
+        end
 
     end
 
-    n_fe, fe_id, fec_
+    n_fe, fe_id, fe2_
+
+end
+
+function _error_table(th, ke_va)
+
+    if !haskey(ke_va, "_ta")
+
+        error("\"$th\" lacks a table.")
+
+    end
 
 end
 
@@ -250,13 +281,9 @@ function tabulate(ke_va, sa_ke_va)
 
     pl = ke_va["!Platform_geo_accession"]
 
-    if !haskey(ke_va, "_ta")
+    _error_table(pl, ke_va)
 
-        error("\"$pl\" lacks a table.")
-
-    end
-
-    n_fe, fe_id, fec_ = _map_feature(pl, ke_va["_ta"])
+    n_fe, fe_id, fe2_ = _map_feature(pl, ke_va["_ta"])
 
     n_sa = length(sa_ke_va)
 
@@ -270,27 +297,23 @@ function tabulate(ke_va, sa_ke_va)
 
     for (ids, (sa, ke_va)) in enumerate(sa_ke_va)
 
-        if !haskey(ke_va, "_ta")
-
-            error("\"$sa\" lacks a table.")
-
-        end
+        _error_table(sa, ke_va)
 
         if ke_va["!Sample_platform_id"] == pl
 
             li_ = _dice(ke_va["_ta"])
 
-            idv = findfirst(==("VALUE"), li_[1])
+            id2 = findfirst(==("VALUE"), li_[1])
 
             for li in view(li_, 2:lastindex(li_))
 
-                st = li[idv]
+                va = li[id2]
 
-                if !isempty(st)
+                if !isempty(va)
 
                     idf = fe_id[li[1]]
 
-                    fe_x_sa_x_fl[idf, ids] = parse(Float64, st)
+                    fe_x_sa_x_fl[idf, ids] = parse(Float64, va)
 
                     isf_[idf] = true
 
@@ -312,34 +335,36 @@ function tabulate(ke_va, sa_ke_va)
 
     end
 
-    fec_[isf_], iss_, fe_x_sa_x_fl[isf_, iss_]
+    fe2_[isf_], iss_, fe_x_sa_x_fl[isf_, iss_]
 
 end
 
 function write(
-    di,
+    ou,
     gs,
     pl = "";
     ke = KE,
-    ur = "",
-    sas_ = (),
+    ts = "",
+    #
+    se = nothing,
+    #
     sar_ = (),
     chr_ = (),
+    #
     fe_fe2 = Dict{String, String}(),
     lo = false,
+    #
     nas = "Sample",
     ch = "",
 )
 
-    Nucleus.Error.error_missing(di)
+    Nucleus.Error.error_missing(ou)
 
-    di = Nucleus.Path.establish(joinpath(di, lowercase(gs)))
-
-    gz = joinpath(di, "$(gs)_family.soft.gz")
+    gz = joinpath(ou, "$(gs)_family.soft.gz")
 
     if !isfile(gz)
 
-        download(di, gs)
+        download(ou, gs)
 
     end
 
@@ -348,14 +373,12 @@ function write(
     sa_ke_va = bl_th["SAMPLE"]
 
     sa_ = get_sample(sa_ke_va, ke)
-
-    @info "👯‍♀️ Sample" sa_
+    @info "💃 Sample" sa_
 
     ch_, ch_x_sa_x_st = tabulate(sa_ke_va)
-
     @info "👙 Characteristic" ch_ ch_x_sa_x_st
 
-    if isempty(ur)
+    if isempty(ts)
 
         if isempty(pl)
 
@@ -377,20 +400,13 @@ function write(
 
     else
 
-        gz = joinpath(di, "$gs.tsv.gz")
-
-        if !isfile(gz)
-
-            download(ur, gz)
-
-        end
-
         pl = "Feature"
 
-        _naf, fe_, saf_, fe_x_sa_x_nu = Nucleus.DataFrame.separate(gz)
+        _naf, fe_, saf_, fe_x_sa_x_nu = Nucleus.DataFrame.separate(ts)
+
+        fe_x_sa_x_nu = convert(Matrix{Float64}, fe_x_sa_x_nu)
 
     end
-
     @info "🧬 Feature" fe_ saf_ fe_x_sa_x_nu
 
     if sa_ != saf_
@@ -400,9 +416,9 @@ function write(
 
     end
 
-    if !isempty(sas_)
+    if !isnothing(se)
 
-        is_ = (sa -> all(occursin(sa), sas_)).(sa_)
+        is_ = contains.(sa_, se)
 
         sa_ = sa_[is_]
 
@@ -410,7 +426,7 @@ function write(
 
         fe_x_sa_x_nu = fe_x_sa_x_nu[:, is_]
 
-        @info "🏩 Selected sample" sa_
+        @info "🏩 Selected" sa_
 
     end
 
@@ -439,7 +455,7 @@ function write(
     nasc = Nucleus.Path.clean(nas)
 
     Nucleus.DataFrame.write(
-        joinpath(di, "characteristic_x_$(nasc)_x_string.tsv"),
+        joinpath(ou, "characteristic_x_$(nasc)_x_string.tsv"),
         "Characteristic",
         ch_,
         sa_,
@@ -448,7 +464,7 @@ function write(
 
     Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
 
-    pr = joinpath(di, "$(lowercase(pl))_x_$(nasc)_x_number")
+    pr = joinpath(ou, "$(lowercase(pl))_x_$(nasc)_x_number")
 
     Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
 
@@ -477,7 +493,7 @@ function write(
         layout = Dict("title" => Dict("text" => title_text)),
     )
 
-    di, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu
+    ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu
 
 end
 
