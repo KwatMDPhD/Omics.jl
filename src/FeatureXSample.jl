@@ -139,10 +139,14 @@ function transform(
 
     _plot(ro_x_co_x_nu, ro_, co_, nar, nac, nan)
 
+    tr_ = String[]
+
     if !isempty(ro_ro2)
 
         # TODO: Generalize the "ENSG" logic.
         Nucleus.Gene.rename!(ro_, ro_ro2)
+
+        push!(tr_, "Renamed")
 
     end
 
@@ -150,15 +154,23 @@ function transform(
 
         ro_, ro_x_co_x_nu = Nucleus.Matrix.collapse(fu, ty, ro_, ro_x_co_x_nu)
 
+        push!(tr_, "Collapsed")
+
     end
 
     if lo
 
         ro_x_co_x_nu .= log2.(ro_x_co_x_nu .+ 1)
 
+        push!(tr_, "+1Log2ed")
+
     end
 
-    _plot(ro_x_co_x_nu, ro_, co_, nar, nac, "$nan (Transformed)")
+    if !isempty(tr_)
+
+        _plot(ro_x_co_x_nu, ro_, co_, nar, nac, "$nan ($(join(tr_, " & ")))")
+
+    end
 
     ro_, ro_x_co_x_nu
 
