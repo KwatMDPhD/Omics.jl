@@ -4,23 +4,19 @@ using Nucleus
 
 # ---- #
 
-const GS = "GSE122404"
-
-# ---- #
-
 const DW = joinpath(homedir(), "Downloads")
 
 # ---- #
 
-const GZ = joinpath(DW, "$(GS)_family.soft.gz")
+const GS = "GSE122404"
 
 # ---- #
 
-if !isfile(GZ)
+const GZ = Nucleus.GEO.establish(DW, GS)
 
-    @test Nucleus.GEO.download(DW, GS) === GZ
+# ---- #
 
-end
+@test isfile(GZ)
 
 # ---- #
 
@@ -119,7 +115,7 @@ const SA = SM_[1]
 
 # ---- #
 
-# 11.500 ms (107248 allocations: 16.70 MiB)
+# 11.482 ms (107248 allocations: 16.70 MiB)
 #@btime Nucleus.GEO._dice($(SA_KE_VA[SA]["_ta"]));
 
 # ---- #
@@ -136,7 +132,7 @@ const N_SA = lastindex(SM_)
 
 # ---- #
 
-# 314.583 ns (1 allocation: 208 bytes)
+# 314.155 ns (1 allocation: 208 bytes)
 #@btime Nucleus.GEO.get_sample(SA_KE_VA);
 
 # ---- #
@@ -172,15 +168,7 @@ for (gs, re, pl_re) in (
     ("GSE13534", (0, 4), ("GPL96" => (22283, 4),)),
 )
 
-    gz = joinpath(DW, "$(gs)_family.soft.gz")
-
-    if !isfile(gz)
-
-        @test Nucleus.GEO.download(DW, gs) === gz
-
-    end
-
-    bl_th = Nucleus.GEO.read(gz)
+    bl_th = Nucleus.GEO.read(Nucleus.GEO.establish(DW, gs))
 
     sa_ke_va = bl_th["SAMPLE"]
 
@@ -224,27 +212,23 @@ const GS2 = "GSE14577"
 
 for pl in ("GPL96", "GPL97")
 
-    Nucleus.GEO.write(DW, GS2, pl)
+    Nucleus.GEO.write(DW, GS2; pl)
 
 end
 
 # ---- #
 
-for (gs, ts, lo, ch) in (
-    ("GSE16059", "", false, "Diagnonsis"),
-    ("GSE67311", "", false, "Irritable Bowel Syndrome"),
-    (
-        "GSE128078",
-        download(
-            "ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE128nnn/GSE128078/suppl/GSE128078%5FFES%5Fisoforms%5FFPKM%2Etxt%2Egz",
-            joinpath(DW, "feature.txt.gz"),
-        ),
-        true,
-        "Disease State",
-    ),
-    #("GSE130353", "", false, ""),
+for (gs, pl, ch) in (
+    ("GSE16059", "", "Diagnonsis"),
+    ("GSE67311", "", "Irritable Bowel Syndrome"),
+    #(
+    #    "GSE128078",
+    #    "ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE128nnn/GSE128078/suppl/GSE128078%5FFES%5Fisoforms%5FFPKM%2Etxt%2Egz",
+    #    "Disease State",
+    #),
+    #("GSE130353", "", ""),
 )
 
-    Nucleus.GEO.write(DW, gs; ts, lo, nas = "$(lowercase(gs))sample", ch)
+    Nucleus.GEO.write(DW, gs; pl, nas = "$gs Sample", ch)
 
 end

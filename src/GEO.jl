@@ -1,6 +1,6 @@
 module GEO
 
-using Downloads: download as downloads_download
+using Downloads: download
 
 using GZip: open
 
@@ -10,16 +10,24 @@ using ..Nucleus
 
 const KE = "!Sample_title"
 
-function download(di, gs)
+function establish(di, gs)
 
     Nucleus.Error.error_missing(di)
 
-    gz = "$(gs)_family.soft.gz"
+    na = "$(gs)_family.soft.gz"
 
-    downloads_download.(
-        "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(view(gs, 1:(lastindex(gs) - 3)))nnn/$gs/soft/$gz",
-        joinpath(di, gz),
-    )
+    pa = joinpath(di, na)
+
+    if !isfile(pa)
+
+        download.(
+            "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(view(gs, 1:(lastindex(gs) - 3)))nnn/$gs/soft/$na",
+            pa,
+        )
+
+    end
+
+    pa
 
 end
 
@@ -340,93 +348,64 @@ function tabulate(ke_va, sa_ke_va)
 end
 
 function write(
-    ou,
-    gs,
-    pl = "";
+    di,
+    gs;
     ke = KE,
-    ts = "",
-    #
-    se = nothing,
-    #
+    pl = "",
+    sas = "",
     sar_ = (),
     chr_ = (),
-    #
-    fe_fe2 = Dict{String, String}(),
-    lo = false,
-    #
     nas = "Sample",
     ch = "",
+    ke_ar...,
 )
 
-    Nucleus.Error.error_missing(ou)
-
-    gz = joinpath(ou, "$(gs)_family.soft.gz")
-
-    if !isfile(gz)
-
-        download(ou, gs)
-
-    end
-
-    bl_th = read(gz)
+    bl_th = read(establish(di, gs))
 
     sa_ke_va = bl_th["SAMPLE"]
 
     sa_ = get_sample(sa_ke_va, ke)
+
     @info "💃 Sample" sa_
 
     ch_, ch_x_sa_x_st = tabulate(sa_ke_va)
+
     @info "👙 Characteristic" ch_ ch_x_sa_x_st
 
-    if isempty(ts)
+    if isempty(pl)
 
-        if isempty(pl)
+        pl_ = collect(keys(bl_th["PLATFORM"]))
 
-            pl_ = collect(keys(bl_th["PLATFORM"]))
+        if !isone(lastindex(pl_))
 
-            if !isone(lastindex(pl_))
-
-                error("There is not one platform. $pl_.")
-
-            end
-
-            pl = pl_[1]
+            error("There is not one platform. $pl_.")
 
         end
 
-        fe_, is_, fe_x_sa_x_nu = tabulate(bl_th["PLATFORM"][pl], sa_ke_va)
-
-        saf_ = sa_[is_]
-
-    else
-
-        pl = "Feature"
-
-        _naf, fe_, saf_, fe_x_sa_x_nu = Nucleus.DataFrame.separate(ts)
-
-        fe_x_sa_x_nu = convert(Matrix{Float64}, fe_x_sa_x_nu)
+        pl = pl_[1]
 
     end
-    @info "🧬 Feature" fe_ saf_ fe_x_sa_x_nu
+
+    fe_, is_, fe_x_sa_x_nu = tabulate(bl_th["PLATFORM"][pl], sa_ke_va)
+
+    saf_ = sa_[is_]
+
+    @info "🧬 $pl" fe_ saf_ fe_x_sa_x_nu
+
+    if !isempty(sas)
+
+        is_ = contains.(sa_, sas)
+
+        sa_ = sa_[is_]
+
+        @info "🏩 Selected" sa_
+
+    end
 
     if sa_ != saf_
 
         sa_, ch_x_sa_x_st, fe_x_sa_x_nu =
             Nucleus.FeatureXSample.intersect_column(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_nu)
-
-    end
-
-    if !isnothing(se)
-
-        is_ = contains.(sa_, se)
-
-        sa_ = sa_[is_]
-
-        ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
-
-        fe_x_sa_x_nu = fe_x_sa_x_nu[:, is_]
-
-        @info "🏩 Selected" sa_
 
     end
 
@@ -442,20 +421,13 @@ function write(
 
     end
 
-    fe_, fe_x_sa_x_nu = Nucleus.FeatureXSample.transform(
-        fe_,
-        sa_,
-        fe_x_sa_x_nu;
-        ro_ro2 = fe_fe2,
-        lo,
-        nar = pl,
-        nac = nas,
-    )
+    fe_, fe_x_sa_x_nu =
+        Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_nu; nar = pl, nac = nas, ke_ar...)
 
     nasc = Nucleus.Path.clean(nas)
 
     Nucleus.DataFrame.write(
-        joinpath(ou, "characteristic_x_$(nasc)_x_string.tsv"),
+        joinpath(di, "characteristic_x_$(nasc)_x_string.tsv"),
         "Characteristic",
         ch_,
         sa_,
@@ -464,7 +436,7 @@ function write(
 
     Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
 
-    pr = joinpath(ou, "$(lowercase(pl))_x_$(nasc)_x_number")
+    pr = joinpath(di, "$(lowercase(pl))_x_$(nasc)_x_number")
 
     Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
 
@@ -493,7 +465,7 @@ function write(
         layout = Dict("title" => Dict("text" => title_text)),
     )
 
-    ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu
+    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu
 
 end
 
