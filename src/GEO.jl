@@ -352,9 +352,9 @@ function write(
     gs;
     ke = KE,
     pl = "",
-    sas = "",
-    sar_ = (),
-    chr_ = (),
+    sas = nothing,
+    saf = nothing,
+    chf = nothing,
     nas = "Sample",
     ch = "",
     ke_ar...,
@@ -392,16 +392,6 @@ function write(
 
     @info "🧬 $pl" fe_ saf_ fe_x_sa_x_nu
 
-    if !isempty(sas)
-
-        is_ = contains.(sa_, sas)
-
-        sa_ = sa_[is_]
-
-        @info "🏩 Selected" sa_
-
-    end
-
     if sa_ != saf_
 
         sa_, ch_x_sa_x_st, fe_x_sa_x_nu =
@@ -409,15 +399,39 @@ function write(
 
     end
 
-    if !isempty(sar_)
+    if !isnothing(sas)
 
-        sa_ = replace.(sa_, sar_...)
+        if sas isa String
+
+            is_ = contains.(sa_, sas)
+
+        elseif sas isa Tuple{String, String}
+
+            is_ = ch_x_sa_x_st[findfirst(==(sas[1]), ch_), :] .== sas[2]
+
+        end
+
+        sa_ = sa_[is_]
+
+        ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
+
+        fe_x_sa_x_nu = fe_x_sa_x_nu[:, is_]
+
+        @info "🏩 Selected" sa_
 
     end
 
-    if !isempty(chr_)
+    # TODO: Benchmark `.`.
 
-        replace!(ch_x_sa_x_st, chr_...)
+    if !isnothing(saf)
+
+        sa_ .= saf.(sa_)
+
+    end
+
+    if !isnothing(chf)
+
+        ch_x_sa_x_st .= chf.(ch_x_sa_x_st)
 
     end
 
