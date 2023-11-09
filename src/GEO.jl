@@ -1,7 +1,5 @@
 module GEO
 
-using Downloads: download
-
 using GZip: open
 
 using OrderedCollections: OrderedDict
@@ -9,27 +7,6 @@ using OrderedCollections: OrderedDict
 using ..Nucleus
 
 const KE = "!Sample_title"
-
-function establish(di, gs)
-
-    Nucleus.Error.error_missing(di)
-
-    na = "$(gs)_family.soft.gz"
-
-    pa = joinpath(di, na)
-
-    if !isfile(pa)
-
-        download.(
-            "ftp://ftp.ncbi.nlm.nih.gov/geo/series/$(view(gs, 1:(lastindex(gs) - 3)))nnn/$gs/soft/$na",
-            pa,
-        )
-
-    end
-
-    pa
-
-end
 
 function _split(st, de)
 
@@ -68,41 +45,21 @@ function read(gz)
 
         elseif li == be
 
-            # TODO: Understand why `view` is slower.
-            #ta = readuntil(io, "$(view(be, 1:(lastindex(be) - 5)))end\n")
             ta = readuntil(io, "$(be[1:(end - 5)])end\n")
+            @assert count('\n', ta) ==
+                    1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
 
-            n_ro = count('\n', ta)
-
-            n_rok = 1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
-
-            if n_ro == n_rok
-
-                bl_th[bl][th]["_ta"] = ta
-
-            else
-
-                @warn "\"$th\" table's numbers of rows differ. $n_ro != $n_rok."
-
-            end
+            bl_th[bl][th]["_ta"] = ta
 
         else
 
             ke, va = _split(li, dek)
 
-            if startswith(ke, "!Sample_characteristics")
+            if startswith(ke, "!Sample_characteristics") && contains(va, dec)
 
-                if contains(va, dec)
+                ch, va = _split(va, dec)
 
-                    pr, va = _split(va, dec)
-
-                    ke = "_ch.$pr"
-
-                else
-
-                    @warn "\"$va\" lacks \"$dec\"."
-
-                end
+                ke = "_ch.$ch"
 
             end
 
@@ -114,29 +71,24 @@ function read(gz)
 
     close(io)
 
-    pl_ = keys(bl_th["PLATFORM"])
-
-    if !isone(length(pl_))
-
-        @warn "There is not one platform. $pl_."
-
-    end
-
     bl_th
 
 end
 
-function get_sample(sa_ke_va, ke = KE)
+function get_sample(bl_th, ke = KE)
 
-    [ke_va[ke] for ke_va in values(sa_ke_va)]
+    sa_ = [ke_va[ke] for ke_va in values(bl_th["SAMPLE"])]
+
+    @info "💃 Sample" sa_
+    sa_
 
 end
 
-function tabulate(sa_ke_va)
+function get_characteristic(bl_th)
 
     ch_ = String[]
 
-    ke_va__ = values(sa_ke_va)
+    ke_va__ = values(bl_th["SAMPLE"])
 
     for ke_va in ke_va__
 
@@ -156,12 +108,9 @@ function tabulate(sa_ke_va)
 
     ch_x_sa_x_st = [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
 
-    for (id, ch) in enumerate(ch_)
+    ch_ .= (ch -> titlecase(view(ch, 5:lastindex(ch)))).(ch_)
 
-        ch_[id] = titlecase(view(ch, 5:lastindex(ch)))
-
-    end
-
+    @info "👙 Characteristic" ch_ ch_x_sa_x_st
     ch_, ch_x_sa_x_st
 
 end
@@ -172,7 +121,7 @@ function _dice(ta)
 
 end
 
-function _map_feature(pl, ta)
+function _map_feature(bl_th, pl)
 
     it = parse(Int, view(pl, 4:lastindex(pl)))
 
@@ -227,216 +176,116 @@ function _map_feature(pl, ta)
 
     end
 
-    li_ = _dice(ta)
+    li_ = _dice(bl_th["PLATFORM"][pl]["_ta"])
 
-    n_li = lastindex(li_)
+    an_id = Dict{String, Int}()
 
-    n_fe = n_li - 1
-
-    fe_id = Dict{String, Int}()
-
-    # TODO: Understand why `String[]` is faster.
-    fe2_ = Vector{String}(undef, n_fe)
+    # TODO: Understand why `Vector{String}(undef, n_fe)` is slower.
+    fe_ = String[]
 
     id2 = findfirst(==(co), li_[1])
 
-    for (id, li) in enumerate(view(li_, 2:n_li))
+    for (id, li) in enumerate(view(li_, 2:lastindex(li_)))
 
-        fe = li[1]
+        an = li[1]
 
-        fe_id[fe] = id
+        an_id[an] = id
 
-        fe2 = li[id2]
+        fe = li[id2]
 
-        if Nucleus.String.is_bad(fe2)
+        if Nucleus.String.is_bad(fe)
 
-            fe2_[id] = "_$fe"
+            fe = "_$an"
 
         else
 
-            # TODO: Benchmark variable collision.
-            fe2 = fu(fe2)
+            fe = fu(fe)
 
-            if Nucleus.String.is_bad(fe2)
+            if Nucleus.String.is_bad(fe)
 
-                fe2_[id] = "_$fe"
-
-            else
-
-                fe2_[id] = fe2
+                fe = "_$an"
 
             end
 
         end
 
-    end
-
-    n_fe, fe_id, fe2_
-
-end
-
-function _error_table(th, ke_va)
-
-    if !haskey(ke_va, "_ta")
-
-        error("\"$th\" lacks a table.")
+        push!(fe_, fe)
 
     end
 
-end
-
-function tabulate(ke_va, sa_ke_va)
-
-    pl = ke_va["!Platform_geo_accession"]
-
-    _error_table(pl, ke_va)
-
-    n_fe, fe_id, fe2_ = _map_feature(pl, ke_va["_ta"])
-
-    n_sa = length(sa_ke_va)
-
-    sa_ = Vector{String}(undef, n_sa)
-
-    fe_x_sa_x_fl = Matrix{Float64}(undef, n_fe, n_sa)
-
-    isf_ = falses(n_fe)
-
-    iss_ = BitVector(undef, n_sa)
-
-    for (ids, (sa, ke_va)) in enumerate(sa_ke_va)
-
-        _error_table(sa, ke_va)
-
-        if ke_va["!Sample_platform_id"] == pl
-
-            li_ = _dice(ke_va["_ta"])
-
-            id2 = findfirst(==("VALUE"), li_[1])
-
-            for li in view(li_, 2:lastindex(li_))
-
-                va = li[id2]
-
-                if !isempty(va)
-
-                    idf = fe_id[li[1]]
-
-                    fe_x_sa_x_fl[idf, ids] = parse(Float64, va)
-
-                    isf_[idf] = true
-
-                end
-
-            end
-
-            sa_[ids] = sa
-
-            is = true
-
-        else
-
-            is = false
-
-        end
-
-        iss_[ids] = is
-
-    end
-
-    fe2_[isf_], iss_, fe_x_sa_x_fl[isf_, iss_]
+    an_id, fe_
 
 end
 
-function write(
-    di,
-    gs;
-    ke = KE,
-    pl = "",
-    sas = nothing,
-    saf = nothing,
-    chf = nothing,
-    nas = "Sample",
-    ch = "",
-    ke_ar...,
-)
-
-    bl_th = read(establish(di, gs))
-
-    sa_ke_va = bl_th["SAMPLE"]
-
-    sa_ = get_sample(sa_ke_va, ke)
-
-    @info "💃 Sample" sa_
-
-    ch_, ch_x_sa_x_st = tabulate(sa_ke_va)
-
-    @info "👙 Characteristic" ch_ ch_x_sa_x_st
+function get_feature(bl_th, pl = "")
 
     if isempty(pl)
 
         pl_ = collect(keys(bl_th["PLATFORM"]))
-
-        if !isone(lastindex(pl_))
-
-            error("There is not one platform. $pl_.")
-
-        end
+        @assert isone(lastindex(pl_))
 
         pl = pl_[1]
 
     end
 
-    fe_, is_, fe_x_sa_x_nu = tabulate(bl_th["PLATFORM"][pl], sa_ke_va)
+    an_id, fe_ = _map_feature(bl_th, pl)
 
-    saf_ = sa_[is_]
+    sa_ke_va = bl_th["SAMPLE"]
 
-    @info "🧬 $pl" fe_ saf_ fe_x_sa_x_nu
+    n_sa = length(sa_ke_va)
 
-    if sa_ != saf_
+    is_ = BitVector(undef, n_sa)
 
-        sa_, ch_x_sa_x_st, fe_x_sa_x_nu =
-            Nucleus.FeatureXSample.intersect_column(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_nu)
+    fe_x_sa_x_fl = Matrix{Float64}(undef, lastindex(fe_), n_sa)
 
-    end
+    for (ids, ke_va) in enumerate(values(sa_ke_va))
 
-    if !isnothing(sas)
+        if ke_va["!Sample_platform_id"] != pl
 
-        if sas isa String
+            is_[ids] = false
 
-            is_ = contains.(sa_, sas)
-
-        elseif sas isa Tuple{String, String}
-
-            is_ = ch_x_sa_x_st[findfirst(==(sas[1]), ch_), :] .== sas[2]
+            continue
 
         end
 
-        sa_ = sa_[is_]
+        is_[ids] = true
 
-        ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
+        li_ = _dice(ke_va["_ta"])
 
-        fe_x_sa_x_nu = fe_x_sa_x_nu[:, is_]
+        # TODO: Get once.
+        id2 = findfirst(==("VALUE"), li_[1])
 
-        @info "🏩 Selected" sa_
+        for li in view(li_, 2:lastindex(li_))
 
-    end
+            va = li[id2]
 
-    # TODO: Benchmark `.`.
+            fe_x_sa_x_fl[an_id[li[1]], ids] = isempty(va) ? NaN : parse(Float64, va)
 
-    if !isnothing(saf)
-
-        sa_ .= saf.(sa_)
-
-    end
-
-    if !isnothing(chf)
-
-        ch_x_sa_x_st .= chf.(ch_x_sa_x_st)
+        end
 
     end
 
-    fe_, fe_x_sa_x_nu =
-        Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_nu; nar = pl, nac = nas, ke_ar...)
+    fe_x_sa_x_fl = fe_x_sa_x_fl[:, is_]
+
+    @info "🧬 $pl" fe_ sum(is_) fe_x_sa_x_fl
+    fe_, is_, fe_x_sa_x_fl
+
+end
+
+function write(
+    di,
+    gs,
+    sa_,
+    ch_,
+    ch_x_sa_x_st,
+    fe_,
+    fe_x_sa_x_nu;
+    naf = "Feature",
+    nas = "Sample",
+    ch = "",
+)
+
+    Nucleus.Error.error_missing(di)
 
     nasc = Nucleus.Path.clean(nas)
 
@@ -450,9 +299,9 @@ function write(
 
     Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
 
-    pr = joinpath(di, "$(lowercase(pl))_x_$(nasc)_x_number")
+    pr = joinpath(di, "$(lowercase(naf))_x_$(nasc)_x_number")
 
-    Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
+    Nucleus.DataFrame.write("$pr.tsv", naf, fe_, sa_, fe_x_sa_x_nu)
 
     if isempty(ch)
 
@@ -473,13 +322,11 @@ function write(
         fe_x_sa_x_nu;
         y = fe_,
         x = sa_,
-        nar = pl,
+        nar = naf,
         nac = nas,
         grc_,
         layout = Dict("title" => Dict("text" => title_text)),
     )
-
-    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu
 
 end
 
