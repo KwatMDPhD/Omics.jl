@@ -66,7 +66,7 @@ const BL_TH = Nucleus.GEO.read(SO)
 # ---- #
 
 # 586.246 ms (10649 allocations: 27.73 MiB)
-@btime Nucleus.GEO.read(SO);
+#@btime Nucleus.GEO.read(SO);
 
 # ---- #
 
@@ -96,9 +96,9 @@ const BL_TH = Nucleus.GEO.read(SO)
 # ---- #
 
 # 333.144 ns (1 allocation: 208 bytes)
-disable_logging(Info);
-@btime Nucleus.GEO.get_sample(BL_TH);
-disable_logging(Debug);
+#disable_logging(Info);
+#@btime Nucleus.GEO.get_sample(BL_TH);
+#disable_logging(Debug);
 
 # ---- #
 
@@ -110,9 +110,9 @@ disable_logging(Debug);
 # ---- #
 
 # 3.875 μs (9 allocations: 936 bytes)
-disable_logging(Info);
-@btime Nucleus.GEO.get_characteristic(BL_TH);
-disable_logging(Debug);
+#disable_logging(Info);
+#@btime Nucleus.GEO.get_characteristic(BL_TH);
+#disable_logging(Debug);
 
 # ---- #
 
@@ -121,9 +121,9 @@ disable_logging(Debug);
 # ---- #
 
 # 375.446 ms (2577468 allocations: 383.49 MiB)
-disable_logging(Info);
-@btime Nucleus.GEO.get_feature(BL_TH);
-disable_logging(Debug);
+#disable_logging(Info);
+#@btime Nucleus.GEO.get_feature(BL_TH);
+#disable_logging(Debug);
 
 # ---- #
 
@@ -158,7 +158,16 @@ for (gs, re, pl_re, ch) in (
 
             @test size(fe_x_sa_x_fl) === re
 
-            Nucleus.GEO.write(Nucleus.TE, gs, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl; ch)
+            Nucleus.GEO.write(
+                Nucleus.Path.establish(joinpath(Nucleus.TE, gs)),
+                gs,
+                sa_,
+                ch_,
+                ch_x_sa_x_st,
+                fe_,
+                fe_x_sa_x_fl;
+                ch,
+            )
 
         end
 
