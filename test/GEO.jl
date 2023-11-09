@@ -159,7 +159,7 @@ for (gs, re, pl_re, ch) in (
             @test size(fe_x_sa_x_fl) === re
 
             Nucleus.GEO.write(
-                Nucleus.Path.establish(joinpath(Nucleus.TE, gs)),
+                mkdir(joinpath(Nucleus.TE, gs)),
                 gs,
                 sa_,
                 ch_,
