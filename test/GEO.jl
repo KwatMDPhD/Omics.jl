@@ -9,13 +9,14 @@ const DA = joinpath(Nucleus._DA, "GEO")
 # ---- #
 
 @test readdir(DA) == [
-    "GSE122404_family.soft.gz"
-    "GSE128078_family.soft.gz"
-    "GSE13534_family.soft.gz"
-    "GSE14577_family.soft.gz"
-    "GSE16059_family.soft.gz"
-    "GSE197763_family.soft.gz"
-    "GSE67311_family.soft.gz"
+    "GSE122404_family.soft.gz",
+    "GSE128078_family.soft.gz",
+    "GSE13534_family.soft.gz",
+    "GSE14577_family.soft.gz",
+    "GSE16059_family.soft.gz",
+    "GSE168940_family.soft.gz",
+    "GSE197763_family.soft.gz",
+    "GSE67311_family.soft.gz",
 ]
 
 # ---- #
@@ -65,7 +66,7 @@ const BL_TH = Nucleus.GEO.read(SO)
 
 # ---- #
 
-# 586.246 ms (10649 allocations: 27.73 MiB)
+# 587.952 ms (10649 allocations: 27.73 MiB)
 #@btime Nucleus.GEO.read(SO);
 
 # ---- #
@@ -109,34 +110,37 @@ const BL_TH = Nucleus.GEO.read(SO)
 
 # ---- #
 
-# 3.875 μs (9 allocations: 936 bytes)
+# 3.885 μs (9 allocations: 936 bytes)
 #disable_logging(Info);
 #@btime Nucleus.GEO.get_characteristic(BL_TH);
 #disable_logging(Debug);
 
 # ---- #
 
-@test size.(Nucleus.GEO.get_feature(BL_TH)) === ((53981,), (20,), (53981, 20))
+@test size.(Nucleus.GEO.get_feature(BL_TH)) === ((53617,), (20,), (53617, 20))
 
 # ---- #
 
-# 375.446 ms (2577468 allocations: 383.49 MiB)
+# 379.171 ms (2524010 allocations: 383.42 MiB)
 #disable_logging(Info);
 #@btime Nucleus.GEO.get_feature(BL_TH);
 #disable_logging(Debug);
 
 # ---- #
 
-for (gs, re, pl_re, ch) in (
-    ("GSE197763", (4, 126), ("GPL18573" => nothing, "GPL24676" => nothing), ""),
-    ("GSE13534", (0, 4), ("" => (22283, 4),), ""),
-    ("GSE16059", (3, 88), ("" => (54675, 88),), "Diagnonsis"),
-    ("GSE67311", (9, 142), ("" => (33297, 142),), "Irritable Bowel Syndrome"),
+@test Nucleus.Error.@is Nucleus.GEO.get_feature(
+    Nucleus.GEO.read(joinpath(DA, "GSE168940_family.soft.gz")),
 )
+
+# ---- #
+
+for (gs, re) in (("GSE168940", (5, 18)), ("GSE197763", (4, 126)))
 
     so = joinpath(DA, "$(gs)_family.soft.gz")
 
     bl_th = Nucleus.GEO.read(so)
+
+    @info gs keys(bl_th["PLATFORM"])
 
     sa_ = Nucleus.GEO.get_sample(bl_th)
 
@@ -144,33 +148,30 @@ for (gs, re, pl_re, ch) in (
 
     @test size(ch_x_sa_x_st) === re
 
-    for (pl, re) in pl_re
+    for pl in keys(bl_th["PLATFORM"])
 
-        if isnothing(re)
-
-            @test Nucleus.Error.@is Nucleus.GEO.get_feature(bl_th, pl)
-
-        else
-
-            fe_, is_, fe_x_sa_x_fl = Nucleus.GEO.get_feature(bl_th)
-
-            @test view(sa_, is_) == sa_
-
-            @test size(fe_x_sa_x_fl) === re
-
-            Nucleus.GEO.write(
-                mkdir(joinpath(Nucleus.TE, gs)),
-                gs,
-                sa_,
-                ch_,
-                ch_x_sa_x_st,
-                fe_,
-                fe_x_sa_x_fl;
-                ch,
-            )
-
-        end
+        @test Nucleus.Error.@is Nucleus.GEO.get_feature(bl_th, pl)
 
     end
+
+end
+
+# ---- #
+
+for (gs, ch, rec, ref) in (
+    ("GSE13534", "", (0, 4), (22283, 4)),
+    ("GSE16059", "Diagnonsis", (3, 88), (54675, 88)),
+    ("GSE67311", "Irritable Bowel Syndrome", (9, 142), (33297, 142)),
+)
+
+    na = "$(gs)_family.soft.gz"
+
+    cp(joinpath(DA, na), joinpath(Nucleus.TE, na); force = true)
+
+    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl = Nucleus.GEO.get(Nucleus.TE, gs; ch)
+
+    @test size(ch_x_sa_x_st) === rec
+
+    @test size(fe_x_sa_x_fl) === ref
 
 end

@@ -106,7 +106,7 @@ function get_characteristic(bl_th)
 
     ch_ = sort!(unique!(ch_))
 
-    ch_x_sa_x_st = [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
+    ch_x_sa_x_st = [Base.get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
 
     ch_ .= (ch -> titlecase(view(ch, 5:lastindex(ch)))).(ch_)
 
@@ -121,7 +121,7 @@ function _dice(ta)
 
 end
 
-function _map_feature(bl_th, pl)
+function _get_feature(bl_th, pl)
 
     it = parse(Int, view(pl, 4:lastindex(pl)))
 
@@ -183,7 +183,7 @@ function _map_feature(bl_th, pl)
     # TODO: Understand why `Vector{String}(undef, n_fe)` is slower.
     fe_ = String[]
 
-    id2 = findfirst(==(co), li_[1])
+    idc = findfirst(==(co), li_[1])
 
     for (id, li) in enumerate(view(li_, 2:lastindex(li_)))
 
@@ -191,7 +191,7 @@ function _map_feature(bl_th, pl)
 
         an_id[an] = id
 
-        fe = li[id2]
+        fe = li[idc]
 
         if Nucleus.String.is_bad(fe)
 
@@ -228,53 +228,71 @@ function get_feature(bl_th, pl = "")
 
     end
 
-    an_id, fe_ = _map_feature(bl_th, pl)
+    an_id, fe_ = _get_feature(bl_th, pl)
 
     sa_ke_va = bl_th["SAMPLE"]
 
+    n_fe = lastindex(fe_)
+
     n_sa = length(sa_ke_va)
 
-    is_ = BitVector(undef, n_sa)
+    fe_x_sa_x_fl = Matrix{Float64}(undef, n_fe, n_sa)
 
-    fe_x_sa_x_fl = Matrix{Float64}(undef, lastindex(fe_), n_sa)
+    isf_ = falses(n_fe)
+
+    iss_ = falses(n_sa)
+
+    idv = 0
 
     for (ids, ke_va) in enumerate(values(sa_ke_va))
 
         if ke_va["!Sample_platform_id"] != pl
 
-            is_[ids] = false
-
             continue
 
         end
 
-        is_[ids] = true
-
         li_ = _dice(ke_va["_ta"])
 
-        # TODO: Get once.
-        id2 = findfirst(==("VALUE"), li_[1])
+        if isone(ids)
 
-        for li in view(li_, 2:lastindex(li_))
-
-            va = li[id2]
-
-            fe_x_sa_x_fl[an_id[li[1]], ids] = isempty(va) ? NaN : parse(Float64, va)
+            idv = findfirst(==("VALUE"), li_[1])
 
         end
 
+        for li in view(li_, 2:lastindex(li_))
+
+            va = li[idv]
+
+            if isempty(va)
+
+                continue
+
+            end
+
+            idf = an_id[li[1]]
+
+            fe_x_sa_x_fl[idf, ids] = parse(Float64, va)
+
+            isf_[idf] = true
+
+        end
+
+        iss_[ids] = true
+
     end
 
-    fe_x_sa_x_fl = fe_x_sa_x_fl[:, is_]
+    fe_ = fe_[isf_]
 
-    @info "🧬 $pl" fe_ sum(is_) fe_x_sa_x_fl
-    fe_, is_, fe_x_sa_x_fl
+    fe_x_sa_x_fl = fe_x_sa_x_fl[isf_, iss_]
+
+    @info "🧬 $pl" fe_ sum(iss_) fe_x_sa_x_fl
+    fe_, iss_, fe_x_sa_x_fl
 
 end
 
 function write(
     di,
-    gs,
     sa_,
     ch_,
     ch_x_sa_x_st,
@@ -282,6 +300,7 @@ function write(
     fe_x_sa_x_nu;
     naf = "Feature",
     nas = "Sample",
+    nan = "Number",
     ch = "",
 )
 
@@ -307,13 +326,13 @@ function write(
 
         grc_ = Int[]
 
-        title_text = gs
+        title_text = nan
 
     else
 
         grc_ = ch_x_sa_x_st[findfirst(==(ch), ch_), :]
 
-        title_text = "$gs (by $(titlecase(ch)))"
+        title_text = "$nan (by $(titlecase(ch)))"
 
     end
 
@@ -327,6 +346,64 @@ function write(
         grc_,
         layout = Dict("title" => Dict("text" => title_text)),
     )
+
+end
+
+function get(di, gs, pl = ""; se = nothing, nas = "Sample", ch = "", ke_ar...)
+
+    so = joinpath(di, "$(gs)_family.soft.gz")
+
+    bl_th = read(so)
+
+    sa_ = get_sample(bl_th)
+
+    ch_, ch_x_sa_x_st = get_characteristic(bl_th)
+
+    fe_, is_, fe_x_sa_x_fl = get_feature(bl_th, pl)
+
+    saf_ = sa_[is_]
+
+    if sa_ != saf_
+
+        sa_, ch_x_sa_x_st, fe_x_sa_x_fl =
+            Nucleus.FeatureXSample.intersect_column(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_fl)
+
+    end
+
+    if !isnothing(se)
+
+        if se isa String
+
+            is_ = contains.(sa_, se)
+
+        elseif se isa Tuple{String, String}
+
+            is_ = ch_x_sa_x_st[findfirst(==(se[1]), ch_), :] .== se[2]
+
+        end
+
+        sa_ = sa_[is_]
+        @info "🏩 Selected" sa_
+
+        ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
+
+        fe_x_sa_x_fl = fe_x_sa_x_fl[:, is_]
+
+    end
+
+    Nucleus.FeatureXSample.transform(
+        fe_,
+        sa_,
+        fe_x_sa_x_fl;
+        nar = pl,
+        nac = nas,
+        nan = gs,
+        ke_ar...,
+    )
+
+    write(di, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl; naf = pl, nas, nan = gs, ch)
+
+    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl
 
 end
 
