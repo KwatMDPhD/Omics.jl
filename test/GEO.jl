@@ -110,18 +110,18 @@ const BL_TH = Nucleus.GEO.read(SO)
 
 # ---- #
 
-# 3.885 μs (9 allocations: 936 bytes)
+# 3.875 μs (9 allocations: 936 bytes)
 #disable_logging(Info);
 #@btime Nucleus.GEO.get_characteristic(BL_TH);
 #disable_logging(Debug);
 
 # ---- #
 
-@test size.(Nucleus.GEO.get_feature(BL_TH)) === ((53617,), (20,), (53617, 20))
+@test lastindex.(Nucleus.GEO.get_feature(BL_TH)) === (8, 53617, 20, 1072340)
 
 # ---- #
 
-# 379.171 ms (2524010 allocations: 383.42 MiB)
+# 372.645 ms (2524010 allocations: 383.42 MiB)
 #disable_logging(Info);
 #@btime Nucleus.GEO.get_feature(BL_TH);
 #disable_logging(Debug);
@@ -134,13 +134,28 @@ const BL_TH = Nucleus.GEO.read(SO)
 
 # ---- #
 
+for (gs, rec, ref) in (
+    ("GSE13534", (0, 4), (22283, 4)),
+    ("GSE16059", (3, 88), (54675, 88)),
+    ("GSE67311", (9, 142), (33297, 142)),
+    # TODO: Add a test data that has a different number of samples.
+)
+
+    ch_, sa_, ch_x_sa_x_st, pl, fe_, saf_, fe_x_sa_x_fl = Nucleus.GEO.get(DA, gs)
+
+    @test size(ch_x_sa_x_st) === rec
+
+    @test size(fe_x_sa_x_fl) === ref
+
+end
+
+# ---- #
+
 for (gs, re) in (("GSE168940", (5, 18)), ("GSE197763", (4, 126)))
 
     so = joinpath(DA, "$(gs)_family.soft.gz")
 
     bl_th = Nucleus.GEO.read(so)
-
-    @info gs keys(bl_th["PLATFORM"])
 
     sa_ = Nucleus.GEO.get_sample(bl_th)
 
@@ -153,25 +168,5 @@ for (gs, re) in (("GSE168940", (5, 18)), ("GSE197763", (4, 126)))
         @test Nucleus.Error.@is Nucleus.GEO.get_feature(bl_th, pl)
 
     end
-
-end
-
-# ---- #
-
-for (gs, ch, rec, ref) in (
-    ("GSE13534", "", (0, 4), (22283, 4)),
-    ("GSE16059", "Diagnonsis", (3, 88), (54675, 88)),
-    ("GSE67311", "Irritable Bowel Syndrome", (9, 142), (33297, 142)),
-)
-
-    na = "$(gs)_family.soft.gz"
-
-    cp(joinpath(DA, na), joinpath(Nucleus.TE, na); force = true)
-
-    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl = Nucleus.GEO.get(Nucleus.TE, gs; ch)
-
-    @test size(ch_x_sa_x_st) === rec
-
-    @test size(fe_x_sa_x_fl) === ref
 
 end

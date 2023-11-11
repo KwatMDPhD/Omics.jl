@@ -242,7 +242,7 @@ function get_feature(bl_th, pl = "")
 
     iss_ = falses(n_sa)
 
-    idv = 0
+    idv = nothing
 
     for (ids, ke_va) in enumerate(values(sa_ke_va))
 
@@ -254,7 +254,7 @@ function get_feature(bl_th, pl = "")
 
         li_ = _dice(ke_va["_ta"])
 
-        if isone(ids)
+        if isnothing(idv)
 
             idv = findfirst(==("VALUE"), li_[1])
 
@@ -286,124 +286,22 @@ function get_feature(bl_th, pl = "")
 
     fe_x_sa_x_fl = fe_x_sa_x_fl[isf_, iss_]
 
-    @info "🧬 $pl" fe_ sum(iss_) fe_x_sa_x_fl
-    fe_, iss_, fe_x_sa_x_fl
+    @info "🧬 $pl" fe_ sum(iss_) / lastindex(iss_) fe_x_sa_x_fl
+    pl, fe_, iss_, fe_x_sa_x_fl
 
 end
 
-function write(
-    di,
-    sa_,
-    ch_,
-    ch_x_sa_x_st,
-    fe_,
-    fe_x_sa_x_nu;
-    naf = "Feature",
-    nas = "Sample",
-    nan = "Number",
-    ch = "",
-)
+function get(di, gs, pl = "")
 
-    Nucleus.Error.error_missing(di)
-
-    nasc = Nucleus.Path.clean(nas)
-
-    Nucleus.DataFrame.write(
-        joinpath(di, "characteristic_x_$(nasc)_x_string.tsv"),
-        "Characteristic",
-        ch_,
-        sa_,
-        ch_x_sa_x_st,
-    )
-
-    Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
-
-    pr = joinpath(di, "$(lowercase(naf))_x_$(nasc)_x_number")
-
-    Nucleus.DataFrame.write("$pr.tsv", naf, fe_, sa_, fe_x_sa_x_nu)
-
-    if isempty(ch)
-
-        grc_ = Int[]
-
-        title_text = nan
-
-    else
-
-        grc_ = ch_x_sa_x_st[findfirst(==(ch), ch_), :]
-
-        title_text = "$nan (by $(titlecase(ch)))"
-
-    end
-
-    Nucleus.Plot.plot_heat_map(
-        "$pr.html",
-        fe_x_sa_x_nu;
-        y = fe_,
-        x = sa_,
-        nar = naf,
-        nac = nas,
-        grc_,
-        layout = Dict("title" => Dict("text" => title_text)),
-    )
-
-end
-
-function get(di, gs, pl = ""; se = nothing, nas = "Sample", ch = "", ke_ar...)
-
-    so = joinpath(di, "$(gs)_family.soft.gz")
-
-    bl_th = read(so)
+    bl_th = read(joinpath(di, "$(gs)_family.soft.gz"))
 
     sa_ = get_sample(bl_th)
 
     ch_, ch_x_sa_x_st = get_characteristic(bl_th)
 
-    fe_, is_, fe_x_sa_x_fl = get_feature(bl_th, pl)
+    pl, fe_, is_, fe_x_sa_x_fl = get_feature(bl_th, pl)
 
-    saf_ = sa_[is_]
-
-    if sa_ != saf_
-
-        sa_, ch_x_sa_x_st, fe_x_sa_x_fl =
-            Nucleus.FeatureXSample.intersect_column(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_fl)
-
-    end
-
-    if !isnothing(se)
-
-        if se isa String
-
-            is_ = contains.(sa_, se)
-
-        elseif se isa Tuple{String, String}
-
-            is_ = ch_x_sa_x_st[findfirst(==(se[1]), ch_), :] .== se[2]
-
-        end
-
-        sa_ = sa_[is_]
-        @info "🏩 Selected" sa_
-
-        ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
-
-        fe_x_sa_x_fl = fe_x_sa_x_fl[:, is_]
-
-    end
-
-    Nucleus.FeatureXSample.transform(
-        fe_,
-        sa_,
-        fe_x_sa_x_fl;
-        nar = pl,
-        nac = nas,
-        nan = gs,
-        ke_ar...,
-    )
-
-    write(di, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl; naf = pl, nas, nan = gs, ch)
-
-    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl
+    ch_, sa_, ch_x_sa_x_st, pl, fe_, sa_[is_], fe_x_sa_x_fl
 
 end
 

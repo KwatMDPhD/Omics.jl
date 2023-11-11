@@ -176,4 +176,75 @@ function transform(
 
 end
 
+function select(is_, sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
+
+    sa_ = sa_[is_]
+    @info "🏩 Selected from $(lastindex(is_))" sa_
+
+    ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
+
+    fe_x_sa_x_fl = fe_x_sa_x_fl[:, is_]
+
+    sa_, ch_x_sa_x_st, fe_x_sa_x_fl
+
+end
+
+function write(
+    di,
+    sa_,
+    ch_,
+    ch_x_sa_x_st,
+    fe_,
+    fe_x_sa_x_nu;
+    naf = "Feature",
+    nas = "Sample",
+    nan = "Number",
+    ch = "",
+)
+
+    Nucleus.Error.error_missing(di)
+
+    nasc = Nucleus.Path.clean(nas)
+
+    Nucleus.DataFrame.write(
+        joinpath(di, "characteristic_x_$(nasc)_x_string.tsv"),
+        "Characteristic",
+        ch_,
+        sa_,
+        ch_x_sa_x_st,
+    )
+
+    Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
+
+    pr = joinpath(di, "$(lowercase(naf))_x_$(nasc)_x_number")
+
+    Nucleus.DataFrame.write("$pr.tsv", naf, fe_, sa_, fe_x_sa_x_nu)
+
+    if isempty(ch)
+
+        grc_ = Int[]
+
+        title_text = nan
+
+    else
+
+        grc_ = ch_x_sa_x_st[findfirst(==(ch), ch_), :]
+
+        title_text = "$nan (by $(titlecase(ch)))"
+
+    end
+
+    Nucleus.Plot.plot_heat_map(
+        "$pr.html",
+        fe_x_sa_x_nu;
+        y = fe_,
+        x = sa_,
+        nar = naf,
+        nac = nas,
+        grc_,
+        layout = Dict("title" => Dict("text" => title_text)),
+    )
+
+end
+
 end
