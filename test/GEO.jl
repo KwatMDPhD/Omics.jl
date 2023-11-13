@@ -29,11 +29,15 @@ const BL_TH = Nucleus.GEO.read(SO)
 
 # ---- #
 
-@test collect(keys(BL_TH["PLATFORM"])) == ["GPL16686"]
+const PL = "GPL16686"
 
 # ---- #
 
-@test length(BL_TH["PLATFORM"]["GPL16686"]) === 47
+@test collect(keys(BL_TH["PLATFORM"])) == [PL]
+
+# ---- #
+
+@test length(BL_TH["PLATFORM"][PL]) === 47
 
 # ---- #
 
@@ -66,7 +70,7 @@ const BL_TH = Nucleus.GEO.read(SO)
 
 # ---- #
 
-# 587.952 ms (10649 allocations: 27.73 MiB)
+# 587.372 ms (10649 allocations: 27.73 MiB)
 #@btime Nucleus.GEO.read(SO);
 
 # ---- #
@@ -110,38 +114,45 @@ const BL_TH = Nucleus.GEO.read(SO)
 
 # ---- #
 
-# 3.875 μs (9 allocations: 936 bytes)
+# 3.839 μs (9 allocations: 936 bytes)
 #disable_logging(Info);
 #@btime Nucleus.GEO.get_characteristic(BL_TH);
 #disable_logging(Debug);
 
 # ---- #
 
-@test lastindex.(Nucleus.GEO.get_feature(BL_TH)) === (8, 53617, 20, 1072340)
-
-# ---- #
-
-# 372.645 ms (2524010 allocations: 383.42 MiB)
-#disable_logging(Info);
-#@btime Nucleus.GEO.get_feature(BL_TH);
-#disable_logging(Debug);
-
-# ---- #
-
-@test Nucleus.Error.@is Nucleus.GEO.get_feature(
+@test Nucleus.Error.@is Nucleus.GEO._get_platform(
     Nucleus.GEO.read(joinpath(DA, "GSE168940_family.soft.gz")),
 )
 
 # ---- #
 
-for (gs, rec, ref) in (
-    ("GSE13534", (0, 4), (22283, 4)),
-    ("GSE16059", (3, 88), (54675, 88)),
-    ("GSE67311", (9, 142), (33297, 142)),
+@test Nucleus.GEO._get_platform(BL_TH) === PL
+
+# ---- #
+
+@test size.(Nucleus.GEO.get_feature(BL_TH, PL)) == ((53617,), (20,), (53617, 20))
+
+# ---- #
+
+# 371.853 ms (2524009 allocations: 383.42 MiB)
+#disable_logging(Info);
+#@btime Nucleus.GEO.get_feature(BL_TH, PL);
+#disable_logging(Debug);
+
+# ---- #
+
+for (gs, ch, rec, ref) in (
+    ("GSE13534", "", (0, 4), (14295, 4)),
+    ("GSE16059", "Diagnonsis", (3, 88), (31773, 88)),
+    ("GSE67311", "Diagnosis", (9, 142), (31403, 142)),
     # TODO: Add a test data that has a different number of samples.
 )
 
-    ch_, sa_, ch_x_sa_x_st, pl, fe_, saf_, fe_x_sa_x_fl = Nucleus.GEO.get(DA, gs)
+    so = "$(gs)_family.soft.gz"
+
+    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl =
+        Nucleus.GEO.write(cp(joinpath(DA, so), joinpath(Nucleus.TE, so)), ch)
 
     @test size(ch_x_sa_x_st) === rec
 

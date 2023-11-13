@@ -121,6 +121,20 @@ function _dice(ta)
 
 end
 
+function _get_platform(bl_th)
+
+    pl_ = collect(keys(bl_th["PLATFORM"]))
+
+    if !isone(lastindex(pl_))
+
+        error("There is not one platform. $pl_.")
+
+    end
+
+    pl_[1]
+
+end
+
 function _get_feature(bl_th, pl)
 
     it = parse(Int, view(pl, 4:lastindex(pl)))
@@ -217,16 +231,7 @@ function _get_feature(bl_th, pl)
 
 end
 
-function get_feature(bl_th, pl = "")
-
-    if isempty(pl)
-
-        pl_ = collect(keys(bl_th["PLATFORM"]))
-        @assert isone(lastindex(pl_))
-
-        pl = pl_[1]
-
-    end
+function get_feature(bl_th, pl)
 
     an_id, fe_ = _get_feature(bl_th, pl)
 
@@ -287,21 +292,70 @@ function get_feature(bl_th, pl = "")
     fe_x_sa_x_fl = fe_x_sa_x_fl[isf_, iss_]
 
     @info "🧬 $pl" fe_ sum(iss_) / lastindex(iss_) fe_x_sa_x_fl
-    pl, fe_, iss_, fe_x_sa_x_fl
+    fe_, iss_, fe_x_sa_x_fl
 
 end
 
-function get(di, gs, pl = "")
+function write(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
 
-    bl_th = read(joinpath(di, "$(gs)_family.soft.gz"))
+    bl_th = read(so)
 
     sa_ = get_sample(bl_th)
 
     ch_, ch_x_sa_x_st = get_characteristic(bl_th)
 
-    pl, fe_, is_, fe_x_sa_x_fl = get_feature(bl_th, pl)
+    if isempty(pl)
 
-    ch_, sa_, ch_x_sa_x_st, pl, fe_, sa_[is_], fe_x_sa_x_fl
+        pl = _get_platform(bl_th)
+
+    end
+
+    fe_, is_, fe_x_sa_x_fl = get_feature(bl_th, pl)
+
+    saf_ = sa_[is_]
+
+    if sa_ != saf_
+
+        sa_, ch_x_sa_x_st, fe_x_sa_x_fl =
+            Nucleus.FeatureXSample.intersect_column(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_fl)
+
+    end
+
+    if !isnothing(se)
+
+        if typeof(se) == String
+
+            is_ = contains.(sa_, se)
+
+        else
+
+            is_ = ch_x_sa_x_st[findfirst(==(se[1]), ch_), :] .== se[2]
+
+        end
+
+        sa_, ch_x_sa_x_st, fe_x_sa_x_fl =
+            Nucleus.FeatureXSample.select(is_, sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
+
+    end
+
+    fe_, fe_x_sa_x_fl = Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_fl; lo)
+
+    ou, na = splitdir(so)
+
+    Nucleus.FeatureXSample.write(
+        ou,
+        sa_,
+        ch_,
+        ch_x_sa_x_st,
+        fe_,
+        fe_x_sa_x_fl;
+        naf = pl,
+        nas,
+        nan = view(na, 1:(lastindex(na) - 15)),
+        ch,
+    )
+
+    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl
 
 end
 
