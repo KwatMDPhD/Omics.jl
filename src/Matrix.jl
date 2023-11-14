@@ -2,12 +2,6 @@ module Matrix
 
 using ..Nucleus
 
-function make(an___)
-
-    [an___[id1][id2] for id1 in eachindex(an___), id2 in eachindex(an___[1])]
-
-end
-
 function collapse(fu, ty, ro_, ma)
 
     n_ro, n_co = size(ma)
