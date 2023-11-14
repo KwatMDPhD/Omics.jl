@@ -121,17 +121,17 @@ const PL = "GPL16686"
 
 # ---- #
 
-@test Nucleus.Error.@is Nucleus.GEO._get_platform(
+@test Nucleus.Error.@is Nucleus.GEO.get_platform(
     Nucleus.GEO.read(joinpath(DA, "GSE168940_family.soft.gz")),
 )
 
 # ---- #
 
-@test Nucleus.GEO._get_platform(BL_TH) === PL
+@test Nucleus.GEO.get_platform(BL_TH) === PL
 
 # ---- #
 
-@test size.(Nucleus.GEO.get_feature(BL_TH, PL)) == ((53617,), (20,), (53617, 20))
+@test size.(Nucleus.GEO.get_feature(BL_TH, PL)) === ((53617,), (20,), (53617, 20))
 
 # ---- #
 
@@ -139,6 +139,29 @@ const PL = "GPL16686"
 #disable_logging(Info);
 #@btime Nucleus.GEO.get_feature(BL_TH, PL);
 #disable_logging(Debug);
+
+# ---- #
+
+@test Nucleus.Error.@is Nucleus.GEO.intersect(1:2, 3:5, [1 2], [3 4 5])
+
+# ---- #
+
+for (co1_, co2_, ma1, ma2, re) in (
+    (1:1, 1:2, [1;;], [1 2], (1:1, [1;;], [1;;])),
+    (1:2, 1:2, [1 2], [1 2], (1:2, [1 2], [1 2])),
+    (1:3, 2:4, [1 2 3], [2 3 4], (2:3, [2 3], [2 3])),
+)
+
+    @test Nucleus.GEO.intersect(co1_, co2_, ma1, ma2) == re
+
+    # 296.094 ns (14 allocations: 1.38 KiB)
+    # 290.047 ns (14 allocations: 1.41 KiB)
+    # 320.500 ns (14 allocations: 1.41 KiB)
+    #disable_logging(Info)
+    #@btime Nucleus.GEO.intersect($co1_, $co2_, $ma1, $ma2)
+    #disable_logging(Debug)
+
+end
 
 # ---- #
 
@@ -152,7 +175,7 @@ for (gs, ch, rec, ref) in (
     so = "$(gs)_family.soft.gz"
 
     sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl =
-        Nucleus.GEO.write(cp(joinpath(DA, so), joinpath(Nucleus.TE, so)), ch)
+        Nucleus.GEO.get(cp(joinpath(DA, so), joinpath(Nucleus.TE, so)), ch)
 
     @test size(ch_x_sa_x_st) === rec
 
@@ -164,13 +187,8 @@ end
 
 for (gs, re) in (("GSE168940", (5, 18)), ("GSE197763", (4, 126)))
 
-    so = joinpath(DA, "$(gs)_family.soft.gz")
-
-    bl_th = Nucleus.GEO.read(so)
-
-    sa_ = Nucleus.GEO.get_sample(bl_th)
-
-    ch_, ch_x_sa_x_st = Nucleus.GEO.get_characteristic(bl_th)
+    bl_th, sa_, ch_, ch_x_sa_x_st =
+        Nucleus.GEO.get_sample_characteristic(joinpath(DA, "$(gs)_family.soft.gz"))
 
     @test size(ch_x_sa_x_st) === re
 

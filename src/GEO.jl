@@ -80,6 +80,7 @@ function get_sample(bl_th, ke = KE)
     sa_ = [ke_va[ke] for ke_va in values(bl_th["SAMPLE"])]
 
     @info "💃 Sample" sa_
+
     sa_
 
 end
@@ -111,6 +112,7 @@ function get_characteristic(bl_th)
     ch_ .= (ch -> titlecase(view(ch, 5:lastindex(ch)))).(ch_)
 
     @info "👙 Characteristic" ch_ ch_x_sa_x_st
+
     ch_, ch_x_sa_x_st
 
 end
@@ -121,7 +123,7 @@ function _dice(ta)
 
 end
 
-function _get_platform(bl_th)
+function get_platform(bl_th)
 
     pl_ = collect(keys(bl_th["PLATFORM"]))
 
@@ -292,11 +294,12 @@ function get_feature(bl_th, pl)
     fe_x_sa_x_fl = fe_x_sa_x_fl[isf_, iss_]
 
     @info "🧬 $pl" fe_ sum(iss_) / lastindex(iss_) fe_x_sa_x_fl
+
     fe_, iss_, fe_x_sa_x_fl
 
 end
 
-function write(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
+function get_sample_characteristic(so)
 
     bl_th = read(so)
 
@@ -304,9 +307,37 @@ function write(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
 
     ch_, ch_x_sa_x_st = get_characteristic(bl_th)
 
+    bl_th, sa_, ch_, ch_x_sa_x_st
+
+end
+
+function intersect(co1_, co2_, ma1, ma2)
+
+    it_ = Base.intersect(co1_, co2_)
+
+    Nucleus.FeatureXSample.log_intersection((co1_, co2_), it_)
+
+    it_, ma1[:, indexin(it_, co1_)], ma2[:, indexin(it_, co2_)]
+
+end
+
+function select(is_, co_, ma1, ma2)
+
+    co_ = co_[is_]
+
+    @info "🏩 Selected from $(lastindex(is_))" co_
+
+    co_, ma1[:, is_], ma2[:, is_]
+
+end
+
+function get(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
+
+    bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so)
+
     if isempty(pl)
 
-        pl = _get_platform(bl_th)
+        pl = get_platform(bl_th)
 
     end
 
@@ -316,8 +347,7 @@ function write(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
 
     if sa_ != saf_
 
-        sa_, ch_x_sa_x_st, fe_x_sa_x_fl =
-            Nucleus.FeatureXSample.intersect_column(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_fl)
+        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = intersect(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_fl)
 
     end
 
@@ -333,29 +363,65 @@ function write(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
 
         end
 
-        sa_, ch_x_sa_x_st, fe_x_sa_x_fl =
-            Nucleus.FeatureXSample.select(is_, sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
+        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = select(is_, sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
 
     end
 
-    fe_, fe_x_sa_x_fl = Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_fl; lo)
-
     ou, na = splitdir(so)
 
-    Nucleus.FeatureXSample.write(
-        ou,
-        sa_,
-        ch_,
-        ch_x_sa_x_st,
-        fe_,
-        fe_x_sa_x_fl;
-        naf = pl,
-        nas,
-        nan = view(na, 1:(lastindex(na) - 15)),
-        ch,
-    )
+    nan = view(na, 1:(lastindex(na) - 15))
+
+    fe_, fe_x_sa_x_fl =
+        Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_fl; lo, nar = pl, nac = nas, nan)
+
+    write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl, pl, nas, nan, ch)
 
     sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl
+
+end
+
+function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, pl, nas, nan, ch)
+
+    nasc = Nucleus.Path.clean(nas)
+
+    Nucleus.DataFrame.write(
+        joinpath(ou, "characteristic_x_$(nasc)_x_string.tsv"),
+        "Characteristic",
+        ch_,
+        sa_,
+        ch_x_sa_x_st,
+    )
+
+    Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
+
+    pr = joinpath(ou, "$(lowercase(pl))_x_$(nasc)_x_number")
+
+    Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
+
+    if isempty(ch)
+
+        grc_ = Int[]
+
+        title_text = nan
+
+    else
+
+        grc_ = ch_x_sa_x_st[findfirst(==(ch), ch_), :]
+
+        title_text = "$nan (by $(titlecase(ch)))"
+
+    end
+
+    Nucleus.Plot.plot_heat_map(
+        "$pr.html",
+        fe_x_sa_x_nu;
+        y = fe_,
+        x = sa_,
+        nar = pl,
+        nac = nas,
+        grc_,
+        layout = Dict("title" => Dict("text" => title_text)),
+    )
 
 end
 

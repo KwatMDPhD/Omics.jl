@@ -24,6 +24,16 @@ macro is(ex)
 
 end
 
+function error_0(n)
+
+    if iszero(n)
+
+        error("0.")
+
+    end
+
+end
+
 function error_empty(an_)
 
     if isempty(an_)

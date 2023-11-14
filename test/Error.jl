@@ -12,6 +12,22 @@ using Nucleus
 
 # ---- #
 
+for ze in (0, 0.0)
+
+    @test Nucleus.Error.@is Nucleus.Error.error_0(ze)
+
+end
+
+# ---- #
+
+for nu in (1, 2.0, NaN, Inf)
+
+    @test !Nucleus.Error.@is Nucleus.Error.error_0(nu)
+
+end
+
+# ---- #
+
 for em in ((), [], "", Set(), Dict())
 
     @test Nucleus.Error.@is Nucleus.Error.error_empty(em)

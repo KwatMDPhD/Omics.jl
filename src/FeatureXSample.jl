@@ -4,118 +4,17 @@ using StatsBase: median
 
 using ..Nucleus
 
-function initialize_block()
-
-    String[], String[], Vector{String}[], Vector{String}[], Matrix[]
-
-end
-
-function push_block!(ts_, nar_, ro___, co___, ma_, ts, nar, ro_, co_, ma)
-
-    push!(ts_, ts)
-
-    push!(nar_, nar)
-
-    push!(ro___, ro_)
-
-    push!(co___, co_)
-
-    push!(ma_, ma)
-
-    nothing
-
-end
-
-function _error_0(n)
-
-    if iszero(n)
-
-        error("0.")
-
-    end
-
-end
-
-function _log_intersection(an___, it_)
+function log_intersection(an___, it_)
 
     n = lastindex(it_)
 
     @info "👯 $(join((lastindex(an_) for an_ in an___), " ∩ ")) = $n." it_
 
-    _error_0(n)
+    Nucleus.Error.error_0(n)
 
 end
 
-function intersect_column!(co___, ma_)
-
-    it_ = intersect(co___...)
-
-    _log_intersection(co___, it_)
-
-    for (id, (co_, ma)) in enumerate(zip(co___, ma_))
-
-        ma_[id] = ma[:, indexin(it_, co_)]
-
-    end
-
-    it_
-
-end
-
-function intersect_column(co1_, co2_, ma1, ma2)
-
-    ma_ = [ma1, ma2]
-
-    it_ = intersect_column!((co1_, co2_), ma_)
-
-    it_, ma_...
-
-end
-
-function write_block(ts_, nar_, ro___, co_, ma_)
-
-    for (ts, nar, ro_, ma) in zip(ts_, nar_, ro___, ma_)
-
-        Nucleus.DataFrame.write(ts, nar, ro_, co_, ma)
-
-        @info "📝 $ts." nar ro_ co_ ma
-
-    end
-
-end
-
-function count_unique(na_, an___)
-
-    for (na, an_) in zip(na_, an___)
-
-        @info "🔦 $na\n$(Nucleus.Collection.count_sort_string(an_))"
-
-    end
-
-end
-
-function _plot(ro_x_co_x_nu, ro_, co_, nar, nac, nan)
-
-    layout = Dict("title" => Dict("text" => nan))
-
-    Nucleus.Plot.plot_heat_map("", ro_x_co_x_nu; y = ro_, x = co_, nar, nac, layout)
-
-    Nucleus.Plot.plot_histogram("", (vec(ro_x_co_x_nu),); layout)
-
-end
-
-function transform(
-    ro_,
-    co_,
-    ro_x_co_x_nu;
-    ro_ro2 = Dict{String, String}(),
-    fu = median,
-    ty = Float64,
-    lo = false,
-    nar = "Row",
-    nac = "Column",
-    nan = "Number",
-)
+function error_bad(ro_, co_, ma)
 
     Nucleus.Error.error_bad(isnothing, ro_)
 
@@ -131,13 +30,40 @@ function transform(
 
     Nucleus.Error.error_bad(Nucleus.String.is_bad, co_)
 
-    Nucleus.Error.error_bad(isnothing, ro_x_co_x_nu)
+    Nucleus.Error.error_bad(isnothing, ma)
 
-    Nucleus.Error.error_bad(ismissing, ro_x_co_x_nu)
+    Nucleus.Error.error_bad(ismissing, ma)
 
-    Nucleus.Error.error_bad(!isfinite, ro_x_co_x_nu)
+    Nucleus.Error.error_bad(!isfinite, ma)
 
-    _plot(ro_x_co_x_nu, ro_, co_, nar, nac, nan)
+end
+
+function plot(nar, ro_, nac, co_, nan, ma)
+
+    title = Dict("title" => Dict("text" => nan))
+
+    Nucleus.Plot.plot_heat_map("", ma; y = ro_, x = co_, nar, nac, layout = title)
+
+    Nucleus.Plot.plot_histogram("", (vec(ma),); layout = Dict("xaxis" => title))
+
+end
+
+function transform(
+    ro_,
+    co_,
+    ma;
+    ro_ro2 = Dict{String, String}(),
+    fu = median,
+    ty = Float64,
+    lo = false,
+    nar = "Row",
+    nac = "Column",
+    nan = "Number",
+)
+
+    error_bad(ro_, co_, ma)
+
+    plot(nar, ro_, nac, co_, nan, ma)
 
     tr_ = String[]
 
@@ -152,7 +78,7 @@ function transform(
 
     if !allunique(ro_)
 
-        ro_, ro_x_co_x_nu = Nucleus.Matrix.collapse(fu, ty, ro_, ro_x_co_x_nu)
+        ro_, ma = Nucleus.Matrix.collapse(fu, ty, ro_, ma)
 
         push!(tr_, "Collapsed")
 
@@ -160,7 +86,7 @@ function transform(
 
     if lo
 
-        ro_x_co_x_nu .= log2.(ro_x_co_x_nu .+ 1)
+        ma .= log2.(ma .+ 1)
 
         push!(tr_, "+1Log2ed")
 
@@ -168,82 +94,21 @@ function transform(
 
     if !isempty(tr_)
 
-        _plot(ro_x_co_x_nu, ro_, co_, nar, nac, "$nan ($(join(tr_, " & ")))")
+        plot(nar, ro_, nac, co_, "$nan ($(join(tr_, " & ")))", ma)
 
     end
 
-    ro_, ro_x_co_x_nu
+    ro_, ma
 
 end
 
-function select(is_, sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
+function count_unique(na_, an___)
 
-    sa_ = sa_[is_]
-    @info "🏩 Selected from $(lastindex(is_))" sa_
+    for (na, an_) in zip(na_, an___)
 
-    ch_x_sa_x_st = ch_x_sa_x_st[:, is_]
-
-    fe_x_sa_x_fl = fe_x_sa_x_fl[:, is_]
-
-    sa_, ch_x_sa_x_st, fe_x_sa_x_fl
-
-end
-
-function write(
-    di,
-    sa_,
-    ch_,
-    ch_x_sa_x_st,
-    fe_,
-    fe_x_sa_x_nu;
-    naf = "Feature",
-    nas = "Sample",
-    nan = "Number",
-    ch = "",
-)
-
-    Nucleus.Error.error_missing(di)
-
-    nasc = Nucleus.Path.clean(nas)
-
-    Nucleus.DataFrame.write(
-        joinpath(di, "characteristic_x_$(nasc)_x_string.tsv"),
-        "Characteristic",
-        ch_,
-        sa_,
-        ch_x_sa_x_st,
-    )
-
-    Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
-
-    pr = joinpath(di, "$(lowercase(naf))_x_$(nasc)_x_number")
-
-    Nucleus.DataFrame.write("$pr.tsv", naf, fe_, sa_, fe_x_sa_x_nu)
-
-    if isempty(ch)
-
-        grc_ = Int[]
-
-        title_text = nan
-
-    else
-
-        grc_ = ch_x_sa_x_st[findfirst(==(ch), ch_), :]
-
-        title_text = "$nan (by $(titlecase(ch)))"
+        @info "🔦 $na\n$(Nucleus.Collection.count_sort_string(an_))"
 
     end
-
-    Nucleus.Plot.plot_heat_map(
-        "$pr.html",
-        fe_x_sa_x_nu;
-        y = fe_,
-        x = sa_,
-        nar = naf,
-        nac = nas,
-        grc_,
-        layout = Dict("title" => Dict("text" => title_text)),
-    )
 
 end
 
