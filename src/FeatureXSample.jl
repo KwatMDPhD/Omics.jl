@@ -14,7 +14,17 @@ function log_intersection(an___, it_)
 
 end
 
-function error_bad(ro_, co_, ma)
+function count_unique(na_, an___)
+
+    for (na, an_) in zip(na_, an___)
+
+        @info "🔦 $na\n$(Nucleus.Collection.count_sort_string(an_))"
+
+    end
+
+end
+
+function _error_bad(ro_, co_, nu)
 
     Nucleus.Error.error_bad(isnothing, ro_)
 
@@ -30,40 +40,40 @@ function error_bad(ro_, co_, ma)
 
     Nucleus.Error.error_bad(Nucleus.String.is_bad, co_)
 
-    Nucleus.Error.error_bad(isnothing, ma)
+    Nucleus.Error.error_bad(isnothing, nu)
 
-    Nucleus.Error.error_bad(ismissing, ma)
+    Nucleus.Error.error_bad(ismissing, nu)
 
-    Nucleus.Error.error_bad(!isfinite, ma)
+    Nucleus.Error.error_bad(!isfinite, nu)
 
 end
 
-function plot(nar, ro_, nac, co_, nan, ma)
+function _plot(nar, ro_, nac, co_, nan, nu)
 
     title = Dict("title" => Dict("text" => nan))
 
-    Nucleus.Plot.plot_heat_map("", ma; y = ro_, x = co_, nar, nac, layout = title)
+    Nucleus.Plot.plot_heat_map("", nu; y = ro_, x = co_, nar, nac, layout = title)
 
-    Nucleus.Plot.plot_histogram("", (vec(ma),); layout = Dict("xaxis" => title))
+    Nucleus.Plot.plot_histogram("", (vec(nu),); layout = Dict("xaxis" => title))
 
 end
 
 function transform(
     ro_,
     co_,
-    ma;
+    nu;
     ro_ro2 = Dict{String, String}(),
     fu = median,
     ty = Float64,
     lo = false,
-    nar = "Row",
-    nac = "Column",
+    nar = "Feature",
+    nac = "Sample",
     nan = "Number",
 )
 
-    error_bad(ro_, co_, ma)
+    _error_bad(ro_, co_, nu)
 
-    plot(nar, ro_, nac, co_, nan, ma)
+    _plot(nar, ro_, nac, co_, nan, nu)
 
     tr_ = String[]
 
@@ -78,7 +88,7 @@ function transform(
 
     if !allunique(ro_)
 
-        ro_, ma = Nucleus.Matrix.collapse(fu, ty, ro_, ma)
+        ro_, nu = Nucleus.Matrix.collapse(fu, ty, ro_, nu)
 
         push!(tr_, "Collapsed")
 
@@ -86,7 +96,7 @@ function transform(
 
     if lo
 
-        ma .= log2.(ma .+ 1)
+        nu .= log2.(nu .+ 1)
 
         push!(tr_, "+1Log2ed")
 
@@ -94,21 +104,11 @@ function transform(
 
     if !isempty(tr_)
 
-        plot(nar, ro_, nac, co_, "$nan ($(join(tr_, " & ")))", ma)
+        _plot(nar, ro_, nac, co_, "$nan ($(join(tr_, " & ")))", nu)
 
     end
 
-    ro_, ma
-
-end
-
-function count_unique(na_, an___)
-
-    for (na, an_) in zip(na_, an___)
-
-        @info "🔦 $na\n$(Nucleus.Collection.count_sort_string(an_))"
-
-    end
+    ro_, nu
 
 end
 

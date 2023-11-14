@@ -25,7 +25,7 @@ const SO = joinpath(DA, "GSE122404_family.soft.gz")
 
 # ---- #
 
-const BL_TH = Nucleus.GEO.read(SO)
+const BL_TH = Nucleus.GEO._read(SO)
 
 # ---- #
 
@@ -71,11 +71,11 @@ const PL = "GPL16686"
 # ---- #
 
 # 587.372 ms (10649 allocations: 27.73 MiB)
-#@btime Nucleus.GEO.read(SO);
+#@btime Nucleus.GEO._read(SO);
 
 # ---- #
 
-@test Nucleus.GEO.get_sample(BL_TH) == [
+@test Nucleus.GEO._get_sample(BL_TH) == [
     "D458_Sensitive_DMSO_1"
     "D458_Sensitive_DMSO_2"
     "D458_Sensitive_DMSO_3"
@@ -102,12 +102,12 @@ const PL = "GPL16686"
 
 # 333.144 ns (1 allocation: 208 bytes)
 #disable_logging(Info);
-#@btime Nucleus.GEO.get_sample(BL_TH);
+#@btime Nucleus.GEO._get_sample(BL_TH);
 #disable_logging(Debug);
 
 # ---- #
 
-@test Nucleus.GEO.get_characteristic(BL_TH) == (
+@test Nucleus.GEO._get_characteristic(BL_TH) == (
     ["Cell Type"],
     ["D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant"],
 )
@@ -116,28 +116,28 @@ const PL = "GPL16686"
 
 # 3.839 μs (9 allocations: 936 bytes)
 #disable_logging(Info);
-#@btime Nucleus.GEO.get_characteristic(BL_TH);
+#@btime Nucleus.GEO._get_characteristic(BL_TH);
 #disable_logging(Debug);
 
 # ---- #
 
-@test Nucleus.Error.@is Nucleus.GEO.get_platform(
-    Nucleus.GEO.read(joinpath(DA, "GSE168940_family.soft.gz")),
+@test Nucleus.Error.@is Nucleus.GEO._get_platform(
+    Nucleus.GEO._read(joinpath(DA, "GSE168940_family.soft.gz")),
 )
 
 # ---- #
 
-@test Nucleus.GEO.get_platform(BL_TH) === PL
+@test Nucleus.GEO._get_platform(BL_TH) === PL
 
 # ---- #
 
-@test size.(Nucleus.GEO.get_feature(BL_TH, PL)) === ((53617,), (20,), (53617, 20))
+@test size.(Nucleus.GEO._get_feature(BL_TH, PL)) === ((53617,), (20,), (53617, 20))
 
 # ---- #
 
 # 371.853 ms (2524009 allocations: 383.42 MiB)
 #disable_logging(Info);
-#@btime Nucleus.GEO.get_feature(BL_TH, PL);
+#@btime Nucleus.GEO._get_feature(BL_TH, PL);
 #disable_logging(Debug);
 
 # ---- #
@@ -154,7 +154,7 @@ for (co1_, co2_, ma1, ma2, re) in (
 
     @test Nucleus.GEO.intersect(co1_, co2_, ma1, ma2) == re
 
-    # 296.094 ns (14 allocations: 1.38 KiB)
+    # 283.514 ns (14 allocations: 1.38 KiB)
     # 290.047 ns (14 allocations: 1.41 KiB)
     # 320.500 ns (14 allocations: 1.41 KiB)
     #disable_logging(Info)
@@ -194,7 +194,7 @@ for (gs, re) in (("GSE168940", (5, 18)), ("GSE197763", (4, 126)))
 
     for pl in keys(bl_th["PLATFORM"])
 
-        @test Nucleus.Error.@is Nucleus.GEO.get_feature(bl_th, pl)
+        @test Nucleus.Error.@is Nucleus.GEO._get_platform(bl_th)
 
     end
 

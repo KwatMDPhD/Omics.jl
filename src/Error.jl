@@ -14,7 +14,7 @@ macro is(ex)
 
         catch er
 
-            @info "Caught." er
+            @info "Caught an error: $(er.msg)"
 
             true
 

@@ -14,7 +14,7 @@ function _split(st, de)
 
 end
 
-function read(gz)
+function _read(gz)
 
     bl_th = Dict(
         "DATABASE" => OrderedDict{String, OrderedDict{String, String}}(),
@@ -75,7 +75,7 @@ function read(gz)
 
 end
 
-function get_sample(bl_th, ke = KE)
+function _get_sample(bl_th, ke = KE)
 
     sa_ = [ke_va[ke] for ke_va in values(bl_th["SAMPLE"])]
 
@@ -85,7 +85,7 @@ function get_sample(bl_th, ke = KE)
 
 end
 
-function get_characteristic(bl_th)
+function _get_characteristic(bl_th)
 
     ch_ = String[]
 
@@ -123,7 +123,7 @@ function _dice(ta)
 
 end
 
-function get_platform(bl_th)
+function _get_platform(bl_th)
 
     pl_ = collect(keys(bl_th["PLATFORM"]))
 
@@ -137,7 +137,7 @@ function get_platform(bl_th)
 
 end
 
-function _get_feature(bl_th, pl)
+function _get_feature_map(bl_th, pl)
 
     it = parse(Int, view(pl, 4:lastindex(pl)))
 
@@ -233,9 +233,9 @@ function _get_feature(bl_th, pl)
 
 end
 
-function get_feature(bl_th, pl)
+function _get_feature(bl_th, pl)
 
-    an_id, fe_ = _get_feature(bl_th, pl)
+    an_id, fe_ = _get_feature_map(bl_th, pl)
 
     sa_ke_va = bl_th["SAMPLE"]
 
@@ -301,11 +301,11 @@ end
 
 function get_sample_characteristic(so)
 
-    bl_th = read(so)
+    bl_th = _read(so)
 
-    sa_ = get_sample(bl_th)
+    sa_ = _get_sample(bl_th)
 
-    ch_, ch_x_sa_x_st = get_characteristic(bl_th)
+    ch_, ch_x_sa_x_st = _get_characteristic(bl_th)
 
     bl_th, sa_, ch_, ch_x_sa_x_st
 
@@ -328,55 +328,6 @@ function select(is_, co_, ma1, ma2)
     @info "🏩 Selected from $(lastindex(is_))" co_
 
     co_, ma1[:, is_], ma2[:, is_]
-
-end
-
-function get(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
-
-    bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so)
-
-    if isempty(pl)
-
-        pl = get_platform(bl_th)
-
-    end
-
-    fe_, is_, fe_x_sa_x_fl = get_feature(bl_th, pl)
-
-    saf_ = sa_[is_]
-
-    if sa_ != saf_
-
-        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = intersect(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_fl)
-
-    end
-
-    if !isnothing(se)
-
-        if typeof(se) == String
-
-            is_ = contains.(sa_, se)
-
-        else
-
-            is_ = ch_x_sa_x_st[findfirst(==(se[1]), ch_), :] .== se[2]
-
-        end
-
-        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = select(is_, sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
-
-    end
-
-    ou, na = splitdir(so)
-
-    nan = view(na, 1:(lastindex(na) - 15))
-
-    fe_, fe_x_sa_x_fl =
-        Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_fl; lo, nar = pl, nac = nas, nan)
-
-    write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl, pl, nas, nan, ch)
-
-    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl
 
 end
 
@@ -422,6 +373,55 @@ function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, pl, nas, nan, ch)
         grc_,
         layout = Dict("title" => Dict("text" => title_text)),
     )
+
+end
+
+function get(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
+
+    bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so)
+
+    if isempty(pl)
+
+        pl = _get_platform(bl_th)
+
+    end
+
+    fe_, is_, fe_x_sa_x_fl = _get_feature(bl_th, pl)
+
+    saf_ = sa_[is_]
+
+    if sa_ != saf_
+
+        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = intersect(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_fl)
+
+    end
+
+    if !isnothing(se)
+
+        if typeof(se) == String
+
+            is_ = contains.(sa_, se)
+
+        else
+
+            is_ = ch_x_sa_x_st[findfirst(==(se[1]), ch_), :] .== se[2]
+
+        end
+
+        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = select(is_, sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
+
+    end
+
+    ou, na = splitdir(so)
+
+    nan = view(na, 1:(lastindex(na) - 15))
+
+    fe_, fe_x_sa_x_fl =
+        Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_fl; lo, nar = pl, nac = nas, nan)
+
+    write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl, pl, nas, nan, ch)
+
+    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl
 
 end
 

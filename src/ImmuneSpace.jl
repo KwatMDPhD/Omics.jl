@@ -5,23 +5,31 @@ using DataFrames: outerjoin
 
 using Nucleus
 
-function read_demographic(ip)
+function _read_demographic(ip)
 
     _nap, pa_, de_, pa_x_de_x_an = Nucleus.DataFrame.separate(joinpath(ip, "demographics.tsv"))
 
-    de_, pa_, permutedims(pa_x_de_x_an)
+    de_x_pa_x_an = permutedims(pa_x_de_x_an)
+
+    @info "🧖‍♀️ Demographic" de_ pa_ de_x_pa_x_an
+
+    de_, pa_, de_x_pa_x_an
 
 end
 
-function read_feature(ip, tsf::AbstractString)
+function _read_feature(ip, tsf::AbstractString)
 
     _naf, fe_, sa_, fe_x_sa_x_nu = Nucleus.DataFrame.separate(joinpath(ip, tsf))
 
-    string.(fe_), sa_, fe_x_sa_x_nu
+    fe_ = string.(fe_)
+
+    @info "🧬 Feature" fe_ sa_ fe_x_sa_x_nu
+
+    fe_, sa_, fe_x_sa_x_nu
 
 end
 
-function read_feature(ip, tsf)
+function _read_feature(ip, tsf)
 
     _naf, fe_, sa_, fe_x_sa_x_nu = Nucleus.DataFrame.separate(
         outerjoin(
@@ -34,7 +42,7 @@ function read_feature(ip, tsf)
 
 end
 
-function read_feature_map(ip)
+function _read_feature_map(ip)
 
     fe_fe2 = Dict{String, String}()
 
@@ -74,7 +82,7 @@ function _get_unit(an_)
 
 end
 
-function read_sample_map(ip)
+function _read_sample_map(ip)
 
     pa_, ti_, un_ = eachcol(
         Matrix(
@@ -89,7 +97,7 @@ function read_sample_map(ip)
 
 end
 
-function read_neut_ab_titer(ip)
+function _read_neut_ab_titer(ip)
 
     pa_, ti_, unt_, vi_, nu_, unn_ = eachcol(
         Matrix(
@@ -113,17 +121,19 @@ function read_neut_ab_titer(ip)
         nu_,
     )
 
+    @info "🏹 Antibody" vt_ pa_ vt_x_pa_x_nu
+
     vt_, pa_, vt_x_pa_x_nu, _get_unit(unt_), _get_unit(unn_)
 
 end
 
-function initialize_block()
+function _initialize_block()
 
     String[], String[], Vector{String}[], Vector{String}[], Matrix[]
 
 end
 
-function push_block!(ts_, nar_, ro___, co___, ma_, ts, nar, ro_, co_, ma)
+function _push_block!(ts_, nar_, ro___, co___, ma_, ts, nar, ro_, co_, ma)
 
     push!(ts_, ts)
 
@@ -139,7 +149,7 @@ function push_block!(ts_, nar_, ro___, co___, ma_, ts, nar, ro_, co_, ma)
 
 end
 
-function intersect_block!(co___, ma_)
+function _intersect_block!(co___, ma_)
 
     it_ = intersect(co___...)
 
@@ -155,7 +165,7 @@ function intersect_block!(co___, ma_)
 
 end
 
-function write_block(ts_, nar_, ro___, co_, ma_)
+function _write_block(ts_, nar_, ro___, co_, ma_)
 
     for (ts, nar, ro_, ma) in zip(ts_, nar_, ro___, ma_)
 
@@ -167,17 +177,15 @@ function write_block(ts_, nar_, ro___, co_, ma_)
 
 end
 
-function write(di, tsf; ft = nothing, lo = false, ne = true)
+function get(di, tsf; ft = nothing, lo = false, ne = true)
 
     Nucleus.Error.error_missing(di)
 
-    ts_, nar_, ro___, co___, ma_ = initialize_block()
+    ts_, nar_, ro___, co___, ma_ = _initialize_block()
 
-    de_, pa_, de_x_pa_x_an = read_demographic(di)
+    de_, pa_, de_x_pa_x_an = _read_demographic(di)
 
-    @info "🧖‍♀️ Demographic" de_ pa_ de_x_pa_x_an
-
-    push_block!(
+    _push_block!(
         ts_,
         nar_,
         ro___,
@@ -190,22 +198,20 @@ function write(di, tsf; ft = nothing, lo = false, ne = true)
         de_x_pa_x_an,
     )
 
-    fe_, sa_, fe_x_sa_x_nu = read_feature(ip, tsf)
-
-    @info "🧬 Feature" fe_ sa_ fe_x_sa_x_nu
+    fe_, sa_, fe_x_sa_x_nu = _read_feature(ip, tsf)
 
     fe_, fe_x_sa_x_nu = Nucleus.FeatureXSample.transform(
         fe_,
         sa_,
         fe_x_sa_x_nu;
-        ro_ro2 = read_feature_map(ip),
+        ro_ro2 = _read_feature_map(ip),
         lo,
         nar = "Gene",
         nac = "Participant",
         nan = "Transcription",
     )
 
-    pa_, ti_, un = read_sample_map(ip)
+    pa_, ti_, un = _read_sample_map(ip)
     @assert lastindex(sa_) == lastindex(pa_)
 
     ke_ar = (y = fe_, nar = "Gene", layout = Dict("title" => Dict("text" => "Transcription")))
@@ -224,7 +230,7 @@ function write(di, tsf; ft = nothing, lo = false, ne = true)
 
         pr = joinpath(ou, "gene_x_participant$(ti)_x_transcription")
 
-        push_block!(ts_, nar_, ro___, co___, ma_, "$pr.tsv", "Gene", fe_, pai_, fe_x_sai_x_nu)
+        _push_block!(ts_, nar_, ro___, co___, ma_, "$pr.tsv", "Gene", fe_, pai_, fe_x_sai_x_nu)
 
         Nucleus.Plot.plot_heat_map(
             "$pr.html",
@@ -238,9 +244,7 @@ function write(di, tsf; ft = nothing, lo = false, ne = true)
 
     if ne
 
-        vt_, pa_, vt_x_pa_x_nu, unt, unn = read_neut_ab_titer(ip)
-
-        @info "💃 Target" vt_ pa_ vt_x_pa_x_nu
+        vt_, pa_, vt_x_pa_x_nu, unt, unn = _read_neut_ab_titer(ip)
 
         n = lastindex(vt_)
 
@@ -269,7 +273,7 @@ function write(di, tsf; ft = nothing, lo = false, ne = true)
                 "time_$(Nucleus.Path.clean(vi))_x_participant_x_$(Nucleus.Path.clean(unn))",
             )
 
-            push_block!(
+            _push_block!(
                 ts_,
                 nar_,
                 ro___,
@@ -294,9 +298,9 @@ function write(di, tsf; ft = nothing, lo = false, ne = true)
 
     end
 
-    co_ = intersect_block!(co___, ma_)
+    co_ = _intersect_block!(co___, ma_)
 
-    write_block(ts_, nar_, ro___, co_, ma_)
+    _write_block(ts_, nar_, ro___, co_, ma_)
 
 end
 
