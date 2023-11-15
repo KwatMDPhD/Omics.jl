@@ -177,13 +177,13 @@ function _write_block(ts_, nar_, ro___, co_, ma_)
 
 end
 
-function get(di, tsf; ft = nothing, lo = false, ne = true)
+function get(ou, ip, tsf; ts = nothing, lo = false, ne = true)
 
-    Nucleus.Error.error_missing(di)
+    Nucleus.Error.error_missing(ou)
 
     ts_, nar_, ro___, co___, ma_ = _initialize_block()
 
-    de_, pa_, de_x_pa_x_an = _read_demographic(di)
+    de_, pa_, de_x_pa_x_an = _read_demographic(ip)
 
     _push_block!(
         ts_,
@@ -218,7 +218,7 @@ function get(di, tsf; ft = nothing, lo = false, ne = true)
 
     for (ti, id_) in sort(Nucleus.Collection.map_index(ti_))
 
-        if !isnothing(ft) && ti != ft
+        if !isnothing(ts) && ti != ts
 
             continue
 

@@ -21,11 +21,19 @@ const DA = joinpath(Nucleus._DA, "GEO")
 
 # ---- #
 
-const SO = joinpath(DA, "GSE122404_family.soft.gz")
+const SO = Nucleus.GEO.make_soft("GSE122404")
 
 # ---- #
 
-const BL_TH = Nucleus.GEO._read(SO)
+@test SO === "GSE122404_family.soft.gz"
+
+# ---- #
+
+const PA = joinpath(DA, SO)
+
+# ---- #
+
+const BL_TH = Nucleus.GEO._read(PA)
 
 # ---- #
 
@@ -71,7 +79,7 @@ const PL = "GPL16686"
 # ---- #
 
 # 587.372 ms (10649 allocations: 27.73 MiB)
-#@btime Nucleus.GEO._read(SO);
+#@btime Nucleus.GEO._read(PA);
 
 # ---- #
 
@@ -172,10 +180,8 @@ for (gs, ch, rec, ref) in (
     # TODO: Add a test data that has a different number of samples.
 )
 
-    so = "$(gs)_family.soft.gz"
-
     sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl =
-        Nucleus.GEO.get(cp(joinpath(DA, so), joinpath(Nucleus.TE, so)), ch)
+        Nucleus.GEO.get(Nucleus.TE, joinpath(DA, Nucleus.GEO.make_soft(gs)), ch)
 
     @test size(ch_x_sa_x_st) === rec
 

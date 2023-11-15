@@ -8,13 +8,19 @@ using ..Nucleus
 
 const KE = "!Sample_title"
 
+function make_soft(gs)
+
+    "$(gs)_family.soft.gz"
+
+end
+
 function _split(st, de)
 
     (string(st) for st in eachsplit(st, de; limit = 2))
 
 end
 
-function _read(gz)
+function _read(so)
 
     bl_th = Dict(
         "DATABASE" => OrderedDict{String, OrderedDict{String, String}}(),
@@ -25,7 +31,7 @@ function _read(gz)
 
     bl = th = be = ""
 
-    io = open(gz)
+    io = open(so)
 
     dek = " = "
 
@@ -299,11 +305,11 @@ function _get_feature(bl_th, pl)
 
 end
 
-function get_sample_characteristic(so)
+function get_sample_characteristic(so, ke = KE)
 
     bl_th = _read(so)
 
-    sa_ = _get_sample(bl_th)
+    sa_ = _get_sample(bl_th, ke)
 
     ch_, ch_x_sa_x_st = _get_characteristic(bl_th)
 
@@ -331,7 +337,7 @@ function select(is_, co_, ma1, ma2)
 
 end
 
-function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, pl, nas, nan, ch)
+function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, nas, pl, nan, ch)
 
     nasc = Nucleus.Path.clean(nas)
 
@@ -376,7 +382,7 @@ function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, pl, nas, nan, ch)
 
 end
 
-function get(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
+function get(ou, so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
 
     bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so)
 
@@ -412,14 +418,12 @@ function get(so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
 
     end
 
-    ou, na = splitdir(so)
-
-    nan = view(na, 1:(lastindex(na) - 15))
+    nan = basename(so)[1:(end - 15)]
 
     fe_, fe_x_sa_x_fl =
         Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_fl; lo, nar = pl, nac = nas, nan)
 
-    write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl, pl, nas, nan, ch)
+    write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl, nas, pl, nan, ch)
 
     sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl
 
