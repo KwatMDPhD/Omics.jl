@@ -1,4 +1,4 @@
-🧬
+The nuclear package for bioinformatics projects such as `GSEA.jl` 🧬
 
 ---
 

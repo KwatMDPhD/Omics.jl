@@ -343,6 +343,8 @@ function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, nas, pl, nan, ch)
 
     sa_ .= Nucleus.String.clean.(sa_)
 
+    Nucleus.Error.error_duplicate(sa_)
+
     Nucleus.DataFrame.write(
         joinpath(ou, "characteristic_x_$(nasc)_x_string.tsv"),
         "Characteristic",
