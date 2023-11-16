@@ -383,12 +383,13 @@ end
 
 function plot_radar(
     ht,
-    ra_,
-    an_;
-    name_ = _initialize_name(ra_),
-    line_color_ = Nucleus.Color.color(eachindex(ra_)),
+    an_,
+    ra_;
+    name_ = _initialize_name(an_),
+    line_color_ = Nucleus.Color.color(eachindex(an_)),
+    fill_ = fill("toself", lastindex(an_)),
     fillcolor_ = line_color_,
-    radialaxis_range = (0, maximum(vcat(ra_...))),
+    radialaxis_range = (0, 1.1maximum(vcat(ra_...))),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -401,8 +402,8 @@ function plot_radar(
             Dict(
                 "type" => "scatterpolar",
                 "name" => name_[id],
-                "r" => _tie(ra_[id]),
                 "theta" => _tie(an_[id]),
+                "r" => _tie(ra_[id]),
                 "marker" => Dict("size" => 4.8, "color" => line_color_[id]),
                 "line" => Dict(
                     "shape" => "spline",
@@ -410,13 +411,25 @@ function plot_radar(
                     "width" => 1,
                     "color" => line_color_[id],
                 ),
-                "fill" => "toself",
+                "fill" => fill_[id],
                 "fillcolor" => fillcolor_[id],
             ) for id in eachindex(ra_)
         ],
         Nucleus.Dict.merge(
             Dict(
                 "polar" => Dict(
+                    "angularaxis" => Dict(
+                        "direction" => "clockwise",
+                        "linewidth" => 4,
+                        "linecolor" => co,
+                        "ticklen" => 16,
+                        "tickwidth" => 2,
+                        "tickcolor" => co,
+                        "tickfont" =>
+                            Dict("family" => "Optima", "size" => 32, "color" => "#23191e"),
+                        "gridwidth" => 2,
+                        "gridcolor" => Nucleus.Color.HEFA,
+                    ),
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
                         "linewidth" => 2,
@@ -429,18 +442,6 @@ function plot_radar(
                             "size" => 16,
                             "color" => "#1f4788",
                         ),
-                        "gridwidth" => 2,
-                        "gridcolor" => Nucleus.Color.HEFA,
-                    ),
-                    "angularaxis" => Dict(
-                        "direction" => "clockwise",
-                        "linewidth" => 4,
-                        "linecolor" => co,
-                        "ticklen" => 16,
-                        "tickwidth" => 2,
-                        "tickcolor" => co,
-                        "tickfont" =>
-                            Dict("family" => "Optima", "size" => 32, "color" => "#23191e"),
                         "gridwidth" => 2,
                         "gridcolor" => Nucleus.Color.HEFA,
                     ),

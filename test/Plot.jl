@@ -199,8 +199,8 @@ const THETA60 = 0:60:360
 
 Nucleus.Plot.plot_radar(
     "",
-    (eachindex(THETA30), eachindex(THETA45), eachindex(THETA60)),
-    (THETA30, THETA45, THETA60);
+    (THETA30, THETA45, THETA60),
+    (eachindex(THETA30), eachindex(THETA45), eachindex(THETA60));
     name_ = (30, 45, 60),
     layout = Dict("title" => Dict("text" => "Title Text")),
 )
