@@ -1,4 +1,6 @@
-The nuclear package for bioinformatics projects such as `GSEA.jl` 🧬
+The nuclear package for various bioinformatics projects like [`GSEA.jl`](https://github.com/KwatMDPhD/GSEA.jl) 🧬
+
+This package used to be registered as [`BioLab.jl`](https://docs.juliahub.com/BioLab/DRovL/0.11.28/).
 
 ---
 
