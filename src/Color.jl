@@ -18,6 +18,8 @@ const HEGR = "#93ff92"
 
 const HEBL = "#1993ff"
 
+const HEYE = "#ffff32"
+
 const HESR = "#8c1515"
 
 const HESG = "#175e54"

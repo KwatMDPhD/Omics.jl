@@ -32,6 +32,7 @@ for co in (
         Nucleus.Color.HERE,
         Nucleus.Color.HEGR,
         Nucleus.Color.HEBL,
+        Nucleus.Color.HEYE,
         Nucleus.Color.HESR,
         Nucleus.Color.HESG,
         Nucleus.Color.HEGE,

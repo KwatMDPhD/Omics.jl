@@ -134,8 +134,6 @@ function plot_histogram(
 
     n = lastindex(x_)
 
-    showlegend = 1 < n
-
     id_ = eachindex(x_)
 
     data = [
@@ -143,7 +141,6 @@ function plot_histogram(
             "type" => "histogram",
             "legendgroup" => id,
             "name" => name_[id],
-            "showlegend" => showlegend,
             "yaxis" => "y2",
             "x" => x_[id],
             "marker" => marker_[id],
@@ -154,6 +151,7 @@ function plot_histogram(
 
     layout = Nucleus.Dict.merge(
         Dict(
+            "showlegend" => 1 < n,
             "yaxis2" => Dict(
                 "showgrid" => false,
                 "title" => Dict("text" => isempty(histnorm) ? "Count" : titlecase(histnorm)),
@@ -385,13 +383,13 @@ function plot_radar(
     ht,
     an_,
     ra_;
-    showlegend_ = fill(true, lastindex(an_)),
     name_ = _initialize_name(an_),
+    showlegend_ = fill(true, lastindex(an_)),
     line_color_ = Nucleus.Color.color(eachindex(an_)),
     fill_ = fill("toself", lastindex(an_)),
     fillcolor_ = line_color_,
     radialaxis_range = (0, 1.1maximum(vcat(ra_...))),
-    tickvals = (),
+    tickvals = nothing,
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -400,21 +398,23 @@ function plot_radar(
 
     tickgridwidth = 1.6
 
-    linetickcolor = "#561649"
+    ticklen = 24
 
-    tickfont_color = "#23191e"
+    linetickcolor = "#351e1c"
+
+    tickfont_color = "#2e211b"
 
     plot(
         ht,
         [
             Dict(
                 "type" => "scatterpolar",
-                "showlegend" => showlegend_[id],
                 "legendgroup" => name_[id],
                 "name" => name_[id],
+                "showlegend" => showlegend_[id],
                 "theta" => _tie(an_[id]),
                 "r" => _tie(ra_[id]),
-                "marker" => Dict("size" => 6.4, "color" => line_color_[id]),
+                "marker" => Dict("size" => linewidth, "color" => line_color_[id]),
                 "line" => Dict(
                     "shape" => "spline",
                     "smoothing" => 0,
@@ -432,7 +432,7 @@ function plot_radar(
                         "direction" => "clockwise",
                         "linewidth" => linewidth,
                         "linecolor" => linetickcolor,
-                        "ticklen" => 32,
+                        "ticklen" => ticklen,
                         "tickwidth" => tickgridwidth,
                         "tickcolor" => linetickcolor,
                         "tickfont" => Dict(
@@ -448,6 +448,7 @@ function plot_radar(
                         "linewidth" => 0.32linewidth,
                         "linecolor" => linetickcolor,
                         "tickvals" => tickvals,
+                        "ticklen" => 0.24ticklen,
                         "tickwidth" => tickgridwidth,
                         "tickcolor" => linetickcolor,
                         "tickfont" => Dict(

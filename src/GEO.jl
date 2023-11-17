@@ -386,7 +386,7 @@ function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, nas, pl, nan, ch)
 
 end
 
-function get(ou, so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
+function get(ou, so, ch; pl = "", sas = nothing, sac = (), lo = false, nas = "Sample")
 
     bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so)
 
@@ -406,19 +406,21 @@ function get(ou, so, ch; pl = "", se = nothing, lo = false, nas = "Sample")
 
     end
 
-    if !isnothing(se)
+    if !isnothing(sas)
 
-        if typeof(se) == String
+        sa_, ch_x_sa_x_st, fe_x_sa_x_fl =
+            select(contains.(sa_, sas), sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
 
-            is_ = contains.(sa_, se)
+    end
 
-        else
+    if !isempty(sac)
 
-            is_ = ch_x_sa_x_st[findfirst(==(se[1]), ch_), :] .== se[2]
-
-        end
-
-        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = select(is_, sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
+        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = select(
+            ch_x_sa_x_st[findfirst(==(sac[1]), ch_), :] .== sac[2],
+            sa_,
+            ch_x_sa_x_st,
+            fe_x_sa_x_fl,
+        )
 
     end
 
