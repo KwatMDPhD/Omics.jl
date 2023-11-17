@@ -385,30 +385,40 @@ function plot_radar(
     ht,
     an_,
     ra_;
+    showlegend_ = fill(true, lastindex(an_)),
     name_ = _initialize_name(an_),
     line_color_ = Nucleus.Color.color(eachindex(an_)),
     fill_ = fill("toself", lastindex(an_)),
     fillcolor_ = line_color_,
     radialaxis_range = (0, 1.1maximum(vcat(ra_...))),
+    tickvals = (),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
 
-    co = "#b83a4b"
+    linewidth = 4.8
+
+    tickgridwidth = 1.6
+
+    linetickcolor = "#561649"
+
+    tickfont_color = "#23191e"
 
     plot(
         ht,
         [
             Dict(
                 "type" => "scatterpolar",
+                "showlegend" => showlegend_[id],
+                "legendgroup" => name_[id],
                 "name" => name_[id],
                 "theta" => _tie(an_[id]),
                 "r" => _tie(ra_[id]),
-                "marker" => Dict("size" => 4.8, "color" => line_color_[id]),
+                "marker" => Dict("size" => 6.4, "color" => line_color_[id]),
                 "line" => Dict(
                     "shape" => "spline",
                     "smoothing" => 0,
-                    "width" => 1,
+                    "width" => 2.4,
                     "color" => line_color_[id],
                 ),
                 "fill" => fill_[id],
@@ -420,29 +430,33 @@ function plot_radar(
                 "polar" => Dict(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
-                        "linewidth" => 4,
-                        "linecolor" => co,
-                        "ticklen" => 16,
-                        "tickwidth" => 2,
-                        "tickcolor" => co,
-                        "tickfont" =>
-                            Dict("family" => "Optima", "size" => 32, "color" => "#23191e"),
-                        "gridwidth" => 2,
+                        "linewidth" => linewidth,
+                        "linecolor" => linetickcolor,
+                        "ticklen" => 32,
+                        "tickwidth" => tickgridwidth,
+                        "tickcolor" => linetickcolor,
+                        "tickfont" => Dict(
+                            "family" => "Optima",
+                            "size" => 32,
+                            "color" => tickfont_color,
+                        ),
+                        "gridwidth" => tickgridwidth,
                         "gridcolor" => Nucleus.Color.HEFA,
                     ),
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
-                        "linewidth" => 2,
-                        "linecolor" => co,
-                        "ticklen" => 8,
-                        "tickwidth" => 2,
-                        "tickcolor" => co,
+                        "linewidth" => 0.32linewidth,
+                        "linecolor" => linetickcolor,
+                        "tickvals" => tickvals,
+                        "tickwidth" => tickgridwidth,
+                        "tickcolor" => linetickcolor,
                         "tickfont" => Dict(
                             "family" => "Monospace",
-                            "size" => 16,
-                            "color" => "#1f4788",
+                            "size" => 12,
+                            "color" => tickfont_color,
                         ),
-                        "gridwidth" => 2,
+                        "tickangle" => 48,
+                        "gridwidth" => tickgridwidth,
                         "gridcolor" => Nucleus.Color.HEFA,
                     ),
                 ),

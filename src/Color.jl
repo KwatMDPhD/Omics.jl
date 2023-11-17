@@ -12,9 +12,11 @@ const HEAG = "#00936e"
 
 const HEAY = "#ffd96a"
 
-const HEBL = "#1993ff"
-
 const HERE = "#ff1992"
+
+const HEGR = "#93ff92"
+
+const HEBL = "#1993ff"
 
 const HESR = "#8c1515"
 
