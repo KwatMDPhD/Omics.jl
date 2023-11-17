@@ -18,6 +18,8 @@ function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}
 
 end
 
+# TODO: Simplify initializations.
+
 function _initialize_x(an___)
 
     eachindex.(an___)
@@ -383,7 +385,7 @@ function plot_radar(
     ht,
     an_,
     ra_;
-    name_ = _initialize_name(an_),
+    name_ = eachindex(an_),
     showlegend_ = fill(true, lastindex(an_)),
     line_color_ = Nucleus.Color.color(eachindex(an_)),
     fill_ = fill("toself", lastindex(an_)),
@@ -391,18 +393,19 @@ function plot_radar(
     radialaxis_range = (0, 1.1maximum(vcat(ra_...))),
     tickvals = nothing,
     layout = Dict{String, Any}(),
+    bgcolor = nothing,
     ke_ar...,
 )
 
     linewidth = 4.8
 
-    tickgridwidth = 1.6
+    gridwidth = 1.6
 
     ticklen = 24
 
-    linetickcolor = "#351e1c"
+    linecolor = "#351e1c"
 
-    tickfont_color = "#2e211b"
+    gridcolor = Nucleus.Color.HEFA
 
     plot(
         ht,
@@ -428,37 +431,35 @@ function plot_radar(
         Nucleus.Dict.merge(
             Dict(
                 "polar" => Dict(
+                    "bgcolor" => bgcolor,
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
                         "linewidth" => linewidth,
-                        "linecolor" => linetickcolor,
+                        "linecolor" => linecolor,
+                        "gridwidth" => gridwidth,
+                        "gridcolor" => gridcolor,
                         "ticklen" => ticklen,
-                        "tickwidth" => tickgridwidth,
-                        "tickcolor" => linetickcolor,
-                        "tickfont" => Dict(
-                            "family" => "Optima",
-                            "size" => 32,
-                            "color" => tickfont_color,
-                        ),
-                        "gridwidth" => tickgridwidth,
-                        "gridcolor" => Nucleus.Color.HEFA,
+                        "tickwidth" => gridwidth,
+                        "tickcolor" => linecolor,
+                        "tickfont" =>
+                            Dict("family" => "Optima", "size" => 32, "color" => "#2e211b"),
                     ),
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
                         "linewidth" => 0.32linewidth,
-                        "linecolor" => linetickcolor,
+                        "linecolor" => linecolor,
+                        "gridwidth" => gridwidth,
+                        "gridcolor" => gridcolor,
                         "tickvals" => tickvals,
                         "ticklen" => 0.24ticklen,
-                        "tickwidth" => tickgridwidth,
-                        "tickcolor" => linetickcolor,
+                        "tickwidth" => gridwidth,
+                        "tickcolor" => linecolor,
                         "tickfont" => Dict(
                             "family" => "Monospace",
-                            "size" => 12,
-                            "color" => tickfont_color,
+                            "size" => 13,
+                            "color" => "#ffffff",
                         ),
                         "tickangle" => 48,
-                        "gridwidth" => tickgridwidth,
-                        "gridcolor" => Nucleus.Color.HEFA,
                     ),
                 ),
                 "title" => Dict(
@@ -466,6 +467,17 @@ function plot_radar(
                     "font" => Dict(
                         "family" => "Times New Roman",
                         "size" => 48,
+                        "color" => "#27221f",
+                    ),
+                ),
+                "legend" => Dict(
+                    "itemwidth" => 32,
+                    "borderwidth" => linewidth,
+                    "bordercolor" => bgcolor,
+                    "bgcolor" => gridcolor,
+                    "font" => Dict(
+                        "family" => "Times New Roman",
+                        "size" => 27,
                         "color" => "#27221f",
                     ),
                 ),
