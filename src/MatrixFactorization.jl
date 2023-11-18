@@ -6,27 +6,25 @@ using NMF: nnmf
 
 using ..Nucleus
 
-function factorize(
-    ma,
-    n;
-    init = :nndsvd,
-    alg = :greedycd,
-    maxiter = 1000000,
-    tol = 0.000001,
-    ke_ar...,
-)
+# TODO: Test.
+function factorize(ma, n; ke_ar...)
 
-    re = nnmf(ma, n; init, alg, maxiter, tol, ke_ar...)
+    re = nnmf(ma, n; ke_ar...)
+
+    me = "with $(re.niters) iterations at $(re.objvalue)."
 
     if re.converged
 
-        re.W, re.H
+        @info "Converged $me"
+
 
     else
 
-        @warn "Failed to converge." re.niters re.objvalue
+        @warn "Failed to converge $me"
 
     end
+
+    re.W, re.H
 
 end
 

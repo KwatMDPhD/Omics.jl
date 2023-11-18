@@ -477,7 +477,7 @@ function plot_radar(
                     "bgcolor" => gridcolor,
                     "font" => Dict(
                         "family" => "Times New Roman",
-                        "size" => 27,
+                        "size" => 24,
                         "color" => "#27221f",
                     ),
                 ),
