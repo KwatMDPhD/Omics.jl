@@ -91,7 +91,7 @@ function _get_sample(bl_th, ke = KE)
 
 end
 
-function _get_characteristic(bl_th)
+function _get_characteristic(bl_th, ke_ = ())
 
     ch_ = String[]
 
@@ -101,7 +101,7 @@ function _get_characteristic(bl_th)
 
         for ke in keys(ke_va)
 
-            if startswith(ke, "_ch")
+            if startswith(ke, "_ch") || ke in ke_
 
                 push!(ch_, ke)
 
@@ -115,7 +115,7 @@ function _get_characteristic(bl_th)
 
     ch_x_sa_x_st = [Base.get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
 
-    ch_ .= (ch -> titlecase(view(ch, 5:lastindex(ch)))).(ch_)
+    ch_ .= (ch -> startswith(ch, "_ch") ? titlecase(view(ch, 5:lastindex(ch))) : ch).(ch_)
 
     @info "👙 Characteristic" ch_ ch_x_sa_x_st
 
@@ -305,13 +305,13 @@ function _get_feature(bl_th, pl)
 
 end
 
-function get_sample_characteristic(so, ke = KE)
+function get_sample_characteristic(so; ke = KE, ke_ = ())
 
     bl_th = _read(so)
 
     sa_ = _get_sample(bl_th, ke)
 
-    ch_, ch_x_sa_x_st = _get_characteristic(bl_th)
+    ch_, ch_x_sa_x_st = _get_characteristic(bl_th, ke_)
 
     bl_th, sa_, ch_, ch_x_sa_x_st
 
@@ -386,9 +386,20 @@ function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, nas, pl, nan, ch)
 
 end
 
-function get(ou, so, ch; pl = "", sas = nothing, sac = (), lo = false, nas = "Sample")
+function get(
+    ou,
+    so,
+    ch;
+    ke = KE,
+    ke_ = (),
+    pl = "",
+    sas = nothing,
+    sac = (),
+    lo = false,
+    nas = "Sample",
+)
 
-    bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so)
+    bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so; ke, ke_)
 
     if isempty(pl)
 

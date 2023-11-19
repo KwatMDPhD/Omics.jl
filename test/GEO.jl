@@ -122,7 +122,12 @@ const PL = "GPL16686"
 
 # ---- #
 
-# 3.839 μs (9 allocations: 936 bytes)
+@test Nucleus.GEO._get_characteristic(BL_TH, ("!Sample_geo_accession", "!Sample_platform_id"))[1] ==
+      ["!Sample_geo_accession", "!Sample_platform_id", "Cell Type"]
+
+# ---- #
+
+# 3.906 μs (9 allocations: 936 bytes)
 #disable_logging(Info);
 #@btime Nucleus.GEO._get_characteristic(BL_TH);
 #disable_logging(Debug);
@@ -162,7 +167,7 @@ for (co1_, co2_, ma1, ma2, re) in (
 
     @test Nucleus.GEO.intersect(co1_, co2_, ma1, ma2) == re
 
-    # 283.514 ns (14 allocations: 1.38 KiB)
+    # 281.628 ns (14 allocations: 1.38 KiB)
     # 290.047 ns (14 allocations: 1.41 KiB)
     # 320.500 ns (14 allocations: 1.41 KiB)
     #disable_logging(Info)
