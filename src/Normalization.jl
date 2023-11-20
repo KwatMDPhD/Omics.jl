@@ -1,6 +1,6 @@
 module Normalization
 
-using StatsBase: competerank, denserank, mean, std, tiedrank
+using StatsBase: competerank, denserank, mean, quantile, std, tiedrank
 
 using ..Nucleus
 
@@ -69,6 +69,30 @@ end
 function normalize_with_125254!(nu_)
 
     _update!(tiedrank, nu_)
+
+end
+
+function normalize_with_quantile!(nu_, qu_ = (0, 0.5, 1))
+
+    qu_ = quantile(nu_, qu_)
+
+    n = lastindex(qu_) - 1
+
+    for (id, nu) in enumerate(nu_)
+
+        for idq in 1:n
+
+            if qu_[idq] <= nu <= qu_[idq + 1]
+
+                nu_[id] = idq
+
+                break
+
+            end
+
+        end
+
+    end
 
 end
 

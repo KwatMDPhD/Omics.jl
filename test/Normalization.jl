@@ -28,7 +28,7 @@ for (nu_, re) in zip(
     @test co == re
 
     # 25.291 ns (0 allocations: 0 bytes)
-    # 26.833 ns (0 allocations: 0 bytes)
+    # 26.792 ns (0 allocations: 0 bytes)
     # 29.666 ns (0 allocations: 0 bytes)
     #@btime Nucleus.Normalization.normalize_with_0!(co) setup = (co = copy($nu_)) evals = 1000
 
@@ -78,7 +78,7 @@ for (nu_, re) in zip(
     @test co == re
 
     # 7.291 ns (0 allocations: 0 bytes)
-    # 10.208 ns (0 allocations: 0 bytes)
+    # 10.125 ns (0 allocations: 0 bytes)
     #@btime Nucleus.Normalization.normalize_with_sum!(co) setup = (co = copy($nu_)) evals = 1000
 
 end
@@ -124,7 +124,7 @@ for (nu_, re) in zip(ARR_, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
     @test co == re
 
-    # 240.791 ns (2 allocations: 224 bytes)
+    # 240.208 ns (2 allocations: 224 bytes)
     # 283.750 ns (6 allocations: 432 bytes)
     #@btime Nucleus.Normalization.normalize_with_1223!(co) setup = (co = copy($nu_)) evals = 1000
 
@@ -141,7 +141,7 @@ for (nu_, re) in zip(ARR_, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
     @test co == re
 
     # 240.209 ns (2 allocations: 224 bytes)
-    # 284.917 ns (6 allocations: 432 bytes)
+    # 283.958 ns (6 allocations: 432 bytes)
     #@btime Nucleus.Normalization.normalize_with_1224!(co) setup = (co = copy($nu_)) evals = 1000
 
 end
@@ -156,9 +156,96 @@ for (nu_, re) in zip(ARR_, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
 
     @test co == re
 
-    # 248.542 ns (2 allocations: 224 bytes)
+    # 248.416 ns (2 allocations: 224 bytes)
     # 296.500 ns (6 allocations: 432 bytes)
     #@btime Nucleus.Normalization.normalize_with_125254!(co) setup = (co = float.($nu_)) evals = 1000
+
+end
+
+# ---- #
+
+const RE_ = [
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    ones(10),
+    [1.0, 1, 1, 1, 1, 2, 2, 2, 2, 2],
+    [1.0, 1, 1, 1, 2, 2, 3, 3, 3, 3],
+    [1.0, 1, 2, 2, 3, 3, 4, 4, 5, 5],
+    ones(10),
+    [1.0, 1, 1, 1, 1, 2, 2, 2, 2, 2],
+    [1.0, 1, 1, 1, 2, 2, 3, 3, 3, 3],
+    [1.0, 1, 2, 2, 3, 3, 4, 4, 5, 5],
+    ones(Int, 10),
+    [1.0, 1, 1, 1, 1, 2, 2, 2, 2, 2],
+    [1.0, 1, 1, 1, 2, 2, 3, 3, 3, 3],
+    [1.0, 1, 2, 2, 3, 3, 4, 4, 5, 5],
+    ones(Int, 10),
+    [1.0, 1, 1, 1, 1, 2, 2, 2, 2, 2],
+    [1.0, 1, 1, 1, 2, 2, 3, 3, 3, 3],
+    [1.0, 1, 2, 2, 3, 3, 4, 4, 5, 5],
+]
+
+# ---- #
+
+for nu_ in (
+    zeros(10),
+    fill(0.1, 10),
+    ones(10),
+    collect(0.1:0.1:1),
+    collect(1:10),
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 100],
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 1000],
+)
+
+    for qu_ in ((0, 1), (0, 0.5, 1), (0, 1 / 3, 2 / 3, 1), (0, 0.2, 0.4, 0.6, 0.8, 1))
+
+        co = copy(nu_)
+
+        Nucleus.Normalization.normalize_with_quantile!(co, qu_)
+
+        @test co == popfirst!(RE_)
+
+        # 68.375 ns (1 allocation: 144 bytes)
+        # 68.375 ns (1 allocation: 144 bytes)
+        # 68.333 ns (1 allocation: 144 bytes)
+        # 68.375 ns (1 allocation: 144 bytes)
+        # 68.333 ns (1 allocation: 144 bytes)
+        # 68.500 ns (1 allocation: 144 bytes)
+        # 68.417 ns (1 allocation: 144 bytes)
+        # 68.375 ns (1 allocation: 144 bytes)
+        # 68.375 ns (1 allocation: 144 bytes)
+        # 68.375 ns (1 allocation: 144 bytes)
+        # 68.916 ns (1 allocation: 144 bytes)
+        # 68.375 ns (1 allocation: 144 bytes)
+        # 69.833 ns (1 allocation: 144 bytes)
+        # 69.833 ns (1 allocation: 144 bytes)
+        # 69.792 ns (1 allocation: 144 bytes)
+        # 69.833 ns (1 allocation: 144 bytes)
+        # 473.458 ns (46 allocations: 1.31 KiB)
+        # 473.250 ns (46 allocations: 1.31 KiB)
+        # 473.417 ns (46 allocations: 1.31 KiB)
+        # 473.375 ns (46 allocations: 1.31 KiB)
+        # 473.292 ns (46 allocations: 1.31 KiB)
+        # 474.000 ns (46 allocations: 1.31 KiB)
+        # 473.375 ns (46 allocations: 1.31 KiB)
+        # 473.416 ns (46 allocations: 1.31 KiB)
+        # 473.500 ns (46 allocations: 1.31 KiB)
+        # 473.584 ns (46 allocations: 1.31 KiB)
+        # 473.750 ns (46 allocations: 1.31 KiB)
+        # 473.625 ns (46 allocations: 1.31 KiB)
+        #@btime Nucleus.Normalization.normalize_with_quantile!(co) setup = (co = copy($nu_)) evals = 1000
+
+    end
 
 end
 
@@ -172,6 +259,7 @@ const FU_ = (
     Nucleus.Normalization.normalize_with_1223!,
     Nucleus.Normalization.normalize_with_1224!,
     Nucleus.Normalization.normalize_with_125254!,
+    Nucleus.Normalization.normalize_with_quantile!,
 )
 
 # ---- #
@@ -230,6 +318,12 @@ for (fu, re) in zip(
             3.5 3.5 3.5 3.5
             3.5 3.5 3.5 3.5
         ],
+        [
+            1.0 1 1 1
+            1 1 1 1
+            2 2 2 2
+            2 2 2 2
+        ],
     ),
 )
 
@@ -239,13 +333,14 @@ for (fu, re) in zip(
 
     @test isapprox(co, re; atol = 0.00001)
 
-    # 69.875 ns (0 allocations: 0 bytes)
+    # 70.250 ns (0 allocations: 0 bytes)
     # 21.000 ns (0 allocations: 0 bytes)
-    # 27.250 ns (0 allocations: 0 bytes)
-    # 66.625 ns (0 allocations: 0 bytes)
-    # 3.067 μs (24 allocations: 1.31 KiB)
-    # 3.069 μs (24 allocations: 1.31 KiB)
-    # 3.054 μs (24 allocations: 1.31 KiB)
+    # 28.000 ns (0 allocations: 0 bytes)
+    # 68.208 ns (0 allocations: 0 bytes)
+    # 3.185 μs (24 allocations: 1.31 KiB)
+    # 3.204 μs (24 allocations: 1.31 KiB)
+    # 3.132 μs (24 allocations: 1.31 KiB)
+    # 256.000 ns (4 allocations: 384 bytes)
     #@btime foreach($fu, ea_) setup = (ea_ = eachcol($co)) evals = 1000
 
 end
@@ -297,6 +392,12 @@ for (fu, re) in zip(
             1 2 3.5 3.5
             1 2 3.5 3.5
         ],
+        [
+            1.0 1 2 2
+            1 1 2 2
+            1 1 2 2
+            1 1 2 2
+        ],
     ),
 )
 
@@ -306,13 +407,14 @@ for (fu, re) in zip(
 
     @test isapprox(co, re; atol = 0.00001)
 
-    # 71.333 ns (0 allocations: 0 bytes)
-    # 27.459 ns (0 allocations: 0 bytes)
-    # 29.667 ns (0 allocations: 0 bytes)
-    # 71.291 ns (0 allocations: 0 bytes)
-    # 3.106 μs (24 allocations: 1.31 KiB)
-    # 3.116 μs (24 allocations: 1.31 KiB)
-    # 3.418 μs (24 allocations: 1.31 KiB)
+    # 88.791 ns (0 allocations: 0 bytes)
+    # 27.500 ns (0 allocations: 0 bytes)
+    # 30.333 ns (0 allocations: 0 bytes)
+    # 149.541 ns (0 allocations: 0 bytes)
+    # 3.457 μs (24 allocations: 1.31 KiB)
+    # 3.452 μs (24 allocations: 1.31 KiB)
+    # 3.550 μs (24 allocations: 1.31 KiB)
+    # 340.875 ns (4 allocations: 384 bytes)
     #@btime foreach($fu, ea_) setup = (ea_ = eachrow($co)) evals = 1000
 
 end
