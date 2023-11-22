@@ -47,11 +47,35 @@ const CO_ = (id -> "$NAC $id").(1:3)
 
 # ---- #
 
-const NU = reshape([2^po - 1 for po in 1:21], 7, 3)
+const FL = reshape(1.0:21, 7, 3)
 
 # ---- #
 
-Nucleus.FeatureXSample._plot(NAR, RO_, NAC, CO_, "Number", NU)
+Nucleus.FeatureXSample.plot(NAR, RO_, NAC, CO_, "plot", FL)
+
+# ---- #
+
+@test Nucleus.Error.@is Nucleus.FeatureXSample.write_plot("", NAR, RO_, NAC, CO_, "write_plot", FL)
+
+# ---- #
+
+Nucleus.FeatureXSample.write_plot(
+    joinpath(Nucleus.TE, "write"),
+    NAR,
+    RO_,
+    NAC,
+    CO_,
+    "write_plot",
+    FL,
+)
+
+# ---- #
+
+for fi in ("write.tsv", "write.html", "write.histogram.html")
+
+    @test isfile(joinpath(Nucleus.TE, fi))
+
+end
 
 # ---- #
 
@@ -63,13 +87,19 @@ const RO2U_ = replace.(ROU_, NAR => "New $NAR")
 
 # ---- #
 
-@test Nucleus.FeatureXSample.transform(RO_, CO_, NU; ro_ro2 = Dict(zip(ROU_, RO2U_)), lo = true) ==
-      (
+@test Nucleus.FeatureXSample.transform(
+    RO_,
+    CO_,
+    FL;
+    ro_ro2 = Dict(zip(ROU_, RO2U_)),
+    lo = true,
+    nan = "transform",
+) == (
     RO2U_,
     [
-        1.584962500721156 8.584962500721156 15.584962500721156
-        4.321928094887363 11.321928094887362 18.32192809488736
-        5.321928094887363 12.321928094887362 19.32192809488736
-        7 14 21
+        1.3219280948873624 3.2479275134435857 4.044394119358453
+        2.321928094887362 3.584962500721156 4.247927513443585
+        2.584962500721156 3.700439718141092 4.321928094887363
+        3.0 3.9068905956085187 4.459431618637297
     ],
 )

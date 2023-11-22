@@ -4,6 +4,13 @@ using StatsBase: median
 
 using ..Nucleus
 
+# TODO: Test.
+function index_1(id_, ro_, ma)
+
+    ro_[id_], ma[id_, :]
+
+end
+
 function log_intersection(an___, it_)
 
     n = lastindex(it_)
@@ -48,13 +55,29 @@ function _error_bad(ro_, co_, nu)
 
 end
 
-function _plot(nar, ro_, nac, co_, nan, nu)
+function plot(hte, hti, nar, ro_, nac, co_, nan, nu; ke_ar...)
 
     title = Dict("title" => Dict("text" => nan))
 
-    Nucleus.Plot.plot_heat_map("", nu; y = ro_, x = co_, nar, nac, layout = title)
+    Nucleus.Plot.plot_heat_map(hte, nu; y = ro_, x = co_, nar, nac, layout = title, ke_ar...)
 
-    Nucleus.Plot.plot_histogram("", (vec(nu),); layout = Dict("xaxis" => title))
+    Nucleus.Plot.plot_histogram(hti, (vec(nu),); layout = Dict("xaxis" => title))
+
+end
+
+function plot(nar, ro_, nac, co_, nan, nu; ke_ar...)
+
+    plot("", "", nar, ro_, nac, co_, nan, nu; ke_ar...)
+
+end
+
+function write_plot(pr, nar, ro_, nac, co_, nan, nu; ke_ar...)
+
+    Nucleus.Error.error_empty(pr)
+
+    Nucleus.DataFrame.write("$pr.tsv", nar, ro_, co_, nu)
+
+    plot("$pr.html", "$(pr).histogram.html", nar, ro_, nac, co_, nan, nu; ke_ar...)
 
 end
 
@@ -73,7 +96,7 @@ function transform(
 
     _error_bad(ro_, co_, nu)
 
-    _plot(nar, ro_, nac, co_, nan, nu)
+    plot(nar, ro_, nac, co_, nan, nu)
 
     tr_ = String[]
 
@@ -104,7 +127,7 @@ function transform(
 
     if !isempty(tr_)
 
-        _plot(nar, ro_, nac, co_, "$nan ($(join(tr_, " & ")))", nu)
+        plot(nar, ro_, nac, co_, "$nan ($(join(tr_, " & ")))", nu)
 
     end
 

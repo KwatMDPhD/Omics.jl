@@ -337,13 +337,12 @@ function select(is_, co_, ma1, ma2)
 
 end
 
-function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, nas, pl, nan, ch)
+# TODO: Test.
+function write(ou, nas, sa_, ch_, ch_x_sa_x_st, pl, fe_, nan, fe_x_sa_x_nu, ch)
 
     nasc = Nucleus.Path.clean(nas)
 
     sa_ .= Nucleus.String.clean.(sa_)
-
-    Nucleus.Error.error_duplicate(sa_)
 
     Nucleus.DataFrame.write(
         joinpath(ou, "characteristic_x_$(nasc)_x_string.tsv"),
@@ -355,33 +354,15 @@ function write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_nu, nas, pl, nan, ch)
 
     Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
 
-    pr = joinpath(ou, "$(lowercase(pl))_x_$(nasc)_x_number")
-
-    Nucleus.DataFrame.write("$pr.tsv", pl, fe_, sa_, fe_x_sa_x_nu)
-
-    if isempty(ch)
-
-        grc_ = Int[]
-
-        title_text = nan
-
-    else
-
-        grc_ = ch_x_sa_x_st[findfirst(==(ch), ch_), :]
-
-        title_text = "$nan (by $(titlecase(ch)))"
-
-    end
-
-    Nucleus.Plot.plot_heat_map(
-        "$pr.html",
+    Nucleus.FeatureXSample.write_plot(
+        joinpath(ou, "$(lowercase(pl))_x_$(nasc)_x_number"),
+        pl,
+        fe_,
+        nas,
+        sa_,
+        nan,
         fe_x_sa_x_nu;
-        y = fe_,
-        x = sa_,
-        nar = pl,
-        nac = nas,
-        grc_,
-        layout = Dict("title" => Dict("text" => title_text)),
+        grc_ = isempty(ch) ? Int[] : ch_x_sa_x_st[findfirst(==(ch), ch_), :],
     )
 
 end
@@ -440,7 +421,7 @@ function get(
     fe_, fe_x_sa_x_fl =
         Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_fl; lo, nar = pl, nac = nas, nan)
 
-    write(ou, sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl, nas, pl, nan, ch)
+    write(ou, nas, sa_, ch_, ch_x_sa_x_st, pl, fe_, nan, fe_x_sa_x_fl, ch)
 
     sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl
 
