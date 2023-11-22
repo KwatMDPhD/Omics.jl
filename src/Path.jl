@@ -2,6 +2,20 @@ module Path
 
 using ..Nucleus
 
+macro here()
+
+    na = basename(string(__source__.file))
+
+    if endswith(na, ".jl")
+
+        na = na[1:(end - 3)]
+
+    end
+
+    na
+
+end
+
 function clean(na)
 
     if contains(na, '/')

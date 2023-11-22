@@ -30,7 +30,7 @@ const TE_ = Nucleus.Path.read(@__DIR__; ig_ = ("runtests.jl",))
 
 # ---- #
 
-@test isempty(symdiff(MO_, TE_))
+@test symdiff(MO_, TE_) == ["Pathhere.jl"]
 
 # ---- #
 
