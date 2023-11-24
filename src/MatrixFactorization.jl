@@ -28,6 +28,7 @@ function factorize(ma, n; ke_ar...)
 
 end
 
+# TODO: Use NNLS.
 function solve_h(ma, mw)
 
     clamp!(pinv(mw) * ma, 0, Inf)
