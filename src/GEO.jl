@@ -6,8 +6,6 @@ using OrderedCollections: OrderedDict
 
 using ..Nucleus
 
-const KE = "!Sample_title"
-
 function make_soft(gs)
 
     "$(gs)_family.soft.gz"
@@ -81,9 +79,12 @@ function _read(so)
 
 end
 
-function _get_sample(bl_th, ke = KE)
+function _get_sample(bl_th)
 
-    sa_ = [ke_va[ke] for ke_va in values(bl_th["SAMPLE"])]
+    sa_ = [
+        "$(ke_va["!Sample_geo_accession"])_$(ke_va["!Sample_title"])" for
+        ke_va in values(bl_th["SAMPLE"])
+    ]
 
     @info "💃 Sample" sa_
 
@@ -305,11 +306,11 @@ function _get_feature(bl_th, pl)
 
 end
 
-function get_sample_characteristic(so; ke = KE, ke_ = ())
+function get_sample_characteristic(so, ke_ = ())
 
     bl_th = _read(so)
 
-    sa_ = _get_sample(bl_th, ke)
+    sa_ = _get_sample(bl_th)
 
     ch_, ch_x_sa_x_st = _get_characteristic(bl_th, ke_)
 
@@ -337,12 +338,10 @@ function select(is_, co_, ma1, ma2)
 
 end
 
-# TODO: Test.
+# TODO: Generalize and test.
 function write(ou, nas, sa_, ch_, ch_x_sa_x_st, pl, fe_, nan, fe_x_sa_x_nu, ch)
 
     nasc = Nucleus.Path.clean(nas)
-
-    sa_ .= Nucleus.String.clean.(sa_)
 
     Nucleus.DataFrame.write(
         joinpath(ou, "characteristic_x_$(nasc)_x_string.tsv"),
@@ -367,20 +366,9 @@ function write(ou, nas, sa_, ch_, ch_x_sa_x_st, pl, fe_, nan, fe_x_sa_x_nu, ch)
 
 end
 
-function get(
-    ou,
-    so,
-    ch;
-    ke = KE,
-    ke_ = (),
-    pl = "",
-    sas = nothing,
-    sac = (),
-    lo = false,
-    nas = "Sample",
-)
+function get(ou, so, ch; ke_ = (), pl = "", sas = nothing, sac = (), lo = false, nas = "Sample")
 
-    bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so; ke, ke_)
+    bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so, ke_)
 
     if isempty(pl)
 

@@ -84,31 +84,31 @@ const PL = "GPL16686"
 # ---- #
 
 @test Nucleus.GEO._get_sample(BL_TH) == [
-    "D458_Sensitive_DMSO_1"
-    "D458_Sensitive_DMSO_2"
-    "D458_Sensitive_DMSO_3"
-    "D458_Sensitive_DMSO_4"
-    "D458_Sensitive_DMSO_5"
-    "D458_Sensitive_JQ1_1"
-    "D458_Sensitive_JQ1_2"
-    "D458_Sensitive_JQ1_3"
-    "D458_Sensitive_JQ1_4"
-    "D458_Sensitive_JQ1_5"
-    "D458_Resistant_DMSO_1"
-    "D458_Resistant_DMSO_2"
-    "D458_Resistant_DMSO_3"
-    "D458_Resistant_DMSO_4"
-    "D458_Resistant_DMSO_5"
-    "D458_Resistant_JQ1_1"
-    "D458_Resistant_JQ1_2"
-    "D458_Resistant_JQ1_3"
-    "D458_Resistant_JQ1_4"
-    "D458_Resistant_JQ1_5"
+    "GSM3466115_D458_Sensitive_DMSO_1"
+    "GSM3466116_D458_Sensitive_DMSO_2"
+    "GSM3466117_D458_Sensitive_DMSO_3"
+    "GSM3466118_D458_Sensitive_DMSO_4"
+    "GSM3466119_D458_Sensitive_DMSO_5"
+    "GSM3466120_D458_Sensitive_JQ1_1"
+    "GSM3466121_D458_Sensitive_JQ1_2"
+    "GSM3466122_D458_Sensitive_JQ1_3"
+    "GSM3466123_D458_Sensitive_JQ1_4"
+    "GSM3466124_D458_Sensitive_JQ1_5"
+    "GSM3466125_D458_Resistant_DMSO_1"
+    "GSM3466126_D458_Resistant_DMSO_2"
+    "GSM3466127_D458_Resistant_DMSO_3"
+    "GSM3466128_D458_Resistant_DMSO_4"
+    "GSM3466129_D458_Resistant_DMSO_5"
+    "GSM3466130_D458_Resistant_JQ1_1"
+    "GSM3466131_D458_Resistant_JQ1_2"
+    "GSM3466132_D458_Resistant_JQ1_3"
+    "GSM3466133_D458_Resistant_JQ1_4"
+    "GSM3466134_D458_Resistant_JQ1_5"
 ]
 
 # ---- #
 
-# 333.144 ns (1 allocation: 208 bytes)
+# 1.087 μs (21 allocations: 1.22 KiB)
 #disable_logging(Info);
 #@btime Nucleus.GEO._get_sample(BL_TH);
 #disable_logging(Debug);
@@ -168,8 +168,8 @@ for (co1_, co2_, ma1, ma2, re) in (
     @test Nucleus.GEO.intersect(co1_, co2_, ma1, ma2) == re
 
     # 281.628 ns (14 allocations: 1.38 KiB)
-    # 290.047 ns (14 allocations: 1.41 KiB)
-    # 320.500 ns (14 allocations: 1.41 KiB)
+    # 289.513 ns (14 allocations: 1.41 KiB)
+    # 319.567 ns (14 allocations: 1.41 KiB)
     #disable_logging(Info)
     #@btime Nucleus.GEO.intersect($co1_, $co2_, $ma1, $ma2)
     #disable_logging(Debug)
