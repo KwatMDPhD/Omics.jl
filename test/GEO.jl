@@ -185,8 +185,8 @@ for (gs, ch, rec, ref) in (
     # TODO: Add a test data that has a different number of samples.
 )
 
-    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl =
-        Nucleus.GEO.get(Nucleus.TE, joinpath(DA, Nucleus.GEO.make_soft(gs)), ch)
+    sa_, ch_, ch_x_sa_x_st, pl, fe_, fe_x_sa_x_fl =
+        Nucleus.GEO.get(Nucleus.TE, joinpath(DA, Nucleus.GEO.make_soft(gs)); ch)
 
     @test size(ch_x_sa_x_st) === rec
 

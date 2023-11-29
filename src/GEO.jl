@@ -152,7 +152,6 @@ function _get_feature_map(bl_th, pl)
 
     fu = identity
 
-    # TODO: Check.
     if it == 96 || it == 97 || it == 570 || it == 13667 || it == 15207
 
         co = "Gene Symbol"
@@ -366,7 +365,17 @@ function write(ou, nas, sa_, ch_, ch_x_sa_x_st, pl, fe_, nan, fe_x_sa_x_nu, ch)
 
 end
 
-function get(ou, so, ch; ke_ = (), pl = "", sas = nothing, sac = (), lo = false, nas = "Sample")
+function get(
+    ou,
+    so;
+    nas = "Sample",
+    sas = nothing,
+    sac = (),
+    ke_ = (),
+    ch = "",
+    pl = "",
+    lo = false,
+)
 
     bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so, ke_)
 
@@ -411,7 +420,7 @@ function get(ou, so, ch; ke_ = (), pl = "", sas = nothing, sac = (), lo = false,
 
     write(ou, nas, sa_, ch_, ch_x_sa_x_st, pl, fe_, nan, fe_x_sa_x_fl, ch)
 
-    sa_, ch_, ch_x_sa_x_st, fe_, fe_x_sa_x_fl
+    sa_, ch_, ch_x_sa_x_st, pl, fe_, fe_x_sa_x_fl
 
 end
 

@@ -2,7 +2,23 @@ module Information
 
 using KernelDensity: kde
 
+using ..Nucleus
+
 function get_entropy(nu_)
+
+    su = 0.0
+
+    for nu in nu_
+
+        if !iszero(nu)
+
+            su -= nu * log(nu)
+
+        end
+
+    end
+
+    su
 
 end
 
@@ -36,7 +52,49 @@ end
 
 end
 
-function get_mutual_information(nu1_, nu2_)
+function get_mutual_information(jo; no = false)
+
+    p1_ = sum.(eachrow(jo))
+
+    p2_ = sum.(eachcol(jo))
+
+    mu = 0.0
+
+    for (id2, p2) in enumerate(p2_), (id1, p1) in enumerate(p1_)
+
+        pp = jo[id1, id2]
+
+        if !iszero(pp)
+
+            mu += get_kullback_leibler_divergence(pp, p1 * p2)
+
+        end
+
+    end
+
+    if no
+
+        mu = 2mu / (get_entropy(p1_) + get_entropy(p2_))
+
+    end
+
+    mu
+
+end
+
+function get_mutual_information(
+    nu1_::AbstractVector{<:Integer},
+    nu2_::AbstractVector{<:Integer};
+    ke_ar...,
+)
+
+    get_mutual_information(Nucleus.Collection.count(nu1_, nu2_) / lastindex(nu1_); ke_ar...)
+
+end
+
+function get_mutual_information(nu1_, nu2_; ke_ar...)
+
+    get_mutual_information(jo; ke_ar...)
 
 end
 
