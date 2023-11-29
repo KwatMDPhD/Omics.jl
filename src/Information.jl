@@ -4,24 +4,6 @@ using KernelDensity: kde
 
 using ..Nucleus
 
-function get_entropy(nu_)
-
-    su = 0.0
-
-    for nu in nu_
-
-        if !iszero(nu)
-
-            su -= nu * log(nu)
-
-        end
-
-    end
-
-    su
-
-end
-
 @inline function get_kullback_leibler_divergence(nu1, nu2)
 
     nu1 * log(nu1 / nu2)
@@ -52,6 +34,18 @@ end
 
 end
 
+@inline function get_entropy(nu)
+
+    iszero(nu) ? 0.0 : -nu * log(nu)
+
+end
+
+@inline function normalize_mutual_information(mu, h1, h2)
+
+    2mu / (h1 + h2)
+
+end
+
 function get_mutual_informationp(jo; no = false)
 
     p1_ = sum.(eachrow(jo))
@@ -62,11 +56,11 @@ function get_mutual_informationp(jo; no = false)
 
     for (id2, p2) in enumerate(p2_), (id1, p1) in enumerate(p1_)
 
-        pp = jo[id1, id2]
+        pj = jo[id1, id2]
 
-        if !iszero(pp)
+        if !iszero(pj)
 
-            mu += get_kullback_leibler_divergence(pp, p1 * p2)
+            mu += get_kullback_leibler_divergence(pj, p1 * p2)
 
         end
 
@@ -74,35 +68,39 @@ function get_mutual_informationp(jo; no = false)
 
     if no
 
-        mu = 2mu / (get_entropy(p1_) + get_entropy(p2_))
+        normalize_mutual_information(mu, sum(get_entropy, p1_), sum(get_entropy, p2_))
+
+    else
+
+        mu
 
     end
 
-    mu
+end
+
+@inline function _sum_get_entropy(ea)
+
+    get_entropy(sum(ea))
 
 end
 
 function get_mutual_informatione(jo; no = false)
 
-    p1_ = sum.(eachrow(jo))
+    h1 = sum(_sum_get_entropy, eachrow(jo))
 
-    p2_ = sum.(eachcol(jo))
+    h2 = sum(_sum_get_entropy, eachcol(jo))
 
-    e1 = get_entropy(p1_)
-
-    e2 = get_entropy(p2_)
-
-    ej = get_entropy(jo)
-
-    mu = e1 + e2 - ej
+    mu = h1 + h2 - sum(get_entropy(pj) for pj in jo)
 
     if no
 
-        mu = 2mu / (e1 + e2)
+        normalize_mutual_information(mu, h1, h2)
+
+    else
+
+        mu
 
     end
-
-    mu
 
 end
 
@@ -112,17 +110,17 @@ function get_mutual_information(
     ke_ar...,
 )
 
-    get_mutual_informationp(Nucleus.Collection.count(nu1_, nu2_) / lastindex(nu1_); ke_ar...)
+    get_mutual_informatione(Nucleus.Collection.count(nu1_, nu2_) / lastindex(nu1_); ke_ar...)
 
 end
 
 function get_mutual_information(nu1_, nu2_; ke_ar...)
 
-    get_mutual_informationp(jo; ke_ar...)
+    get_mutual_informatione(jo; ke_ar...)
 
 end
 
-function get_information_coefficient(nu1_, nu2_)
+function get_information_coefficient(nu1_, nu2_; ke_ar...)
 
 end
 
