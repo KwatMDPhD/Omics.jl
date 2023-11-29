@@ -2,9 +2,9 @@ using Test: @test
 
 using Nucleus
 
-# TODO: Benchmark.
-
 # ---- #
+
+# TODO: Benchmark.
 
 using Clustering: mutualinfo
 

@@ -82,6 +82,14 @@ function get_mutual_information(jo; no = false)
 
 end
 
+function get_mutual_informatione(jo; no = false)
+
+    p1_ = sum.(eachrow(jo))
+
+    p2_ = sum.(eachcol(jo))
+
+end
+
 function get_mutual_information(
     nu1_::AbstractVector{<:Integer},
     nu2_::AbstractVector{<:Integer};
