@@ -52,7 +52,7 @@ end
 
 end
 
-function get_mutual_information(jo; no = false)
+function get_mutual_informationp(jo; no = false)
 
     p1_ = sum.(eachrow(jo))
 
@@ -88,6 +88,22 @@ function get_mutual_informatione(jo; no = false)
 
     p2_ = sum.(eachcol(jo))
 
+    e1 = get_entropy(p1_)
+
+    e2 = get_entropy(p2_)
+
+    ej = get_entropy(jo)
+
+    mu = e1 + e2 - ej
+
+    if no
+
+        mu = 2mu / (e1 + e2)
+
+    end
+
+    mu
+
 end
 
 function get_mutual_information(
@@ -96,13 +112,13 @@ function get_mutual_information(
     ke_ar...,
 )
 
-    get_mutual_information(Nucleus.Collection.count(nu1_, nu2_) / lastindex(nu1_); ke_ar...)
+    get_mutual_informationp(Nucleus.Collection.count(nu1_, nu2_) / lastindex(nu1_); ke_ar...)
 
 end
 
 function get_mutual_information(nu1_, nu2_; ke_ar...)
 
-    get_mutual_information(jo; ke_ar...)
+    get_mutual_informationp(jo; ke_ar...)
 
 end
 

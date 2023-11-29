@@ -101,24 +101,49 @@ end
 
 # ---- #
 
-for (jo, re_) in ((
-    [
-        0.2 0 0 0 0
-        0 0.2 0 0 0
-        0.001 0 0.199 0 0
-        0.002 0 0 0.198 0
-        0.006 0.002 0 0 0.192
-    ],
-    (1.5534700710552343, 0.9653404496537963),
-),)
+for (jo, re_) in (
+    (
+        [
+            0.2 0 0 0 0
+            0 0.2 0 0 0
+            0.001 0 0.199 0 0
+            0.002 0 0 0.198 0
+            0.006 0.002 0 0 0.192
+        ],
+        (1.5534700710552343, 0.9653404496537963),
+    ),
+    (
+        [
+            0.2 0 0 0 0
+            0.001 0 0.199 0 0
+            0.006 0.002 0 0 0.192
+            0.002 0 0 0.198 0
+            0 0.2 0 0 0
+        ],
+        (1.5534700710552343, 0.9653404496537963),
+    ),
+)
 
     for (no, re) in zip((false, true), re_)
 
-        @test Nucleus.Information.get_mutual_information(jo; no) === re
+        atol = 1e-15
 
-        # 160.428 ns (2 allocations: 192 bytes)
-        # 197.831 ns (2 allocations: 192 bytes)
-        #@btime Nucleus.Information.get_mutual_information($jo; no = $no)
+        @test isapprox(Nucleus.Information.get_mutual_informationp(jo; no), re; atol)
+
+        @test isapprox(Nucleus.Information.get_mutual_informatione(jo; no), re; atol)
+
+        # 163.015 ns (2 allocations: 192 bytes)
+        # 189.486 ns (2 allocations: 192 bytes)
+        # 200.479 ns (2 allocations: 192 bytes)
+        # 189.963 ns (2 allocations: 192 bytes)
+        # 164.022 ns (2 allocations: 192 bytes)
+        # 190.402 ns (2 allocations: 192 bytes)
+        # 201.341 ns (2 allocations: 192 bytes)
+        # 190.476 ns (2 allocations: 192 bytes)
+
+        #@btime Nucleus.Information.get_mutual_informationp($jo; no = $no)
+
+        #@btime Nucleus.Information.get_mutual_informatione($jo; no = $no)
 
     end
 
