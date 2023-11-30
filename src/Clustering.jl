@@ -68,7 +68,7 @@ function compare_grouping(
         (mu_,),
         (ng_,);
         layout = Dict(
-            "title" => Dict("text" => "$title_text<br>$(Nucleus.Number.format(_mean(mu_)))"),
+            "title" => Dict("text" => "$title_text<br>$(Nucleus.Number.format4(_mean(mu_)))"),
             "yaxis" => Dict("title" => Dict("text" => "Mutual Information")),
             "xaxis" => Dict("title" => Dict("text" => "Number of Group")),
         ),
@@ -130,7 +130,7 @@ function compare_grouping(
         layout = Dict(
             "title" => Dict(
                 Dict(
-                    "text" => "$title_text<br>$(Nucleus.Number.format(_mean(la_x_ng_x_ti) * 100))%",
+                    "text" => "$title_text<br>$(Nucleus.Number.format4(_mean(la_x_ng_x_ti) * 100))%",
                 ),
             ),
             "yaxis" => Dict("dtick" => 1),

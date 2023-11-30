@@ -1,7 +1,5 @@
 module Match
 
-using Printf: @sprintf
-
 using ProgressMeter: @showprogress
 
 using Random: shuffle!
@@ -100,7 +98,7 @@ function _annotate(y, la, th, fe_, fe_x_st_x_fl)
 
     for id in eachindex(fe_)
 
-        sc, ma, pv, ad = (@sprintf("%.2g", fl) for fl in view(fe_x_st_x_fl, id, :))
+        sc, ma, pv, ad = (Nucleus.Number.format2(fl) for fl in view(fe_x_st_x_fl, id, :))
 
         for (id, text) in enumerate(("$sc ($ma)", pv, ad))
 

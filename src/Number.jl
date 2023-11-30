@@ -3,7 +3,14 @@ module Number
 using Printf: @sprintf
 
 # TODO: Test.
-function format(nu)
+function format2(nu)
+
+    @sprintf "%.2g" nu
+
+end
+
+# TODO: Test.
+function format4(nu)
 
     @sprintf "%.4g" nu
 
