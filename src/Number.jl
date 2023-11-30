@@ -1,5 +1,14 @@
 module Number
 
+using Printf: @sprintf
+
+# TODO: Test.
+function format(nu)
+
+    @sprintf "%.4g" nu
+
+end
+
 function is_negative(it)
 
     it < 0

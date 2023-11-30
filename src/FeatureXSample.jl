@@ -77,7 +77,7 @@ function write_plot(pr, nar, ro_, nac, co_, nan, nu; ke_ar...)
 
     Nucleus.DataFrame.write("$pr.tsv", nar, ro_, co_, nu)
 
-    plot("$pr.html", "$(pr).histogram.html", nar, ro_, nac, co_, nan, nu; ke_ar...)
+    plot("$pr.html", "$pr.histogram.html", nar, ro_, nac, co_, nan, nu; ke_ar...)
 
 end
 
