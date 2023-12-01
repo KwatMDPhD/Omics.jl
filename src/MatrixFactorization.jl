@@ -1,12 +1,11 @@
 module MatrixFactorization
 
-using LinearAlgebra: pinv
-
 using NMF: nnmf
+
+using NonNegLeastSquares: nonneg_lsq
 
 using ..Nucleus
 
-# TODO: Test.
 function factorize(ma, n; ke_ar...)
 
     re = nnmf(ma, n; ke_ar...)
@@ -28,10 +27,17 @@ function factorize(ma, n; ke_ar...)
 
 end
 
-# TODO: Use NNLS.
-function solve_h(ma, mw)
+function solve_h(mw, ma)
 
-    clamp!(pinv(mw) * ma, 0, Inf)
+    mh = Matrix{Float64}(undef, size(mw, 2), size(ma, 2))
+
+    for (id, co) in enumerate(eachcol(ma))
+
+        mh[:, id] = nonneg_lsq(mw, co; alg = :nnls)
+
+    end
+
+    mh
 
 end
 

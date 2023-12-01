@@ -32,22 +32,24 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     Nucleus.MatrixFactorization.write(di, mh)
 
-    mh2 = Nucleus.MatrixFactorization.solve_h(ma, mw)
+    mh2 = Nucleus.MatrixFactorization.solve_h(mw, ma)
 
-    @test isapprox(mh, mh2; rtol = 1)
+    @test isapprox(mh, mh2; rtol = 1e-3)
 
     Nucleus.MatrixFactorization.write(mkdir("$(di)_solved"), mh2; naf = "Solved")
 
-    # 9.417 μs (58 allocations: 6.95 KiB)
-    # 2.116 μs (23 allocations: 2.78 KiB)
-    # 224.333 μs (128 allocations: 40.97 KiB)
-    # 3.151 μs (23 allocations: 4.33 KiB)
-    # 2.888 s (4331 allocations: 221.99 MiB)
-    # 144.417 μs (24 allocations: 172.08 KiB)
-    # 7.915 s (12949 allocations: 363.06 MiB)
-    # 288.292 μs (27 allocations: 329.34 KiB)
+    # 11.458 μs (70 allocations: 8.00 KiB)
+    # 685.152 ns (19 allocations: 1.61 KiB)
+    # 224.250 μs (136 allocations: 41.09 KiB)
+    # 3.625 μs (28 allocations: 6.91 KiB)
+    # 202.382 ms (372 allocations: 17.77 MiB)
+    # 3.547 ms (102 allocations: 3.83 MiB)
+    # 153.218 ms (371 allocations: 10.21 MiB)
+    # 24.665 ms (101 allocations: 7.83 MiB)
 
+    #disable_logging(Warn)
     #@btime Nucleus.MatrixFactorization.factorize($ma, $n_fa)
+    #disable_logging(Debug)
 
     #@btime Nucleus.MatrixFactorization.solve_h($ma, $mw)
 
