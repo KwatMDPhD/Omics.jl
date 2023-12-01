@@ -129,11 +129,10 @@ function compare_grouping(
         nac = "Number of Group",
         layout = Dict(
             "title" => Dict(
-                Dict(
-                    "text" => "$title_text<br>$(Nucleus.Number.format4(_mean(la_x_ng_x_ti) * 100))%",
-                ),
+                "text" => "$title_text<br>$(Nucleus.Number.format4(_mean(la_x_ng_x_ti) * 100))%",
             ),
             "yaxis" => Dict("dtick" => 1),
+            "xaxis" => Dict("dtick" => 1),
         ),
     )
 

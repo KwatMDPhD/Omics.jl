@@ -65,9 +65,9 @@ function plot(hte, hti, nar, ro_, nac, co_, nan, nu; ke_ar...)
 
 end
 
-function plot(nar, ro_, nac, co_, nan, nu; ke_ar...)
+function plot(nar, ro_, nac, co_, nan, nu)
 
-    plot("", "", nar, ro_, nac, co_, nan, nu; ke_ar...)
+    plot("", "", nar, ro_, nac, co_, nan, nu)
 
 end
 
