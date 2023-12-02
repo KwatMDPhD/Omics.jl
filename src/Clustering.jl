@@ -63,18 +63,20 @@ function compare_grouping(
         n_gr in ng_
     ]
 
+    me = _mean(mu_)
+
     Nucleus.Plot.plot_scatter(
         ht,
         (mu_,),
         (ng_,);
         layout = Dict(
-            "title" => Dict("text" => "$title_text<br>$(Nucleus.Number.format4(_mean(mu_)))"),
+            "title" => Dict("text" => "$title_text<br>$(Nucleus.Number.format4(me))"),
             "yaxis" => Dict("title" => Dict("text" => "Mutual Information")),
             "xaxis" => Dict("title" => Dict("text" => "Number of Group")),
         ),
     )
 
-    mu_
+    me
 
 end
 
@@ -118,6 +120,8 @@ function compare_grouping(
 
     end
 
+    me = _mean(la_x_ng_x_ti)
+
     id_ = sortperm(sum.(eachrow(la_x_ng_x_ti)))
 
     Nucleus.Plot.plot_heat_map(
@@ -128,15 +132,13 @@ function compare_grouping(
         nar = "Label",
         nac = "Number of Group",
         layout = Dict(
-            "title" => Dict(
-                "text" => "$title_text<br>$(Nucleus.Number.format4(_mean(la_x_ng_x_ti) * 100))%",
-            ),
+            "title" => Dict("text" => "$title_text<br>$(Nucleus.Number.format4(me * 100))%"),
             "yaxis" => Dict("dtick" => 1),
             "xaxis" => Dict("dtick" => 1),
         ),
     )
 
-    la_x_ng_x_ti
+    me
 
 end
 
