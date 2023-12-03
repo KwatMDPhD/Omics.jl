@@ -228,32 +228,8 @@ end
 
 # ---- #
 
-nu1_ = collect(0:10)
+for (nu1_, nu2_) in ((1:10, 1:10), (1:10, 10:-1:1), (1:10, 1:10:100), (1:10, 1:10:100))
 
-# ---- #
+    @info Nucleus.Information.get_information_coefficient(nu1_, nu2_)
 
-nu2_ = collect(0:10:100)
-
-# ---- #
-
-bi = Nucleus.Information.kde((nu2_, nu1_), npoints = (8, 8))
-
-# ---- #
-
-y = collect(bi.y)
-
-# ---- #
-
-x = collect(bi.x)
-
-# ---- #
-
-z = bi.density
-
-# ---- #
-
-Nucleus.Plot.plot_heat_map("", z; y, x)
-
-# ---- #
-
-Nucleus.Information.get_information_coefficient(nu1_, nu2_)
+end
