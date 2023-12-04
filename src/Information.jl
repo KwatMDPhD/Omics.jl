@@ -1,6 +1,6 @@
 module Information
 
-# TODO: Improve bandwidth.
+# TODO: Improve bandwidth. https://github.com/panlanfeng/KernelEstimator.jl/blob/master/src/bandwidth.jl.
 using KernelDensity: default_bandwidth, kde
 
 using Statistics: cor
