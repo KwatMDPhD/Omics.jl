@@ -8,6 +8,52 @@ using Distances: CorrDist
 
 # ---- #
 
+for (nu___, re) in (
+    (
+        ([1], [1]),
+        [
+            0 0
+            0 0
+        ],
+    ),
+    (
+        ([1], [2]),
+        [
+            0 1
+            1 0
+        ],
+    ),
+    (
+        ([1], [2], [4]),
+        [
+            0 1 9
+            1 0 4
+            9 4 0
+        ],
+    ),
+    (
+        ([1], [4], [2]),
+        [
+            0 9 1
+            9 0 4
+            1 4 0
+        ],
+    ),
+    (
+        ([1, 2], [2, 1]),
+        [
+            0 2
+            2 0
+        ],
+    ),
+)
+
+    @test Nucleus.Clustering.get_distance(nu___, SqEuclidean()) == re
+
+end
+
+# ---- #
+
 const MA = [
     0  1  2  3  10  20  30
     0  2  1  3  20  10  30
@@ -17,38 +63,31 @@ const MA = [
 
 # ---- #
 
-for (di, re) in ((2, [4, 1, 2, 3, 7, 5, 6]), (1, [1, 3, 2, 4]))
+for (ea, re) in ((eachcol, [4, 1, 2, 3, 7, 5, 6]), (eachrow, [1, 3, 2, 4]))
 
-    if isone(di)
+    ea_ = ea(MA)
 
-        ma = permutedims(MA)
+    @test Nucleus.Clustering.hierarchize(ea_).order == re
 
-    else
-
-        ma = MA
-
-    end
-
-    @test Nucleus.Clustering.hierarchize(ma).order == re
-
-    # 1.704 μs (38 allocations: 4.54 KiB)
-    # 1.204 μs (35 allocations: 3.04 KiB)
-    #@btime Nucleus.Clustering.hierarchize($ma)
+    # 1.446 μs (36 allocations: 4.30 KiB)
+    # 987.500 ns (33 allocations: 2.81 KiB)
+    @btime Nucleus.Clustering.hierarchize($ea_)
 
 end
 
 # ---- #
 
-const FU = CorrDist()
+for (fu, re) in (
+    (CorrDist(), [3, 6, 2, 5, 7, 1, 4]),
+    ((nu1_, nu2_) -> (sqrt.(nu1_ .^ 2 .+ nu2_ .^ 2)), [4, 1, 2, 3, 7, 5, 6]),
+)
 
-# ---- #
+    @test Nucleus.Clustering.hierarchize(MA, fu).order == re
 
-@test Nucleus.Clustering.hierarchize(MA, FU).order == [3, 6, 2, 5, 7, 1, 4]
+    # 1.954 μs (47 allocations: 5.29 KiB)
+    @btime Nucleus.Clustering.hierarchize(MA, $fu)
 
-# ---- #
-
-# 1.954 μs (47 allocations: 5.29 KiB)
-#@btime Nucleus.Clustering.hierarchize(MA, FU);
+end
 
 # ---- #
 

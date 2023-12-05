@@ -2,17 +2,11 @@ module Clustering
 
 using Clustering: cutree, hclust
 
-using Distances: Euclidean, pairwise
-
 using ..Nucleus
 
-const _FU = Euclidean()
+function hierarchize(an_x_an_x_di, linkage = :ward)
 
-const _LI = :ward
-
-function hierarchize(ma, fu = _FU, linkage = _LI)
-
-    hclust(pairwise(fu, ma); linkage)
+    hclust(an_x_an_x_di; linkage)
 
 end
 
@@ -22,7 +16,7 @@ function cluster(hc, k)
 
 end
 
-function order(co_, ma, fu = _FU, linkage = _LI)
+function order(co_, ma, fu = Nucleus.Distance.Euclidean(), linkage = :ward)
 
     id_ = Int[]
 
@@ -30,7 +24,17 @@ function order(co_, ma, fu = _FU, linkage = _LI)
 
         idc_ = findall(==(co), co_)
 
-        append!(id_, view(idc_, hierarchize(ma[:, idc_], fu, linkage).order))
+        # TODO: Benchmark.
+        append!(
+            id_,
+            view(
+                idc_,
+                hierarchize(
+                    Nucleus.Distance.get_distance(eachcol(view(ma, :, idc_)), fu),
+                    linkage,
+                ).order,
+            ),
+        )
 
     end
 

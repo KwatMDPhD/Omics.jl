@@ -115,9 +115,17 @@ function get_information_coefficient(
     nu2_::AbstractVector{<:Integer},
 )
 
-    if nu1_ == nu2_
+    if allequal(nu1_) || allequal(nu2_)
+
+        return NaN
+
+    elseif nu1_ == nu2_
 
         return 1.0
+
+    elseif nu1_ == view(nu2_, lastindex(nu2_):-1:1)
+
+        return -1.0
 
     end
 
@@ -131,9 +139,17 @@ end
 
 function get_information_coefficient(nu1_, nu2_)
 
-    if nu1_ == nu2_
+    if allequal(nu1_) || allequal(nu2_)
+
+        return NaN
+
+    elseif nu1_ == nu2_
 
         return 1.0
+
+    elseif nu1_ == view(nu2_, lastindex(nu2_):-1:1)
+
+        return -1.0
 
     end
 

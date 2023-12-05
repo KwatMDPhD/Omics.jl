@@ -22,18 +22,6 @@ Nucleus.Plot.plot_heat_map("", mh; y = fa_, x = sa_)
 
 # ---- #
 
-function cluster(z, y, x)
-
-    id2_ = Nucleus.Clustering.hierarchize(z).order
-
-    id1_ = Nucleus.Clustering.hierarchize(permutedims(z)).order
-
-    z[id1_, id2_], y[id1_], x[id2_]
-
-end
-
-# ---- #
-
 for co in eachcol(mh)
 
     Nucleus.Normalization.normalize_with_0!(co)
@@ -44,9 +32,11 @@ for co in eachcol(mh)
 
 end
 
-z, y, x = cluster(mh, fa_, sa_)
+id2_ = Nucleus.Clustering.hierarchize(mh.order)
 
-Nucleus.Plot.plot_heat_map("", z; y, x)
+id1_ = Nucleus.Clustering.hierarchize(permutedims(mh).order)
+
+Nucleus.Plot.plot_heat_map("", mh[id1_, id2_]; y = fa_[id1_], x = sa_[id2_])
 
 # ---- #
 
