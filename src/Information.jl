@@ -1,6 +1,6 @@
 module Information
 
-# TODO: Improve bandwidth. https://github.com/panlanfeng/KernelEstimator.jl/blob/master/src/bandwidth.jl.
+# TODO: https://github.com/panlanfeng/KernelEstimator.jl/blob/master/src/bandwidth.jl.
 using KernelDensity: default_bandwidth, kde
 
 using Statistics: cor
@@ -10,18 +10,6 @@ using ..Nucleus
 @inline function get_kullback_leibler_divergence(nu1, nu2)
 
     nu1 * log(nu1 / nu2)
-
-end
-
-@inline function get_thermodynamic_depth(nu1, nu2)
-
-    get_kullback_leibler_divergence(nu1, nu2) - get_kullback_leibler_divergence(nu2, nu1)
-
-end
-
-@inline function get_thermodynamic_breadth(nu1, nu2)
-
-    get_kullback_leibler_divergence(nu1, nu2) + get_kullback_leibler_divergence(nu2, nu1)
 
 end
 
@@ -37,19 +25,25 @@ end
 
 end
 
+@inline function get_thermodynamic_depth(nu1, nu2)
+
+    get_kullback_leibler_divergence(nu1, nu2) - get_kullback_leibler_divergence(nu2, nu1)
+
+end
+
+@inline function get_thermodynamic_breadth(nu1, nu2)
+
+    get_kullback_leibler_divergence(nu1, nu2) + get_kullback_leibler_divergence(nu2, nu1)
+
+end
+
 @inline function get_entropy(nu)
 
     iszero(nu) ? 0.0 : -nu * log(nu)
 
 end
 
-@inline function normalize_mutual_information(mu, e1, e2)
-
-    2mu / (e1 + e2)
-
-end
-
-function get_mutual_informationp(jo)
+function _get_mutual_information_using_probability(jo)
 
     p1_ = sum.(eachrow(jo))
 
@@ -79,7 +73,7 @@ end
 
 end
 
-function get_mutual_informatione(jo)
+function _get_mutual_information_using_entropy(jo)
 
     sum(_sum_get_entropy, eachrow(jo)) + sum(_sum_get_entropy, eachcol(jo)) -
     sum(get_entropy(pj) for pj in jo)
@@ -90,7 +84,7 @@ function get_mutual_information(nu1_::AbstractVector{<:Integer}, nu2_::AbstractV
 
     jo = Nucleus.Collection.count(nu1_, nu2_) / lastindex(nu1_)
 
-    get_mutual_informatione(jo)
+    _get_mutual_information_using_entropy(jo)
 
 end
 
@@ -100,7 +94,7 @@ function get_mutual_information(nu1_, nu2_; ke_ar...)
 
     jo = de / sum(de)
 
-    get_mutual_informatione(jo)
+    _get_mutual_information_using_entropy(jo)
 
 end
 
@@ -168,10 +162,15 @@ function get_information_coefficient(nu1_, nu2_)
 
 end
 
-# TODO: Test.
 function get_information_coefficient_distance(nu1_, nu2_)
 
     0.5(1.0 - get_information_coefficient(nu1_, nu2_))
+
+end
+
+@inline function normalize_mutual_information(mu, e1, e2)
+
+    2mu / (e1 + e2)
 
 end
 

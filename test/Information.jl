@@ -8,6 +8,8 @@ using Clustering: mutualinfo
 
 # ---- #
 
+# TODO: Test.
+# TODO: Benchmark.
 const N = 10
 
 # ---- #
@@ -34,8 +36,6 @@ const NU___ = (
 
 for (nu1_, nu2_) in NU___
 
-    # TODO: Test.
-    # TODO: Benchmark.
     for fu in (
         Nucleus.Information.get_kullback_leibler_divergence,
         Nucleus.Information.get_thermodynamic_depth,
@@ -57,8 +57,6 @@ end
 
 for (nu1_, nu2_) in NU___
 
-    # TODO: Test.
-    # TODO: Benchmark.
     for fu in (
         Nucleus.Information.get_antisymmetric_kullback_leibler_divergence,
         Nucleus.Information.get_symmetric_kullback_leibler_divergence,
@@ -104,39 +102,49 @@ function get_entropy(nu)
 
 end
 
-JO = [
+const JO = [
     1/8 1/16 1/16 1/4
     1/16 1/8 1/16 0
     1/32 1/32 1/16 0
     1/32 1/32 1/16 0
 ]
 
-P1_ = sum.(eachrow(JO))
+const P1_ = sum.(eachrow(JO))
+
 @test P1_ == [1 / 2, 1 / 4, 1 / 8, 1 / 8]
 
-P2_ = sum.(eachcol(JO))
+const P2_ = sum.(eachcol(JO))
+
 @test P2_ == [1 / 4, 1 / 4, 1 / 4, 1 / 4]
 
-E1 = sum(get_entropy, P1_)
+const E1 = sum(get_entropy, P1_)
+
 @test E1 === 7 / 4
 
-E2 = sum(get_entropy, P2_)
+const E2 = sum(get_entropy, P2_)
+
 @test E2 === 2.0
 
-EJ = sum(get_entropy, JO)
+const EJ = sum(get_entropy, JO)
+
 @test EJ === 27 / 8
 
-E12 = EJ - E2
+const E12 = EJ - E2
+
 @test E12 === sum(p2 * sum(get_entropy, co / p2) for (p2, co) in zip(P2_, eachcol(JO))) === 11 / 8
 
-E21 = EJ - E1
+const E21 = EJ - E1
+
 @test E21 === sum(p1 * sum(get_entropy, ro / p1) for (p1, ro) in zip(P1_, eachrow(JO))) === 13 / 8
 
-MU = E1 + E2 - EJ
+const MU = E1 + E2 - EJ
+
 @test MU === E1 - E12 === E2 - E21 === 3 / 8
 
 # ---- #
 
+# https://cdanielaam.medium.com/how-to-compare-and-evaluate-unsupervised-clustering-methods-84f3617e3769
+# TODO: Shuffle.
 const PE_ = (
     (
         [
@@ -164,17 +172,11 @@ const PE_ = (
 
 for (jo, re_) in PE_
 
-    mu = Nucleus.Information.get_mutual_informationp(jo)
+    @test Nucleus.Information._get_mutual_information_using_probability(jo) === re_[1]
 
-    e1 = sum(Nucleus.Information._sum_get_entropy, eachrow(jo))
-
-    e2 = sum(Nucleus.Information._sum_get_entropy, eachcol(jo))
-
-    @test Nucleus.Information.normalize_mutual_information(mu, e1, e2) === re_[2]
-
-    # 1.458 ns (0 allocations: 0 bytes)
-    # 1.459 ns (0 allocations: 0 bytes)
-    #@btime Nucleus.Information.normalize_mutual_information($mu, $e1, $e2)
+    # 161.193 ns (2 allocations: 192 bytes)
+    # 162.149 ns (2 allocations: 192 bytes)
+    #@btime Nucleus.Information._get_mutual_information_using_probability($jo)
 
 end
 
@@ -182,23 +184,15 @@ end
 
 for (jo, re_) in PE_
 
-    @test Nucleus.Information.get_mutual_informationp(jo) === re_[1]
+    @test isapprox(
+        Nucleus.Information._get_mutual_information_using_entropy(jo),
+        re_[1];
+        atol = 1e-15,
+    )
 
-    # 163.860 ns (2 allocations: 192 bytes)
-    # 164.777 ns (2 allocations: 192 bytes)
-    #@btime Nucleus.Information.get_mutual_informationp($jo)
-
-end
-
-# ---- #
-
-for (jo, re_) in PE_
-
-    @test isapprox(Nucleus.Information.get_mutual_informatione(jo), re_[1]; atol = 1e-15)
-
-    # 118.870 ns (0 allocations: 0 bytes)
-    # 118.870 ns (0 allocations: 0 bytes)
-    #@btime Nucleus.Information.get_mutual_informatione($jo)
+    # 115.115 ns (0 allocations: 0 bytes)
+    # 115.115 ns (0 allocations: 0 bytes)
+    #@btime Nucleus.Information._get_mutual_information_using_entropy($jo)
 
 end
 
@@ -210,19 +204,20 @@ const MI_ = ((1:10, 1:10), (1:10, 10:-1:1), (1:10, 1:10:100))
 
 for (nu1_, nu2_) in MI_
 
-    nu1t_ = collect(nu1_)
+    nu1i_ = convert(Vector{Int}, nu1_)
 
-    nu2t_ = collect(nu2_)
+    nu2i_ = convert(Vector{Int}, nu2_)
 
-    re = mutualinfo(nu1t_, nu2t_; normed = false)
+    re = mutualinfo(nu1i_, nu2i_; normed = false)
+
     @info re
 
-    @test isapprox(Nucleus.Information.get_mutual_information(nu1t_, nu2t_), re; atol = 1e-15)
+    @test isapprox(Nucleus.Information.get_mutual_information(nu1i_, nu2i_), re; atol = 1e-15)
 
-    # 1.071 μs (24 allocations: 4.53 KiB)
-    # 1.104 μs (24 allocations: 4.53 KiB)
-    # 1.100 μs (24 allocations: 4.53 KiB
-    #@btime Nucleus.Information.get_mutual_information($nu1t_, $nu2t_)
+    # 1.012 μs (24 allocations: 4.53 KiB)
+    # 1.046 μs (24 allocations: 4.53 KiB)
+    # 1.050 μs (24 allocations: 4.53 KiB
+    #@btime Nucleus.Information.get_mutual_information($nu1i_, $nu2i_)
 
 end
 
@@ -230,36 +225,37 @@ end
 
 for (nu1_, nu2_) in MI_
 
-    nu1t_ = convert(Vector{Float64}, nu1_)
+    nu1f_ = convert(Vector{Float64}, nu1_)
 
-    nu2t_ = convert(Vector{Float64}, nu2_)
+    nu2f_ = convert(Vector{Float64}, nu2_)
 
+    # TODO: Test.
     for ke_ar in (
-        (),
         (npoints = (4, 4),),
         (npoints = (32, 32),),
         (npoints = (64, 64),),
+        (),
         (bandwidth = (1e-3, 1e-3),),
     )
 
-        @info Nucleus.Information.get_mutual_information(nu1t_, nu2t_; ke_ar...)
+        @info Nucleus.Information.get_mutual_information(nu1f_, nu2f_; ke_ar...)
 
-        # 1.111 ms (44 allocations: 3.01 MiB)
-        # 11.375 μs (34 allocations: 3.52 KiB)
-        # 26.000 μs (34 allocations: 52.45 KiB)
-        # 71.292 μs (40 allocations: 197.48 KiB)
-        # 1.047 ms (33 allocations: 3.01 MiB)
-        # 1.106 ms (44 allocations: 3.01 MiB)
-        # 11.458 μs (34 allocations: 3.52 KiB)
-        # 26.042 μs (34 allocations: 52.45 KiB)
+        # 11.250 μs (34 allocations: 3.52 KiB)
+        # 26.292 μs (34 allocations: 52.45 KiB)
         # 71.291 μs (40 allocations: 197.48 KiB)
-        # 1.042 ms (33 allocations: 3.01 MiB)
-        # 1.113 ms (44 allocations: 3.01 MiB)
-        # 11.416 μs (34 allocations: 3.52 KiB)
+        # 1.110 ms (44 allocations: 3.01 MiB)
+        # 1.055 ms (33 allocations: 3.01 MiB)
+        # 11.333 μs (34 allocations: 3.52 KiB)
+        # 26.083 μs (34 allocations: 52.45 KiB)
+        # 71.458 μs (40 allocations: 197.48 KiB)
+        # 1.110 ms (44 allocations: 3.01 MiB)
+        # 1.049 ms (33 allocations: 3.01 MiB)
+        # 11.292 μs (34 allocations: 3.52 KiB)
         # 26.000 μs (34 allocations: 52.45 KiB)
-        # 70.959 μs (40 allocations: 197.48 KiB)
-        # 1.053 ms (33 allocations: 3.01 MiB)
-        #@btime Nucleus.Information.get_mutual_information($nu1t_, $nu2t_; $ke_ar...)
+        # 71.375 μs (40 allocations: 197.48 KiB)
+        # 1.112 ms (44 allocations: 3.01 MiB)
+        # 1.051 ms (33 allocations: 3.01 MiB)
+        #@btime Nucleus.Information.get_mutual_information($nu1f_, $nu2f_; $ke_ar...)
 
     end
 
@@ -282,11 +278,11 @@ for ((nu1_, nu2_), (rei, ref)) in
 
     @test Nucleus.Information.get_information_coefficient(nu1f_, nu2f_) === ref
 
-    # 6.507 ns (0 allocations: 0 bytes)
+    # 6.458 ns (0 allocations: 0 bytes)
     # 10.135 ns (0 allocations: 0 bytes)
     # 39.230 ns (0 allocations: 0 bytes)
-    # 39.441 ns (0 allocations: 0 bytes)
-    # 1.104 μs (24 allocations: 4.53 KiB)
+    # 39.315 ns (0 allocations: 0 bytes)
+    # 1.129 μs (24 allocations: 4.53 KiB)
     # 24.459 μs (34 allocations: 52.45 KiB)
 
     #@btime Nucleus.Information.get_information_coefficient($nu1i_, $nu2i_)
@@ -297,7 +293,7 @@ end
 
 # ---- #
 
-for (nu1_, nu2_, re1, re2) in (
+for (nu1_, nu2_, re, red) in (
     # allequal
     ([1], [2], NaN, NaN),
     ([1, 1], [2, 2], NaN, NaN),
@@ -320,24 +316,42 @@ for (nu1_, nu2_, re1, re2) in (
     ([1, 2, 3, 4], [1, 2, 3, 4.001], 0.9682458365517885, 0.015877081724105735),
 )
 
-    @test Nucleus.Information.get_information_coefficient(nu1_, nu2_) === re1
+    @test Nucleus.Information.get_information_coefficient(nu1_, nu2_) === re
 
     # 3.333 ns (0 allocations: 0 bytes)
-    # 4.000 ns (0 allocations: 0 bytes)
-    # 4.000 ns (0 allocations: 0 bytes)
-    # 3.666 ns (0 allocations: 0 bytes)
+    # 3.958 ns (0 allocations: 0 bytes)
+    # 3.958 ns (0 allocations: 0 bytes)
+    # 3.625 ns (0 allocations: 0 bytes)
     # 4.875 ns (0 allocations: 0 bytes)
     # 6.125 ns (0 allocations: 0 bytes)
-    # 8.000 ns (0 allocations: 0 bytes)
-    # 549.241 ns (22 allocations: 2.31 KiB)
-    # 550.134 ns (22 allocations: 2.31 KiB)
-    # 639.145 ns (22 allocations: 2.38 KiB)
-    # 24.875 μs (34 allocations: 52.33 KiB)
-    # 23.667 μs (34 allocations: 52.33 KiB)
-    # 24.458 μs (34 allocations: 52.33 KiB)
+    # 7.959 ns (0 allocations: 0 bytes)
+    # 567.027 ns (22 allocations: 2.31 KiB)
+    # 564.989 ns (22 allocations: 2.31 KiB)
+    # 650.816 ns (22 allocations: 2.38 KiB)
+    # 25.000 μs (34 allocations: 52.33 KiB)
+    # 23.541 μs (34 allocations: 52.33 KiB)
+    # 24.291 μs (34 allocations: 52.33 KiB)
     # 24.583 μs (34 allocations: 52.36 KiB)
     #@btime Nucleus.Information.get_information_coefficient($nu1_, $nu2_)
 
-    @test Nucleus.Information.get_information_coefficient_distance(nu1_, nu2_) === re2
+    @test Nucleus.Information.get_information_coefficient_distance(nu1_, nu2_) === red
+
+end
+
+# ---- #
+
+for (jo, re_) in PE_
+
+    mu = Nucleus.Information._get_mutual_information_using_probability(jo)
+
+    e1 = sum(Nucleus.Information._sum_get_entropy, eachrow(jo))
+
+    e2 = sum(Nucleus.Information._sum_get_entropy, eachcol(jo))
+
+    @test Nucleus.Information.normalize_mutual_information(mu, e1, e2) === re_[2]
+
+    # 1.458 ns (0 allocations: 0 bytes)
+    # 1.459 ns (0 allocations: 0 bytes)
+    #@btime Nucleus.Information.normalize_mutual_information($mu, $e1, $e2)
 
 end
