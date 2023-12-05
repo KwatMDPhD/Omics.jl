@@ -342,6 +342,8 @@ function write(ou, nas, sa_, ch_, ch_x_sa_x_st, pl, fe_, nan, fe_x_sa_x_nu, ch)
 
     nasc = Nucleus.Path.clean(nas)
 
+    sa_ = replace.(sa_, ',' => '_')
+
     Nucleus.DataFrame.write(
         joinpath(ou, "characteristic_x_$(nasc)_x_string.tsv"),
         "Characteristic",

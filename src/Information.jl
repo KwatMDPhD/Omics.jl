@@ -115,6 +115,12 @@ function get_information_coefficient(
     nu2_::AbstractVector{<:Integer},
 )
 
+    if nu1_ == nu2_
+
+        return 1.0
+
+    end
+
     co = cor(nu1_, nu2_)
 
     mu = get_mutual_information(nu1_, nu2_)
@@ -124,6 +130,12 @@ function get_information_coefficient(
 end
 
 function get_information_coefficient(nu1_, nu2_)
+
+    if nu1_ == nu2_
+
+        return 1.0
+
+    end
 
     co = cor(nu1_, nu2_)
 
@@ -137,6 +149,13 @@ function get_information_coefficient(nu1_, nu2_)
     )
 
     sign(co) * get_information_coefficient(mu)
+
+end
+
+# TODO: Test.
+function get_information_coefficient_distance(nu1_, nu2_)
+
+    0.5(1.0 - get_information_coefficient(nu1_, nu2_))
 
 end
 
