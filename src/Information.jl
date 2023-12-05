@@ -1,8 +1,5 @@
 module Information
 
-# TODO: https://github.com/panlanfeng/KernelEstimator.jl/blob/master/src/bandwidth.jl.
-using KernelDensity: default_bandwidth, kde
-
 using Statistics: cor
 
 using ..Nucleus
@@ -90,7 +87,7 @@ end
 
 function get_mutual_information(nu1_, nu2_; ke_ar...)
 
-    de = kde((nu2_, nu1_); ke_ar...).density
+    de = Nucleus.Density.estimate((nu2_, nu1_); ke_ar...).density
 
     jo = de / sum(de)
 
@@ -155,7 +152,10 @@ function get_information_coefficient(nu1_, nu2_)
         nu1_,
         nu2_;
         npoints = (32, 32),
-        bandwidth = (default_bandwidth(nu2_) * fa, default_bandwidth(nu1_) * fa),
+        bandwidth = (
+            Nucleus.Density.get_bandwidth(nu2_) * fa,
+            Nucleus.Density.get_bandwidth(nu1_) * fa,
+        ),
     )
 
     sign(co) * get_information_coefficient(mu)

@@ -4,6 +4,8 @@ using Nucleus
 
 # ---- #
 
+using KernelDensity: kde
+
 using Clustering: mutualinfo
 
 # ---- #
@@ -25,11 +27,8 @@ const NU2_ = randn(N)
 const NU___ = (
     (ones(3), ones(3)),
     ([1, 2, 3], [10, 20, 30]),
-    (Nucleus.Information.kde(NU1_).density, Nucleus.Information.kde(NU2_).density),
-    (
-        Nucleus.Information.kde(NU1_ .+ minimum(NU1_)).density,
-        Nucleus.Information.kde(NU2_ .+ minimum(NU2_)).density,
-    ),
+    (kde(NU1_).density, kde(NU2_).density),
+    (kde(NU1_ .+ minimum(NU1_)).density, kde(NU2_ .+ minimum(NU2_)).density),
 )
 
 # ---- #
@@ -217,7 +216,7 @@ for (nu1_, nu2_) in MI_
     # 1.012 μs (24 allocations: 4.53 KiB)
     # 1.046 μs (24 allocations: 4.53 KiB)
     # 1.050 μs (24 allocations: 4.53 KiB
-    #@btime Nucleus.Information.get_mutual_information($nu1i_, $nu2i_)
+    @btime Nucleus.Information.get_mutual_information($nu1i_, $nu2i_)
 
 end
 
@@ -229,7 +228,6 @@ for (nu1_, nu2_) in MI_
 
     nu2f_ = convert(Vector{Float64}, nu2_)
 
-    # TODO: Test.
     for ke_ar in (
         (npoints = (4, 4),),
         (npoints = (32, 32),),
@@ -238,6 +236,7 @@ for (nu1_, nu2_) in MI_
         (bandwidth = (1e-3, 1e-3),),
     )
 
+        # TODO: Test.
         @info Nucleus.Information.get_mutual_information(nu1f_, nu2f_; ke_ar...)
 
         # 11.250 μs (34 allocations: 3.52 KiB)
