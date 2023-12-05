@@ -50,36 +50,13 @@ for (nu___, re) in (
 
     fu = SqEuclidean()
 
-    @test Nucleus.Distance.get_distance(nu___, fu) == re
+    @test Nucleus.Distance.get_distance(fu, nu___) == re
 
-    # 23.343 ns (1 allocation: 96 bytes)
-    # 43.096 ns (1 allocation: 96 bytes)
-    # 53.150 ns (1 allocation: 128 bytes)
-    # 53.203 ns (1 allocation: 128 bytes)
-    # 43.517 ns (1 allocation: 96 bytes)
-    #@btime Nucleus.Distance.get_distance($nu___, $fu)
-
-end
-
-# ---- #
-
-for (nu___, re) in (
-    (([1, 1], [1, 1]), []),
-    (([1, 1], [2, 2]), []),
-    (([1, 2], [1, 2]), []),
-    (([1, 2, 3], [1, 2, 3]), []),
-    (([1, 2, 3, 4], [1, 2, 3, 4]), []),
-)
-
-    fu = Nucleus.Information.get_information_coefficient_distance
-
-    @info Nucleus.Distance.get_distance(nu___, fu)
-
-    # 23.343 ns (1 allocation: 96 bytes)
-    # 43.096 ns (1 allocation: 96 bytes)
-    # 53.150 ns (1 allocation: 128 bytes)
-    # 53.203 ns (1 allocation: 128 bytes)
-    # 43.517 ns (1 allocation: 96 bytes)
-    #@btime Nucleus.Distance.get_distance($nu___, $fu)
+    # 23.301 ns (1 allocation: 96 bytes)
+    # 23.320 ns (1 allocation: 96 bytes)
+    # 34.533 ns (1 allocation: 128 bytes)
+    # 34.533 ns (1 allocation: 128 bytes)
+    # 23.469 ns (1 allocation: 96 bytes)
+    #@btime Nucleus.Distance.get_distance($fu, $nu___)
 
 end
