@@ -8,11 +8,15 @@ function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}
 
     id = "Plotly"
 
+    layout = merge(Dict("hovermode" => "closest"), layout)
+
+    config = merge(Dict("displaylogo" => false), config)
+
     Nucleus.HTML.make(
         ht,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
         id,
-        "Plotly.newPlot(\"$id\", $(json(data)), $(json(layout)), $(json(merge(Dict("displaylogo" => false), config))))";
+        "Plotly.newPlot(\"$id\", $(json(data)), $(json(layout)), $(json(config)))";
         ke_ar...,
     )
 
