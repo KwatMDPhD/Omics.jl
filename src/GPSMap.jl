@@ -13,7 +13,7 @@ function plot(
     no_,
     po_,
     no_x_po_x_pu,
-    sc_ = ();
+    no_x_no_x_di = Nucleus.Distance.get(Nucleus.Distance.Euclidean(), eachrow(no_x_po_x_pu));
     node_marker_size = 48,
     node_marker_color = "#23191e",
     node_marker_line_width = 2,
@@ -23,13 +23,12 @@ function plot(
     point_marker_line_width = 0.8,
     point_marker_line_color = "#898a74",
     point_marker_opacity = 0.88,
+    la_ = (),
 )
 
     n_no = lastindex(no_)
 
     n_po = lastindex(po_)
-
-    no_x_no_x_di = Nucleus.Distance.get(Nucleus.Distance.Euclidean(), eachrow(no_x_po_x_pu))
 
     di_x_no_x_co = fit(MetricMDS, no_x_no_x_di; distances = true, maxoutdim = 2).X
 
@@ -119,13 +118,16 @@ function plot(
 
     end
 
-    ro_, co_, de = Nucleus.Density.estimate((di_x_po_x_co[1, :], di_x_po_x_co[2, :]))
+    n_po = 64
 
-    ma = [!(element(Singleton([ro, co])) ∈ pl) for ro in ro_, co in co_]
+    es_ar = (boundary = ((-10, 10), (-10, 10)), npoints = (n_po, n_po))
 
-    de[ma] .= NaN
+    ro_, co_, de = Nucleus.Density.estimate((di_x_po_x_co[1, :], di_x_po_x_co[2, :]); es_ar...)
 
-    #Nucleus.Density.plot("", ro_, co_, de)
+    ou = [!(element(Singleton([ro, co])) ∈ pl) for ro in ro_, co in co_]
+
+    de[ou] .= NaN
+
     push!(
         data,
         Dict(
@@ -172,7 +174,73 @@ function plot(
 
         un_ = sort!(unique(sc_))
 
-        for (un, color) in zip(un_, Nucleus.Color.color(un_))
+        n_un = lastindex(un_)
+
+        cu = Array{Float64, 3}(undef, n_po, n_po, n_un)
+
+        for (id, un) in enumerate(un_)
+
+            id_ = findall(==(un), sc_)
+
+            _ro_, _co_, de =
+                Nucleus.Density.estimate((di_x_po_x_co[1, id_], di_x_po_x_co[2, id_]); es_ar...)
+
+            pr = de / sum(de)
+
+            pr[ou] .= NaN
+
+            cu[:, :, id] = pr
+
+        end
+
+        id_ = 1:n_po
+
+        # TODO: Benchmark iteration order.
+        for id2 in id_, id1 in id_
+
+            # TODO: Benchmark `view`.
+            pr_ = view(cu, id1, id2, :)
+
+            if all(isnan, pr_)
+
+                continue
+
+            end
+            @assert !any(isnan, pr_)
+
+            ma = argmax(pr_)
+
+            for id in 1:n_un
+
+                if id != ma
+
+                    pr_[id] = NaN
+
+                end
+
+            end
+
+        end
+
+        for (id, (un, color)) in enumerate(zip(un_, Nucleus.Color.color(un_)))
+
+            push!(
+                data,
+                Dict(
+                    "type" => "heatmap",
+                    "legendgroup" => un,
+                    "y" => ro_,
+                    "x" => co_,
+                    "z" => cu[:, :, id],
+                    "transpose" => true,
+                    "colorscale" => Nucleus.Color.fractionate(
+                        Nucleus.Color._make_color_scheme(["#ffffff", color]),
+                    ),
+                    #"opacity" => 1,
+                    "showscale" => false,
+                    "hoverinfo" => "none",
+                ),
+            )
 
             id_ = findall(==(un), sc_)
 
