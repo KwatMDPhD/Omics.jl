@@ -87,7 +87,7 @@ end
 
 function get_mutual_information(nu1_, nu2_; ke_ar...)
 
-    de = Nucleus.Density.estimate((nu2_, nu1_); ke_ar...).density
+    _ro, _co, de = Nucleus.Density.estimate((nu2_, nu1_); ke_ar...)
 
     jo = de / sum(de)
 

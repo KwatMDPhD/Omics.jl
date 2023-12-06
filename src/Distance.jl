@@ -1,8 +1,8 @@
 module Distance
 
-using Distances: pairwise
+using Distances: Euclidean, pairwise
 
-function get_distance(fu, an___)
+function get(fu, an___)
 
     pairwise(fu, an___)
 

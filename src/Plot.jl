@@ -199,7 +199,7 @@ end
 
 function _group(it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
 
-    id_ = Nucleus.Clustering.order(it_, ma)
+    id_ = Nucleus.Clustering.order(Nucleus.Distance.Euclidean(), it_, ma)
 
     it_[id_], an_[id_], ma[:, id_], ticktext
 
@@ -230,11 +230,23 @@ function _make_group_heat_map!(ke_va, it_, colorbarx, ticktext)
 
 end
 
+function _label_row(nu)
+
+    "$nu ●"
+
+end
+
+function _label_col(nu)
+
+    "● $nu"
+
+end
+
 function plot_heat_map(
     ht,
     z;
-    y = (id -> "$id ▶︎").(1:size(z, 1)),
-    x = (id -> "▲ $id").(1:size(z, 2)),
+    y = _label_row.(1:size(z, 1)),
+    x = _label_col.(1:size(z, 2)),
     text = z,
     nar = "Row",
     nac = "Column",

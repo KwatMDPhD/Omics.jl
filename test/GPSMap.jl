@@ -1,14 +1,8 @@
+using Test: @test
+
 using Nucleus
 
-using DelaunayTriangulation: get_edges, triangulate
-
-using Distances: pairwise
-
-using KernelDensity: kde
-
-using LazySets: VPolygon, Singleton, element
-
-using MultivariateStats: MetricMDS, fit
+# ---- #
 
 using Random: seed!
 

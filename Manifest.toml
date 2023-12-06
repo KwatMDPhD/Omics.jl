@@ -2,7 +2,7 @@
 
 julia_version = "1.9.4"
 manifest_format = "2.0"
-project_hash = "9009384e7f285eb84c9153516140fe8b8e4593c9"
+project_hash = "f72856051817059b478d52563904bb8fddc33cd6"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -365,9 +365,9 @@ uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[deps.FillArrays]]
 deps = ["LinearAlgebra", "Random"]
-git-tree-sha1 = "fdd015769934644858b4bcc69a03bb06f4e31357"
+git-tree-sha1 = "25a10f2b86118664293062705fd9c7e2eda881a2"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "1.9.0"
+version = "1.9.2"
 weakdeps = ["PDMats", "SparseArrays", "Statistics"]
 
     [deps.FillArrays.extensions]
@@ -430,9 +430,9 @@ version = "6.2.1+2"
 
 [[deps.GZip]]
 deps = ["Libdl", "Zlib_jll"]
-git-tree-sha1 = "6388a2d8e409ce23de7d03a7c73d83c5753b3eb2"
+git-tree-sha1 = "0085ccd5ec327c077ec5b91a5f937b759810ba62"
 uuid = "92fee26a-97fe-5a0c-ad85-20a5f3185b63"
-version = "0.6.1"
+version = "0.6.2"
 
 [[deps.HypergeometricFunctions]]
 deps = ["DualNumbers", "LinearAlgebra", "OpenLibm_jll", "SpecialFunctions"]
@@ -644,9 +644,9 @@ version = "1.1.0"
 uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
 [[deps.Mods]]
-git-tree-sha1 = "c703557e9194fce2417b6afc3e1f0318213c401a"
+git-tree-sha1 = "f4fc34d4118afc0beefe429d77fe46160730fd23"
 uuid = "7475f97c-0381-53b1-977b-4c60186c8d62"
-version = "2.1.0"
+version = "2.1.1"
 
 [[deps.MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"

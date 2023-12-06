@@ -50,13 +50,13 @@ for (nu___, re) in (
 
     fu = SqEuclidean()
 
-    @test Nucleus.Distance.get_distance(fu, nu___) == re
+    @test Nucleus.Distance.get(fu, nu___) == re
 
     # 23.301 ns (1 allocation: 96 bytes)
     # 23.320 ns (1 allocation: 96 bytes)
     # 34.533 ns (1 allocation: 128 bytes)
     # 34.533 ns (1 allocation: 128 bytes)
     # 23.469 ns (1 allocation: 96 bytes)
-    #@btime Nucleus.Distance.get_distance($fu, $nu___)
+    #@btime Nucleus.Distance.get($fu, $nu___)
 
 end

@@ -16,7 +16,7 @@ function cluster(hc, k)
 
 end
 
-function order(co_, ma, fu = Nucleus.Distance.Euclidean(), linkage = :ward)
+function order(fu, co_, ma, linkage = :ward)
 
     id_ = Int[]
 
@@ -24,15 +24,11 @@ function order(co_, ma, fu = Nucleus.Distance.Euclidean(), linkage = :ward)
 
         idc_ = findall(==(co), co_)
 
-        # TODO: Benchmark.
         append!(
             id_,
             view(
                 idc_,
-                hierarchize(
-                    Nucleus.Distance.get_distance(eachcol(view(ma, :, idc_)), fu),
-                    linkage,
-                ).order,
+                hierarchize(Nucleus.Distance.get(fu, eachcol(view(ma, :, idc_))), linkage).order,
             ),
         )
 

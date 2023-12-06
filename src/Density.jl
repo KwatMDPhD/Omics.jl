@@ -11,7 +11,9 @@ end
 
 function estimate(nu___; ke_ar...)
 
-    kde(nu___; ke_ar...)
+    de = kde(nu___; ke_ar...)
+
+    de.x, de.y, de.density
 
 end
 

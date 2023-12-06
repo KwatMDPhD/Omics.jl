@@ -91,7 +91,10 @@ function write(
 
     Nucleus.DataFrame.write("$pr.tsv", nar, ro_, co_, ma)
 
-    id_ = Nucleus.Clustering.hierarchize(ma2).order
+    id_ =
+        Nucleus.Clustering.hierarchize(
+            Nucleus.Distance.get(Nucleus.Distance.Euclidean(), ma2),
+        ).order
 
     if isone(id)
 

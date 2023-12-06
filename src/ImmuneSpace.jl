@@ -3,7 +3,7 @@ module ImmuneSpace
 # TODO: Implement `Nucleus.FeatureXSample.join_row`.
 using DataFrames: outerjoin
 
-using Nucleus
+using ..Nucleus
 
 function _read_demographic(ip)
 
