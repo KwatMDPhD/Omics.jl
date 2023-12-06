@@ -83,9 +83,9 @@ seed!()
 
 Nucleus.GPSMap._get_coordinate!(no_x_no_x_di, copy(mh))
 
-# 160.375 μs (3261 allocations: 318.62 KiB)
-#@btime Nucleus.GPSMap._get_coordinate!($no_x_no_x_di, co) setup =
-#    (co = copy(mh); seed!(202312042237)) evals = 1;
+# 114.834 μs (3261 allocations: 318.62 KiB)
+@btime Nucleus.GPSMap._get_coordinate!($no_x_no_x_di, co) setup =
+    (co = copy(mh); seed!(202312042237)) evals = 1;
 
 # ---- #
 
@@ -111,6 +111,6 @@ Nucleus.Plot.plot_heat_map(
 
 # ---- #
 
-seed!(202312042237)
+seed!()
 
 Nucleus.GPSMap.plot(joinpath(Nucleus.TE, "map_with_score.html"), fa_, sa_, mh, la_)
