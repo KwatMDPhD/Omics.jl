@@ -8,12 +8,36 @@ using MultivariateStats: MetricMDS, fit
 
 using ..Nucleus
 
+function _log_coordinate(an_, co___)
+
+    n_pa = maximum(lastindex, an_) + 4
+
+    @info "$(lastindex(an_)) coordinates\n" * join(
+        (
+            "$(rpad(an, n_pa))$(Nucleus.Number.format2(co1))\t$(Nucleus.Number.format2(co2))" for
+            (an, (co1, co2)) in zip(an_, co___)
+        ),
+        '\n',
+    )
+
+end
+
+function _get_coordinate!(no_x_no_x_di, no_x_po_x_pu)
+
+    di_x_no_x_co = fit(MetricMDS, no_x_no_x_di; distances = true, maxoutdim = 2, maxiter = 10^3).X
+
+    foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(no_x_po_x_pu))
+
+    di_x_no_x_co, di_x_no_x_co * no_x_po_x_pu
+
+end
+
 function plot(
     ht,
     no_,
     po_,
     no_x_po_x_pu,
-    no_x_no_x_di = Nucleus.Distance.get(Nucleus.Distance.Euclidean(), eachrow(no_x_po_x_pu));
+    no_x_no_x_di;
     node_marker_size = 48,
     node_marker_color = "#23191e",
     node_marker_line_width = 2,
@@ -24,28 +48,18 @@ function plot(
     point_marker_line_color = "#898a74",
     point_marker_opacity = 0.88,
     la_ = (),
+    sc_ = (),
 )
 
     n_no = lastindex(no_)
 
     n_po = lastindex(po_)
 
-    di_x_no_x_co = fit(MetricMDS, no_x_no_x_di; distances = true, maxoutdim = 2).X
-
-    @info "$n_no nodes\n" * join(
-        (
-            (no, (co1, co2)) ->
-                "$no ($(Nucleus.Number.format2(co1)), $(Nucleus.Number.format2(co2)))"
-        ).(no_, eachcol(di_x_no_x_co)),
-        '\n',
-    )
-
-    di_x_po_x_co =
-        [sum(co_ .* pu_) / sum(pu_) for co_ in eachrow(di_x_no_x_co), pu_ in eachcol(no_x_po_x_pu)]
+    di_x_no_x_co, di_x_po_x_co = _get_coordinate!(no_x_no_x_di, no_x_po_x_pu)
 
     data = Dict{String, Any}[]
 
-    tr = triangulate(Tuple.(eachcol(di_x_no_x_co)))
+    tr = triangulate(eachcol(di_x_no_x_co))
 
     for id_ in get_edges(tr)
 
@@ -55,15 +69,15 @@ function plot(
 
         end
 
-        id2_ = collect(id_)
+        ve = collect(id_)
 
         push!(
             data,
             Dict(
                 "legendgroup" => "Node",
                 "showlegend" => false,
-                "y" => di_x_no_x_co[1, id2_],
-                "x" => di_x_no_x_co[2, id2_],
+                "y" => view(di_x_no_x_co, 1, ve),
+                "x" => view(di_x_no_x_co, 2, ve),
                 "mode" => "lines",
                 "line" => Dict("color" => triangulation_line_color),
             ),
@@ -71,11 +85,12 @@ function plot(
 
     end
 
-    pl = VPolygon([di_x_no_x_co[:, id] for id in tr.convex_hull.indices])
+    pl = VPolygon(di_x_no_x_co[:, tr.convex_hull.indices])
 
     push!(
         data,
         Dict(
+            "legendgroupname" => "XX",
             "legendgroup" => "Node",
             "name" => "Node",
             "y" => view(di_x_no_x_co, 1, :),
@@ -120,9 +135,9 @@ function plot(
 
     n_po = 64
 
-    es_ar = (boundary = ((-10, 10), (-10, 10)), npoints = (n_po, n_po))
+    npoints = (n_po, n_po)
 
-    ro_, co_, de = Nucleus.Density.estimate((di_x_po_x_co[1, :], di_x_po_x_co[2, :]); es_ar...)
+    ro_, co_, de = Nucleus.Density.estimate((di_x_po_x_co[1, :], di_x_po_x_co[2, :]); npoints)
 
     ou = [!(element(Singleton([ro, co])) ∈ pl) for ro in ro_, co in co_]
 
@@ -182,8 +197,13 @@ function plot(
 
             id_ = findall(==(un), sc_)
 
-            _ro_, _co_, de =
-                Nucleus.Density.estimate((di_x_po_x_co[1, id_], di_x_po_x_co[2, id_]); es_ar...)
+            _ro_, _co_, de = Nucleus.Density.estimate(
+                (di_x_po_x_co[1, id_], di_x_po_x_co[2, id_]);
+                boundary,
+                npoints,
+            )
+            @assert ro_ == _ro_
+            @assert co_ == _co_
 
             pr = de / sum(de)
 
