@@ -8,20 +8,6 @@ using MultivariateStats: MetricMDS, fit
 
 using ..Nucleus
 
-function _log_coordinate(an_, co___)
-
-    n_pa = maximum(lastindex, an_) + 4
-
-    @info "$(lastindex(an_)) coordinates\n" * join(
-        (
-            "$(rpad(an, n_pa))$(Nucleus.Number.format2(co1))\t$(Nucleus.Number.format2(co2))" for
-            (an, (co1, co2)) in zip(an_, co___)
-        ),
-        '\n',
-    )
-
-end
-
 function _get_coordinate!(no_x_no_x_di, no_x_po_x_pu)
 
     di_x_no_x_co = fit(MetricMDS, no_x_no_x_di; distances = true, maxoutdim = 2, maxiter = 10^3).X
@@ -38,24 +24,22 @@ function plot(
     po_,
     no_x_po_x_pu,
     no_x_no_x_di;
+    triangulation_line_color = "#171412",
     node_marker_size = 48,
     node_marker_color = "#23191e",
     node_marker_line_width = 2,
     node_marker_line_color = Nucleus.Color.HEFA,
-    triangulation_line_color = "#171412",
+    n_gr = 128,
+    la_ = (),
     point_marker_size = 16,
+    point_marker_color = Nucleus.Color.HEGE,
     point_marker_line_width = 0.8,
     point_marker_line_color = "#898a74",
     point_marker_opacity = 0.88,
-    la_ = (),
     sc_ = (),
 )
 
-    n_no = lastindex(no_)
-
-    n_po = lastindex(po_)
-
-    di_x_no_x_co, di_x_po_x_co = _get_coordinate!(no_x_no_x_di, no_x_po_x_pu)
+    di_x_no_x_co, di_x_po_x_co = _get_coordinate!(no_x_no_x_di, copy(no_x_po_x_pu))
 
     data = Dict{String, Any}[]
 
@@ -85,12 +69,9 @@ function plot(
 
     end
 
-    pl = VPolygon(di_x_no_x_co[:, tr.convex_hull.indices])
-
     push!(
         data,
         Dict(
-            "legendgroupname" => "XX",
             "legendgroup" => "Node",
             "name" => "Node",
             "y" => view(di_x_no_x_co, 1, :),
@@ -133,11 +114,26 @@ function plot(
 
     end
 
-    n_po = 64
+    boundary = (
+        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[1, :] .* 1.1),
+        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[2, :] .* 1.1),
+    )
 
-    npoints = (n_po, n_po)
+    npoints = (n_gr, n_gr)
 
-    ro_, co_, de = Nucleus.Density.estimate((di_x_po_x_co[1, :], di_x_po_x_co[2, :]); npoints)
+    bandwidth = (
+        Nucleus.Density.get_bandwidth(di_x_po_x_co[1, :]),
+        Nucleus.Density.get_bandwidth(di_x_po_x_co[2, :]),
+    )
+
+    ro_, co_, de = Nucleus.Density.estimate(
+        (di_x_po_x_co[1, :], di_x_po_x_co[2, :]);
+        boundary,
+        npoints,
+        bandwidth,
+    )
+
+    pl = VPolygon(di_x_no_x_co[:, tr.convex_hull.indices])
 
     ou = [!(element(Singleton([ro, co])) ∈ pl) for ro in ro_, co in co_]
 
@@ -155,52 +151,27 @@ function plot(
             "transpose" => true,
             "ncontours" => 32,
             "contours" => Dict("coloring" => "none"),
+            "hoverinfo" => "none",
         ),
     )
 
-    point = Dict(
-        "legendgroup" => "Point",
-        "name" => "Point",
-        "mode" => "markers",
-        "marker" => Dict(
-            "size" => point_marker_size,
-            "color" => Nucleus.Color.HEGE,
-            "line" => Dict("width" => point_marker_line_width, "color" => point_marker_line_color),
-            "opacity" => point_marker_opacity,
-        ),
-        "hoverinfo" => "text",
-    )
+    if !isempty(la_)
 
-    if isempty(sc_)
-
-        push!(
-            data,
-            merge(
-                point,
-                Dict(
-                    "y" => view(di_x_po_x_co, 1, :),
-                    "x" => view(di_x_po_x_co, 2, :),
-                    "text" => po_,
-                ),
-            ),
-        )
-
-    elseif eltype(sc_) <: Integer
-
-        un_ = sort!(unique(sc_))
+        un_ = sort!(unique(la_))
 
         n_un = lastindex(un_)
 
-        cu = Array{Float64, 3}(undef, n_po, n_po, n_un)
+        gr_x_gr_x_un_x_pr = Array{Float64, 3}(undef, n_gr, n_gr, n_un)
 
         for (id, un) in enumerate(un_)
 
-            id_ = findall(==(un), sc_)
+            id_ = findall(==(un), la_)
 
             _ro_, _co_, de = Nucleus.Density.estimate(
                 (di_x_po_x_co[1, id_], di_x_po_x_co[2, id_]);
                 boundary,
                 npoints,
+                bandwidth,
             )
             @assert ro_ == _ro_
             @assert co_ == _co_
@@ -209,17 +180,17 @@ function plot(
 
             pr[ou] .= NaN
 
-            cu[:, :, id] = pr
+            gr_x_gr_x_un_x_pr[:, :, id] = pr
 
         end
 
-        id_ = 1:n_po
+        id_ = 1:n_gr
 
         # TODO: Benchmark iteration order.
         for id2 in id_, id1 in id_
 
             # TODO: Benchmark `view`.
-            pr_ = view(cu, id1, id2, :)
+            pr_ = view(gr_x_gr_x_un_x_pr, id1, id2, :)
 
             if all(isnan, pr_)
 
@@ -251,16 +222,52 @@ function plot(
                     "legendgroup" => un,
                     "y" => ro_,
                     "x" => co_,
-                    "z" => cu[:, :, id],
+                    "z" => view(gr_x_gr_x_un_x_pr, :, :, id),
                     "transpose" => true,
                     "colorscale" => Nucleus.Color.fractionate(
                         Nucleus.Color._make_color_scheme(["#ffffff", color]),
                     ),
-                    #"opacity" => 1,
                     "showscale" => false,
                     "hoverinfo" => "none",
                 ),
             )
+
+        end
+
+    end
+
+    point = Dict(
+        "legendgroup" => "Point",
+        "name" => "Point",
+        "mode" => "markers",
+        "marker" => Dict(
+            "size" => point_marker_size,
+            "color" => point_marker_color,
+            "line" => Dict("width" => point_marker_line_width, "color" => point_marker_line_color),
+            "opacity" => point_marker_opacity,
+        ),
+        "hoverinfo" => "text",
+    )
+
+    if isempty(sc_)
+
+        push!(
+            data,
+            merge(
+                point,
+                Dict(
+                    "y" => view(di_x_po_x_co, 1, :),
+                    "x" => view(di_x_po_x_co, 2, :),
+                    "text" => po_,
+                ),
+            ),
+        )
+
+    elseif eltype(sc_) <: Integer
+
+        un_ = sort!(unique(sc_))
+
+        for (un, color) in zip(un_, Nucleus.Color.color(un_))
 
             id_ = findall(==(un), sc_)
 
@@ -273,7 +280,7 @@ function plot(
                         "name" => un,
                         "y" => view(di_x_po_x_co, 1, id_),
                         "x" => view(di_x_po_x_co, 2, id_),
-                        "text" => po_[id_],
+                        "text" => view(po_, id_),
                         "marker" => Dict("color" => color),
                     ),
                 ),
@@ -283,20 +290,40 @@ function plot(
 
     elseif eltype(sc_) <: AbstractVector
 
+        error()
+
     end
 
-    axis = Dict("showgrid" => false, "zeroline" => false, "showticklabels" => true)
+    axis = Dict("showgrid" => false, "zeroline" => false, "ticks" => "", "showticklabels" => false)
 
-    layout = Dict(
-        "height" => 800,
-        "width" => 960,
-        "title" => Dict("text" => "GPS Map<br>$n_no nodes and $n_po points"),
-        "yaxis" => merge(axis, Dict("autorange" => "reversed")),
-        "xaxis" => axis,
-        "annotations" => annotations,
+    Nucleus.Plot.plot(
+        ht,
+        data,
+        Dict(
+            "height" => 800,
+            "width" => 960,
+            "title" =>
+                Dict("text" => "GPS Map<br>$(lastindex(no_)) nodes and $(lastindex(po_)) points"),
+            "yaxis" => merge(axis, Dict("autorange" => "reversed")),
+            "xaxis" => axis,
+            "annotations" => annotations,
+        ),
     )
 
-    Nucleus.Plot.plot(ht, data, layout)
+end
+
+# TODO: Remove.
+function _log_coordinate(an_, co___)
+
+    n_pa = maximum(lastindex, an_) + 4
+
+    @info "$(lastindex(an_)) coordinates\n" * join(
+        (
+            "$(rpad(an, n_pa))$(Nucleus.Number.format2(co1))\t$(Nucleus.Number.format2(co2))" for
+            (an, (co1, co2)) in zip(an_, co___)
+        ),
+        '\n',
+    )
 
 end
 
