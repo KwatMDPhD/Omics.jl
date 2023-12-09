@@ -103,17 +103,7 @@ const SE = 202312062103
 
 seed!(SE)
 
-Nucleus.GPSMap._get_coordinate!(no_x_no_x_di, copy(no_x_po_x_pu))
-
-# 162.250 μs (4323 allocations: 417.62 KiB)
-#@btime Nucleus.GPSMap._get_coordinate!($no_x_no_x_di, co) setup =
-#    (co = copy(no_x_po_x_pu); seed!(SE)) evals = 1;
-
-# ---- #
-
-seed!(SE)
-
-Nucleus.GPSMap.plot(joinpath(Nucleus.TE, "map.html"), fa_, sa_, no_x_po_x_pu, no_x_no_x_di)
+Nucleus.GPSMap.plot(joinpath(Nucleus.TE, "map.html"), fa_, no_x_no_x_di, sa_, no_x_po_x_pu)
 
 # ---- #
 
@@ -122,9 +112,9 @@ seed!(SE)
 Nucleus.GPSMap.plot(
     joinpath(Nucleus.TE, "map_with_label.html"),
     fa_,
+    no_x_no_x_di,
     sa_,
-    no_x_po_x_pu,
-    no_x_no_x_di;
+    no_x_po_x_pu;
     la_,
 )
 
@@ -135,9 +125,9 @@ seed!(SE)
 Nucleus.GPSMap.plot(
     joinpath(Nucleus.TE, "map_with_score.html"),
     fa_,
+    no_x_no_x_di,
     sa_,
-    no_x_po_x_pu,
-    no_x_no_x_di;
+    no_x_po_x_pu;
     la_,
     sc_ = la_,
 )

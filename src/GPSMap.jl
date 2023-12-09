@@ -8,22 +8,28 @@ using MultivariateStats: MetricMDS, fit
 
 using ..Nucleus
 
-function _get_coordinate!(no_x_no_x_di, no_x_po_x_pu)
+function _get_coordinate(no_x_no_x_di)
 
-    di_x_no_x_co = fit(MetricMDS, no_x_no_x_di; distances = true, maxoutdim = 2, maxiter = 10^3).X
+    fit(MetricMDS, no_x_no_x_di; distances = true, maxoutdim = 2, maxiter = 10^3).X
+
+end
+
+function _get_coordinate(di_x_no_x_co, no_x_po_x_pu)
+
+    no_x_po_x_pu = copy(no_x_po_x_pu)
 
     foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(no_x_po_x_pu))
 
-    di_x_no_x_co, di_x_no_x_co * no_x_po_x_pu
+    di_x_no_x_co * no_x_po_x_pu
 
 end
 
 function plot(
     ht,
     no_,
+    no_x_no_x_di,
     po_,
-    no_x_po_x_pu,
-    no_x_no_x_di;
+    no_x_po_x_pu;
     triangulation_line_color = "#171412",
     node_marker_size = 48,
     node_marker_color = "#23191e",
@@ -32,16 +38,16 @@ function plot(
     n_gr = 128,
     la_ = (),
     point_marker_size = 16,
-    point_marker_color = Nucleus.Color.HEGE,
     point_marker_line_width = 0.8,
-    point_marker_line_color = "#898a74",
     point_marker_opacity = 0.88,
     sc_ = (),
 )
 
-    di_x_no_x_co, di_x_po_x_co = _get_coordinate!(no_x_no_x_di, copy(no_x_po_x_pu))
-
     data = Dict{String, Any}[]
+
+    legendgroup = "Node"
+
+    di_x_no_x_co = _get_coordinate(no_x_no_x_di)
 
     tr = triangulate(eachcol(di_x_no_x_co))
 
@@ -58,12 +64,13 @@ function plot(
         push!(
             data,
             Dict(
-                "legendgroup" => "Node",
+                "legendgroup" => legendgroup,
                 "showlegend" => false,
                 "y" => view(di_x_no_x_co, 1, ve),
                 "x" => view(di_x_no_x_co, 2, ve),
                 "mode" => "lines",
                 "line" => Dict("color" => triangulation_line_color),
+                "hoverinfo" => "none",
             ),
         )
 
@@ -72,8 +79,8 @@ function plot(
     push!(
         data,
         Dict(
-            "legendgroup" => "Node",
-            "name" => "Node",
+            "legendgroup" => legendgroup,
+            "name" => legendgroup,
             "y" => view(di_x_no_x_co, 1, :),
             "x" => view(di_x_no_x_co, 2, :),
             "text" => no_,
@@ -114,9 +121,15 @@ function plot(
 
     end
 
+    legendgroup = "Point"
+
+    di_x_po_x_co = _get_coordinate(di_x_no_x_co, no_x_po_x_pu)
+
+    fa = 1.1
+
     boundary = (
-        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[1, :] .* 1.1),
-        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[2, :] .* 1.1),
+        Nucleus.Collection.get_minimum_maximum(view(di_x_no_x_co, 1, :) .* fa),
+        Nucleus.Collection.get_minimum_maximum(view(di_x_no_x_co, 2, :) .* fa),
     )
 
     npoints = (n_gr, n_gr)
@@ -137,13 +150,15 @@ function plot(
 
     ou = [!(element(Singleton([ro, co])) ∈ pl) for ro in ro_, co in co_]
 
+    de = de / sum(de)
+
     de[ou] .= NaN
 
     push!(
         data,
         Dict(
             "type" => "contour",
-            "legendgroup" => "Point",
+            "legendgroup" => legendgroup,
             "showlegend" => false,
             "y" => ro_,
             "x" => co_,
@@ -173,14 +188,12 @@ function plot(
                 npoints,
                 bandwidth,
             )
-            @assert ro_ == _ro_
-            @assert co_ == _co_
 
-            pr = de / sum(de)
+            de = de / sum(de)
 
-            pr[ou] .= NaN
+            de[ou] .= NaN
 
-            gr_x_gr_x_un_x_pr[:, :, id] = pr
+            gr_x_gr_x_un_x_pr[:, :, id] = de
 
         end
 
@@ -189,7 +202,6 @@ function plot(
         # TODO: Benchmark iteration order.
         for id2 in id_, id1 in id_
 
-            # TODO: Benchmark `view`.
             pr_ = view(gr_x_gr_x_un_x_pr, id1, id2, :)
 
             if all(isnan, pr_)
@@ -197,7 +209,6 @@ function plot(
                 continue
 
             end
-            @assert !any(isnan, pr_)
 
             ma = argmax(pr_)
 
@@ -237,13 +248,12 @@ function plot(
     end
 
     point = Dict(
-        "legendgroup" => "Point",
-        "name" => "Point",
+        "legendgroup" => legendgroup,
+        "name" => legendgroup,
         "mode" => "markers",
         "marker" => Dict(
             "size" => point_marker_size,
-            "color" => point_marker_color,
-            "line" => Dict("width" => point_marker_line_width, "color" => point_marker_line_color),
+            "line" => Dict("width" => point_marker_line_width, "color" => "#898a74"),
             "opacity" => point_marker_opacity,
         ),
         "hoverinfo" => "text",
@@ -253,12 +263,13 @@ function plot(
 
         push!(
             data,
-            merge(
+            Nucleus.Dict.merge(
                 point,
                 Dict(
                     "y" => view(di_x_po_x_co, 1, :),
                     "x" => view(di_x_po_x_co, 2, :),
                     "text" => po_,
+                    "marker" => Dict("color" => Nucleus.Color.HEGE),
                 ),
             ),
         )
@@ -308,21 +319,6 @@ function plot(
             "xaxis" => axis,
             "annotations" => annotations,
         ),
-    )
-
-end
-
-# TODO: Remove.
-function _log_coordinate(an_, co___)
-
-    n_pa = maximum(lastindex, an_) + 4
-
-    @info "$(lastindex(an_)) coordinates\n" * join(
-        (
-            "$(rpad(an, n_pa))$(Nucleus.Number.format2(co1))\t$(Nucleus.Number.format2(co2))" for
-            (an, (co1, co2)) in zip(an_, co___)
-        ),
-        '\n',
     )
 
 end
