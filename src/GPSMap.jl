@@ -24,6 +24,14 @@ function _get_coordinate(di_x_no_x_co, no_x_po_x_pu)
 
 end
 
+function make_probability_and_mask!(de, ou)
+
+    de ./= sum(de)
+
+    de[ou] .= NaN
+
+end
+
 function plot(
     ht,
     no_,
@@ -150,9 +158,7 @@ function plot(
 
     ou = [!(element(Singleton([ro, co])) ∈ pl) for ro in ro_, co in co_]
 
-    de = de / sum(de)
-
-    de[ou] .= NaN
+    make_probability_and_mask!(de, ou)
 
     push!(
         data,
@@ -189,9 +195,7 @@ function plot(
                 bandwidth,
             )
 
-            de = de / sum(de)
-
-            de[ou] .= NaN
+            make_probability_and_mask!(de, ou)
 
             gr_x_gr_x_un_x_pr[:, :, id] = de
 
