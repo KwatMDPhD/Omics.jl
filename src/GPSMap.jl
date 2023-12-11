@@ -1,26 +1,40 @@
+#VPolygon(yx_x_no_x_co[:, tr.convex_hull.indices]),
 module GPSMap
 
 using DelaunayTriangulation: get_edges, triangulate
 
 using LazySets: VPolygon, Singleton, element
 
-using MultivariateStats: MetricMDS, fit
-
 using ..Nucleus
 
-function _get_coordinate(no_x_no_x_di)
+function trace!(data, yx_x_no_x_co, tr, triangulation_line_color)
 
-    fit(MetricMDS, no_x_no_x_di; distances = true, maxoutdim = 2, maxiter = 10^3).X
+    legendgroup = "Node"
 
-end
+    for id_ in get_edges(tr)
 
-function _get_coordinate(di_x_no_x_co, no_x_po_x_pu)
+        if any(==(-1), id_)
 
-    no_x_po_x_pu = copy(no_x_po_x_pu)
+            continue
 
-    foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(no_x_po_x_pu))
+        end
 
-    di_x_no_x_co * no_x_po_x_pu
+        #ve = collect(id_)
+
+        push!(
+            data,
+            Dict(
+                "legendgroup" => legendgroup,
+                "showlegend" => false,
+                "y" => view(yx_x_no_x_co, 1, id_),
+                "x" => view(yx_x_no_x_co, 2, id_),
+                "mode" => "lines",
+                "line" => Dict("color" => triangulation_line_color),
+                "hoverinfo" => "none",
+            ),
+        )
+
+    end
 
 end
 
@@ -32,129 +46,16 @@ function make_probability_and_mask!(de, ou)
 
 end
 
-function plot(
-    ht,
-    no_,
-    no_x_no_x_di,
-    po_,
-    no_x_po_x_pu;
-    triangulation_line_color = "#171412",
-    node_marker_size = 48,
-    node_marker_color = "#23191e",
-    node_marker_line_width = 2,
-    node_marker_line_color = Nucleus.Color.HEFA,
-    n_gr = 128,
-    la_ = (),
-    point_marker_size = 16,
-    point_marker_line_width = 0.8,
-    point_marker_opacity = 0.88,
-    sc_ = (),
-)
-
-    data = Dict{String, Any}[]
-
-    legendgroup = "Node"
-
-    di_x_no_x_co = _get_coordinate(no_x_no_x_di)
-
-    tr = triangulate(eachcol(di_x_no_x_co))
-
-    for id_ in get_edges(tr)
-
-        if any(==(-1), id_)
-
-            continue
-
-        end
-
-        ve = collect(id_)
-
-        push!(
-            data,
-            Dict(
-                "legendgroup" => legendgroup,
-                "showlegend" => false,
-                "y" => view(di_x_no_x_co, 1, ve),
-                "x" => view(di_x_no_x_co, 2, ve),
-                "mode" => "lines",
-                "line" => Dict("color" => triangulation_line_color),
-                "hoverinfo" => "none",
-            ),
-        )
-
-    end
-
-    push!(
-        data,
-        Dict(
-            "legendgroup" => legendgroup,
-            "name" => legendgroup,
-            "y" => view(di_x_no_x_co, 1, :),
-            "x" => view(di_x_no_x_co, 2, :),
-            "text" => no_,
-            "mode" => "markers",
-            "marker" => Dict(
-                "size" => node_marker_size,
-                "color" => node_marker_color,
-                "line" =>
-                    Dict("width" => node_marker_line_width, "color" => node_marker_line_color),
-            ),
-            "hoverinfo" => "text",
-        ),
-    )
-
-    annotations = Dict{String, Any}[]
-
-    for (no, (co1, co2)) in zip(no_, eachcol(di_x_no_x_co))
-
-        push!(
-            annotations,
-            Dict(
-                "y" => co1,
-                "x" => co2,
-                "text" => "<b>$no</b>",
-                "font" => Dict(
-                    "family" => "Gravitas One, monospace",
-                    "size" => 16,
-                    "color" => node_marker_color,
-                ),
-                "bgcolor" => "#ffffff",
-                "borderpad" => 2,
-                "borderwidth" => node_marker_line_width,
-                "bordercolor" => node_marker_line_color,
-                "arrowwidth" => node_marker_line_width,
-                "arrowcolor" => node_marker_line_color,
-            ),
-        )
-
-    end
+function trace!(data, boundary, npoints, yx_x_po_x_co, bandwidth, la_)
 
     legendgroup = "Point"
 
-    di_x_po_x_co = _get_coordinate(di_x_no_x_co, no_x_po_x_pu)
-
-    fa = 1.1
-
-    boundary = (
-        Nucleus.Collection.get_minimum_maximum(view(di_x_no_x_co, 1, :) .* fa),
-        Nucleus.Collection.get_minimum_maximum(view(di_x_no_x_co, 2, :) .* fa),
-    )
-
-    npoints = (n_gr, n_gr)
-
-    bandwidth = (
-        Nucleus.Density.get_bandwidth(di_x_po_x_co[1, :]),
-        Nucleus.Density.get_bandwidth(di_x_po_x_co[2, :]),
-    )
-
     ro_, co_, de = Nucleus.Density.estimate(
-        (di_x_po_x_co[1, :], di_x_po_x_co[2, :]);
+        (yx_x_po_x_co[1, :], yx_x_po_x_co[2, :]);
         boundary,
         npoints,
         bandwidth,
     )
-
-    pl = VPolygon(di_x_no_x_co[:, tr.convex_hull.indices])
 
     ou = [!(element(Singleton([ro, co])) ∈ pl) for ro in ro_, co in co_]
 
@@ -189,7 +90,7 @@ function plot(
             id_ = findall(==(un), la_)
 
             _ro_, _co_, de = Nucleus.Density.estimate(
-                (di_x_po_x_co[1, id_], di_x_po_x_co[2, id_]);
+                (yx_x_po_x_co[1, id_], yx_x_po_x_co[2, id_]);
                 boundary,
                 npoints,
                 bandwidth,
@@ -251,6 +152,12 @@ function plot(
 
     end
 
+end
+
+function trace!(data, la_, point_marker_size, point_marker_line_width, point_marker_opacity, sc_)
+
+    legendgroup = "Point"
+
     point = Dict(
         "legendgroup" => legendgroup,
         "name" => legendgroup,
@@ -270,8 +177,8 @@ function plot(
             Nucleus.Dict.merge(
                 point,
                 Dict(
-                    "y" => view(di_x_po_x_co, 1, :),
-                    "x" => view(di_x_po_x_co, 2, :),
+                    "y" => view(yx_x_po_x_co, 1, :),
+                    "x" => view(yx_x_po_x_co, 2, :),
                     "text" => po_,
                     "marker" => Dict("color" => Nucleus.Color.HEGE),
                 ),
@@ -293,8 +200,8 @@ function plot(
                     Dict(
                         "legendgroup" => un,
                         "name" => un,
-                        "y" => view(di_x_po_x_co, 1, id_),
-                        "x" => view(di_x_po_x_co, 2, id_),
+                        "y" => view(yx_x_po_x_co, 1, id_),
+                        "x" => view(yx_x_po_x_co, 2, id_),
                         "text" => view(po_, id_),
                         "marker" => Dict("color" => color),
                     ),
@@ -308,6 +215,68 @@ function plot(
         error()
 
     end
+
+end
+
+function plot(
+    ht,
+    no_,
+    no_x_no_x_di,
+    po_,
+    no_x_po_x_pu;
+    triangulation_line_color = "#171412",
+    node_marker_size = 48,
+    node_marker_color = "#23191e",
+    node_marker_line_width = 2,
+    node_marker_line_color = Nucleus.Color.HEFA,
+    n_gr = 128,
+    la_ = (),
+    point_marker_size = 16,
+    point_marker_line_width = 0.8,
+    point_marker_opacity = 0.88,
+    sc_ = (),
+)
+
+    data = Dict{String, Any}[]
+
+    annotations = Dict{String, Any}[]
+
+    yx_x_no_x_co = _get_coordinate(no_x_no_x_di)
+
+    tr = triangulate(eachcol(yx_x_no_x_co))
+
+    trace!(
+        data,
+        annotations,
+        no_,
+        yx_x_no_x_co,
+        tr,
+        triangulation_line_color,
+        node_marker_size,
+        node_marker_color,
+        node_marker_line_width,
+        node_marker_line_color,
+    )
+
+    fa = 1.1
+
+    boundary = (
+        Nucleus.Collection.get_minimum_maximum(view(yx_x_no_x_co, 1, :)) .* fa,
+        Nucleus.Collection.get_minimum_maximum(view(yx_x_no_x_co, 2, :)) .* fa,
+    )
+
+    npoints = (n_gr, n_gr)
+
+    yx_x_po_x_co = _get_coordinate(yx_x_no_x_co, no_x_po_x_pu)
+
+    bandwidth = (
+        Nucleus.Density.get_bandwidth(yx_x_po_x_co[1, :]),
+        Nucleus.Density.get_bandwidth(yx_x_po_x_co[2, :]),
+    )
+
+    trace!(data, boundary, npoints, yx_x_po_x_co, bandwidth, la_)
+
+    trace!(data, la_, point_marker_size, point_marker_line_width, point_marker_opacity, sc_)
 
     axis = Dict("showgrid" => false, "zeroline" => false, "ticks" => "", "showticklabels" => false)
 
