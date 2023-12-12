@@ -41,10 +41,10 @@ for (an_x_an_x_di, re1, re2) in (
     ),
 )
 
-    # 2.833 μs (75 allocations: 4.00 KiB)
-    # 214.471 ns (3 allocations: 592 bytes)
-    # 4.201 μs (111 allocations: 5.92 KiB)
-    # 214.550 ns (3 allocations: 592 bytes)
+    # 2.791 μs (75 allocations: 4.00 KiB)
+    # 214.955 ns (3 allocations: 592 bytes)
+    # 4.215 μs (111 allocations: 5.92 KiB)
+    # 216.035 ns (3 allocations: 592 bytes)
 
     seed!(20231210)
 
@@ -85,12 +85,12 @@ const GR1_, GR2_ = Nucleus.Coordinate.grid(DI_X_AN_X_CO, N_GR)
 
 # ---- #
 
-@test GR1_ == GR2_ == range(-1, 1, N_GR)
+@test GR1_ === GR2_ === range(-1, 1, N_GR)
 
 # ---- #
 
 # 1.458 ns (0 allocations: 0 bytes)
-#@btime Nucleus.Coordinate.grid(DI_X_AN_X_CO, N_GR)
+#@btime Nucleus.Coordinate.grid(DI_X_AN_X_CO, N_GR);
 
 # ---- #
 
@@ -99,7 +99,7 @@ const TR = Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO))
 # ---- #
 
 # 10.333 μs (154 allocations: 18.67 KiB)
-#@btime Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO))
+#@btime Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO));
 
 # ---- #
 
@@ -108,7 +108,7 @@ const VP = Nucleus.Coordinate.wall(TR)
 # ---- #
 
 # 373.780 ns (6 allocations: 1.28 KiB)
-#@btime Nucleus.Coordinate.wall(TR)
+#@btime Nucleus.Coordinate.wall(TR);
 
 # ---- #
 
@@ -116,10 +116,10 @@ for co_ in eachcol(DI_X_AN_X_CO)
 
     @test Nucleus.Coordinate.is_in(co_, VP)
 
-    # 32.780 ns (1 allocation: 80 bytes)
-    # 32.654 ns (1 allocation: 80 bytes)
-    # 32.654 ns (1 allocation: 80 bytes)
-    # 32.822 ns (1 allocation: 80 bytes)
+    # 9.551 ns (0 allocations: 0 bytes)
+    # 9.551 ns (0 allocations: 0 bytes)
+    # 9.551 ns (0 allocations: 0 bytes)
+    # 9.551 ns (0 allocations: 0 bytes)
     #@btime Nucleus.Coordinate.is_in($co_, VP)
 
 end

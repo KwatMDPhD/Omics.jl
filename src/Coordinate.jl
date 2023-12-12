@@ -38,7 +38,7 @@ end
 
 function is_in(co_, vp)
 
-    element(Singleton(collect(co_))) ∈ vp
+    element(Singleton(co_)) ∈ vp
 
 end
 
