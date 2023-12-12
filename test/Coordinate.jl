@@ -8,58 +8,6 @@ using Random: seed!
 
 # ---- #
 
-function plot(di_x_no_x_co, di_x_po_x_co)
-
-    data = Dict{String, Any}[]
-
-    annotations = Dict{String, Any}[]
-
-    marker_size = 80
-
-    line_width = 2
-
-    line_color = "#000000"
-
-    Nucleus.Coordinate.trace!(
-        data,
-        annotations,
-        "Node",
-        1:size(di_x_no_x_co, 2),
-        di_x_no_x_co,
-        marker_size,
-        "#ff0000",
-        line_width,
-        line_color,
-    )
-
-    Nucleus.Coordinate.trace!(
-        data,
-        annotations,
-        "Point",
-        1:size(di_x_po_x_co, 2),
-        di_x_po_x_co,
-        marker_size * 0.5,
-        "#00ff00",
-        line_width,
-        line_color,
-    )
-
-    Nucleus.Plot.plot(
-        "",
-        data,
-        Dict(
-            "height" => 820,
-            "width" => 820,
-            "yaxis" => Dict("autorange" => "reversed"),
-            "annotations" => annotations,
-        ),
-        Dict("editable" => true),
-    )
-
-end
-
-# ---- #
-
 for (an_x_an_x_di, re1, re2) in (
     (
         [
@@ -93,10 +41,10 @@ for (an_x_an_x_di, re1, re2) in (
     ),
 )
 
-    # 2.708 μs (75 allocations: 4.00 KiB)
-    # 205.827 ns (3 allocations: 592 bytes)
-    # 4.118 μs (111 allocations: 5.92 KiB)
-    # 205.921 ns (3 allocations: 592 bytes)
+    # 2.833 μs (75 allocations: 4.00 KiB)
+    # 214.471 ns (3 allocations: 592 bytes)
+    # 4.201 μs (111 allocations: 5.92 KiB)
+    # 214.550 ns (3 allocations: 592 bytes)
 
     seed!(20231210)
 
@@ -118,6 +66,60 @@ for (an_x_an_x_di, re1, re2) in (
 
     #@btime Nucleus.Coordinate.pull($di_x_no_x_co, $no_x_po_x_pu)
 
-    plot(di_x_no_x_co, di_x_po_x_co)
+end
+
+# ---- #
+
+const DI_X_AN_X_CO = [
+    -1.0 -1 1 1
+    1 -1 -1 1
+]
+
+# ---- #
+
+const N_GR = 8
+
+# ---- #
+
+const GR1_, GR2_ = Nucleus.Coordinate.grid(DI_X_AN_X_CO, N_GR)
+
+# ---- #
+
+@test GR1_ == GR2_ == range(-1, 1, N_GR)
+
+# ---- #
+
+# 1.458 ns (0 allocations: 0 bytes)
+#@btime Nucleus.Coordinate.grid(DI_X_AN_X_CO, N_GR)
+
+# ---- #
+
+const TR = Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO))
+
+# ---- #
+
+# 10.333 μs (154 allocations: 18.67 KiB)
+#@btime Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO))
+
+# ---- #
+
+const VP = Nucleus.Coordinate.wall(TR)
+
+# ---- #
+
+# 373.780 ns (6 allocations: 1.28 KiB)
+#@btime Nucleus.Coordinate.wall(TR)
+
+# ---- #
+
+for co_ in eachcol(DI_X_AN_X_CO)
+
+    @test Nucleus.Coordinate.is_in(co_, VP)
+
+    # 32.780 ns (1 allocation: 80 bytes)
+    # 32.654 ns (1 allocation: 80 bytes)
+    # 32.654 ns (1 allocation: 80 bytes)
+    # 32.822 ns (1 allocation: 80 bytes)
+    #@btime Nucleus.Coordinate.is_in($co_, VP)
 
 end

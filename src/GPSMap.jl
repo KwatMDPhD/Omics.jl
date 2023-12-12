@@ -1,9 +1,5 @@
 module GPSMap
 
-using DelaunayTriangulation: get_convex_hull_indices, get_edges, triangulate
-
-using LazySets: VPolygon, Singleton, element
-
 using ..Nucleus
 
 function plot(
@@ -12,13 +8,17 @@ function plot(
     no_x_no_x_di,
     po_,
     no_x_po_x_pu;
+    n_gr = 128,
     triangulation_line_color = "#171412",
     node_marker_size = 48,
     node_marker_opacity = 1,
     node_marker_color = "#23191e",
     node_marker_line_width = 2,
     node_marker_line_color = Nucleus.Color.HEFA,
-    n_gr = 128,
+    node_annotation_borderwidth = node_marker_line_width,
+    node_annotation_bordercolor = node_marker_line_color,
+    node_annotation_arrowwidth = node_marker_line_width,
+    node_annotation_arrowcolor = node_marker_line_color,
     la_ = (),
     point_marker_size = 16,
     point_marker_opacity = 0.88,
@@ -32,9 +32,7 @@ function plot(
 
     di_x_no_x_co = Nucleus.Coordinate.get(no_x_no_x_di)
 
-    tr = triangulate(eachcol(di_x_no_x_co))
-
-    vp = VPolygon(di_x_no_x_co[:, tr.convex_hull.indices])
+    tr, gr1_, gr2_, is = _triangulate(di_x_no_x_co, n_gr)
 
     for id_ in get_edges(tr)
 
@@ -49,6 +47,9 @@ function plot(
         push!(
             data,
             Dict(
+                "legendgroup" => "Node",
+                "name" => "Triangulation",
+                #"showlegend" => false,
                 "y" => view(di_x_no_x_co, 1, ve),
                 "x" => view(di_x_no_x_co, 2, ve),
                 "mode" => "lines",
@@ -62,6 +63,8 @@ function plot(
     push!(
         data,
         Dict(
+            "legendgroup" => "Node",
+            "name" => "Node",
             "y" => view(di_x_no_x_co, 1, :),
             "x" => view(di_x_no_x_co, 2, :),
             "text" => no_,
@@ -91,20 +94,17 @@ function plot(
                 ),
                 "bgcolor" => "#ffffff",
                 "borderpad" => 2,
-                "borderwidth" => node_marker_line_width,
-                "bordercolor" => node_marker_line_color,
-                "arrowwidth" => node_marker_line_width,
-                "arrowcolor" => node_marker_line_color,
+                "borderwidth" => node_annotation_borderwidth,
+                "bordercolor" => node_annotation_bordercolor,
+                "arrowwidth" => node_annotation_arrowwidth,
+                "arrowcolor" => node_annotation_arrowcolor,
             ) for (no, (co1, co2)) in zip(no_, eachcol(di_x_no_x_co))
         ],
     )
 
     di_x_po_x_co = Nucleus.Coordinate.pull(di_x_no_x_co, no_x_po_x_pu)
 
-    boundary = (
-        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[1, :]),
-        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[2, :]),
-    )
+    boundary = ((gr1_[1], gr1_[end]), (gr2_[1], gr2_[end]))
 
     npoints = (n_gr, n_gr)
 
@@ -120,14 +120,14 @@ function plot(
         bandwidth,
     )
 
-    ou = [!(element(Singleton([ro, co])) ∈ vp) for ro in ro_, co in co_]
-
-    de[ou] .= NaN
+    de[is] .= NaN
 
     push!(
         data,
         Dict(
             "type" => "contour",
+            "legendgroup" => "Point",
+            "name" => "Contour",
             "y" => ro_,
             "x" => co_,
             "z" => de,
@@ -157,7 +157,7 @@ function plot(
                 bandwidth,
             )
 
-            de[ou] .= NaN
+            de[is] .= NaN
 
             gr_x_gr_x_un_x_pr[:, :, id] = de
 
