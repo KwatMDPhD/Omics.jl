@@ -1,64 +1,10 @@
 module GPSMap
 
-using DelaunayTriangulation: get_convex_hull_indices, get_edges, get_points, triangulate
+using DelaunayTriangulation: get_convex_hull_indices, get_edges, triangulate
 
 using LazySets: VPolygon, Singleton, element
 
 using ..Nucleus
-
-function _trace!(data, tr, color)
-
-    co___ = get_points(tr)
-
-    for id_ in get_edges(tr)
-
-        if any(==(-1), id_)
-
-            continue
-
-        end
-
-        push!(
-            data,
-            Dict(
-                "y" => [co___[id][1] for id in id_],
-                "x" => [co___[id][2] for id in id_],
-                "mode" => "lines",
-                "line" => Dict("color" => color),
-                "hoverinfo" => "none",
-            ),
-        )
-
-    end
-
-end
-
-function _make_probability_and_mask!(de, ou)
-
-    de ./= sum(de)
-
-    de[ou] .= NaN
-
-end
-
-function _trace!(data, ro_, co_, de)
-
-    push!(
-        data,
-        Dict(
-            "type" => "contour",
-            "y" => ro_,
-            "x" => co_,
-            "z" => de,
-            "transpose" => true,
-            "ncontours" => 32,
-            "contours" => Dict("coloring" => "none"),
-            #"showscale"=>false,
-            "hoverinfo" => "none",
-        ),
-    )
-
-end
 
 function plot(
     ht,
@@ -90,35 +36,74 @@ function plot(
 
     vp = VPolygon(di_x_no_x_co[:, tr.convex_hull.indices])
 
-    _trace!(data, tr, triangulation_line_color)
+    for id_ in get_edges(tr)
 
-    Nucleus.Coordinate.trace!(
+        if any(==(-1), id_)
+
+            continue
+
+        end
+
+        ve = collect(id_)
+
+        push!(
+            data,
+            Dict(
+                "y" => view(di_x_no_x_co, 1, ve),
+                "x" => view(di_x_no_x_co, 2, ve),
+                "mode" => "lines",
+                "line" => Dict("color" => triangulation_line_color),
+                "hoverinfo" => "none",
+            ),
+        )
+
+    end
+
+    push!(
         data,
-        no_,
-        di_x_no_x_co,
-        node_marker_size,
-        node_marker_opacity,
-        node_marker_color,
-        node_marker_line_width,
-        node_marker_line_color,
+        Dict(
+            "y" => view(di_x_no_x_co, 1, :),
+            "x" => view(di_x_no_x_co, 2, :),
+            "text" => no_,
+            "mode" => "markers",
+            "marker" => Dict(
+                "size" => node_marker_size,
+                "opacity" => node_marker_opacity,
+                "color" => node_marker_color,
+                "line" =>
+                    Dict("width" => node_marker_line_width, "color" => node_marker_line_color),
+            ),
+            "hoverinfo" => "text",
+        ),
     )
 
-    Nucleus.Coordinate.annotate!(
+    append!(
         annotations,
-        no_,
-        di_x_no_x_co,
-        node_marker_color,
-        node_marker_line_width,
-        node_marker_line_color,
+        [
+            Dict(
+                "y" => co1,
+                "x" => co2,
+                "text" => "<b>$no</b>",
+                "font" => Dict(
+                    "family" => "Gravitas One, monospace",
+                    "size" => 16,
+                    "color" => node_marker_color,
+                ),
+                "bgcolor" => "#ffffff",
+                "borderpad" => 2,
+                "borderwidth" => node_marker_line_width,
+                "bordercolor" => node_marker_line_color,
+                "arrowwidth" => node_marker_line_width,
+                "arrowcolor" => node_marker_line_color,
+            ) for (no, (co1, co2)) in zip(no_, eachcol(di_x_no_x_co))
+        ],
     )
 
     di_x_po_x_co = Nucleus.Coordinate.pull(di_x_no_x_co, no_x_po_x_pu)
 
-    fa = 1.1
-
     boundary = (
-        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[1, :]) .* fa,
-        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[2, :]) .* fa,
+        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[1, :]),
+        Nucleus.Collection.get_minimum_maximum(di_x_po_x_co[2, :]),
     )
 
     npoints = (n_gr, n_gr)
@@ -135,11 +120,23 @@ function plot(
         bandwidth,
     )
 
-    #ou = [!(element(Singleton([ro, co])) ∈ vp) for ro in ro_, co in co_]
+    ou = [!(element(Singleton([ro, co])) ∈ vp) for ro in ro_, co in co_]
 
-    #_make_probability_and_mask!(de, ou)
+    de[ou] .= NaN
 
-    _trace!(data, ro_, co_, de)
+    push!(
+        data,
+        Dict(
+            "type" => "contour",
+            "y" => ro_,
+            "x" => co_,
+            "z" => de,
+            "transpose" => true,
+            "ncontours" => 32,
+            "contours" => Dict("coloring" => "none"),
+            "hoverinfo" => "none",
+        ),
+    )
 
     if !isempty(la_)
 
@@ -160,7 +157,7 @@ function plot(
                 bandwidth,
             )
 
-            #make_probability_and_mask!(de, ou)
+            de[ou] .= NaN
 
             gr_x_gr_x_un_x_pr[:, :, id] = de
 
@@ -218,15 +215,21 @@ function plot(
 
     if isempty(sc_)
 
-        Nucleus.Coordinate.trace!(
+        push!(
             data,
-            po_,
-            di_x_po_x_co,
-            point_marker_size,
-            point_marker_opacity,
-            Nucleus.Color.HEGE,
-            point_marker_line_width,
-            "#898a74",
+            Dict(
+                "y" => view(di_x_po_x_co, 1, :),
+                "x" => view(di_x_po_x_co, 2, :),
+                "text" => po_,
+                "mode" => "markers",
+                "marker" => Dict(
+                    "size" => point_marker_size,
+                    "opacity" => point_marker_opacity,
+                    "color" => Nucleus.Color.HEGE,
+                    "line" => Dict("width" => point_marker_line_width, "color" => "#898a74"),
+                ),
+                "hoverinfo" => "text",
+            ),
         )
 
     elseif eltype(sc_) <: Integer
@@ -237,15 +240,21 @@ function plot(
 
             id_ = findall(==(un), sc_)
 
-            Nucleus.Coordinate.trace!(
+            push!(
                 data,
-                view(po_, id_),
-                view(di_x_po_x_co, :, id_),
-                point_marker_size,
-                point_marker_opacity,
-                color,
-                point_marker_line_width,
-                "#898a74",
+                Dict(
+                    "y" => view(di_x_po_x_co, 1, id_),
+                    "x" => view(di_x_po_x_co, 2, id_),
+                    "text" => view(di_x_po_x_co, :, id_),
+                    "mode" => "markers",
+                    "marker" => Dict(
+                        "size" => point_marker_size,
+                        "opacity" => point_marker_opacity,
+                        "color" => color,
+                        "line" => Dict("width" => point_marker_line_width),
+                    ),
+                    "hoverinfo" => "text",
+                ),
             )
 
         end
