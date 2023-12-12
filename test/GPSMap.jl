@@ -16,17 +16,29 @@ const DA = joinpath(Nucleus._DA, "GPSMap")
 
 # ---- #
 
-_naf, fa_, sa_, mh = Nucleus.DataFrame.separate(joinpath(DA, "h.tsv"))
-
-Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "h.html"), mh; y = fa_, x = sa_)
-
-# ---- #
-
 function order(nu___)
 
     Nucleus.Clustering.hierarchize(Nucleus.Distance.get(Nucleus.Distance.Euclidean(), nu___)).order
 
 end
+
+# ---- #
+
+function plot(ht, ro_, co_, ma)
+
+    id1_ = order(eachrow(ma))
+
+    id2_ = order(eachcol(ma))
+
+    Nucleus.Plot.plot_heat_map(ht, ma[id1_, id2_]; y = ro_[id1_], x = co_[id2_])
+
+end
+
+# ---- #
+
+_naf, fa_, sa_, mh = Nucleus.DataFrame.separate(joinpath(DA, "h.tsv"))
+
+plot(joinpath(Nucleus.TE, "h.html"), fa_, sa_, mh)
 
 # ---- #
 
@@ -40,31 +52,13 @@ for co in eachcol(mh)
 
 end
 
-id1_ = order(eachrow(mh))
-
-id2_ = order(eachcol(mh))
-
-Nucleus.Plot.plot_heat_map(
-    joinpath(Nucleus.TE, "h_normalized.html"),
-    mh[id1_, id2_];
-    y = fa_[id1_],
-    x = sa_[id2_],
-)
+plot(joinpath(Nucleus.TE, "h_normalized.html"), fa_, sa_, mh)
 
 # ---- #
 
 mh .^= 2
 
-id1_ = order(eachrow(mh))
-
-id2_ = order(eachcol(mh))
-
-Nucleus.Plot.plot_heat_map(
-    joinpath(Nucleus.TE, "h_powered.html"),
-    mh[id1_, id2_];
-    y = fa_[id1_],
-    x = sa_[id2_],
-)
+plot(joinpath(Nucleus.TE, "h_powered.html"), fa_, sa_, mh)
 
 # ---- #
 
@@ -93,11 +87,11 @@ no_x_no_x_di = Nucleus.Distance.get(
     eachrow(no_x_po_x_pu),
 )
 
-Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "distance.html"), no_x_no_x_di; x = fa_, y = fa_)
+plot(joinpath(Nucleus.TE, "distance.html"), fa_, fa_, no_x_no_x_di)
 
 # ---- #
 
-const SE = 202312062103
+const SE = 20231211
 
 # ---- #
 

@@ -22,11 +22,10 @@ end
 
 function trace!(
     data,
-    annotations,
-    name,
     an_,
     di_x_an_x_co,
     marker_size,
+    marker_opacity,
     marker_color,
     marker_line_width,
     marker_line_color,
@@ -35,19 +34,25 @@ function trace!(
     push!(
         data,
         Dict(
-            "name" => name,
             "y" => view(di_x_an_x_co, 1, :),
             "x" => view(di_x_an_x_co, 2, :),
             "text" => an_,
             "mode" => "markers",
             "marker" => Dict(
                 "size" => marker_size,
+                "opacity" => marker_opacity,
                 "color" => marker_color,
                 "line" => Dict("width" => marker_line_width, "color" => marker_line_color),
             ),
             "hoverinfo" => "text",
         ),
     )
+
+    nothing
+
+end
+
+function annotate!(annotations, an_, di_x_an_x_co, font_color, width, color)
 
     append!(
         annotations,
@@ -59,14 +64,14 @@ function trace!(
                 "font" => Dict(
                     "family" => "Gravitas One, monospace",
                     "size" => 16,
-                    "color" => marker_color,
+                    "color" => font_color,
                 ),
                 "bgcolor" => "#ffffff",
                 "borderpad" => 2,
-                "borderwidth" => marker_line_width,
-                "bordercolor" => marker_line_color,
-                "arrowwidth" => marker_line_width,
-                "arrowcolor" => marker_line_color,
+                "borderwidth" => width,
+                "bordercolor" => color,
+                "arrowwidth" => width,
+                "arrowcolor" => color,
             ) for (no, (co1, co2)) in zip(an_, eachcol(di_x_an_x_co))
         ],
     )
