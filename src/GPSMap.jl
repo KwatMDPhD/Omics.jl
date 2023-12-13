@@ -1,5 +1,7 @@
 module GPSMap
 
+using DelaunayTriangulation: get_edges
+
 using ..Nucleus
 
 function plot(
@@ -8,7 +10,6 @@ function plot(
     no_x_no_x_di,
     po_,
     no_x_po_x_pu;
-    n_gr = 128,
     triangulation_line_color = "#171412",
     node_marker_size = 48,
     node_marker_opacity = 1,
@@ -19,7 +20,7 @@ function plot(
     node_annotation_bordercolor = node_marker_line_color,
     node_annotation_arrowwidth = node_marker_line_width,
     node_annotation_arrowcolor = node_marker_line_color,
-    la_ = (),
+    n_gr = 128,
     point_marker_size = 16,
     point_marker_opacity = 0.88,
     point_marker_line_width = 0.8,
@@ -28,11 +29,9 @@ function plot(
 
     data = Dict{String, Any}[]
 
-    annotations = Dict{String, Any}[]
-
     di_x_no_x_co = Nucleus.Coordinate.get(no_x_no_x_di)
 
-    tr, gr1_, gr2_, is = _triangulate(di_x_no_x_co, n_gr)
+    tr = Nucleus.Coordinate.triangulate(eachcol(di_x_no_x_co))
 
     for id_ in get_edges(tr)
 
@@ -48,8 +47,7 @@ function plot(
             data,
             Dict(
                 "legendgroup" => "Node",
-                "name" => "Triangulation",
-                #"showlegend" => false,
+                "showlegend" => false,
                 "y" => view(di_x_no_x_co, 1, ve),
                 "x" => view(di_x_no_x_co, 2, ve),
                 "mode" => "lines",
@@ -80,33 +78,33 @@ function plot(
         ),
     )
 
-    append!(
-        annotations,
-        [
-            Dict(
-                "y" => co1,
-                "x" => co2,
-                "text" => "<b>$no</b>",
-                "font" => Dict(
-                    "family" => "Gravitas One, monospace",
-                    "size" => 16,
-                    "color" => node_marker_color,
-                ),
-                "bgcolor" => "#ffffff",
-                "borderpad" => 2,
-                "borderwidth" => node_annotation_borderwidth,
-                "bordercolor" => node_annotation_bordercolor,
-                "arrowwidth" => node_annotation_arrowwidth,
-                "arrowcolor" => node_annotation_arrowcolor,
-            ) for (no, (co1, co2)) in zip(no_, eachcol(di_x_no_x_co))
-        ],
+    annotations = [
+        Dict(
+            "y" => co1,
+            "x" => co2,
+            "text" => "<b>$no</b>",
+            "font" => Dict(
+                "family" => "Gravitas One, monospace",
+                "size" => 16,
+                "color" => node_marker_color,
+            ),
+            "bgcolor" => "#ffffff",
+            "borderpad" => 2,
+            "borderwidth" => node_annotation_borderwidth,
+            "bordercolor" => node_annotation_bordercolor,
+            "arrowwidth" => node_annotation_arrowwidth,
+            "arrowcolor" => node_annotation_arrowcolor,
+        ) for (no, (co1, co2)) in zip(no_, eachcol(di_x_no_x_co))
+    ]
+
+    boundary = (
+        Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[1, :]),
+        Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[2, :]),
     )
 
-    di_x_po_x_co = Nucleus.Coordinate.pull(di_x_no_x_co, no_x_po_x_pu)
-
-    boundary = ((gr1_[1], gr1_[end]), (gr2_[1], gr2_[end]))
-
     npoints = (n_gr, n_gr)
+
+    di_x_po_x_co = Nucleus.Coordinate.pull(di_x_no_x_co, no_x_po_x_pu)
 
     bandwidth = (
         Nucleus.Density.get_bandwidth(di_x_po_x_co[1, :]),
@@ -120,6 +118,10 @@ function plot(
         bandwidth,
     )
 
+    vp = Nucleus.Coordinate.wall(tr)
+
+    is = [!Nucleus.Coordinate.is_in([ro, co], vp) for ro in ro_, co in co_]
+
     de[is] .= NaN
 
     push!(
@@ -127,7 +129,7 @@ function plot(
         Dict(
             "type" => "contour",
             "legendgroup" => "Point",
-            "name" => "Contour",
+            "showlegend" => false,
             "y" => ro_,
             "x" => co_,
             "z" => de,
@@ -138,9 +140,36 @@ function plot(
         ),
     )
 
-    if !isempty(la_)
+    point = Dict(
+        "mode" => "markers",
+        "marker" => Dict(
+            "size" => point_marker_size,
+            "opacity" => point_marker_opacity,
+            "line" => Dict("width" => point_marker_line_width),
+        ),
+        "hoverinfo" => "text",
+    )
 
-        un_ = sort!(unique(la_))
+    if isempty(sc_)
+
+        push!(
+            data,
+            Nucleus.Dict.merge(
+                point,
+                Dict(
+                    "legendgroup" => "Point",
+                    "name" => "Point",
+                    "y" => view(di_x_po_x_co, 1, :),
+                    "x" => view(di_x_po_x_co, 2, :),
+                    "text" => po_,
+                    "marker" => Dict("color" => Nucleus.Color.HEGE),
+                ),
+            ),
+        )
+
+    elseif eltype(sc_) <: Integer
+
+        un_ = sort!(unique(sc_))
 
         n_un = lastindex(un_)
 
@@ -148,7 +177,7 @@ function plot(
 
         for (id, un) in enumerate(un_)
 
-            id_ = findall(==(un), la_)
+            id_ = findall(==(un), sc_)
 
             _ro_, _co_, de = Nucleus.Density.estimate(
                 (di_x_po_x_co[1, id_], di_x_po_x_co[2, id_]);
@@ -163,10 +192,8 @@ function plot(
 
         end
 
-        id_ = 1:n_gr
-
         # TODO: Benchmark iteration order.
-        for id2 in id_, id1 in id_
+        for id2 in 1:n_gr, id1 in 1:n_gr
 
             pr_ = view(gr_x_gr_x_un_x_pr, id1, id2, :)
 
@@ -192,11 +219,13 @@ function plot(
 
         for (id, (un, color)) in enumerate(zip(un_, Nucleus.Color.color(un_)))
 
+            id_ = findall(==(un), sc_)
+
             push!(
                 data,
                 Dict(
                     "type" => "heatmap",
-                    "legendgroup" => un,
+                    "name" => un,
                     "y" => ro_,
                     "x" => co_,
                     "z" => view(gr_x_gr_x_un_x_pr, :, :, id),
@@ -209,51 +238,18 @@ function plot(
                 ),
             )
 
-        end
-
-    end
-
-    if isempty(sc_)
-
-        push!(
-            data,
-            Dict(
-                "y" => view(di_x_po_x_co, 1, :),
-                "x" => view(di_x_po_x_co, 2, :),
-                "text" => po_,
-                "mode" => "markers",
-                "marker" => Dict(
-                    "size" => point_marker_size,
-                    "opacity" => point_marker_opacity,
-                    "color" => Nucleus.Color.HEGE,
-                    "line" => Dict("width" => point_marker_line_width, "color" => "#898a74"),
-                ),
-                "hoverinfo" => "text",
-            ),
-        )
-
-    elseif eltype(sc_) <: Integer
-
-        un_ = sort!(unique(sc_))
-
-        for (un, color) in zip(un_, Nucleus.Color.color(un_))
-
-            id_ = findall(==(un), sc_)
-
             push!(
                 data,
-                Dict(
-                    "y" => view(di_x_po_x_co, 1, id_),
-                    "x" => view(di_x_po_x_co, 2, id_),
-                    "text" => view(di_x_po_x_co, :, id_),
-                    "mode" => "markers",
-                    "marker" => Dict(
-                        "size" => point_marker_size,
-                        "opacity" => point_marker_opacity,
-                        "color" => color,
-                        "line" => Dict("width" => point_marker_line_width),
+                Nucleus.Dict.merge(
+                    point,
+                    Dict(
+                        "legendgroup" => un,
+                        "name" => un,
+                        "y" => view(di_x_po_x_co, 1, id_),
+                        "x" => view(di_x_po_x_co, 2, id_),
+                        "text" => view(po_, id_),
+                        "marker" => Dict("color" => color),
                     ),
-                    "hoverinfo" => "text",
                 ),
             )
 

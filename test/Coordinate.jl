@@ -77,23 +77,6 @@ const DI_X_AN_X_CO = [
 
 # ---- #
 
-const N_GR = 8
-
-# ---- #
-
-const GR1_, GR2_ = Nucleus.Coordinate.grid(DI_X_AN_X_CO, N_GR)
-
-# ---- #
-
-@test GR1_ === GR2_ === range(-1, 1, N_GR)
-
-# ---- #
-
-# 1.458 ns (0 allocations: 0 bytes)
-#@btime Nucleus.Coordinate.grid(DI_X_AN_X_CO, N_GR);
-
-# ---- #
-
 const TR = Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO))
 
 # ---- #

@@ -24,12 +24,6 @@ function pull(di_x_no_x_co, no_x_po_x_pu)
 
 end
 
-function grid(di_x_an_x_co, n_gr)
-
-    (range(Nucleus.Collection.get_minimum_maximum(co_)..., n_gr) for co_ in eachrow(di_x_an_x_co))
-
-end
-
 function wall(tr)
 
     VPolygon(get_points(tr)[get_convex_hull_indices(tr)])
