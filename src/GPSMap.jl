@@ -147,7 +147,6 @@ function plot(
             "opacity" => point_marker_opacity,
             "line" => Dict("width" => point_marker_line_width),
         ),
-        "hoverinfo" => "text",
     )
 
     if isempty(sc_)
@@ -163,6 +162,7 @@ function plot(
                     "x" => view(di_x_po_x_co, 2, :),
                     "text" => po_,
                     "marker" => Dict("color" => Nucleus.Color.HEGE),
+                    "hoverinfo" => "text",
                 ),
             ),
         )
@@ -219,13 +219,13 @@ function plot(
 
         for (id, (un, color)) in enumerate(zip(un_, Nucleus.Color.color(un_)))
 
+            # TODO: Do this once.
             id_ = findall(==(un), sc_)
 
             push!(
                 data,
                 Dict(
                     "type" => "heatmap",
-                    "name" => un,
                     "y" => ro_,
                     "x" => co_,
                     "z" => view(gr_x_gr_x_un_x_pr, :, :, id),
