@@ -12,19 +12,27 @@ function plot(
     no_x_po_x_pu;
     triangulation_line_color = "#171412",
     node_marker_size = 48,
-    node_marker_opacity = 1,
-    node_marker_color = "#23191e",
+    node_marker_opacity = 0.96,
+    node_marker_color = triangulation_line_color,
     node_marker_line_width = 2,
     node_marker_line_color = Nucleus.Color.HEFA,
+    node_annotation_font_size = 24,
+    node_annotation_font_color = node_marker_color,
+    node_annotation_bgcolor = "#ffffff",
+    node_annotation_borderpad = 2,
     node_annotation_borderwidth = node_marker_line_width,
     node_annotation_bordercolor = node_marker_line_color,
     node_annotation_arrowwidth = node_marker_line_width,
     node_annotation_arrowcolor = node_marker_line_color,
-    n_gr = 128,
+    n_gr = 256,
+    ncontours = 32,
     point_marker_size = 16,
     point_marker_opacity = 0.88,
+    point_marker_color = Nucleus.Color.HEGE,
     point_marker_line_width = 0.8,
+    point_marker_line_color = "#000000",
     sc_ = (),
+    heightwidth = 800,
 )
 
     data = Dict{String, Any}[]
@@ -62,7 +70,7 @@ function plot(
         data,
         Dict(
             "legendgroup" => "Node",
-            "name" => "Node",
+            "name" => "Node ($(lastindex(no_)))",
             "y" => view(di_x_no_x_co, 1, :),
             "x" => view(di_x_no_x_co, 2, :),
             "text" => no_,
@@ -85,11 +93,11 @@ function plot(
             "text" => "<b>$no</b>",
             "font" => Dict(
                 "family" => "Gravitas One, monospace",
-                "size" => 16,
-                "color" => node_marker_color,
+                "size" => node_annotation_font_size,
+                "color" => node_annotation_font_color,
             ),
-            "bgcolor" => "#ffffff",
-            "borderpad" => 2,
+            "bgcolor" => node_annotation_bgcolor,
+            "borderpad" => node_annotation_borderpad,
             "borderwidth" => node_annotation_borderwidth,
             "bordercolor" => node_annotation_bordercolor,
             "arrowwidth" => node_annotation_arrowwidth,
@@ -97,26 +105,24 @@ function plot(
         ) for (no, (co1, co2)) in zip(no_, eachcol(di_x_no_x_co))
     ]
 
-    boundary = (
-        Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[1, :]),
-        Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[2, :]),
-    )
+    range1 = Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[1, :])
 
-    npoints = (n_gr, n_gr)
+    range2 = Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[2, :])
 
     di_x_po_x_co = Nucleus.Coordinate.pull(di_x_no_x_co, no_x_po_x_pu)
 
-    bandwidth = (
-        Nucleus.Density.get_bandwidth(di_x_po_x_co[1, :]),
-        Nucleus.Density.get_bandwidth(di_x_po_x_co[2, :]),
+    fa = 1.39
+
+    ke_ar = (
+        boundary = (range1 .* fa, range2 .* fa),
+        npoints = (n_gr, n_gr),
+        bandwidth = (
+            Nucleus.Density.get_bandwidth(di_x_po_x_co[1, :]),
+            Nucleus.Density.get_bandwidth(di_x_po_x_co[2, :]),
+        ),
     )
 
-    ro_, co_, de = Nucleus.Density.estimate(
-        (di_x_po_x_co[1, :], di_x_po_x_co[2, :]);
-        boundary,
-        npoints,
-        bandwidth,
-    )
+    ro_, co_, de = Nucleus.Density.estimate((di_x_po_x_co[1, :], di_x_po_x_co[2, :]); ke_ar...)
 
     vp = Nucleus.Coordinate.wall(tr)
 
@@ -134,7 +140,7 @@ function plot(
             "x" => co_,
             "z" => de,
             "transpose" => true,
-            "ncontours" => 32,
+            "ncontours" => ncontours,
             "contours" => Dict("coloring" => "none"),
             "hoverinfo" => "none",
         ),
@@ -145,8 +151,9 @@ function plot(
         "marker" => Dict(
             "size" => point_marker_size,
             "opacity" => point_marker_opacity,
-            "line" => Dict("width" => point_marker_line_width),
+            "line" => Dict("width" => point_marker_line_width, "color" => point_marker_line_color),
         ),
+        "hoverinfo" => "text",
     )
 
     if isempty(sc_)
@@ -157,12 +164,11 @@ function plot(
                 point,
                 Dict(
                     "legendgroup" => "Point",
-                    "name" => "Point",
+                    "name" => "Point ($(lastindex(po_)))",
                     "y" => view(di_x_po_x_co, 1, :),
                     "x" => view(di_x_po_x_co, 2, :),
                     "text" => po_,
-                    "marker" => Dict("color" => Nucleus.Color.HEGE),
-                    "hoverinfo" => "text",
+                    "marker" => Dict("color" => point_marker_color),
                 ),
             ),
         )
@@ -171,20 +177,14 @@ function plot(
 
         un_ = sort!(unique(sc_))
 
-        n_un = lastindex(un_)
-
-        gr_x_gr_x_un_x_pr = Array{Float64, 3}(undef, n_gr, n_gr, n_un)
+        gr_x_gr_x_un_x_pr = Array{Float64, 3}(undef, n_gr, n_gr, lastindex(un_))
 
         for (id, un) in enumerate(un_)
 
             id_ = findall(==(un), sc_)
 
-            _ro_, _co_, de = Nucleus.Density.estimate(
-                (di_x_po_x_co[1, id_], di_x_po_x_co[2, id_]);
-                boundary,
-                npoints,
-                bandwidth,
-            )
+            _ro_, _co_, de =
+                Nucleus.Density.estimate((di_x_po_x_co[1, id_], di_x_po_x_co[2, id_]); ke_ar...)
 
             de[is] .= NaN
 
@@ -205,7 +205,7 @@ function plot(
 
             ma = argmax(pr_)
 
-            for id in 1:n_un
+            for id in eachindex(pr_)
 
                 if id != ma
 
@@ -219,7 +219,6 @@ function plot(
 
         for (id, (un, color)) in enumerate(zip(un_, Nucleus.Color.color(un_)))
 
-            # TODO: Do this once.
             id_ = findall(==(un), sc_)
 
             push!(
@@ -244,7 +243,7 @@ function plot(
                     point,
                     Dict(
                         "legendgroup" => un,
-                        "name" => un,
+                        "name" => "$un ($(lastindex(id_)))",
                         "y" => view(di_x_po_x_co, 1, id_),
                         "x" => view(di_x_po_x_co, 2, id_),
                         "text" => view(po_, id_),
@@ -267,12 +266,17 @@ function plot(
         ht,
         data,
         Dict(
-            "height" => 800,
-            "width" => 960,
-            "title" =>
-                Dict("text" => "GPS Map<br>$(lastindex(no_)) nodes and $(lastindex(po_)) points"),
-            "yaxis" => merge(axis, Dict("autorange" => "reversed")),
-            "xaxis" => axis,
+            "height" => heightwidth,
+            "width" => heightwidth,
+            "margin" => Dict("t" => 32, "b" => 0, "l" => 8, "r" => 0),
+            "title" => Dict(
+                "y" => 0.98,
+                "x" => 0.02,
+                "text" => "GPS Map",
+                "font" => Dict("family" => "Gravitas One", "size" => 32, "color" => "#000000"),
+            ),
+            "yaxis" => merge(axis, Dict("range" => range1, "autorange" => "reversed")),
+            "xaxis" => merge(axis, Dict("range" => range2 .* 1.08)),
             "annotations" => annotations,
         ),
     )
