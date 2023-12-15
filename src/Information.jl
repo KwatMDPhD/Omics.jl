@@ -97,7 +97,7 @@ end
 
 function get_information_coefficient(mu)
 
-    sqrt(1.0 - exp(-2mu))
+    sqrt(1.0 - exp(-2.0 * mu))
 
 end
 
@@ -146,7 +146,7 @@ function get_information_coefficient(nu1_, nu2_)
 
     co = cor(nu1_, nu2_)
 
-    fa = 0.75 - 0.75abs(co)
+    fa = 0.75 - 0.75 * abs(co)
 
     mu = get_mutual_information(
         nu1_,
@@ -164,13 +164,13 @@ end
 
 function get_information_coefficient_distance(nu1_, nu2_)
 
-    0.5(1.0 - get_information_coefficient(nu1_, nu2_))
+    (1.0 - get_information_coefficient(nu1_, nu2_)) * 0.5
 
 end
 
 @inline function normalize_mutual_information(mu, e1, e2)
 
-    2mu / (e1 + e2)
+    2.0 * mu / (e1 + e2)
 
 end
 

@@ -213,9 +213,9 @@ for (nu1_, nu2_) in MI_
 
     @test isapprox(Nucleus.Information.get_mutual_information(nu1i_, nu2i_), re; atol = 1e-15)
 
-    # 1.058 μs (24 allocations: 4.53 KiB)
+    # 1.050 μs (24 allocations: 4.53 KiB)
     # 1.104 μs (24 allocations: 4.53 KiB)
-    # 1.092 μs (24 allocations: 4.53 KiB)
+    # 1.087 μs (24 allocations: 4.53 KiB)
     #@btime Nucleus.Information.get_mutual_information($nu1i_, $nu2i_)
 
 end
@@ -239,21 +239,21 @@ for (nu1_, nu2_) in MI_
         # TODO: Test.
         @info Nucleus.Information.get_mutual_information(nu1f_, nu2f_; ke_ar...)
 
-        # 11.167 μs (34 allocations: 3.52 KiB)
-        # 26.000 μs (34 allocations: 52.45 KiB)
+        # 11.208 μs (34 allocations: 3.52 KiB)
+        # 26.291 μs (34 allocations: 52.45 KiB)
+        # 71.416 μs (40 allocations: 197.48 KiB)
+        # 1.116 ms (44 allocations: 3.01 MiB)
+        # 1.039 ms (33 allocations: 3.01 MiB)
+        # 11.291 μs (34 allocations: 3.52 KiB)
+        # 26.125 μs (34 allocations: 52.45 KiB)
+        # 71.459 μs (40 allocations: 197.48 KiB)
+        # 1.109 ms (44 allocations: 3.01 MiB)
+        # 1.042 ms (33 allocations: 3.01 MiB)
+        # 11.291 μs (34 allocations: 3.52 KiB)
+        # 26.084 μs (34 allocations: 52.45 KiB)
         # 71.625 μs (40 allocations: 197.48 KiB)
-        # 1.107 ms (44 allocations: 3.01 MiB)
-        # 1.050 ms (33 allocations: 3.01 MiB)
-        # 11.375 μs (34 allocations: 3.52 KiB)
-        # 26.333 μs (34 allocations: 52.45 KiB)
-        # 71.166 μs (40 allocations: 197.48 KiB)
-        # 1.132 ms (44 allocations: 3.01 MiB)
-        # 1.053 ms (33 allocations: 3.01 MiB)
-        # 11.292 μs (34 allocations: 3.52 KiB)
-        # 26.208 μs (34 allocations: 52.45 KiB)
-        # 71.625 μs (40 allocations: 197.48 KiB)
-        # 1.132 ms (44 allocations: 3.01 MiB)
-        # 1.073 ms (33 allocations: 3.01 MiB)
+        # 1.111 ms (44 allocations: 3.01 MiB)
+        # 1.047 ms (33 allocations: 3.01 MiB)
         #@btime Nucleus.Information.get_mutual_information($nu1f_, $nu2f_; $ke_ar...)
 
     end
@@ -277,12 +277,12 @@ for ((nu1_, nu2_), (rei, ref)) in
 
     @test Nucleus.Information.get_information_coefficient(nu1f_, nu2f_) === ref
 
-    # 6.500 ns (0 allocations: 0 bytes)
-    # 10.761 ns (0 allocations: 0 bytes)
-    # 39.231 ns (0 allocations: 0 bytes)
+    # 6.458 ns (0 allocations: 0 bytes)
+    # 8.884 ns (0 allocations: 0 bytes)
+    # 39.146 ns (0 allocations: 0 bytes)
     # 39.315 ns (0 allocations: 0 bytes)
-    # 1.150 μs (24 allocations: 4.53 KiB)
-    # 24.875 μs (34 allocations: 52.45 KiB)
+    # 1.146 μs (24 allocations: 4.53 KiB)
+    # 24.458 μs (34 allocations: 52.45 KiB)
 
     #@btime Nucleus.Information.get_information_coefficient($nu1i_, $nu2i_)
 
@@ -317,20 +317,21 @@ for (nu1_, nu2_, re, red) in (
 
     @test Nucleus.Information.get_information_coefficient(nu1_, nu2_) === re
 
-    # 3.334 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
+    # 3.375 ns (0 allocations: 0 bytes)
+    # 4.000 ns (0 allocations: 0 bytes)
     # 3.958 ns (0 allocations: 0 bytes)
     # 3.666 ns (0 allocations: 0 bytes)
-    # 4.916 ns (0 allocations: 0 bytes)
+    # 4.875 ns (0 allocations: 0 bytes)
     # 6.125 ns (0 allocations: 0 bytes)
-    # 8.000 ns (0 allocations: 0 bytes)
-    # 587.808 ns (22 allocations: 2.31 KiB)
-    # 594.460 ns (22 allocations: 2.31 KiB)
-    # 684.483 ns (22 allocations: 2.38 KiB)
-    # 24.833 μs (34 allocations: 52.33 KiB)
-    # 23.500 μs (34 allocations: 52.33 KiB)
-    # 24.459 μs (34 allocations: 52.33 KiB)
-    # 24.750 μs (34 allocations: 52.36 KiB)
+    # 7.958 ns (0 allocations: 0 bytes)
+    # 587.728 ns (22 allocations: 2.31 KiB)
+    # 588.277 ns (22 allocations: 2.31 KiB)
+    # 681.490 ns (22 allocations: 2.38 KiB)
+    # 24.958 μs (34 allocations: 52.33 KiB)
+    # 23.667 μs (34 allocations: 52.33 KiB)
+    # 24.542 μs (34 allocations: 52.33 KiB)
+    # 24.541 μs (34 allocations: 52.36 KiB)
+
     #@btime Nucleus.Information.get_information_coefficient($nu1_, $nu2_)
 
     @test Nucleus.Information.get_information_coefficient_distance(nu1_, nu2_) === red

@@ -41,10 +41,12 @@ for (an_x_an_x_di, re1, re2) in (
     ),
 )
 
-    # 2.791 μs (75 allocations: 4.00 KiB)
-    # 214.955 ns (3 allocations: 592 bytes)
-    # 4.215 μs (111 allocations: 5.92 KiB)
-    # 216.035 ns (3 allocations: 592 bytes)
+    # 2.750 μs (75 allocations: 4.00 KiB)
+    # 217.565 ns (3 allocations: 592 bytes)
+    # 218.073 ns (3 allocations: 592 bytes)
+    # 3.933 μs (103 allocations: 5.46 KiB)
+    # 216.888 ns (3 allocations: 592 bytes)
+    # 216.732 ns (3 allocations: 592 bytes)
 
     seed!(20231210)
 
@@ -64,7 +66,11 @@ for (an_x_an_x_di, re1, re2) in (
 
     @test isapprox(di_x_po_x_co, re2; atol = 1e-5)
 
-    #@btime Nucleus.Coordinate.pull($di_x_no_x_co, $no_x_po_x_pu)
+    for pu in (1, 2)
+
+        #@btime Nucleus.Coordinate.pull($di_x_no_x_co, $no_x_po_x_pu)
+
+    end
 
 end
 
@@ -81,7 +87,7 @@ const TR = Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO))
 
 # ---- #
 
-# 10.333 μs (154 allocations: 18.67 KiB)
+# 9.791 μs (154 allocations: 18.67 KiB)
 #@btime Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO));
 
 # ---- #
@@ -99,10 +105,10 @@ for co_ in eachcol(DI_X_AN_X_CO)
 
     @test Nucleus.Coordinate.is_in(co_, VP)
 
+    # 9.510 ns (0 allocations: 0 bytes)
+    # 9.541 ns (0 allocations: 0 bytes)
     # 9.551 ns (0 allocations: 0 bytes)
-    # 9.551 ns (0 allocations: 0 bytes)
-    # 9.551 ns (0 allocations: 0 bytes)
-    # 9.551 ns (0 allocations: 0 bytes)
+    # 9.541 ns (0 allocations: 0 bytes)
     #@btime Nucleus.Coordinate.is_in($co_, VP)
 
 end

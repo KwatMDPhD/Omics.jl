@@ -16,15 +16,122 @@ const DA = joinpath(Nucleus._DA, "GPSMap")
 
 # ---- #
 
-function order(nu___)
+for (na1, no_x_no_x_di) in (
+    (
+        "111",
+        [
+            0 1 1 1
+            1 0 1 1
+            1 1 0 1
+            1 1 1 0
+        ],
+    ),
+    (
+        "211",
+        [
+            0 2 1 1
+            2 0 1 1
+            1 1 0 1
+            1 1 1 0
+        ],
+    ),
+    (
+        "121",
+        [
+            0 1 2 1
+            1 0 1 1
+            2 1 0 1
+            1 1 1 0
+        ],
+    ),
+    (
+        "112",
+        [
+            0 1 1 2
+            1 0 1 1
+            1 1 0 1
+            2 1 1 0
+        ],
+    ),
+    (
+        "221",
+        [
+            0 2 2 1
+            2 0 1 1
+            2 1 0 1
+            1 1 1 0
+        ],
+    ),
+    (
+        "122",
+        [
+            0 1 2 2
+            1 0 1 1
+            2 1 0 1
+            2 1 1 0
+        ],
+    ),
+    (
+        "212",
+        [
+            0 2 1 2
+            2 0 1 1
+            1 1 0 1
+            2 1 1 0
+        ],
+    ),
+    (
+        "123",
+        [
+            0 1 2 3
+            1 0 1 1
+            2 1 0 1
+            3 1 1 0
+        ],
+    ),
+)
 
-    Nucleus.Clustering.hierarchize(Nucleus.Distance.get(Nucleus.Distance.Euclidean(), nu___)).order
+    no_ = (id -> "Node $id").(1:size(no_x_no_x_di, 1))
+
+    po_ = (id -> "Point $id").(1:10)
+
+    no_x_po_x_pu = ones(lastindex(no_), lastindex(po_))
+
+    for (na2, no_x_no_x_di2) in
+        (("10", no_x_no_x_di .* 10), ("1", no_x_no_x_di), ("0.1", no_x_no_x_di .* 0.1))
+
+        Nucleus.GPSMap.plot(
+            "",
+            no_,
+            no_x_no_x_di2,
+            po_,
+            no_x_po_x_pu;
+            layout = Dict("title" => Dict("text" => "$na1 $na2")),
+        )
+
+    end
 
 end
 
 # ---- #
 
-function plot(ht, ro_, co_, ma)
+function get_distance(nu___)
+
+    Nucleus.Distance.get_half(Nucleus.Information.get_information_coefficient_distance, nu___)
+
+end
+
+# ---- #
+
+function order(nu___)
+
+    Nucleus.Clustering.hierarchize(get_distance(nu___)).order
+
+end
+
+# ---- #
+
+function cluster_plot(ht, ro_, co_, ma)
 
     id1_ = order(eachrow(ma))
 
@@ -38,7 +145,7 @@ end
 
 _naf, fa_, sa_, mh = Nucleus.DataFrame.separate(joinpath(DA, "h.tsv"))
 
-plot(joinpath(Nucleus.TE, "h.html"), fa_, sa_, mh)
+cluster_plot(joinpath(Nucleus.TE, "h.html"), fa_, sa_, mh)
 
 # ---- #
 
@@ -52,13 +159,7 @@ for co in eachcol(mh)
 
 end
 
-plot(joinpath(Nucleus.TE, "h_normalized.html"), fa_, sa_, mh)
-
-# ---- #
-
-mh .^= 2
-
-plot(joinpath(Nucleus.TE, "h_powered.html"), fa_, sa_, mh)
+cluster_plot(joinpath(Nucleus.TE, "h_normalized.html"), fa_, sa_, mh)
 
 # ---- #
 
@@ -81,23 +182,30 @@ no_x_po_x_pu = mh
 
 # ---- #
 
-no_x_no_x_di = Nucleus.Distance.get(
-    Nucleus.Distance.Euclidean(),
-    #Nucleus.Information.get_information_coefficient_distance,
-    eachrow(no_x_po_x_pu),
-)
+no_x_no_x_di = get_distance(eachrow(no_x_po_x_pu))
 
-plot(joinpath(Nucleus.TE, "distance.html"), fa_, fa_, no_x_no_x_di)
+cluster_plot(joinpath(Nucleus.TE, "distance.html"), fa_, fa_, no_x_no_x_di)
 
 # ---- #
 
-const SE = 20231211
+const SE = 202312091501
+
+# ---- #
+
+const KE_AR = (pu = 2, point_marker_size = 13)
 
 # ---- #
 
 seed!(SE)
 
-Nucleus.GPSMap.plot(joinpath(Nucleus.TE, "map.html"), fa_, no_x_no_x_di, sa_, no_x_po_x_pu)
+Nucleus.GPSMap.plot(
+    joinpath(Nucleus.TE, "map.html"),
+    fa_,
+    no_x_no_x_di,
+    sa_,
+    no_x_po_x_pu;
+    KE_AR...,
+)
 
 # ---- #
 
@@ -110,4 +218,5 @@ Nucleus.GPSMap.plot(
     sa_,
     no_x_po_x_pu;
     sc_ = la_,
+    KE_AR...,
 )

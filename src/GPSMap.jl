@@ -24,6 +24,7 @@ function plot(
     node_annotation_bordercolor = node_marker_line_color,
     node_annotation_arrowwidth = node_marker_line_width,
     node_annotation_arrowcolor = node_marker_line_color,
+    pu = 1,
     n_gr = 256,
     ncontours = 32,
     point_marker_size = 16,
@@ -32,7 +33,7 @@ function plot(
     point_marker_line_width = 0.8,
     point_marker_line_color = "#000000",
     sc_ = (),
-    heightwidth = 800,
+    layout = Dict{String, Any}(),
 )
 
     data = Dict{String, Any}[]
@@ -109,7 +110,7 @@ function plot(
 
     range2 = Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[2, :])
 
-    di_x_po_x_co = Nucleus.Coordinate.pull(di_x_no_x_co, no_x_po_x_pu)
+    di_x_po_x_co = Nucleus.Coordinate.pull(di_x_no_x_co, no_x_po_x_pu, pu)
 
     fa = 1.39
 
@@ -265,19 +266,23 @@ function plot(
     Nucleus.Plot.plot(
         ht,
         data,
-        Dict(
-            "height" => heightwidth,
-            "width" => heightwidth,
-            "margin" => Dict("t" => 32, "b" => 0, "l" => 8, "r" => 0),
-            "title" => Dict(
-                "y" => 0.98,
-                "x" => 0.02,
-                "text" => "GPS Map",
-                "font" => Dict("family" => "Gravitas One", "size" => 32, "color" => "#000000"),
+        Nucleus.Dict.merge(
+            Dict(
+                "height" => 800,
+                "width" => 800,
+                "margin" => Dict("t" => 8, "b" => 0, "l" => 16, "r" => 0),
+                "title" => Dict(
+                    "y" => 0.98,
+                    "x" => 0.02,
+                    "text" => "GPS Map",
+                    "font" =>
+                        Dict("family" => "Gravitas One", "size" => 32, "color" => "#000000"),
+                ),
+                "yaxis" => merge(axis, Dict("range" => range1, "autorange" => "reversed")),
+                "xaxis" => merge(axis, Dict("range" => range2 .* 1.08)),
+                "annotations" => annotations,
             ),
-            "yaxis" => merge(axis, Dict("range" => range1, "autorange" => "reversed")),
-            "xaxis" => merge(axis, Dict("range" => range2 .* 1.08)),
-            "annotations" => annotations,
+            layout,
         ),
     )
 
