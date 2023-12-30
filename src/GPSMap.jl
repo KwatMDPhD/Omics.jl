@@ -25,7 +25,7 @@ function plot(
     node_annotation_arrowwidth = node_marker_line_width,
     node_annotation_arrowcolor = node_marker_line_color,
     pu = 1,
-    n_gr = 256,
+    n_gr = 64,
     ncontours = 32,
     point_marker_size = 16,
     point_marker_opacity = 0.88,
@@ -88,22 +88,22 @@ function plot(
     )
 
     annotations = [
-        Dict(
-            "y" => co1,
-            "x" => co2,
-            "text" => "<b>$no</b>",
-            "font" => Dict(
-                "family" => "Gravitas One, monospace",
-                "size" => node_annotation_font_size,
-                "color" => node_annotation_font_color,
-            ),
-            "bgcolor" => node_annotation_bgcolor,
-            "borderpad" => node_annotation_borderpad,
-            "borderwidth" => node_annotation_borderwidth,
-            "bordercolor" => node_annotation_bordercolor,
-            "arrowwidth" => node_annotation_arrowwidth,
-            "arrowcolor" => node_annotation_arrowcolor,
-        ) for (no, (co1, co2)) in zip(no_, eachcol(di_x_no_x_co))
+    #Dict(
+    #    "y" => co1,
+    #    "x" => co2,
+    #    "text" => "<b>$no</b>",
+    #    "font" => Dict(
+    #        "family" => "Gravitas One, monospace",
+    #        "size" => node_annotation_font_size,
+    #        "color" => node_annotation_font_color,
+    #    ),
+    #    "bgcolor" => node_annotation_bgcolor,
+    #    "borderpad" => node_annotation_borderpad,
+    #    "borderwidth" => node_annotation_borderwidth,
+    #    "bordercolor" => node_annotation_bordercolor,
+    #    "arrowwidth" => node_annotation_arrowwidth,
+    #    "arrowcolor" => node_annotation_arrowcolor,
+    #) for (no, (co1, co2)) in zip(no_, eachcol(di_x_no_x_co))
     ]
 
     range1 = Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[1, :])
@@ -238,6 +238,7 @@ function plot(
                 ),
             )
 
+            @info view(po_, id_)
             push!(
                 data,
                 Nucleus.Dict.merge(

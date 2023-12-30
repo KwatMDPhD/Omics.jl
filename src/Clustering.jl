@@ -50,18 +50,16 @@ function compare_grouping(
     id_::AbstractVector{<:Integer},
     fe_x_sa_x_nu,
     ng_ = eachindex(unique(id_));
-    fu = _FU,
+    fu = Nucleus.Distance.Euclidean(),
     title_text = "",
 )
 
     n_gr = lastindex(ng_)
 
-    hi = hierarchize(fe_x_sa_x_nu, fu)
+    hi = hierarchize(Nucleus.Distance.get(fu, eachcol(fe_x_sa_x_nu)))
 
-    mu_ = [
-        Nucleus.Information.get_mutual_information(id_, cluster(hi, n_gr); no = true) for
-        n_gr in ng_
-    ]
+    # TODO: Normalize mutual information?
+    mu_ = [Nucleus.Information.get_mutual_information(id_, cluster(hi, n_gr)) for n_gr in ng_]
 
     me = _mean(mu_)
 
@@ -86,13 +84,13 @@ function compare_grouping(
     la_,
     fe_x_sa_x_nu,
     ng_ = eachindex(unique(la_));
-    fu = _FU,
+    fu = Nucleus.Distance.Euclidean(),
     title_text = "",
 )
 
     n_gr = lastindex(ng_)
 
-    hi = hierarchize(fe_x_sa_x_nu, fu)
+    hi = hierarchize(Nucleus.Distance.get(fu, eachcol(fe_x_sa_x_nu)))
 
     un_ = unique(la_)
 

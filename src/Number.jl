@@ -2,14 +2,14 @@ module Number
 
 using Printf: @sprintf
 
-# TODO: Test.
+using ..Nucleus
+
 function format2(nu)
 
     @sprintf "%.2g" nu
 
 end
 
-# TODO: Test.
 function format4(nu)
 
     @sprintf "%.4g" nu
@@ -28,7 +28,14 @@ function is_negative(fl::AbstractFloat)
 
 end
 
-# TODO: Test.
+function shift!(nu_, mi = 1)
+
+    nu_ .-= minimum(nu_)
+
+    nu_ .+= mi
+
+end
+
 function separate(nu_)
 
     ne_ = Float64[]
@@ -42,6 +49,20 @@ function separate(nu_)
     end
 
     ne_, po_
+
+end
+
+function ready(nu_::AbstractVector{<:Real})
+
+    nu_
+
+end
+
+function ready(an_)
+
+    la_id = Nucleus.Collection._map_index(unique(an_))
+
+    [la_id[an] for an in an_]
 
 end
 
