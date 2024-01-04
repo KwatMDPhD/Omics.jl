@@ -16,7 +16,6 @@ function factorize(ma, n; ke_ar...)
 
         @info "Converged $me"
 
-
     else
 
         @warn "Failed to converge $me"
@@ -41,6 +40,7 @@ function solve_h(mw, ma)
 
 end
 
+# TODO: Test.
 function write(
     di,
     ma;
@@ -48,32 +48,20 @@ function write(
     naf = "Factor",
     la_ = (id -> "$nal $id").(1:maximum(size(ma))),
     fa_ = (id -> "$naf $id").(1:minimum(size(ma))),
-    no = true,
+    no = false,
     lo = Nucleus.HTML.WI,
     sh = Nucleus.HTML.HE,
 )
 
-    Nucleus.Error.error_missing(di)
+    n_fa, id = findmin(size(ma))
 
-    id = findmax(size(ma))[2]
+    nnaf = "$n_fa$naf"
 
     if isone(id)
 
-        wh = "W"
-
-        nar = nal
-
-        nac = naf
-
-        ro_ = la_
-
-        co_ = fa_
-
-        ma2 = permutedims(ma)
-
-    else
-
         wh = "H"
+
+        fi = "$(nnaf)_x_$(nal)_x_float"
 
         nar = naf
 
@@ -83,48 +71,65 @@ function write(
 
         co_ = la_
 
-        ma2 = ma
+        height = sh
+
+        width = lo
+
+        ax = "y"
+
+        mac = ma
+
+    else
+
+        wh = "W"
+
+        fi = "$(nal)_x_$(nnaf)_x_float"
+
+        nar = nal
+
+        nac = naf
+
+        ro_ = la_
+
+        co_ = fa_
+
+        height = lo
+
+        width = sh
+
+        ax = "x"
+
+        mac = permutedims(ma)
 
     end
 
-    pr = joinpath(di, lowercase(wh))
+    pr = joinpath(di, Nucleus.Path.clean(fi))
 
     Nucleus.DataFrame.write("$pr.tsv", nar, ro_, co_, ma)
 
     id_ =
         Nucleus.Clustering.hierarchize(
-            Nucleus.Distance.get(Nucleus.Distance.Euclidean(), ma2),
+            # TODO: Use information.
+            Nucleus.Distance.get(Nucleus.Distance.Euclidean(), mac),
         ).order
 
     if isone(id)
-
-        ma = ma[id_, :]
-
-        ro_ = ro_[id_]
-
-        ea = eachrow
-
-        height, width = lo, sh
-
-        ax = "x"
-
-    else
 
         ma = ma[:, id_]
 
         co_ = co_[id_]
 
-        ea = eachcol
+    else
 
-        height, width = sh, lo
+        ma = ma[id_, :]
 
-        ax = "y"
+        ro_ = ro_[id_]
 
     end
 
     if no
 
-        foreach(Nucleus.Normalization.normalize_with_0!, ea(ma))
+        foreach(Nucleus.Normalization.normalize_with_0!, (isone(id) ? eachcol : eachrow)(ma))
 
     end
 
