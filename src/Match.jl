@@ -6,7 +6,7 @@ using Random: shuffle!
 
 using Statistics: cor
 
-using StatsBase: sample
+using StatsBase: mean, quantile, sample
 
 using ..Nucleus
 
@@ -369,6 +369,17 @@ function make(
     end
 
     fe_x_st_x_fl
+
+end
+
+# TODO: Test.
+function summarize(fe_x_st_x_fl, qu = 0.99)
+
+    sc_ = view(fe_x_st_x_fl, :, 1)
+
+    ab_ = abs.(view(sc_, .!isnan.(sc_)))
+
+    mean(filter!(>=(quantile(ab_, qu)), ab_))
 
 end
 
