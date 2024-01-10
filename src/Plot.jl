@@ -406,22 +406,19 @@ function plot_radar(
     line_color_ = Nucleus.Color.color(eachindex(an_)),
     fill_ = fill("toself", lastindex(an_)),
     fillcolor_ = line_color_,
+    linewidth = 4.8,
+    linecolor = "#351e1c",
+    gridwidth = 1.6,
+    gridcolor = Nucleus.Color.HEFA,
+    ticklen = 24,
+    angularaxis_tickfont_color = "#2e211b",
     radialaxis_range = (0, 1.1maximum(vcat(ra_...))),
-    tickvals = nothing,
+    radialaxis_tickvals = nothing,
+    radialaxis_tickfont_color = "#ffffff",
     layout = Dict{String, Any}(),
     bgcolor = nothing,
     ke_ar...,
 )
-
-    linewidth = 4.8
-
-    gridwidth = 1.6
-
-    ticklen = 24
-
-    linecolor = "#351e1c"
-
-    gridcolor = Nucleus.Color.HEFA
 
     plot(
         ht,
@@ -457,8 +454,11 @@ function plot_radar(
                         "ticklen" => ticklen,
                         "tickwidth" => gridwidth,
                         "tickcolor" => linecolor,
-                        "tickfont" =>
-                            Dict("family" => "Optima", "size" => 32, "color" => "#2e211b"),
+                        "tickfont" => Dict(
+                            "family" => "Optima",
+                            "size" => 32,
+                            "color" => angularaxis_tickfont_color,
+                        ),
                     ),
                     "radialaxis" => Dict(
                         "range" => radialaxis_range,
@@ -466,14 +466,14 @@ function plot_radar(
                         "linecolor" => linecolor,
                         "gridwidth" => gridwidth,
                         "gridcolor" => gridcolor,
-                        "tickvals" => tickvals,
+                        "tickvals" => radialaxis_tickvals,
                         "ticklen" => 0.24ticklen,
                         "tickwidth" => gridwidth,
                         "tickcolor" => linecolor,
                         "tickfont" => Dict(
                             "family" => "Monospace",
                             "size" => 13,
-                            "color" => "#ffffff",
+                            "color" => radialaxis_tickfont_color,
                         ),
                         "tickangle" => 48,
                     ),

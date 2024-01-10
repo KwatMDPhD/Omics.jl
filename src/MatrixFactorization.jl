@@ -6,9 +6,9 @@ using NonNegLeastSquares: nonneg_lsq
 
 using ..Nucleus
 
-function factorize(ma, n; ke_ar...)
+function factorize(ma, n_fa; ke_ar...)
 
-    re = nnmf(ma, n; ke_ar...)
+    re = nnmf(ma, n_fa; ke_ar...)
 
     me = "with $(re.niters) iterations at $(re.objvalue)."
 
@@ -44,10 +44,10 @@ end
 function write(
     di,
     ma;
-    nal = "Label",
-    naf = "Factor",
-    la_ = (id -> "$nal $id").(1:maximum(size(ma))),
-    fa_ = (id -> "$naf $id").(1:minimum(size(ma))),
+    nl = "Label",
+    nf = "Factor",
+    la_ = (id -> "$nl $id").(1:maximum(size(ma))),
+    fa_ = (id -> "$nf $id").(1:minimum(size(ma))),
     no = false,
     lo = Nucleus.HTML.WI,
     sh = Nucleus.HTML.HE,
@@ -55,17 +55,17 @@ function write(
 
     n_fa, id = findmin(size(ma))
 
-    nnaf = "$n_fa$naf"
+    na = "$n_fa$nf"
 
     if isone(id)
 
         wh = "H"
 
-        fi = "$(nnaf)_x_$(nal)_x_float"
+        pr = "$(na)_x_$(nl)_x_float"
 
-        nar = naf
+        nr = nf
 
-        nac = nal
+        nc = nl
 
         ro_ = fa_
 
@@ -77,17 +77,17 @@ function write(
 
         ax = "y"
 
-        mac = ma
+        mc = ma
 
     else
 
         wh = "W"
 
-        fi = "$(nal)_x_$(nnaf)_x_float"
+        pr = "$(nl)_x_$(na)_x_float"
 
-        nar = nal
+        nr = nl
 
-        nac = naf
+        nc = nf
 
         ro_ = la_
 
@@ -99,18 +99,18 @@ function write(
 
         ax = "x"
 
-        mac = permutedims(ma)
+        mc = permutedims(ma)
 
     end
 
-    pr = joinpath(di, Nucleus.Path.clean(fi))
+    pe = joinpath(di, Nucleus.Path.clean(pr))
 
-    Nucleus.DataFrame.write("$pr.tsv", nar, ro_, co_, ma)
+    Nucleus.DataFrame.write("$pe.tsv", nr, ro_, co_, ma)
 
     id_ =
         Nucleus.Clustering.hierarchize(
             # TODO: Use information.
-            Nucleus.Distance.get(Nucleus.Distance.Euclidean(), mac),
+            Nucleus.Distance.get(Nucleus.Distance.Euclidean(), mc),
         ).order
 
     if isone(id)
@@ -134,12 +134,12 @@ function write(
     end
 
     Nucleus.Plot.plot_heat_map(
-        "$pr.html",
+        "$pe.html",
         ma;
         y = ro_,
         x = co_,
-        nar,
-        nac,
+        nr,
+        nc,
         layout = Dict(
             "height" => height,
             "width" => width,

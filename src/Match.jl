@@ -237,14 +237,13 @@ function make(
     sa_,
     ta_,
     fe_x_sa_x_nu;
+    ts = "feature_x_statistic_x_number",
     n_ma = 10,
     n_pv = 10,
     n_ex = 8,
     st = 4,
     layout = Dict{String, Any}(),
 )
-
-    Nucleus.Error.error_missing(di)
 
     n_fe, n_sa = size(fe_x_sa_x_nu)
 
@@ -338,7 +337,7 @@ function make(
 
     fe_x_st_x_fl = hcat(sc_, ma_, pv_, ad_)
 
-    pr = joinpath(di, "feature_x_statistic_x_number")
+    pr = joinpath(di, ts)
 
     Nucleus.DataFrame.write(
         "$pr.tsv",

@@ -28,6 +28,12 @@ const HEGE = "#20d9ba"
 
 const HEGP = "#9017e6"
 
+const HEIR = "#ff4e20"
+
+const HEIP = "#561649"
+
+const HEIB = "#d3ebee"
+
 function _make_color_scheme(he_)
 
     ColorScheme(parse.(Colorant, he_))

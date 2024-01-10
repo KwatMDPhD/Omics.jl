@@ -16,11 +16,11 @@ const CO = Nucleus.Color._make_color_scheme(HE_)
 
 # ---- #
 
-const N = lastindex(CO)
+const NC = lastindex(CO)
 
 # ---- #
 
-@test N === lastindex(HE_)
+@test NC === lastindex(HE_)
 
 # ---- #
 
@@ -37,6 +37,9 @@ for co in (
         Nucleus.Color.HESG,
         Nucleus.Color.HEGE,
         Nucleus.Color.HEGP,
+        Nucleus.Color.HEIR,
+        Nucleus.Color.HEIP,
+        Nucleus.Color.HEIB,
     ]),
     Nucleus.Color.COAS,
     Nucleus.Color.COBW,
@@ -92,7 +95,7 @@ const HEH = HE_[Int(round(0.5N))]
 
 # ---- #
 
-for id in (-1, 0, N + 1)
+for id in (-1, 0, NC + 1)
 
     @test Nucleus.Error.@is CO[id]
 
@@ -102,7 +105,7 @@ end
 
 # ---- #
 
-const ID_ = collect(1:N)
+const ID_ = collect(1:NC)
 
 # ---- #
 
@@ -131,9 +134,9 @@ for (fl, re) in (
     (0.01, "#fa0500"),
     (0.5, HEH),
     (0.99, "#0005fa"),
-    (1.0, HE_[N]),
-    (1.1, HE_[N]),
-    (Inf, HE_[N]),
+    (1.0, HE_[NC]),
+    (1.1, HE_[NC]),
+    (Inf, HE_[NC]),
 )
 
     @test Nucleus.Color.color(fl, CO) === re
@@ -148,7 +151,7 @@ end
 
 # ---- #
 
-@test Nucleus.Color.color(vcat(ID_, N + 1), CO) == [HE_[1], "#55aa00", "#00aa55", HE_[N]]
+@test Nucleus.Color.color(vcat(ID_, NC + 1), CO) == [HE_[1], "#55aa00", "#00aa55", HE_[NC]]
 
 # ---- #
 
