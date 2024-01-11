@@ -63,7 +63,7 @@ Nucleus.Plot.plot_scatter("", Y_)
 Nucleus.Plot.plot_scatter(
     "",
     Y_,
-    Y_,
+    Y_;
     marker_ = (Dict("size" => 80, "color" => "#ff0000"), Dict("size" => 40, "color" => "#0000ff")),
 )
 

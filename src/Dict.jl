@@ -83,35 +83,15 @@ function is_in(an_id, an1_)
 end
 
 # TODO: Test.
-function type!(ke_va)
-
-    for (ke, va) in ke_va
-
-        if va isa Vector{Any}
-
-            ke_va[ke] = convert(Vector{String}, va)
-
-        end
-
-    end
-
-end
-
 function read(fi, dicttype = OrderedDict; ke_ar...)
 
-    ex = Nucleus.Path.get_extension(fi)
-
-    if ex == "json" || ex == "ipynb"
-
-        json_parsefile(fi; dicttype, ke_ar...)
-
-    elseif ex == "toml"
+    if Nucleus.Path.get_extension(fi) == "toml"
 
         toml_parsefile(fi; ke_ar...)
 
     else
 
-        error("`$ex` is not `json`, `ipynb`, or `toml`.")
+        json_parsefile(fi; dicttype, ke_ar...)
 
     end
 

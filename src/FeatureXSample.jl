@@ -55,29 +55,29 @@ function _error_bad(ro_, co_, nu)
 
 end
 
-function plot(hte, hti, nar, ro_, nac, co_, nan, nu; ke_ar...)
+function plot(he, hi, nr, ro_, nc, co_, nn, nu; ke_ar...)
 
-    title = Dict("title" => Dict("text" => nan))
+    title = Dict("title" => Dict("text" => nn))
 
-    Nucleus.Plot.plot_heat_map(hte, nu; y = ro_, x = co_, nar, nac, layout = title, ke_ar...)
+    Nucleus.Plot.plot_heat_map(he, nu; y = ro_, x = co_, nr, nc, layout = title, ke_ar...)
 
-    Nucleus.Plot.plot_histogram(hti, (vec(nu),); layout = Dict("xaxis" => title))
-
-end
-
-function plot(nar, ro_, nac, co_, nan, nu)
-
-    plot("", "", nar, ro_, nac, co_, nan, nu)
+    Nucleus.Plot.plot_histogram(hi, (vec(nu),); layout = Dict("xaxis" => title))
 
 end
 
-function write_plot(pr, nar, ro_, nac, co_, nan, nu; ke_ar...)
+function plot(nr, ro_, nc, co_, nn, nu)
+
+    plot("", "", nr, ro_, nc, co_, nn, nu)
+
+end
+
+function write_plot(pr, nr, ro_, nc, co_, nn, nu; ke_ar...)
 
     Nucleus.Error.error_empty(pr)
 
-    Nucleus.DataFrame.write("$pr.tsv", nar, ro_, co_, nu)
+    Nucleus.DataFrame.write("$pr.tsv", nr, ro_, co_, nu)
 
-    plot("$pr.html", "$pr.histogram.html", nar, ro_, nac, co_, nan, nu; ke_ar...)
+    plot("$pr.html", "$pr.histogram.html", nr, ro_, nc, co_, nn, nu; ke_ar...)
 
 end
 
@@ -89,14 +89,14 @@ function transform(
     fu = median,
     ty = Float64,
     lo = false,
-    nar = "Feature",
-    nac = "Sample",
-    nan = "Number",
+    nr = "Feature",
+    nc = "Sample",
+    nn = "Number",
 )
 
     _error_bad(ro_, co_, nu)
 
-    plot(nar, ro_, nac, co_, nan, nu)
+    plot(nr, ro_, nc, co_, nn, nu)
 
     tr_ = String[]
 
@@ -127,7 +127,7 @@ function transform(
 
     if !isempty(tr_)
 
-        plot(nar, ro_, nac, co_, "$nan ($(join(tr_, " & ")))", nu)
+        plot(nr, ro_, nc, co_, "$nn ($(join(tr_, " & ")))", nu)
 
     end
 

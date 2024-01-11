@@ -102,13 +102,17 @@ function plot(
 
         fi = joinpath(dirname(ht), na)
 
-        if isfile(fi)
+        if dw != fi
 
-            rm(fi)
+            if isfile(fi)
+
+                rm(fi)
+
+            end
+
+            mv(dw, fi)
 
         end
-
-        mv(dw, fi)
 
     end
 

@@ -25,7 +25,7 @@ function plot(ht, ro_, co_, de; title_text = "Density")
 
     Nucleus.Plot.plot_heat_map(
         ht,
-        de,
+        de;
         y = Nucleus.Plot._label_row.(Nucleus.Number.format4.(ro_)),
         x = Nucleus.Plot._label_col.(Nucleus.Number.format4.(co_)),
         layout = Dict(

@@ -95,6 +95,13 @@ function get_mutual_information(nu1_, nu2_; ke_ar...)
 
 end
 
+# TODO: Use as a keyword argument.
+@inline function normalize_mutual_information(mu, e1, e2)
+
+    2.0 * mu / (e1 + e2)
+
+end
+
 function get_information_coefficient(mu)
 
     sqrt(1.0 - exp(-2.0 * mu))
@@ -165,12 +172,6 @@ end
 function get_information_coefficient_distance(nu1_, nu2_)
 
     (1.0 - get_information_coefficient(nu1_, nu2_)) * 0.5
-
-end
-
-@inline function normalize_mutual_information(mu, e1, e2)
-
-    2.0 * mu / (e1 + e2)
 
 end
 

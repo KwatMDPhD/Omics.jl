@@ -127,8 +127,8 @@ function compare_grouping(
         la_x_ng_x_ti[id_, :];
         y = un_[id_],
         x = ng_,
-        nar = "Label",
-        nac = "Number of Group",
+        nr = "Label",
+        nc = "Number of Group",
         layout = Dict(
             "title" => Dict("text" => "$title_text<br>$(Nucleus.Number.format4(me * 100))%"),
             "yaxis" => Dict("dtick" => 1),

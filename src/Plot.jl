@@ -252,16 +252,16 @@ function plot_heat_map(
     y = _label_row.(1:size(z, 1)),
     x = _label_col.(1:size(z, 2)),
     text = z,
-    nar = "Row",
-    nac = "Column",
+    nr = "Row",
+    nc = "Column",
     co = Nucleus.Color.pick_color_scheme(z),
     grr_ = Int[],
-    grc_ = Int[],
+    gc_ = Int[],
     layout = Dict{String, Any}(),
     ke_ar...,
 )
 
-    colorbarx = isempty(grr_) ? 0.97 : 1.024
+    colorbarx = isempty(gr_) ? 0.97 : 1.024
 
     colorbarx1 = colorbarx
 
@@ -269,9 +269,9 @@ function plot_heat_map(
 
     dx = 0.08
 
-    if !isempty(grr_)
+    if !isempty(gr_)
 
-        gr_, y, z, ticktext = _group(grr_, y, permutedims(z))
+        go_, y, z, ticktext = _group(gr_, y, permutedims(z))
 
         z = permutedims(z)
 
@@ -279,13 +279,13 @@ function plot_heat_map(
             data,
             _make_group_heat_map!(
                 Dict(
-                    "name" => "$nar Group",
+                    "name" => "$nr Group",
                     "xaxis" => "x2",
                     "y" => y,
-                    "z" => [[gr] for gr in gr_],
+                    "z" => [[gr] for gr in go_],
                     "hoverinfo" => "y+z",
                 ),
-                gr_,
+                go_,
                 colorbarx += dx,
                 ticktext,
             ),
@@ -293,21 +293,21 @@ function plot_heat_map(
 
     end
 
-    if !isempty(grc_)
+    if !isempty(gc_)
 
-        gr_, x, z, ticktext = _group(grc_, x, z)
+        go_, x, z, ticktext = _group(gc_, x, z)
 
         push!(
             data,
             _make_group_heat_map!(
                 Dict(
-                    "name" => "$nac Group",
+                    "name" => "$nc Group",
                     "yaxis" => "y2",
                     "x" => x,
-                    "z" => [gr_],
+                    "z" => [go_],
                     "hoverinfo" => "x+z",
                 ),
-                gr_,
+                go_,
                 colorbarx += dx,
                 ticktext,
             ),
@@ -370,12 +370,12 @@ function plot_heat_map(
                     "domain" => ydomain,
                     "autorange" => "reversed",
                     "automargin" => true,
-                    "title" => Dict("text" => "$nar ($(size(z, 1)))"),
+                    "title" => Dict("text" => "$nr ($(size(z, 1)))"),
                 ),
                 "xaxis" => Dict(
                     "domain" => xdomain,
                     "automargin" => true,
-                    "title" => Dict("text" => "$nac ($(size(z, 2)))"),
+                    "title" => Dict("text" => "$nc ($(size(z, 2)))"),
                 ),
                 "yaxis2" => Dict(
                     "domain" => (ydomain[2] + ddy, 1),

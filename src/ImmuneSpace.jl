@@ -51,7 +51,7 @@ function _read_feature_map(ip)
     if isfile(ts)
 
         for (fe, fe2) in
-            eachrow(Matrix(Nucleus.DataFrame.read(ts, select = ["Feature Id", "Gene Symbol"])))
+            eachrow(Matrix(Nucleus.DataFrame.read(ts; select = ["Feature Id", "Gene Symbol"])))
 
             fe_fe2[string(fe)] = fe2
 
