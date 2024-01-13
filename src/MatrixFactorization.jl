@@ -55,13 +55,9 @@ function write(
 
     n_fa, id = findmin(size(ma))
 
-    na = "$n_fa$nf"
-
     if isone(id)
 
         wh = "H"
-
-        pr = "$(na)_x_$(nl)_x_float"
 
         nr = nf
 
@@ -83,8 +79,6 @@ function write(
 
         wh = "W"
 
-        pr = "$(nl)_x_$(na)_x_float"
-
         nr = nl
 
         nc = nf
@@ -103,9 +97,9 @@ function write(
 
     end
 
-    pe = joinpath(di, Nucleus.Path.clean(pr))
+    pr = joinpath(di, "$n_fa$(lowercase(wh))")
 
-    Nucleus.DataFrame.write("$pe.tsv", nr, ro_, co_, ma)
+    Nucleus.DataFrame.write("$pr.tsv", nr, ro_, co_, ma)
 
     id_ =
         Nucleus.Clustering.hierarchize(
@@ -134,7 +128,7 @@ function write(
     end
 
     Nucleus.Plot.plot_heat_map(
-        "$pe.html",
+        "$pr.html",
         ma;
         y = ro_,
         x = co_,

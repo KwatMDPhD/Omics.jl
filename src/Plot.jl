@@ -255,7 +255,7 @@ function plot_heat_map(
     nr = "Row",
     nc = "Column",
     co = Nucleus.Color.pick_color_scheme(z),
-    grr_ = Int[],
+    gr_ = Int[],
     gc_ = Int[],
     layout = Dict{String, Any}(),
     ke_ar...,

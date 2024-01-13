@@ -238,9 +238,9 @@ function make(
     ta_,
     fe_x_sa_x_nu;
     ts = "feature_x_statistic_x_number",
-    n_ma = 10,
-    n_pv = 10,
-    n_ex = 8,
+    nm = 10,
+    np = 10,
+    ne = 8,
     st = 4,
     layout = Dict{String, Any}(),
 )
@@ -269,11 +269,11 @@ function make(
 
     ad_ = fill(NaN, n_fe)
 
-    if 0 < n_ma
+    if 0 < nm
 
-        @info "Calculating the margin of errors using $(Nucleus.String.count(n_ma, "sampling"))"
+        @info "Calculating the margin of errors using $(Nucleus.String.count(nm, "sampling"))"
 
-        ra_ = Vector{Float64}(undef, n_ma)
+        ra_ = Vector{Float64}(undef, nm)
 
         id_ = 1:n_sa
 
@@ -285,7 +285,7 @@ function make(
 
             nu_ = fe_x_sa_x_nu[id, :]
 
-            for id in 1:n_ma
+            for id in 1:nm
 
                 ids_ .= sample(id_, n_sm; replace = false)
 
@@ -299,19 +299,19 @@ function make(
 
     end
 
-    if 0 < n_pv
+    if 0 < np
 
-        @info "Calculating p-values using $(Nucleus.String.count(n_pv, "permutation"))"
+        @info "Calculating p-values using $(Nucleus.String.count(np, "permutation"))"
 
         co = copy(ta_)
 
-        fe_x_id_x_ra = Matrix{Float64}(undef, n_fe, n_pv)
+        fe_x_id_x_ra = Matrix{Float64}(undef, n_fe, np)
 
         @showprogress for idf in 1:n_fe
 
             nu_ = fe_x_sa_x_nu[idf, :]
 
-            for idr in 1:n_pv
+            for idr in 1:np
 
                 fe_x_id_x_ra[idf, idr] = fu(shuffle!(co), nu_)
 
@@ -347,9 +347,9 @@ function make(
         fe_x_st_x_fl,
     )
 
-    if 0 < n_ex
+    if 0 < ne
 
-        id_ = reverse!(Nucleus.Rank.get_extreme(sc_, n_ex))
+        id_ = reverse!(Nucleus.Rank.get_extreme(sc_, ne))
 
         _plot(
             "$pr.html",
