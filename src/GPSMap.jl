@@ -11,7 +11,7 @@ function plot(
     po_,
     no_x_po_x_pu;
     triangulation_line_color = "#171412",
-    node_marker_size = 48,
+    node_marker_size = 32,
     node_marker_opacity = 0.96,
     node_marker_color = triangulation_line_color,
     node_marker_line_width = 2,
@@ -59,7 +59,7 @@ function plot(
                 "x" => view(di_x_no_x_co, 2, ve),
                 "mode" => "lines",
                 "line" => Dict("color" => triangulation_line_color),
-                "hoverinfo" => "none",
+                "hoverinfo" => "skip",
             ),
         )
 
@@ -141,11 +141,16 @@ function plot(
             "transpose" => true,
             "ncontours" => ncontours,
             "contours" => Dict("coloring" => "none"),
-            "hoverinfo" => "none",
+            "hoverinfo" => "skip",
         ),
     )
 
     point = Dict(
+        "legendgroup" => "Point",
+        "name" => "Point ($(lastindex(po_)))",
+        "y" => view(di_x_po_x_co, 1, :),
+        "x" => view(di_x_po_x_co, 2, :),
+        "text" => po_,
         "mode" => "markers",
         "marker" => Dict(
             "size" => point_marker_size,
@@ -155,24 +160,19 @@ function plot(
         "hoverinfo" => "text",
     )
 
-    if isempty(sc_)
+    ty = eltype(sc_)
+
+    if ty <: AbstractFloat
 
         push!(
             data,
             Nucleus.Dict.merge(
                 point,
-                Dict(
-                    "legendgroup" => "Point",
-                    "name" => "Point ($(lastindex(po_)))",
-                    "y" => view(di_x_po_x_co, 1, :),
-                    "x" => view(di_x_po_x_co, 2, :),
-                    "text" => po_,
-                    "marker" => Dict("color" => point_marker_color),
-                ),
+                Dict("marker" => Dict("color" => Nucleus.Color.color(sc_, Nucleus.Color.COBW))),
             ),
         )
 
-    elseif eltype(sc_) <: Integer
+    elseif ty <: Integer
 
         un_ = sort!(unique(sc_))
 
@@ -232,7 +232,7 @@ function plot(
                         Nucleus.Color._make_color_scheme(["#ffffff", color]),
                     ),
                     "showscale" => false,
-                    "hoverinfo" => "none",
+                    "hoverinfo" => "skip",
                 ),
             )
 
@@ -253,10 +253,6 @@ function plot(
 
         end
 
-    elseif eltype(sc_) <: AbstractVector
-
-        error()
-
     end
 
     axis = Dict("showgrid" => false, "zeroline" => false, "ticks" => "", "showticklabels" => false)
@@ -268,7 +264,6 @@ function plot(
             Dict(
                 "height" => 800,
                 "width" => 800,
-                "margin" => Dict("t" => 8, "b" => 0, "l" => 16, "r" => 0),
                 "title" => Dict(
                     "y" => 0.98,
                     "x" => 0.02,

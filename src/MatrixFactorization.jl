@@ -48,7 +48,6 @@ function write(
     nf = "Factor",
     la_ = (id -> "$nl $id").(1:maximum(size(ma))),
     fa_ = (id -> "$nf $id").(1:minimum(size(ma))),
-    no = false,
     lo = Nucleus.HTML.WI,
     sh = Nucleus.HTML.HE,
 )
@@ -118,12 +117,6 @@ function write(
         ma = ma[id_, :]
 
         ro_ = ro_[id_]
-
-    end
-
-    if no
-
-        foreach(Nucleus.Normalization.normalize_with_0!, (isone(id) ? eachcol : eachrow)(ma))
 
     end
 
