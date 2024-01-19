@@ -6,12 +6,20 @@ using OrderedCollections: OrderedDict
 
 using ..Nucleus
 
+# TODO: Consider moving.
+function find(an, an_)
+
+    findfirst(==(an), an_)
+
+end
+
 function make_soft(gs)
 
     "$(gs)_family.soft.gz"
 
 end
 
+# TODO: Consider removing.
 function _split(st, de)
 
     (string(st) for st in eachsplit(st, de; limit = 2))
@@ -29,11 +37,11 @@ function _read(so)
 
     bl = th = be = ""
 
+    dk = " = "
+
+    dc = ": "
+
     io = open(so)
-
-    dek = " = "
-
-    dec = ": "
 
     while !eof(io)
 
@@ -41,7 +49,7 @@ function _read(so)
 
         if li[1] == '^'
 
-            bl, th = _split(view(li, 2:lastindex(li)), dek)
+            bl, th = _split(view(li, 2:lastindex(li)), dk)
 
             bl_th[bl][th] = OrderedDict{String, String}()
 
@@ -50,6 +58,7 @@ function _read(so)
         elseif li == be
 
             ta = readuntil(io, "$(be[1:(end - 5)])end\n")
+
             @assert count('\n', ta) ==
                     1 + parse(Int, bl_th[bl][th]["!$(titlecase(bl))_data_row_count"])
 
@@ -57,13 +66,11 @@ function _read(so)
 
         else
 
-            ke, va = _split(li, dek)
+            ke, va = _split(li, dk)
 
-            if startswith(ke, "!Sample_characteristics") && contains(va, dec)
+            if startswith(ke, "!Sample_characteristics") && contains(va, dc)
 
-                ch, va = _split(va, dec)
-
-                ke = "_ch.$ch"
+                ke, va = _split(va, dc)
 
             end
 
@@ -79,12 +86,13 @@ function _read(so)
 
 end
 
+# TODO: Benchmark against `push!`.
 function _get_sample(bl_th)
 
-    sa_ = [
-        "$(ke_va["!Sample_geo_accession"])_$(ke_va["!Sample_title"])" for
-        ke_va in values(bl_th["SAMPLE"])
-    ]
+    sa_ =
+        (
+            ke_va -> "$(ke_va["!Sample_geo_accession"])_$(ke_va["!Sample_title"])"
+        ).(values(bl_th["SAMPLE"]))
 
     @info "💃 Sample" sa_
 
@@ -92,17 +100,17 @@ function _get_sample(bl_th)
 
 end
 
-function _get_characteristic(bl_th, ke_ = ())
-
-    ch_ = String[]
+function _get_characteristic(bl_th)
 
     ke_va__ = values(bl_th["SAMPLE"])
+
+    ch_ = String[]
 
     for ke_va in ke_va__
 
         for ke in keys(ke_va)
 
-            if startswith(ke, "_ch") || ke in ke_
+            if !startswith(ke, "_ta")
 
                 push!(ch_, ke)
 
@@ -112,15 +120,13 @@ function _get_characteristic(bl_th, ke_ = ())
 
     end
 
-    ch_ = sort!(unique!(ch_))
+    mc = [Base.get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
 
-    ch_x_sa_x_st = [Base.get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
+    ch_ = titlecase.(sort!(unique!(ch_)))
 
-    ch_ .= (ch -> startswith(ch, "_ch") ? titlecase(view(ch, 5:lastindex(ch))) : ch).(ch_)
+    @info "👙 Characteristic" ch_ mc
 
-    @info "👙 Characteristic" ch_ ch_x_sa_x_st
-
-    ch_, ch_x_sa_x_st
+    ch_, mc
 
 end
 
@@ -198,26 +204,26 @@ function _get_feature_map(bl_th, pl)
 
     end
 
-    li_ = _dice(bl_th["PLATFORM"][pl]["_ta"])
+    ro_ = _dice(bl_th["PLATFORM"][pl]["_ta"])
 
-    an_id = Dict{String, Int}()
-
-    # TODO: Understand why `Vector{String}(undef, n_fe)` is slower.
+    # TODO: Understand why `Vector{String}(undef, n1)` is slower.
     fe_ = String[]
 
-    idc = findfirst(==(co), li_[1])
+    st_i1 = Dict{String, Int}()
 
-    for (id, li) in enumerate(view(li_, 2:lastindex(li_)))
+    i2 = find(co, ro_[1])
 
-        an = li[1]
+    for (i1, ro) in enumerate(view(ro_, 2:lastindex(ro_)))
 
-        an_id[an] = id
+        st = ro[1]
 
-        fe = li[idc]
+        st_i1[st] = i1
+
+        fe = ro[i2]
 
         if Nucleus.String.is_bad(fe)
 
-            fe = "_$an"
+            fe = "_$fe"
 
         else
 
@@ -225,7 +231,7 @@ function _get_feature_map(bl_th, pl)
 
             if Nucleus.String.is_bad(fe)
 
-                fe = "_$an"
+                fe = "_$fe"
 
             end
 
@@ -235,151 +241,138 @@ function _get_feature_map(bl_th, pl)
 
     end
 
-    an_id, fe_
+    st_i1, fe_
 
 end
 
 function _get_feature(bl_th, pl)
 
-    an_id, fe_ = _get_feature_map(bl_th, pl)
+    st_i1, fe_ = _get_feature_map(bl_th, pl)
 
-    sa_ke_va = bl_th["SAMPLE"]
+    sa_di = bl_th["SAMPLE"]
 
-    n_fe = lastindex(fe_)
+    n1 = lastindex(fe_)
 
-    n_sa = length(sa_ke_va)
+    n2 = length(sa_di)
 
-    fe_x_sa_x_fl = Matrix{Float64}(undef, n_fe, n_sa)
+    mf = Matrix{Float64}(undef, n1, n2)
 
-    isf_ = falses(n_fe)
+    i1_ = tures(n1)
 
-    iss_ = falses(n_sa)
+    i2_ = trues(n2)
 
-    idv = nothing
+    co = "VALUE"
 
-    for (ids, ke_va) in enumerate(values(sa_ke_va))
+    iv = nothing
+
+    for (i2, ke_va) in enumerate(values(sa_di))
 
         if ke_va["!Sample_platform_id"] != pl
+
+            i2_[i2] = false
 
             continue
 
         end
 
-        li_ = _dice(ke_va["_ta"])
+        ro_ = _dice(ke_va["_ta"])
 
-        if isnothing(idv)
+        co_ = ro_[1]
 
-            idv = findfirst(==("VALUE"), li_[1])
+        iv = isnothing(iv) ? find(co, co_) : @assert iv == find(co, co_)
 
-        end
+        for ro in view(ro_, 2:lastindex(ro_))
 
-        for li in view(li_, 2:lastindex(li_))
+            i1 = st_i1[ro[1]]
 
-            va = li[idv]
+            va = ro[iv]
 
             if isempty(va)
+
+                i1_[i1] = false
 
                 continue
 
             end
 
-            idf = an_id[li[1]]
-
-            fe_x_sa_x_fl[idf, ids] = parse(Float64, va)
-
-            isf_[idf] = true
+            mf[i1, i2] = parse(Float64, va)
 
         end
 
-        iss_[ids] = true
-
     end
 
-    fe_ = fe_[isf_]
+    fe_ = fe_[i1_]
 
-    fe_x_sa_x_fl = fe_x_sa_x_fl[isf_, iss_]
+    mf = mf[i1_, i2_]
 
-    @info "🧬 $pl" fe_ sum(iss_) / lastindex(iss_) fe_x_sa_x_fl
+    @info "🧬 $pl" fe_ sum(i2_) / lastindex(i2_) mf
 
-    fe_, iss_, fe_x_sa_x_fl
+    fe_, i2_, mf
 
 end
 
-function get_sample_characteristic(so, ke_ = ())
+function get_sample_characteristic(so)
 
     bl_th = _read(so)
 
-    sa_ = _get_sample(bl_th)
-
-    ch_, ch_x_sa_x_st = _get_characteristic(bl_th, ke_)
-
-    bl_th, sa_, ch_, ch_x_sa_x_st
+    bl_th, _get_sample(bl_th), _get_characteristic(bl_th)...
 
 end
 
-function intersect(co1_, co2_, ma1, ma2)
+function intersect(c1_, c2_, m1, m2)
 
-    it_ = Base.intersect(co1_, co2_)
+    it_ = Base.intersect(c1_, c2_)
 
-    Nucleus.FeatureXSample.log_intersection((co1_, co2_), it_)
+    Nucleus.FeatureXSample.log_intersection((c1_, c2_), it_)
 
-    it_, ma1[:, indexin(it_, co1_)], ma2[:, indexin(it_, co2_)]
+    it_, m1[:, indexin(it_, c1_)], m2[:, indexin(it_, c2_)]
 
 end
 
-function select(is_, co_, ma1, ma2)
+function select(i2_, co_, m1, m2)
 
-    co_ = co_[is_]
+    co_ = co_[i2_]
 
-    @info "🏩 Selected from $(lastindex(is_))" co_
+    @info "🏩 Selected from $(lastindex(i2_))" co_
 
-    co_, ma1[:, is_], ma2[:, is_]
+    co_, m1[:, i2_], m2[:, i2_]
 
 end
 
 # TODO: Generalize and test.
-function write(ou, nas, sa_, ch_, ch_x_sa_x_st, pl, fe_, nan, fe_x_sa_x_nu, ch)
+function write(ou, ns, sa_, ch_, mc, pl, fe_, nn, mf, ch)
 
-    nasc = Nucleus.Path.clean(nas)
+    nc = Nucleus.Path.clean(ns)
 
+    # TODO: Try `replace!`.
     sa_ = replace.(sa_, ',' => '_')
 
     Nucleus.DataFrame.write(
-        joinpath(ou, "characteristic_x_$(nasc)_x_string.tsv"),
+        joinpath(ou, "characteristic_x_$(nc)_x_string.tsv"),
         "Characteristic",
         ch_,
         sa_,
-        ch_x_sa_x_st,
+        mc,
     )
 
-    Nucleus.FeatureXSample.count_unique(ch_, eachrow(ch_x_sa_x_st))
+    Nucleus.FeatureXSample.count_unique(ch_, eachrow(mc))
 
     Nucleus.FeatureXSample.write_plot(
-        joinpath(ou, "$(lowercase(pl))_x_$(nasc)_x_number"),
+        joinpath(ou, "$(lowercase(pl))_x_$(nc)_x_number"),
         pl,
         fe_,
-        nas,
+        ns,
         sa_,
-        nan,
-        fe_x_sa_x_nu;
-        grc_ = isempty(ch) ? Int[] : ch_x_sa_x_st[findfirst(==(ch), ch_), :],
+        nn,
+        mf;
+        gc_ = isempty(ch) ? Int[] : mc[find(ch, ch_), :],
     )
 
 end
 
-function get(
-    ou,
-    so;
-    nas = "Sample",
-    sas = nothing,
-    sac = (),
-    ke_ = (),
-    ch = "",
-    pl = "",
-    lo = false,
-)
+function get(ou, so; ns = "Sample", ss = nothing, sc_ = (), ch = "", pl = "", lo = false)
 
-    bl_th, sa_, ch_, ch_x_sa_x_st = get_sample_characteristic(so, ke_)
+    bl_th, sa_, ch_, mc = get_sample_characteristic(so)
 
     if isempty(pl)
 
@@ -387,42 +380,35 @@ function get(
 
     end
 
-    fe_, is_, fe_x_sa_x_fl = _get_feature(bl_th, pl)
+    fe_, i2_, mf = _get_feature(bl_th, pl)
 
-    saf_ = sa_[is_]
+    sf_ = sa_[i2_]
 
-    if sa_ != saf_
+    if sa_ != sf_
 
-        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = intersect(sa_, saf_, ch_x_sa_x_st, fe_x_sa_x_fl)
-
-    end
-
-    if !isnothing(sas)
-
-        sa_, ch_x_sa_x_st, fe_x_sa_x_fl =
-            select(contains.(sa_, sas), sa_, ch_x_sa_x_st, fe_x_sa_x_fl)
+        sa_, mc, mf = intersect(sa_, sf_, mc, mf)
 
     end
 
-    if !isempty(sac)
+    if !isnothing(ss)
 
-        sa_, ch_x_sa_x_st, fe_x_sa_x_fl = select(
-            ch_x_sa_x_st[findfirst(==(sac[1]), ch_), :] .== sac[2],
-            sa_,
-            ch_x_sa_x_st,
-            fe_x_sa_x_fl,
-        )
+        sa_, mc, mf = select(contains.(sa_, ss), sa_, mc, mf)
 
     end
 
-    nan = basename(so)[1:(end - 15)]
+    if !isempty(sc_)
 
-    fe_, fe_x_sa_x_fl =
-        Nucleus.FeatureXSample.transform(fe_, sa_, fe_x_sa_x_fl; lo, nar = pl, nac = nas, nan)
+        sa_, mc, mf = select(mc[find(sc_[1], ch_), :] .== sc_[2], sa_, mc, mf)
 
-    write(ou, nas, sa_, ch_, ch_x_sa_x_st, pl, fe_, nan, fe_x_sa_x_fl, ch)
+    end
 
-    sa_, ch_, ch_x_sa_x_st, pl, fe_, fe_x_sa_x_fl
+    nn = basename(so)[1:(end - 15)]
+
+    fe_, mf = Nucleus.FeatureXSample.transform(fe_, sa_, mf; lo, nr = pl, nc = ns, nn)
+
+    write(ou, ns, sa_, ch_, mc, pl, fe_, nn, mf, ch)
+
+    sa_, ch_, mc, pl, fe_, mf
 
 end
 
