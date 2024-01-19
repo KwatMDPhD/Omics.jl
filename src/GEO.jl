@@ -6,13 +6,6 @@ using OrderedCollections: OrderedDict
 
 using ..Nucleus
 
-# TODO: Consider moving.
-function find(an, an_)
-
-    findfirst(==(an), an_)
-
-end
-
 function make_soft(gs)
 
     "$(gs)_family.soft.gz"
@@ -72,6 +65,8 @@ function _read(so)
 
                 ke, va = _split(va, dc)
 
+                ke = "_ch$ke"
+
             end
 
             Nucleus.Dict.set_with_suffix!(bl_th[bl][th], ke, va)
@@ -86,13 +81,12 @@ function _read(so)
 
 end
 
-# TODO: Benchmark against `push!`.
 function _get_sample(bl_th)
 
-    sa_ =
-        (
-            ke_va -> "$(ke_va["!Sample_geo_accession"])_$(ke_va["!Sample_title"])"
-        ).(values(bl_th["SAMPLE"]))
+    sa_ = [
+        "$(ke_va["!Sample_geo_accession"])_$(ke_va["!Sample_title"])" for
+        ke_va in values(bl_th["SAMPLE"])
+    ]
 
     @info "💃 Sample" sa_
 
@@ -110,7 +104,7 @@ function _get_characteristic(bl_th)
 
         for ke in keys(ke_va)
 
-            if !startswith(ke, "_ta")
+            if ke == "!Sample_platform_id" || view(ke, 1:3) == "_ch"
 
                 push!(ch_, ke)
 
@@ -120,9 +114,15 @@ function _get_characteristic(bl_th)
 
     end
 
+    ch_ = sort!(unique!(ch_))
+
     mc = [Base.get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
 
-    ch_ = titlecase.(sort!(unique!(ch_)))
+    for (i1, ch) in enumerate(ch_)
+
+        ch_[i1] = ch == "!Sample_platform_id" ? "Platform" : titlecase(view(ch, 4:lastindex(ch)))
+
+    end
 
     @info "👙 Characteristic" ch_ mc
 
@@ -206,34 +206,22 @@ function _get_feature_map(bl_th, pl)
 
     ro_ = _dice(bl_th["PLATFORM"][pl]["_ta"])
 
+    st_i1 = Dict{String, Int}()
+
+    i2 = Nucleus.Collection.find(co, ro_[1])
+
     # TODO: Understand why `Vector{String}(undef, n1)` is slower.
     fe_ = String[]
 
-    st_i1 = Dict{String, Int}()
-
-    i2 = find(co, ro_[1])
-
     for (i1, ro) in enumerate(view(ro_, 2:lastindex(ro_)))
 
-        st = ro[1]
-
-        st_i1[st] = i1
+        st_i1[ro[1]] = i1
 
         fe = ro[i2]
 
-        if Nucleus.String.is_bad(fe)
-
-            fe = "_$fe"
-
-        else
+        if !Nucleus.String.is_bad(fe)
 
             fe = fu(fe)
-
-            if Nucleus.String.is_bad(fe)
-
-                fe = "_$fe"
-
-            end
 
         end
 
@@ -257,9 +245,9 @@ function _get_feature(bl_th, pl)
 
     mf = Matrix{Float64}(undef, n1, n2)
 
-    i1_ = tures(n1)
+    i1_ = falses(n1)
 
-    i2_ = trues(n2)
+    i2_ = falses(n2)
 
     co = "VALUE"
 
@@ -269,31 +257,41 @@ function _get_feature(bl_th, pl)
 
         if ke_va["!Sample_platform_id"] != pl
 
-            i2_[i2] = false
-
             continue
 
         end
+
+        i2_[i2] = true
 
         ro_ = _dice(ke_va["_ta"])
 
         co_ = ro_[1]
 
-        iv = isnothing(iv) ? find(co, co_) : @assert iv == find(co, co_)
+        if isnothing(iv)
+
+            iv = Nucleus.Collection.find(co, co_)
+
+        else
+
+            @assert iv == Nucleus.Collection.find(co, co_)
+
+        end
 
         for ro in view(ro_, 2:lastindex(ro_))
 
-            i1 = st_i1[ro[1]]
+            st = ro[1]
+
+            i1 = st_i1[st]
 
             va = ro[iv]
 
-            if isempty(va)
-
-                i1_[i1] = false
+            if Nucleus.String.is_bad(fe_[i1]) || isempty(va)
 
                 continue
 
             end
+
+            i1_[i1] = true
 
             mf[i1, i2] = parse(Float64, va)
 
@@ -305,7 +303,7 @@ function _get_feature(bl_th, pl)
 
     mf = mf[i1_, i2_]
 
-    @info "🧬 $pl" fe_ sum(i2_) / lastindex(i2_) mf
+    @info "🧬 $pl" sum(i1_) / lastindex(i1_) sum(i2_) / lastindex(i2_) fe_ mf
 
     fe_, i2_, mf
 
@@ -365,7 +363,7 @@ function write(ou, ns, sa_, ch_, mc, pl, fe_, nn, mf, ch)
         sa_,
         nn,
         mf;
-        gc_ = isempty(ch) ? Int[] : mc[find(ch, ch_), :],
+        gc_ = isempty(ch) ? Int[] : mc[Nucleus.Collection.find(ch, ch_), :],
     )
 
 end
@@ -398,7 +396,7 @@ function get(ou, so; ns = "Sample", ss = nothing, sc_ = (), ch = "", pl = "", lo
 
     if !isempty(sc_)
 
-        sa_, mc, mf = select(mc[find(sc_[1], ch_), :] .== sc_[2], sa_, mc, mf)
+        sa_, mc, mf = select(mc[Nucleus.Collection.find(sc_[1], ch_), :] .== sc_[2], sa_, mc, mf)
 
     end
 

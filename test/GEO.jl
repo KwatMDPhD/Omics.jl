@@ -78,7 +78,7 @@ const PL = "GPL16686"
 
 # ---- #
 
-# 587.372 ms (10649 allocations: 27.73 MiB)
+# 587.345 ms (10649 allocations: 27.73 MiB)
 #@btime Nucleus.GEO._read(PA);
 
 # ---- #
@@ -108,7 +108,7 @@ const PL = "GPL16686"
 
 # ---- #
 
-# 1.087 μs (21 allocations: 1.22 KiB)
+# 1.042 μs (21 allocations: 1.22 KiB)
 #disable_logging(Info);
 #@btime Nucleus.GEO._get_sample(BL_TH);
 #disable_logging(Debug);
@@ -116,18 +116,16 @@ const PL = "GPL16686"
 # ---- #
 
 @test Nucleus.GEO._get_characteristic(BL_TH) == (
-    ["Cell Type"],
-    ["D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant"],
+    ["Platform", "Cell Type"],
+    [
+         "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686" "GPL16686"
+        "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant"
+    ],
 )
 
 # ---- #
 
-@test Nucleus.GEO._get_characteristic(BL_TH, ("!Sample_geo_accession", "!Sample_platform_id"))[1] ==
-      ["!Sample_geo_accession", "!Sample_platform_id", "Cell Type"]
-
-# ---- #
-
-# 3.906 μs (9 allocations: 936 bytes)
+# 10.666 μs (13 allocations: 1.45 KiB)
 #disable_logging(Info);
 #@btime Nucleus.GEO._get_characteristic(BL_TH);
 #disable_logging(Debug);
@@ -144,11 +142,11 @@ const PL = "GPL16686"
 
 # ---- #
 
-@test size.(Nucleus.GEO._get_feature(BL_TH, PL)) === ((53617,), (20,), (53617, 20))
+@test size.(Nucleus.GEO._get_feature(BL_TH, PL)) === ((17623,), (20,), (17623, 20))
 
 # ---- #
 
-# 371.853 ms (2524009 allocations: 383.42 MiB)
+# 370.710 ms (2378577 allocations: 372.10 MiB)
 #disable_logging(Info);
 #@btime Nucleus.GEO._get_feature(BL_TH, PL);
 #disable_logging(Debug);
@@ -159,49 +157,49 @@ const PL = "GPL16686"
 
 # ---- #
 
-for (co1_, co2_, ma1, ma2, re) in (
+for (c1_, c2_, m1, m2, re) in (
     (1:1, 1:2, [1;;], [1 2], (1:1, [1;;], [1;;])),
     (1:2, 1:2, [1 2], [1 2], (1:2, [1 2], [1 2])),
     (1:3, 2:4, [1 2 3], [2 3 4], (2:3, [2 3], [2 3])),
 )
 
-    @test Nucleus.GEO.intersect(co1_, co2_, ma1, ma2) == re
+    @test Nucleus.GEO.intersect(c1_, c2_, m1, m2) == re
 
-    # 281.628 ns (14 allocations: 1.38 KiB)
-    # 289.513 ns (14 allocations: 1.41 KiB)
-    # 319.567 ns (14 allocations: 1.41 KiB)
+    # 283.576 ns (14 allocations: 1.38 KiB)
+    # 294.370 ns (14 allocations: 1.41 KiB)
+    # 325.658 ns (14 allocations: 1.41 KiB)
     #disable_logging(Info)
-    #@btime Nucleus.GEO.intersect($co1_, $co2_, $ma1, $ma2)
+    #@btime Nucleus.GEO.intersect($c1_, $c2_, $m1, $m2)
     #disable_logging(Debug)
 
 end
 
 # ---- #
 
-for (gs, ch, rec, ref) in (
-    ("GSE13534", "", (0, 4), (14295, 4)),
-    ("GSE16059", "Diagnonsis", (3, 88), (31773, 88)),
-    ("GSE67311", "Diagnosis", (9, 142), (31403, 142)),
+for (gs, ch, rs, rf) in (
+    ("GSE13534", "", (1, 4), (13237, 4)),
+    ("GSE16059", "Diagnonsis", (4, 88), (22880, 88)),
+    ("GSE67311", "Diagnosis", (10, 142), (20254, 142)),
     # TODO: Add a test data that has a different number of samples.
 )
 
-    sa_, ch_, ch_x_sa_x_st, pl, fe_, fe_x_sa_x_fl =
+    sa_, ch_, st, pl, fe_, fl =
         Nucleus.GEO.get(Nucleus.TE, joinpath(DA, Nucleus.GEO.make_soft(gs)); ch)
 
-    @test size(ch_x_sa_x_st) === rec
+    @test size(st) === rs
 
-    @test size(fe_x_sa_x_fl) === ref
+    @test size(fl) === rf
 
 end
 
 # ---- #
 
-for (gs, re) in (("GSE168940", (5, 18)), ("GSE197763", (4, 126)))
+for (gs, re) in (("GSE168940", (6, 18)), ("GSE197763", (5, 126)))
 
-    bl_th, sa_, ch_, ch_x_sa_x_st =
+    bl_th, sa_, ch_, st =
         Nucleus.GEO.get_sample_characteristic(joinpath(DA, "$(gs)_family.soft.gz"))
 
-    @test size(ch_x_sa_x_st) === re
+    @test size(st) === re
 
     for pl in keys(bl_th["PLATFORM"])
 

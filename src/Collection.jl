@@ -28,6 +28,13 @@ function get_minimum_maximum(an_)
 
 end
 
+# TODO: Test.
+function find(an, an_)
+
+    findfirst(==(an), an_)
+
+end
+
 function _map_index(an_)
 
     Dict(an => id for (id, an) in enumerate(an_))
