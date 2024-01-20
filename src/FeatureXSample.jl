@@ -85,7 +85,7 @@ function transform(
     ro_,
     co_,
     nu;
-    ro_ro2 = Dict{String, String}(),
+    ro_r2 = Dict{String, String}(),
     fu = median,
     ty = Float64,
     lo = false,
@@ -100,10 +100,10 @@ function transform(
 
     tr_ = String[]
 
-    if !isempty(ro_ro2)
+    if !isempty(ro_r2)
 
         # TODO: Generalize the "ENSG" logic.
-        Nucleus.Gene.rename!(ro_, ro_ro2)
+        Nucleus.Gene.rename!(ro_, ro_r2)
 
         push!(tr_, "Renamed")
 

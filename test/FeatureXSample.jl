@@ -31,19 +31,19 @@ end
 
 # ---- #
 
-const NAR = "Row"
+const NR = "Row"
 
 # ---- #
 
-const NAC = "Column"
+const NC = "Column"
 
 # ---- #
 
-const RO_ = (id -> "$NAR $id").([1, 1, 2, 3, 2, 3, 4])
+const RO_ = (id -> "$NR $id").([1, 1, 2, 3, 2, 3, 4])
 
 # ---- #
 
-const CO_ = (id -> "$NAC $id").(1:3)
+const CO_ = (id -> "$NC $id").(1:3)
 
 # ---- #
 
@@ -51,19 +51,19 @@ const FL = reshape(1.0:21, 7, 3)
 
 # ---- #
 
-Nucleus.FeatureXSample.plot(NAR, RO_, NAC, CO_, "plot", FL)
+Nucleus.FeatureXSample.plot(NR, RO_, NC, CO_, "plot", FL)
 
 # ---- #
 
-@test Nucleus.Error.@is Nucleus.FeatureXSample.write_plot("", NAR, RO_, NAC, CO_, "write_plot", FL)
+@test Nucleus.Error.@is Nucleus.FeatureXSample.write_plot("", NR, RO_, NC, CO_, "write_plot", FL)
 
 # ---- #
 
 Nucleus.FeatureXSample.write_plot(
     joinpath(Nucleus.TE, "write"),
-    NAR,
+    NR,
     RO_,
-    NAC,
+    NC,
     CO_,
     "write_plot",
     FL,
@@ -79,11 +79,11 @@ end
 
 # ---- #
 
-const ROU_ = unique(RO_)
+const UN_ = unique(RO_)
 
 # ---- #
 
-const RO2U_ = replace.(ROU_, NAR => "New $NAR")
+const U2_ = replace.(UN_, NR => "New $NR")
 
 # ---- #
 
@@ -91,11 +91,11 @@ const RO2U_ = replace.(ROU_, NAR => "New $NAR")
     RO_,
     CO_,
     FL;
-    ro_ro2 = Dict(zip(ROU_, RO2U_)),
+    ro_r2 = Dict(zip(UN_, U2_)),
     lo = true,
-    nan = "transform",
+    nn = "transform",
 ) == (
-    RO2U_,
+    U2_,
     [
         1.3219280948873624 3.2479275134435857 4.044394119358453
         2.321928094887362 3.584962500721156 4.247927513443585
