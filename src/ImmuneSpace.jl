@@ -7,65 +7,63 @@ using ..Nucleus
 
 function _read_demographic(ip)
 
-    _nap, pa_, de_, pa_x_de_x_an = Nucleus.DataFrame.separate(joinpath(ip, "demographics.tsv"))
+    _np, pa_, de_, ma = Nucleus.DataFrame.separate(joinpath(ip, "demographics.tsv"))
 
-    de_x_pa_x_an = permutedims(pa_x_de_x_an)
+    pe = permutedims(ma)
 
-    @info "🧖‍♀️ Demographic" de_ pa_ de_x_pa_x_an
+    @info "🧖‍♀️ Demographic" de_ pa_ pe
 
-    de_, pa_, de_x_pa_x_an
-
-end
-
-function _read_feature(ip, tsf::AbstractString)
-
-    _naf, fe_, sa_, fe_x_sa_x_nu = Nucleus.DataFrame.separate(joinpath(ip, tsf))
-
-    fe_ = string.(fe_)
-
-    @info "🧬 Feature" fe_ sa_ fe_x_sa_x_nu
-
-    fe_, sa_, fe_x_sa_x_nu
+    de_, pa_, pe
 
 end
 
-function _read_feature(ip, tsf)
+function _read_feature(ip, tf::AbstractString)
 
-    _naf, fe_, sa_, fe_x_sa_x_nu = Nucleus.DataFrame.separate(
-        outerjoin(
-            (Nucleus.DataFrame.read(joinpath(ip, tsf)) for tsf in tsf)...;
-            on = "feature_id",
-        ),
+    _nf, fe_, sa_, ma = Nucleus.DataFrame.separate(joinpath(ip, tf))
+
+    st_ = string.(fe_)
+
+    @info "🧬 Feature" st_ sa_ ma
+
+    st_, sa_, ma
+
+end
+
+function _read_feature(ip, tf)
+
+    _nf, fe_, sa_, ma = Nucleus.DataFrame.separate(
+        outerjoin((Nucleus.DataFrame.read(joinpath(ip, tf)) for tf in tf)...; on = "feature_id"),
     )
 
-    string.(fe_), sa_, replace(fe_x_sa_x_nu, missing => NaN)
+    string.(fe_), sa_, replace(ma, missing => NaN)
 
 end
 
 function _read_feature_map(ip)
 
-    fe_fe2 = Dict{String, String}()
+    fe_f2 = Dict{String, String}()
 
     ts = joinpath(ip, "FeatureAnnotation.tsv")
 
     if isfile(ts)
 
-        for (fe, fe2) in
+        for (fe, f2) in
             eachrow(Matrix(Nucleus.DataFrame.read(ts; select = ["Feature Id", "Gene Symbol"])))
 
-            fe_fe2[string(fe)] = fe2
+            fe_f2[string(fe)] = f2
 
         end
 
     end
 
-    fe_fe2
+    fe_f2
 
 end
 
 function _get_unit(an_)
 
     un_ = unique(an_)
+
     @assert isone(lastindex(un_))
 
     un = un_[1]
@@ -99,7 +97,7 @@ end
 
 function _read_neut_ab_titer(ip)
 
-    pa_, ti_, unt_, vi_, nu_, unn_ = eachcol(
+    pa_, ti_, ut_, vi_, nu_, un_ = eachcol(
         Matrix(
             Nucleus.DataFrame.read(
                 joinpath(ip, "neut_ab_titer.tsv");
@@ -115,15 +113,15 @@ function _read_neut_ab_titer(ip)
         ),
     )
 
-    vt_, pa_, vt_x_pa_x_nu = Nucleus.Target.tabulate(
+    vt_, pa_, ma = Nucleus.Target.tabulate(
         (Nucleus.String.clean.(vi_), convert(Vector{Int}, ti_)),
         (pa_,),
         nu_,
     )
 
-    @info "🏹 Antibody" vt_ pa_ vt_x_pa_x_nu
+    @info "🏹 Antibody" vt_ pa_ ma
 
-    vt_, pa_, vt_x_pa_x_nu, _get_unit(unt_), _get_unit(unn_)
+    vt_, pa_, ma, _get_unit(ut_), _get_unit(un_)
 
 end
 
@@ -133,11 +131,11 @@ function _initialize_block()
 
 end
 
-function _push_block!(ts_, nar_, ro___, co___, ma_, ts, nar, ro_, co_, ma)
+function _push_block!(ts_, nr_, ro___, co___, ma_, ts, nr, ro_, co_, ma)
 
     push!(ts_, ts)
 
-    push!(nar_, nar)
+    push!(nr_, nr)
 
     push!(ro___, ro_)
 
@@ -165,29 +163,29 @@ function _intersect_block!(co___, ma_)
 
 end
 
-function _write_block(ts_, nar_, ro___, co_, ma_)
+function _write_block(ts_, nr_, ro___, co_, ma_)
 
-    for (ts, nar, ro_, ma) in zip(ts_, nar_, ro___, ma_)
+    for (ts, nr, ro_, ma) in zip(ts_, nr_, ro___, ma_)
 
-        Nucleus.DataFrame.write(ts, nar, ro_, co_, ma)
+        Nucleus.DataFrame.write(ts, nr, ro_, co_, ma)
 
-        @info "📝 $ts." nar ro_ co_ ma
+        @info "📝 $ts." nr ro_ co_ ma
 
     end
 
 end
 
-function get(ou, ip, tsf; ts = nothing, lo = false, ne = true)
+function get(ou, ip, tf; ts = nothing, lo = false, ne = true)
 
     Nucleus.Error.error_missing(ou)
 
-    ts_, nar_, ro___, co___, ma_ = _initialize_block()
+    ts_, nr_, ro___, co___, ma_ = _initialize_block()
 
-    de_, pa_, de_x_pa_x_an = _read_demographic(ip)
+    de_, pa_, an = _read_demographic(ip)
 
     _push_block!(
         ts_,
-        nar_,
+        nr_,
         ro___,
         co___,
         ma_,
@@ -195,26 +193,27 @@ function get(ou, ip, tsf; ts = nothing, lo = false, ne = true)
         "Information",
         de_,
         pa_,
-        de_x_pa_x_an,
+        an,
     )
 
-    fe_, sa_, fe_x_sa_x_nu = _read_feature(ip, tsf)
+    fe_, sa_, mf = _read_feature(ip, tf)
 
-    fe_, fe_x_sa_x_nu = Nucleus.FeatureXSample.transform(
+    fe_, mf = Nucleus.FeatureXSample.transform(
         fe_,
         sa_,
-        fe_x_sa_x_nu;
-        ro_ro2 = _read_feature_map(ip),
+        mf;
+        ro_r2 = _read_feature_map(ip),
         lo,
-        nar = "Gene",
-        nac = "Participant",
-        nan = "Transcription",
+        nr = "Gene",
+        nc = "Participant",
+        nn = "Transcription",
     )
 
     pa_, ti_, un = _read_sample_map(ip)
+
     @assert lastindex(sa_) == lastindex(pa_)
 
-    ke_ar = (y = fe_, nar = "Gene", layout = Dict("title" => Dict("text" => "Transcription")))
+    ke_ar = (y = fe_, nr = "Gene", layout = Dict("title" => Dict("text" => "Transcription")))
 
     for (ti, id_) in sort(Nucleus.Collection.map_index(ti_))
 
@@ -224,33 +223,27 @@ function get(ou, ip, tsf; ts = nothing, lo = false, ne = true)
 
         end
 
-        pai_ = pa_[id_]
+        pi_ = pa_[id_]
 
-        fe_x_sai_x_nu = fe_x_sa_x_nu[:, id_]
+        mi = mf[:, id_]
 
         pr = joinpath(ou, "gene_x_participant$(ti)_x_transcription")
 
-        _push_block!(ts_, nar_, ro___, co___, ma_, "$pr.tsv", "Gene", fe_, pai_, fe_x_sai_x_nu)
+        _push_block!(ts_, nr_, ro___, co___, ma_, "$pr.tsv", "Gene", fe_, pi_, mi)
 
-        Nucleus.Plot.plot_heat_map(
-            "$pr.html",
-            fe_x_sai_x_nu;
-            x = pai_,
-            nac = "Participant $un $ti",
-            ke_ar...,
-        )
+        Nucleus.Plot.plot_heat_map("$pr.html", mi; x = pi_, nc = "Participant $un $ti", ke_ar...)
 
     end
 
     if ne
 
-        vt_, pa_, vt_x_pa_x_nu, unt, unn = _read_neut_ab_titer(ip)
+        vt_, pa_, mn, ut, un = _read_neut_ab_titer(ip)
 
-        n = lastindex(vt_)
+        nv = lastindex(vt_)
 
-        vi_ = Vector{String}(undef, n)
+        vi_ = Vector{String}(undef, nv)
 
-        ti_ = Vector{Int}(undef, n)
+        ti_ = Vector{Int}(undef, nv)
 
         for (id, (vi, ti)) in enumerate(vt_)
 
@@ -260,36 +253,25 @@ function get(ou, ip, tsf; ts = nothing, lo = false, ne = true)
 
         end
 
-        ke_ar = (x = pa_, nar = unt, nac = "Participant")
+        ke_ar = (x = pa_, nr = ut, nc = "Participant")
 
         for (vi, id_) in Nucleus.Collection.map_index(vi_)
 
-            tii_ = string.("@ ", ti_[id_])
+            td_ = string.("@ ", ti_[id_])
 
-            vti_x_pa_x_nu = vt_x_pa_x_nu[id_, :]
+            md = mn[id_, :]
 
             pr = joinpath(
                 ou,
-                "time_$(Nucleus.Path.clean(vi))_x_participant_x_$(Nucleus.Path.clean(unn))",
+                "time_$(Nucleus.Path.clean(vi))_x_participant_x_$(Nucleus.Path.clean(un))",
             )
 
-            _push_block!(
-                ts_,
-                nar_,
-                ro___,
-                co___,
-                ma_,
-                "$pr.tsv",
-                "Target",
-                tii_,
-                pa_,
-                vti_x_pa_x_nu,
-            )
+            _push_block!(ts_, nr_, ro___, co___, ma_, "$pr.tsv", "Target", td_, pa_, md)
 
             Nucleus.Plot.plot_heat_map(
                 "$pr.html",
-                vti_x_pa_x_nu;
-                y = tii_,
+                md;
+                y = td_,
                 layout = Dict("title" => Dict("text" => vi)),
                 ke_ar...,
             )
@@ -298,9 +280,7 @@ function get(ou, ip, tsf; ts = nothing, lo = false, ne = true)
 
     end
 
-    co_ = _intersect_block!(co___, ma_)
-
-    _write_block(ts_, nar_, ro___, co_, ma_)
+    _write_block(ts_, nr_, ro___, _intersect_block!(co___, ma_), ma_)
 
 end
 

@@ -247,7 +247,7 @@ function make(
 
     n_fe, n_sa = size(fe_x_sa_x_nu)
 
-    @info "Matching \"$nat\" and $(Nucleus.String.count(n_fe, "\"$naf\"")) with `$fu`"
+    @info "🩰 Matching \"$nat\" and $(Nucleus.String.count(n_fe, "\"$naf\"")) with `$fu`"
 
     sa_, ta_, fe_x_sa_x_nu = _order(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
 

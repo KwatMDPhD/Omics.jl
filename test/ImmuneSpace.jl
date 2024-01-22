@@ -4,12 +4,12 @@ using Nucleus
 
 # ---- #
 
-const TS_, NAR_, RO___, CO___, MA_ = Nucleus.ImmuneSpace._initialize_block()
+const TS_, NR_, RO___, CO___, MA_ = Nucleus.ImmuneSpace._initialize_block()
 
 # ---- #
 
 for (bl, re) in
-    zip((TS_, NAR_, RO___, CO___, MA_), (String, String, Vector{String}, Vector{String}, Matrix))
+    zip((TS_, NR_, RO___, CO___, MA_), (String, String, Vector{String}, Vector{String}, Matrix))
 
     @test eltype(bl) === re
 
@@ -27,7 +27,7 @@ for (id, (ro_, co_)) in enumerate((
 
     Nucleus.ImmuneSpace._push_block!(
         TS_,
-        NAR_,
+        NR_,
         RO___,
         CO___,
         MA_,
@@ -42,7 +42,7 @@ end
 
 # ---- #
 
-for bl in (TS_, NAR_, RO___, CO___, MA_)
+for bl in (TS_, NR_, RO___, CO___, MA_)
 
     @test lastindex(bl) === 3
 
@@ -66,7 +66,7 @@ end
 
 # ---- #
 
-Nucleus.ImmuneSpace._write_block(TS_, NAR_, RO___, CO_, MA_)
+Nucleus.ImmuneSpace._write_block(TS_, NR_, RO___, CO_, MA_)
 
 # ---- #
 
