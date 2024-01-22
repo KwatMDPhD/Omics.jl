@@ -61,7 +61,7 @@ function plot(he, hi, nr, ro_, nc, co_, nn, nu; ke_ar...)
 
     Nucleus.Plot.plot_heat_map(he, nu; y = ro_, x = co_, nr, nc, layout = title, ke_ar...)
 
-    Nucleus.Plot.plot_histogram(hi, (vec(nu),); layout = Dict("xaxis" => title))
+    #Nucleus.Plot.plot_histogram(hi, (vec(nu),); layout = Dict("xaxis" => title))
 
 end
 

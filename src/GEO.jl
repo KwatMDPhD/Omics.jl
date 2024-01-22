@@ -12,7 +12,6 @@ function make_soft(gs)
 
 end
 
-# TODO: Consider removing.
 function _split(st, de)
 
     (string(st) for st in eachsplit(st, de; limit = 2))
@@ -81,10 +80,16 @@ function _read(so)
 
 end
 
+function _clean(st)
+
+    replace(st, '/' => '_', ',' => '_')
+
+end
+
 function _get_sample(bl_th)
 
     sa_ = [
-        "$(ke_va["!Sample_geo_accession"])_$(ke_va["!Sample_title"])" for
+        "$(ke_va["!Sample_geo_accession"])_$(_clean(ke_va["!Sample_title"]))" for
         ke_va in values(bl_th["SAMPLE"])
     ]
 
@@ -116,11 +121,12 @@ function _get_characteristic(bl_th)
 
     ch_ = sort!(unique!(ch_))
 
-    mc = [Base.get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
+    mc = [_clean(Base.get(ke_va, ch, "")) for ch in ch_, ke_va in ke_va__]
 
     for (i1, ch) in enumerate(ch_)
 
-        ch_[i1] = ch == "!Sample_platform_id" ? "Platform" : titlecase(view(ch, 4:lastindex(ch)))
+        ch_[i1] =
+            ch == "!Sample_platform_id" ? "Platform" : titlecase(_clean(view(ch, 4:lastindex(ch))))
 
     end
 
@@ -341,9 +347,6 @@ end
 function write(ou, ns, sa_, ch_, mc, pl, fe_, nn, mf, ch)
 
     nc = Nucleus.Path.clean(ns)
-
-    # TODO: Try `replace!`.
-    sa_ = replace.(sa_, ',' => '_')
 
     Nucleus.DataFrame.write(
         joinpath(ou, "characteristic_x_$(nc)_x_string.tsv"),
