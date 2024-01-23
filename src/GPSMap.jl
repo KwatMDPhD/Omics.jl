@@ -25,7 +25,7 @@ function plot(
     node_annotation_arrowwidth = node_marker_line_width,
     node_annotation_arrowcolor = node_marker_line_color,
     pu = 1,
-    n_gr = 256,
+    n_gr = 64,
     ncontours = 32,
     point_marker_size = 16,
     point_marker_opacity = 0.88,
@@ -155,6 +155,7 @@ function plot(
         "marker" => Dict(
             "size" => point_marker_size,
             "opacity" => point_marker_opacity,
+            "color" => point_marker_color,
             "line" => Dict("width" => point_marker_line_width, "color" => point_marker_line_color),
         ),
         "hoverinfo" => "text",
