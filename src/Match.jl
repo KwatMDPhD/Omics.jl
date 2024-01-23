@@ -397,7 +397,7 @@ function summarize_significant(st, ad = 0.1)
 
     end
 
-    ab / ns
+    iszero(ns) ? 0.0 : ab / ns
 
 end
 
