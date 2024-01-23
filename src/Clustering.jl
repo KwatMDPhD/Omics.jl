@@ -2,6 +2,8 @@ module Clustering
 
 using Clustering: cutree, hclust
 
+using StatsBase: mode
+
 using ..Nucleus
 
 function hierarchize(an_x_an_x_di, linkage = :ward)
@@ -48,18 +50,15 @@ end
 function compare_grouping(
     ht,
     id_::AbstractVector{<:Integer},
-    fe_x_sa_x_nu,
+    ma,
     ng_ = eachindex(unique(id_));
     fu = Nucleus.Distance.Euclidean(),
     title_text = "",
 )
 
-    n_gr = lastindex(ng_)
+    hi = hierarchize(Nucleus.Distance.get(fu, eachcol(ma)))
 
-    hi = hierarchize(Nucleus.Distance.get(fu, eachcol(fe_x_sa_x_nu)))
-
-    # TODO: Normalize mutual information?
-    mu_ = [Nucleus.Information.get_mutual_information(id_, cluster(hi, n_gr)) for n_gr in ng_]
+    mu_ = [Nucleus.Information.get_mutual_information(id_, cluster(hi, ng)) for ng in ng_]
 
     me = _mean(mu_)
 
@@ -70,7 +69,7 @@ function compare_grouping(
         layout = Dict(
             "title" => Dict("text" => "$title_text<br>$(Nucleus.Number.format4(me))"),
             "yaxis" => Dict("title" => Dict("text" => "Mutual Information")),
-            "xaxis" => Dict("title" => Dict("text" => "Number of Group")),
+            "xaxis" => Dict("dtick" => 1, "title" => Dict("text" => "Number of Group")),
         ),
     )
 
@@ -82,35 +81,34 @@ end
 function compare_grouping(
     ht,
     la_,
-    fe_x_sa_x_nu,
+    ma,
     ng_ = eachindex(unique(la_));
     fu = Nucleus.Distance.Euclidean(),
+    fr = 1.0,
     title_text = "",
 )
 
-    n_gr = lastindex(ng_)
-
-    hi = hierarchize(Nucleus.Distance.get(fu, eachcol(fe_x_sa_x_nu)))
+    hi = hierarchize(Nucleus.Distance.get(fu, eachcol(ma)))
 
     un_ = unique(la_)
 
-    la_x_ng_x_ti = Matrix{Int}(undef, lastindex(un_), n_gr)
+    ti = Matrix{Int}(undef, lastindex(un_), lastindex(ng_))
 
     la_gr_ = Dict(la => Int[] for la in un_)
 
-    for (idg, n_gr) in enumerate(ng_)
+    for (i2, ng) in enumerate(ng_)
 
-        for (la, gr) in zip(la_, cluster(hi, n_gr))
+        for (la, gr) in zip(la_, cluster(hi, ng))
 
             push!(la_gr_[la], gr)
 
         end
 
-        for (idl, la) in enumerate(un_)
+        for (i1, la) in enumerate(un_)
 
             gr_ = la_gr_[la]
 
-            la_x_ng_x_ti[idl, idg] = convert(Int, isone(lastindex(unique!(gr_))))
+            ti[i1, i2] = fr <= count(==(mode(gr_)), gr_) / lastindex(gr_)
 
             empty!(gr_)
 
@@ -118,14 +116,14 @@ function compare_grouping(
 
     end
 
-    me = _mean(la_x_ng_x_ti)
+    me = _mean(ti)
 
-    id_ = sortperm(sum.(eachrow(la_x_ng_x_ti)))
+    i1_ = sortperm(sum.(eachrow(ti)))
 
     Nucleus.Plot.plot_heat_map(
         ht,
-        la_x_ng_x_ti[id_, :];
-        y = un_[id_],
+        ti[i1_, :];
+        y = un_[i1_],
         x = ng_,
         nr = "Label",
         nc = "Number of Group",

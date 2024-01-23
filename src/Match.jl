@@ -372,13 +372,32 @@ function make(
 end
 
 # TODO: Test.
-function summarize(fe_x_st_x_fl, qu = 0.99)
+function summarize_top(st, qu = 0.99)
 
-    sc_ = view(fe_x_st_x_fl, :, 1)
+    ab_ = abs.(view(st, :, 1))
 
-    ab_ = abs.(view(sc_, .!isnan.(sc_)))
+    mean(filter!(>(quantile(ab_, qu)), ab_))
 
-    mean(filter!(>=(quantile(ab_, qu)), ab_))
+end
+
+# TODO: Test.
+function summarize_significant(st, ad = 0.1)
+
+    ns = ab = 0
+
+    for i1 in 1:size(st, 1)
+
+        if st[i1, 4] < ad
+
+            ns += 1
+
+            ab += abs(st[i1, 1])
+
+        end
+
+    end
+
+    ab / ns
 
 end
 
