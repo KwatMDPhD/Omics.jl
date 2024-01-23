@@ -2,7 +2,7 @@ module Clustering
 
 using Clustering: cutree, hclust
 
-using StatsBase: mode
+using StatsBase: mean, mode
 
 using ..Nucleus
 
@@ -40,27 +40,18 @@ function order(fu, co_, ma, linkage = :ward)
 
 end
 
-function _mean(nu)
-
-    sum(nu) / lastindex(nu)
-
-end
+const XAXIS = Dict("dtick" => 1, "title" => Dict("text" => "Number of Group"))
 
 # TODO: Test.
-function compare_grouping(
-    ht,
-    id_::AbstractVector{<:Integer},
-    ma,
-    ng_ = eachindex(unique(id_));
-    fu = Nucleus.Distance.Euclidean(),
-    title_text = "",
-)
+function compare_grouping(ht, it_, ma; fu = Nucleus.Distance.Euclidean(), title_text = "")
 
     hi = hierarchize(Nucleus.Distance.get(fu, eachcol(ma)))
 
-    mu_ = [Nucleus.Information.get_mutual_information(id_, cluster(hi, ng)) for ng in ng_]
+    ng_ = eachindex(unique(it_))
 
-    me = _mean(mu_)
+    mu_ = [Nucleus.Information.get_mutual_information(it_, cluster(hi, ng)) for ng in ng_]
+
+    me = mean(mu_)
 
     Nucleus.Plot.plot_scatter(
         ht,
@@ -69,7 +60,7 @@ function compare_grouping(
         layout = Dict(
             "title" => Dict("text" => "$title_text<br>$(Nucleus.Number.format4(me))"),
             "yaxis" => Dict("title" => Dict("text" => "Mutual Information")),
-            "xaxis" => Dict("dtick" => 1, "title" => Dict("text" => "Number of Group")),
+            "xaxis" => XAXIS,
         ),
     )
 
@@ -78,23 +69,22 @@ function compare_grouping(
 end
 
 # TODO: Test.
-function compare_grouping(
-    ht,
-    la_,
-    ma,
-    ng_ = eachindex(unique(la_));
-    fu = Nucleus.Distance.Euclidean(),
-    fr = 1.0,
-    title_text = "",
-)
+function compare_grouping(ht, la_, ma, fr; fu = Nucleus.Distance.Euclidean(), title_text = "")
 
+    lu_ = unique(la_)
+
+    ng_ = eachindex(lu_)
+
+    nl = lastindex(lu_)
+
+    nn = lastindex(ng_)
+
+    ti = zeros(Int, nl, nn)
+
+    # TODO: Use information.
     hi = hierarchize(Nucleus.Distance.get(fu, eachcol(ma)))
 
-    un_ = unique(la_)
-
-    ti = Matrix{Int}(undef, lastindex(un_), lastindex(ng_))
-
-    la_gr_ = Dict(la => Int[] for la in un_)
+    la_gr_ = Dict(la => Int[] for la in lu_)
 
     for (i2, ng) in enumerate(ng_)
 
@@ -104,11 +94,17 @@ function compare_grouping(
 
         end
 
-        for (i1, la) in enumerate(un_)
+        for (i1, la) in enumerate(lu_)
 
             gr_ = la_gr_[la]
 
-            ti[i1, i2] = fr <= count(==(mode(gr_)), gr_) / lastindex(gr_)
+            mo = mode(gr_)
+
+            if fr <= count(==(mo), gr_) / lastindex(gr_)
+
+                ti[i1, i2] = mo
+
+            end
 
             empty!(gr_)
 
@@ -116,21 +112,24 @@ function compare_grouping(
 
     end
 
-    me = _mean(ti)
+    no_ = count.(!iszero, eachrow(view(ti, :, 2:nn)))
 
-    i1_ = sortperm(sum.(eachrow(ti)))
+    i1_ = sortperm(no_)
+
+    me = sum(no_) / (nl * (nn - 1))
 
     Nucleus.Plot.plot_heat_map(
         ht,
-        ti[i1_, :];
-        y = un_[i1_],
+        view(ti, i1_, :);
+        y = view(lu_, i1_),
         x = ng_,
         nr = "Label",
         nc = "Number of Group",
+        co = Nucleus.Color._make_color_scheme(vcat("#000000", Nucleus.Color.COPO.colors)),
         layout = Dict(
             "title" => Dict("text" => "$title_text<br>$(Nucleus.Number.format4(me * 100))%"),
             "yaxis" => Dict("dtick" => 1),
-            "xaxis" => Dict("dtick" => 1),
+            "xaxis" => XAXIS,
         ),
     )
 
