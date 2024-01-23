@@ -16,13 +16,13 @@ function plot(
     node_marker_color = triangulation_line_color,
     node_marker_line_width = 2,
     node_marker_line_color = Nucleus.Color.HEFA,
-    node_annotation_font_size = 24,
+    node_annotation_font_size = 16,
     node_annotation_font_color = node_marker_color,
     node_annotation_bgcolor = "#ffffff",
     node_annotation_borderpad = 2,
     node_annotation_borderwidth = node_marker_line_width,
     node_annotation_bordercolor = node_marker_line_color,
-    node_annotation_arrowwidth = node_marker_line_width,
+    node_annotation_arrowwidth = 1.6,
     node_annotation_arrowcolor = node_marker_line_color,
     pu = 1,
     n_gr = 64,
@@ -33,6 +33,7 @@ function plot(
     point_marker_line_width = 0.8,
     point_marker_line_color = "#000000",
     sc_ = (),
+    sc_na = Dict{Int, String}(),
     layout = Dict{String, Any}(),
 )
 
@@ -237,13 +238,15 @@ function plot(
                 ),
             )
 
+            na = get(sc_na, un, un)
+
             push!(
                 data,
                 Nucleus.Dict.merge(
                     point,
                     Dict(
-                        "legendgroup" => un,
-                        "name" => "$un ($(lastindex(id_)))",
+                        "legendgroup" => na,
+                        "name" => "$na ($(lastindex(id_)))",
                         "y" => view(di_x_po_x_co, 1, id_),
                         "x" => view(di_x_po_x_co, 2, id_),
                         "text" => view(po_, id_),
@@ -278,6 +281,7 @@ function plot(
             ),
             layout,
         ),
+        Dict("editable" => true),
     )
 
 end

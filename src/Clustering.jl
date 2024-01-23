@@ -43,13 +43,13 @@ end
 const XAXIS = Dict("dtick" => 1, "title" => Dict("text" => "Number of Group"))
 
 # TODO: Test.
-function compare_grouping(ht, it_, ma; fu = Nucleus.Distance.Euclidean(), title_text = "")
+function compare_grouping(ht, la_, ma; fu = Nucleus.Distance.Euclidean(), title_text = "")
 
     hi = hierarchize(Nucleus.Distance.get(fu, eachcol(ma)))
 
-    ng_ = eachindex(unique(it_))
+    ng_ = eachindex(unique(la_))
 
-    mu_ = [Nucleus.Information.get_mutual_information(it_, cluster(hi, ng)) for ng in ng_]
+    mu_ = [Nucleus.Information.get_mutual_information(la_, cluster(hi, ng)) for ng in ng_]
 
     me = mean(mu_)
 
