@@ -16,7 +16,7 @@ function plot(
     node_marker_color = triangulation_line_color,
     node_marker_line_width = 2,
     node_marker_line_color = Nucleus.Color.HEFA,
-    node_annotation_font_size = 16,
+    node_annotation_font_size = 8,
     node_annotation_font_color = node_marker_color,
     node_annotation_bgcolor = "#ffffff",
     node_annotation_borderpad = 2,
