@@ -6,9 +6,9 @@ using NonNegLeastSquares: nonneg_lsq
 
 using ..Nucleus
 
-function factorize(ma, n_fa; ke_ar...)
+function factorize(ma, nf; ke_ar...)
 
-    re = nnmf(ma, n_fa; ke_ar...)
+    re = nnmf(ma, nf; ke_ar...)
 
     me = "with $(re.niters) iterations at $(re.objvalue)."
 
@@ -30,9 +30,9 @@ function solve_h(mw, ma)
 
     mh = Matrix{Float64}(undef, size(mw, 2), size(ma, 2))
 
-    for (id, co) in enumerate(eachcol(ma))
+    for (i2, co) in enumerate(eachcol(ma))
 
-        mh[:, id] = nonneg_lsq(mw, co; alg = :nnls)
+        mh[:, i2] = nonneg_lsq(mw, co; alg = :nnls)
 
     end
 
@@ -45,20 +45,20 @@ function write(
     di,
     ma;
     nl = "Label",
-    nf = "Factor",
-    la_ = (id -> "$nl $id").(1:maximum(size(ma))),
-    fa_ = (id -> "$nf $id").(1:minimum(size(ma))),
+    na = "Factor",
+    la_ = (i1 -> "$nl $i1").(1:maximum(size(ma))),
+    fa_ = (i1 -> "$na $i1").(1:minimum(size(ma))),
     lo = Nucleus.HTML.WI,
     sh = Nucleus.HTML.HE,
 )
 
-    n_fa, id = findmin(size(ma))
+    nf, dm = findmin(size(ma))
 
-    if isone(id)
+    if isone(dm)
 
         wh = "H"
 
-        nr = nf
+        nr = na
 
         nc = nl
 
@@ -66,13 +66,9 @@ function write(
 
         co_ = la_
 
-        height = sh
+        he = sh
 
-        width = lo
-
-        ax = "y"
-
-        mc = ma
+        wi = lo
 
     else
 
@@ -80,45 +76,21 @@ function write(
 
         nr = nl
 
-        nc = nf
+        nc = na
 
         ro_ = la_
 
         co_ = fa_
 
-        height = lo
+        he = lo
 
-        width = sh
-
-        ax = "x"
-
-        mc = permutedims(ma)
+        wi = sh
 
     end
 
-    pr = joinpath(di, "$n_fa$(lowercase(wh))")
+    pr = joinpath(di, "$nf$(lowercase(wh))")
 
     Nucleus.DataFrame.write("$pr.tsv", nr, ro_, co_, ma)
-
-    id_ =
-        Nucleus.Clustering.hierarchize(
-            # TODO: Use information.
-            Nucleus.Distance.get(Nucleus.Distance.Euclidean(), mc),
-        ).order
-
-    if isone(id)
-
-        ma = ma[:, id_]
-
-        co_ = co_[id_]
-
-    else
-
-        ma = ma[id_, :]
-
-        ro_ = ro_[id_]
-
-    end
 
     Nucleus.Plot.plot_heat_map(
         "$pr.html",
@@ -127,12 +99,9 @@ function write(
         x = co_,
         nr,
         nc,
-        layout = Dict(
-            "height" => height,
-            "width" => width,
-            "title" => Dict("text" => wh),
-            "$(ax)axis" => Dict("dtick" => 1),
-        ),
+        layout = Dict("title" => Dict("text" => wh)),
+        he,
+        wi,
     )
 
 end

@@ -26,7 +26,7 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     end
 
-    di = mkdir(joinpath(Nucleus.TE, "$(n_ro)_$(n_co)_$(n_fa)"))
+    di = Nucleus.Path.establish(joinpath(Nucleus.TE, "$(n_ro)_$(n_co)_$(n_fa)"))
 
     Nucleus.MatrixFactorization.write(di, mw)
 
@@ -36,16 +36,16 @@ for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10
 
     @test isapprox(mh, mh2; rtol = 1e-3)
 
-    Nucleus.MatrixFactorization.write(mkdir("$(di)_solved"), mh2; naf = "Solved")
+    Nucleus.MatrixFactorization.write(Nucleus.Path.establish("$(di)_solved"), mh2; na = "Solved")
 
-    # 11.458 μs (70 allocations: 8.00 KiB)
-    # 685.152 ns (19 allocations: 1.61 KiB)
-    # 224.250 μs (136 allocations: 41.09 KiB)
-    # 3.625 μs (28 allocations: 6.91 KiB)
-    # 202.382 ms (372 allocations: 17.77 MiB)
-    # 3.547 ms (102 allocations: 3.83 MiB)
-    # 153.218 ms (371 allocations: 10.21 MiB)
-    # 24.665 ms (101 allocations: 7.83 MiB)
+    # 11.875 μs (68 allocations: 7.77 KiB)
+    # 931.034 ns (19 allocations: 1.61 KiB)
+    # 227.667 μs (136 allocations: 41.09 KiB)
+    # 3.958 μs (28 allocations: 6.91 KiB)
+    # 202.596 ms (372 allocations: 17.77 MiB)
+    # 3.539 ms (102 allocations: 3.83 MiB)
+    # 150.743 ms (371 allocations: 10.21 MiB)
+    # 24.210 ms (101 allocations: 7.83 MiB)
 
     #disable_logging(Warn)
     #@btime Nucleus.MatrixFactorization.factorize($ma, $n_fa)
@@ -77,19 +77,19 @@ Nucleus.MatrixFactorization.write(DI, MH)
 
 # ---- #
 
-@test MW == Matrix(Nucleus.DataFrame.read(joinpath(DI, "w.tsv"))[!, 2:end])
+@test MW == Matrix(Nucleus.DataFrame.read(joinpath(DI, "2w.tsv"))[!, 2:end])
 
 # ---- #
 
-@test MH == Matrix(Nucleus.DataFrame.read(joinpath(DI, "h.tsv"))[!, 2:end])
+@test MH == Matrix(Nucleus.DataFrame.read(joinpath(DI, "2h.tsv"))[!, 2:end])
 
 # ---- #
 
-@test isfile(joinpath(DI, "w.html"))
+@test isfile(joinpath(DI, "2w.html"))
 
 # ---- #
 
-@test isfile(joinpath(DI, "h.html"))
+@test isfile(joinpath(DI, "2h.html"))
 
 # ---- #
 

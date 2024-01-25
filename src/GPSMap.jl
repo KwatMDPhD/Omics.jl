@@ -16,7 +16,7 @@ function plot(
     node_marker_color = triangulation_line_color,
     node_marker_line_width = 2,
     node_marker_line_color = Nucleus.Color.HEFA,
-    node_annotation_font_size = 8,
+    node_annotation_font_size = 16,
     node_annotation_font_color = node_marker_color,
     node_annotation_bgcolor = "#ffffff",
     node_annotation_borderpad = 2,
@@ -32,7 +32,7 @@ function plot(
     point_marker_color = Nucleus.Color.HEGE,
     point_marker_line_width = 0.8,
     point_marker_line_color = "#000000",
-    sc_ = (),
+    sc_ = nothing,
     sc_na = Dict{Int, String}(),
     layout = Dict{String, Any}(),
 )
@@ -162,9 +162,11 @@ function plot(
         "hoverinfo" => "text",
     )
 
-    ty = eltype(sc_)
+    if isnothing(sc_)
 
-    if ty <: AbstractFloat
+        push!(data, point)
+
+    elseif sc_ isa AbstractVector{<:AbstractFloat}
 
         push!(
             data,
@@ -174,7 +176,7 @@ function plot(
             ),
         )
 
-    elseif ty <: Integer
+    elseif sc_ isa AbstractVector{<:Integer}
 
         un_ = sort!(unique(sc_))
 
