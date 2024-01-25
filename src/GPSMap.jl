@@ -2,7 +2,30 @@ module GPSMap
 
 using DelaunayTriangulation: get_edges
 
+using StatsBase: mean, std
+
 using ..Nucleus
+
+function normalize_with_0_clamp_01!(ea_; me_ = mean.(ea_), st_ = std.(ea_), lo = -3, hi = 3)
+
+    for (ea, me, st) in zip(ea_, me_, st_)
+
+        ea .= (ea .- me) ./ st
+
+        clamp!(ea, lo, hi)
+
+        Nucleus.Normalization.normalize_with_01!(ea)
+
+    end
+
+end
+
+# TODO: Test.
+function distance(ea_)
+
+    Nucleus.Distance.get_half(Nucleus.Information.get_information_coefficient_distance, ea_)
+
+end
 
 function plot(
     ht,

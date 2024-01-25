@@ -71,9 +71,9 @@ for di in (
 
     np = 10
 
-    no_ = (id -> "Node $id").(1:nn)
+    no_ = (i1 -> "Node $i1").(1:nn)
 
-    po_ = (id -> "Point $id").(1:np)
+    po_ = (i1 -> "Point $i1").(1:np)
 
     ci = ones(nn, np)
 
@@ -97,29 +97,21 @@ end
 
 # ---- #
 
-function get_distance(nu___)
+function order(ea_)
 
-    Nucleus.Distance.get_half(Nucleus.Information.get_information_coefficient_distance, nu___)
-
-end
-
-# ---- #
-
-function order(nu___)
-
-    Nucleus.Clustering.hierarchize(get_distance(nu___)).order
+    Nucleus.Clustering.hierarchize(Nucleus.GPSMap.distance(ea_)).order
 
 end
 
 # ---- #
 
-function cluster_plot(ht, ro_, co_, ma)
+function cluster_plot(ht, ro_, co_, nu)
 
-    i1_ = order(eachrow(ma))
+    i1_ = order(eachrow(nu))
 
-    i2_ = order(eachcol(ma))
+    i2_ = order(eachcol(nu))
 
-    Nucleus.Plot.plot_heat_map(ht, ma[i1_, i2_]; y = ro_[i1_], x = co_[i2_])
+    Nucleus.Plot.plot_heat_map(ht, nu[i1_, i2_]; y = ro_[i1_], x = co_[i2_])
 
 end
 
@@ -131,17 +123,65 @@ cluster_plot(joinpath(Nucleus.TE, "h.html"), fa_, sa_, mh)
 
 # ---- #
 
-for ea in eachrow(mh)
+const NU = [
+    -9.0 -8 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 8 9
+]
 
-    Nucleus.Normalization.normalize_with_0!(ea)
+# ---- #
 
-    clamp!(ea, -3, 3)
+for (ke_ar, re) in (
+    (
+        (),
+        [
+            0.0 0.05022355489119638 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.9497764451088037 1.0
+        ],
+    ),
+    (
+        (lo = -Inf,),
+        [
+            0.0 0.05588681851596242 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.9500759147713611 1.0
+        ],
+    ),
+    (
+        (hi = Inf,),
+        [
+            0.0 0.04992408522863893 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.9441131814840377 1.0
+        ],
+    ),
+    (
+        (lo = -2, hi = 2),
+        [
+            0.0 0.0 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 1.0 1.0
+        ],
+    ),
+)
 
-    Nucleus.Normalization.normalize_with_01!(ea)
+    nu = copy(NU)
+
+    ea_ = eachrow(nu)
+
+    Nucleus.GPSMap.normalize_with_0_clamp_01!(ea_; ke_ar...)
+
+    @test isapprox(nu, re; atol = 1e-5)
+
+    # 262.698 ns (2 allocations: 128 bytes)
+    # 264.069 ns (2 allocations: 128 bytes)
+    # 271.537 ns (2 allocations: 128 bytes)
+    # 258.123 ns (2 allocations: 128 bytes)
+    #@btime Nucleus.GPSMap.normalize_with_0_clamp_01!($ea_)
 
 end
 
+# ---- #
+
+const EA_ = eachrow(mh)
+
+Nucleus.GPSMap.normalize_with_0_clamp_01!(EA_)
+
 cluster_plot(joinpath(Nucleus.TE, "h_normalized.html"), fa_, sa_, mh)
+
+# 45.333 μs (2 allocations: 256 bytes)
+#@btime Nucleus.GPSMap.normalize_with_0_clamp_01!($EA_);
 
 # ---- #
 
@@ -153,15 +193,33 @@ Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "h_labeled.html"), mh; y = fa_, 
 
 # ---- #
 
-di = get_distance(eachrow(mh))
+@test isapprox(
+    Nucleus.GPSMap.distance(eachrow([
+        -1 0 1
+        -2 0 2
+        -1 0 2
+        -2 0 1
+    ])),
+    [
+        0.0        0.0285955  0.0285955  0.0285955
+        0.0285955  0.0        0.0285955  0.0285955
+        0.0285955  0.0285955  0.0        0.0285955
+        0.0285955  0.0285955  0.0285955  0.0
+    ];
+    atol = 1e-7,
+)
 
-cluster_plot(joinpath(Nucleus.TE, "distance.html"), fa_, fa_, di)
+# ---- #
+
+const DI = Nucleus.GPSMap.distance(eachrow(mh))
+
+cluster_plot(joinpath(Nucleus.TE, "distance.html"), fa_, fa_, DI)
 
 # ---- #
 
 seed!(202312091501)
 
-const CN = Nucleus.Coordinate.get(di)
+const CN = Nucleus.Coordinate.get(DI)
 
 # ---- #
 
@@ -180,5 +238,6 @@ Nucleus.GPSMap.plot(
     sa_,
     mh;
     sc_ = la_,
+    sc_na = Dict(i1 => "State $i1" for i1 in 1:15),
     KE_AR...,
 )
