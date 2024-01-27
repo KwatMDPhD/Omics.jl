@@ -10,17 +10,24 @@ function normalize_with_0_clamp_01!(ea_; me_ = mean.(ea_), st_ = std.(ea_), lo =
 
     for (ea, me, st) in zip(ea_, me_, st_)
 
-        ea .= (ea .- me) ./ st
+        if allequal(ea)
 
-        clamp!(ea, lo, hi)
+            ea .= 0
 
-        Nucleus.Normalization.normalize_with_01!(ea)
+        else
+
+            ea .= (ea .- me) ./ st
+
+            clamp!(ea, lo, hi)
+
+            Nucleus.Normalization.normalize_with_01!(ea)
+
+        end
 
     end
 
 end
 
-# TODO: Test.
 function distance(ea_)
 
     Nucleus.Distance.get_half(Nucleus.Information.get_information_coefficient_distance, ea_)
@@ -243,9 +250,9 @@ function plot(
 
         end
 
-        for (id, (un, color)) in enumerate(zip(un_, Nucleus.Color.color(un_)))
+        for (i3, (un, he)) in enumerate(zip(un_, Nucleus.Color.color(un_)))
 
-            id_ = findall(==(un), sc_)
+            i2_ = findall(==(un), sc_)
 
             push!(
                 data,
@@ -253,10 +260,10 @@ function plot(
                     "type" => "heatmap",
                     "y" => ro_,
                     "x" => co_,
-                    "z" => view(gr_x_gr_x_un_x_pr, :, :, id),
+                    "z" => view(gr_x_gr_x_un_x_pr, :, :, i3),
                     "transpose" => true,
                     "colorscale" => Nucleus.Color.fractionate(
-                        Nucleus.Color._make_color_scheme(["#ffffff", color]),
+                        Nucleus.Color._make_color_scheme(["#ffffff", he]),
                     ),
                     "showscale" => false,
                     "hoverinfo" => "skip",
@@ -271,11 +278,11 @@ function plot(
                     point,
                     Dict(
                         "legendgroup" => na,
-                        "name" => "$na ($(lastindex(id_)))",
-                        "y" => view(di_x_po_x_co, 1, id_),
-                        "x" => view(di_x_po_x_co, 2, id_),
-                        "text" => view(po_, id_),
-                        "marker" => Dict("color" => color),
+                        "name" => "$na ($(lastindex(i2_)))",
+                        "y" => view(di_x_po_x_co, 1, i2_),
+                        "x" => view(di_x_po_x_co, 2, i2_),
+                        "text" => view(po_, i2_),
+                        "marker" => Dict("color" => he),
                     ),
                 ),
             )

@@ -482,7 +482,7 @@ function plot_radar(
                     "x" => 0.02,
                     "font" => Dict(
                         "family" => "Times New Roman",
-                        "size" => 48,
+                        "size" => 32,
                         "color" => "#27221f",
                     ),
                 ),
