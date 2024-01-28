@@ -10,19 +10,17 @@ function normalize_with_0_clamp_01!(ea_; me_ = mean.(ea_), st_ = std.(ea_), lo =
 
     for (ea, me, st) in zip(ea_, me_, st_)
 
-        if allequal(ea)
+        ea .= (ea .- me) ./ st
 
-            ea .= 0
+        clamp!(ea, lo, hi)
 
-        else
-
-            ea .= (ea .- me) ./ st
-
-            clamp!(ea, lo, hi)
+        if !allequal(ea)
 
             Nucleus.Normalization.normalize_with_01!(ea)
 
         end
+
+        @assert !any(isnan, ea)
 
     end
 
