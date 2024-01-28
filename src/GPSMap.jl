@@ -301,7 +301,6 @@ function plot(
                 "height" => 800,
                 "width" => 800,
                 "title" => Dict(
-                    "y" => 0.98,
                     "x" => 0.02,
                     "text" => "GPS Map",
                     "font" =>
