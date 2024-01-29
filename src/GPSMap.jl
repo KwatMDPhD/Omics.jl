@@ -7,19 +7,24 @@ using StatsBase: mean, std
 using ..Nucleus
 
 # TODO: Test.
-function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
-
-    if size(h1, 1) != size(h2, 1)
-
-        error()
-
-    end
+function boost!(h1, h2)
 
     m1 = mean(h1)
 
     for e2 in eachcol(h2)
 
         e2 .= e2 ./ mean(e2) .* m1
+
+    end
+
+end
+
+# TODO: Test.
+function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
+
+    if size(h1, 1) != size(h2, 1)
+
+        error()
 
     end
 
@@ -57,9 +62,15 @@ function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
 
         end
 
-        @assert !any(isnan, e2)
+        for n2 in e2
 
-        @assert !any(Nucleus.Number.is_negative, e2)
+            if isnan(n2) || Nucleus.Number.is_negative(n2)
+
+                error()
+
+            end
+
+        end
 
     end
 
