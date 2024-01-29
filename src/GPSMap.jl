@@ -15,6 +15,14 @@ function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
 
     end
 
+    m1 = mean(h1)
+
+    for e2 in eachcol(h2)
+
+        e2 .= e2 ./ mean(e2) .* m1
+
+    end
+
     ra = hi - lo
 
     for (e1, e2) in zip(eachrow(h1), eachrow(h2))
@@ -29,11 +37,9 @@ function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
 
         end
 
-        for (i2, n2) in enumerate(e2)
+        e2 .= (e2 .- m1) ./ s1
 
-            e2[i2] = clamp((n2 - m1) / s1, lo, hi)
-
-        end
+        clamp!(e2, lo, hi)
 
         if allequal(e2)
 
