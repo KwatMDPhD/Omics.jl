@@ -6,21 +6,54 @@ using StatsBase: mean, std
 
 using ..Nucleus
 
-function normalize_with_0_clamp_01!(ea_; me_ = mean.(ea_), st_ = std.(ea_), lo = -3, hi = 3)
+# TODO: Test.
+function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
 
-    for (ea, me, st) in zip(ea_, me_, st_)
+    if size(h1, 1) != size(h2, 1)
 
-        ea .= (ea .- me) ./ st
+        error()
 
-        clamp!(ea, lo, hi)
+    end
 
-        if !allequal(ea)
+    ra = hi - lo
 
-            Nucleus.Normalization.normalize_with_01!(ea)
+    for (e1, e2) in zip(eachrow(h1), eachrow(h2))
+
+        m1 = mean(e1)
+
+        s1 = std(e1)
+
+        if iszero(s1)
+
+            error()
 
         end
 
-        @assert !any(isnan, ea)
+        for (i2, n2) in enumerate(e2)
+
+            e2[i2] = clamp((n2 - m1) / s1, lo, hi)
+
+        end
+
+        if allequal(e2)
+
+            be = e2[1]
+
+            af = (be - lo) / ra
+
+            e2 .= af
+
+            @warn "$be --> $af."
+
+        else
+
+            Nucleus.Normalization.normalize_with_01!(e2)
+
+        end
+
+        @assert !any(isnan, e2)
+
+        @assert !any(Nucleus.Number.is_negative, e2)
 
     end
 
