@@ -6,7 +6,6 @@ using StatsBase: mean, std
 
 using ..Nucleus
 
-# TODO: Test.
 function boost!(h1, h2)
 
     m1 = mean(h1)
@@ -19,7 +18,6 @@ function boost!(h1, h2)
 
 end
 
-# TODO: Test.
 function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
 
     if size(h1, 1) != size(h2, 1)
@@ -27,6 +25,8 @@ function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
         error()
 
     end
+
+    ep = eps()
 
     ra = hi - lo
 
@@ -36,7 +36,7 @@ function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
 
         s1 = std(e1)
 
-        if iszero(s1)
+        if s1 < ep
 
             error()
 
