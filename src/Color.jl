@@ -28,11 +28,9 @@ const HEGE = "#20d9ba"
 
 const HEGP = "#9017e6"
 
-const HEIR = "#ff4e20"
+const HEIO = "#fc7f31"
 
 const HEIP = "#561649"
-
-const HEIB = "#d3ebee"
 
 function _make_color_scheme(he_)
 
@@ -47,7 +45,7 @@ const COBW = bwr
 
 const COPA = plasma
 
-const COMO = _make_color_scheme(["#fc7f31"])
+const COMO = _make_color_scheme(["#a40522"])
 
 const COBI = _make_color_scheme(["#006442", "#ffb61e"])
 

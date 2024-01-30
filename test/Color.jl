@@ -37,9 +37,8 @@ for co in (
         Nucleus.Color.HESG,
         Nucleus.Color.HEGE,
         Nucleus.Color.HEGP,
-        Nucleus.Color.HEIR,
+        Nucleus.Color.HEIO,
         Nucleus.Color.HEIP,
-        Nucleus.Color.HEIB,
     ]),
     Nucleus.Color.COAS,
     Nucleus.Color.COBW,
@@ -91,7 +90,7 @@ end
 
 # ---- #
 
-const HEH = HE_[Int(round(0.5N))]
+const HEH = HE_[Int(round(0.5 * NC))]
 
 # ---- #
 
