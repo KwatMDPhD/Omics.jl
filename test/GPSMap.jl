@@ -291,18 +291,11 @@ Nucleus.Plot.plot_heat_map(
 
 # ---- #
 
-const POINT_MARKER_SIZE = 8
+const point_marker_size = 8
 
 # ---- #
 
-Nucleus.GPSMap.plot(
-    joinpath(Nucleus.TE, "map.html"),
-    fa_,
-    CN,
-    sa_,
-    CP;
-    point_marker_size = POINT_MARKER_SIZE,
-)
+Nucleus.GPSMap.plot(joinpath(Nucleus.TE, "map.html"), fa_, CN, sa_, CP; point_marker_size)
 
 # ---- #
 
@@ -314,5 +307,5 @@ Nucleus.GPSMap.plot(
     CP;
     sc_ = la_,
     sc_na = Dict(i1 => "State $i1" for i1 in 1:15),
-    point_marker_size = POINT_MARKER_SIZE,
+    point_marker_size,
 )
