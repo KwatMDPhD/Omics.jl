@@ -35,14 +35,15 @@ for (h1, h2, re) in ((
 
     c2 = copy(h2)
 
-    Nucleus.GPSMap.boost!(c1, c2)
+    Nucleus.GPSMap.boost_each_sample!(c1, c2)
 
     @test h1 == c1
 
     @test c2 == re
 
-    # 23.375 ns (0 allocations: 0 bytes)
-    #@btime Nucleus.GPSMap.boost!(c1, c2) setup = (c1 = copy($h1); c2 = copy($h2)) evals = 1000
+    # 21.875 ns (0 allocations: 0 bytes)
+    #@btime Nucleus.GPSMap.boost_each_sample!(c1, c2) setup = (c1 = copy($h1); c2 = copy($h2)) evals =
+    #    1000
 
 end
 
@@ -58,7 +59,7 @@ for (h1, h2) in ((
     ],
 ), ([0.1 0.1 0.1], [0.1 0.1 0.1]))
 
-    @test Nucleus.Error.@is Nucleus.GPSMap.normalize_h!(h1, h2)
+    @test Nucleus.Error.@is Nucleus.GPSMap.normalize_each_factor!(h1, h2)
 
 end
 
@@ -70,27 +71,31 @@ const NU = [
 
 # ---- #
 
-for (ke_ar, re) in (
+for (lo, hi, re) in (
     (
-        (),
+        -3,
+        3,
         [
             0.0 0.05022355489119638 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.9497764451088037 1.0
         ],
     ),
     (
-        (lo = -Inf,),
+        -Inf,
+        3,
         [
             0.0 0.05588681851596242 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.5029813666436618 0.9500759147713611 1.0
         ],
     ),
     (
-        (hi = Inf,),
+        -3,
+        Inf,
         [
             0.0 0.04992408522863893 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.4970186333563382 0.9441131814840377 1.0
         ],
     ),
     (
-        (lo = -2, hi = 2),
+        -2,
+        2,
         [
             0.0 0.0 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 1.0 1.0
         ],
@@ -99,15 +104,19 @@ for (ke_ar, re) in (
 
     nu = copy(NU)
 
-    Nucleus.GPSMap.normalize_h!(nu; ke_ar...)
+    Nucleus.GPSMap.normalize_each_factor!(nu)
+
+    clamp!(nu, lo, hi)
+
+    Nucleus.GPSMap.zero1_each_factor!(nu)
 
     @test isapprox(nu, re; atol = 1e-5)
 
-    # 206.792 ns (0 allocations: 0 bytes)
-    # 208.916 ns (0 allocations: 0 bytes)
-    # 192.875 ns (0 allocations: 0 bytes)
-    # 193.250 ns (0 allocations: 0 bytes)
-    #@btime Nucleus.GPSMap.normalize_h!(nu) setup = (nu = copy(NU)) evals = 1000
+    # 53.750 ns (0 allocations: 0 bytes)
+    # 53.750 ns (0 allocations: 0 bytes)
+    # 53.750 ns (0 allocations: 0 bytes)
+    # 53.750 ns (0 allocations: 0 bytes)
+    #@btime Nucleus.GPSMap.normalize_each_factor!(nu) setup = (nu = copy(NU)) evals = 1000
 
 end
 
@@ -128,6 +137,10 @@ end
     ];
     atol = 1e-7,
 )
+
+# ---- #
+
+const PO_ = (i1 -> "Point $i1").(1:10)
 
 # ---- #
 
@@ -182,24 +195,22 @@ for di in (
     ],
 )
 
-    nn = 4
-
-    np = 10
+    nn = size(di, 1)
 
     no_ = (i1 -> "Node $i1").(1:nn)
 
-    po_ = (i1 -> "Point $i1").(1:np)
-
-    ci = ones(nn, np)
+    pu = ones(nn, lastindex(PO_))
 
     for mu in (0.333, 1, 3)
+
+        cn = Nucleus.Coordinate.get(di * mu)
 
         Nucleus.GPSMap.plot(
             "",
             no_,
-            Nucleus.Coordinate.get(di * mu),
-            po_,
-            ci;
+            cn,
+            PO_,
+            Nucleus.Coordinate.pull(cn, pu);
             layout = Dict(
                 "title" =>
                     Dict("text" => "$(join(convert(Vector{Int}, view(di, 1, :)), ' '))  *$mu"),
@@ -238,7 +249,11 @@ cluster_plot(joinpath(Nucleus.TE, "h.html"), fa_, sa_, mh)
 
 # ---- #
 
-Nucleus.GPSMap.normalize_h!(mh)
+Nucleus.GPSMap.normalize_each_factor!(mh)
+
+clamp!(mh, -3, 3)
+
+Nucleus.GPSMap.zero1_each_factor!(mh)
 
 cluster_plot(joinpath(Nucleus.TE, "h_normalized.html"), fa_, sa_, mh)
 
@@ -264,11 +279,30 @@ const CN = Nucleus.Coordinate.get(DI)
 
 # ---- #
 
-const KE_AR = (pu = 2, point_marker_size = 8)
+const CP = Nucleus.Coordinate.pull(CN, mh, 1.5)
+
+Nucleus.Plot.plot_heat_map(
+    joinpath(Nucleus.TE, "point.html"),
+    CP;
+    y = ["Dimension 1", "Dimension 2"],
+    x = sa_,
+    gc_ = la_,
+)
 
 # ---- #
 
-Nucleus.GPSMap.plot(joinpath(Nucleus.TE, "map.html"), fa_, CN, sa_, mh; KE_AR...)
+const POINT_MARKER_SIZE = 8
+
+# ---- #
+
+Nucleus.GPSMap.plot(
+    joinpath(Nucleus.TE, "map.html"),
+    fa_,
+    CN,
+    sa_,
+    CP;
+    point_marker_size = POINT_MARKER_SIZE,
+)
 
 # ---- #
 
@@ -277,8 +311,8 @@ Nucleus.GPSMap.plot(
     fa_,
     CN,
     sa_,
-    mh;
+    CP;
     sc_ = la_,
     sc_na = Dict(i1 => "State $i1" for i1 in 1:15),
-    KE_AR...,
+    point_marker_size = POINT_MARKER_SIZE,
 )

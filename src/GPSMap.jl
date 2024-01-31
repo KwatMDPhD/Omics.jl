@@ -6,7 +6,7 @@ using StatsBase: mean, std
 
 using ..Nucleus
 
-function boost!(h1, h2)
+function boost_each_sample!(h1, h2)
 
     m1 = mean(h1)
 
@@ -18,7 +18,7 @@ function boost!(h1, h2)
 
 end
 
-function normalize_h_0!(h1, h2 = h1)
+function normalize_each_factor!(h1, h2 = h1)
 
     if size(h1, 1) != size(h2, 1)
 
@@ -46,7 +46,7 @@ function normalize_h_0!(h1, h2 = h1)
 
 end
 
-function normalize_h_01!(h1)
+function zero1_each_factor!(h1)
 
     mi = minimum(h1)
 
@@ -85,7 +85,7 @@ function plot(
     no_,
     di_x_no_x_co,
     po_,
-    no_x_po_x_pu;
+    di_x_po_x_co;
     triangulation_line_color = "#171412",
     node_marker_size = 32,
     node_marker_opacity = 0.96,
@@ -100,11 +100,10 @@ function plot(
     node_annotation_bordercolor = node_marker_line_color,
     node_annotation_arrowwidth = 1.6,
     node_annotation_arrowcolor = node_marker_line_color,
-    pu = 1,
     n_gr = 64,
     ncontours = 32,
     point_marker_size = 16,
-    point_marker_opacity = 0.88,
+    point_marker_opacity = 0.64,
     point_marker_color = Nucleus.Color.HEGE,
     point_marker_line_width = 0.8,
     point_marker_line_color = "#000000",
@@ -184,8 +183,6 @@ function plot(
     range1 = Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[1, :])
 
     range2 = Nucleus.Collection.get_minimum_maximum(di_x_no_x_co[2, :])
-
-    di_x_po_x_co = Nucleus.Coordinate.pull(di_x_no_x_co, no_x_po_x_pu, pu)
 
     fa = 1.39
 
