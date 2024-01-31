@@ -18,7 +18,7 @@ function boost!(h1, h2)
 
 end
 
-function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
+function normalize_h_0!(h1, h2 = h1)
 
     if size(h1, 1) != size(h2, 1)
 
@@ -27,8 +27,6 @@ function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
     end
 
     ep = eps()
-
-    ra = hi - lo
 
     for (e1, e2) in zip(eachrow(h1), eachrow(h2))
 
@@ -44,31 +42,31 @@ function normalize_h!(h1, h2 = h1; lo = -3, hi = 3)
 
         e2 .= (e2 .- m1) ./ s1
 
-        clamp!(e2, lo, hi)
+    end
 
-        if allequal(e2)
+end
 
-            be = e2[1]
+function normalize_h_01!(h1)
 
-            af = (be - lo) / ra
+    mi = minimum(h1)
 
-            e2 .= af
+    ra = maximum(h1) - mi
+
+    for e1 in eachrow(h1)
+
+        if allequal(e1)
+
+            be = e1[1]
+
+            af = (be - mi) / ra
+
+            e1 .= af
 
             @warn "$be --> $af."
 
         else
 
-            Nucleus.Normalization.normalize_with_01!(e2)
-
-        end
-
-        for n2 in e2
-
-            if isnan(n2) || Nucleus.Number.is_negative(n2)
-
-                error()
-
-            end
+            Nucleus.Normalization.normalize_with_01!(e1)
 
         end
 
