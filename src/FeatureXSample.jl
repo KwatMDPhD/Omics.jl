@@ -5,9 +5,49 @@ using StatsBase: median
 using ..Nucleus
 
 # TODO: Test.
-function index_1(id_, ro_, ma)
+function remove_constant(la_, ma)
 
-    ro_[id_], ma[id_, :]
+    nl = lastindex(la_)
+
+    n1, n2 = size(ma)
+
+    if nl == n1 == n2
+
+        error()
+
+    elseif nl == n1
+
+        ea = eachrow
+
+        di = 1
+
+    elseif nl == n2
+
+        ea = eachcol
+
+        di = 2
+
+    else
+
+        error()
+
+    end
+
+    is_ = allequal.(ea(ma))
+
+    if any(is_)
+
+        @warn "Removing $(sum(is_)) / $nl all-equal labels from dimension $di"
+
+        is_ = .!is_
+
+        la_ = la_[is_]
+
+        ma = isone(di) ? ma[is_, :] : ma[:, is_]
+
+    end
+
+    la_, ma
 
 end
 

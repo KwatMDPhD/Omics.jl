@@ -4,6 +4,67 @@ using Nucleus
 
 # ---- #
 
+for (la_, ma) in ((
+    [1],
+    [
+        1 3
+        2 4
+    ],
+), (
+    [1, 2],
+    [
+        1 3
+        2 4
+    ],
+))
+
+    @test Nucleus.Error.@is Nucleus.FeatureXSample.remove_constant(la_, ma)
+
+end
+
+# ---- #
+
+for (la_, ma, re) in ((
+    [1, 2, 3],
+    [
+        1 2 4
+        1 3 5
+    ],
+    (
+        [2, 3],
+        [
+            2 4
+            3 5
+        ],
+    ),
+), (
+    [1, 2, 3],
+    [
+        1 1
+        2 4
+        3 5
+    ],
+    (
+        [2, 3],
+        [
+            2 4
+            3 5
+        ],
+    ),
+))
+
+    @test Nucleus.FeatureXSample.remove_constant(la_, ma) == re
+
+    # 131.417 ns (6 allocations: 368 bytes)
+    # 133.635 ns (6 allocations: 368 bytes)
+    #disable_logging(Warn)
+    #@btime Nucleus.FeatureXSample.remove_constant($la_, $ma)
+    #disable_logging(Debug)
+
+end
+
+# ---- #
+
 for an___ in ((Int[], Int[]), ([1], [2, 3, 4]), (['a'], ['b', 'c']))
 
     @test Nucleus.Error.@is Nucleus.FeatureXSample.log_intersection(an___, intersect(an___...))
