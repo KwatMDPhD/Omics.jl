@@ -6,31 +6,27 @@ using StatsBase: mean, mode
 
 using ..Nucleus
 
-function hierarchize(di, linkage = :ward)
+function hierarchize(di)
 
-    hclust(di; linkage)
-
-end
-
-function cluster(hc, k)
-
-    cutree(hc; k)
+    hclust(di; linkage = :ward)
 
 end
 
-function order(fu, co_, ma, linkage = :ward)
+function hierarchize(fu, nu___)
+
+    hierarchize(Nucleus.Distance.pairwise(fu, nu___))
+
+end
+
+function order(fu, la_, nu___)
 
     i1_ = Int[]
 
-    for co in sort!(unique(co_))
+    for la in sort!(unique(la_))
 
-        id_ = findall(==(co), co_)
+        id_ = findall(==(la), la_)
 
-        di = Nucleus.Distance.pairwise(fu, eachcol(view(ma, :, id_)))
-
-        Nucleus.Error.error_bad(isnan, di)
-
-        append!(i1_, view(id_, hierarchize(di, linkage).order))
+        append!(i1_, view(id_, hierarchize(fu, view(nu___, id_)).order))
 
     end
 
@@ -38,42 +34,42 @@ function order(fu, co_, ma, linkage = :ward)
 
 end
 
-function title(st, me)
+function _title(ti, sc)
 
-    Dict("text" => "$st<br>$(Nucleus.Number.format4(me))")
+    Dict("text" => "$ti<br>$(Nucleus.Number.format4(sc))")
 
 end
 
 const XAXIS = Dict("dtick" => 1, "title" => Dict("text" => "Number of Group"))
 
-# TODO: Test.
-function compare_grouping(ht, la_, ma; fu = Nucleus.Distance.CO, title_text = "")
+# TODO: Plot.
+# TODO: Normalize score.
+function compare_grouping(fu, ht, la_, ma; ti = "")
 
-    hi = hierarchize(Nucleus.Distance.pairwise(fu, eachcol(ma)))
+    hi = hierarchize(fu, eachcol(ma))
 
     ng_ = eachindex(unique(la_))
 
-    mu_ = [Nucleus.Information.get_mutual_information(la_, cluster(hi, ng)) for ng in ng_]
+    mu_ = [Nucleus.Information.get_mutual_information(la_, cutree(hi; k = ng)) for ng in ng_]
 
-    me = mean(mu_)
+    sc = mean(mu_)
 
     Nucleus.Plot.plot_scatter(
         ht,
         (mu_,),
         (ng_,);
         layout = Dict(
-            "title" => title(title_text, me),
+            "title" => _title(ti, sc),
             "yaxis" => Dict("title" => Dict("text" => "Mutual Information")),
             "xaxis" => XAXIS,
         ),
     )
 
-    me
+    sc
 
 end
 
-# TODO: Test.
-function compare_grouping(ht, la_, ma, fr; fu = Nucleus.Distance.CO, title_text = "")
+function compare_grouping(fu, ht, la_, ma, fr; ti = "")
 
     lu_ = unique(la_)
 
@@ -83,15 +79,15 @@ function compare_grouping(ht, la_, ma, fr; fu = Nucleus.Distance.CO, title_text 
 
     nn = lastindex(ng_)
 
-    ti = zeros(Int, nl, nn)
+    tg = zeros(Int, nl, nn)
 
-    hi = hierarchize(Nucleus.Distance.pairwise(fu, eachcol(ma)))
+    hi = hierarchize(fu, eachcol(ma))
 
     la_gr_ = Dict(la => Int[] for la in lu_)
 
     for (i2, ng) in enumerate(ng_)
 
-        for (la, gr) in zip(la_, cluster(hi, ng))
+        for (la, gr) in zip(la_, cutree(hi; k = ng))
 
             push!(la_gr_[la], gr)
 
@@ -105,7 +101,7 @@ function compare_grouping(ht, la_, ma, fr; fu = Nucleus.Distance.CO, title_text 
 
             if fr <= count(==(mo), gr_) / lastindex(gr_)
 
-                ti[i1, i2] = mo
+                tg[i1, i2] = mo
 
             end
 
@@ -115,28 +111,28 @@ function compare_grouping(ht, la_, ma, fr; fu = Nucleus.Distance.CO, title_text 
 
     end
 
-    no_ = count.(!iszero, eachrow(view(ti, :, 2:nn)))
+    no_ = count.(!iszero, eachrow(view(tg, :, 2:nn)))
 
     i1_ = sortperm(no_)
 
-    me = sum(no_) / (nl * (nn - 1))
+    sc = sum(no_) / (nl * (nn - 1))
 
     Nucleus.Plot.plot_heat_map(
         ht,
-        view(ti, i1_, :);
+        view(tg, i1_, :);
         y = view(lu_, i1_),
         x = ng_,
         nr = "Label",
         nc = "Number of Group",
         co = Nucleus.Color._make_color_scheme(vcat("#000000", Nucleus.Color.COPO.colors)),
         layout = Dict(
-            "title" => title(title_text, me * 100),
+            "title" => _title(ti, sc * 100),
             "yaxis" => Dict("dtick" => 1),
             "xaxis" => XAXIS,
         ),
     )
 
-    me
+    sc
 
 end
 

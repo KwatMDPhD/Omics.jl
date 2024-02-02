@@ -205,20 +205,11 @@ end
 
 # ---- #
 
-# TODO: Add to `Clustering`.
-function order(ea_)
-
-    Nucleus.Clustering.hierarchize(Nucleus.Distance.pairwise(Nucleus.Distance.IN, ea_)).order
-
-end
-
-# ---- #
-
 function cluster_plot(ht, ro_, co_, nu)
 
-    i1_ = order(eachrow(nu))
+    i1_ = Nucleus.Clustering.hierarchize(Nucleus.Distance.IN, eachrow(nu)).order
 
-    i2_ = order(eachcol(nu))
+    i2_ = Nucleus.Clustering.hierarchize(Nucleus.Distance.IN, eachcol(nu)).order
 
     Nucleus.Plot.plot_heat_map(ht, nu[i1_, i2_]; y = ro_[i1_], x = co_[i2_])
 
