@@ -169,10 +169,4 @@ function get_information_coefficient(nu1_, nu2_)
 
 end
 
-function get_information_coefficient_distance(nu1_, nu2_)
-
-    (1.0 - get_information_coefficient(nu1_, nu2_)) * 0.5
-
-end
-
 end

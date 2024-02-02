@@ -4,10 +4,6 @@ using Nucleus
 
 # ---- #
 
-using Distances: CorrDist
-
-# ---- #
-
 const MA = [
     0  1  2  3  10  20  30
     0  2  1  3  20  10  30
@@ -19,7 +15,7 @@ const MA = [
 
 for (ea, re) in ((eachcol, [4, 1, 2, 3, 7, 5, 6]), (eachrow, [1, 3, 2, 4]))
 
-    di = Nucleus.Distance.get(Nucleus.Distance.Euclidean(), ea(MA))
+    di = Nucleus.Distance.pairwise(Nucleus.Distance.EU, ea(MA))
 
     @test Nucleus.Clustering.hierarchize(di).order == re
 
@@ -38,7 +34,7 @@ for (k, re) in (
     (4, [1, 2, 3, 1, 2, 3, 4]),
 )
 
-    hc = Nucleus.Clustering.hierarchize(Nucleus.Distance.get(CorrDist(), MA))
+    hc = Nucleus.Clustering.hierarchize(Nucleus.Distance.pairwise(Nucleus.Distance.CO, MA))
 
     @test Nucleus.Clustering.cluster(hc, k) == re
 
@@ -61,9 +57,7 @@ for (co_, ma, re) in (
     ([2, 1, 2, 1, 2, 1, 2, 1], [1 1 2 2 1 1 2 2; 1 1 2 2 1 1 2 2], [2, 6, 4, 8, 1, 5, 3, 7]),
 )
 
-    fu = Nucleus.Distance.Euclidean()
-
-    @test Nucleus.Clustering.order(fu, co_, ma) == re
+    @test Nucleus.Clustering.order(Nucleus.Distance.EU, co_, ma) == re
 
     # 2.370 μs (80 allocations: 6.67 KiB)
     # 2.380 μs (80 allocations: 6.67 KiB)
@@ -71,6 +65,6 @@ for (co_, ma, re) in (
     # 2.389 μs (80 allocations: 6.67 KiB)
     # 2.384 μs (80 allocations: 6.67 KiB)
     # 2.384 μs (80 allocations: 6.67 KiB)
-    #@btime Nucleus.Clustering.order($fu, $co_, $ma)
+    #@btime Nucleus.Clustering.order(Nucleus.Distance.EU, $co_, $ma)
 
 end

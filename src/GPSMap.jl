@@ -74,12 +74,6 @@ function zero1_each_factor!(h1)
 
 end
 
-function distance(ea_)
-
-    Nucleus.Distance.get_half(Nucleus.Information.get_information_coefficient_distance, ea_)
-
-end
-
 function plot(
     ht,
     no_,

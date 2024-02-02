@@ -8,7 +8,7 @@ using Random: seed!
 
 # ---- #
 
-for (an_x_an_x_di, re1, re2) in (
+for (di, re1, re2) in (
     (
         [
             0 1 2
@@ -41,34 +41,32 @@ for (an_x_an_x_di, re1, re2) in (
     ),
 )
 
-    # 2.750 μs (75 allocations: 4.00 KiB)
-    # 217.565 ns (3 allocations: 592 bytes)
-    # 218.073 ns (3 allocations: 592 bytes)
-    # 3.933 μs (103 allocations: 5.46 KiB)
-    # 216.888 ns (3 allocations: 592 bytes)
-    # 216.732 ns (3 allocations: 592 bytes)
+    # 2.583 μs (75 allocations: 4.00 KiB)
+    # 222.685 ns (3 allocations: 592 bytes)
+    # 308.402 ns (3 allocations: 592 bytes)
+    # 3.917 μs (111 allocations: 5.92 KiB)
+    # 222.456 ns (3 allocations: 592 bytes)
+    # 307.979 ns (3 allocations: 592 bytes)
 
     seed!(20231210)
 
-    di_x_no_x_co = Nucleus.Coordinate.get(an_x_an_x_di)
+    dn = Nucleus.Coordinate.get(di)
 
-    @test isapprox(di_x_no_x_co, re1; atol = 1e-5)
+    @test isapprox(dn, re1; atol = 1e-5)
 
-    #@btime Nucleus.Coordinate.get($an_x_an_x_di)
+    #@btime Nucleus.Coordinate.get($di)
 
-    no_x_po_x_pu = [
+    np = [
         1 0 0 1 0 1 1 0.5 2
         0 1 0 1 1 0 1 0.5 2
         0 0 1 0 1 1 1 0.5 2
     ]
 
-    di_x_po_x_co = Nucleus.Coordinate.pull(di_x_no_x_co, no_x_po_x_pu)
-
-    @test isapprox(di_x_po_x_co, re2; atol = 1e-5)
+    @test isapprox(Nucleus.Coordinate.pull(dn, np), re2; atol = 1e-5)
 
     for pu in (1, 2)
 
-        #@btime Nucleus.Coordinate.pull($di_x_no_x_co, $no_x_po_x_pu)
+        #@btime Nucleus.Coordinate.pull($dn, $np, $pu)
 
     end
 
@@ -76,19 +74,19 @@ end
 
 # ---- #
 
-const DI_X_AN_X_CO = [
+const CO = [
     -1.0 -1 1 1
     1 -1 -1 1
 ]
 
 # ---- #
 
-const TR = Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO))
+const TR = Nucleus.Coordinate.triangulate(eachcol(CO))
 
 # ---- #
 
 # 9.791 μs (154 allocations: 18.67 KiB)
-#@btime Nucleus.Coordinate.triangulate(eachcol(DI_X_AN_X_CO));
+#@btime Nucleus.Coordinate.triangulate(eachcol(CO));
 
 # ---- #
 
@@ -96,18 +94,18 @@ const VP = Nucleus.Coordinate.wall(TR)
 
 # ---- #
 
-# 373.780 ns (6 allocations: 1.28 KiB)
+# 325.000 ns (6 allocations: 1.28 KiB)
 #@btime Nucleus.Coordinate.wall(TR);
 
 # ---- #
 
-for co_ in eachcol(DI_X_AN_X_CO)
+for co_ in eachcol(CO)
 
     @test Nucleus.Coordinate.is_in(co_, VP)
 
     # 9.510 ns (0 allocations: 0 bytes)
-    # 9.541 ns (0 allocations: 0 bytes)
-    # 9.551 ns (0 allocations: 0 bytes)
+    # 9.510 ns (0 allocations: 0 bytes)
+    # 9.510 ns (0 allocations: 0 bytes)
     # 9.541 ns (0 allocations: 0 bytes)
     #@btime Nucleus.Coordinate.is_in($co_, VP)
 

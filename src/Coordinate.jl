@@ -8,27 +8,19 @@ using MultivariateStats: MetricMDS, fit
 
 using ..Nucleus
 
-function get(an_x_an_x_di, maxoutdim = 2)
+function get(di, maxoutdim = 2)
 
-    fit(MetricMDS, an_x_an_x_di; distances = true, maxoutdim, maxiter = 10^3).X
+    fit(MetricMDS, di; distances = true, maxoutdim, maxiter = 10^3).X
 
 end
 
-function pull(di_x_no_x_co, no_x_po_x_pu, pu = 1)
+function pull(dn, np, pu = 1)
 
-    if isone(pu)
+    np = isone(pu) ? copy(np) : np .^ pu
 
-        no_x_po_x_pu = copy(no_x_po_x_pu)
+    foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(np))
 
-    else
-
-        no_x_po_x_pu = no_x_po_x_pu .^ pu
-
-    end
-
-    foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(no_x_po_x_pu))
-
-    di_x_no_x_co * no_x_po_x_pu
+    dn * np
 
 end
 

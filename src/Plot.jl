@@ -38,7 +38,7 @@ end
 
 function _initialize_name(an___)
 
-    (id -> "Name $id").(eachindex(an___))
+    (i1 -> "Name $i1").(eachindex(an___))
 
 end
 
@@ -83,13 +83,13 @@ function plot_scatter(
         ht,
         [
             Dict(
-                "name" => name_[id],
-                "y" => y_[id],
-                "x" => x_[id],
-                "text" => text_[id],
-                "mode" => mode_[id],
-                "marker" => marker_[id],
-            ) for id in eachindex(y_)
+                "name" => name_[i1],
+                "y" => y_[i1],
+                "x" => x_[i1],
+                "text" => text_[i1],
+                "mode" => mode_[i1],
+                "marker" => marker_[i1],
+            ) for i1 in eachindex(y_)
         ],
         Nucleus.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
         ke_ar...,
@@ -112,11 +112,11 @@ function plot_bar(
         [
             Dict(
                 "type" => "bar",
-                "name" => name_[id],
-                "y" => y_[id],
-                "x" => x_[id],
-                "marker" => marker_[id],
-            ) for id in eachindex(y_)
+                "name" => name_[i1],
+                "y" => y_[i1],
+                "x" => x_[i1],
+                "marker" => marker_[i1],
+            ) for i1 in eachindex(y_)
         ],
         Nucleus.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
         ke_ar...,
@@ -140,19 +140,19 @@ function plot_histogram(
 
     n = lastindex(x_)
 
-    id_ = eachindex(x_)
+    i1_ = eachindex(x_)
 
     data = [
         Dict(
             "type" => "histogram",
-            "legendgroup" => id,
-            "name" => name_[id],
+            "legendgroup" => i1,
+            "name" => name_[i1],
             "yaxis" => "y2",
-            "x" => x_[id],
-            "marker" => marker_[id],
+            "x" => x_[i1],
+            "marker" => marker_[i1],
             "histnorm" => histnorm,
             "xbins" => Dict("size" => xbins_size),
-        ) for id in id_
+        ) for i1 in i1_
     ]
 
     layout = Nucleus.Dict.merge(
@@ -174,18 +174,18 @@ function plot_histogram(
             data,
             [
                 Dict(
-                    "legendgroup" => id,
-                    "name" => name_[id],
+                    "legendgroup" => i1,
+                    "name" => name_[i1],
                     "showlegend" => false,
-                    "y" => fill(id, lastindex(x_[id])),
-                    "x" => x_[id],
-                    "text" => text_[id],
+                    "y" => fill(i1, lastindex(x_[i1])),
+                    "x" => x_[i1],
+                    "text" => text_[i1],
                     "mode" => "markers",
                     "marker" => merge(
-                        marker_[id],
+                        marker_[i1],
                         Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
                     ),
-                ) for id in id_
+                ) for i1 in i1_
             ],
         )
 
@@ -201,21 +201,21 @@ function plot_histogram(
 
 end
 
-function _group(it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
+function _group(fu, it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
 
-    id_ = Nucleus.Clustering.order(Nucleus.Distance.Euclidean(), it_, ma)
+    i1_ = Nucleus.Clustering.order(fu, it_, ma)
 
-    it_[id_], an_[id_], ma[:, id_], ticktext
+    it_[i1_], an_[i1_], ma[:, i1_], ticktext
 
 end
 
-function _group(st_, an_, ma)
+function _group(fu, st_, an_, ma)
 
     un_ = sort!(unique(st_))
 
-    st_id = Dict(st => id for (id, st) in enumerate(un_))
+    st_i1 = Dict(st => i1 for (i1, st) in enumerate(un_))
 
-    _group([st_id[st] for st in st_], an_, ma, un_)
+    _group(fu, [st_i1[st] for st in st_], an_, ma, un_)
 
 end
 
@@ -257,6 +257,7 @@ function plot_heat_map(
     co = Nucleus.Color.pick_color_scheme(z),
     gr_ = Int[],
     gc_ = Int[],
+    fu = Nucleus.Distance.IN,
     layout = Dict{String, Any}(),
     ke_ar...,
 )
@@ -271,7 +272,7 @@ function plot_heat_map(
 
     if !isempty(gr_)
 
-        go_, y, z, ticktext = _group(gr_, y, permutedims(z))
+        go_, y, z, ticktext = _group(fu, gr_, y, permutedims(z))
 
         z = permutedims(z)
 
@@ -295,7 +296,7 @@ function plot_heat_map(
 
     if !isempty(gc_)
 
-        go_, x, z, ticktext = _group(gc_, x, z)
+        go_, x, z, ticktext = _group(fu, gc_, x, z)
 
         push!(
             data,
@@ -425,21 +426,21 @@ function plot_radar(
         [
             Dict(
                 "type" => "scatterpolar",
-                "legendgroup" => name_[id],
-                "name" => name_[id],
-                "showlegend" => showlegend_[id],
-                "theta" => _tie(an_[id]),
-                "r" => _tie(ra_[id]),
-                "marker" => Dict("size" => linewidth, "color" => line_color_[id]),
+                "legendgroup" => name_[i1],
+                "name" => name_[i1],
+                "showlegend" => showlegend_[i1],
+                "theta" => _tie(an_[i1]),
+                "r" => _tie(ra_[i1]),
+                "marker" => Dict("size" => linewidth, "color" => line_color_[i1]),
                 "line" => Dict(
                     "shape" => "spline",
                     "smoothing" => 0,
                     "width" => 2.4,
-                    "color" => line_color_[id],
+                    "color" => line_color_[i1],
                 ),
-                "fill" => fill_[id],
-                "fillcolor" => fillcolor_[id],
-            ) for id in eachindex(ra_)
+                "fill" => fill_[i1],
+                "fillcolor" => fillcolor_[i1],
+            ) for i1 in eachindex(ra_)
         ],
         Nucleus.Dict.merge(
             Dict(

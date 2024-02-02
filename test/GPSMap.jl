@@ -122,24 +122,6 @@ end
 
 # ---- #
 
-@test isapprox(
-    Nucleus.GPSMap.distance(eachrow([
-        -1 0 1
-        -2 0 2
-        -1 0 2
-        -2 0 1
-    ])),
-    [
-        0.0        0.0285955  0.0285955  0.0285955
-        0.0285955  0.0        0.0285955  0.0285955
-        0.0285955  0.0285955  0.0        0.0285955
-        0.0285955  0.0285955  0.0285955  0.0
-    ];
-    atol = 1e-7,
-)
-
-# ---- #
-
 const PO_ = (i1 -> "Point $i1").(1:10)
 
 # ---- #
@@ -223,9 +205,10 @@ end
 
 # ---- #
 
+# TODO: Add to `Clustering`.
 function order(ea_)
 
-    Nucleus.Clustering.hierarchize(Nucleus.GPSMap.distance(ea_)).order
+    Nucleus.Clustering.hierarchize(Nucleus.Distance.pairwise(Nucleus.Distance.IN, ea_)).order
 
 end
 
@@ -267,7 +250,7 @@ Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "h_labeled.html"), mh; y = fa_, 
 
 # ---- #
 
-const DI = Nucleus.GPSMap.distance(eachrow(mh))
+const DI = Nucleus.Distance.pairwise(Nucleus.Distance.IN, eachrow(mh))
 
 cluster_plot(joinpath(Nucleus.TE, "distance.html"), fa_, fa_, DI)
 
@@ -287,7 +270,9 @@ Nucleus.Plot.plot_heat_map(
     y = ["Dimension 1", "Dimension 2"],
     x = sa_,
     gc_ = la_,
+    fu = Nucleus.Distance.EU,
 )
+
 
 # ---- #
 
