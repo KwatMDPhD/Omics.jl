@@ -4,33 +4,33 @@ using Statistics: cor
 
 using ..Nucleus
 
-@inline function get_kullback_leibler_divergence(nu1, nu2)
+@inline function get_kullback_leibler_divergence(n1, n2)
 
-    nu1 * log(nu1 / nu2)
-
-end
-
-@inline function get_antisymmetric_kullback_leibler_divergence(nu1, nu2, nu3, nu4 = nu3)
-
-    get_kullback_leibler_divergence(nu1, nu3) - get_kullback_leibler_divergence(nu2, nu4)
+    n1 * log(n1 / n2)
 
 end
 
-@inline function get_symmetric_kullback_leibler_divergence(nu1, nu2, nu3, nu4 = nu3)
+@inline function get_antisymmetric_kullback_leibler_divergence(n1, n2, n3, n4 = n3)
 
-    get_kullback_leibler_divergence(nu1, nu3) + get_kullback_leibler_divergence(nu2, nu4)
-
-end
-
-@inline function get_thermodynamic_depth(nu1, nu2)
-
-    get_kullback_leibler_divergence(nu1, nu2) - get_kullback_leibler_divergence(nu2, nu1)
+    get_kullback_leibler_divergence(n1, n3) - get_kullback_leibler_divergence(n2, n4)
 
 end
 
-@inline function get_thermodynamic_breadth(nu1, nu2)
+@inline function get_symmetric_kullback_leibler_divergence(n1, n2, n3, n4 = n3)
 
-    get_kullback_leibler_divergence(nu1, nu2) + get_kullback_leibler_divergence(nu2, nu1)
+    get_kullback_leibler_divergence(n1, n3) + get_kullback_leibler_divergence(n2, n4)
+
+end
+
+@inline function get_thermodynamic_depth(n1, n2)
+
+    get_kullback_leibler_divergence(n1, n2) - get_kullback_leibler_divergence(n2, n1)
+
+end
+
+@inline function get_thermodynamic_breadth(n1, n2)
+
+    get_kullback_leibler_divergence(n1, n2) + get_kullback_leibler_divergence(n2, n1)
 
 end
 
@@ -40,7 +40,7 @@ end
 
 end
 
-function _get_mutual_information_using_probability(jo)
+function get_mutual_information(jo)
 
     p1_ = sum.(eachrow(jo))
 
@@ -48,9 +48,9 @@ function _get_mutual_information_using_probability(jo)
 
     mu = 0.0
 
-    for (id2, p2) in enumerate(p2_), (id1, p1) in enumerate(p1_)
+    for (i2, p2) in enumerate(p2_), (i1, p1) in enumerate(p1_)
 
-        pj = jo[id1, id2]
+        pj = jo[i1, i2]
 
         if !iszero(pj)
 
@@ -64,108 +64,73 @@ function _get_mutual_information_using_probability(jo)
 
 end
 
-@inline function _sum_get_entropy(ea)
+@inline function _sum_get_entropy(nu_)
 
-    get_entropy(sum(ea))
-
-end
-
-function _get_mutual_information_using_entropy(jo)
-
-    sum(_sum_get_entropy, eachrow(jo)) + sum(_sum_get_entropy, eachcol(jo)) -
-    sum(get_entropy(pj) for pj in jo)
+    get_entropy(sum(nu_))
 
 end
 
-function get_mutual_information(nu1_::AbstractVector{<:Integer}, nu2_::AbstractVector{<:Integer})
+function get_mutual_information(jo, no)
 
-    jo = Nucleus.Collection.count(nu1_, nu2_) / lastindex(nu1_)
+    e1 = sum(_sum_get_entropy, eachrow(jo))
 
-    _get_mutual_information_using_entropy(jo)
+    e2 = sum(_sum_get_entropy, eachcol(jo))
 
-end
+    mu = e1 + e2 - sum(get_entropy(pj) for pj in jo)
 
-function get_mutual_information(nu1_, nu2_; ke_ar...)
+    if no
 
-    _ro, _co, de = Nucleus.Density.estimate((nu2_, nu1_); ke_ar...)
+        mu = 2.0 * mu / (e1 + e2)
 
-    jo = de / sum(de)
+    end
 
-    _get_mutual_information_using_entropy(jo)
-
-end
-
-# TODO: Use as a keyword argument.
-@inline function normalize_mutual_information(mu, e1, e2)
-
-    2.0 * mu / (e1 + e2)
+    mu
 
 end
 
-function get_information_coefficient(mu)
+function _convert(mu)
 
     sqrt(1.0 - exp(-2.0 * mu))
 
 end
 
 function get_information_coefficient(
-    nu1_::AbstractVector{<:Integer},
-    nu2_::AbstractVector{<:Integer},
+    i1_::AbstractVector{<:Integer},
+    i2_::AbstractVector{<:Integer},
 )
 
-    if allequal(nu1_) || allequal(nu2_)
-
-        return NaN
-
-    elseif nu1_ == nu2_
-
-        return 1.0
-
-    elseif nu1_ == view(nu2_, lastindex(nu2_):-1:1)
-
-        return -1.0
-
-    end
-
-    co = cor(nu1_, nu2_)
-
-    mu = get_mutual_information(nu1_, nu2_)
-
-    sign(co) * get_information_coefficient(mu)
+    sign(cor(i1_, i2_)) *
+    _convert(get_mutual_information(Nucleus.Probability.get_joint(i1_, i2_), false))
 
 end
 
-function get_information_coefficient(nu1_, nu2_)
+function get_information_coefficient(n1_, n2_)
 
-    if allequal(nu1_) || allequal(nu2_)
+    # TODO: Decide when to use the `Integer` dispatch.
+    if lastindex(unique(n1_)) == lastindex(unique(n2_)) == 2
 
-        return NaN
-
-    elseif nu1_ == nu2_
-
-        return 1.0
-
-    elseif nu1_ == view(nu2_, lastindex(nu2_):-1:1)
-
-        return -1.0
+        return sign(n1_[1] - n1_[2]) == sign(n2_[1] - n2_[2]) ? 1.0 : -1.0
 
     end
 
-    co = cor(nu1_, nu2_)
+    co = cor(n1_, n2_)
 
     fa = 0.75 - 0.75 * abs(co)
 
-    mu = get_mutual_information(
-        nu1_,
-        nu2_;
-        npoints = (32, 32),
-        bandwidth = (
-            Nucleus.Density.get_bandwidth(nu2_) * fa,
-            Nucleus.Density.get_bandwidth(nu1_) * fa,
+    sign(co) * _convert(
+        get_mutual_information(
+            Nucleus.Probability.get_joint(
+                n1_,
+                n2_;
+                npoints = (32, 32),
+                bandwidth = (
+                    Nucleus.Density.get_bandwidth(n2_) * fa,
+                    Nucleus.Density.get_bandwidth(n1_) * fa,
+                ),
+            ),
+            false,
         ),
     )
-
-    sign(co) * get_information_coefficient(mu)
 
 end
 

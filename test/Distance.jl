@@ -54,7 +54,7 @@ for (n1_, n2_, re) in (
     ([1, 1], [1, 2], NaN),
     ([1, 2], [1, 1], NaN),
     # ==
-    ([1, 2], [1, 2], 0.0),
+    ([1, 2], [1, 2], 0.1339745962155614),
     ([1, 2], [1.0, 2], 0.0),
     ([1, 2], [1, 2 + eps()], 0.0),
     # Integer
@@ -64,28 +64,27 @@ for (n1_, n2_, re) in (
     ([1, 2, 3], [1, 2, 4], 0.057190958417936644),
     ([1.0, 2, 3], [1, 2, 4], 0.06160436857756835),
     # ~
-    # TODO: Improve 2-Float64 cases.
-    ([1, 2], [1, 2.001], 0.9999998528628226),
+    ([1, 2], [1, 2.001], 0.0),
     ([1, 2, 3], [1, 2, 3.001], 0.0571909584182676),
     ([1, 2, 3, 4], [1, 2, 3, 4.001], 0.03175416344821147),
 )
 
     @test Nucleus.Distance.IN(n1_, n2_) === re
 
-    # 21.690 ns (1 allocation: 16 bytes)
-    # 22.275 ns (1 allocation: 16 bytes)
-    # 22.275 ns (1 allocation: 16 bytes)
-    # 22.275 ns (1 allocation: 16 bytes)
-    # 24.556 ns (1 allocation: 16 bytes)
-    # 25.309 ns (1 allocation: 16 bytes)
-    # 24.724 ns (1 allocation: 16 bytes)
-    # 735.548 ns (34 allocations: 2.55 KiB)
-    # 737.234 ns (34 allocations: 2.55 KiB)
-    # 825.236 ns (34 allocations: 2.61 KiB)
-    # 25.083 μs (46 allocations: 52.56 KiB)
-    # 23.667 μs (46 allocations: 52.56 KiB)
-    # 24.625 μs (46 allocations: 52.56 KiB)
-    # 24.750 μs (46 allocations: 52.59 KiB)
+    # 642.188 ns (34 allocations: 2.48 KiB)
+    # 663.522 ns (34 allocations: 2.48 KiB)
+    # 724.000 ns (34 allocations: 2.52 KiB)
+    # 705.616 ns (34 allocations: 2.52 KiB)
+    # 713.585 ns (34 allocations: 2.55 KiB)
+    # 22.632 ns (1 allocation: 16 bytes)
+    # 22.632 ns (1 allocation: 16 bytes)
+    # 717.153 ns (34 allocations: 2.55 KiB)
+    # 715.684 ns (34 allocations: 2.55 KiB)
+    # 815.895 ns (34 allocations: 2.61 KiB)
+    # 25.167 μs (46 allocations: 52.56 KiB)
+    # 22.609 ns (1 allocation: 16 bytes)
+    # 24.542 μs (46 allocations: 52.56 KiB)
+    # 24.792 μs (46 allocations: 52.59 KiB)
     #@btime Nucleus.Distance.IN($n1_, $n2_)
 
 end
@@ -108,7 +107,14 @@ for (fu, re_) in zip(
             2.220446049250313e-16,
             1.9999999999999998,
         ),
-        (0.0, 2.0, 0.0, 2.0, 0.0, 2.0),
+        (
+            0.1339745962155614,
+            1.8660254037844386,
+            0.057190958417936644,
+            1.9428090415820634,
+            0.031754163448145745,
+            1.9682458365518543,
+        ),
     ),
 )
 
@@ -127,23 +133,23 @@ for (fu, re_) in zip(
         @test fu(n1_, n2_) === re
 
         # 3.125 ns (0 allocations: 0 bytes)
-        # 3.166 ns (0 allocations: 0 bytes)
+        # 3.208 ns (0 allocations: 0 bytes)
         # 4.583 ns (0 allocations: 0 bytes)
         # 4.583 ns (0 allocations: 0 bytes)
         # 3.625 ns (0 allocations: 0 bytes)
         # 3.625 ns (0 allocations: 0 bytes)
-        # 45.417 ns (2 allocations: 160 bytes)
-        # 45.374 ns (2 allocations: 160 bytes)
-        # 47.402 ns (2 allocations: 160 bytes)
-        # 47.564 ns (2 allocations: 160 bytes)
-        # 46.596 ns (2 allocations: 192 bytes)
-        # 46.638 ns (2 allocations: 192 bytes)
-        # 23.427 ns (1 allocation: 16 bytes)
-        # 42.003 ns (1 allocation: 16 bytes)
-        # 23.427 ns (1 allocation: 16 bytes)
-        # 43.266 ns (1 allocation: 16 bytes)
-        # 23.469 ns (1 allocation: 16 bytes)
-        # 45.542 ns (1 allocation: 16 bytes)
+        # 49.477 ns (2 allocations: 160 bytes)
+        # 50.659 ns (2 allocations: 160 bytes)
+        # 50.954 ns (2 allocations: 160 bytes)
+        # 51.039 ns (2 allocations: 160 bytes)
+        # 48.119 ns (2 allocations: 192 bytes)
+        # 48.035 ns (2 allocations: 192 bytes)
+        # 714.765 ns (34 allocations: 2.55 KiB)
+        # 751.078 ns (34 allocations: 2.55 KiB)
+        # 766.204 ns (34 allocations: 2.61 KiB)
+        # 769.860 ns (34 allocations: 2.61 KiB)
+        # 813.759 ns (34 allocations: 2.73 KiB)
+        # 843.750 ns (34 allocations: 2.73 KiB)
         #@btime $fu($n1_, $n2_)
 
     end
@@ -211,11 +217,11 @@ for (fu, re_) in zip(
         @test isapprox(Nucleus.Distance.pairwise(fu, nu___), re; atol = 1e-5)
 
         # 47.017 ns (1 allocation: 192 bytes)
-        # 47.017 ns (1 allocation: 192 bytes)
-        # 313.979 ns (13 allocations: 1.12 KiB)
-        # 355.052 ns (13 allocations: 1.12 KiB)
-        # 6.175 μs (215 allocations: 16.00 KiB)
-        # 152.375 μs (287 allocations: 315.72 KiB)
+        # 46.975 ns (1 allocation: 192 bytes)
+        # 357.143 ns (13 allocations: 1.12 KiB)
+        # 315.346 ns (13 allocations: 1.12 KiB)
+        # 6.025 μs (215 allocations: 16.00 KiB)
+        # 153.000 μs (287 allocations: 315.72 KiB)
         #@btime Nucleus.Distance.pairwise($fu, $nu___)
 
     end
@@ -232,15 +238,15 @@ for nn in (10, 100, 1000)
 
     for fu in FU_
 
-        # 28.363 ns (1 allocation: 96 bytes)
-        # 77.012 ns (3 allocations: 384 bytes)
-        # 27.041 μs (50 allocations: 52.83 KiB)
+        # 28.308 ns (1 allocation: 96 bytes)
+        # 77.651 ns (3 allocations: 384 bytes)
+        # 27.125 μs (50 allocations: 52.83 KiB)
         # 41.498 ns (1 allocation: 96 bytes)
-        # 148.875 ns (3 allocations: 1.84 KiB)
-        # 31.708 μs (50 allocations: 54.30 KiB)
-        # 317.089 ns (1 allocation: 96 bytes)
-        # 1.104 μs (3 allocations: 15.97 KiB)
-        # 80.416 μs (51 allocations: 68.44 KiB)
+        # 150.170 ns (3 allocations: 1.84 KiB)
+        # 31.709 μs (50 allocations: 54.30 KiB)
+        # 317.050 ns (1 allocation: 96 bytes)
+        # 1.100 μs (3 allocations: 15.97 KiB)
+        # 80.458 μs (51 allocations: 68.44 KiB)
         #@btime Nucleus.Distance.pairwise($fu, $nu___)
 
     end

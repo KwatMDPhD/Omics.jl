@@ -43,14 +43,18 @@ end
 const XAXIS = Dict("dtick" => 1, "title" => Dict("text" => "Number of Group"))
 
 # TODO: Plot.
-# TODO: Normalize score.
-function compare_grouping(fu, ht, la_, ma; ti = "")
+function compare_grouping(fu, ht, it_, ma; ti = "")
 
     hi = hierarchize(fu, eachcol(ma))
 
-    ng_ = eachindex(unique(la_))
+    ng_ = eachindex(unique(it_))
 
-    mu_ = [Nucleus.Information.get_mutual_information(la_, cutree(hi; k = ng)) for ng in ng_]
+    mu_ = [
+        Nucleus.Information.get_mutual_information(
+            Nucleus.Probability.get_joint(it_, cutree(hi; k = ng)),
+            true,
+        ) for ng in ng_
+    ]
 
     sc = mean(mu_)
 
@@ -125,11 +129,7 @@ function compare_grouping(fu, ht, la_, ma, fr; ti = "")
         nr = "Label",
         nc = "Number of Group",
         co = Nucleus.Color._make_color_scheme(vcat("#000000", Nucleus.Color.COPO.colors)),
-        layout = Dict(
-            "title" => _title(ti, sc * 100),
-            "yaxis" => Dict("dtick" => 1),
-            "xaxis" => XAXIS,
-        ),
+        layout = Dict("title" => _title(ti, sc), "yaxis" => Dict("dtick" => 1), "xaxis" => XAXIS),
     )
 
     sc

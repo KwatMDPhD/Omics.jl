@@ -23,10 +23,10 @@ for (ea, re) in ((eachcol, [4, 1, 2, 3, 7, 5, 6]), (eachrow, [1, 3, 2, 4]))
           Nucleus.Clustering.hierarchize(Nucleus.Distance.EU, nu___).order ==
           re
 
-    # 1.346 μs (35 allocations: 3.86 KiB)
-    # 1.462 μs (36 allocations: 4.30 KiB)
-    # 938.435 ns (32 allocations: 2.62 KiB)
-    # 995.800 ns (33 allocations: 2.81 KiB)
+    # 1.333 μs (35 allocations: 3.86 KiB)
+    # 1.421 μs (36 allocations: 4.30 KiB)
+    # 913.194 ns (32 allocations: 2.62 KiB)
+    # 977.538 ns (33 allocations: 2.81 KiB)
 
     #@btime Nucleus.Clustering.hierarchize($di)
 
@@ -91,12 +91,12 @@ for (co_, ma, re) in (
 
     @test Nucleus.Clustering.order(Nucleus.Distance.EU, co_, nu___) == re
 
-    # 2.472 μs (80 allocations: 6.67 KiB)
-    # 2.477 μs (80 allocations: 6.67 KiB)
-    # 2.468 μs (80 allocations: 6.67 KiB)
-    # 2.477 μs (80 allocations: 6.67 KiB)
-    # 2.481 μs (80 allocations: 6.67 KiB)
-    # 2.486 μs (80 allocations: 6.67 KiB)
+    # 2.292 μs (80 allocations: 6.67 KiB)
+    # 2.292 μs (80 allocations: 6.67 KiB)
+    # 2.310 μs (80 allocations: 6.67 KiB)
+    # 2.292 μs (80 allocations: 6.67 KiB)
+    # 2.301 μs (80 allocations: 6.67 KiB)
+    # 2.292 μs (80 allocations: 6.67 KiB)
     #@btime Nucleus.Clustering.order(Nucleus.Distance.EU, $co_, $nu___)
 
 end
@@ -107,21 +107,29 @@ const IT_ = [1, 2, 3, 1, 2, 3, 1]
 
 # ---- #
 
-@test Nucleus.Clustering.compare_grouping(
-    Nucleus.Distance.CO,
-    "",
-    IT_,
-    MA;
-    ti = "Mutual Information",
-) === 0.5590872654876136
+for (fu, re) in (
+    (Nucleus.Distance.EU, 0.09928735617366401),
+    (Nucleus.Distance.CO, 0.5711294801431482),
+    (Nucleus.Distance.IN, 0.5917316471029412),
+)
+
+    @test Nucleus.Clustering.compare_grouping(fu, "", IT_, MA; ti = "Mutual Information $fu") ===
+          re
+
+end
 
 # ---- #
 
-@test Nucleus.Clustering.compare_grouping(
-    Nucleus.Distance.CO,
-    "",
-    (it -> "Label $it").(IT_),
-    MA,
-    1;
-    ti = "Tight",
-) === 1.0
+for (fu, re) in
+    ((Nucleus.Distance.EU, 0.0), (Nucleus.Distance.CO, 1.0), (Nucleus.Distance.IN, 1.0))
+
+    @test Nucleus.Clustering.compare_grouping(
+        fu,
+        "",
+        (it -> "Label $it").(IT_),
+        MA,
+        1;
+        ti = "Tight $fu",
+    ) === re
+
+end
