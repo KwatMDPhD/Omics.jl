@@ -42,10 +42,8 @@ end
 
 const XAXIS = Dict("dtick" => 1, "title" => Dict("text" => "Number of Group"))
 
-# TODO: Plot.
-function compare_grouping(fu, ht, it_, ma; ti = "")
-
-    hi = hierarchize(fu, eachcol(ma))
+# TODO: Test.
+function compare_grouping(hi, ht, it_; ti = "")
 
     ng_ = eachindex(unique(it_))
 
@@ -73,7 +71,8 @@ function compare_grouping(fu, ht, it_, ma; ti = "")
 
 end
 
-function compare_grouping(fu, ht, la_, ma, fr; ti = "")
+# TODO: Test.
+function compare_grouping(hi, ht, la_, fr; ti = "")
 
     lu_ = unique(la_)
 
@@ -84,8 +83,6 @@ function compare_grouping(fu, ht, la_, ma, fr; ti = "")
     nn = lastindex(ng_)
 
     tg = zeros(Int, nl, nn)
-
-    hi = hierarchize(fu, eachcol(ma))
 
     la_gr_ = Dict(la => Int[] for la in lu_)
 

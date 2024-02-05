@@ -107,6 +107,7 @@ end
 function get_information_coefficient(n1_, n2_)
 
     # TODO: Decide when to use the `Integer` dispatch.
+    # TODO: Try changing the grid sizes for smaller vectors.
     if lastindex(unique(n1_)) == lastindex(unique(n2_)) == 2
 
         return sign(n1_[1] - n1_[2]) == sign(n2_[1] - n2_[2]) ? 1.0 : -1.0
