@@ -203,7 +203,7 @@ end
 
 function _group(fu, it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
 
-    i1_ = Nucleus.Clustering.order(fu, it_, ma)
+    i1_ = Nucleus.Clustering.order(fu, it_, eachcol(ma))
 
     it_[i1_], an_[i1_], ma[:, i1_], ticktext
 
