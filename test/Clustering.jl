@@ -110,11 +110,15 @@ const IT_ = [1, 2, 3, 1, 2, 3, 1]
 for (fu, re) in (
     (Nucleus.Distance.EU, 0.09928735617366401),
     (Nucleus.Distance.CO, 0.5711294801431482),
-    (Nucleus.Distance.IN, 0.5917316471029412),
+    (Nucleus.Distance.IN, 0.5711294801431482),
 )
 
-    @test Nucleus.Clustering.compare_grouping(fu, "", IT_, MA; ti = "Mutual Information $fu") ===
-          re
+    @test Nucleus.Clustering.compare_grouping(
+        Nucleus.Clustering.hierarchize(fu, eachcol(MA)),
+        "",
+        IT_;
+        ti = "Mutual Information $fu",
+    ) === re
 
 end
 
@@ -124,10 +128,9 @@ for (fu, re) in
     ((Nucleus.Distance.EU, 0.0), (Nucleus.Distance.CO, 1.0), (Nucleus.Distance.IN, 1.0))
 
     @test Nucleus.Clustering.compare_grouping(
-        fu,
+        Nucleus.Clustering.hierarchize(fu, eachcol(MA)),
         "",
         (it -> "Label $it").(IT_),
-        MA,
         1;
         ti = "Tight $fu",
     ) === re

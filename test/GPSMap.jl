@@ -207,9 +207,9 @@ end
 
 function cluster_plot(ht, ro_, co_, nu)
 
-    i1_ = Nucleus.Clustering.hierarchize(Nucleus.Distance.IN, eachrow(nu)).order
+    i1_ = Nucleus.Clustering.hierarchize(Nucleus.Distance.CO, eachrow(nu)).order
 
-    i2_ = Nucleus.Clustering.hierarchize(Nucleus.Distance.IN, eachcol(nu)).order
+    i2_ = Nucleus.Clustering.hierarchize(Nucleus.Distance.CO, eachcol(nu)).order
 
     Nucleus.Plot.plot_heat_map(ht, nu[i1_, i2_]; y = ro_[i1_], x = co_[i2_])
 

@@ -99,22 +99,27 @@ function get_information_coefficient(
     i2_::AbstractVector{<:Integer},
 )
 
-    sign(cor(i1_, i2_)) *
-    _convert(get_mutual_information(Nucleus.Probability.get_joint(i1_, i2_), false))
+    co = cor(i1_, i2_)
+
+    if isnan(co) || isone(abs(co))
+
+        return co
+
+    end
+
+    sign(co) * _convert(get_mutual_information(Nucleus.Probability.get_joint(i1_, i2_), false))
 
 end
 
 function get_information_coefficient(n1_, n2_)
 
-    # TODO: Decide when to use the `Integer` dispatch.
-    # TODO: Try changing the grid sizes for smaller vectors.
-    if lastindex(unique(n1_)) == lastindex(unique(n2_)) == 2
+    co = cor(n1_, n2_)
 
-        return sign(n1_[1] - n1_[2]) == sign(n2_[1] - n2_[2]) ? 1.0 : -1.0
+    if isnan(co) || isone(abs(co))
+
+        return co
 
     end
-
-    co = cor(n1_, n2_)
 
     fa = 0.75 - 0.75 * abs(co)
 

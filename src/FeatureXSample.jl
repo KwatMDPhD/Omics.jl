@@ -4,7 +4,6 @@ using StatsBase: median
 
 using ..Nucleus
 
-# TODO: Test.
 function remove_constant(la_, ma)
 
     nl = lastindex(la_)
@@ -71,53 +70,13 @@ function count_unique(na_, an___)
 
 end
 
-function _error_bad(ro_, co_, nu)
-
-    Nucleus.Error.error_bad(isnothing, ro_)
-
-    Nucleus.Error.error_bad(ismissing, ro_)
-
-    Nucleus.Error.error_bad(Nucleus.String.is_bad, ro_)
-
-    Nucleus.Error.error_duplicate(co_)
-
-    Nucleus.Error.error_bad(isnothing, co_)
-
-    Nucleus.Error.error_bad(ismissing, co_)
-
-    Nucleus.Error.error_bad(Nucleus.String.is_bad, co_)
-
-    Nucleus.Error.error_bad(isnothing, nu)
-
-    Nucleus.Error.error_bad(ismissing, nu)
-
-    Nucleus.Error.error_bad(!isfinite, nu)
-
-end
-
-function plot(he, hi, nr, ro_, nc, co_, nn, nu; ke_ar...)
+function _plot(he, hi, nr, ro_, nc, co_, nn, nu; ke_ar...)
 
     title = Dict("title" => Dict("text" => nn))
 
     Nucleus.Plot.plot_heat_map(he, nu; y = ro_, x = co_, nr, nc, layout = title, ke_ar...)
 
     Nucleus.Plot.plot_histogram(hi, (vec(nu),); layout = Dict("xaxis" => title))
-
-end
-
-function plot(nr, ro_, nc, co_, nn, nu; ke_ar...)
-
-    plot("", "", nr, ro_, nc, co_, nn, nu; ke_ar...)
-
-end
-
-function write_plot(pr, nr, ro_, nc, co_, nn, nu; ke_ar...)
-
-    Nucleus.Error.error_empty(pr)
-
-    Nucleus.DataFrame.write("$pr.tsv", nr, ro_, co_, nu)
-
-    plot("$pr.html", "$pr.histogram.html", nr, ro_, nc, co_, nn, nu; ke_ar...)
 
 end
 
@@ -134,9 +93,7 @@ function transform(
     nn = "Number",
 )
 
-    _error_bad(ro_, co_, nu)
-
-    plot(nr, ro_, nc, co_, nn, nu)
+    _plot("", "", nr, ro_, nc, co_, nn, nu)
 
     tr_ = String[]
 
@@ -167,11 +124,21 @@ function transform(
 
     if !isempty(tr_)
 
-        plot(nr, ro_, nc, co_, "$nn ($(join(tr_, " & ")))", nu)
+        _plot("", "", nr, ro_, nc, co_, "$nn ($(join(tr_, " & ")))", nu)
 
     end
 
     ro_, nu
+
+end
+
+function write_plot(pr, nr, ro_, nc, co_, nn, nu; ke_ar...)
+
+    Nucleus.Error.error_empty(pr)
+
+    Nucleus.DataFrame.write("$pr.tsv", nr, ro_, co_, nu)
+
+    _plot("$pr.html", "$pr.histogram.html", nr, ro_, nc, co_, nn, nu; ke_ar...)
 
 end
 

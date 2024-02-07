@@ -132,7 +132,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
         @info "Clustering within groups"
 
         sa_, ta_, fe_x_sa_x_nu = _order(
-            Nucleus.Clustering.order(Nucleus.Distance.IN, ta_, eachcol(fe_x_sa_x_nu)),
+            Nucleus.Clustering.order(Nucleus.Distance.CO, ta_, eachcol(fe_x_sa_x_nu)),
             sa_,
             ta_,
             fe_x_sa_x_nu,

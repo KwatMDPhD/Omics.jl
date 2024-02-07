@@ -257,7 +257,7 @@ function plot_heat_map(
     co = Nucleus.Color.pick_color_scheme(z),
     gr_ = Int[],
     gc_ = Int[],
-    fu = Nucleus.Distance.IN,
+    fu = Nucleus.Distance.CO,
     layout = Dict{String, Any}(),
     ke_ar...,
 )
