@@ -2,16 +2,9 @@ module Target
 
 using ..Nucleus
 
-# TODO: Move to `Collection`.
-function _unique_sort(an_)
-
-    sort!(unique(an_))
-
-end
-
 function tabulate(ro_)
 
-    rou_ = _unique_sort(ro_)
+    rou_ = sort!(unique(ro_))
 
     ro_x_id_x_is = falses(lastindex(rou_), lastindex(ro_))
 
@@ -47,9 +40,9 @@ function tabulate(ro___, co___, fl_)
 
     co_ = _fuse(co___)
 
-    rou_ = _unique_sort(ro_)
+    rou_ = sort!(unique(ro_))
 
-    cou_ = _unique_sort(co_)
+    cou_ = sort!(unique(co_))
 
     ro_x_co_x_fl = fill(NaN, lastindex(rou_), lastindex(cou_))
 

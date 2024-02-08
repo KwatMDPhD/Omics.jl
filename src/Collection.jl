@@ -35,7 +35,8 @@ function find(an, an_)
 
 end
 
-function map_index(an_)
+# TODO: Test.
+function map_index2(an_)
 
     an_i1_ = OrderedDict{eltype(an_), Vector{Int}}()
 

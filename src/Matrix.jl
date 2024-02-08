@@ -6,7 +6,7 @@ function collapse(fu, ty, ro_, ma)
 
     n_ro, n_co = size(ma)
 
-    ro_id_ = Nucleus.Collection.map_index(ro_)
+    ro_id_ = Nucleus.Collection.map_index2(ro_)
 
     n_ro2 = length(ro_id_)
 

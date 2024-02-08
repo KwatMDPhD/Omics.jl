@@ -33,7 +33,7 @@ for (an_, re) in (
     ([1, 2, 3, 3, 2, 1], OrderedDict(1 => [1, 6], 2 => [2, 5], 3 => [3, 4])),
 )
 
-    an_id_ = Nucleus.Collection.map_index(an_)
+    an_id_ = Nucleus.Collection.map_index2(an_)
 
     @test typeof(an_id_) === typeof(re)
 
@@ -42,7 +42,7 @@ for (an_, re) in (
     # 305.612 ns (13 allocations: 992 bytes)
     # 340.820 ns (13 allocations: 992 bytes)
     # 318.133 ns (13 allocations: 1.00 KiB)
-    #@btime Nucleus.Collection.map_index($an_)
+    #@btime Nucleus.Collection.map_index2($an_)
 
 end
 
