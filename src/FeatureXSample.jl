@@ -4,39 +4,16 @@ using StatsBase: median
 
 using ..Nucleus
 
-function remove_constant(la_, ma)
+# TODO: Test.
+# TODO: Benchmark.
+function remove_constant(la_, ma, di)
 
-    nl = lastindex(la_)
-
-    n1, n2 = size(ma)
-
-    if nl == n1 == n2
-
-        error()
-
-    elseif nl == n1
-
-        ea = eachrow
-
-        di = 1
-
-    elseif nl == n2
-
-        ea = eachcol
-
-        di = 2
-
-    else
-
-        error()
-
-    end
-
-    is_ = allequal.(ea(ma))
+    # TODO: Benchmark `ea`.
+    is_ = allequal.((isone(di) ? eachrow : eachcol)(ma))
 
     if any(is_)
 
-        @warn "Removing $(sum(is_)) / $nl all-equal labels from dimension $di"
+        @warn "Removing $(sum(is_)) / $(lastindex(is_)) all-equal labels from dimension $di"
 
         is_ = .!is_
 

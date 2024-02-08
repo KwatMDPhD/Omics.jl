@@ -60,9 +60,9 @@ end
 
 function ready(an_)
 
-    la_id = Nucleus.Collection._map_index(unique(an_))
+    an_i1 = Nucleus.Collection.map_index(sort!(unique(an_)))
 
-    [la_id[an] for an in an_]
+    [an_i1[an] for an in an_]
 
 end
 

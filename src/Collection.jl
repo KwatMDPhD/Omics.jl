@@ -8,9 +8,9 @@ function get_minimum_maximum(an_)
 
     mi = ma = an_[1]
 
-    for id in 2:lastindex(an_)
+    for i1 in 2:lastindex(an_)
 
-        an = an_[id]
+        an = an_[i1]
 
         if an < mi
 
@@ -35,43 +35,44 @@ function find(an, an_)
 
 end
 
-function _map_index(an_)
-
-    Dict(an => id for (id, an) in enumerate(an_))
-
-end
-
 function map_index(an_)
 
-    an_id_ = OrderedDict{eltype(an_), Vector{Int}}()
+    an_i1_ = OrderedDict{eltype(an_), Vector{Int}}()
 
-    for (id, an) in enumerate(an_)
+    for (i1, an) in enumerate(an_)
 
-        if !haskey(an_id_, an)
+        if !haskey(an_i1_, an)
 
-            an_id_[an] = Int[]
+            an_i1_[an] = Int[]
 
         end
 
-        push!(an_id_[an], id)
+        push!(an_i1_[an], i1)
 
     end
 
-    an_id_
+    an_i1_
+
+end
+
+# TODO: Test.
+function map_index(an_)
+
+    Dict(an => i1 for (i1, an) in enumerate(an_))
 
 end
 
 function count(an1_, an2_)
 
-    an1_id = _map_index(unique(an1_))
+    an1_i1 = map_index(unique(an1_))
 
-    an2_id = _map_index(unique(an2_))
+    an2_i2 = map_index(unique(an2_))
 
-    co = zeros(Int, length(an1_id), length(an2_id))
+    co = zeros(Int, length(an1_i1), length(an2_i2))
 
     for (an1, an2) in zip(an1_, an2_)
 
-        co[an1_id[an1], an2_id[an2]] += 1
+        co[an1_i1[an1], an2_i2[an2]] += 1
 
     end
 

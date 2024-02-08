@@ -1,24 +1,21 @@
 module Target
 
-function _sort_unique(an_)
+using ..Nucleus
+
+# TODO: Move to `Collection`.
+function _unique_sort(an_)
 
     sort!(unique(an_))
 
 end
 
-function _map_index(an_)
-
-    Dict(an => id for (id, an) in enumerate(an_))
-
-end
-
 function tabulate(ro_)
 
-    rou_ = _sort_unique(ro_)
+    rou_ = _unique_sort(ro_)
 
     ro_x_id_x_is = falses(lastindex(rou_), lastindex(ro_))
 
-    ro_id = _map_index(rou_)
+    ro_id = Nucleus.Collection.map_index(rou_)
 
     for (id, ro) in enumerate(ro_)
 
@@ -50,15 +47,15 @@ function tabulate(ro___, co___, fl_)
 
     co_ = _fuse(co___)
 
-    rou_ = _sort_unique(ro_)
+    rou_ = _unique_sort(ro_)
 
-    cou_ = _sort_unique(co_)
+    cou_ = _unique_sort(co_)
 
     ro_x_co_x_fl = fill(NaN, lastindex(rou_), lastindex(cou_))
 
-    ro_id = _map_index(rou_)
+    ro_id = Nucleus.Collection.map_index(rou_)
 
-    co_id = _map_index(cou_)
+    co_id = Nucleus.Collection.map_index(cou_)
 
     for (ro, co, fl) in zip(ro_, co_, fl_)
 

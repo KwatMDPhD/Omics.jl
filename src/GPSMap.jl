@@ -110,15 +110,15 @@ function plot(
 
     tr = Nucleus.Coordinate.triangulate(eachcol(di_x_no_x_co))
 
-    for id_ in get_edges(tr)
+    for ie_ in get_edges(tr)
 
-        if any(==(-1), id_)
+        if any(==(-1), ie_)
 
             continue
 
         end
 
-        ve = collect(id_)
+        ve = collect(ie_)
 
         push!(
             data,
@@ -249,23 +249,23 @@ function plot(
 
         gr_x_gr_x_un_x_pr = Array{Float64, 3}(undef, n_gr, n_gr, lastindex(un_))
 
-        for (id, un) in enumerate(un_)
+        for (i3, un) in enumerate(un_)
 
-            id_ = findall(==(un), sc_)
+            i2_ = findall(==(un), sc_)
 
             _ro_, _co_, de =
-                Nucleus.Density.estimate((di_x_po_x_co[1, id_], di_x_po_x_co[2, id_]); ke_ar...)
+                Nucleus.Density.estimate((di_x_po_x_co[1, i2_], di_x_po_x_co[2, i2_]); ke_ar...)
 
             de[is] .= NaN
 
-            gr_x_gr_x_un_x_pr[:, :, id] = de
+            gr_x_gr_x_un_x_pr[:, :, i3] = de
 
         end
 
         # TODO: Benchmark iteration order.
-        for id2 in 1:n_gr, id1 in 1:n_gr
+        for i2 in 1:n_gr, i1 in 1:n_gr
 
-            pr_ = view(gr_x_gr_x_un_x_pr, id1, id2, :)
+            pr_ = view(gr_x_gr_x_un_x_pr, i1, i2, :)
 
             if all(isnan, pr_)
 
@@ -275,11 +275,11 @@ function plot(
 
             ma = argmax(pr_)
 
-            for id in eachindex(pr_)
+            for i3 in eachindex(pr_)
 
-                if id != ma
+                if i3 != ma
 
-                    pr_[id] = NaN
+                    pr_[i3] = NaN
 
                 end
 
