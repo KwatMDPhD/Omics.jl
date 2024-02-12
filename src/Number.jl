@@ -2,6 +2,8 @@ module Number
 
 using Printf: @sprintf
 
+using StatsBase: median
+
 using ..Nucleus
 
 function format2(nu)
@@ -25,6 +27,14 @@ end
 function is_negative(fl::AbstractFloat)
 
     fl < 0 || fl === -0.0
+
+end
+
+function categorize(nu, nu_, ca_)
+
+    i1 = findfirst(>(nu), nu_)
+
+    ca_[isnothing(i1) ? end : i1]
 
 end
 
@@ -63,6 +73,26 @@ function ready(an_)
     an_i1 = Nucleus.Collection.map_index(sort!(unique(an_)))
 
     [an_i1[an] for an in an_]
+
+end
+
+function replace_nan!(fl_)
+
+    is_ = isnan.(fl_)
+
+    nn = sum(is_)
+
+    @info "$(Nucleus.String.count(nn, "NaN"))."
+
+    if !iszero(nn)
+
+        re = median(fl_[.!is_])
+
+        fl_[is_] .= re
+
+        @warn "Replaced with median $re."
+
+    end
 
 end
 
