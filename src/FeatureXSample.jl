@@ -37,6 +37,36 @@ function log_intersection(an___, it_)
 
 end
 
+# TODO: Test.
+# TODO: Benchmark.
+function assimilate(c1_, c2_, m2)
+
+    ma = Matrix{Union{Missing, eltype(m2)}}(undef, size(m2, 1), lastindex(c1_))
+
+    for (i1, c1) in enumerate(c1_)
+
+        i2_ = findall(==(c1), c2_)
+
+        n2 = lastindex(i2_)
+
+        if iszero(n2)
+
+            @warn "$c1 ($i1) is missing."
+
+            ma[:, i1] .= missing
+
+        elseif isone(n2)
+
+            ma[:, i1] = m2[:, i2_[1]]
+
+        end
+
+    end
+
+    ma
+
+end
+
 function count_unique(na_, an___)
 
     for (na, an_) in zip(na_, an___)
