@@ -16,21 +16,19 @@ macro here()
 
 end
 
-function clean(na)
+function clean(pa)
 
-    if contains(na, '/')
+    if contains(pa, '/')
 
-        error("\"$na\" contains '/'.")
+        di, na = splitdir(pa)
+
+        joinpath(di, Nucleus.String.clean(lowercase(na)))
+
+    else
+
+        Nucleus.String.clean(lowercase(pa))
 
     end
-
-    Nucleus.String.clean(lowercase(na))
-
-end
-
-function get_extension(pa)
-
-    splitext(pa)[2][2:end]
 
 end
 
@@ -48,23 +46,9 @@ function wait(pa, ma = 4; sl = 1)
 
 end
 
-function read(di; ig_ = (), ke_ = (), ke_ar...)
+function read(di, se = ""; ke_ar...)
 
-    pa_ = String[]
-
-    for pa in readdir(di; ke_ar...)
-
-        na = basename(pa)
-
-        if !any(occursin(na), ig_) && (isempty(ke_) || any(occursin(na), ke_))
-
-            push!(pa_, pa)
-
-        end
-
-    end
-
-    pa_
+    filter!(pa -> contains(basename(pa), se), readdir(di; ke_ar...))
 
 end
 
@@ -85,6 +69,8 @@ function open(pa)
 end
 
 function establish(di)
+
+    di = clean(di)
 
     if !isdir(di)
 

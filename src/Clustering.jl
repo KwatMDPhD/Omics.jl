@@ -6,15 +6,15 @@ using StatsBase: mean, mode
 
 using ..Nucleus
 
-function hierarchize(di)
+function hierarchize(di; linkage = :ward)
 
-    hclust(di; linkage = :ward)
+    hclust(di; linkage)
 
 end
 
-function hierarchize(fu, nu___)
+function hierarchize(fu, nu___; ke_ar...)
 
-    hierarchize(Nucleus.Distance.pairwise(fu, nu___))
+    hierarchize(Nucleus.Distance.pairwise(fu, nu___); ke_ar...)
 
 end
 

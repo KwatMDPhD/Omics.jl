@@ -88,7 +88,7 @@ function write(
 
     end
 
-    pr = joinpath(di, "$nf$(lowercase(wh))")
+    pr = joinpath(di, "$nf$wh")
 
     Nucleus.DataFrame.write("$pr.tsv", nr, ro_, co_, ma)
 

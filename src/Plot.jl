@@ -508,6 +508,8 @@ end
 
 function animate(gi, pn_)
 
+    gi = Nucleus.Path.clean(gi)
+
     run(`convert -delay 32 -loop 0 $pn_ $gi`)
 
     Nucleus.Path.open(gi)

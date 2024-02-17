@@ -2,7 +2,7 @@ module Nucleus
 
 const _DA = joinpath(dirname(@__DIR__), "data")
 
-const TE = joinpath(tempdir(), "Nucleus")
+const TE = joinpath(tempdir(), "nu")
 
 for jl in readdir(@__DIR__)
 

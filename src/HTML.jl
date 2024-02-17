@@ -8,11 +8,8 @@ const WI = 1280
 
 function make(ht, sr_, id, sc; he = HE, wi = WI, ba = "#27221f")
 
-    if isempty(ht)
-
-        ht = joinpath(Nucleus.TE, "$(Nucleus.Time.stamp()).html")
-
-    end
+    ht =
+        isempty(ht) ? joinpath(Nucleus.TE, "$(Nucleus.Time.stamp()).html") : Nucleus.Path.clean(ht)
 
     write(
         ht,

@@ -32,11 +32,9 @@ function map_ensembl(index_x_information_x_string = read_ensemble())
         ],
     )
 
-    n = size(ma, 2)
-
     for st_ in eachrow(ma)
 
-        ge = st_[n]
+        ge = st_[end]
 
         if ismissing(ge)
 
@@ -44,7 +42,7 @@ function map_ensembl(index_x_information_x_string = read_ensemble())
 
         end
 
-        for en in st_[1:(n - 1)]
+        for en in st_[1:(end - 1)]
 
             for ens in eachsplit(en, '|')
 
@@ -107,27 +105,29 @@ function map_uniprot(index_x_information_x_string = read_uniprot())
 
 end
 
-function rename!(fe_, fe_fe2)
+function rename(fe_, fe_na)
 
-    n = 0
+    na_ = copy(fe_)
 
-    for (id, fe) in enumerate(fe_)
+    nr = 0
 
-        if haskey(fe_fe2, fe)
+    for (i1, fe) in enumerate(na_)
 
-            fe_[id] = fe_fe2[fe]
+        if haskey(fe_na, fe)
 
-            n += 1
+            na_[i1] = fe_na[fe]
+
+            nr += 1
 
         elseif startswith(fe, "ENS") && contains(fe, '.')
 
-            fe = Nucleus.String.split_get(fe, '.', 1)
+            fe = split(fe, '.'; limit = 2)[1]
 
-            if haskey(fe_fe2, fe)
+            if haskey(fe_na, fe)
 
-                fe_[id] = fe_fe2[fe]
+                na_[i1] = fe_na[fe]
 
-                n += 1
+                nr += 1
 
             end
 
@@ -135,7 +135,9 @@ function rename!(fe_, fe_fe2)
 
     end
 
-    @info "Renamed $n / $(lastindex(fe_))."
+    @info "Renamed $nr / $(lastindex(na_))."
+
+    na_
 
 end
 

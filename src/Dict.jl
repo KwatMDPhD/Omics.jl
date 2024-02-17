@@ -99,7 +99,7 @@ end
 
 function write(js, ke_va, id = 2)
 
-    open(js, "w") do io
+    open(Nucleus.Path.clean(js), "w") do io
 
         print(io, ke_va, id)
 

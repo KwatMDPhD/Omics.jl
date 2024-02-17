@@ -12,19 +12,19 @@ using XLSX: readtable
 
 using ..Nucleus
 
-function make(nar, ro_, co_, ma)
+function make(nr, ro_, co_, rc)
 
-    insertcols!(_DataFrame(ma, co_), 1, nar => ro_)
+    insertcols!(_DataFrame(rc, co_), 1, nr => ro_)
 
 end
 
-function separate(row_x_column_x_any::AbstractDataFrame)
+function separate(da::AbstractDataFrame)
 
-    co_ = names(row_x_column_x_any)
+    co_ = names(da)
 
-    id_ = 2:lastindex(co_)
+    ic_ = 2:lastindex(co_)
 
-    co_[1], row_x_column_x_any[:, 1], co_[id_], Matrix(row_x_column_x_any[!, id_])
+    co_[1], da[:, 1], co_[ic_], Matrix(da[!, ic_])
 
 end
 
@@ -34,7 +34,7 @@ function read(fi; ke_ar...)
 
     it_ = mmap(fi)
 
-    if Nucleus.Path.get_extension(fi) == "gz"
+    if splitext(fi)[2] == ".gz"
 
         it_ = transcode(GzipDecompressor, it_)
 
@@ -50,9 +50,9 @@ function read(xl, sh; ke_ar...)
 
 end
 
-function write(ts, row_x_column_x_any)
+function write(ts, da)
 
-    _write(ts, row_x_column_x_any; delim = '\t')
+    _write(Nucleus.Path.clean(ts), da; delim = '\t')
 
     nothing
 
@@ -64,9 +64,9 @@ function separate(ar_...; ke_ar...)
 
 end
 
-function write(ts, nar, ro_, co_, ma)
+function write(ts, nr, ro_, co_, rc)
 
-    write(ts, make(nar, ro_, co_, ma))
+    write(ts, make(nr, ro_, co_, rc))
 
 end
 

@@ -38,14 +38,6 @@ function categorize(nu, nu_, ca_)
 
 end
 
-function shift!(nu_, mi = 1)
-
-    nu_ .-= minimum(nu_)
-
-    nu_ .+= mi
-
-end
-
 function separate(nu_)
 
     ne_ = Float64[]
