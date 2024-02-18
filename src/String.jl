@@ -48,12 +48,6 @@ function limit(st, n)
 
 end
 
-function split_get(st, de, id)
-
-    split(st, de; limit = id + 1)[id]
-
-end
-
 function count(n, st)
 
     n_ch = lastindex(st)

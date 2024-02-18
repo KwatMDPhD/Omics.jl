@@ -22,32 +22,6 @@ function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}
 
 end
 
-# TODO: Simplify initializations.
-
-function _initialize_x(an___)
-
-    eachindex.(an___)
-
-end
-
-function _initialize_text(an___)
-
-    (_ -> String[]).(eachindex(an___))
-
-end
-
-function _initialize_name(an___)
-
-    (i1 -> "Name $i1").(eachindex(an___))
-
-end
-
-function _initialize_marker(an___)
-
-    (he -> Dict("color" => he)).(Nucleus.Color.color(eachindex(an___)))
-
-end
-
 const COLORBAR = Dict(
     "len" => 0.5,
     "thickness" => 16,
@@ -67,12 +41,18 @@ const SPIKE = Dict(
 
 const _AX = Dict("showgrid" => false, "automargin" => true)
 
+function _initialize_marker(an___)
+
+    (he -> Dict("color" => he)).(Nucleus.Color.color(eachindex(an___)))
+
+end
+
 function plot_scatter(
     ht,
     y_,
-    x_ = _initialize_x(y_);
-    text_ = _initialize_text(y_),
-    name_ = _initialize_name(y_),
+    x_ = eachindex.(y_);
+    text_ = (_ -> String[]).(eachindex(y_)),
+    name_ = eachindex.(y_),
     mode_ = (y -> lastindex(y) < 1000 ? "markers+lines" : "lines").(y_),
     marker_ = _initialize_marker(y_),
     layout = Dict{String, Any}(),
@@ -100,8 +80,8 @@ end
 function plot_bar(
     ht,
     y_,
-    x_ = _initialize_x(y_);
-    name_ = _initialize_name(y_),
+    x_ = eachindex.(y_);
+    name_ = eachindex.(y_),
     marker_ = _initialize_marker(y_),
     layout = Dict{String, Any}(),
     ke_ar...,
@@ -125,11 +105,12 @@ function plot_bar(
 end
 
 # TODO: Fit and plot a line.
+# TODO: Spread rug markers.
 function plot_histogram(
     ht,
     x_,
-    text_ = _initialize_text(x_);
-    name_ = _initialize_name(x_),
+    text_ = (_ -> String[]).(eachindex(x_));
+    name_ = eachindex.(x_),
     marker_ = _initialize_marker(x_),
     histnorm = "",
     xbins_size = 0,

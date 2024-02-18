@@ -371,7 +371,6 @@ function make(
 
 end
 
-# TODO: Test.
 function summarize_top(st, qu = 0.99)
 
     ab_ = abs.(view(st, :, 1))
@@ -380,7 +379,6 @@ function summarize_top(st, qu = 0.99)
 
 end
 
-# TODO: Test.
 function summarize_significant(st, ad = 0.1)
 
     ns = ab = 0

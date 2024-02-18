@@ -46,8 +46,6 @@ function get_p_value(fu, nu_, ra_)
 
 end
 
-# TODO: Test.
-
 function get_p_value(nu_, nei_, poi_, fe_x_id_x_ra)
 
     ne_, po_ = Nucleus.Number.separate(fe_x_id_x_ra)

@@ -1,12 +1,12 @@
 module Distance
 
-using Distances: CorrDist, Euclidean, SemiMetric, colwise, pairwise
+using Distances: CorrDist, Euclidean, SemiMetric, pairwise
 
 using ..Nucleus
 
-const CO = CorrDist()
-
 const EU = Euclidean()
+
+const CO = CorrDist()
 
 struct InformationDistance <: SemiMetric end
 

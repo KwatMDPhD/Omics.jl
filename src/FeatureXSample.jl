@@ -14,18 +14,6 @@ function log_unique(na_, an___)
 
 end
 
-function log_intersection(an___, it_)
-
-    ni = lastindex(it_)
-
-    @info "👯 $(join((lastindex(an_) for an_ in an___), " ∩ ")) = $ni." it_
-
-    Nucleus.Error.error_0(ni)
-
-end
-
-# TODO: Test.
-# TODO: Benchmark.
 function remove_constant(la_, ma, di)
 
     # TODO: Benchmark `ea`.
@@ -47,8 +35,6 @@ function remove_constant(la_, ma, di)
 
 end
 
-# TODO: Test.
-# TODO: Benchmark.
 function assimilate(c1_, c2_, m2)
 
     ma = Matrix{Union{Missing, eltype(m2)}}(undef, size(m2, 1), lastindex(c1_))

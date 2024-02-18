@@ -82,7 +82,6 @@ function is_in(an_id, an1_)
 
 end
 
-# TODO: Test.
 function read(fi, dicttype = OrderedDict; ke_ar...)
 
     if Nucleus.Path.get_extension(fi) == "toml"

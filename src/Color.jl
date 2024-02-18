@@ -74,12 +74,6 @@ function add_alpha(he, al)
 
 end
 
-function _count_unique(an_)
-
-    lastindex(unique(an_))
-
-end
-
 function pick_color_scheme(nu_)
 
     ty = eltype(nu_)
@@ -90,7 +84,7 @@ function pick_color_scheme(nu_)
 
     elseif ty <: Integer
 
-        n = _count_unique(nu_)
+        n = lastindex(unique(nu_))
 
         if iszero(n) || isone(n)
 
@@ -122,7 +116,7 @@ end
 
 function color(nu_, co = pick_color_scheme(nu_))
 
-    if isone(_count_unique(nu_))
+    if isone(lastindex(unique(nu_)))
 
         return [color(0.5, co)]
 

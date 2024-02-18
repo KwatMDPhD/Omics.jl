@@ -42,7 +42,6 @@ end
 
 const XAXIS = Dict("dtick" => 1, "title" => Dict("text" => "Number of Group"))
 
-# TODO: Test.
 function compare_grouping(hi, ht, it_; ti = "")
 
     ng_ = eachindex(unique(it_))
@@ -71,7 +70,6 @@ function compare_grouping(hi, ht, it_; ti = "")
 
 end
 
-# TODO: Test.
 function compare_grouping(hi, ht, la_, fr; ti = "")
 
     lu_ = unique(la_)

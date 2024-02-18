@@ -72,16 +72,6 @@ function error_bad(fu, an_)
 
 end
 
-function error_length_difference(an___)
-
-    if !isone(lastindex(unique(lastindex.(an___))))
-
-        error("Lengths differ.")
-
-    end
-
-end
-
 function error_has_key(ke_va, ke)
 
     if haskey(ke_va, ke)
@@ -94,7 +84,7 @@ end
 
 function error_extension_difference(pa, ex)
 
-    pae = Nucleus.Path.get_extension(pa)
+    pae = splitext(pa)[2][2:end]
 
     if pae != ex
 

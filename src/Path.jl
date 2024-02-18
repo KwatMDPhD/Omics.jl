@@ -16,17 +16,23 @@ macro here()
 
 end
 
+function _clean(na)
+
+    Nucleus.String.clean(lowercase(na))
+
+end
+
 function clean(pa)
 
     if contains(pa, '/')
 
         di, na = splitdir(pa)
 
-        joinpath(di, Nucleus.String.clean(lowercase(na)))
+        joinpath(di, _clean(na))
 
     else
 
-        Nucleus.String.clean(lowercase(pa))
+        _clean(pa)
 
     end
 

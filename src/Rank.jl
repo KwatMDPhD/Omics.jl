@@ -2,7 +2,7 @@ module Rank
 
 function get_extreme(n::Integer, n_ex)
 
-    if 0.5n <= n_ex
+    if 0.5 * n <= n_ex
 
         collect(1:n)
 
