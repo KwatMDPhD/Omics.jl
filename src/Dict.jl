@@ -84,7 +84,7 @@ end
 
 function read(fi, dicttype = OrderedDict; ke_ar...)
 
-    if Nucleus.Path.get_extension(fi) == "toml"
+    if splitext(fi) == ".toml"
 
         toml_parsefile(fi; ke_ar...)
 

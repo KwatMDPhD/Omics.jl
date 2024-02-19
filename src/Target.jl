@@ -8,7 +8,7 @@ function tabulate(ro_)
 
     ro_x_id_x_is = falses(lastindex(rou_), lastindex(ro_))
 
-    ro_id = Nucleus.Collection.map_index(rou_)
+    ro_id = Nucleus.Collection._map_index(rou_)
 
     for (id, ro) in enumerate(ro_)
 
@@ -46,9 +46,9 @@ function tabulate(ro___, co___, fl_)
 
     ro_x_co_x_fl = fill(NaN, lastindex(rou_), lastindex(cou_))
 
-    ro_id = Nucleus.Collection.map_index(rou_)
+    ro_id = Nucleus.Collection._map_index(rou_)
 
-    co_id = Nucleus.Collection.map_index(cou_)
+    co_id = Nucleus.Collection._map_index(cou_)
 
     for (ro, co, fl) in zip(ro_, co_, fl_)
 
