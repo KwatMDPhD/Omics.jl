@@ -105,36 +105,4 @@ function map_uniprot(index_x_information_x_string = read_uniprot())
 
 end
 
-function rename!(fe_, fe_f2)
-
-    nr = 0
-
-    for (i1, fe) in enumerate(fe_)
-
-        if haskey(fe_f2, fe)
-
-            fe_[i1] = fe_f2[fe]
-
-            nr += 1
-
-        elseif startswith(fe, "ENS") && contains(fe, '.')
-
-            fe = split(fe, '.'; limit = 2)[1]
-
-            if haskey(fe_f2, fe)
-
-                fe_[i1] = fe_f2[fe]
-
-                nr += 1
-
-            end
-
-        end
-
-    end
-
-    @info "Renamed $nr / $(lastindex(fe_))."
-
-end
-
 end
