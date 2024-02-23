@@ -2,24 +2,64 @@ module Gene
 
 using ..Nucleus
 
-function read_ensemble()
+function _read_hgnc()
+
+    Nucleus.DataFrame.read(joinpath(Nucleus._DA, "Gene", "hgnc.tsv.gz"))
+
+end
+
+function _read_ensemble()
 
     Nucleus.DataFrame.read(joinpath(Nucleus._DA, "Gene", "ensembl.tsv.gz"))
 
 end
 
-function read_uniprot()
+function _read_uniprot()
 
     Nucleus.DataFrame.read(joinpath(Nucleus._DA, "Gene", "uniprot.tsv.gz"))
 
 end
 
-function map_ensembl(index_x_information_x_string = read_ensemble())
+function map(kc_, vc = "symbol"; da = _read_hgnc())
 
-    en_ge = Dict{String, String}()
+    ke_va = Dict{String, String}()
+
+    for ro in eachrow(da)
+
+        va = ro[vc]
+
+        if ismissing(va)
+
+            continue
+
+        end
+
+        for kc in kc_
+
+            ke = ro[kc]
+
+            if ismissing(ke)
+
+                continue
+
+            end
+
+            ke_va[string(ke)] = va
+
+        end
+
+    end
+
+    sort(ke_va; byvalue = true)
+
+end
+
+function map_ensembl(da = _read_ensemble())
+
+    ke_va = Dict{String, String}()
 
     ma = Matrix(
-        index_x_information_x_string[
+        da[
             !,
             [
                 "Transcript stable ID version",
@@ -44,9 +84,9 @@ function map_ensembl(index_x_information_x_string = read_ensemble())
 
         for en in st_[1:(end - 1)]
 
-            for ens in eachsplit(en, '|')
+            for sp in eachsplit(en, '|')
 
-                en_ge[ens] = ge
+                ke_va[sp] = ge
 
             end
 
@@ -54,24 +94,21 @@ function map_ensembl(index_x_information_x_string = read_ensemble())
 
     end
 
-    en_ge
+    sort(ke_va; byvalue = true)
 
 end
 
-function map_uniprot(index_x_information_x_string = read_uniprot())
+function map_uniprot(da = _read_uniprot())
 
-    pr_ir_an = Dict{String, Dict{String, Any}}()
+    ke_va = Dict{String, Dict{String, Any}}()
 
-    ir_ = names(index_x_information_x_string)
+    ir_ = names(da)
 
     id = 2
 
     popat!(ir_, id)
 
-    for (pr, an_) in zip(
-        index_x_information_x_string[!, id],
-        eachrow(Matrix(index_x_information_x_string[!, ir_])),
-    )
+    for (pr, an_) in zip(da[!, id], eachrow(Matrix(da[!, ir_])))
 
         ir_an = Dict{String, Any}()
 
@@ -97,11 +134,11 @@ function map_uniprot(index_x_information_x_string = read_uniprot())
 
         end
 
-        pr_ir_an[pr[1:(end - 6)]] = ir_an
+        ke_va[pr[1:(end - 6)]] = ir_an
 
     end
 
-    pr_ir_an
+    ke_va
 
 end
 
