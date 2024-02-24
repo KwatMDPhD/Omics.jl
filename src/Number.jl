@@ -48,7 +48,7 @@ end
 
 function ready(an_)
 
-    an_i1 = Nucleus.Collection.map_index(sort!(unique(an_)))
+    an_i1 = Nucleus.Collection._map_index(sort!(unique(an_)))
 
     [an_i1[an] for an in an_]
 
