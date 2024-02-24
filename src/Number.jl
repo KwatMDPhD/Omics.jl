@@ -40,6 +40,7 @@ function separate(nu_)
 
 end
 
+# TODO: Remove.
 function ready(nu_::AbstractVector{<:Real})
 
     nu_
