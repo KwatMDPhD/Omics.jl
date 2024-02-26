@@ -46,9 +46,25 @@ function get_p_value(fu, nu_, ra_)
 
 end
 
+function _separate(nu_)
+
+    ne_ = Float64[]
+
+    po_ = Float64[]
+
+    for nu in nu_
+
+        push!(nu < 0 ? ne_ : po_, nu)
+
+    end
+
+    ne_, po_
+
+end
+
 function get_p_value(nu_, nei_, poi_, fe_x_id_x_ra)
 
-    ne_, po_ = Nucleus.Number.separate(fe_x_id_x_ra)
+    ne_, po_ = _separate(fe_x_id_x_ra)
 
     if isempty(nei_)
 

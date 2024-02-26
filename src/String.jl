@@ -20,28 +20,6 @@ function make(ar_...)
 
 end
 
-function try_parse(st)
-
-    try
-
-        return convert(Int, parse(Float64, st))
-
-    catch
-
-    end
-
-    try
-
-        return parse(Float64, st)
-
-    catch
-
-    end
-
-    st
-
-end
-
 function limit(st, n)
 
     n < lastindex(st) ? "$(view(st, 1:n))..." : st

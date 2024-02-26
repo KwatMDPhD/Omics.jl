@@ -24,30 +24,29 @@ function categorize(nu, nu_, ca_)
 
 end
 
-function separate(nu_)
+function try_parse(st)
 
-    ne_ = Float64[]
+    try
 
-    po_ = Float64[]
+        return convert(Int, parse(Float64, st))
 
-    for nu in nu_
-
-        push!(nu < 0 ? ne_ : po_, nu)
+    catch
 
     end
 
-    ne_, po_
+    try
+
+        return parse(Float64, st)
+
+    catch
+
+    end
+
+    st
 
 end
 
-# TODO: Remove.
-function ready(nu_::AbstractVector{<:Real})
-
-    nu_
-
-end
-
-function ready(an_)
+function integize(an_)
 
     an_i1 = Nucleus.Collection._map_index(sort!(unique(an_)))
 

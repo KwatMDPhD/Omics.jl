@@ -105,7 +105,6 @@ function plot_bar(
 end
 
 # TODO: Fit and plot a line.
-# TODO: Spread rug markers.
 function plot_histogram(
     ht,
     x_,
@@ -464,7 +463,7 @@ function plot_radar(
                     "x" => 0.02,
                     "font" => Dict(
                         "family" => "Times New Roman",
-                        "size" => 32,
+                        "size" => 48,
                         "color" => "#27221f",
                     ),
                 ),
