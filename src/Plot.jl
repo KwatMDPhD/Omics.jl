@@ -81,6 +81,7 @@ function plot_bar(
     ht,
     y_,
     x_ = eachindex.(y_);
+    text_ = (_ -> String[]).(eachindex(y_)),
     name_ = eachindex.(y_),
     marker_ = _initialize_marker(y_),
     layout = Dict{String, Any}(),
@@ -95,6 +96,7 @@ function plot_bar(
                 "name" => name_[i1],
                 "y" => y_[i1],
                 "x" => x_[i1],
+                "text" => text_[i1],
                 "marker" => marker_[i1],
             ) for i1 in eachindex(y_)
         ],
