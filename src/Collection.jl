@@ -6,7 +6,51 @@ using StatsBase: countmap
 
 function count_sort_string(an_, mi = 1)
 
-    join("$n $an.\n" for (an, n) in sort(countmap(an_); byvalue = true, rev = true) if mi <= n)
+    an_na = countmap(an_)
+
+    join("$na $an.\n" for (an, na) in sort(an_na; by = an -> (an_na[an], an)) if mi <= na)
+
+end
+
+function log_unique(na_, an___)
+
+    for id in sortperm(an___; by = an_ -> lastindex(unique(an_)), rev = true)
+
+        @info "🔦 ($id) $(na_[id])\n$(count_sort_string(an___[id]))"
+
+    end
+
+end
+
+function rename!(an_, an_a2)
+
+    nr = 0
+
+    for (id, an) in enumerate(an_)
+
+        if haskey(an_a2, an)
+
+            nr += 1
+
+            a2 = an_a2[an]
+
+        else
+
+            a2 = "_$an"
+
+        end
+
+        an_[id] = a2
+
+    end
+
+    @info "📛 Renamed $nr / $(lastindex(an_))."
+
+    if iszero(nr)
+
+        error()
+
+    end
 
 end
 
@@ -14,9 +58,9 @@ function get_minimum_maximum(an_)
 
     mi = ma = an_[1]
 
-    for i1 in 2:lastindex(an_)
+    for id in 2:lastindex(an_)
 
-        an = an_[i1]
+        an = an_[id]
 
         if an < mi
 
@@ -36,45 +80,45 @@ end
 
 function map_index2(an_)
 
-    an_i1_ = OrderedDict{eltype(an_), Vector{Int}}()
+    an_id_ = OrderedDict{eltype(an_), Vector{Int}}()
 
-    for (i1, an) in enumerate(an_)
+    for (id, an) in enumerate(an_)
 
-        if !haskey(an_i1_, an)
+        if !haskey(an_id_, an)
 
-            an_i1_[an] = Int[]
+            an_id_[an] = Int[]
 
         end
 
-        push!(an_i1_[an], i1)
+        push!(an_id_[an], id)
 
     end
 
-    an_i1_
+    an_id_
 
 end
 
 function _map_index(an_)
 
-    Dict(an => i1 for (i1, an) in enumerate(an_))
+    Dict(an => id for (id, an) in enumerate(an_))
 
 end
 
-function count(an1_, an2_)
+function count(a1_, a2_)
 
-    an1_i1 = _map_index(unique(an1_))
+    a1_i1 = _map_index(unique(a1_))
 
-    an2_i2 = _map_index(unique(an2_))
+    a2_i2 = _map_index(unique(a2_))
 
-    co = zeros(Int, length(an1_i1), length(an2_i2))
+    aa = zeros(Int, length(a1_i1), length(a2_i2))
 
-    for (an1, an2) in zip(an1_, an2_)
+    for (a1, a2) in zip(a1_, a2_)
 
-        co[an1_i1[an1], an2_i2[an2]] += 1
+        aa[a1_i1[a1], a2_i2[a2]] += 1
 
     end
 
-    co
+    aa
 
 end
 
