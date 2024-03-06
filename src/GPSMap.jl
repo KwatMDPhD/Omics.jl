@@ -135,6 +135,8 @@ function plot(
 
     end
 
+    font = Dict("family" => "Gravitas One, monospace", "size" => node_annotation_font_size)
+
     push!(
         data,
         Dict(
@@ -142,8 +144,8 @@ function plot(
             "name" => "Node ($(lastindex(no_)))",
             "y" => view(di_x_no_x_co, 1, :),
             "x" => view(di_x_no_x_co, 2, :),
-            "text" => no_,
-            "mode" => "markers",
+            "text" => (no -> rsplit(no; limit = 2)[2]).(no_),
+            "mode" => "markers+text",
             "marker" => Dict(
                 "size" => node_marker_size,
                 "opacity" => node_marker_opacity,
@@ -151,6 +153,7 @@ function plot(
                 "line" =>
                     Dict("width" => node_marker_line_width, "color" => node_marker_line_color),
             ),
+            "textfont" => merge(font, Dict("color" => "#ffffff")),
             "hoverinfo" => "text",
         ),
     )
@@ -160,11 +163,7 @@ function plot(
             "y" => co1,
             "x" => co2,
             "text" => "<b>$no</b>",
-            "font" => Dict(
-                "family" => "Gravitas One, monospace",
-                "size" => node_annotation_font_size,
-                "color" => node_annotation_font_color,
-            ),
+            "font" => merge(font, Dict("color" => node_annotation_font_color)),
             "bgcolor" => node_annotation_bgcolor,
             "borderpad" => node_annotation_borderpad,
             "borderwidth" => node_annotation_borderwidth,
@@ -345,11 +344,10 @@ function plot(
                 ),
                 "yaxis" => merge(axis, Dict("range" => range1, "autorange" => "reversed")),
                 "xaxis" => merge(axis, Dict("range" => range2 .* 1.08)),
-                "annotations" => annotations,
+                #"annotations" => annotations,
             ),
             layout,
         ),
-        Dict("editable" => true),
     )
 
 end

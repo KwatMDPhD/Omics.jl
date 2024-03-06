@@ -469,17 +469,6 @@ function plot_radar(
                         "color" => "#27221f",
                     ),
                 ),
-                "legend" => Dict(
-                    "itemwidth" => 32,
-                    "borderwidth" => linewidth,
-                    "bordercolor" => bgcolor,
-                    "bgcolor" => gridcolor,
-                    "font" => Dict(
-                        "family" => "Times New Roman",
-                        "size" => 24,
-                        "color" => "#27221f",
-                    ),
-                ),
             ),
             layout,
         );

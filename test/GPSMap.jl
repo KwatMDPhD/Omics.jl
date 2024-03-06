@@ -42,8 +42,8 @@ for (h1, h2, re) in ((
     @test c2 == re
 
     # 21.875 ns (0 allocations: 0 bytes)
-    #@btime Nucleus.GPSMap.boost_each_sample!(c1, c2) setup = (c1 = copy($h1); c2 = copy($h2)) evals =
-    #    1000
+    @btime Nucleus.GPSMap.boost_each_sample!(c1, c2) setup = (c1 = copy($h1); c2 = copy($h2)) evals =
+        1000
 
 end
 
@@ -116,7 +116,7 @@ for (lo, hi, re) in (
     # 53.750 ns (0 allocations: 0 bytes)
     # 53.750 ns (0 allocations: 0 bytes)
     # 53.750 ns (0 allocations: 0 bytes)
-    #@btime Nucleus.GPSMap.normalize_each_factor!(nu) setup = (nu = copy(NU)) evals = 1000
+    @btime Nucleus.GPSMap.normalize_each_factor!(nu) setup = (nu = copy(NU)) evals = 1000
 
 end
 
