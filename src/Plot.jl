@@ -462,7 +462,7 @@ function plot_radar(
                     ),
                 ),
                 "title" => Dict(
-                    "x" => 0.02,
+                    "x" => 0.008,
                     "font" => Dict(
                         "family" => "Times New Roman",
                         "size" => 48,
