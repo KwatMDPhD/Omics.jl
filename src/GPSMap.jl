@@ -2,77 +2,7 @@ module GPSMap
 
 using DelaunayTriangulation: get_edges
 
-using StatsBase: mean, std
-
 using ..Nucleus
-
-function boost_each_sample!(h1, h2)
-
-    m1 = mean(h1)
-
-    for e2 in eachcol(h2)
-
-        e2 .= e2 ./ mean(e2) .* m1
-
-    end
-
-end
-
-function normalize_each_factor!(h1, h2 = h1)
-
-    if size(h1, 1) != size(h2, 1)
-
-        error()
-
-    end
-
-    ep = eps()
-
-    for (e1, e2) in zip(eachrow(h1), eachrow(h2))
-
-        m1 = mean(e1)
-
-        s1 = std(e1)
-
-        if s1 < ep
-
-            error()
-
-        end
-
-        e2 .= (e2 .- m1) ./ s1
-
-    end
-
-end
-
-function zero1_each_factor!(h1)
-
-    mi = minimum(h1)
-
-    ra = maximum(h1) - mi
-
-    for e1 in eachrow(h1)
-
-        if allequal(e1)
-
-            be = e1[1]
-
-            af = (be - mi) / ra
-
-            e1 .= af
-
-            @warn "$be --> $af."
-
-        else
-
-            Nucleus.Normalization.normalize_with_01!(e1)
-
-        end
-
-    end
-
-end
 
 function plot(
     ht,
