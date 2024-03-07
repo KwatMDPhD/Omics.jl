@@ -375,7 +375,7 @@ function summarize_top(st, qu = 0.99)
 
     ab_ = abs.(view(st, :, 1))
 
-    mean(filter!(>(quantile(ab_, qu)), ab_))
+    mean(filter!(>=(quantile(ab_, qu)), ab_))
 
 end
 

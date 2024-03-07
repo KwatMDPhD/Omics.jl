@@ -34,15 +34,15 @@ function order(fu, la_, nu___)
 
 end
 
-function _title(ti, sc)
+function _title(text, sc)
 
-    Dict("text" => "$ti<br>$(Nucleus.Number.format4(sc))")
+    Dict("text" => "$text<br>$(Nucleus.Number.format4(sc))")
 
 end
 
 const XAXIS = Dict("dtick" => 1, "title" => Dict("text" => "Number of Group"))
 
-function compare_grouping(hi, ht, it_; ti = "")
+function compare_grouping(hi, ht, it_; text = "")
 
     ng_ = eachindex(unique(it_))
 
@@ -53,14 +53,20 @@ function compare_grouping(hi, ht, it_; ti = "")
         ) for ng in ng_
     ]
 
-    sc = mean(mu_)
+    sc, id = findmax(mu_)
 
     Nucleus.Plot.plot_scatter(
         ht,
-        (mu_,),
-        (ng_,);
+        (mu_, (sc,), (mu_[end],)),
+        (ng_, (ng_[id],), (ng_[end],));
+        name_ = ("All", "Maximum", "Last"),
+        marker_ = (
+            Dict("color" => Nucleus.Color.HEGR),
+            Dict("size" => 24, "color" => Nucleus.Color.HERE),
+            Dict("size" => 16, "color" => Nucleus.Color.HEBL),
+        ),
         layout = Dict(
-            "title" => _title(ti, sc),
+            "title" => _title(text, sc),
             "yaxis" => Dict("title" => Dict("text" => "Mutual Information")),
             "xaxis" => XAXIS,
         ),
@@ -70,7 +76,7 @@ function compare_grouping(hi, ht, it_; ti = "")
 
 end
 
-function compare_grouping(hi, ht, la_, fr; ti = "")
+function compare_grouping(hi, ht, la_, fr; text = "")
 
     lu_ = unique(la_)
 
@@ -124,7 +130,11 @@ function compare_grouping(hi, ht, la_, fr; ti = "")
         nr = "Label",
         nc = "Number of Group",
         co = Nucleus.Color._make_color_scheme(vcat("#000000", Nucleus.Color.COPO.colors)),
-        layout = Dict("title" => _title(ti, sc), "yaxis" => Dict("dtick" => 1), "xaxis" => XAXIS),
+        layout = Dict(
+            "title" => _title(text, sc),
+            "yaxis" => Dict("dtick" => 1),
+            "xaxis" => XAXIS,
+        ),
     )
 
     sc
