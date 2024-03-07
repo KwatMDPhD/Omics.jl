@@ -69,6 +69,7 @@ function plot_scatter(
                 "text" => text_[i1],
                 "mode" => mode_[i1],
                 "marker" => marker_[i1],
+                "cliponaxis" => false,
             ) for i1 in eachindex(y_)
         ],
         Nucleus.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);

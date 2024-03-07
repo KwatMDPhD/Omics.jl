@@ -67,8 +67,11 @@ function compare_grouping(hi, ht, it_; text = "")
         ),
         layout = Dict(
             "title" => _title(text, sc),
-            "yaxis" => Dict("title" => Dict("text" => "Mutual Information")),
-            "xaxis" => XAXIS,
+            "yaxis" => Dict(
+                "range" => (0, 1),
+                "title" => Dict("text" => "Mutual Information (Normalized)"),
+            ),
+            "xaxis" => merge(XAXIS, Dict("range" => (1, lastindex(ng_)))),
         ),
     )
 
