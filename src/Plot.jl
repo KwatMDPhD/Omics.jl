@@ -194,7 +194,7 @@ end
 
 function _group(fu, st_, an_, ma)
 
-    un_ = sort!(unique(st_))
+    un_ = unique(st_)
 
     st_i1 = Dict(st => i1 for (i1, st) in enumerate(un_))
 
@@ -266,8 +266,9 @@ function plot_heat_map(
                     "name" => "$nr Group",
                     "xaxis" => "x2",
                     "y" => y,
-                    "z" => [[gr] for gr in go_],
-                    "hoverinfo" => "y+z",
+                    "z" => [[go] for go in go_],
+                    "text" => [[gr] for gr in gr_],
+                    "hoverinfo" => "y+z+text",
                 ),
                 go_,
                 colorbarx += dx,
@@ -289,7 +290,8 @@ function plot_heat_map(
                     "yaxis" => "y2",
                     "x" => x,
                     "z" => [go_],
-                    "hoverinfo" => "x+z",
+                    "text" => [gc_],
+                    "hoverinfo" => "x+z+text",
                 ),
                 go_,
                 colorbarx += dx,

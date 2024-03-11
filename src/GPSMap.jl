@@ -174,7 +174,7 @@ function plot(
 
     elseif sc_ isa AbstractVector{<:Integer}
 
-        un_ = sort!(unique(sc_))
+        un_ = unique(sc_)
 
         gr_x_gr_x_un_x_pr = Array{Float64, 3}(undef, n_gr, n_gr, lastindex(un_))
 
