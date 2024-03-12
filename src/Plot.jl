@@ -186,9 +186,10 @@ end
 
 function _group(fu, it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
 
-    i1_ = Nucleus.Clustering.order(fu, it_, eachcol(ma))
+    id_ = Nucleus.Clustering.order(fu, it_, eachcol(ma))
 
-    it_[i1_], an_[i1_], ma[:, i1_], ticktext
+    # TODO: Refactor.
+    id_, it_[id_], an_[id_], ma[:, id_], ticktext
 
 end
 
@@ -196,9 +197,11 @@ function _group(fu, st_, an_, ma)
 
     un_ = unique(st_)
 
-    st_i1 = Dict(st => i1 for (i1, st) in enumerate(un_))
+    st_id = Dict(st => i1 for (i1, st) in enumerate(un_))
 
-    _group(fu, [st_i1[st] for st in st_], an_, ma, un_)
+    @error "" st_ un_ st_id
+
+    _group(fu, [st_id[st] for st in st_], an_, ma, un_)
 
 end
 
@@ -255,7 +258,7 @@ function plot_heat_map(
 
     if !isempty(gr_)
 
-        go_, y, z, ticktext = _group(fu, gr_, y, permutedims(z))
+        id_, go_, y, z, ticktext = _group(fu, gr_, y, permutedims(z))
 
         z = permutedims(z)
 
@@ -267,7 +270,7 @@ function plot_heat_map(
                     "xaxis" => "x2",
                     "y" => y,
                     "z" => [[go] for go in go_],
-                    "text" => [[gr] for gr in gr_],
+                    "text" => [[gr] for gr in gr_[id_]],
                     "hoverinfo" => "y+z+text",
                 ),
                 go_,
@@ -280,7 +283,7 @@ function plot_heat_map(
 
     if !isempty(gc_)
 
-        go_, x, z, ticktext = _group(fu, gc_, x, z)
+        id_, go_, x, z, ticktext = _group(fu, gc_, x, z)
 
         push!(
             data,
@@ -290,7 +293,7 @@ function plot_heat_map(
                     "yaxis" => "y2",
                     "x" => x,
                     "z" => [go_],
-                    "text" => [gc_],
+                    "text" => [gc_[id_]],
                     "hoverinfo" => "x+z+text",
                 ),
                 go_,
