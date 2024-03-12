@@ -48,9 +48,9 @@ end
 
 function integize(an_)
 
-    an_i1 = Nucleus.Collection._map_index(sort!(unique(an_)))
+    an_id = Nucleus.Collection._map_index(unique(an_))
 
-    [an_i1[an] for an in an_]
+    [an_id[an] for an in an_]
 
 end
 

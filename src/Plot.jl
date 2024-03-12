@@ -184,42 +184,6 @@ function plot_histogram(
 
 end
 
-function _group(fu, it_::AbstractVector{<:Integer}, an_, ma, ticktext = String[])
-
-    id_ = Nucleus.Clustering.order(fu, it_, eachcol(ma))
-
-    # TODO: Refactor.
-    id_, it_[id_], an_[id_], ma[:, id_], ticktext
-
-end
-
-function _group(fu, st_, an_, ma)
-
-    un_ = unique(st_)
-
-    st_id = Dict(st => i1 for (i1, st) in enumerate(un_))
-
-    @error "" st_ un_ st_id
-
-    _group(fu, [st_id[st] for st in st_], an_, ma, un_)
-
-end
-
-function _make_group_heat_map!(ke_va, it_, colorbarx, ticktext)
-
-    ke_va["type"] = "heatmap"
-
-    ke_va["colorscale"] = Nucleus.Color.fractionate(Nucleus.Color.pick_color_scheme(it_))
-
-    ke_va["colorbar"] = merge(
-        COLORBAR,
-        Dict("x" => colorbarx, "tickvals" => 1:maximum(it_), "ticktext" => ticktext),
-    )
-
-    ke_va
-
-end
-
 function _label_row(nu)
 
     "$nu ●"
@@ -258,24 +222,39 @@ function plot_heat_map(
 
     if !isempty(gr_)
 
-        id_, go_, y, z, ticktext = _group(fu, gr_, y, permutedims(z))
+        if eltype(gr_) <: Real
 
-        z = permutedims(z)
+            gi_ = gr_
+
+        else
+
+            gi_ = Nucleus.Number.integize(gr_)
+
+        end
+
+        so_ = Nucleus.Clustering.order(fu, gi_, eachrow(z))
+
+        gs_ = gr_[so_]
 
         push!(
             data,
-            _make_group_heat_map!(
-                Dict(
-                    "name" => "$nr Group",
-                    "xaxis" => "x2",
-                    "y" => y,
-                    "z" => [[go] for go in go_],
-                    "text" => [[gr] for gr in gr_[id_]],
-                    "hoverinfo" => "y+z+text",
+            Dict(
+                "type" => "heatmap",
+                "name" => "$nr Group",
+                "xaxis" => "x2",
+                "y" => y[so_],
+                "z" => [[gi] for gi in gi_[so_]],
+                "text" => [[gr] for gr in gs_],
+                "colorscale" => Nucleus.Color.fractionate(Nucleus.Color.pick_color_scheme(gi_)),
+                "colorbar" => merge(
+                    COLORBAR,
+                    Dict(
+                        "x" => (colorbarx += dx),
+                        "tickvals" => 1:maximum(gi_),
+                        "ticktext" => unique(gs_),
+                    ),
                 ),
-                go_,
-                colorbarx += dx,
-                ticktext,
+                "hoverinfo" => "y+z+text",
             ),
         )
 
@@ -283,22 +262,39 @@ function plot_heat_map(
 
     if !isempty(gc_)
 
-        id_, go_, x, z, ticktext = _group(fu, gc_, x, z)
+        if eltype(gc_) <: Real
+
+            gi_ = gc_
+
+        else
+
+            gi_ = Nucleus.Number.integize(gc_)
+
+        end
+
+        so_ = Nucleus.Clustering.order(fu, gi_, eachcol(z))
+
+        gs_ = gc_[so_]
 
         push!(
             data,
-            _make_group_heat_map!(
-                Dict(
-                    "name" => "$nc Group",
-                    "yaxis" => "y2",
-                    "x" => x,
-                    "z" => [go_],
-                    "text" => [gc_[id_]],
-                    "hoverinfo" => "x+z+text",
+            Dict(
+                "type" => "heatmap",
+                "name" => "$nc Group",
+                "yaxis" => "y2",
+                "x" => x[so_],
+                "z" => [gi_[so_]],
+                "text" => [gs_],
+                "colorscale" => Nucleus.Color.fractionate(Nucleus.Color.pick_color_scheme(gi_)),
+                "colorbar" => merge(
+                    COLORBAR,
+                    Dict(
+                        "x" => (colorbarx += dx),
+                        "tickvals" => 1:maximum(gi_),
+                        "ticktext" => unique(gs_),
+                    ),
                 ),
-                go_,
-                colorbarx += dx,
-                ticktext,
+                "hoverinfo" => "x+z+text",
             ),
         )
 
