@@ -18,9 +18,7 @@ end
 
 function categorize(nu, nu_, ca_)
 
-    i1 = findfirst(>(nu), nu_)
-
-    ca_[isnothing(i1) ? end : i1]
+    ca_[findfirst(>(nu), nu_) - 1]
 
 end
 

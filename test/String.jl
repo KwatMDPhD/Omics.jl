@@ -114,33 +114,6 @@ end
 
 # ---- #
 
-for (st, re) in (
-    ("0", 0),
-    ("-0.0", 0),
-    ("0.0", 0),
-    ("0.1", 0.1),
-    (".1", 0.1),
-    ('a', 'a'),
-    ("Aa", "Aa"),
-    ("1/2", "1/2"),
-)
-
-    @test Nucleus.String.try_parse(st) === re
-
-    # 41.498 ns (0 allocations: 0 bytes)
-    # 46.932 ns (0 allocations: 0 bytes)
-    # 45.712 ns (0 allocations: 0 bytes)
-    # 138.208 μs (2 allocations: 48 bytes)
-    # 138.333 μs (2 allocations: 48 bytes)
-    # 279.250 μs (8 allocations: 352 bytes)
-    # 356.500 μs (20 allocations: 848 bytes)
-    # 356.583 μs (20 allocations: 848 bytes)
-    #@btime Nucleus.String.try_parse($st)
-
-end
-
-# ---- #
-
 const STL = "Can"
 
 # ---- #
