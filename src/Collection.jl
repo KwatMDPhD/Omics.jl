@@ -8,7 +8,9 @@ function count_sort_string(an_, mi = 1)
 
     an_na = countmap(an_)
 
-    join("$na $an.\n" for (an, na) in sort(an_na; by = an -> (an_na[an], an)) if mi <= na)
+    join(
+        "$(rpad(na, 8))$an.\n" for (an, na) in sort(an_na; by = an -> (an_na[an], an)) if mi <= na
+    )
 
 end
 
