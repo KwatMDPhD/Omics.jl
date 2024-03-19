@@ -130,13 +130,11 @@ function compare_grouping(hi, ht, la_, fr; text = "")
         view(tg, i1_, :);
         y = view(lu_, i1_),
         x = ng_,
-        nr = "Label",
-        nc = "Number of Group",
         co = Nucleus.Color._make_color_scheme(vcat("#000000", Nucleus.Color.COPO.colors)),
         layout = Dict(
             "title" => _title(text, sc),
-            "yaxis" => Dict("dtick" => 1),
-            "xaxis" => XAXIS,
+            "yaxis" => Dict("dtick" => 1, "title" => Dict("text" => "Label (n = $nl)")),
+            "xaxis" => merge(XAXIS, "title" => Dict("text" => "Number of Group (n = $nn))")),
         ),
     )
 

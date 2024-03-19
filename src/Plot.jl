@@ -202,8 +202,6 @@ function plot_heat_map(
     y = _label_row.(1:size(z, 1)),
     x = _label_col.(1:size(z, 2)),
     text = z,
-    nr = "Row",
-    nc = "Column",
     co = Nucleus.Color.pick_color_scheme(z),
     gr_ = Int[],
     gc_ = Int[],
@@ -240,7 +238,6 @@ function plot_heat_map(
             data,
             Dict(
                 "type" => "heatmap",
-                "name" => "$nr Group",
                 "xaxis" => "x2",
                 "y" => y[so_],
                 "z" => [[gi] for gi in gi_[so_]],
@@ -280,7 +277,6 @@ function plot_heat_map(
             data,
             Dict(
                 "type" => "heatmap",
-                "name" => "$nc Group",
                 "yaxis" => "y2",
                 "x" => x[so_],
                 "z" => [gi_[so_]],
@@ -318,7 +314,6 @@ function plot_heat_map(
         data,
         Dict(
             "type" => "heatmap",
-            "name" => "Data",
             "y" => y,
             "x" => x,
             "z" => collect(eachrow(z)),
@@ -351,23 +346,81 @@ function plot_heat_map(
         data,
         Nucleus.Dict.merge(
             Dict(
-                "yaxis" => Dict(
-                    "domain" => ydomain,
-                    "autorange" => "reversed",
-                    "automargin" => true,
-                    "title" => Dict("text" => "$nr ($(size(z, 1)))"),
-                ),
-                "xaxis" => Dict(
-                    "domain" => xdomain,
-                    "automargin" => true,
-                    "title" => Dict("text" => "$nc ($(size(z, 2)))"),
-                ),
+                "yaxis" =>
+                    Dict("domain" => ydomain, "autorange" => "reversed", "automargin" => true),
+                "xaxis" => Dict("domain" => xdomain, "automargin" => true),
                 "yaxis2" => Dict(
                     "domain" => (ydomain[2] + ddy, 1),
                     "autorange" => "reversed",
                     "tickvals" => (),
                 ),
                 "xaxis2" => Dict("domain" => (xdomain[2] + ddx, 1), "tickvals" => ()),
+            ),
+            layout,
+        );
+        ke_ar...,
+    )
+
+end
+
+function plot_bubble_map(
+    ht,
+    zs,
+    zc = zs;
+    si = 24,
+    y = _label_row.(1:size(zs, 1)),
+    x = _label_col.(1:size(zs, 2)),
+    co = Nucleus.Color.pick_color_scheme(zc),
+    layout = Dict{String, Any}(),
+    ke_ar...,
+)
+
+    nn = lastindex(zs)
+
+    y2 = Vector{eltype(y)}(undef, nn)
+
+    x2 = Vector{eltype(x)}(undef, nn)
+
+    marker_size = Vector{eltype(zs)}(undef, nn)
+
+    marker_color = Vector{eltype(zc)}(undef, nn)
+
+    for (id, ca) in enumerate(CartesianIndices(zs))
+
+        y2[id] = y[ca[1]]
+
+        x2[id] = x[ca[2]]
+
+        marker_size[id] = zs[ca]
+
+        marker_color[id] = zc[ca]
+
+    end
+
+    plot(
+        ht,
+        [
+            Dict(
+                "y" => y2,
+                "x" => x2,
+                "mode" => "markers",
+                "marker" => Dict(
+                    "size" => marker_size * si,
+                    "color" => marker_color,
+                    "colorscale" => Nucleus.Color.fractionate(co),
+                    "line" => Dict("color" => "#000000"),
+                ),
+            ),
+        ],
+        Nucleus.Dict.merge(
+            Dict(
+                "yaxis" => Dict(
+                    "autorange" => "reversed",
+                    "dtick" => 1,
+                    "showgrid" => false,
+                    "automargin" => true,
+                ),
+                "xaxis" => Dict("showgrid" => false, "automargin" => true, "dtick" => 1),
             ),
             layout,
         );
@@ -401,7 +454,6 @@ function plot_radar(
     radialaxis_tickvals = nothing,
     radialaxis_tickfont_color = "#ffffff",
     layout = Dict{String, Any}(),
-    bgcolor = nothing,
     ke_ar...,
 )
 
@@ -429,7 +481,6 @@ function plot_radar(
         Nucleus.Dict.merge(
             Dict(
                 "polar" => Dict(
-                    "bgcolor" => bgcolor,
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
                         "linewidth" => linewidth,

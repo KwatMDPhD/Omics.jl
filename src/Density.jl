@@ -29,8 +29,6 @@ function plot(ht, ro_, co_, de; title_text = "Density")
         y = Nucleus.Plot._label_row.(Nucleus.Number.format4.(ro_)),
         x = Nucleus.Plot._label_col.(Nucleus.Number.format4.(co_)),
         layout = Dict(
-            "height" => 800,
-            "width" => 960,
             "title" => Dict("text" => title_text),
             "yaxis" => Dict("title" => Dict("text" => "← <b>$(lastindex(ro_))</b>")),
             "xaxis" => Dict("title" => Dict("text" => "<b>$(lastindex(co_))</b> →")),
