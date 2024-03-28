@@ -98,8 +98,8 @@ function write(
         x = co_,
         layout = Dict(
             "title" => Dict("text" => wh),
-            "yaxis" => Dict("title" => Dict("text" => "$nr (n = $(lastindex(ro_)))")),
-            "xaxis" => Dict("title" => Dict("text" => "$nc (n = $(lastindex(co_)))")),
+            "yaxis" => Dict("title" => Dict("text" => "$nr ($(lastindex(ro_)))")),
+            "xaxis" => Dict("title" => Dict("text" => "$nc ($(lastindex(co_)))")),
         ),
         he,
         wi,

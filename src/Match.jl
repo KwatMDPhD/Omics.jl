@@ -129,7 +129,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
 
     if eltype(ta_) <: Integer
 
-        @info "Clustering within groups"
+        #@info "Clustering within groups"
 
         sa_, ta_, fe_x_sa_x_nu = _order(
             Nucleus.Clustering.order(Nucleus.Distance.CO, ta_, eachcol(fe_x_sa_x_nu)),
@@ -148,9 +148,9 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
 
     fei, fea = _align!(fe_x_sa_x_nuc, st)
 
-    @info "\"$nat\" colors can range from $tai to $taa."
+    #@info "\"$nat\" colors can range from $tai to $taa."
 
-    @info "\"$naf\" colors can range from $fei to $fea."
+    #@info "\"$naf\" colors can range from $fei to $fea."
 
     n_ro = lastindex(fe_) + 2
 
@@ -247,11 +247,11 @@ function make(
 
     n_fe, n_sa = size(fe_x_sa_x_nu)
 
-    @info "🩰 Matching \"$nat\" and $(Nucleus.String.count(n_fe, "\"$naf\"")) with `$fu`"
+    #@info "🩰 Matching \"$nat\" and $(Nucleus.String.count(n_fe, "\"$naf\"")) with `$fu`"
 
     sa_, ta_, fe_x_sa_x_nu = _order(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
 
-    @info "Calculating scores"
+    #@info "Calculating scores"
 
     sc_ = (nu_ -> fu(ta_, nu_)).(eachrow(fe_x_sa_x_nu))
 
@@ -271,7 +271,7 @@ function make(
 
     if 0 < nm
 
-        @info "Calculating the margin of errors using $(Nucleus.String.count(nm, "sampling"))"
+        #@info "Calculating the margin of errors using $(Nucleus.String.count(nm, "sampling"))"
 
         ra_ = Vector{Float64}(undef, nm)
 
@@ -301,7 +301,7 @@ function make(
 
     if 0 < np
 
-        @info "Calculating p-values using $(Nucleus.String.count(np, "permutation"))"
+        #@info "Calculating p-values using $(Nucleus.String.count(np, "permutation"))"
 
         co = copy(ta_)
 
