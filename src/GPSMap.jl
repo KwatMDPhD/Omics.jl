@@ -74,7 +74,7 @@ function plot(
             "name" => "Node ($(lastindex(no_)))",
             "y" => view(di_x_no_x_co, 1, :),
             "x" => view(di_x_no_x_co, 2, :),
-            "text" => (no -> rsplit(no; limit = 2)[2]).(no_),
+            "text" => no_,
             "mode" => "markers+text",
             "marker" => Dict(
                 "size" => node_marker_size,
