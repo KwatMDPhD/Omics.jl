@@ -270,7 +270,7 @@ function plot(
                     "x" => 0.02,
                     "text" => "GPS Map",
                     "font" =>
-                        Dict("family" => "Gravitas One", "size" => 48, "color" => "#000000"),
+                        Dict("family" => "Gravitas One", "size" => 32, "color" => "#000000"),
                 ),
                 "yaxis" => merge(axis, Dict("range" => range1, "autorange" => "reversed")),
                 "xaxis" => merge(axis, Dict("range" => range2 .* 1.08)),

@@ -480,6 +480,7 @@ function plot_radar(
         ],
         Nucleus.Dict.merge(
             Dict(
+                "margin" => Dict("t" => 160),
                 "polar" => Dict(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
@@ -492,7 +493,7 @@ function plot_radar(
                         "tickcolor" => linecolor,
                         "tickfont" => Dict(
                             "family" => "Optima",
-                            "size" => 32,
+                            "size" => 24,
                             "color" => angularaxis_tickfont_color,
                         ),
                     ),
@@ -518,7 +519,7 @@ function plot_radar(
                     "x" => 0.008,
                     "font" => Dict(
                         "family" => "Times New Roman",
-                        "size" => 48,
+                        "size" => 32,
                         "color" => "#27221f",
                     ),
                 ),
