@@ -420,7 +420,12 @@ function plot_bubble_map(
                     "showgrid" => false,
                     "automargin" => true,
                 ),
-                "xaxis" => Dict("showgrid" => false, "automargin" => true, "dtick" => 1),
+                "xaxis" => Dict(
+                    "showgrid" => false,
+                    "automargin" => true,
+                    "dtick" => 1,
+                    "tickangle" => 90,
+                ),
             ),
             layout,
         );
