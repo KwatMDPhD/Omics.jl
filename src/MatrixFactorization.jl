@@ -43,6 +43,7 @@ end
 function write(
     di,
     ma;
+    su = "",
     nl = "Label",
     na = "Factor",
     la_ = (i1 -> "$nl $i1").(1:maximum(size(ma))),
@@ -55,7 +56,7 @@ function write(
 
     if isone(dm)
 
-        wh = "H"
+        wh = "H$su"
 
         nr = na
 
@@ -71,7 +72,7 @@ function write(
 
     else
 
-        wh = "W"
+        wh = "W$su"
 
         nr = nl
 
