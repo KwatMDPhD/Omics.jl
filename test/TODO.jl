@@ -40,19 +40,29 @@ foreach(Nucleus.Normalization.normalize_with_01!, eachcol(FS))
 
 println(Nucleus.Collection.count_sort_string(DA_))
 
-const DS_ = ("GSE107011", "GSE168527")#sort!(unique(DA_))
-
-# ---- #
+const DS_ = ("GSE24759", "GSE107011")#sort!(unique(DA_))
 
 const ID___ = Tuple(DA_ .== ds for ds in DS_)
 
-const MA_ = Tuple(FS[:, id_] for id_ in ID___)
+# ---- #
+
+const MA_ = [FS[:, id_] for id_ in ID___]
 
 const x = vcat((SA_[id_] for id_ in ID___)...)
 
 const gc_ = vcat((DA_[id_] for id_ in ID___)...)
 
 const wi = lastindex(x) * 8
+
+# ---- #
+
+const ID_ = findall(!allequal, eachrow(hcat(MA_...)))
+
+for (id, ma) in enumerate(MA_)
+
+    MA_[id] = ma[ID_, :]
+
+end
 
 # ---- #
 
