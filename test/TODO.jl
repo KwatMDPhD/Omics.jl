@@ -90,19 +90,21 @@ seed!(20240420)
 
 # ---- #
 
-const TW, TH = Nucleus.MatrixFactorization.factorize(
-    hcat(MA_...),
-    UF;
-    init = :random,
-    alg = :multmse,
-    tol = TO,
-    maxiter = UI,
-)
+for i in 1:10
 
-plot(joinpath(Nucleus.TE, "st.html"), TH)
+    const TW, TH = Nucleus.MatrixFactorization.factorize(
+        hcat(MA_...),
+        UF;
+        init = :random,
+        alg = :multmse,
+        tol = TO,
+        maxiter = UI,
+    )
 
-# ---- #
+    plot(joinpath(Nucleus.TE, "st$i.html"), TH)
 
-const IW_, IH_, AI = Nucleus.MatrixFactorization.factorize_wide(MA_, UF, TO, UI)
+    const IW_, IH_, AI = Nucleus.MatrixFactorization.factorize_wide(MA_, UF, TO, UI)
 
-plot(joinpath(Nucleus.TE, "si.html"), hcat(IH_...))
+    plot(joinpath(Nucleus.TE, "si$i.html"), hcat(IH_...))
+
+end
