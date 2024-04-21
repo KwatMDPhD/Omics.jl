@@ -2,7 +2,7 @@ module MatrixFactorization
 
 using NMF: nnmf
 
-using LinearAlgebra: norm
+using LinearAlgebra: mul!, norm
 
 using NonNegLeastSquares: nonneg_lsq
 
@@ -34,33 +34,45 @@ function _initialize(ur, uc, ma, uf)
 
     rand(ur, uc) * sqrt(mean(ma) / uf)
 
+    # TODO: Normalize.
+
 end
 
-function _initialize_w(ma, uf)
+function _initialize(ma, uf::Integer)
 
     _initialize(size(ma, 1), uf, ma, uf)
 
 end
 
-function _initialize_h(ma, uf)
+function _initialize(uf::Integer, ma)
 
     _initialize(uf, size(ma, 2), ma, uf)
 
 end
 
-function _has_converged(no___, to)
+function _get_error(A_, WH_)
 
-    n1_ = no___[end - 1]
+    (norm(A - WH) for (A, WH) in zip(A_, WH_))
 
-    ne_ = no___[end]
+end
 
-    if all((n1_ .- ne_) ./ n1_ .<= to)
+function _has_converged(ii, er_, to, ui)
 
-        @info "Converged with $(lastindex(no___)) iterations."
+    me = "with $ii iterations:\n$(join(er_, '\n'))."
+
+    if all(<(to), er_)
+
+        @info "Converged $me"
 
         true
 
     else
+
+        if ii == ui
+
+            @warn "Failed to converge $me"
+
+        end
 
         false
 
@@ -68,55 +80,101 @@ function _has_converged(no___, to)
 
 end
 
-function _zero!(nu_)
+function factorize_wide(A_, uf, to, ui, we_ = ones(lastindex(A_)))
 
-    ep = eps()
+    ia_ = eachindex(A_)
 
-    for id in eachindex(nu_)
+    A1 = A_[1]
 
-        if nu_[id] < ep
+    u1 = size(A1, 1)
 
-            nu_[id] = 0
+    u2_ = size.(A_, 2)
+
+    W = _initialize(A1, uf)
+
+    H_ = _initialize.(uf, A_)
+
+    WH_ = Tuple(W * H_[ia] for ia in ia_)
+
+    AHt_ = Tuple(Matrix{Float64}(undef, u1, uf) for _ in ia_)
+
+    WHHt_ = Tuple(Matrix{Float64}(undef, u1, uf) for _ in ia_)
+
+    WtA_ = Tuple(Matrix{Float64}(undef, uf, u2_[ia]) for ia in ia_)
+
+    WtWH_ = Tuple(Matrix{Float64}(undef, uf, u2_[ia]) for ia in ia_)
+
+    n1 = norm(A1)
+
+    co_ = Tuple(n1 / norm(A_[ia]) * we_[ia] for ia in ia_)
+
+    @info "$u1 $uf $u2_" co_
+
+    ai = Matrix{Float64}(undef, lastindex(ia_), ui)
+
+    ai[:, 1] .= _get_error(A_, WH_)
+
+    ep = sqrt(eps())
+
+    for ii in 2:ui
+
+        for ia in ia_
+
+            Ht = transpose(H_[ia])
+
+            mul!(AHt_[ia], A_[ia], Ht)
+
+            mul!(WHHt_[ia], WH_[ia], Ht)
 
         end
 
-    end
+        for iw in eachindex(W)
 
-end
+            su = 0
 
-function factorize_wide(ma_, uf, to, ui)
+            for ia in ia_
 
-    n1 = norm(ma_[1])
+                su += co_[ia] * AHt_[ia][iw] / (WHHt_[ia][iw] + ep)
 
-    co_ = [n1 / norm(ma) for ma in ma_]
+            end
 
-    mw = _initialize_w(ma_[1], uf)
-
-    mh_ = Tuple(_initialize_h(ma, uf) for ma in ma_)
-
-    no___ = [[norm(ma - mw * mh) for (ma, mh) in zip(ma_, mh_)]]
-
-    for _ in 1:ui
-
-        mw .*=
-            sum(co * ma * transpose(mh) for (co, ma, mh) in zip(co_, ma_, mh_)) ./
-            sum(co * mw * mh * transpose(mh) for (co, mh) in zip(co_, mh_))
-
-        _zero!(mw)
-
-        for (ma, mh) in zip(ma_, mh_)
-
-            mh .*= (transpose(mw) * ma) ./ (transpose(mw) * mw * mh)
-
-            _zero!(mh)
+            W[iw] *= su / lastindex(ia_)
 
         end
 
-        no_ = [norm(ma - mw * mh) for (ma, mh) in zip(ma_, mh_)]
+        Wt = transpose(W)
 
-        push!(no___, no_)
+        for ia in ia_
 
-        if _has_converged(no___, to)
+            H = H_[ia]
+
+            WtA = WtA_[ia]
+
+            WtWH = WtWH_[ia]
+
+            mul!(WtA, Wt, A_[ia])
+
+            mul!(WtWH, Wt, WH_[ia])
+
+            co = co_[ia]
+
+            for ih in eachindex(H)
+
+                H[ih] *= co * WtA[ih] / (WtWH[ih] + ep)
+
+            end
+
+        end
+
+        for ia in ia_
+
+            mul!(WH_[ia], W, H_[ia])
+
+        end
+
+        ai[:, ii] .= _get_error(A_, WH_)
+
+        if _has_converged(ii, ai[:, ii], to, ui)
 
             break
 
@@ -124,7 +182,7 @@ function factorize_wide(ma_, uf, to, ui)
 
     end
 
-    (mw,), mh_, no___
+    (W,), H_, ai
 
 end
 
