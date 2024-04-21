@@ -39,6 +39,7 @@ foreach(Nucleus.Normalization.normalize_with_01!, eachcol(FS))
 # ---- #
 
 println(Nucleus.Collection.count_sort_string(DA_))
+
 const DS_ = ("GSE107011", "GSE168527")#sort!(unique(DA_))
 
 # ---- #
@@ -48,6 +49,8 @@ const ID___ = Tuple(DA_ .== ds for ds in DS_)
 const MA_ = Tuple(FS[:, id_] for id_ in ID___)
 
 const x = vcat((SA_[id_] for id_ in ID___)...)
+
+const gc_ = vcat((DA_[id_] for id_ in ID___)...)
 
 const wi = lastindex(x) * 8
 
@@ -72,18 +75,12 @@ const TW, TH = Nucleus.MatrixFactorization.factorize(
     maxiter = UI,
 )
 
-Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "st.html"), TH; x, gc_ = DA_[id_], wi)
+Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "st.html"), TH; x, gc_, wi)
 
 # ---- #
 
 seed!(20240420)
 
-const IW_, IH_, NO___ = factorize_wide(MA_, UF, TO, UI)
+const IW_, IH_, NO___ = Nucleus.MatrixFactorization.factorize_wide(MA_, UF, TO, UI)
 
-Nucleus.Plot.plot_heat_map(
-    joinpath(Nucleus.TE, "si.html"),
-    hcat(IH_...);
-    x,
-    gc_ = vcat((DA_[id_] for id_ in id___)...),
-    wi,
-)
+Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "si.html"), hcat(IH_...); x, gc_, wi)
