@@ -8,7 +8,7 @@ using Random: seed!
 
 # ---- #
 
-seed!(2023092820240422)
+seed!(20240422)
 
 const A1 = randn(8, 8)
 
@@ -28,33 +28,36 @@ A4 .-= minimum(A4)
 
 # ---- #
 
-const to = 1e-3
+const to = 1e-4
 
-const ui = 10^1
+const ma = 10^4
 
 const uf = 3
 
 # ---- #
 
-for (id, A) in enumerate((A1,))
+for (id, A) in enumerate((A1, A2, A3, A4))
+
+    seed!(20240422)
+
+    W0 = Nucleus.MatrixFactorization._initialize(A, uf)
+
+    H0 = Nucleus.MatrixFactorization._initialize(uf, A)
 
     W, H = Nucleus.MatrixFactorization.factorize(
         A,
         uf;
-        init = :random,
+        init = :custom,
+        W0,
+        H0,
         alg = :multmse,
         tol = to,
-        maxiter = ui,
-        verbose = true,
+        maxiter = ma,
     )
 
     Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "$(id)w.html"), W)
 
     Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "$(id)h.html"), H)
-
-    @test size(W) === (size(A, 1), uf)
-
-    @test size(H) === (uf, size(A, 2))
 
     @test all(>=(0), W)
 
@@ -62,55 +65,65 @@ for (id, A) in enumerate((A1,))
 
     AWi = Nucleus.MatrixFactorization.solve_h(W, A)
 
-    Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "$(id)awi.html"), AWi)
-
-    @test size(AWi) === size(H)
+    Nucleus.Plot.plot_heat_map(
+        joinpath(Nucleus.TE, "$(id)awi.html"),
+        AWi;
+        layout = Dict("title" => Dict("text" => "AWi")),
+    )
 
     @test all(>=(0), AWi)
 
-    @test isapprox(H, AWi; rtol = 1e-1)
+    @test isapprox(H, AWi; rtol = 1e-3)
 
-    #┌ Info: Converged with 223 iterations.
-    #└   re.objvalue = 7.267759831700613
-    #  80.875 μs (18 allocations: 2.94 KiB)
-    #  2.199 μs (28 allocations: 4.47 KiB)
-    #┌ Warning: Failed to converged with 1000 iterations.
-    #│   re.objvalue = 24.020152551969993
-    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:23
-    #  166.083 μs (18 allocations: 4.19 KiB)
-    #  4.000 μs (28 allocations: 6.91 KiB)
-    #┌ Info: Converged with 524 iterations.
-    #└   re.objvalue = 69.00092272342778
-    #  281.625 μs (18 allocations: 6.12 KiB)
-    #  4.732 μs (28 allocations: 10.84 KiB)
-    #┌ Warning: Failed to converged with 1000 iterations.
-    #│   re.objvalue = 161.3491056540221
-    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:23
-    #  705.750 μs (18 allocations: 9.88 KiB)
-    #  10.875 μs (28 allocations: 18.97 KiB)
+    #┌ Info: Converged with 900 iterations.
+    #└   ob = 8.357147435525784
+    #  1.250 μs (18 allocations: 2.52 KiB)
+    #  3.276 μs (73 allocations: 7.50 KiB)
+    #┌ Info: Converged with 496 iterations.
+    #└   ob = 20.901416313405537
+    #  1.658 μs (18 allocations: 3.58 KiB)
+    #  6.525 μs (145 allocations: 14.94 KiB)
+    #┌ Info: Converged with 1394 iterations.
+    #└   ob = 57.35550497172282
+    #  2.065 μs (18 allocations: 5.33 KiB)
+    #  8.195 μs (145 allocations: 19.94 KiB)
+    #┌ Info: Converged with 1933 iterations.
+    #└   ob = 155.4344525901171
+    #  3.260 μs (18 allocations: 8.64 KiB)
+    #  16.250 μs (289 allocations: 39.88 KiB)
 
     #disable_logging(Warn)
     #@btime Nucleus.MatrixFactorization.factorize(
     #    $A,
     #    uf;
-    #    init = :random,
+    #    init = :custom,
+    #    W0 = $W0,
+    #    H0 = $H0,
     #    alg = :multmse,
     #    tol = to,
-    #    maxiter = ui,
+    #    maxiter = ma,
     #)
     #disable_logging(Debug)
 
-    #@btime Nucleus.MatrixFactorization.solve_h($A, $W)
+    #@btime Nucleus.MatrixFactorization.solve_h($W, $A)
 
 end
 
 # ---- #
 
-for (id, A) in enumerate((A1,))
+for (id, A) in enumerate((A1, A2, A3, A4))
+
+    seed!(20240422)
 
     A_ = (A, A)
 
-    W, H_ = Nucleus.MatrixFactorization.factorize_wide(A_, uf; to, ui)
+    W0 = Nucleus.MatrixFactorization._initialize(A, uf)
+
+    H0 = Nucleus.MatrixFactorization._initialize(uf, A)
+
+    H0_ = [copy(H0) for _ in A_]
+
+    W, H_ = Nucleus.MatrixFactorization.factorize_wide(A_, uf; W = W0, H_ = H0_, to, ma)
 
     Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "$(id)sw.html"), W)
 
@@ -124,47 +137,41 @@ for (id, A) in enumerate((A1,))
 
     end
 
-    @test size(W) === (size(A_[1], 1), uf)
-
     @test all(>=(0), W)
 
-    for ia in 1:lastindex(A_)
+    for ia in eachindex(A_)
 
-        H = H_[ia]
-
-        @test size(H) === (uf, size(A_[ia], 2))
-
-        @test all(>=(0), H)
+        @test all(>=(0), H_[ia])
 
     end
 
-    #┌ Warning: Failed to converged with 1000 iterations.
-    #│   ob_ =
-    #│    1-element Vector{Float64}:
-    #│     1742.9433128938886
-    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:155
-    #  579.292 μs (16 allocations: 2.62 KiB)
-    #┌ Warning: Failed to converged with 1000 iterations.
-    #│   ob_ =
-    #│    1-element Vector{Float64}:
-    #│     1502.51233919367
-    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:155
-    #^[  834.125 μs (16 allocations: 3.69 KiB)
-    #┌ Warning: Failed to converged with 1000 iterations.
-    #│   ob_ =
-    #│    1-element Vector{Float64}:
-    #│     7267.39999602119
-    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:155
-    #  1.130 ms (16 allocations: 5.44 KiB)
-    #┌ Warning: Failed to converged with 1000 iterations.
-    #│   ob_ =
-    #│    1-element Vector{Float64}:
-    #│     9405.538943969412
-    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:155
-    #  1.969 ms (16 allocations: 8.75 KiB)
+    #┌ Info: Converged with 195 iterations.
+    #│   ob =
+    #│    2-element Vector{Float64}:
+    #│     8.361346897830222
+    #└     8.361346897830222
+    #  1.242 μs (15 allocations: 2.56 KiB)
+    #┌ Info: Converged with 112 iterations.
+    #│   ob =
+    #│    2-element Vector{Float64}:
+    #│     20.90411783954717
+    #└     20.90411783954717
+    #  1.792 μs (15 allocations: 3.62 KiB)
+    #┌ Info: Converged with 405 iterations.
+    #│   ob =
+    #│    2-element Vector{Float64}:
+    #│     57.37454392418523
+    #└     57.37454392418523
+    #  2.435 μs (15 allocations: 5.38 KiB)
+    #┌ Info: Converged with 676 iterations.
+    #│   ob =
+    #│    2-element Vector{Float64}:
+    #│     155.48641480203864
+    #└     155.48641480203864
+    #  4.184 μs (15 allocations: 8.69 KiB)
 
     #disable_logging(Warn)
-    #@btime Nucleus.MatrixFactorization.factorize_wide($A_, uf; to, ui)
+    #@btime Nucleus.MatrixFactorization.factorize_wide($(A,), uf; W = $W0, H_ = $(H0,), to, ma)
     #disable_logging(Debug)
 
 end

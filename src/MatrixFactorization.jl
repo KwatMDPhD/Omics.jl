@@ -10,37 +10,55 @@ using StatsBase: mean, sqL2dist
 
 using ..Nucleus
 
+function _log_convergence(bo, ui, ob)
+
+    if bo
+
+        @info "Converged with $ui iterations." ob
+
+    else
+
+        @warn "Failed to converge with $ui iterations." ob
+
+    end
+
+end
+
 function factorize(A, uf; ke_ar...)
 
     re = nnmf(A, uf; ke_ar...)
 
-    if re.converged
-
-        @info "Converged with $(re.niters) iterations." re.objvalue
-
-    else
-
-        @warn "Failed to converged with $(re.niters) iterations." re.objvalue
-
-    end
+    _log_convergence(re.converged, re.niters, re.objvalue)
 
     re.W, re.H
 
 end
 
-function _initialize(u1, u2, A, uf)
+function _get_coefficient(A_)
 
-    rand(u1, u2) .*= sqrt(mean(A) / uf)
+    co_ = Vector{Float64}(undef, lastindex(A_))
+
+    n1 = norm(A_[1])
+
+    co_[1] = 1
+
+    for ia in 2:lastindex(A_)
+
+        co_[ia] = n1 / norm(A_[ia])
+
+    end
+
+    co_
 
 end
 
 function _initialize(A, uf::Integer)
 
-    #_initialize(size(A, 1), uf, A, uf)
-
     W = rand(size(A, 1), uf)
 
     foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(W))
+
+    W .*= sqrt(mean(A) / uf)
 
     W
 
@@ -48,58 +66,65 @@ end
 
 function _initialize(uf::Integer, A)
 
-    #_initialize(uf, size(A, 2), A, uf)
+    H = rand(uf, size(A, 2))
 
-    rand(uf, size(A, 2))
+    foreach(Nucleus.Normalization.normalize_with_sum!, eachrow(H))
+
+    H .*= sqrt(mean(A) / uf)
+
+    H
 
 end
 
 function _get_objective(A, WH)
 
-    ob = 0.5 * sqL2dist(A, WH)
-
-    @info ob
-
-    ob
+    0.5 * sqL2dist(A, WH)
 
 end
 
-# TODO: Match with `nnmf`.
-function factorize_wide(A_, uf; to = 0.01, ui = 100, we_ = ones(lastindex(A_)))
+function factorize_wide(
+    A_,
+    uf;
+    to = 0.01,
+    ma = 100,
+    W = _initialize(A_[1], uf),
+    H_ = [_initialize(uf, A) for A in A_],
+    co_ = _get_coefficient(A_),
+)
 
-    ua = lastindex(A_)
-
-    ia_ = 1:ua
-
-    u1 = size(A_[1], 1)
-
-    u2_ = (size(A, 2) for A in A_)
-
-    W = _initialize(A_[1], uf)
-
-    H_ = [_initialize(uf, A) for A in A_]
+    ui = 0
 
     WH_ = [W * H for H in H_]
 
-    AHt_ = [Matrix{Float64}(undef, u1, uf) for _ in A_]
-
-    WHHt_ = [Matrix{Float64}(undef, u1, uf) for _ in A_]
-
-    WtA_ = [Matrix{Float64}(undef, uf, u2) for u2 in u2_]
-
-    WtWH_ = [Matrix{Float64}(undef, uf, u2) for u2 in u2_]
-
-    n1 = norm(A_[1])
-
-    co_ = [n1 / norm(A_[ia]) * we_[ia] for ia in ia_]
-
-    ep = sqrt(eps())
-
     ob_ = _get_objective.(A_, WH_)
 
-    for ii in 2:ui
+    Wp = Matrix{Float64}(undef, size(W))
 
-        for ia in ia_
+    Hp_ = [Matrix{Float64}(undef, size(H)) for H in H_]
+
+    AHt_ = [Matrix{Float64}(undef, size(A_[1], 1), uf) for _ in A_]
+
+    WHHt_ = [Matrix{Float64}(undef, size(A_[1], 1), uf) for _ in A_]
+
+    WtA_ = [Matrix{Float64}(undef, uf, size(A, 2)) for A in A_]
+
+    WtWH_ = [Matrix{Float64}(undef, uf, size(A, 2)) for A in A_]
+
+    bo = false
+
+    while !bo && ui < ma
+
+        ui += 1
+
+        copyto!(Wp, W)
+
+        for ia in eachindex(A_)
+
+            copyto!(Hp_[ia], H_[ia])
+
+        end
+
+        for ia in eachindex(A_)
 
             Ht = transpose(H_[ia])
 
@@ -113,41 +138,35 @@ function factorize_wide(A_, uf; to = 0.01, ui = 100, we_ = ones(lastindex(A_)))
 
             su = 0
 
-            for ia in ia_
+            for ia in eachindex(A_)
 
-                su += co_[ia] * AHt_[ia][iw] / (WHHt_[ia][iw] + ep)
+                su += co_[ia] * AHt_[ia][iw] / (WHHt_[ia][iw] + eps())
 
             end
 
-            W[iw] *= su / ua
+            W[iw] *= su / lastindex(A_)
+
+        end
+
+        for ia in eachindex(A_)
+
+            mul!(WH_[ia], W, H_[ia])
 
         end
 
         Wt = transpose(W)
 
-        for ia in ia_
+        for ia in eachindex(A_)
 
-            H = H_[ia]
+            mul!(WtA_[ia], Wt, A_[ia])
 
-            WtA = WtA_[ia]
+            mul!(WtWH_[ia], Wt, WH_[ia])
 
-            WtWH = WtWH_[ia]
+            for ih in eachindex(H_[ia])
 
-            mul!(WtA, Wt, A_[ia])
-
-            mul!(WtWH, Wt, WH_[ia])
-
-            co = co_[ia]
-
-            for ih in eachindex(H)
-
-                H[ih] *= co * WtA[ih] / (WtWH[ih] + ep)
+                H_[ia][ih] *= co_[ia] * WtA_[ia][ih] / (WtWH_[ia][ih] + eps())
 
             end
-
-        end
-
-        for ia in ia_
 
             mul!(WH_[ia], W, H_[ia])
 
@@ -155,21 +174,47 @@ function factorize_wide(A_, uf; to = 0.01, ui = 100, we_ = ones(lastindex(A_)))
 
         ob_ .= _get_objective.(A_, WH_)
 
-        if all(<(to), ob_)
+        bo = all(_has_converged(W, Wp, H_[ia], Hp_[ia], to) for ia in eachindex(A_))
 
-            @info "Converged with $ii iterations." ob_
+    end
 
-            break
+    _log_convergence(bo, ui, ob_)
 
-        elseif ii == ui
+    W, H_
 
-            @warn "Failed to converged with $ii iterations." ob_
+end
+
+function _has_converged(W, Wp, H, Hp, to)
+
+    for ic in axes(W, 2)
+
+        wd = ws = hd = hs = 0
+
+        for i1 in axes(W, 1)
+
+            wd += (W[i1, ic] - Wp[i1, ic])^2
+
+            ws += (W[i1, ic] + Wp[i1, ic])^2
+
+        end
+
+        for i2 in axes(H, 2)
+
+            hd += (H[ic, i2] - Hp[ic, i2])^2
+
+            hs += (H[ic, i2] + Hp[ic, i2])^2
+
+        end
+
+        if to * sqrt(ws) < sqrt(wd) || to * sqrt(hs) < sqrt(hd)
+
+            return false
 
         end
 
     end
 
-    W, H_
+    true
 
 end
 
@@ -177,9 +222,9 @@ function solve_h(W, A)
 
     AWi = Matrix{Float64}(undef, size(W, 2), size(A, 2))
 
-    for (i2, nu_) in enumerate(eachcol(A))
+    for i2 in axes(A, 2)
 
-        AWi[:, i2] = nonneg_lsq(W, nu_; alg = :nnls)
+        AWi[:, i2] = nonneg_lsq(W, view(A, :, i2); alg = :nnls)
 
     end
 
