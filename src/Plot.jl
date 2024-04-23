@@ -1,5 +1,7 @@
 module Plot
 
+using Distances: CorrDist
+
 using JSON: json
 
 using ..Nucleus
@@ -205,7 +207,7 @@ function plot_heat_map(
     co = Nucleus.Color.pick_color_scheme(z),
     gr_ = Int[],
     gc_ = Int[],
-    fu = Nucleus.Distance.CO,
+    fu = CorrDist(),
     layout = Dict{String, Any}(),
     ke_ar...,
 )
