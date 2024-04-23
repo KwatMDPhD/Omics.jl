@@ -8,125 +8,163 @@ using Random: seed!
 
 # ---- #
 
-for (n_ro, n_co, n_fa) in ((4, 3, 2), (8, 16, 3), (20, 2000, 10), (1000, 100, 10))
+seed!(2023092820240422)
 
-    seed!(20230928)
+const A1 = randn(8, 8)
 
-    ma = rand(n_ro, n_co)
+const A2 = randn(8, 16)
 
-    mw, mh = Nucleus.MatrixFactorization.factorize(ma, n_fa)
+const A3 = randn(16, 16)
 
-    @test size(mw) === (n_ro, n_fa)
+const A4 = randn(16, 32)
 
-    @test size(mh) === (n_fa, n_co)
+A1 .-= minimum(A1)
 
-    for ma in (mw, mh)
+A2 .-= minimum(A2)
 
-        @test all(!Nucleus.Number.is_negative, ma)
+A3 .-= minimum(A3)
 
-    end
+A4 .-= minimum(A4)
 
-    di = Nucleus.Path.establish(joinpath(Nucleus.TE, "$(n_ro)_$(n_co)_$(n_fa)"))
+# ---- #
 
-    Nucleus.MatrixFactorization.write(di, mw)
+const to = 1e-3
 
-    Nucleus.MatrixFactorization.write(di, mh)
+const ui = 10^1
 
-    mh2 = Nucleus.MatrixFactorization.solve_h(mw, ma)
+const uf = 3
 
-    @test isapprox(mh, mh2; rtol = 1e-3)
+# ---- #
 
-    Nucleus.MatrixFactorization.write(Nucleus.Path.establish("$(di)_solved"), mh2; na = "Solved")
+for (id, A) in enumerate((A1,))
 
-    # 11.875 μs (68 allocations: 7.77 KiB)
-    # 931.034 ns (19 allocations: 1.61 KiB)
-    # 227.667 μs (136 allocations: 41.09 KiB)
-    # 3.958 μs (28 allocations: 6.91 KiB)
-    # 202.596 ms (372 allocations: 17.77 MiB)
-    # 3.539 ms (102 allocations: 3.83 MiB)
-    # 150.743 ms (371 allocations: 10.21 MiB)
-    # 24.210 ms (101 allocations: 7.83 MiB)
+    W, H = Nucleus.MatrixFactorization.factorize(
+        A,
+        uf;
+        init = :random,
+        alg = :multmse,
+        tol = to,
+        maxiter = ui,
+        verbose = true,
+    )
+
+    Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "$(id)w.html"), W)
+
+    Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "$(id)h.html"), H)
+
+    @test size(W) === (size(A, 1), uf)
+
+    @test size(H) === (uf, size(A, 2))
+
+    @test all(>=(0), W)
+
+    @test all(>=(0), H)
+
+    AWi = Nucleus.MatrixFactorization.solve_h(W, A)
+
+    Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "$(id)awi.html"), AWi)
+
+    @test size(AWi) === size(H)
+
+    @test all(>=(0), AWi)
+
+    @test isapprox(H, AWi; rtol = 1e-1)
+
+    #┌ Info: Converged with 223 iterations.
+    #└   re.objvalue = 7.267759831700613
+    #  80.875 μs (18 allocations: 2.94 KiB)
+    #  2.199 μs (28 allocations: 4.47 KiB)
+    #┌ Warning: Failed to converged with 1000 iterations.
+    #│   re.objvalue = 24.020152551969993
+    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:23
+    #  166.083 μs (18 allocations: 4.19 KiB)
+    #  4.000 μs (28 allocations: 6.91 KiB)
+    #┌ Info: Converged with 524 iterations.
+    #└   re.objvalue = 69.00092272342778
+    #  281.625 μs (18 allocations: 6.12 KiB)
+    #  4.732 μs (28 allocations: 10.84 KiB)
+    #┌ Warning: Failed to converged with 1000 iterations.
+    #│   re.objvalue = 161.3491056540221
+    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:23
+    #  705.750 μs (18 allocations: 9.88 KiB)
+    #  10.875 μs (28 allocations: 18.97 KiB)
 
     #disable_logging(Warn)
-    #@btime Nucleus.MatrixFactorization.factorize($ma, $n_fa)
+    #@btime Nucleus.MatrixFactorization.factorize(
+    #    $A,
+    #    uf;
+    #    init = :random,
+    #    alg = :multmse,
+    #    tol = to,
+    #    maxiter = ui,
+    #)
     #disable_logging(Debug)
 
-    #@btime Nucleus.MatrixFactorization.solve_h($ma, $mw)
+    #@btime Nucleus.MatrixFactorization.solve_h($A, $W)
 
 end
 
 # ---- #
 
-const MW = Nucleus.Simulation.make_matrix_1n(Float64, 3, 2)
+for (id, A) in enumerate((A1,))
 
-# ---- #
+    A_ = (A, A)
 
-const MH = Nucleus.Simulation.make_matrix_1n(Float64, 2, 3)
+    W, H_ = Nucleus.MatrixFactorization.factorize_wide(A_, uf; to, ui)
 
-# ---- #
+    Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "$(id)sw.html"), W)
 
-const DI = mkdir(joinpath(Nucleus.TE, "write"))
+    for (ih, H) in enumerate(H_)
 
-# ---- #
+        Nucleus.Plot.plot_heat_map(
+            joinpath(Nucleus.TE, "$(id)sh$ih.html"),
+            H;
+            layout = Dict("title" => Dict("text" => ih)),
+        )
 
-Nucleus.MatrixFactorization.write(DI, MW)
+    end
 
-# ---- #
+    @test size(W) === (size(A_[1], 1), uf)
 
-Nucleus.MatrixFactorization.write(DI, MH)
+    @test all(>=(0), W)
 
-# ---- #
+    for ia in 1:lastindex(A_)
 
-@test MW == Matrix(Nucleus.DataFrame.read(joinpath(DI, "2w.tsv"))[!, 2:end])
+        H = H_[ia]
 
-# ---- #
+        @test size(H) === (uf, size(A_[ia], 2))
 
-@test MH == Matrix(Nucleus.DataFrame.read(joinpath(DI, "2h.tsv"))[!, 2:end])
+        @test all(>=(0), H)
 
-# ---- #
+    end
 
-@test isfile(joinpath(DI, "2w.html"))
+    #┌ Warning: Failed to converged with 1000 iterations.
+    #│   ob_ =
+    #│    1-element Vector{Float64}:
+    #│     1742.9433128938886
+    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:155
+    #  579.292 μs (16 allocations: 2.62 KiB)
+    #┌ Warning: Failed to converged with 1000 iterations.
+    #│   ob_ =
+    #│    1-element Vector{Float64}:
+    #│     1502.51233919367
+    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:155
+    #^[  834.125 μs (16 allocations: 3.69 KiB)
+    #┌ Warning: Failed to converged with 1000 iterations.
+    #│   ob_ =
+    #│    1-element Vector{Float64}:
+    #│     7267.39999602119
+    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:155
+    #  1.130 ms (16 allocations: 5.44 KiB)
+    #┌ Warning: Failed to converged with 1000 iterations.
+    #│   ob_ =
+    #│    1-element Vector{Float64}:
+    #│     9405.538943969412
+    #└ @ Nucleus.MatrixFactorization ~/craft/jl/Nucleus.jl/src/MatrixFactorization.jl:155
+    #  1.969 ms (16 allocations: 8.75 KiB)
 
-# ---- #
+    #disable_logging(Warn)
+    #@btime Nucleus.MatrixFactorization.factorize_wide($A_, uf; to, ui)
+    #disable_logging(Debug)
 
-@test isfile(joinpath(DI, "2h.html"))
-
-# ---- #
-
-ma = rand(4, 8)
-
-# ---- #
-
-Nucleus.Plot.plot_heat_map("", ma; layout = Dict("title" => Dict("text" => "A")))
-
-# ---- #
-
-mw, mh = Nucleus.MatrixFactorization.factorize(ma, 3)
-
-# ---- #
-
-mwh = mw * mh
-
-# ---- #
-
-Nucleus.Plot.plot_heat_map("", mwh; layout = Dict("title" => Dict("text" => "W x H")))
-
-# ---- #
-
-# https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004760
-
-# ---- #
-
-ml = copy(mwh)
-
-# ---- #
-
-Nucleus.Normalization.normalize_with_logistic!(ml)
-
-# ---- #
-
-Nucleus.Plot.plot_heat_map("", ml; layout = Dict("title" => Dict("text" => "Logistic")))
-
-# ---- #
-
-prod(ml .^ ma .* (1 .- ml) .^ (1 .- ma))
+end

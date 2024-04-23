@@ -1,28 +1,26 @@
 module MatrixFactorization
 
-using NMF: nnmf
-
 using LinearAlgebra: mul!, norm
+
+using NMF: nnmf
 
 using NonNegLeastSquares: nonneg_lsq
 
-using StatsBase: mean
+using StatsBase: mean, sqL2dist
 
 using ..Nucleus
 
-function factorize(ma, nf; ke_ar...)
+function factorize(A, uf; ke_ar...)
 
-    re = nnmf(ma, nf; ke_ar...)
-
-    me = "with $(re.niters) iterations at $(re.objvalue)."
+    re = nnmf(A, uf; ke_ar...)
 
     if re.converged
 
-        @info "Converged $me"
+        @info "Converged with $(re.niters) iterations." re.objvalue
 
     else
 
-        @warn "Failed to converge $me"
+        @warn "Failed to converged with $(re.niters) iterations." re.objvalue
 
     end
 
@@ -30,91 +28,74 @@ function factorize(ma, nf; ke_ar...)
 
 end
 
-function _initialize(ur, uc, ma, uf)
+function _initialize(u1, u2, A, uf)
 
-    rand(ur, uc) * sqrt(mean(ma) / uf)
-
-    # TODO: Normalize.
+    rand(u1, u2) .*= sqrt(mean(A) / uf)
 
 end
 
-function _initialize(ma, uf::Integer)
+function _initialize(A, uf::Integer)
 
-    _initialize(size(ma, 1), uf, ma, uf)
+    #_initialize(size(A, 1), uf, A, uf)
 
-end
+    W = rand(size(A, 1), uf)
 
-function _initialize(uf::Integer, ma)
+    foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(W))
 
-    _initialize(uf, size(ma, 2), ma, uf)
-
-end
-
-function _get_error(A_, WH_)
-
-    (norm(A - WH) for (A, WH) in zip(A_, WH_))
+    W
 
 end
 
-function _has_converged(ii, er_, to, ui)
+function _initialize(uf::Integer, A)
 
-    me = "with $ii iterations:\n$(join(er_, '\n'))."
+    #_initialize(uf, size(A, 2), A, uf)
 
-    if all(<(to), er_)
-
-        @info "Converged $me"
-
-        true
-
-    else
-
-        if ii == ui
-
-            @warn "Failed to converge $me"
-
-        end
-
-        false
-
-    end
+    rand(uf, size(A, 2))
 
 end
 
-function factorize_wide(A_, uf, to, ui, we_ = ones(lastindex(A_)))
+function _get_objective(A, WH)
 
-    ia_ = eachindex(A_)
+    ob = 0.5 * sqL2dist(A, WH)
 
-    A1 = A_[1]
+    @info ob
 
-    u1 = size(A1, 1)
+    ob
 
-    u2_ = size.(A_, 2)
+end
 
-    W = _initialize(A1, uf)
+# TODO: Match with `nnmf`.
+function factorize_wide(A_, uf; to = 0.01, ui = 100, we_ = ones(lastindex(A_)))
 
-    H_ = _initialize.(uf, A_)
+    ua = lastindex(A_)
 
-    WH_ = Tuple(W * H_[ia] for ia in ia_)
+    ia_ = 1:ua
 
-    AHt_ = Tuple(Matrix{Float64}(undef, u1, uf) for _ in ia_)
+    u1 = size(A_[1], 1)
 
-    WHHt_ = Tuple(Matrix{Float64}(undef, u1, uf) for _ in ia_)
+    u2_ = (size(A, 2) for A in A_)
 
-    WtA_ = Tuple(Matrix{Float64}(undef, uf, u2_[ia]) for ia in ia_)
+    W = _initialize(A_[1], uf)
 
-    WtWH_ = Tuple(Matrix{Float64}(undef, uf, u2_[ia]) for ia in ia_)
+    H_ = [_initialize(uf, A) for A in A_]
 
-    n1 = norm(A1)
+    WH_ = [W * H for H in H_]
 
-    co_ = Tuple(n1 / norm(A_[ia]) * we_[ia] for ia in ia_)
+    AHt_ = [Matrix{Float64}(undef, u1, uf) for _ in A_]
 
-    @info "$u1 $uf $u2_" co_
+    WHHt_ = [Matrix{Float64}(undef, u1, uf) for _ in A_]
 
-    ai = Matrix{Float64}(undef, lastindex(ia_), ui)
+    WtA_ = [Matrix{Float64}(undef, uf, u2) for u2 in u2_]
 
-    ai[:, 1] .= _get_error(A_, WH_)
+    WtWH_ = [Matrix{Float64}(undef, uf, u2) for u2 in u2_]
+
+    n1 = norm(A_[1])
+
+    co_ = [n1 / norm(A_[ia]) * we_[ia] for ia in ia_]
 
     ep = sqrt(eps())
+
+    ob_ = _get_objective.(A_, WH_)
 
     for ii in 2:ui
 
@@ -138,7 +119,7 @@ function factorize_wide(A_, uf, to, ui, we_ = ones(lastindex(A_)))
 
             end
 
-            W[iw] *= su / lastindex(ia_)
+            W[iw] *= su / ua
 
         end
 
@@ -172,99 +153,37 @@ function factorize_wide(A_, uf, to, ui, we_ = ones(lastindex(A_)))
 
         end
 
-        ai[:, ii] .= _get_error(A_, WH_)
+        ob_ .= _get_objective.(A_, WH_)
 
-        if _has_converged(ii, ai[:, ii], to, ui)
+        if all(<(to), ob_)
+
+            @info "Converged with $ii iterations." ob_
 
             break
+
+        elseif ii == ui
+
+            @warn "Failed to converged with $ii iterations." ob_
 
         end
 
     end
 
-    (W,), H_, ai
+    W, H_
 
 end
 
-function solve_h(mw, ma)
+function solve_h(W, A)
 
-    mh = Matrix{Float64}(undef, size(mw, 2), size(ma, 2))
+    AWi = Matrix{Float64}(undef, size(W, 2), size(A, 2))
 
-    for (i2, co) in enumerate(eachcol(ma))
+    for (i2, nu_) in enumerate(eachcol(A))
 
-        mh[:, i2] = nonneg_lsq(mw, co; alg = :nnls)
-
-    end
-
-    mh
-
-end
-
-function write(
-    di,
-    ma;
-    su = "",
-    nl = "Label",
-    na = "Factor",
-    la_ = (i1 -> "$nl $i1").(1:maximum(size(ma))),
-    fa_ = (i1 -> "$na $i1").(1:minimum(size(ma))),
-    lo = Nucleus.HTML.WI,
-    sh = Nucleus.HTML.HE,
-)
-
-    nf, dm = findmin(size(ma))
-
-    if isone(dm)
-
-        wh = "H$su"
-
-        nr = na
-
-        nc = nl
-
-        ro_ = fa_
-
-        co_ = la_
-
-        he = sh
-
-        wi = lo
-
-    else
-
-        wh = "W$su"
-
-        nr = nl
-
-        nc = na
-
-        ro_ = la_
-
-        co_ = fa_
-
-        he = lo
-
-        wi = sh
+        AWi[:, i2] = nonneg_lsq(W, nu_; alg = :nnls)
 
     end
 
-    pr = joinpath(di, "$nf$wh")
-
-    Nucleus.DataFrame.write("$pr.tsv", nr, ro_, co_, ma)
-
-    Nucleus.Plot.plot_heat_map(
-        "$pr.html",
-        ma;
-        y = ro_,
-        x = co_,
-        layout = Dict(
-            "title" => Dict("text" => wh),
-            "yaxis" => Dict("title" => Dict("text" => "$nr ($(lastindex(ro_)))")),
-            "xaxis" => Dict("title" => Dict("text" => "$nc ($(lastindex(co_)))")),
-        ),
-        he,
-        wi,
-    )
+    AWi
 
 end
 
