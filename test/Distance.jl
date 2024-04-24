@@ -206,129 +206,162 @@ end
 
 # ---- #
 
-for (a1, a2, re) in (
+for (a1, a2, re1, re2) in (
     #
-    (1.23, 1.23, 0),
+    (1.23, 1.23, 0, 0),
     #
-    (0, 0, 0),
-    (0, 1, 1),
-    (0, 2, 2),
-    (0, 3, 1),
-    (0, 4, 2),
+    (0, 0, 0, 0),
+    (0, 0.5, 0.5, 0.5),
+    (0, 1, 1, 1),
+    (0, 2, 2, 0),
+    (0, 3, 1, 1),
+    (0, 3.5, 1.5, 0.5),
+    (0, 4, 2, 0),
     #
-    (1, 0, -1),
-    (1, 1, 0),
-    (1, 2, 1),
-    (1, 3, 0),
-    (1, 4, 1),
+    (1, 0, -1, 1),
+    (1, 0.5, -0.5, 0.5),
+    (1, 1, 0, 0),
+    (1, 2, 1, 1),
+    (1, 3, 0, 0),
+    (1, 3.5, 0.5, 0.5),
+    (1, 4, 1, 1),
     # 2 != 0.
-    (2, 0, -2),
-    (2, 1, -1),
-    (2, 2, 0),
-    (2, 3, -1),
-    (2, 4, 0),
+    (2, 0, -2, 0),
+    (2, 0.5, -1.5, 0.5),
+    (2, 1, -1, 1),
+    (2, 2, 0, 0),
+    (2, 3, -1, 1),
+    (2, 3.5, -0.5, 0.5),
+    (2, 4, 0, 0),
     #
-    (0, -1, 1),
-    (0, -2, 0),
-    (0, -3, 1),
-    (0, -4, 0),
+    (0, -0.5, 1.5, 0.5),
+    (0, -1, 1, 1),
+    (0, -2, 0, 0),
+    (0, -3, 1, 1),
+    (0, -3.5, 0.5, 0.5),
+    (0, -4, 0, 0),
     #
-    (-1, 0, -1),
-    (-1, -1, 0),
-    (-1, -2, -1),
-    (-1, -3, 0),
-    (-1, -4, -1),
+    (-1, 0, -1, 1),
+    (-1, -0.5, 0.5, 0.5),
+    (-1, -1, 0, 0),
+    (-1, -2, -1, 1),
+    (-1, -3, 0, 0),
+    (-1, -3.5, -0.5, 0.5),
+    (-1, -4, -1, 1),
     # -2 == 0.
-    (-2, 0, 0),
-    (-2, -1, 1),
-    (-2, -2, 0),
-    (-2, -3, 1),
-    (-2, -4, 0),
+    (-2, 0, 0, 0),
+    (-2, -0.5, 1.5, 0.5),
+    (-2, -1, 1, 1),
+    (-2, -2, 0, 0),
+    (-2, -3, 1, 1),
+    (-2, -3.5, 0.5, 0.5),
+    (-2, -4, 0, 0),
+    #
 )
 
     a1 *= pi
 
     a2 *= pi
 
-    re *= pi
+    re1 *= pi
 
-    @test isapprox(Nucleus.Distance.AngularDistance()(a1, a2), re; atol = 1e-2)
+    re2 *= pi
 
-    @test isapprox(Nucleus.Distance.AngularDistance()(a2, a1), -re; atol = 1e-2)
+    @test isapprox(Nucleus.Distance.AngularDistance()(a1, a2), re1)
 
-    if re < 0
+    @test isapprox(Nucleus.Distance.AngularDistance()(a2, a1), -re1)
 
-        re = -re
+    @test isapprox(Nucleus.Distance.AngularDistance2()(a1, a2), re2)
 
-    end
+    @test isapprox(Nucleus.Distance.AngularDistance2()(a2, a1), re2)
 
-    @test isapprox(Nucleus.Distance.AngularDistanceNorm()(a1, a2), re)
-
-    @test isapprox(Nucleus.Distance.AngularDistanceNorm()(a2, a1), re)
-
+    # 4.000 ns (0 allocations: 0 bytes)
+    # 4.291 ns (0 allocations: 0 bytes)
     # 3.958 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
+    # 4.291 ns (0 allocations: 0 bytes)
+    # 4.208 ns (0 allocations: 0 bytes)
+    # 4.250 ns (0 allocations: 0 bytes)
     # 3.959 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
-    # 8.333 ns (0 allocations: 0 bytes)
-    # 8.467 ns (0 allocations: 0 bytes)
-    # 8.133 ns (0 allocations: 0 bytes)
-    # 8.299 ns (0 allocations: 0 bytes)
-    # 8.292 ns (0 allocations: 0 bytes)
-    # 8.383 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
-    # 3.959 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
-    # 8.299 ns (0 allocations: 0 bytes)
-    # 8.466 ns (0 allocations: 0 bytes)
-    # 8.125 ns (0 allocations: 0 bytes)
-    # 8.258 ns (0 allocations: 0 bytes)
-    # 8.292 ns (0 allocations: 0 bytes)
-    # 8.341 ns (0 allocations: 0 bytes)
-    # 8.291 ns (0 allocations: 0 bytes)
-    # 8.466 ns (0 allocations: 0 bytes)
-    # 8.300 ns (0 allocations: 0 bytes)
-    # 8.466 ns (0 allocations: 0 bytes)
-    # 13.222 ns (0 allocations: 0 bytes)
-    # 13.346 ns (0 allocations: 0 bytes)
-    # 12.929 ns (0 allocations: 0 bytes)
-    # 13.096 ns (0 allocations: 0 bytes)
-    # 12.930 ns (0 allocations: 0 bytes)
-    # 13.138 ns (0 allocations: 0 bytes)
-    # 5.500 ns (0 allocations: 0 bytes)
-    # 5.500 ns (0 allocations: 0 bytes)
-    # 7.375 ns (0 allocations: 0 bytes)
-    # 7.375 ns (0 allocations: 0 bytes)
+    # 4.291 ns (0 allocations: 0 bytes)
     # 8.592 ns (0 allocations: 0 bytes)
-    # 8.634 ns (0 allocations: 0 bytes)
-    # 7.375 ns (0 allocations: 0 bytes)
-    # 7.382 ns (0 allocations: 0 bytes)
-    # 5.541 ns (0 allocations: 0 bytes)
-    # 5.541 ns (0 allocations: 0 bytes)
-    # 5.791 ns (0 allocations: 0 bytes)
-    # 5.791 ns (0 allocations: 0 bytes)
-    # 8.300 ns (0 allocations: 0 bytes)
-    # 8.466 ns (0 allocations: 0 bytes)
-    # 9.541 ns (0 allocations: 0 bytes)
-    # 9.718 ns (0 allocations: 0 bytes)
+    # 8.917 ns (0 allocations: 0 bytes)
+    # 8.133 ns (0 allocations: 0 bytes)
+    # 8.592 ns (0 allocations: 0 bytes)
     # 8.299 ns (0 allocations: 0 bytes)
+    # 8.593 ns (0 allocations: 0 bytes)
+    # 8.299 ns (0 allocations: 0 bytes)
+    # 8.592 ns (0 allocations: 0 bytes)
+    # 4.875 ns (0 allocations: 0 bytes)
+    # 4.250 ns (0 allocations: 0 bytes)
+    # 3.958 ns (0 allocations: 0 bytes)
+    # 4.250 ns (0 allocations: 0 bytes)
+    # 3.958 ns (0 allocations: 0 bytes)
+    # 4.291 ns (0 allocations: 0 bytes)
+    # 8.299 ns (0 allocations: 0 bytes)
+    # 8.916 ns (0 allocations: 0 bytes)
+    # 8.593 ns (0 allocations: 0 bytes)
+    # 8.842 ns (0 allocations: 0 bytes)
+    # 8.333 ns (0 allocations: 0 bytes)
+    # 8.593 ns (0 allocations: 0 bytes)
+    # 8.291 ns (0 allocations: 0 bytes)
+    # 8.592 ns (0 allocations: 0 bytes)
+    # 8.292 ns (0 allocations: 0 bytes)
+    # 8.916 ns (0 allocations: 0 bytes)
+    # 8.592 ns (0 allocations: 0 bytes)
+    # 8.925 ns (0 allocations: 0 bytes)
     # 8.341 ns (0 allocations: 0 bytes)
-    # 7.382 ns (0 allocations: 0 bytes)
-    # 7.382 ns (0 allocations: 0 bytes)
+    # 8.925 ns (0 allocations: 0 bytes)
+    # 13.221 ns (0 allocations: 0 bytes)
+    # 13.597 ns (0 allocations: 0 bytes)
+    # 12.930 ns (0 allocations: 0 bytes)
+    # 13.402 ns (0 allocations: 0 bytes)
+    # 12.930 ns (0 allocations: 0 bytes)
+    # 13.555 ns (0 allocations: 0 bytes)
+    # 12.929 ns (0 allocations: 0 bytes)
+    # 13.555 ns (0 allocations: 0 bytes)
+    # 5.500 ns (0 allocations: 0 bytes)
+    # 5.833 ns (0 allocations: 0 bytes)
+    # 5.500 ns (0 allocations: 0 bytes)
+    # 5.792 ns (0 allocations: 0 bytes)
+    # 7.966 ns (0 allocations: 0 bytes)
+    # 7.666 ns (0 allocations: 0 bytes)
+    # 8.583 ns (0 allocations: 0 bytes)
+    # 8.925 ns (0 allocations: 0 bytes)
     # 8.466 ns (0 allocations: 0 bytes)
-    # 8.466 ns (0 allocations: 0 bytes)
-    # 11.052 ns (0 allocations: 0 bytes)
-    # 11.052 ns (0 allocations: 0 bytes)
-    # 12.345 ns (0 allocations: 0 bytes)
+    # 8.916 ns (0 allocations: 0 bytes)
+    # 7.375 ns (0 allocations: 0 bytes)
+    # 7.666 ns (0 allocations: 0 bytes)
+    # 6.417 ns (0 allocations: 0 bytes)
+    # 5.833 ns (0 allocations: 0 bytes)
+    # 5.833 ns (0 allocations: 0 bytes)
+    # 6.416 ns (0 allocations: 0 bytes)
+    # 5.791 ns (0 allocations: 0 bytes)
+    # 6.416 ns (0 allocations: 0 bytes)
+    # 8.299 ns (0 allocations: 0 bytes)
+    # 8.884 ns (0 allocations: 0 bytes)
+    # 9.551 ns (0 allocations: 0 bytes)
+    # 10.135 ns (0 allocations: 0 bytes)
+    # 9.510 ns (0 allocations: 0 bytes)
+    # 10.125 ns (0 allocations: 0 bytes)
+    # 8.258 ns (0 allocations: 0 bytes)
+    # 8.759 ns (0 allocations: 0 bytes)
+    # 7.340 ns (0 allocations: 0 bytes)
+    # 7.667 ns (0 allocations: 0 bytes)
+    # 8.425 ns (0 allocations: 0 bytes)
+    # 8.884 ns (0 allocations: 0 bytes)
+    # 8.417 ns (0 allocations: 0 bytes)
+    # 8.925 ns (0 allocations: 0 bytes)
+    # 11.094 ns (0 allocations: 0 bytes)
+    # 11.386 ns (0 allocations: 0 bytes)
     # 12.303 ns (0 allocations: 0 bytes)
-    # 10.802 ns (0 allocations: 0 bytes)
-    # 10.802 ns (0 allocations: 0 bytes)
+    # 13.221 ns (0 allocations: 0 bytes)
+    # 12.303 ns (0 allocations: 0 bytes)
+    # 12.638 ns (0 allocations: 0 bytes)
+    # 10.761 ns (0 allocations: 0 bytes)
+    # 11.386 ns (0 allocations: 0 bytes)
 
     #@btime Nucleus.Distance.AngularDistance()($a1, $a2)
 
-    #@btime Nucleus.Distance.AngularDistanceNorm()($a1, $a2)
+    #@btime Nucleus.Distance.AngularDistance2()($a1, $a2)
 
 end

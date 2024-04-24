@@ -34,11 +34,19 @@ function (::AngularDistance)(a1::Real, a2::Real)
 
 end
 
-struct AngularDistanceNorm <: Metric end
+struct AngularDistance2 <: Metric end
 
-function (::AngularDistanceNorm)(a1::Real, a2::Real)
+function (::AngularDistance2)(a1::Real, a2::Real)
 
-    sqrt(AngularDistance()(a1, a2)^2)
+    di = abs(AngularDistance()(a1, a2))
+
+    if pi < di
+
+        di = 2 * pi - di
+
+    end
+
+    di
 
 end
 
