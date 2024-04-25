@@ -8,12 +8,12 @@ function plot(
     di_x_no_x_co,
     po_,
     di_x_po_x_co;
-    node_marker_size = 32,
+    node_marker_size = 48,
     node_marker_opacity = 0.96,
     node_marker_color = "#171412",
     node_marker_line_width = 2,
     node_marker_line_color = Nucleus.Color.HEFA,
-    node_annotation_font_size = 16,
+    node_annotation_font_size = 24,
     node_annotation_font_color = node_marker_color,
     node_annotation_bgcolor = "#ffffff",
     node_annotation_borderpad = 2,
@@ -42,7 +42,7 @@ function plot(
             "marker" => Dict(
                 "size" => size - 2 * margin,
                 "color" => Nucleus.Color.add_alpha("#000000", 0.04),
-                "line" => Dict("width" => 2, "color" => Nucleus.Color.HEIP),
+                "line" => Dict("width" => 4, "color" => node_marker_color),
             ),
             "cliponaxis" => false,
             "hoverinfo" => "skip",

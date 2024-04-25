@@ -107,7 +107,7 @@ Nucleus.Plot.plot_heat_map(
 
 # ---- #
 
-const point_marker_size = 8
+const point_marker_size = 10
 
 # ---- #
 
