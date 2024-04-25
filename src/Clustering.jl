@@ -2,7 +2,9 @@ module Clustering
 
 using Clustering: cutree, hclust
 
-using StatsBase: mean, mode
+using Distances: pairwise
+
+using StatsBase: mode
 
 using ..Nucleus
 
@@ -14,7 +16,7 @@ end
 
 function hierarchize(fu, nu___; ke_ar...)
 
-    hierarchize(Nucleus.Distance.pairwise(fu, nu___); ke_ar...)
+    hierarchize(pairwise(fu, nu___); ke_ar...)
 
 end
 

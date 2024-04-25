@@ -4,11 +4,13 @@ using Nucleus
 
 # ---- #
 
+using DelaunayTriangulation: triangulate
+
 using Random: seed!
 
 # ---- #
 
-for (di, re1, re2) in (
+for (aa, re) in (
     (
         [
             0 1 2
@@ -18,10 +20,6 @@ for (di, re1, re2) in (
         [
             -0.323051  -1.31159     1.63464
             0.300953  -0.0234223  -0.277531
-        ],
-        [
-            -0.323051  -1.31159     1.63464   -0.81732    0.161526  0.655795   -2.98023e-8  -2.98023e-8  -2.98023e-8
-             0.300953  -0.0234223  -0.277531   0.138765  -0.150476  0.0117112  -5.58794e-9  -5.58794e-9  -5.58794e-9
         ],
     ),
     (
@@ -34,59 +32,36 @@ for (di, re1, re2) in (
             0.0827895 -0.5356215 0.45283207
             0.5728598 -0.219652 -0.3532078
         ],
-        [
-            0.0827895  -0.535622   0.452832  -0.226416  -0.0413947  0.267811  1.73847e-8  1.73847e-8  1.73847e-8
-            0.57286    -0.219652  -0.353208   0.176604  -0.28643    0.109826  9.93411e-9  9.93411e-9  9.93411e-9
-        ],
     ),
 )
 
-    # 2.583 μs (75 allocations: 4.00 KiB)
-    # 222.685 ns (3 allocations: 592 bytes)
-    # 308.402 ns (3 allocations: 592 bytes)
-    # 3.917 μs (111 allocations: 5.92 KiB)
-    # 222.456 ns (3 allocations: 592 bytes)
-    # 307.979 ns (3 allocations: 592 bytes)
-
     seed!(20231210)
 
-    dn = Nucleus.Coordinate.get(di)
+    ca = Nucleus.Coordinate.get_cartesian(aa)
 
-    @test isapprox(dn, re1; atol = 1e-5)
+    @test isapprox(ca, re; atol = 1e-5)
 
-    #@btime Nucleus.Coordinate.get($di)
-
-    np = [
-        1 0 0 1 0 1 1 0.5 2
-        0 1 0 1 1 0 1 0.5 2
-        0 0 1 0 1 1 1 0.5 2
-    ]
-
-    @test isapprox(Nucleus.Coordinate.pull(dn, np), re2; atol = 1e-5)
-
-    for pu in (1, 2)
-
-        #@btime Nucleus.Coordinate.pull($dn, $np, $pu)
-
-    end
+    # 9.514 μs (292 allocations: 15.47 KiB)
+    # 5.326 μs (165 allocations: 8.84 KiB)
+    #@btime Nucleus.Coordinate.get_cartesian($aa) setup = seed!(20231210)
 
 end
 
 # ---- #
 
-const CO = [
+const CA = [
     -1.0 -1 1 1
     1 -1 -1 1
 ]
 
 # ---- #
 
-const TR = Nucleus.Coordinate.triangulate(eachcol(CO))
+const TR = triangulate(eachcol(CA))
 
 # ---- #
 
-# 9.791 μs (154 allocations: 18.67 KiB)
-#@btime Nucleus.Coordinate.triangulate(eachcol(CO));
+# 13.834 μs (305 allocations: 39.22 KiB)
+#@btime triangulate(eachcol(CA));
 
 # ---- #
 
@@ -94,19 +69,120 @@ const VP = Nucleus.Coordinate.wall(TR)
 
 # ---- #
 
-# 325.000 ns (6 allocations: 1.28 KiB)
+# 339.450 ns (6 allocations: 1.28 KiB)
 #@btime Nucleus.Coordinate.wall(TR);
 
 # ---- #
 
-for co_ in eachcol(CO)
+for yx in eachcol(CA)
 
-    @test Nucleus.Coordinate.is_in(co_, VP)
+    @test Nucleus.Coordinate.is_in(yx, VP)
 
-    # 9.510 ns (0 allocations: 0 bytes)
-    # 9.510 ns (0 allocations: 0 bytes)
-    # 9.510 ns (0 allocations: 0 bytes)
-    # 9.541 ns (0 allocations: 0 bytes)
-    #@btime Nucleus.Coordinate.is_in($co_, VP)
+    # 9.175 ns (0 allocations: 0 bytes)
+    # 9.175 ns (0 allocations: 0 bytes)
+    # 9.175 ns (0 allocations: 0 bytes)
+    # 9.175 ns (0 allocations: 0 bytes)
+    #@btime Nucleus.Coordinate.is_in($yx, VP)
 
 end
+
+# ---- #
+
+const AA = [
+    0 1 2 3 4 5
+    1 0 3 4 5 6
+    2 3 0 5 6 7
+    3 4 5 0 7 8
+    4 5 6 7 0 9
+    5 6 7 8 9 0.0
+]
+
+# ---- #
+
+seed!(20240423)
+
+# ---- #
+
+const AN_ = Nucleus.Coordinate.get_polar(AA)
+
+# ---- #
+
+@test AN_ == [
+    3.227306766493292,
+    3.225656618311293,
+    3.561874485774487,
+    2.6924753975885922,
+    4.726053584536512,
+    1.2984595170912603,
+]
+
+# ---- #
+
+# 66.875 μs (6 allocations: 640 bytes)
+#@btime Nucleus.Coordinate.get_polar(AA) setup = seed!(20240423);
+
+# ---- #
+
+PA = Nucleus.Coordinate.make_unit(AN_)
+
+# ---- #
+
+@test PA[1, :] == AN_
+
+# ---- #
+
+@test PA[2, :] == ones(lastindex(AN_))
+
+# ---- #
+
+# 29.439 ns (1 allocation: 160 bytes)
+#@btime Nucleus.Coordinate.make_unit(AN_);
+
+# ---- #
+
+for (xc, yc, re) in ((1, 1, 1 / 3), (-1, 1, 2 / 3), (-1, -1, 4 / 3), (1, -1, 5 / 3))
+
+    yc = yc * sqrt(3)
+
+    an, ra = Nucleus.Coordinate.convert_cartesian_to_polar(yc, xc)
+
+    @test isapprox(an, pi * re)
+
+    @test isapprox(ra, 2)
+
+    y2, x2 = Nucleus.Coordinate.convert_polar_to_cartesian(an, ra)
+
+    @test isapprox(y2, yc)
+
+    @test isapprox(x2, xc)
+
+    # 10.427 ns (0 allocations: 0 bytes)
+    # 7.666 ns (0 allocations: 0 bytes)
+    # 10.427 ns (0 allocations: 0 bytes)
+    # 7.666 ns (0 allocations: 0 bytes)
+    # 10.426 ns (0 allocations: 0 bytes)
+    # 7.666 ns (0 allocations: 0 bytes)
+    # 10.427 ns (0 allocations: 0 bytes)
+    # 7.666 ns (0 allocations: 0 bytes)
+
+    #@btime Nucleus.Coordinate.convert_cartesian_to_polar($yc, $xc)
+
+    #@btime Nucleus.Coordinate.convert_polar_to_cartesian($an, $ra)
+
+end
+
+# ---- #
+
+@test isapprox(
+    PA,
+    Nucleus.Coordinate.convert_cartesian_to_polar(
+        Nucleus.Coordinate.convert_polar_to_cartesian(PA),
+    ),
+)
+
+# ---- #
+
+# 143.864 ns (2 allocations: 320 bytes)
+#@btime Nucleus.Coordinate.convert_cartesian_to_polar(
+#    Nucleus.Coordinate.convert_polar_to_cartesian(PA),
+#);

@@ -1,6 +1,6 @@
-module GPSMap
+module PolarGPSMap
 
-using DelaunayTriangulation: get_edges, triangulate
+using DelaunayTriangulation: get_edges
 
 using ..Nucleus
 
@@ -38,32 +38,49 @@ function plot(
 
     data = Dict{String, Any}[]
 
-    tr = triangulate(eachcol(di_x_no_x_co))
-
-    for ie_ in get_edges(tr)
-
-        if any(==(-1), ie_)
-
-            continue
-
-        end
-
-        ve = collect(ie_)
-
-        push!(
-            data,
-            Dict(
-                "legendgroup" => "Node",
-                "showlegend" => false,
-                "y" => view(di_x_no_x_co, 1, ve),
-                "x" => view(di_x_no_x_co, 2, ve),
-                "mode" => "lines",
-                "line" => Dict("color" => triangulation_line_color),
-                "hoverinfo" => "skip",
+    push!(
+        data,
+        Dict(
+            "legendgroup" => "Node",
+            "showlegend" => false,
+            "y" => (0,),
+            "x" => (0,),
+            "mode" => "markers",
+            "marker" => Dict(
+                "size" => 560,
+                "color" => Nucleus.Color.add_alpha("#000000", 0.04),
+                "line" => Dict("width" => 8, "color" => Nucleus.Color.HEIP),
             ),
-        )
+            "hoverinfo" => "skip",
+        ),
+    )
 
-    end
+    tr = Nucleus.Coordinate.triangulate(eachcol(di_x_no_x_co))
+
+    #for ie_ in get_edges(tr)
+
+    #    if any(==(-1), ie_)
+
+    #        continue
+
+    #    end
+
+    #    ve = collect(ie_)
+
+    #    push!(
+    #        data,
+    #        Dict(
+    #            "legendgroup" => "Node",
+    #            "showlegend" => false,
+    #            "y" => view(di_x_no_x_co, 1, ve),
+    #            "x" => view(di_x_no_x_co, 2, ve),
+    #            "mode" => "lines",
+    #            "line" => Dict("color" => triangulation_line_color),
+    #            "hoverinfo" => "skip",
+    #        ),
+    #    )
+
+    #end
 
     font = Dict("family" => "Gravitas One, monospace", "size" => node_annotation_font_size)
 
@@ -257,7 +274,7 @@ function plot(
 
     end
 
-    axis = Dict("showgrid" => false, "zeroline" => false, "ticks" => "", "showticklabels" => false)
+    axis = Dict("showgrid" => false, "zeroline" => false, "ticks" => "", "showticklabels" => true)
 
     Nucleus.Plot.plot(
         ht,
@@ -266,14 +283,15 @@ function plot(
             Dict(
                 "height" => 800,
                 "width" => 800,
+                "margin" => Dict("t" => 100, "b" => 100, "l" => 100, "r" => 100),
                 "title" => Dict(
                     "x" => 0.02,
                     "text" => "GPS Map",
                     "font" =>
                         Dict("family" => "Gravitas One", "size" => 32, "color" => "#000000"),
                 ),
-                "yaxis" => merge(axis, Dict("range" => range1, "autorange" => "reversed")),
-                "xaxis" => merge(axis, Dict("range" => range2 .* 1.08)),
+                "yaxis" => merge(axis, Dict("range" => (1.04, -1.04))),
+                "xaxis" => merge(axis, Dict("range" => (-1.04, 1.04))),
                 #"annotations" => annotations,
             ),
             layout,
