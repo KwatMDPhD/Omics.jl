@@ -1,12 +1,8 @@
 module Coordinate
 
-using DelaunayTriangulation: get_convex_hull_indices, get_points
-
 using Distances: Metric, pairwise
 
 using Distributions: Normal
-
-using LazySets: VPolygon, Singleton, element
 
 using MultivariateStats: MetricMDS, fit
 
@@ -20,21 +16,9 @@ function get_cartesian(aa)
 
 end
 
-function wall(tr)
+struct PolarDistance <: Metric end
 
-    VPolygon(get_points(tr)[get_convex_hull_indices(tr)])
-
-end
-
-function is_in(ca_, vp)
-
-    element(Singleton(ca_)) ∈ vp
-
-end
-
-struct Di <: Metric end
-
-function (::Di)(a1, a2)
+function (::PolarDistance)(a1, a2)
 
     di = abs(a2 - a1)
 
@@ -52,7 +36,7 @@ function _update!(a2, iu, an_, up)
 
     for id in axes(a2, 2)
 
-        a2[iu, id] = a2[id, iu] = id == iu ? 0 : Di()(an_[id], up)
+        a2[iu, id] = a2[id, iu] = id == iu ? 0 : PolarDistance()(an_[id], up)
 
     end
 
@@ -62,7 +46,7 @@ function get_polar(aa; ma = 1000, st = 0.5 * pi, te = 2 / log(2), de = 1, pl = f
 
     an_ = collect(range(0; step = 2 * pi / size(aa, 2), length = size(aa, 2)))
 
-    a2 = pairwise(Di(), an_)
+    a2 = pairwise(PolarDistance(), an_)
 
     di_ = vec(aa)
 
