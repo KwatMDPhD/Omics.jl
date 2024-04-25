@@ -131,6 +131,5 @@ Nucleus.PolarGPSMap.plot(
     PO_,
     LP;
     sc_ = LA_,
-    sc_na = Dict(i1 => "State $i1" for i1 in 1:15),
     point_marker_size,
 )
