@@ -30,9 +30,9 @@ end
 
 # ---- #
 
-_nf, fa_, sa_, H = Nucleus.DataFrame.separate(joinpath(DA, "h.tsv"))
+const _NF, NO_, PO_, H = Nucleus.DataFrame.separate(joinpath(DA, "h.tsv"))
 
-cluster_plot(joinpath(Nucleus.TE, "h.html"), fa_, sa_, H)
+cluster_plot(joinpath(Nucleus.TE, "h.html"), NO_, PO_, H)
 
 # ---- #
 
@@ -42,40 +42,70 @@ clamp!(H, -3, 3)
 
 foreach(Nucleus.Normalization.normalize_with_01!, eachrow(H))
 
-cluster_plot(joinpath(Nucleus.TE, "h_normalized.html"), fa_, sa_, H)
+cluster_plot(joinpath(Nucleus.TE, "h_normalized.html"), NO_, PO_, H)
 
 # ---- #
 
-_ng, gr_, _sa_, la = Nucleus.DataFrame.separate(joinpath(DA, "grouping_x_sample_x_group.tsv"))
+const _ng, GR_, _sa_, GP =
+    Nucleus.DataFrame.separate(joinpath(DA, "grouping_x_sample_x_group.tsv"))
 
-@assert sa_ == _sa_
+@assert PO_ == _sa_
 
-la_ = la[findfirst(==("K15"), gr_), :] .+ 1
+const LA_ = GP[findfirst(==("K15"), GR_), :] .+ 1
 
-Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "h_labeled.html"), H; y = fa_, x = sa_, gc_ = la_)
+Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "h_labeled.html"), H; y = NO_, x = PO_, gc_ = LA_)
 
 # ---- #
 
 const NN = pairwise(Nucleus.Distance.InformationDistance(), eachrow(H))
 
-cluster_plot(joinpath(Nucleus.TE, "distance.html"), fa_, fa_, NN)
+cluster_plot(joinpath(Nucleus.TE, "distance.html"), NO_, NO_, NN)
 
 # ---- #
 
 seed!(202312091501)
 
-const DN = Nucleus.Coordinate.get(NN)
+const CN = Nucleus.Coordinate.get_cartesian(NN)
 
 # ---- #
 
-const DP = Nucleus.Coordinate.pull(DN, mh, 1.5)
+seed!(202404241617)
+
+const LN = Nucleus.Coordinate.convert_polar_to_cartesian(
+    Nucleus.Coordinate.make_unit(Nucleus.Coordinate.get_polar(NN; pl = true)),
+)
+
+# ---- #
+
+const NP = copy(H)
+
+NP .^= 1.5
+
+foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(NP))
+
+# ---- #
+
+const CP = CN * NP
 
 Nucleus.Plot.plot_heat_map(
-    joinpath(Nucleus.TE, "point.html"),
-    DP;
-    y = ["Dimension 1", "Dimension 2"],
-    x = sa_,
-    gc_ = la_,
+    joinpath(Nucleus.TE, "point_cartesian.html"),
+    CP;
+    y = ["Y", "X"],
+    x = PO_,
+    gc_ = LA_,
+    fu = Euclidean(),
+)
+
+# ---- #
+
+const LP = LN * NP
+
+Nucleus.Plot.plot_heat_map(
+    joinpath(Nucleus.TE, "point_polar_cartesian.html"),
+    LP;
+    y = ["Y", "X"],
+    x = PO_,
+    gc_ = LA_,
     fu = Euclidean(),
 )
 
@@ -85,93 +115,26 @@ const point_marker_size = 8
 
 # ---- #
 
-Nucleus.GPSMap.plot(joinpath(Nucleus.TE, "map.html"), fa_, DN, sa_, DP; point_marker_size)
-
-# ---- #
-
 Nucleus.GPSMap.plot(
-    joinpath(Nucleus.TE, "map_with_score.html"),
-    fa_,
-    DN,
-    sa_,
-    DP;
-    sc_ = la_,
-    sc_na = Dict(i1 => "State $i1" for i1 in 1:15),
-    point_marker_size,
-)
-
-# ---- #
-
-seed!(202404241617)
-
-an_, ob_, te_, ac_ = Nucleus.Polar.anneal(NN)
-
-Nucleus.Polar.plot_annealing(joinpath(Nucleus.TE, "annealing.html"), ob_, te_, ac_)
-
-# ---- #
-
-pn = Matrix{Float64}(undef, 2, lastindex(an_))
-
-pn[1, :] = an_
-
-pn[2, :] .= 1
-
-# ---- #
-
-cn = Nucleus.Polar.convert_polar_to_cartesian(pn)
-
-CP = Nucleus.Coordinate.pull(cn, mh, 1.5)
-
-pp = Nucleus.Polar.convert_cartesian_to_polar(CP)
-
-# ---- #
-
-Nucleus.Plot.plot(
-    joinpath(Nucleus.TE, "polar.html"),
-    [
-        Dict(
-            "type" => "scatterpolar",
-            "name" => "Node",
-            "theta" => pn[1, :] / pi * 180,
-            "r" => pn[2, :],
-            "text" => fa_,
-            "mode" => "markers",
-            "marker" => Dict("size" => 48, "color" => "#ffff00"),
-        ),
-        Dict(
-            "type" => "scatterpolar",
-            "name" => "Point",
-            "theta" => pp[1, :] / pi * 180,
-            "r" => pp[2, :],
-            "text" => sa_,
-            "mode" => "markers",
-            "marker" => Dict("size" => point_marker_size, "color" => "#00ffff"),
-        ),
-    ],
-    Dict(
-        "polar" => Dict(
-            "angularaxis" =>
-                Dict("showgrid" => false, "ticks" => "", "showticklabels" => false),
-            "radialaxis" => Dict(
-                "showline" => false,
-                "showgrid" => false,
-                "ticks" => "",
-                "showticklabels" => false,
-            ),
-        ),
-    ),
-)
-
-# ---- #
-
-Nucleus.GPSMap.plot(
-    joinpath(Nucleus.TE, "polar.html"),
-    fa_,
-    cn,
-    sa_,
+    joinpath(Nucleus.TE, "gps_map.html"),
+    NO_,
+    CN,
+    PO_,
     CP;
-    sc_ = la_,
+    sc_ = LA_,
     sc_na = Dict(i1 => "State $i1" for i1 in 1:15),
     point_marker_size,
-    layout = Dict("showlegend" => false, "legend" => Dict()),
+)
+
+# ---- #
+
+Nucleus.PolarGPSMap.plot(
+    joinpath(Nucleus.TE, "polar_gps_map.html"),
+    NO_,
+    LN,
+    PO_,
+    LP;
+    sc_ = LA_,
+    sc_na = Dict(i1 => "State $i1" for i1 in 1:15),
+    point_marker_size,
 )
