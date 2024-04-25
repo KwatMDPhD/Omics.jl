@@ -10,9 +10,9 @@ function bound(tr)
 
 end
 
-function is_in(ca_, vp)
+function is_in(xy, vp)
 
-    element(Singleton(ca_)) ∈ vp
+    element(Singleton(xy)) ∈ vp
 
 end
 

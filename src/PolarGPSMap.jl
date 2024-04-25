@@ -21,7 +21,7 @@ function plot(
     node_annotation_bordercolor = node_marker_line_color,
     node_annotation_arrowwidth = 1.6,
     node_annotation_arrowcolor = node_marker_line_color,
-    n_gr = 64,
+    ug = 64,
     ncontours = 32,
     point_marker_size = 16,
     point_marker_opacity = 0.64,
@@ -38,8 +38,8 @@ function plot(
     push!(
         data,
         Dict(
-            "y" => (0,),
             "x" => (0,),
+            "y" => (0,),
             "mode" => "markers",
             "marker" => Dict(
                 "size" => 696,
@@ -52,8 +52,8 @@ function plot(
     push!(
         data,
         Dict(
-            "y" => di_x_no_x_co[1, :],
             "x" => di_x_no_x_co[2, :],
+            "y" => di_x_no_x_co[1, :],
             "text" => no_,
             "mode" => "markers+text",
             "marker" => Dict(
@@ -68,6 +68,33 @@ function plot(
                 "size" => node_annotation_font_size,
                 "color" => "#ffffff",
             ),
+        ),
+    )
+
+    range = (-1.08, 1.08)
+
+    ke_ar = (
+        boundary = (range .* 1.24, range .* 1.24),
+        npoints = (ug, ug),
+        bandwidth = (
+            Nucleus.Density.get_bandwidth(di_x_po_x_co[1, :]),
+            Nucleus.Density.get_bandwidth(di_x_po_x_co[2, :]),
+        ),
+    )
+
+    c1_, c2_, cc = Nucleus.Density.estimate((di_x_po_x_co[1, :], di_x_po_x_co[2, :]); ke_ar...)
+
+    push!(
+        data,
+        Dict(
+            "type" => "contour",
+            "y" => c1_,
+            "x" => c2_,
+            "z" => cc,
+            "transpose" => true,
+            "ncontours" => ncontours,
+            "contours" => Dict("coloring" => "none"),
+            #"hoverinfo" => "skip",
         ),
     )
 
@@ -99,8 +126,6 @@ function plot(
 
     margin = 24
 
-    range = 1.08
-
     Nucleus.Plot.plot(
         ht,
         data,
@@ -109,8 +134,8 @@ function plot(
                 "height" => 800,
                 "width" => 800,
                 "margin" => Dict("t" => margin, "b" => margin, "l" => margin, "r" => margin),
-                "yaxis" => merge(axis, Dict("range" => (range, -range))),
-                "xaxis" => merge(axis, Dict("range" => (-range, range))),
+                "yaxis" => merge(axis, Dict("range" => yrange)),
+                "xaxis" => merge(axis, Dict("range" => xrange)),
                 "showlegend" => false,
             ),
             layout,
