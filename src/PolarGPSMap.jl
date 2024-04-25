@@ -5,28 +5,21 @@ using ..Nucleus
 function plot(
     ht,
     no_,
-    di_x_no_x_co,
+    cn,
     po_,
-    di_x_po_x_co;
-    node_marker_size = 48,
-    node_marker_opacity = 0.96,
-    node_marker_color = "#171412",
+    cp;
+    node_marker_size = 56,
+    node_marker_color = "#000000",
     node_marker_line_width = 2,
     node_marker_line_color = Nucleus.Color.HEFA,
     node_annotation_font_size = 24,
-    node_annotation_font_color = node_marker_color,
-    node_annotation_bgcolor = "#ffffff",
-    node_annotation_borderpad = 2,
-    node_annotation_borderwidth = node_marker_line_width,
-    node_annotation_bordercolor = node_marker_line_color,
-    node_annotation_arrowwidth = 1.6,
-    node_annotation_arrowcolor = node_marker_line_color,
+    node_annotation_font_color = "#ffffff",
     ug = 128,
-    ncontours = 32,
+    ncontours = 48,
     point_marker_size = 16,
-    point_marker_opacity = 0.64,
-    point_marker_color = Nucleus.Color.HEGE,
-    point_marker_line_width = 0.8,
+    point_marker_opacity = 0.8,
+    point_marker_color = Nucleus.Color.HEFA,
+    point_marker_line_width = 1,
     point_marker_line_color = "#000000",
     sc_ = nothing,
     size = 800,
@@ -41,7 +34,7 @@ function plot(
             "mode" => "markers",
             "marker" => Dict(
                 "size" => size - 2 * margin,
-                "color" => Nucleus.Color.add_alpha("#000000", 0.04),
+                "color" => Nucleus.Color.add_alpha("#ffffff", 0),
                 "line" => Dict("width" => 4, "color" => node_marker_color),
             ),
             "cliponaxis" => false,
@@ -52,8 +45,8 @@ function plot(
     push!(
         data,
         Dict(
-            "x" => view(di_x_no_x_co, 1, :),
-            "y" => view(di_x_no_x_co, 2, :),
+            "x" => view(cn, 1, :),
+            "y" => view(cn, 2, :),
             "text" => no_,
             "mode" => "markers+text",
             "marker" => Dict(
@@ -61,12 +54,11 @@ function plot(
                 "color" => node_marker_color,
                 "line" =>
                     Dict("width" => node_marker_line_width, "color" => node_marker_line_color),
-                "opacity" => node_marker_opacity,
             ),
             "textfont" => Dict(
                 "family" => "Gravitas One, monospace",
                 "size" => node_annotation_font_size,
-                "color" => "#ffffff",
+                "color" => node_annotation_font_color,
             ),
             "cliponaxis" => false,
         ),
@@ -76,13 +68,12 @@ function plot(
         boundary = ((-1.2, 1.2), (-1.2, 1.2)),
         npoints = (ug, ug),
         bandwidth = (
-            Nucleus.Density.get_bandwidth(view(di_x_po_x_co, 1, :)),
-            Nucleus.Density.get_bandwidth(view(di_x_po_x_co, 2, :)),
+            Nucleus.Density.get_bandwidth(view(cp, 1, :)),
+            Nucleus.Density.get_bandwidth(view(cp, 2, :)),
         ),
     )
 
-    xc_, yc_, cc =
-        Nucleus.Density.estimate((view(di_x_po_x_co, 1, :), view(di_x_po_x_co, 2, :)); ke_ar...)
+    xc_, yc_, cc = Nucleus.Density.estimate((view(cp, 1, :), view(cp, 2, :)); ke_ar...)
 
     aa = [1 < xc^2 + yc^2 for xc in xc_, yc in yc_]
 
@@ -102,15 +93,15 @@ function plot(
     )
 
     point = Dict(
-        "x" => view(di_x_po_x_co, 1, :),
-        "y" => view(di_x_po_x_co, 2, :),
+        "x" => view(cp, 1, :),
+        "y" => view(cp, 2, :),
         "text" => po_,
         "mode" => "markers",
         "marker" => Dict(
             "size" => point_marker_size,
+            "opacity" => point_marker_opacity,
             "color" => point_marker_color,
             "line" => Dict("width" => point_marker_line_width, "color" => point_marker_line_color),
-            "opacity" => point_marker_opacity,
         ),
     )
 
@@ -138,10 +129,8 @@ function plot(
 
             i2_ = findall(==(un), sc_)
 
-            _xc_, _yc_, rr = Nucleus.Density.estimate(
-                (view(di_x_po_x_co, 1, i2_), view(di_x_po_x_co, 2, i2_));
-                ke_ar...,
-            )
+            _xc_, _yc_, rr =
+                Nucleus.Density.estimate((view(cp, 1, i2_), view(cp, 2, i2_)); ke_ar...)
 
             rr[aa] .= NaN
 
@@ -199,8 +188,8 @@ function plot(
                 Nucleus.Dict.merge(
                     point,
                     Dict(
-                        "x" => view(di_x_po_x_co, 1, i2_),
-                        "y" => view(di_x_po_x_co, 2, i2_),
+                        "x" => view(cp, 1, i2_),
+                        "y" => view(cp, 2, i2_),
                         "text" => view(po_, i2_),
                         "marker" => Dict("color" => he_[i3]),
                     ),

@@ -111,25 +111,12 @@ const point_marker_size = 10
 
 # ---- #
 
-Nucleus.GPSMap.plot(
-    joinpath(Nucleus.TE, "gps_map.html"),
-    NO_,
-    CN,
-    PO_,
-    CP;
-    sc_ = LA_,
-    sc_na = Dict(i1 => "State $i1" for i1 in 1:15),
-    point_marker_size,
-)
+Nucleus.GPSMap.plot(joinpath(Nucleus.TE, "gps_map.html"), NO_, CN, PO_, CP; sc_ = LA_)
 
 # ---- #
 
-Nucleus.PolarGPSMap.plot(
-    joinpath(Nucleus.TE, "polar_gps_map.html"),
-    NO_,
-    LN,
-    PO_,
-    LP;
-    sc_ = LA_,
-    point_marker_size,
-)
+Nucleus.PolarGPSMap.plot(joinpath(Nucleus.TE, "polar_gps_map.html"), NO_, LN, PO_, LP;)
+
+# ---- #
+
+Nucleus.PolarGPSMap.plot(joinpath(Nucleus.TE, "polar_gps_map.html"), NO_, LN, PO_, LP; sc_ = LA_)
