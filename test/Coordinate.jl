@@ -60,15 +60,11 @@ const AA = [
 
 seed!(20240425)
 
-# ---- #
-
 const CA = Nucleus.Coordinate.get_cartesian(AA)
 
 # ---- #
 
 seed!(20240423)
-
-# ---- #
 
 const AN_ = Nucleus.Coordinate.get_polar(AA)
 
@@ -102,26 +98,26 @@ const PA = Nucleus.Coordinate.make_unit(AN_)
 
 # ---- #
 
-# 29.439 ns (1 allocation: 160 bytes)
+# 29.314 ns (1 allocation: 160 bytes)
 #@btime Nucleus.Coordinate.make_unit(AN_);
 
 # ---- #
 
 for (xc, yc, re) in ((1, 1, 1 / 3), (-1, 1, 2 / 3), (-1, -1, 4 / 3), (1, -1, 5 / 3))
 
-    yc = yc * sqrt(3)
+    yc *= sqrt(3)
 
-    an, ra = Nucleus.Coordinate.convert_cartesian_to_polar(yc, xc)
+    an, ra = Nucleus.Coordinate.convert_cartesian_to_polar(xc, yc)
 
     @test isapprox(an, pi * re)
 
     @test isapprox(ra, 2)
 
-    y2, x2 = Nucleus.Coordinate.convert_polar_to_cartesian(an, ra)
-
-    @test isapprox(y2, yc)
+    x2, y2 = Nucleus.Coordinate.convert_polar_to_cartesian(an, ra)
 
     @test isapprox(x2, xc)
+
+    @test isapprox(y2, yc)
 
     # 10.427 ns (0 allocations: 0 bytes)
     # 7.666 ns (0 allocations: 0 bytes)
@@ -132,7 +128,7 @@ for (xc, yc, re) in ((1, 1, 1 / 3), (-1, 1, 2 / 3), (-1, -1, 4 / 3), (1, -1, 5 /
     # 10.427 ns (0 allocations: 0 bytes)
     # 7.666 ns (0 allocations: 0 bytes)
 
-    #@btime Nucleus.Coordinate.convert_cartesian_to_polar($yc, $xc)
+    #@btime Nucleus.Coordinate.convert_cartesian_to_polar($xc, $yc)
 
     #@btime Nucleus.Coordinate.convert_polar_to_cartesian($an, $ra)
 
@@ -149,7 +145,7 @@ end
 
 # ---- #
 
-# 143.864 ns (2 allocations: 320 bytes)
+# 128.247 ns (2 allocations: 320 bytes)
 #@btime Nucleus.Coordinate.convert_cartesian_to_polar(
 #    Nucleus.Coordinate.convert_polar_to_cartesian(PA),
 #);
@@ -181,16 +177,16 @@ Nucleus.Plot.plot(
     [
         Dict(
             "name" => "Cartesian",
-            "y" => CA[1, :],
-            "x" => CA[2, :],
+            "x" => CA[1, :],
+            "y" => CA[2, :],
             "text" => axes(CA, 2),
             "mode" => "markers+text",
             "marker" => Dict("size" => 40, "color" => Nucleus.Color.HEGR),
         ),
         Dict(
             "name" => "Polar Cartesian",
-            "y" => OA[1, :],
-            "x" => OA[2, :],
+            "x" => OA[1, :],
+            "y" => OA[2, :],
             "text" => axes(OA, 2),
             "mode" => "markers+text",
             "marker" => Dict("size" => 40, "color" => Nucleus.Color.HEYE),

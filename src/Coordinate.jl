@@ -20,7 +20,7 @@ struct PolarDistance <: Metric end
 
 function (::PolarDistance)(a1, a2)
 
-    di = abs(a2 - a1)
+    di = abs(a1 - a2)
 
     if pi < di
 
@@ -32,11 +32,11 @@ function (::PolarDistance)(a1, a2)
 
 end
 
-function _update!(a2, iu, an_, up)
+function _update!(cc, cu_, iu, up)
 
-    for id in axes(a2, 2)
+    for id in axes(cc, 2)
 
-        a2[iu, id] = a2[id, iu] = id == iu ? 0 : PolarDistance()(an_[id], up)
+        cc[iu, id] = cc[id, iu] = id == iu ? 0 : PolarDistance()(cu_[id], up)
 
     end
 
@@ -44,25 +44,25 @@ end
 
 function get_polar(aa; ma = 1000, st = 0.5 * pi, te = 2 / log(2), de = 1, pl = false)
 
-    an_ = collect(range(0; step = 2 * pi / size(aa, 2), length = size(aa, 2)))
+    cu_ = collect(range(0; step = 2 * pi / size(aa, 2), length = size(aa, 2)))
 
-    a2 = pairwise(PolarDistance(), an_)
+    cc = pairwise(PolarDistance(), cu_)
 
-    di_ = vec(aa)
+    aa_ = vec(aa)
 
-    d2_ = vec(a2)
+    cc_ = vec(cc)
 
-    ob = cor(di_, d2_)
+    sc = cor(aa_, cc_)
 
     if pl
 
-        ob_ = Vector{Float64}(undef, 1 + ma)
+        sc_ = Vector{Float64}(undef, 1 + ma)
 
         te_ = Vector{Float64}(undef, 1 + ma)
 
         go_ = BitVector(undef, 1 + ma)
 
-        ob_[1] = ob
+        sc_[1] = sc
 
         te_[1] = te
 
@@ -72,9 +72,9 @@ function get_polar(aa; ma = 1000, st = 0.5 * pi, te = 2 / log(2), de = 1, pl = f
 
     for ui in 1:ma
 
-        iu = rand(eachindex(an_))
+        iu = rand(eachindex(cu_))
 
-        up = rand(Normal(an_[iu], st))
+        up = rand(Normal(cu_[iu], st))
 
         if 2 * pi < abs(up)
 
@@ -88,29 +88,29 @@ function get_polar(aa; ma = 1000, st = 0.5 * pi, te = 2 / log(2), de = 1, pl = f
 
         end
 
-        _update!(a2, iu, an_, up)
+        _update!(cc, cu_, iu, up)
 
-        ou = cor(di_, d2_)
+        ne = cor(aa_, cc_)
 
         te *= (1 - ui / ma)^de
 
-        go = rand() < exp((ou - ob) / te)
+        go = rand() < exp((ne - sc) / te)
 
         if go
 
-            an_[iu] = up
+            cu_[iu] = up
 
-            ob = ou
+            sc = ne
 
         else
 
-            _update!(a2, iu, an_, an_[iu])
+            _update!(cc, cu_, iu, cu_[iu])
 
         end
 
         if pl
 
-            ob_[1 + ui] = ou
+            sc_[1 + ui] = ne
 
             te_[1 + ui] = te
 
@@ -126,8 +126,8 @@ function get_polar(aa; ma = 1000, st = 0.5 * pi, te = 2 / log(2), de = 1, pl = f
             "",
             [
                 Dict(
-                    "name" => "Objective",
-                    "y" => ob_,
+                    "name" => "Score",
+                    "y" => sc_,
                     "mode" => "markers",
                     "line" => Dict("color" => "#000000"),
                     "marker" => Dict(
@@ -145,7 +145,7 @@ function get_polar(aa; ma = 1000, st = 0.5 * pi, te = 2 / log(2), de = 1, pl = f
 
     end
 
-    an_
+    cu_
 
 end
 
@@ -161,7 +161,7 @@ function make_unit(an_)
 
 end
 
-function convert_cartesian_to_polar(yc, xc)
+function convert_cartesian_to_polar(xc, yc)
 
     an = atan(yc / xc)
 
@@ -175,13 +175,15 @@ function convert_cartesian_to_polar(yc, xc)
 
     end
 
-    an, sqrt(yc^2 + xc^2)
+    an, sqrt(xc^2 + yc^2)
 
 end
 
 function convert_polar_to_cartesian(an, ra)
 
-    sincos(an) .* ra
+    si, co = sincos(an)
+
+    co * ra, si * ra
 
 end
 
@@ -209,11 +211,11 @@ function convert_polar_to_cartesian(pa)
 
     for id in axes(ca, 2)
 
-        y, x = convert_polar_to_cartesian(pa[1, id], pa[2, id])
+        xc, yc = convert_polar_to_cartesian(pa[1, id], pa[2, id])
 
-        ca[1, id] = y
+        ca[1, id] = xc
 
-        ca[2, id] = x
+        ca[2, id] = yc
 
     end
 
