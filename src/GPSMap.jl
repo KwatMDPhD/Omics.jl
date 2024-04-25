@@ -120,9 +120,9 @@ function plot(
 
     ro_, co_, de = Nucleus.Density.estimate((di_x_po_x_co[1, :], di_x_po_x_co[2, :]); ke_ar...)
 
-    vp = Nucleus.Coordinate.wall(tr)
+    vp = Nucleus.Triangulation.bound(tr)
 
-    is = [!Nucleus.Coordinate.is_in([ro, co], vp) for ro in ro_, co in co_]
+    is = [!Nucleus.Triangulation.is_in([ro, co], vp) for ro in ro_, co in co_]
 
     de[is] .= NaN
 

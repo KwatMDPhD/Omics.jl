@@ -46,10 +46,12 @@ cluster_plot(joinpath(Nucleus.TE, "h_normalized.html"), NO_, PO_, H)
 
 # ---- #
 
-const _ng, GR_, _sa_, GP =
+const _ng, GR_, _po_, GP =
     Nucleus.DataFrame.separate(joinpath(DA, "grouping_x_sample_x_group.tsv"))
 
-@assert PO_ == _sa_
+@assert PO_ == _po_
+
+# ---- #
 
 const LA_ = GP[findfirst(==("K15"), GR_), :] .+ 1
 
