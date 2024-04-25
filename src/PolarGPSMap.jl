@@ -44,7 +44,7 @@ function plot(
             "marker" => Dict(
                 "size" => 696,
                 "color" => Nucleus.Color.add_alpha("#000000", 0.04),
-                "line" => Dict("width" => 4, "color" => Nucleus.Color.HEIP),
+                "line" => Dict("width" => 2, "color" => Nucleus.Color.HEIP),
             ),
         ),
     )
@@ -52,8 +52,8 @@ function plot(
     push!(
         data,
         Dict(
-            "x" => di_x_no_x_co[2, :],
-            "y" => di_x_no_x_co[1, :],
+            "x" => di_x_no_x_co[1, :],
+            "y" => di_x_no_x_co[2, :],
             "text" => no_,
             "mode" => "markers+text",
             "marker" => Dict(
@@ -88,10 +88,10 @@ function plot(
         data,
         Dict(
             "type" => "contour",
-            "y" => c1_,
-            "x" => c2_,
+            "x" => c1_,
+            "y" => c2_,
             "z" => cc,
-            "transpose" => true,
+            #"transpose" => true,
             "ncontours" => ncontours,
             "contours" => Dict("coloring" => "none"),
             #"hoverinfo" => "skip",
@@ -99,8 +99,8 @@ function plot(
     )
 
     point = Dict(
-        "y" => view(di_x_po_x_co, 1, :),
-        "x" => view(di_x_po_x_co, 2, :),
+        "x" => di_x_po_x_co[1, :],
+        "y" => di_x_po_x_co[2, :],
         "text" => po_,
         "mode" => "markers",
         "marker" => Dict(
@@ -134,8 +134,8 @@ function plot(
                 "height" => 800,
                 "width" => 800,
                 "margin" => Dict("t" => margin, "b" => margin, "l" => margin, "r" => margin),
-                "yaxis" => merge(axis, Dict("range" => yrange)),
-                "xaxis" => merge(axis, Dict("range" => xrange)),
+                "yaxis" => merge(axis, Dict("range" => range)),
+                "xaxis" => merge(axis, Dict("range" => range)),
                 "showlegend" => false,
             ),
             layout,

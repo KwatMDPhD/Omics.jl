@@ -4,7 +4,7 @@ using Nucleus
 
 # ---- #
 
-using Distances: CorrDist, Euclidean, pairwise
+using Distances: CorrDist, pairwise
 
 using Random: seed!
 
@@ -20,11 +20,11 @@ const DA = joinpath(Nucleus._DA, "GPSMap")
 
 function cluster_plot(ht, ro_, co_, rc)
 
-    i1_ = Nucleus.Clustering.hierarchize(CorrDist(), eachrow(rc)).order
+    ir_ = Nucleus.Clustering.hierarchize(CorrDist(), eachrow(rc)).order
 
-    i2_ = Nucleus.Clustering.hierarchize(CorrDist(), eachcol(rc)).order
+    ic_ = Nucleus.Clustering.hierarchize(CorrDist(), eachcol(rc)).order
 
-    Nucleus.Plot.plot_heat_map(ht, rc[i1_, i2_]; y = ro_[i1_], x = co_[i2_])
+    Nucleus.Plot.plot_heat_map(ht, rc[ir_, ic_]; y = ro_[ir_], x = co_[ic_])
 
 end
 
@@ -48,10 +48,6 @@ cluster_plot(joinpath(Nucleus.TE, "h_normalized.html"), NO_, PO_, H)
 
 const _ng, GR_, _po_, GP =
     Nucleus.DataFrame.separate(joinpath(DA, "grouping_x_sample_x_group.tsv"))
-
-@assert PO_ == _po_
-
-# ---- #
 
 const LA_ = GP[findfirst(==("K15"), GR_), :] .+ 1
 
@@ -95,7 +91,6 @@ Nucleus.Plot.plot_heat_map(
     y = ["Y", "X"],
     x = PO_,
     gc_ = LA_,
-    fu = Euclidean(),
 )
 
 # ---- #
@@ -108,7 +103,6 @@ Nucleus.Plot.plot_heat_map(
     y = ["Y", "X"],
     x = PO_,
     gc_ = LA_,
-    fu = Euclidean(),
 )
 
 # ---- #
