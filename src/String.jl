@@ -1,7 +1,5 @@
 module String
 
-using Random: randstring
-
 function is_bad(st)
 
     isempty(st) || contains(st, r"^[^0-9A-Za-z]+$")
@@ -14,49 +12,39 @@ function clean(st)
 
 end
 
-function make(ar_...)
+function split_get(st, de, id)
 
-    randstring(ar_...)
-
-end
-
-function limit(st, n)
-
-    n < lastindex(st) ? "$(view(st, 1:n))..." : st
+    split(st, de; limit = id + 1)[id]
 
 end
 
-function count(n, st)
+function count(nc, st)
 
-    n_ch = lastindex(st)
+    if iszero(nc) || isone(abs(nc))
 
-    if iszero(n) || isone(abs(n))
+        "$nc $st"
 
-        pl = st
+    elseif lastindex(st) == 3 && st[2:3] == "ex"
 
-    elseif n_ch == 3 && view(st, 2:3) == "ex"
-
-        pl = "$(st)es"
+        "$nc $(st)es"
 
     elseif endswith(st, "ex")
 
-        pl = "$(view(st, 1:(n_ch - 2)))ices"
+        "$nc $(st[1:(end - 2)])ices"
 
     elseif endswith(st, "ry")
 
-        pl = "$(view(st, 1:(n_ch - 2)))ries"
+        "$nc $(st[1:(end - 2)])ries"
 
-    elseif endswith(st, "o")
+    elseif endswith(st, 'o')
 
-        pl = "$(view(st, 1:(n_ch - 1)))oes"
+        "$nc $(st[1:(end - 1)])oes"
 
     else
 
-        pl = "$(st)s"
+        "$nc $(st)s"
 
     end
-
-    "$n $pl"
 
 end
 
