@@ -56,7 +56,8 @@ function _initialize(A, uf::Integer)
 
     W = rand(size(A, 1), uf)
 
-    #foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(W))
+    # TODO: Test and benchmark.
+    foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(W))
 
     W .*= sqrt(mean(A) / uf)
 
@@ -68,7 +69,8 @@ function _initialize(uf::Integer, A)
 
     H = rand(uf, size(A, 2))
 
-    #foreach(Nucleus.Normalization.normalize_with_sum!, eachrow(H))
+    # TODO: Test and benchmark.
+    foreach(Nucleus.Normalization.normalize_with_sum!, eachrow(H))
 
     H .*= sqrt(mean(A) / uf)
 
@@ -89,7 +91,8 @@ function factorize_wide(
     ma = 100,
     W = _initialize(A_[1], uf),
     H_ = [_initialize(uf, A) for A in A_],
-    co_ = _get_coefficient(A_),
+    # TODO: Test and benchmark.
+    co_ = ones(lastindex(A_)),
 )
 
     ui = 0
@@ -97,7 +100,6 @@ function factorize_wide(
     WH_ = [W * H for H in H_]
 
     ob_ = _get_objective.(A_, WH_)
-    @debug join(ob_, '\t')
 
     Wp = Matrix{Float64}(undef, size(W))
 
@@ -176,7 +178,6 @@ function factorize_wide(
         end
 
         ob_ .= _get_objective.(A_, WH_)
-        @debug join(ob_, '\t')
 
         bo = all(_has_converged(W, Wp, H_[ia], Hp_[ia], to) for ia in eachindex(A_))
 
