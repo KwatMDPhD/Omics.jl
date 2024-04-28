@@ -28,7 +28,7 @@ function factorize(A, uf; ke_ar...)
 
     re = nnmf(A, uf; ke_ar...)
 
-    _log_convergence(re.converged, re.niters, re.objvalue)
+    _log_convergence(re.converged, re.niters, re.objvalue / norm(A))
 
     re.W, re.H
 
@@ -40,13 +40,15 @@ function _get_coefficient(A_)
 
     n1 = norm(A_[1])
 
-    co_[1] = 1
+    su = co_[1] = 1
 
     for ia in 2:lastindex(A_)
 
-        co_[ia] = n1 / norm(A_[ia])
+        su += co_[ia] = n1 / norm(A_[ia])
 
     end
+
+    co_ ./= su
 
     co_
 
@@ -56,7 +58,6 @@ function _initialize(A, uf::Integer)
 
     W = rand(size(A, 1), uf)
 
-    # TODO: Test and benchmark.
     foreach(Nucleus.Normalization.normalize_with_sum!, eachcol(W))
 
     W .*= sqrt(mean(A) / uf)
@@ -69,7 +70,6 @@ function _initialize(uf::Integer, A)
 
     H = rand(uf, size(A, 2))
 
-    # TODO: Test and benchmark.
     foreach(Nucleus.Normalization.normalize_with_sum!, eachrow(H))
 
     H .*= sqrt(mean(A) / uf)
@@ -84,6 +84,7 @@ function _get_objective(A, WH)
 
 end
 
+# TODO: Consider zeroing.
 function factorize_wide(
     A_,
     uf;
@@ -91,9 +92,10 @@ function factorize_wide(
     ma = 100,
     W = _initialize(A_[1], uf),
     H_ = [_initialize(uf, A) for A in A_],
-    # TODO: Test and benchmark.
-    co_ = ones(lastindex(A_)),
+    co_ = _get_coefficient(A_),
 )
+
+    @assert isone(sum(co_))
 
     ui = 0
 
@@ -149,7 +151,7 @@ function factorize_wide(
 
             end
 
-            W[iw] *= su / lastindex(A_)
+            W[iw] *= su
 
         end
 
@@ -169,7 +171,7 @@ function factorize_wide(
 
             for ih in eachindex(H_[ia])
 
-                H_[ia][ih] *= co_[ia] * WtA_[ia][ih] / (WtWH_[ia][ih] + ep)
+                H_[ia][ih] *= WtA_[ia][ih] / (WtWH_[ia][ih] + ep)
 
             end
 
@@ -183,7 +185,7 @@ function factorize_wide(
 
     end
 
-    _log_convergence(bo, ui, ob_)
+    _log_convergence(bo, ui, ob_ ./ norm.(A_))
 
     W, H_
 
