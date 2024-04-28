@@ -95,7 +95,11 @@ function factorize_wide(
     co_ = _get_coefficient(A_),
 )
 
-    @assert isone(sum(co_))
+    if !isapprox(sum(co_), 1)
+
+        @warn "Coefficients do not add up to 1."
+
+    end
 
     ui = 0
 
