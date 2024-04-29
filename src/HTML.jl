@@ -2,7 +2,7 @@ module HTML
 
 using ..Nucleus
 
-function make(ht, sr_, id, sc; ba = "#000000")
+function make(ht, sr_, id, sc; ba = "#171412")
 
     ht =
         isempty(ht) ? joinpath(Nucleus.TE, "$(Nucleus.Time.stamp()).html") : Nucleus.Path.clean(ht)
@@ -17,7 +17,7 @@ function make(ht, sr_, id, sc; ba = "#000000")
                 "<meta charset=\"utf-8\">",
                 "</head>",
                 ("<script src=\"$sr\"></script>" for sr in sr_)...,
-                "<div id=\"$id\" style=\"margin: auto; min-height: 800px; min-width: 1280px; display: flex; justify-content: center; align-items: center; padding: 24px; background: $ba;\"></div>",
+                "<div id=\"$id\" style=\"min-height: fit-content; min-width: fit-content; display: flex; justify-content: center; align-items: center; padding: 8px; background: $ba;\"></div>",
                 "<script>",
                 sc,
                 "</script>",

@@ -42,7 +42,7 @@ function _update!(cc, cu_, iu, up)
 
 end
 
-function get_polar(aa; ma = 1000, st = 0.5 * pi, te = 2 / log(2), de = 1, pl = false)
+function get_polar(aa; ma = 1000, st = 0.1 * pi, te = 2 / log(2), de = 1, pl = false)
 
     cu_ = collect(range(0; step = 2 * pi / size(aa, 2), length = size(aa, 2)))
 
