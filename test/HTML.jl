@@ -8,28 +8,12 @@ const HT = joinpath(Nucleus.TE, "name.html")
 
 # ---- #
 
-const SR_ = ("SRC_1", "SRC_2")
+Nucleus.HTML.make(HT, ("SRC_1", "SRC_2"), "ID", "SCRIPT")
 
 # ---- #
 
-const ID = "ID"
+@test lastindex(readlines(HT)) === 12
 
 # ---- #
 
-const SC = "SCRIPT"
-
-# ---- #
-
-Nucleus.HTML.make(HT, SR_, ID, SC)
-
-# ---- #
-
-@test lastindex(readlines(HT)) === 10 + lastindex(SR_)
-
-# ---- #
-
-for ba in ("#ff0000", "#0000ff")
-
-    Nucleus.HTML.make("", SR_, ID, SC; ba)
-
-end
+Nucleus.HTML.make("", ("SRC_1", "SRC_2"), "ID", "SCRIPT"; ba = "#ff0000")
