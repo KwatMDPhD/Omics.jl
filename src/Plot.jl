@@ -365,6 +365,48 @@ function plot_heat_map(
 
 end
 
+function plot_heat_map(
+    pr,
+    nr,
+    ro_,
+    nc,
+    co_,
+    nn,
+    rc;
+    ir_ = eachindex(ro_),
+    ic_ = eachindex(co_),
+    layout = Dict{String, Any}(),
+)
+
+    layout = Nucleus.Dict.merge(
+        Dict(
+            "height" => 833,
+            "width" => 1481,
+            "title" => Dict("text" => nn),
+            "yaxis" => Dict("title" => "$nr ($(lastindex(ro_)))"),
+            "xaxis" => Dict("title" => "$nc ($(lastindex(co_)))"),
+        ),
+        layout,
+    )
+
+    plot_heat_map("$pr.html", rc; y = ro_, x = co_, layout)
+
+    if ir_ != eachindex(ro_) || ic_ != eachindex(co_)
+
+        layout["title"]["text"] *= " (ordered)"
+
+        plot_heat_map(
+            "$(pr).ordered.html",
+            view(rc, ir_, ic_);
+            y = view(ro_, ir_),
+            x = view(co_, ic_),
+            layout,
+        )
+
+    end
+
+end
+
 function plot_bubble_map(
     ht,
     zs,
