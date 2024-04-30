@@ -42,7 +42,7 @@ function _update!(cc, cu_, iu, up)
 
 end
 
-function get_polar(aa; ma = 1000, st = 0.1 * pi, te = 2 / log(2), de = 1, pl = false)
+function get_polar(aa; ma = 2000, st = 0.2 * pi, te = 2 / log(2), de = 0.01, pl = false)
 
     cu_ = collect(range(0; step = 2 * pi / size(aa, 2), length = size(aa, 2)))
 
@@ -122,25 +122,40 @@ function get_polar(aa; ma = 1000, st = 0.1 * pi, te = 2 / log(2), de = 1, pl = f
 
     if pl
 
+        ma, id = findmax(sc_)
+
         Nucleus.Plot.plot(
             "",
             [
-                Dict(
-                    "name" => "Score",
-                    "y" => sc_,
-                    "mode" => "markers",
-                    "line" => Dict("color" => "#000000"),
-                    "marker" => Dict(
-                        "size" => [go ? 8 : 2 for go in go_],
-                        "color" => [go ? Nucleus.Color.HEGR : "#000000" for go in go_],
-                    ),
-                ),
                 Dict(
                     "name" => "Temperature",
                     "y" => te_,
                     "marker" => Dict("color" => Nucleus.Color.HERE),
                 ),
+                Dict(
+                    "legendgroup" => "Score",
+                    "name" => "All",
+                    "mode" => "markers",
+                    "y" => sc_,
+                    "marker" => Dict(
+                        "size" => [go ? 8 : 4 for go in go_],
+                        "color" => [go ? Nucleus.Color.HEGR : "#000000" for go in go_],
+                    ),
+                ),
+                Dict(
+                    "legendgroup" => "Score",
+                    "name" => "Maximum",
+                    "mode" => "markers+text",
+                    "x" => (id - 1,),
+                    "y" => (ma,),
+                    "text" => Nucleus.Number.format4(ma),
+                    "marker" => Dict("size" => 16, "color" => Nucleus.Color.HEYE),
+                ),
             ],
+            Dict(
+                "title" => Dict("text" => "Simulated Annealing"),
+                "xaxis" => Dict("title" => Dict("text" => "Iteration")),
+            ),
         )
 
     end

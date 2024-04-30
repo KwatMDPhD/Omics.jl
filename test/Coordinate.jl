@@ -66,22 +66,22 @@ const CA = Nucleus.Coordinate.get_cartesian(AA)
 
 seed!(20240423)
 
-const AN_ = Nucleus.Coordinate.get_polar(AA)
+const AN_ = Nucleus.Coordinate.get_polar(AA; pl = true)
 
 # ---- #
 
 @test AN_ == [
-    3.227306766493292,
-    3.225656618311293,
-    3.561874485774487,
-    2.6924753975885922,
-    4.726053584536512,
-    1.2984595170912603,
+    4.613493863132031,
+    4.623988611262445,
+    4.289663707024984,
+    5.190467066616274,
+    3.122061514443475,
+    0.32751146228354094,
 ]
 
 # ---- #
 
-# 66.875 μs (6 allocations: 640 bytes)
+# 188.625 μs (6 allocations: 640 bytes)
 #@btime Nucleus.Coordinate.get_polar(AA) setup = seed!(20240423);
 
 # ---- #
@@ -152,6 +152,10 @@ end
 
 # ---- #
 
+const LAYOUT = Dict("height" => 833, "width" => 833)
+
+# ---- #
+
 Nucleus.Plot.plot(
     joinpath(Nucleus.TE, "polar.html"),
     [
@@ -164,6 +168,7 @@ Nucleus.Plot.plot(
             "marker" => Dict("size" => 40, "color" => Nucleus.Color.HEYE),
         ),
     ],
+    LAYOUT,
 )
 
 # ---- #
@@ -192,4 +197,5 @@ Nucleus.Plot.plot(
             "marker" => Dict("size" => 40, "color" => Nucleus.Color.HEYE),
         ),
     ],
+    LAYOUT,
 )

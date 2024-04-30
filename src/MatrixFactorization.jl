@@ -84,6 +84,7 @@ function _get_objective(A, WH)
 
 end
 
+# TODO: Fix coefficients.
 # TODO: Consider zeroing.
 function factorize_wide(
     A_,
