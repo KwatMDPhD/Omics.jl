@@ -40,15 +40,13 @@ function _get_coefficient(A_)
 
     n1 = norm(A_[1])
 
-    su = co_[1] = 1
+    co_[1] = 1
 
-    for ia in 2:lastindex(A_)
+    for id in 2:lastindex(A_)
 
-        su += co_[ia] = n1 / norm(A_[ia])
+        co_[id] = n1 / norm(A_[id])
 
     end
-
-    co_ ./= su
 
     co_
 
@@ -84,8 +82,6 @@ function _get_objective(A, WH)
 
 end
 
-# TODO: Fix coefficients.
-# TODO: Consider zeroing.
 function factorize_wide(
     A_,
     uf;
@@ -95,12 +91,6 @@ function factorize_wide(
     H_ = [_initialize(uf, A) for A in A_],
     co_ = _get_coefficient(A_),
 )
-
-    if !isapprox(sum(co_), 1)
-
-        @warn "Coefficients do not add up to 1."
-
-    end
 
     ui = 0
 
@@ -148,15 +138,17 @@ function factorize_wide(
 
         for iw in eachindex(W)
 
-            su = 0
+            nu = de = 0
 
             for ia in eachindex(A_)
 
-                su += co_[ia] * AHt_[ia][iw] / (WHHt_[ia][iw] + ep)
+                nu += co_[ia] * AHt_[ia][iw]
+
+                de += co_[ia] * WHHt_[ia][iw]
 
             end
 
-            W[iw] *= su
+            W[iw] *= nu / (de + ep)
 
         end
 

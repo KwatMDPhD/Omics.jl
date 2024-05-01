@@ -15,25 +15,26 @@ function plot(
     node_annotation_font_size = 24,
     node_annotation_font_color = "#ffffff",
     ug = 128,
-    ncontours = 48,
+    ncontours = 40,
     point_marker_size = 16,
     point_marker_opacity = 0.8,
     point_marker_color = Nucleus.Color.HEFA,
     point_marker_line_width = 1,
     point_marker_line_color = "#000000",
-    sc_ = nothing,
-    size = 800,
+    ta_ = nothing,
+    ba = 1,
+    size = 832,
+    margin = 0.04,
 )
-
-    margin = size * 0.04
 
     data = [
         Dict(
+            "showlegend" => false,
             "x" => (0,),
             "y" => (0,),
             "mode" => "markers",
             "marker" => Dict(
-                "size" => size - 2 * margin,
+                "size" => size - size * margin * 2,
                 "color" => Nucleus.Color.add_alpha("#ffffff", 0),
                 "line" => Dict("width" => 4, "color" => node_marker_color),
             ),
@@ -45,6 +46,7 @@ function plot(
     push!(
         data,
         Dict(
+            "showlegend" => false,
             "x" => view(cn, 1, :),
             "y" => view(cn, 2, :),
             "text" => no_,
@@ -65,11 +67,11 @@ function plot(
     )
 
     ke_ar = (
-        boundary = ((-1.2, 1.2), (-1.2, 1.2)),
+        boundary = ((-1.1, 1.1), (-1.1, 1.1)),
         npoints = (ug, ug),
         bandwidth = (
-            Nucleus.Density.get_bandwidth(view(cp, 1, :)),
-            Nucleus.Density.get_bandwidth(view(cp, 2, :)),
+            Nucleus.Density.get_bandwidth(view(cp, 1, :)) * ba,
+            Nucleus.Density.get_bandwidth(view(cp, 2, :)) * ba,
         ),
     )
 
@@ -82,6 +84,7 @@ function plot(
     push!(
         data,
         Dict(
+            "showlegend" => false,
             "type" => "contour",
             "x" => xc_,
             "y" => yc_,
@@ -93,6 +96,7 @@ function plot(
     )
 
     point = Dict(
+        "name" => "Point",
         "x" => view(cp, 1, :),
         "y" => view(cp, 2, :),
         "text" => po_,
@@ -105,56 +109,56 @@ function plot(
         ),
     )
 
-    if isnothing(sc_)
+    if isnothing(ta_)
 
         push!(data, point)
 
-    elseif sc_ isa AbstractVector{<:AbstractFloat}
+    elseif ta_ isa AbstractVector{<:AbstractFloat}
 
         push!(
             data,
             Nucleus.Dict.merge(
                 point,
-                Dict("marker" => Dict("color" => Nucleus.Color.color(sc_, Nucleus.Color.COBW))),
+                Dict("marker" => Dict("color" => Nucleus.Color.color(ta_, Nucleus.Color.COBW))),
             ),
         )
 
-    elseif sc_ isa AbstractVector{<:Integer}
+    else
 
-        un_ = unique(sc_)
+        tu_ = unique(ta_)
 
-        gr_x_gr_x_un_x_pr = Array{Float64, 3}(undef, ug, ug, lastindex(un_))
+        gr_x_gr_x_id_x_de = Array{Float64, 3}(undef, ug, ug, lastindex(tu_))
 
-        for (i3, un) in enumerate(un_)
+        for id in eachindex(tu_)
 
-            i2_ = findall(==(un), sc_)
+            ii_ = findall(==(tu_[id]), ta_)
 
-            _xc_, _yc_, rr =
-                Nucleus.Density.estimate((view(cp, 1, i2_), view(cp, 2, i2_)); ke_ar...)
+            _xc_, _yc_, cc =
+                Nucleus.Density.estimate((view(cp, 1, ii_), view(cp, 2, ii_)); ke_ar...)
 
-            rr[aa] .= NaN
+            cc[aa] .= NaN
 
-            gr_x_gr_x_un_x_pr[:, :, i3] = rr
+            gr_x_gr_x_id_x_de[:, :, id] = cc
 
         end
 
         for i2 in 1:ug, i1 in 1:ug
 
-            pr_ = view(gr_x_gr_x_un_x_pr, i1, i2, :)
+            de_ = view(gr_x_gr_x_id_x_de, i1, i2, :)
 
-            if all(isnan, pr_)
+            if all(isnan, de_)
 
                 continue
 
             end
 
-            ma = argmax(pr_)
+            ma = argmax(de_)
 
-            for i3 in eachindex(pr_)
+            for id in eachindex(de_)
 
-                if i3 != ma
+                if id != ma
 
-                    pr_[i3] = NaN
+                    de_[id] = NaN
 
                 end
 
@@ -162,36 +166,40 @@ function plot(
 
         end
 
-        he_ = Nucleus.Color.color(un_)
+        he_ = Nucleus.Color.color(eachindex(tu_))
 
-        for i3 in 1:lastindex(un_)
+        for id in eachindex(tu_)
 
             push!(
                 data,
                 Dict(
+                    "legendgroup" => tu_[id],
+                    "name" => tu_[id],
                     "type" => "heatmap",
                     "x" => xc_,
                     "y" => yc_,
-                    "z" => view(gr_x_gr_x_un_x_pr, :, :, i3),
+                    "z" => view(gr_x_gr_x_id_x_de, :, :, id),
                     "colorscale" => Nucleus.Color.fractionate(
-                        Nucleus.Color._make_color_scheme(["#ffffff", he_[i3]]),
+                        Nucleus.Color._make_color_scheme(["#ffffff", he_[id]]),
                     ),
                     "showscale" => false,
                     "hoverinfo" => "skip",
                 ),
             )
 
-            i2_ = findall(==(un_[i3]), sc_)
+            ii_ = findall(==(tu_[id]), ta_)
 
             push!(
                 data,
                 Nucleus.Dict.merge(
                     point,
                     Dict(
-                        "x" => view(cp, 1, i2_),
-                        "y" => view(cp, 2, i2_),
-                        "text" => view(po_, i2_),
-                        "marker" => Dict("color" => he_[i3]),
+                        "legendgroup" => tu_[id],
+                        "name" => tu_[id],
+                        "x" => view(cp, 1, ii_),
+                        "y" => view(cp, 2, ii_),
+                        "text" => view(po_, ii_),
+                        "marker" => Dict("color" => he_[id]),
                     ),
                 ),
             )
@@ -213,11 +221,21 @@ function plot(
         data,
         Dict(
             "height" => size,
-            "width" => size,
-            "margin" => Dict("t" => margin, "b" => margin, "l" => margin, "r" => margin),
+            "width" => size * 1.5,
+            "margin" => Dict(
+                "autoexpand" => false,
+                "t" => size * margin,
+                "b" => size * margin,
+                "l" => size * margin,
+                "r" => size * (margin + 0.5),
+            ),
             "xaxis" => axis,
             "yaxis" => axis,
-            "showlegend" => false,
+            "legend" => Dict(
+                # TODO: `xref`.
+                "xanchor" => "right",
+                "x" => 1 + 1 / (2 - margin * 4),
+            ),
         ),
     )
 

@@ -30,19 +30,15 @@ A4 .-= minimum(A4)
 
 # ---- #
 
-for (A_, re) in (
-    ((A1,), [1]),
-    ((A1, A1), [0.5, 0.5]),
-    ((A1, A1, A1), [1 / 3, 1 / 3, 1 / 3]),
-    ((A1, A1 .* 2), [2 / 3, 1 / 3]),
-)
+for (A_, re) in
+    (((A1,), [1]), ((A1, A1), [1, 1]), ((A1, A1, A1), [1, 1, 1]), ((A1, A1 .* 2), [1, 0.5]))
 
     @test Nucleus.MatrixFactorization._get_coefficient(A_) == re
 
-    # 116.067 ns (1 allocation: 64 bytes)
-    # 225.506 ns (1 allocation: 80 bytes)
-    # 335.396 ns (1 allocation: 80 bytes)
-    # 226.812 ns (1 allocation: 80 bytes)
+    # 115.251 ns (1 allocation: 64 bytes)
+    # 219.285 ns (1 allocation: 80 bytes)
+    # 316.911 ns (1 allocation: 80 bytes)
+    # 219.368 ns (1 allocation: 80 bytes)
     #@btime Nucleus.MatrixFactorization._get_coefficient($A_)
 
 end
@@ -102,20 +98,20 @@ for (id, A) in enumerate((A1, A2, A3, A4))
 
     #┌ Info: Converged with 914 iterations.
     #└   ob = 0.6741529947808842
-    #  1.654 μs (20 allocations: 3.14 KiB)
-    #  4.786 μs (91 allocations: 10.14 KiB)
+    #  1.871 μs (20 allocations: 3.14 KiB)
+    #  4.979 μs (91 allocations: 10.14 KiB)
     #┌ Info: Converged with 738 iterations.
     #└   ob = 1.4374956847624631
-    #  2.421 μs (20 allocations: 4.73 KiB)
-    #j  9.416 μs (181 allocations: 20.22 KiB)
+    #  2.597 μs (20 allocations: 4.73 KiB)
+    #  9.834 μs (181 allocations: 20.22 KiB)
     #┌ Info: Converged with 934 iterations.
     #└   ob = 1.3383717598237397
-    #  2.144 μs (20 allocations: 4.73 KiB)
-    #  6.158 μs (91 allocations: 14.05 KiB)
+    #  2.352 μs (20 allocations: 4.73 KiB)
+    #  6.375 μs (91 allocations: 14.05 KiB)
     #┌ Info: Converged with 1746 iterations.
     #└   ob = 1.7146732148845611
-    #  3.302 μs (20 allocations: 7.05 KiB)
-    #  12.125 μs (181 allocations: 28.03 KiB)
+    #  3.474 μs (20 allocations: 7.05 KiB)
+    #  12.625 μs (181 allocations: 28.03 KiB)
 
     #disable_logging(Warn)
     #@btime Nucleus.MatrixFactorization.factorize(
@@ -165,28 +161,27 @@ for (id, A) in enumerate((A1, A2, A3, A4))
     #┌ Info: Converged with 402 iterations.
     #│   ob =
     #│    2-element Vector{Float64}:
-    #│     0.6743289169156936
-    #└     0.6743289169156936
-    #  1.850 μs (16 allocations: 3.22 KiB)
+    #│     0.6743289169372342
+    #└     0.6743289169372342
+    #  1.775 μs (16 allocations: 3.22 KiB)
     #┌ Info: Converged with 459 iterations.
     #│   ob =
     #│    2-element Vector{Float64}:
-    #│     1.4377058426055105
-    #└     1.4377058426055105
-    #  2.801 μs (16 allocations: 4.81 KiB)
+    #│     1.4377058427756195
+    #└     1.4377058427756195
+    #  2.731 μs (16 allocations: 4.81 KiB)
     #┌ Info: Converged with 234 iterations.
     #│   ob =
     #│    2-element Vector{Float64}:
-    #│     1.3385646237203688
-    #└     1.3385646237203688
-    #  2.532 μs (16 allocations: 4.81 KiB)
+    #│     1.3385646237237367
+    #└     1.3385646237237367
+    #  2.444 μs (16 allocations: 4.81 KiB)
     #┌ Info: Converged with 637 iterations.
     #│   ob =
     #│    2-element Vector{Float64}:
-    #│     1.7150104469069736
-    #└     1.7150104469069736
-    #  4.036 μs (16 allocations: 7.12 KiB)
-
+    #│     1.7150104467124012
+    #└     1.7150104467124012
+    #  3.970 μs (16 allocations: 7.12 KiB)
     #disable_logging(Warn)
     #@btime Nucleus.MatrixFactorization.factorize_wide($(A,), UF; W = $W0, H_ = $(H0_[1],), to, ma)
     #disable_logging(Debug)
@@ -199,9 +194,7 @@ seed!(20240427)
 
 A_ = (rand(20, 40), rand(20, 40), rand(20, 40))
 
-co_ = [1, 1, 1]
-
-W, H_ = Nucleus.MatrixFactorization.factorize_wide(A_, 4; co_ = co_ ./ sum(co_))
+W, H_ = Nucleus.MatrixFactorization.factorize_wide(A_, 4; co_ = [2, 2, 2])
 
 Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "te_w.html"), W)
 
@@ -210,6 +203,8 @@ for ia in eachindex(A_)
     Nucleus.Plot.plot_heat_map(joinpath(Nucleus.TE, "te_h$ia.html"), H_[ia])
 
 end
+
+# ---- #
 
 for ia in eachindex(A_)
 
