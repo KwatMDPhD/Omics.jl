@@ -67,7 +67,7 @@ function plot(
     )
 
     ke_ar = (
-        boundary = ((-1.1, 1.1), (-1.1, 1.1)),
+        boundary = ((-2, 2), (-2, 2)),
         npoints = (ug, ug),
         bandwidth = (
             Nucleus.Density.get_bandwidth(view(cp, 1, :)) * ba,
