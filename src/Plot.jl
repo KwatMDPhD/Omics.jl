@@ -6,11 +6,22 @@ using JSON: json
 
 using ..Nucleus
 
-function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}(); ke_ar...)
+function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}())
 
     id = "Plotly"
 
-    layout = merge(Dict("hovermode" => "closest"), layout)
+    axis = Dict("automargin" => true, "zeroline" => false, "showgrid" => false)
+
+    layout = Nucleus.Dict.merge(
+        Dict(
+            "height" => 800,
+            "width" => 1280,
+            "hovermode" => "closest",
+            "xaxis" => axis,
+            "yaxis" => axis,
+        ),
+        layout,
+    )
 
     config = merge(Dict("displaylogo" => false), config)
 
@@ -19,92 +30,6 @@ function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}
         ("https://cdn.plot.ly/plotly-latest.min.js",),
         id,
         "Plotly.newPlot(\"$id\", $(json(data)), $(json(layout)), $(json(config)))";
-        ke_ar...,
-    )
-
-end
-
-const COLORBAR = Dict(
-    "len" => 0.5,
-    "thickness" => 16,
-    "outlinecolor" => Nucleus.Color.HEFA,
-    "title" => Dict("font" => Dict("family" => "Droid Sans Mono", "size" => 13)),
-    "tickfont" => Dict("family" => "Droid Sans Mono", "size" => 10),
-)
-
-const SPIKE = Dict(
-    "showspikes" => true,
-    "spikesnap" => "cursor",
-    "spikemode" => "across",
-    "spikedash" => "solid",
-    "spikethickness" => 1,
-    "spikecolor" => "#561649",
-)
-
-const _AX = Dict("showgrid" => false, "automargin" => true)
-
-function _initialize_marker(an___)
-
-    (he -> Dict("color" => he)).(Nucleus.Color.color(eachindex(an___)))
-
-end
-
-function plot_scatter(
-    ht,
-    y_,
-    x_ = eachindex.(y_);
-    text_ = (_ -> String[]).(eachindex(y_)),
-    name_ = eachindex.(y_),
-    mode_ = (y -> lastindex(y) < 1000 ? "markers+lines" : "lines").(y_),
-    marker_ = _initialize_marker(y_),
-    layout = Dict{String, Any}(),
-    ke_ar...,
-)
-
-    plot(
-        ht,
-        [
-            Dict(
-                "name" => name_[i1],
-                "y" => y_[i1],
-                "x" => x_[i1],
-                "text" => text_[i1],
-                "mode" => mode_[i1],
-                "marker" => marker_[i1],
-                "cliponaxis" => false,
-            ) for i1 in eachindex(y_)
-        ],
-        Nucleus.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
-        ke_ar...,
-    )
-
-end
-
-function plot_bar(
-    ht,
-    y_,
-    x_ = eachindex.(y_);
-    text_ = (_ -> String[]).(eachindex(y_)),
-    name_ = eachindex.(y_),
-    marker_ = _initialize_marker(y_),
-    layout = Dict{String, Any}(),
-    ke_ar...,
-)
-
-    plot(
-        ht,
-        [
-            Dict(
-                "type" => "bar",
-                "name" => name_[i1],
-                "y" => y_[i1],
-                "x" => x_[i1],
-                "text" => text_[i1],
-                "marker" => marker_[i1],
-            ) for i1 in eachindex(y_)
-        ],
-        Nucleus.Dict.merge(Dict("yaxis" => _AX, "xaxis" => _AX), layout);
-        ke_ar...,
     )
 
 end
@@ -115,7 +40,7 @@ function plot_histogram(
     x_,
     text_ = (_ -> String[]).(eachindex(x_));
     name_ = eachindex.(x_),
-    marker_ = _initialize_marker(x_),
+    marker_ = (he -> Dict("color" => he)).(Nucleus.Color.color(eachindex(x_))),
     histnorm = "",
     xbins_size = 0,
     rug_marker_size = all(x -> lastindex(x) < 100000, x_) ? 16 : 0,
@@ -123,28 +48,23 @@ function plot_histogram(
     ke_ar...,
 )
 
-    n = lastindex(x_)
-
-    i1_ = eachindex(x_)
-
     data = [
         Dict(
             "type" => "histogram",
-            "legendgroup" => i1,
-            "name" => name_[i1],
+            "legendgroup" => id,
+            "name" => name_[id],
             "yaxis" => "y2",
-            "x" => x_[i1],
-            "marker" => marker_[i1],
+            "x" => x_[id],
+            "marker" => marker_[id],
             "histnorm" => histnorm,
             "xbins" => Dict("size" => xbins_size),
-        ) for i1 in i1_
+        ) for id in eachindex(x_)
     ]
 
     layout = Nucleus.Dict.merge(
         Dict(
-            "showlegend" => 1 < n,
+            "showlegend" => 1 < lastindex(x_),
             "yaxis2" => Dict(
-                "showgrid" => false,
                 "title" => Dict("text" => isempty(histnorm) ? "Count" : titlecase(histnorm)),
             ),
         ),
@@ -159,26 +79,31 @@ function plot_histogram(
             data,
             [
                 Dict(
-                    "legendgroup" => i1,
-                    "name" => name_[i1],
+                    "legendgroup" => id,
+                    "name" => name_[id],
                     "showlegend" => false,
-                    "y" => fill(i1, lastindex(x_[i1])),
-                    "x" => x_[i1],
-                    "text" => text_[i1],
+                    "y" => fill(id, lastindex(x_[id])),
+                    "x" => x_[id],
+                    "text" => text_[id],
                     "mode" => "markers",
                     "marker" => merge(
-                        marker_[i1],
+                        marker_[id],
                         Dict("symbol" => "line-ns-open", "size" => rug_marker_size),
                     ),
-                ) for i1 in i1_
+                ) for id in eachindex(x_)
             ],
         )
 
-        dm = min(0.04n, 0.5)
+        dm = min(0.04 * lastindex(x_), 0.5)
 
-        layout["yaxis"] = Dict("domain" => (0, dm), "zeroline" => false, "tickvals" => ())
-
-        layout["yaxis2"]["domain"] = (dm + 0.01, 1)
+        layout = Nucleus.Dict.merge(
+            layout,
+            Dict(
+                "yaxis" => Dict("domain" => (0, dm), "zeroline" => false, "tickvals" => ()),
+                "yaxis2" =>
+                    Dict("domain" => (dm + 0.01, 1), "zeroline" => false, "showgrid" => false),
+            ),
+        )
 
     end
 
@@ -197,6 +122,14 @@ function _label_col(nu)
     "● $nu"
 
 end
+
+const COLORBAR = Dict(
+    "len" => 0.5,
+    "thickness" => 16,
+    "outlinecolor" => Nucleus.Color.HEFA,
+    "title" => Dict("font" => Dict("family" => "Droid Sans Mono", "size" => 13)),
+    "tickfont" => Dict("family" => "Droid Sans Mono", "size" => 10),
+)
 
 function plot_heat_map(
     ht,
@@ -348,9 +281,8 @@ function plot_heat_map(
         data,
         Nucleus.Dict.merge(
             Dict(
-                "yaxis" =>
-                    Dict("domain" => ydomain, "autorange" => "reversed", "automargin" => true),
-                "xaxis" => Dict("domain" => xdomain, "automargin" => true),
+                "yaxis" => Dict("domain" => ydomain, "autorange" => "reversed"),
+                "xaxis" => Dict("domain" => xdomain),
                 "yaxis2" => Dict(
                     "domain" => (ydomain[2] + ddy, 1),
                     "autorange" => "reversed",
@@ -380,8 +312,7 @@ function plot_heat_map(
 
     layout = Nucleus.Dict.merge(
         Dict(
-            "height" => 833,
-            "width" => 1481,
+            #"width" => 1481,
             "title" => Dict("text" => nn),
             "yaxis" => Dict("title" => "$nr ($(lastindex(ro_)))"),
             "xaxis" => Dict("title" => "$nc ($(lastindex(co_)))"),
@@ -458,18 +389,8 @@ function plot_bubble_map(
         ],
         Nucleus.Dict.merge(
             Dict(
-                "yaxis" => Dict(
-                    "autorange" => "reversed",
-                    "dtick" => 1,
-                    "showgrid" => false,
-                    "automargin" => true,
-                ),
-                "xaxis" => Dict(
-                    "showgrid" => false,
-                    "automargin" => true,
-                    "dtick" => 1,
-                    "tickangle" => 90,
-                ),
+                "yaxis" => Dict("autorange" => "reversed", "dtick" => 1),
+                "xaxis" => Dict("dtick" => 1, "tickangle" => 90),
             ),
             layout,
         );

@@ -26,6 +26,7 @@ const NC = lastindex(CO)
 
 for co in (
     Nucleus.Color._make_color_scheme([
+        Nucleus.Color.HEDA,
         Nucleus.Color.HEFA,
         Nucleus.Color.HEAG,
         Nucleus.Color.HEAY,

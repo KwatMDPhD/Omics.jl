@@ -30,8 +30,8 @@ Nucleus.Plot.plot(HT, DATA)
 
 const LAYOUT = Dict(
     "title" => "Title",
-    "yaxis" => Dict("title" => "Y-Axis Title"),
     "xaxis" => Dict("title" => "X-Axis Title"),
+    "yaxis" => Dict("title" => "Y-Axis Title"),
 )
 
 # ---- #
@@ -44,62 +44,15 @@ Nucleus.Plot.plot("", DATA, LAYOUT, Dict("editable" => true))
 
 # ---- #
 
-const Y_ = ([-2, -1], [-1, 0, 1, 2])
+const HX_ = ([-2], [-1, -1, 0, 0], [1, 1, 1, 2, 2, 2, 3, 3, 3])
 
 # ---- #
 
-const Y1_ = Y_[1:1]
+Nucleus.Plot.plot_histogram("", HX_[1:1])
 
 # ---- #
 
-Nucleus.Plot.plot_scatter("", Y1_)
-
-# ---- #
-
-Nucleus.Plot.plot_scatter("", Y_)
-
-# ---- #
-
-Nucleus.Plot.plot_scatter(
-    "",
-    Y_,
-    Y_;
-    marker_ = (Dict("size" => 80, "color" => "#ff0000"), Dict("size" => 40, "color" => "#0000ff")),
-)
-
-# ---- #
-
-Nucleus.Plot.plot_bar("", Y1_)
-
-# ---- #
-
-Nucleus.Plot.plot_bar("", Y_)
-
-# ---- #
-
-for barmode in ("group", "stack")
-
-    Nucleus.Plot.plot_bar(
-        "",
-        Y_,
-        Y_;
-        name_ = ("Jonathan", "Joseph", "Jotaro"),
-        layout = Dict("barmode" => barmode, "title" => Dict("text" => "barmode = $barmode")),
-    )
-
-end
-
-# ---- #
-
-const HIX_ = ([-2], [-1, -1, 0, 0], [1, 1, 1, 2, 2, 2, 3, 3, 3])
-
-# ---- #
-
-Nucleus.Plot.plot_histogram("", HIX_[1:1])
-
-# ---- #
-
-Nucleus.Plot.plot_histogram("", HIX_)
+Nucleus.Plot.plot_histogram("", HX_)
 
 # ---- #
 
@@ -107,8 +60,8 @@ for xbins_size in (0, 1)
 
     Nucleus.Plot.plot_histogram(
         "",
-        HIX_,
-        Tuple((id -> "$ch$id").(eachindex(x)) for (x, ch) in zip(HIX_, ('A', 'B', 'C')));
+        HX_,
+        Tuple((id -> "$ch$id").(eachindex(x)) for (x, ch) in zip(HX_, ('A', 'B', 'C')));
         xbins_size,
         layout = Dict("title" => Dict("text" => "xbins_size = $xbins_size")),
     )
@@ -150,38 +103,6 @@ const XG = collect(1.0:10)
 # ---- #
 
 const ZG = [y * x for y in YG, x in XG]
-
-# ---- #
-
-const GR_ = Int[]
-
-# ---- #
-
-const GRR_ = [1, 2, 1, 2, 1, 2, 1, 2]
-
-# ---- #
-
-const GRC_ = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2]
-
-# ---- #
-
-for (grr_, grc_) in (
-    (GRR_, GR_),
-    (GR_, GRC_),
-    (GRR_, GRC_),
-    ((id -> "Row Group $id").(GRR_), (id -> "Column Group $id").(GRC_)),
-)
-
-    Nucleus.Plot.plot_heat_map(
-        "",
-        ZG;
-        y = (nu -> "Y = $nu").(YG),
-        x = (nu -> "X = $nu").(XG),
-        grr_,
-        grc_,
-    )
-
-end
 
 # ---- #
 

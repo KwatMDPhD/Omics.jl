@@ -2,7 +2,7 @@ module HTML
 
 using ..Nucleus
 
-function make(ht, sr_, id, sc; ba = "#171412")
+function make(ht, sr_, id, sc; ba = Nucleus.Color.HEDA)
 
     ht =
         isempty(ht) ? joinpath(Nucleus.TE, "$(Nucleus.Time.stamp()).html") : Nucleus.Path.clean(ht)

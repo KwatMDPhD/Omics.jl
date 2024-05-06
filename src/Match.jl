@@ -1,5 +1,7 @@
 module Match
 
+using Distances: CorrDist
+
 using ProgressMeter: @showprogress
 
 using Random: shuffle!
@@ -132,7 +134,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
         #@info "Clustering within groups"
 
         sa_, ta_, fe_x_sa_x_nu = _order(
-            Nucleus.Clustering.order(Nucleus.Distance.CO, ta_, eachcol(fe_x_sa_x_nu)),
+            Nucleus.Clustering.order(CorrDist(), ta_, eachcol(fe_x_sa_x_nu)),
             sa_,
             ta_,
             fe_x_sa_x_nu,
@@ -172,7 +174,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
                 "type" => "heatmap",
                 "name" => "Target",
                 "yaxis" => "y2",
-                "y" => ["<b>$(Nucleus.String.limit(nat, n_li))</b>"],
+                "y" => ["<b>$nat</b>"],
                 "x" => sa_,
                 "z" => [tac_],
                 "text" => [ta_],
@@ -187,7 +189,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
             Dict(
                 "type" => "heatmap",
                 "name" => "Feature",
-                "y" => Nucleus.String.limit.(fe_, n_li),
+                "y" => fe_,
                 "x" => sa_,
                 "z" => collect(eachrow(fe_x_sa_x_nuc)),
                 "text" => collect(eachrow(fe_x_sa_x_nu)),
@@ -205,11 +207,8 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
             Dict(
                 "margin" => Dict("l" => 220, "r" => 220),
                 "height" => max(640, 40n_ro),
-                "width" => Nucleus.HTML.WI,
-                "title" => Dict(
-                    "text" => naf,
-                    "font" => Dict("family" => _FONT_FAMILY, "size" => 2_FONT_SIZE),
-                ),
+                "width" => 1280,
+                "title" => Dict("font" => Dict("family" => _FONT_FAMILY, "size" => 2_FONT_SIZE)),
                 "yaxis2" => merge(axis, Dict("domain" => (1 - th, 1))),
                 "yaxis" => merge(axis, Dict("domain" => (0, 1 - 2th), "autorange" => "reversed")),
                 "xaxis" => merge(
@@ -230,12 +229,12 @@ end
 function make(
     di,
     fu,
-    nat,
-    naf,
     nas,
-    fe_,
     sa_,
+    nat,
     ta_,
+    naf,
+    fe_,
     fe_x_sa_x_nu;
     ts = "feature_x_statistic_x_number",
     nm = 10,
@@ -319,9 +318,9 @@ function make(
 
         end
 
-        idn_ = findall(Nucleus.Number.is_negative, sc_)
+        idn_ = findall(<(0), sc_)
 
-        idp_ = findall(!Nucleus.Number.is_negative, sc_)
+        idp_ = findall(>=(0), sc_)
 
         np_, na_, pp_, pa_ = Nucleus.Statistics.get_p_value(sc_, idn_, idp_, fe_x_id_x_ra)
 

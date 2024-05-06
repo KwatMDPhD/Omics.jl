@@ -6,6 +6,8 @@ using Colors: Colorant, coloralpha, hex
 
 using ..Nucleus
 
+const HEDA = "#171412"
+
 const HEFA = "#ebf6f7"
 
 const HEAG = "#00936e"
