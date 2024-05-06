@@ -4,6 +4,10 @@ using Nucleus
 
 # ---- #
 
+using Distances: CorrDist, Euclidean, pairwise
+
+# ---- #
+
 const MA = [
     0  1  2  3  10  20  30
     0  2  1  3  20  10  30
@@ -17,10 +21,10 @@ for (ea, re) in ((eachcol, [4, 1, 2, 3, 7, 5, 6]), (eachrow, [1, 3, 2, 4]))
 
     nu___ = ea(MA)
 
-    di = Nucleus.Distance.pairwise(Nucleus.Distance.EU, nu___)
+    di = pairwise(Euclidean(), nu___)
 
     @test Nucleus.Clustering.hierarchize(di).order ==
-          Nucleus.Clustering.hierarchize(Nucleus.Distance.EU, nu___).order ==
+          Nucleus.Clustering.hierarchize(Euclidean(), nu___).order ==
           re
 
     # 1.333 μs (35 allocations: 3.86 KiB)
@@ -30,7 +34,7 @@ for (ea, re) in ((eachcol, [4, 1, 2, 3, 7, 5, 6]), (eachrow, [1, 3, 2, 4]))
 
     #@btime Nucleus.Clustering.hierarchize($di)
 
-    #@btime Nucleus.Clustering.hierarchize(Nucleus.Distance.EU, $nu___)
+    #@btime Nucleus.Clustering.hierarchize(Euclidean(), $nu___)
 
 end
 
@@ -89,7 +93,7 @@ for (co_, ma, re) in (
 
     nu___ = eachcol(ma)
 
-    @test Nucleus.Clustering.order(Nucleus.Distance.EU, co_, nu___) == re
+    @test Nucleus.Clustering.order(Euclidean(), co_, nu___) == re
 
     # 2.292 μs (80 allocations: 6.67 KiB)
     # 2.292 μs (80 allocations: 6.67 KiB)
@@ -97,7 +101,7 @@ for (co_, ma, re) in (
     # 2.292 μs (80 allocations: 6.67 KiB)
     # 2.301 μs (80 allocations: 6.67 KiB)
     # 2.292 μs (80 allocations: 6.67 KiB)
-    #@btime Nucleus.Clustering.order(Nucleus.Distance.EU, $co_, $nu___)
+    #@btime Nucleus.Clustering.order(Euclidean(), $co_, $nu___)
 
 end
 
@@ -108,16 +112,16 @@ const IT_ = [1, 2, 3, 1, 2, 3, 1]
 # ---- #
 
 for (fu, re) in (
-    (Nucleus.Distance.EU, 0.09928735617366401),
-    (Nucleus.Distance.CO, 0.5711294801431482),
-    (Nucleus.Distance.IN, 0.5711294801431482),
+    (Euclidean(), 0.28193356790024415),
+    (CorrDist(), 1.0),
+    (Nucleus.Distance.InformationDistance(), 1.0),
 )
 
     @test Nucleus.Clustering.compare_grouping(
         Nucleus.Clustering.hierarchize(fu, eachcol(MA)),
         "",
         IT_;
-        ti = "Mutual Information $fu",
+        text = "Mutual Information $fu",
     ) === re
 
 end
@@ -125,14 +129,14 @@ end
 # ---- #
 
 for (fu, re) in
-    ((Nucleus.Distance.EU, 0.0), (Nucleus.Distance.CO, 1.0), (Nucleus.Distance.IN, 1.0))
+    ((Euclidean(), 0.0), (CorrDist(), 1.0), (Nucleus.Distance.InformationDistance(), 1.0))
 
     @test Nucleus.Clustering.compare_grouping(
         Nucleus.Clustering.hierarchize(fu, eachcol(MA)),
         "",
         (it -> "Label $it").(IT_),
         1;
-        ti = "Tight $fu",
+        text = "Tight $fu",
     ) === re
 
 end

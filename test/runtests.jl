@@ -12,25 +12,23 @@ const SR = joinpath(dirname(@__DIR__), "src")
 
 # ---- #
 
-const MO_ = Nucleus.Path.read(SR; ig_ = ("Nucleus.jl",))
+const MO_ = Nucleus.Path.read(SR, r"^((?!Nucleus.jl).)*$")
 
 # ---- #
 
 for jl in MO_
 
-    li = readline(joinpath(SR, jl))
-
-    @test view(jl, 1:(lastindex(jl) - 3)) == view(li, 8:lastindex(li))
+    @test jl[1:(end - 3)] == readline(joinpath(SR, jl))[8:end]
 
 end
 
 # ---- #
 
-const TE_ = Nucleus.Path.read(@__DIR__; ig_ = ("runtests.jl",))
+const TE_ = Nucleus.Path.read(@__DIR__, r"^((?!runtests.jl).)*$")
 
 # ---- #
 
-@test symdiff(MO_, TE_) == ["Pathhere.jl"]
+@test isempty(symdiff(MO_, TE_))
 
 # ---- #
 
