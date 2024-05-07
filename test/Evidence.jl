@@ -4,11 +4,65 @@ using Nucleus
 
 # ---- #
 
-c = Dict("a"=>1)
+using GLM: fitted, predict
 
-b = Dict("b"=>2, "c"=>c, "d"=>c)
+# ---- #
 
-Nucleus.Dict.merge(b, Dict("c"=>Dict("x"=>9)))
+for (ta_, f1_) in (
+    ([0, 0, 0, 1, 1, 1], [0, 0, 0, 1, 1, 1]),
+    ([1, 1, 1, 0, 0, 0], [1, 1, 1, 0, 0, 0]),
+    ([0, 0, 0, 1, 1, 1], [1, 1, 1, 0, 0, 0]),
+    ([1, 1, 1, 0, 0, 0], [0, 0, 0, 1, 1, 1]),
+    ([0, 1, 0, 1, 0, 1], [0, 1, 0, 1, 0, 1]),
+    ([0, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0]),
+)
+
+    ge = Nucleus.Evidence.fit(ta_, f1_)
+
+    @test isapprox(fitted(ge), ta_; rtol = 1e-7)
+
+    Nucleus.Evidence.plot(
+        "",
+        "Sample",
+        ["_$id" for id in eachindex(ta_)],
+        "Target",
+        ta_,
+        "Feature",
+        f1_,
+        ge;
+        marker_size = 40,
+    )
+
+    # 22.542 μs (209 allocations: 13.89 KiB)
+    # 22.625 μs (209 allocations: 13.89 KiB)
+    # 22.708 μs (209 allocations: 13.89 KiB)
+    # 22.583 μs (209 allocations: 13.89 KiB)
+    # 22.750 μs (209 allocations: 13.89 KiB)
+    # 22.708 μs (209 allocations: 13.89 KiB)
+    #@btime Nucleus.Evidence.fit($ta_, $f1_)
+
+end
+
+# ---- #
+
+for (ta_, f1_) in ((rand((0, 1), 100), randn(100)),)
+
+    ge = Nucleus.Evidence.fit(ta_, f1_)
+
+    Nucleus.Evidence.plot(
+        "",
+        "Sample",
+        ["_$id" for id in eachindex(ta_)],
+        "Target",
+        ta_,
+        "Feature",
+        f1_,
+        ge;
+    )
+
+    #@btime Nucleus.Evidence.fit($ta_, $f1_)
+
+end
 
 # ---- #
 
@@ -22,11 +76,15 @@ sa_ = ["$(da[id, "name"]) ($id)" for id in axes(da, 1)]
 
 # ---- #
 
+nt = "Survival"
+
 ta_ = da[!, "survived"]
 
 # ---- #
 
-fs = Matrix{Float64}(undef, 3, lastindex(ta_))
+nf_ = ["Sex", "Age", "Fare"]
+
+fs = Matrix{Float64}(undef, lastindex(nf_), lastindex(ta_))
 
 fs[1, :] = replace(da[!, "sex"], "female" => 0, "male" => 1)
 
@@ -46,39 +104,22 @@ ts = Nucleus.Match.make(
     "Survived",
     ta_,
     "Feature",
-    ["Sex", "Age", "Fare"],
+    nf_,
     fs;
     layout = Dict("title" => Dict("text" => "Match Panel")),
 )
 
 # ---- #
 
-nx = ns
+id = 3
 
-x = sa_
-
-nb = "Survived"
-
-bi_ = ta_
-
-nn = "Age"
-
-nu_ = fs[2, :]
-
-i0_ = findall(iszero, bi_)
-
-i1_ = findall(isone, bi_)
-
-Nucleus.Plot.plot(
-    joinpath(Nucleus.TE, "fit.html"),
-    [
-        Dict("name" => nn, "x" => x, "y" => nu_, "mode" => "markers"),
-        Dict("name" => "!$nb", "x" => x[i0_], "y" => nu_[i0_], "mode" => "markers"),
-        Dict("name" => nb, "x" => x[i1_], "y" => nu_[i1_], "mode" => "markers"),
-    ],
-    Dict(
-        "title" => Dict("text" => "Fit"),
-        "xaxis" => Dict("title" => Dict("text" => nx)),
-        "yaxis" => Dict("title" => Dict("text" => nn)),
-    ),
+Nucleus.Evidence.plot(
+    "",
+    ns,
+    sa_,
+    nt,
+    ta_,
+    nf_[id],
+    fs[id, :],
+    Nucleus.Evidence.fit(ta_, fs[id, :]);
 )

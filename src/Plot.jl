@@ -8,17 +8,13 @@ using ..Nucleus
 
 function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}())
 
-    id = "Plotly"
-
-    axis = Dict("automargin" => true, "zeroline" => false, "showgrid" => false)
-
     layout = Nucleus.Dict.merge(
         Dict(
             "height" => 800,
             "width" => 1280,
             "hovermode" => "closest",
-            "xaxis" => axis,
-            "yaxis" => axis,
+            "xaxis" => Dict("automargin" => true, "zeroline" => false, "showgrid" => false),
+            "yaxis" => Dict("automargin" => true, "zeroline" => false, "showgrid" => false),
         ),
         layout,
     )
@@ -28,8 +24,8 @@ function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}
     Nucleus.HTML.make(
         ht,
         ("https://cdn.plot.ly/plotly-latest.min.js",),
-        id,
-        "Plotly.newPlot(\"$id\", $(json(data)), $(json(layout)), $(json(config)))";
+        "Plotly20240506",
+        "Plotly.newPlot(\"Plotly20240506\", $(json(data)), $(json(layout)), $(json(config)))";
     )
 
 end
@@ -155,15 +151,7 @@ function plot_heat_map(
 
     if !isempty(gr_)
 
-        if eltype(gr_) <: Real
-
-            gi_ = gr_
-
-        else
-
-            gi_ = Nucleus.Number.integize(gr_)
-
-        end
+        gi_ = eltype(gr_) <: Real ? gr_ : Nucleus.Number.integize(gr_)
 
         so_ = Nucleus.Clustering.order(fu, gi_, eachrow(z))
 
@@ -194,15 +182,7 @@ function plot_heat_map(
 
     if !isempty(gc_)
 
-        if eltype(gc_) <: Real
-
-            gi_ = gc_
-
-        else
-
-            gi_ = Nucleus.Number.integize(gc_)
-
-        end
+        gi_ = eltype(gc_) <: Real ? gc_ : Nucleus.Number.integize(gc_)
 
         so_ = Nucleus.Clustering.order(fu, gi_, eachcol(z))
 
@@ -272,9 +252,9 @@ function plot_heat_map(
 
     ddx = 0.016
 
-    ydomain = (0, 1 - 2ddy)
+    ydomain = 0, 1 - ddy * 2
 
-    xdomain = (0, 1 - 2ddx)
+    xdomain = 0, 1 - ddx * 2
 
     plot(
         ht,
@@ -312,7 +292,6 @@ function plot_heat_map(
 
     layout = Nucleus.Dict.merge(
         Dict(
-            #"width" => 1481,
             "title" => Dict("text" => nn),
             "yaxis" => Dict("title" => "$nr ($(lastindex(ro_)))"),
             "xaxis" => Dict("title" => "$nc ($(lastindex(co_)))"),
