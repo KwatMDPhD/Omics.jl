@@ -63,8 +63,8 @@ function plot(
         ht,
         (
             "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.29.2/cytoscape.min.js",
         ),
         id,
         """
