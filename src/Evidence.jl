@@ -1,6 +1,6 @@
 module Evidence
 
-using GLM: @formula, Binomial, glm, predict
+using GLM: @formula, Binomial, coef, glm, predict
 
 using ..Nucleus
 
@@ -22,7 +22,13 @@ function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{
 
     mi, ma = Nucleus.Collection.get_minimum_maximum(f1_)
 
-    pr_ = predict(ge, (; f1_ = range(mi, ma, lastindex(sa_))))
+    pr_nu_ = predict(ge, (; f1_ = range(mi, ma, lastindex(sa_))); interval = :confidence)
+
+    it, c1 = coef(ge)
+
+    cr = -it / c1
+
+    sl = 1 / c1
 
     Nucleus.Plot.plot(
         ht,
@@ -62,10 +68,25 @@ function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{
             Dict(
                 "yaxis" => "y3",
                 "x" => sa_,
-                "y" => pr_,
-                "mode" => "markers",
+                "y" => pr_nu_.prediction,
                 "marker" => Dict("size" => marker_size * 0.8, "color" => Nucleus.Color.HERE),
                 "cliponaxis" => false,
+            ),
+            Dict(
+                "yaxis" => "y3",
+                "x" => sa_,
+                "y" => pr_nu_.lower,
+                "mode" => "lines",
+                "line" => Dict("width" => 0),
+            ),
+            Dict(
+                "yaxis" => "y3",
+                "x" => sa_,
+                "y" => pr_nu_.upper,
+                "mode" => "lines",
+                "line" => Dict("width" => 0),
+                "fill" => "tonexty",
+                "fillcolor" => Nucleus.Color.add_alpha(Nucleus.Color.HERE, 0.16),
             ),
         ],
         Nucleus.Dict.merge(
@@ -96,6 +117,15 @@ function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{
                     "zeroline" => false,
                     "showgrid" => false,
                 ),
+                "annotations" => [
+                    Dict(
+                        "yref" => "y3",
+                        "x" => sa_[argmin(abs.(pr_nu_.prediction .- 0.5))],
+                        "y" => 0.5,
+                        "text" => "$nf $(round(cr; sigdigits = 2))<br>Slope $(round(sl; sigdigits = 2))",
+                        "arrowhead" => 6,
+                    ),
+                ],
             ),
             layout,
         ),
