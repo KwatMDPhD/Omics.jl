@@ -79,11 +79,15 @@ da = Nucleus.DataFrame.read(
     missingstring = ["NA"],
 )
 
+# ---- #
+
 da = disallowmissing!(da[completecases(da), :])
 
 # ---- #
 
 ns = "Passenger"
+
+# ---- #
 
 sa_ = ["$(da[id, "name"]) ($id)" for id in axes(da, 1)]
 
@@ -91,19 +95,31 @@ sa_ = ["$(da[id, "name"]) ($id)" for id in axes(da, 1)]
 
 nt = "Survival"
 
+# ---- #
+
 ta_ = da[!, "survived"]
 
 # ---- #
 
 nf_ = ["Sex", "Age", "Class", "Fare"]
 
+# ---- #
+
 fs = Matrix{Float64}(undef, lastindex(nf_), lastindex(sa_))
+
+# ---- #
 
 fs[1, :] = replace(da[!, "sex"], "female" => 0, "male" => 1)
 
+# ---- #
+
 fs[2, :] = da[!, "age"]
 
+# ---- #
+
 fs[3, :] = [4 - parse(Int, da[id, "pclass"][1]) for id in eachindex(sa_)]
+
+# ---- #
 
 fs[4, :] = da[!, "fare"]
 

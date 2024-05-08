@@ -6,6 +6,34 @@ using JSON: json
 
 using ..Nucleus
 
+function set_tickvals(nu_, ut = 10)
+
+    mi, ma = Nucleus.Collection.get_minimum_maximum(nu_)
+
+    if all(isinteger, nu_)
+
+        collect(mi:1:ma)
+
+    else
+
+        va_ = collect(range(mi, ma, ut))
+
+        for id in eachindex(va_)
+
+            if 1 < id < lastindex(va_)
+
+                va_[id] = round(va_[id])
+
+            end
+
+        end
+
+        va_
+
+    end
+
+end
+
 function plot(ht, data, layout = Dict{String, Any}(), config = Dict{String, Any}())
 
     layout = Nucleus.Dict.merge(
@@ -236,14 +264,7 @@ function plot_heat_map(
             "colorscale" => Nucleus.Color.fractionate(co),
             "colorbar" => merge(
                 COLORBAR,
-                Dict(
-                    "x" => colorbarx1,
-                    "tickvals" => range(
-                        Nucleus.Collection.get_minimum_maximum(view(z, .!isnan.(z)))...;
-                        length,
-                        step,
-                    ),
-                ),
+                Dict("x" => colorbarx1, "tickvals" => set_titlevals(view(z, .!isnan.(z)))),
             ),
         ),
     )

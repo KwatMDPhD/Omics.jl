@@ -76,9 +76,10 @@ function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{
                 "yaxis2" => Dict(
                     "domain" => (0.08, 1),
                     "position" => 0,
-                    "range" => (mi, ma),
                     "title" =>
                         Dict("text" => nf, "font" => Dict("color" => Nucleus.Color.HEBL)),
+                    "range" => (mi, ma),
+                    "tickvals" => Nucleus.Plot.set_tickvals(f1_),
                     "zeroline" => false,
                     "showgrid" => false,
                 ),
@@ -87,7 +88,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{
                     "position" => 0.08,
                     "overlaying" => "y2",
                     "title" => Dict(
-                        "text" => "Probability",
+                        "text" => "Probability of $nt",
                         "font" => Dict("color" => Nucleus.Color.HERE),
                     ),
                     "range" => (0, 1),
