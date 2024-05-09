@@ -10,6 +10,32 @@ function fit(ta_, f1_)
 
 end
 
+function get_evidence(P1_f1, P0, P1)
+
+    log((P1_f1 / (1 - P1_f1)) / (P1 / P0))
+
+end
+
+function get_evidence(ge, f1_)
+
+    P1_f1__ = predict(ge, (; f1_))
+
+    P0 = sum(iszero, ge.mf.data.ta_)
+
+    P1 = sum(isone, ge.mf.data.ta_)
+
+    ev = 0
+
+    for id in eachindex(f1_)
+
+        ev += abs(get_evidence(P1_f1__[id], P0, P1))
+
+    end
+
+    ev / lastindex(f1_)
+
+end
+
 function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{String, Any}())
 
     id_ = sortperm(f1_)
@@ -22,7 +48,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{
 
     mi, ma = Nucleus.Collection.get_minimum_maximum(f1_)
 
-    pr_nu_ = predict(ge, (; f1_ = range(mi, ma, lastindex(sa_))); interval = :confidence)
+    P1_f1__ = predict(ge, (; f1_ = range(mi, ma, lastindex(sa_))); interval = :confidence)
 
     it, c1 = coef(ge)
 
@@ -68,21 +94,21 @@ function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{
             Dict(
                 "yaxis" => "y3",
                 "x" => sa_,
-                "y" => pr_nu_.prediction,
+                "y" => P1_f1__.prediction,
                 "marker" => Dict("size" => marker_size * 0.8, "color" => Nucleus.Color.HERE),
                 "cliponaxis" => false,
             ),
             Dict(
                 "yaxis" => "y3",
                 "x" => sa_,
-                "y" => pr_nu_.lower,
+                "y" => P1_f1__.lower,
                 "mode" => "lines",
                 "line" => Dict("width" => 0),
             ),
             Dict(
                 "yaxis" => "y3",
                 "x" => sa_,
-                "y" => pr_nu_.upper,
+                "y" => P1_f1__.upper,
                 "mode" => "lines",
                 "line" => Dict("width" => 0),
                 "fill" => "tonexty",
@@ -92,6 +118,9 @@ function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{
         Nucleus.Dict.merge(
             Dict(
                 "showlegend" => false,
+                "title" => Dict(
+                    "text" => "Average Evidenve = $(round(get_evidence(ge, f1_); sigdigits = 2))",
+                ),
                 "xaxis" => Dict("domain" => (0.08, 1), "title" => Dict("text" => ns)),
                 "yaxis" => Dict("domain" => (0, 0.04), "tickvals" => ()),
                 "yaxis2" => Dict(
@@ -120,9 +149,9 @@ function plot(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4, layout = Dict{
                 "annotations" => [
                     Dict(
                         "yref" => "y3",
-                        "x" => sa_[argmin(abs.(pr_nu_.prediction .- 0.5))],
+                        "x" => sa_[argmin(abs.(P1_f1__.prediction .- 0.5))],
                         "y" => 0.5,
-                        "text" => "$nf $(round(cr; sigdigits = 2))<br>Slope $(round(sl; sigdigits = 2))",
+                        "text" => "$nf = $(round(cr; sigdigits = 2))<br>Slope = $(round(sl; sigdigits = 2))",
                         "arrowhead" => 6,
                     ),
                 ],
