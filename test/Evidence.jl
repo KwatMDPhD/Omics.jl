@@ -6,7 +6,7 @@ using Nucleus
 
 using DataFrames: completecases, disallowmissing!
 
-using GLM: fitted
+using GLM: StatisticalModel, fitted
 
 using Random: seed!
 
@@ -16,35 +16,35 @@ for (id, ta_, f1_, re) in (
     (1, [0, 0, 0, 1, 1, 1], [0, 0, 0, 1, 1, 1], 17.56606848519685),
     (2, [1, 1, 1, 0, 0, 0], [1, 1, 1, 0, 0, 0], 17.56606848519685),
     (3, [0, 1, 0, 1, 0, 1], [0, 1, 0, 1, 0, 1], 17.56606848519685),
-    (4, [0, 0, 0, 1, 1, 1], [1, 1, 1, 0, 0, 0], 17.566068485196848),
-    (5, [1, 1, 1, 0, 0, 0], [0, 0, 0, 1, 1, 1], 17.56606848519685),
-    (6, [0, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0], 17.56606848519685),
+    (4, [0, 0, 0, 1, 1, 1], [1, 1, 1, 0, 0, 0], -17.566068485196848),
+    (5, [1, 1, 1, 0, 0, 0], [0, 0, 0, 1, 1, 1], -17.56606848519685),
+    (6, [0, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0], -17.56606848519685),
 )
 
     ge = Nucleus.Evidence.fit(ta_, f1_)
 
     @test isapprox(fitted(ge), ta_; rtol = 1e-7)
 
-    @test Nucleus.Evidence.get_evidence(ge, f1_) === re
+    @test Nucleus.Evidence._average_evidence(ge, f1_) === re
 
-    # 22.041 μs (209 allocations: 13.89 KiB)
-    # 4.929 μs (68 allocations: 3.11 KiB)
-    # 22.166 μs (209 allocations: 13.89 KiB)
-    # 4.917 μs (68 allocations: 3.11 KiB)
-    # 22.000 μs (209 allocations: 13.89 KiB)
-    # 4.934 μs (68 allocations: 3.11 KiB)
-    # 21.958 μs (209 allocations: 13.89 KiB)
-    # 4.935 μs (68 allocations: 3.11 KiB)
-    # 22.250 μs (209 allocations: 13.89 KiB)
-    # 4.946 μs (68 allocations: 3.11 KiB)
-    # 22.208 μs (209 allocations: 13.89 KiB)
-    # 4.946 μs (68 allocations: 3.11 KiB)
+    # 21.834 μs (209 allocations: 13.89 KiB)
+    # 3.938 μs (70 allocations: 3.14 KiB)
+    # 21.583 μs (209 allocations: 13.89 KiB)
+    # 3.969 μs (70 allocations: 3.14 KiB)
+    # 21.916 μs (209 allocations: 13.89 KiB)
+    # 3.970 μs (70 allocations: 3.14 KiB)
+    # 21.750 μs (209 allocations: 13.89 KiB)
+    # 3.958 μs (70 allocations: 3.14 KiB)
+    # 21.500 μs (209 allocations: 13.89 KiB)
+    # 3.958 μs (70 allocations: 3.14 KiB)
+    # 21.833 μs (209 allocations: 13.89 KiB)
+    # 3.976 μs (70 allocations: 3.14 KiB)
 
     #@btime Nucleus.Evidence.fit($ta_, $f1_)
 
-    #@btime Nucleus.Evidence.get_evidence($ge, $f1_)
+    #@btime Nucleus.Evidence._average_evidence($ge, $f1_)
 
-    Nucleus.Evidence.plot(
+    Nucleus.Evidence.plot_fit(
         joinpath(Nucleus.TE, "$id.html"),
         "Sample",
         ["_$id" for id in eachindex(ta_)],
@@ -72,7 +72,7 @@ for (id, ta_, f1_) in (
     ("ra1000", rand((0, 1), 1000), randn(1000)),
 )
 
-    Nucleus.Evidence.plot(
+    Nucleus.Evidence.plot_fit(
         joinpath(Nucleus.TE, "$id.html"),
         "Sample",
         ["_$id" for id in eachindex(ta_)],
@@ -82,13 +82,6 @@ for (id, ta_, f1_) in (
         f1_,
         Nucleus.Evidence.fit(ta_, f1_);
     )
-
-    # 67.709 μs (245 allocations: 30.38 KiB)
-    # 20.375 μs (154 allocations: 24.24 KiB)
-    # 12.667 μs (154 allocations: 10.77 KiB)
-    # 21.292 μs (154 allocations: 24.24 KiB)
-    # 112.250 μs (155 allocations: 152.20 KiB)
-    #@btime Nucleus.Evidence.fit($ta_, $f1_)
 
 end
 
@@ -130,7 +123,9 @@ fs = Matrix{Float64}(undef, lastindex(nf_), lastindex(sa_))
 
 # ---- #
 
+# TODO: Is changing directions symmetric?
 fs[1, :] = replace(da[!, "sex"], "female" => 0, "male" => 1)
+fs[1, :] = replace(da[!, "sex"], "female" => 1, "male" => 0)
 
 # ---- #
 
@@ -142,7 +137,9 @@ fs[3, :] = da[!, "fare"]
 
 # ---- #
 
+# TODO: Is changing directions symmetric?
 fs[4, :] = [4 - parse(Int, da[id, "pclass"][1]) for id in eachindex(sa_)]
+fs[4, :] = [parse(Int, da[id, "pclass"][1]) for id in eachindex(sa_)]
 
 # ---- #
 
@@ -160,12 +157,18 @@ ts = Nucleus.Match.make(
 
 # ---- #
 
+const GE_ = Vector{StatisticalModel}(undef, lastindex(nf_))
+
+# ---- #
+
 for (id, re) in
-    enumerate([1.1681195763601897, 0.08630585757607466, 0.3886782595762168, 0.6055654277469712])
+    enumerate([1.1681195763601897, -0.08630585757607466, 0.3886782595762168, -0.6055654277469712])
 
     ge = Nucleus.Evidence.fit(ta_, fs[id, :])
 
-    Nucleus.Evidence.plot(
+    @test Nucleus.Evidence._average_evidence(ge, fs[id, :]) === re
+
+    Nucleus.Evidence.plot_fit(
         joinpath(Nucleus.TE, "$(nf_[id]).html"),
         ns,
         sa_,
@@ -176,6 +179,20 @@ for (id, re) in
         ge;
     )
 
-    @test Nucleus.Evidence.get_evidence(ge, fs[id, :]) === re
+    GE_[id] = ge
+
+end
+
+# ---- #
+
+for id in 1:4
+
+    Nucleus.Evidence.plot_evidence(
+        joinpath(Nucleus.TE, "get_evidence_$id.html"),
+        nf_,
+        GE_,
+        fs[:, id];
+        title_text = "Nomogram for Passenger $id",
+    )
 
 end
