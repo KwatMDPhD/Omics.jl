@@ -185,7 +185,7 @@ end
 
 # ---- #
 
-for id in 1:4
+for id in 1:10
 
     Nucleus.Evidence.plot_evidence(
         joinpath(Nucleus.TE, "get_evidence_$id.html"),

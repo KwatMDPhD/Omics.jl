@@ -1,6 +1,6 @@
 module Evidence
 
-using GLM: @formula, Binomial, coef, glm, predict
+using GLM: @formula, Binomial, coef, fitted, glm, predict
 
 using ..Nucleus
 
@@ -16,23 +16,9 @@ function _get_evidence(P1_f1, P0, P1)
 
 end
 
-function _average_evidence(ge, f1_)
+function get_p0_p1(ta_)
 
-    P1_f1__ = predict(ge, (; f1_))
-
-    P0 = sum(iszero, ge.mf.data.ta_)
-
-    P1 = sum(isone, ge.mf.data.ta_)
-
-    ab = 0
-
-    for id in eachindex(f1_)
-
-        ab += abs(_get_evidence(P1_f1__[id], P0, P1))
-
-    end
-
-    sign(coef(ge)[2]) * ab / lastindex(f1_)
+    sum(iszero, ta_) / lastindex(ta_), sum(isone, ta_) / lastindex(ta_)
 
 end
 
@@ -46,15 +32,29 @@ function plot_fit(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4)
 
     f1_ = f1_[id_]
 
-    mi, ma = Nucleus.Collection.get_minimum_maximum(f1_)
-
-    P1_f1__ = predict(ge, (; f1_ = range(mi, ma, lastindex(sa_))); interval = :confidence)
-
     it, c1 = coef(ge)
 
     cr = -it / c1
 
     sl = 1 / c1
+
+    P1_fr__ = fitted(ge)
+
+    P0, P1 = get_p0_p1(ta_)
+
+    ab = 0
+
+    for id in eachindex(sa_)
+
+        ab += abs(_get_evidence(P1_fr__[id], P0, P1))
+
+    end
+
+    ev = sign(c1) * ab / lastindex(sa_)
+
+    mi, ma = Nucleus.Collection.get_minimum_maximum(f1_)
+
+    P1_fe__ = predict(ge, (; f1_ = range(mi, ma, lastindex(sa_))); interval = :confidence)
 
     Nucleus.Plot.plot(
         ht,
@@ -71,7 +71,6 @@ function plot_fit(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4)
                     "yanchor" => "bottom",
                     "len" => 0.2,
                     "thickness" => 16,
-                    "outlinecolor" => Nucleus.Color.HEFA,
                     "title" => Dict("text" => nt),
                     "tickvals" => (0, 1),
                 ),
@@ -94,21 +93,21 @@ function plot_fit(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4)
             Dict(
                 "yaxis" => "y3",
                 "x" => sa_,
-                "y" => P1_f1__.prediction,
+                "y" => P1_fe__.prediction,
                 "marker" => Dict("size" => marker_size * 0.8, "color" => Nucleus.Color.HERE),
                 "cliponaxis" => false,
             ),
             Dict(
                 "yaxis" => "y3",
                 "x" => sa_,
-                "y" => P1_f1__.lower,
+                "y" => P1_fe__.lower,
                 "mode" => "lines",
                 "line" => Dict("width" => 0),
             ),
             Dict(
                 "yaxis" => "y3",
                 "x" => sa_,
-                "y" => P1_f1__.upper,
+                "y" => P1_fe__.upper,
                 "mode" => "lines",
                 "line" => Dict("width" => 0),
                 "fill" => "tonexty",
@@ -117,13 +116,11 @@ function plot_fit(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4)
         ],
         Dict(
             "showlegend" => false,
-            "title" => Dict(
-                "text" => "Average Evidenve = $(round(_average_evidence(ge, f1_); sigdigits = 4))",
-            ),
+            "title" => Dict("text" => "Average Evidenve = $(round(ev; sigdigits = 2))"),
             "xaxis" => Dict("domain" => (0.08, 1), "title" => Dict("text" => ns)),
             "yaxis" => Dict("domain" => (0, 0.04), "tickvals" => ()),
             "yaxis2" => Dict(
-                "domain" => (0.08, 1),
+                "domain" => (0.064, 1),
                 "position" => 0,
                 "title" => Dict("text" => nf, "font" => Dict("color" => Nucleus.Color.HEBL)),
                 "range" => (mi, ma),
@@ -132,7 +129,7 @@ function plot_fit(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4)
                 "showgrid" => false,
             ),
             "yaxis3" => Dict(
-                "domain" => (0.08, 1),
+                "domain" => (0.064, 1),
                 "position" => 0.08,
                 "overlaying" => "y2",
                 "title" => Dict(
@@ -147,9 +144,9 @@ function plot_fit(ht, ns, sa_, nt, ta_, nf, f1_, ge; marker_size = 4)
             "annotations" => [
                 Dict(
                     "yref" => "y3",
-                    "x" => sa_[argmin(abs.(P1_f1__.prediction .- 0.5))],
+                    "x" => sa_[argmin(abs.(P1_fe__.prediction .- 0.5))],
                     "y" => 0.5,
-                    "text" => "$nf = $(round(cr; sigdigits = 4))<br>Slope = $(round(sl; sigdigits = 4))",
+                    "text" => "$nf = $(round(cr; sigdigits = 2))<br>Slope = $(round(sl; sigdigits = 2))",
                     "arrowhead" => 6,
                 ),
             ],
@@ -168,48 +165,56 @@ function plot_evidence(
     ht,
     nf_,
     ge_,
-    f1_;
-    line_width = 4,
-    marker_size = 32,
+    te_;
+    line_width = 2,
+    marker_size = 24,
     textfont_size = 24,
     title_text = "Nomogram",
 )
 
     ev_ = Vector{Float64}(undef, lastindex(nf_))
 
-    P0 = sum(iszero, ge_[1].mf.data.ta_)
+    P0, P1 = get_p0_p1(ge_[1].mf.data.ta_)
 
-    P1 = sum(isone, ge_[1].mf.data.ta_)
+    be = _sign_square_root(log(P1 / P0))
 
-    po = _sign_square_root(log(P1 / P0))
-
-    su = po
+    af = be
 
     for id in eachindex(nf_)
 
-        su +=
+        af +=
             ev_[id] =
-                _sign_square_root(_get_evidence(predict(ge_[id], (; f1_ = [f1_[id]]))[1], P0, P1))
+                _sign_square_root(_get_evidence(predict(ge_[id], (; f1_ = [te_[id]]))[1], P0, P1))
 
     end
 
-    pr = convert(Int, 0 < su)
+    ta = convert(Int, 0 < af)
+
+    id = 0
 
     data = [
         Dict(
-            "y" => ("Prior", "Prior"),
-            "x" => (0, po),
+            "legendgroup" => id,
+            "showlegend" => false,
+            "y" => (id, id),
+            "x" => (0, be),
             "mode" => "lines",
             "line" => Dict("width" => line_width, "color" => Nucleus.Color.HEDA),
         ),
         Dict(
-            "y" => ("Prior",),
-            "x" => (po,),
-            "text" => round(po; sigdigits = 4),
+            "legendgroup" => id,
+            "name" => "Prior",
+            "y" => (id,),
+            "x" => (be,),
+            "text" => round(be; sigdigits = 2),
             "mode" => "markers+text",
-            "marker" => Dict("size" => marker_size, "color" => Nucleus.Color.HEDA),
-            "textposition" => "top center",
-            "textfont" => Dict("size" => textfont_size, "bgcolor" => "red"),
+            "marker" => Dict(
+                "size" => marker_size,
+                "color" => be <= 0 ? Nucleus.Color.HESR : Nucleus.Color.HESG,
+                "line" => Dict("width" => line_width * 1.6, "color" => Nucleus.Color.HEYE),
+            ),
+            "textposition" => be < 0 ? "left" : "right",
+            "textfont" => Dict("size" => textfont_size),
         ),
     ]
 
@@ -220,52 +225,61 @@ function plot_evidence(
         push!(
             data,
             Dict(
-                "y" => (nf_[id], nf_[id]),
+                "legendgroup" => id,
+                "showlegend" => false,
+                "y" => (id, id),
                 "x" => (0, ev_[id]),
                 "mode" => "lines",
-                "line" => Dict("width" => line_width * 0.64, "color" => he_[id]),
+                "line" => Dict("width" => line_width, "color" => he_[id]),
             ),
         )
 
         push!(
             data,
             Dict(
-                "y" => (nf_[id],),
+                "legendgroup" => id,
+                "name" => nf_[id],
+                "y" => (id,),
                 "x" => (ev_[id],),
-                "text" => "$(round(f1_[id]; sigdigits = 4)) ➡ $(round(ev_[id]; sigdigits = 4))",
+                "text" => "($(round(te_[id]; sigdigits = 2))) $(round(ev_[id]; sigdigits = 2))",
                 "mode" => "markers+text",
-                "marker" => Dict("size" => marker_size * 0.64, "color" => he_[id]),
-                "textposition" => "top center",
+                "marker" => Dict("size" => marker_size, "color" => he_[id]),
+                "textposition" => ev_[id] < 0 ? "left" : "right",
                 "textfont" => Dict("size" => textfont_size),
-                "cliponaxis" => false,
             ),
         )
 
     end
 
+    id = lastindex(nf_) + 1
+
     push!(
         data,
         Dict(
-            "y" => ("Total", "Total"),
-            "x" => (0, su),
+            "legendgroup" => id,
+            "showlegend" => false,
+            "y" => (id, id),
+            "x" => (0, af),
             "mode" => "lines",
-            "line" => Dict("width" => line_width, "color" => Nucleus.Color.HEDA),
+            "line" => Dict("width" => line_width * 1.6, "color" => Nucleus.Color.HEDA),
         ),
     )
 
     push!(
         data,
         Dict(
-            "y" => ("Total",),
-            "x" => (su,),
-            "text" => "$(round(su; sigdigits = 4)) ➡ $pr",
+            "legendgroup" => id,
+            "name" => "Total",
+            "y" => (id,),
+            "x" => (af,),
+            "text" => round(af; sigdigits = 2),
             "mode" => "markers+text",
             "marker" => Dict(
-                "size" => marker_size,
-                "color" => isone(pr) ? Nucleus.Color.HEYE : Nucleus.Color.HEGR,
-                "line" => Dict("width" => line_width, "color" => Nucleus.Color.HEDA),
+                "size" => marker_size * 1.6,
+                "color" => iszero(ta) ? Nucleus.Color.HESR : Nucleus.Color.HESG,
+                "line" => Dict("width" => line_width * 1.6, "color" => Nucleus.Color.HEYE),
             ),
-            "textposition" => "top center",
+            "textposition" => af < 0 ? "left" : "right",
             "textfont" => Dict("size" => textfont_size),
         ),
     )
@@ -274,17 +288,19 @@ function plot_evidence(
         ht,
         data,
         Dict(
-            "showlegend" => false,
+            "height" => 800,
+            "width" => 800,
+            "legend" => Dict("x" => 0, "y" => 0.5),
             "title" => Dict("text" => title_text, "font" => Dict("size" => textfont_size * 1.6)),
             "xaxis" => Dict(
                 "range" => (-8, 8),
                 "title" => Dict("text" => "√Evidence"),
                 "dtick" => 1,
                 "zeroline" => true,
-                "zerolinewidth" => line_width * 0.4,
-                "zerolinecolor" => Nucleus.Color.HEDA,
+                "zerolinewidth" => line_width * 2,
+                "zerolinecolor" => Nucleus.Color.HEFA,
             ),
-            "yaxis" => Dict("autorange" => "reversed", "ticktexts" => vcat(nf_, "Total")),
+            "yaxis" => Dict("autorange" => "reversed", "visible" => false),
         ),
     )
 
