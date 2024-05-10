@@ -172,23 +172,25 @@ function plot_evidence(
     title_text = "Nomogram",
 )
 
-    ev_ = Vector{Float64}(undef, lastindex(nf_))
-
     P0, P1 = get_p0_p1(ge_[1].mf.data.ta_)
 
-    be = _sign_square_root(log(P1 / P0))
+    be = log(P1 / P0)
+
+    ev_ = Vector{Float64}(undef, lastindex(nf_))
 
     af = be
 
     for id in eachindex(nf_)
 
-        af +=
-            ev_[id] =
-                _sign_square_root(_get_evidence(predict(ge_[id], (; f1_ = [te_[id]]))[1], P0, P1))
+        af += ev_[id] = _get_evidence(predict(ge_[id], (; f1_ = [te_[id]]))[1], P0, P1)
 
     end
 
-    ta = convert(Int, 0 < af)
+    be = _sign_square_root(be)
+
+    ev_ .= _sign_square_root.(ev_)
+
+    af = _sign_square_root(af)
 
     id = 0
 
@@ -276,7 +278,7 @@ function plot_evidence(
             "mode" => "markers+text",
             "marker" => Dict(
                 "size" => marker_size * 1.6,
-                "color" => iszero(ta) ? Nucleus.Color.HESR : Nucleus.Color.HESG,
+                "color" => af <= 0 ? Nucleus.Color.HESR : Nucleus.Color.HESG,
                 "line" => Dict("width" => line_width * 1.6, "color" => Nucleus.Color.HEYE),
             ),
             "textposition" => af < 0 ? "left" : "right",

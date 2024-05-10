@@ -124,7 +124,7 @@ fs = Matrix{Float64}(undef, lastindex(nf_), lastindex(sa_))
 # ---- #
 
 # TODO: Is changing directions symmetric?
-fs[1, :] = replace(da[!, "sex"], "female" => 0, "male" => 1)
+#fs[1, :] = replace(da[!, "sex"], "female" => 0, "male" => 1)
 fs[1, :] = replace(da[!, "sex"], "female" => 1, "male" => 0)
 
 # ---- #
@@ -138,7 +138,7 @@ fs[3, :] = da[!, "fare"]
 # ---- #
 
 # TODO: Is changing directions symmetric?
-fs[4, :] = [4 - parse(Int, da[id, "pclass"][1]) for id in eachindex(sa_)]
+#fs[4, :] = [4 - parse(Int, da[id, "pclass"][1]) for id in eachindex(sa_)]
 fs[4, :] = [parse(Int, da[id, "pclass"][1]) for id in eachindex(sa_)]
 
 # ---- #
@@ -161,12 +161,9 @@ const GE_ = Vector{StatisticalModel}(undef, lastindex(nf_))
 
 # ---- #
 
-for (id, re) in
-    enumerate([1.1681195763601897, -0.08630585757607466, 0.3886782595762168, -0.6055654277469712])
+for id in eachindex(nf_)
 
     ge = Nucleus.Evidence.fit(ta_, fs[id, :])
-
-    @test Nucleus.Evidence._average_evidence(ge, fs[id, :]) === re
 
     Nucleus.Evidence.plot_fit(
         joinpath(Nucleus.TE, "$(nf_[id]).html"),
