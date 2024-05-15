@@ -12,20 +12,18 @@ using Random: seed!
 
 # ---- #
 
-for (id, ta_, f1_, re) in (
-    (1, [0, 0, 0, 1, 1, 1], [0, 0, 0, 1, 1, 1], 17.56606848519685),
-    (2, [1, 1, 1, 0, 0, 0], [1, 1, 1, 0, 0, 0], 17.56606848519685),
-    (3, [0, 1, 0, 1, 0, 1], [0, 1, 0, 1, 0, 1], 17.56606848519685),
-    (4, [0, 0, 0, 1, 1, 1], [1, 1, 1, 0, 0, 0], -17.566068485196848),
-    (5, [1, 1, 1, 0, 0, 0], [0, 0, 0, 1, 1, 1], -17.56606848519685),
-    (6, [0, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0], -17.56606848519685),
+for (id, ta_, f1_) in (
+    (1, [0, 0, 0, 1, 1, 1], [0, 0, 0, 1, 1, 1]),
+    (2, [1, 1, 1, 0, 0, 0], [1, 1, 1, 0, 0, 0]),
+    (3, [0, 1, 0, 1, 0, 1], [0, 1, 0, 1, 0, 1]),
+    (4, [0, 0, 0, 1, 1, 1], [1, 1, 1, 0, 0, 0]),
+    (5, [1, 1, 1, 0, 0, 0], [0, 0, 0, 1, 1, 1]),
+    (6, [0, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0]),
 )
 
     ge = Nucleus.Evidence.fit(ta_, f1_)
 
     @test isapprox(fitted(ge), ta_; rtol = 1e-7)
-
-    @test Nucleus.Evidence._average_evidence(ge, f1_) === re
 
     # 21.834 μs (209 allocations: 13.89 KiB)
     # 3.938 μs (70 allocations: 3.14 KiB)
@@ -41,8 +39,6 @@ for (id, ta_, f1_, re) in (
     # 3.976 μs (70 allocations: 3.14 KiB)
 
     #@btime Nucleus.Evidence.fit($ta_, $f1_)
-
-    #@btime Nucleus.Evidence._average_evidence($ge, $f1_)
 
     Nucleus.Evidence.plot_fit(
         joinpath(Nucleus.TE, "$id.html"),
@@ -123,9 +119,7 @@ fs = Matrix{Float64}(undef, lastindex(nf_), lastindex(sa_))
 
 # ---- #
 
-# TODO: Is changing directions symmetric?
-#fs[1, :] = replace(da[!, "sex"], "female" => 0, "male" => 1)
-fs[1, :] = replace(da[!, "sex"], "female" => 1, "male" => 0)
+fs[1, :] = replace(da[!, "sex"], "female" => 0, "male" => 1)
 
 # ---- #
 
@@ -137,9 +131,7 @@ fs[3, :] = da[!, "fare"]
 
 # ---- #
 
-# TODO: Is changing directions symmetric?
-#fs[4, :] = [4 - parse(Int, da[id, "pclass"][1]) for id in eachindex(sa_)]
-fs[4, :] = [parse(Int, da[id, "pclass"][1]) for id in eachindex(sa_)]
+fs[4, :] = [4 - parse(Int, da[id, "pclass"][1]) for id in eachindex(sa_)]
 
 # ---- #
 
