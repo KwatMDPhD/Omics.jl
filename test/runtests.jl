@@ -1,41 +1,70 @@
+using LeMoString
+
+using Aqua: test_all
+
 using Test: @test
 
-using Nucleus
+test_all(LeMoString; deps_compat = false)
 
 # ----------------------------------------------------------------------------------------------- #
 
-@test isempty(readdir(Nucleus.TE))
-
 # ---- #
 
-const SR = joinpath(dirname(@__DIR__), "src")
+for (st, re) in (
+    (" less  is   more    ", "Less Is More"),
+    ("    DNA   RNA  protein ", "DNA RNA Protein"),
+    ("i'm on a path", "I'm on a Path"),
+    ("i'M ON A path", "I'M ON A Path"),
+    ("1st", "1st"),
+    ("1ST", "1ST"),
+    ("2nd", "2nd"),
+    ("2Nd", "2Nd"),
+    ("3rd", "3rd"),
+    ("3rD", "3rD"),
+    ("4th", "4th"),
+    ("5TH", "5TH"),
+)
 
-# ---- #
-
-const MO_ = Nucleus.Path.read(SR, r"^((?!Nucleus.jl).)*$")
-
-# ---- #
-
-for jl in MO_
-
-    @test jl[1:(end - 3)] == readline(joinpath(SR, jl))[8:end]
+    @test LeMoString.title(st) === re
 
 end
 
 # ---- #
 
-const TE_ = Nucleus.Path.read(@__DIR__, r"^((?!runtests.jl).)*$")
+for (st, re) in (
+    (" less  is   more    ", "_less__is___more____"),
+    ("    DNA   RNA  protein ", "____dna___rna__protein_"),
+    ("i'm on a path", "i_m_on_a_path"),
+)
+
+    @test LeMoString.lower(st) === re
+
+end
 
 # ---- #
 
-@test isempty(symdiff(MO_, TE_))
+for (si, pl) in (
+    ("vertex", "vertices"),
+    ("edge", "edges"),
+    ("sex", "sexes"),
+    ("country", "countries"),
+    ("hero", "heroes"),
+)
 
-# ---- #
+    for uc in (-2, 2, -1, 1, 0)
 
-for jl in TE_
+        re = if abs(uc) <= 1
 
-    @info "Testing $jl"
+            si
 
-    run(`julia --project $jl`)
+        else
+
+            pl
+
+        end
+
+        @test LeMoString.count(uc, si) === "$uc $re"
+
+    end
 
 end
