@@ -1,4 +1,4 @@
-⚪️
+Less-is-More string functions ⚪️
 
 ---
 
