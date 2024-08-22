@@ -11,6 +11,18 @@ test_all(LeMoString; deps_compat = false)
 # ---- #
 
 for (st, re) in (
+    (" less  is   more    ", "_less__is___more____"),
+    ("    DNA   RNA  protein ", "____dna___rna__protein_"),
+    ("i'm on the path", "i_m_on_the_path"),
+)
+
+    @test LeMoString.lower(st) === re
+
+end
+
+# ---- #
+
+for (st, re) in (
     (" less  is   more    ", "Less Is More"),
     ("    DNA   RNA  protein ", "DNA RNA Protein"),
     ("i'm on a path", "I'm on a Path"),
@@ -31,18 +43,6 @@ end
 
 # ---- #
 
-for (st, re) in (
-    (" less  is   more    ", "_less__is___more____"),
-    ("    DNA   RNA  protein ", "____dna___rna__protein_"),
-    ("i'm on a path", "i_m_on_a_path"),
-)
-
-    @test LeMoString.lower(st) === re
-
-end
-
-# ---- #
-
 for (si, pl) in (
     ("vertex", "vertices"),
     ("edge", "edges"),
@@ -51,19 +51,9 @@ for (si, pl) in (
     ("hero", "heroes"),
 )
 
-    for uc in (-2, 2, -1, 1, 0)
+    for uc in (-2, -1, 0, 1, 2)
 
-        re = if abs(uc) <= 1
-
-            si
-
-        else
-
-            pl
-
-        end
-
-        @test LeMoString.count(uc, si) === "$uc $re"
+        @test LeMoString.count(uc, si) === "$uc $(abs(uc) <= 1 ? si : pl)"
 
     end
 
