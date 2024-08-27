@@ -4,9 +4,9 @@ using Aqua: test_all
 
 using Test: @test
 
-test_all(LeMoString; deps_compat = false)
-
 # ----------------------------------------------------------------------------------------------- #
+
+test_all(LeMoString; deps_compat = false)
 
 # ---- #
 
