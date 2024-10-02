@@ -1,4 +1,4 @@
-using KwString
+using LeMoString
 
 using Test: @test
 
@@ -12,7 +12,7 @@ for (st, re) in (
     ("i'm on the path", "i_m_on_the_path"),
 )
 
-    @test KwString.lower(st) === re
+    @test LeMoString.lower(st) === re
 
 end
 
@@ -33,7 +33,7 @@ for (st, re) in (
     ("5TH", "5TH"),
 )
 
-    @test KwString.title(st) === re
+    @test LeMoString.title(st) === re
 
 end
 
@@ -49,7 +49,7 @@ for (si, pl) in (
 
     for uc in (-2, -1, 0, 1, 2)
 
-        @test KwString.count(uc, si) === "$uc $(abs(uc) <= 1 ? si : pl)"
+        @test LeMoString.count(uc, si) === "$uc $(abs(uc) <= 1 ? si : pl)"
 
     end
 
