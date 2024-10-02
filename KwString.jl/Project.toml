@@ -1,7 +1,0 @@
-name = "LeMoString"
-uuid = "2cac7ef4-7cbf-4cf8-826b-1ca409d5b139"
-authors = ["KwatMDPhD"]
-version = "0.1.0"
-
-[deps]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

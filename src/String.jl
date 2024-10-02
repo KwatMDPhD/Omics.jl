@@ -1,4 +1,4 @@
-module KwString
+module String
 
 function _strip(st)
 
