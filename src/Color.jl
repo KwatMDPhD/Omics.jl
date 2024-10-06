@@ -1,4 +1,4 @@
-module LeMoColor
+module Color
 
 using ColorSchemes: ColorScheme, bwr
 

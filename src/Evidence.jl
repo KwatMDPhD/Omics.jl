@@ -1,6 +1,6 @@
 module Evidence
 
-using LeMoColor
+using ..Omics
 
 using Plot
 
@@ -42,9 +42,9 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
 
     fe_ = fe_[id_]
 
-    hd = LeMoColor.RE
+    hd = Omics.Color.RE
 
-    hf = LeMoColor.BL
+    hf = Omics.Color.BL
 
     bo = Dict("yaxis" => "y3", "x" => sa_, "mode" => "lines", "line" => Dict("width" => 0))
 
@@ -58,7 +58,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
                 "z" => (ta_,),
                 "y" => (nt,),
                 "x" => sa_,
-                "colorscale" => LeMoColor.fractionate(LeMoColor.BI),
+                "colorscale" => Omics.Color.fractionate(Omics.Color.BI),
                 "showscale" => false,
             ),
             Dict(
@@ -80,7 +80,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
                 Dict(
                     "y" => up_,
                     "fill" => "tonexty",
-                    "fillcolor" => LeMoColor.fade(hf, 0.16),
+                    "fillcolor" => Omics.Color.fade(hf, 0.16),
                 ),
             ),
             Dict(
@@ -88,7 +88,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
                 "y" => (0.5, 0.5),
                 "x" => (sa_[1], sa_[end]),
                 "mode" => "lines",
-                "line" => Dict("color" => LeMoColor.GR),
+                "line" => Dict("color" => Omics.Color.GR),
             ),
         ],
         Dict(
@@ -131,7 +131,7 @@ function _color(ev)
 
     if ev < 0
 
-        LeMoColor.RE
+        Omics.Color.RE
 
     elseif iszero(ev)
 
@@ -139,7 +139,7 @@ function _color(ev)
 
     else
 
-        LeMoColor.GR
+        Omics.Color.GR
 
     end
 
@@ -223,11 +223,11 @@ function plot(ht, nt, P1, nf_, P1f_, ac = nothing; xa = 8)
 
     wi = 4
 
-    he = LeMoColor.DA
+    he = Omics.Color.DA
 
     si = 20
 
-    he_ = LeMoColor.color(1:uf)
+    he_ = Omics.Color.color(1:uf)
 
     ti_ = (-xa):xa
 
@@ -274,7 +274,7 @@ function plot(ht, nt, P1, nf_, P1f_, ac = nothing; xa = 8)
                 "ticks" => "inside",
                 "ticklen" => 16,
                 "tickwidth" => 2,
-                "tickcolor" => LeMoColor.FA,
+                "tickcolor" => Omics.Omics.Color.FA,
             ),
         ),
     )
