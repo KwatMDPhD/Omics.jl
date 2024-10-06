@@ -6,9 +6,7 @@ using Printf: @sprintf
 
 using Random: randstring
 
-using LeMoColor
-
-using LeMoHTML
+using ..Omics
 
 function _open(pa)
 
@@ -107,7 +105,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
     end
 
     _open(
-        LeMoHTML.write(
+        Omics.HTM.write(
             ht,
             ("https://cdn.plot.ly/plotly-latest.min.js",),
             "Plotly.newPlot(\"Plotly\", $(json(da)), $(json(la)), $(json(merge(Dict("displaylogo" => false), co))))";
@@ -143,7 +141,7 @@ function plot_heat_map(
     zc;
     ro_ = map(_label_1, axes(zc, 1)),
     co_ = map(_label_2, axes(zc, 2)),
-    co = LeMoColor.pick(zc),
+    co = Omics.Color.pick(zc),
     la = Dict{String, Any}(),
 )
 
@@ -155,7 +153,7 @@ function plot_heat_map(
                 "y" => ro_,
                 "x" => co_,
                 "z" => collect(eachrow(zc)),
-                "colorscale" => LeMoColor.fractionate(co),
+                "colorscale" => Omics.Color.fractionate(co),
                 "colorbar" => Dict(
                     "len" => 0.4,
                     "thickness" => 16,
@@ -175,7 +173,7 @@ function plot_bubble_map(
     zc;
     ro_ = map(_label_1, axes(zs, 1)),
     co_ = map(_label_2, axes(zs, 2)),
-    co = LeMoColor.pick(zc),
+    co = Omics.Color.pick(zc),
     la = Dict{String, Any}(),
 )
 
@@ -191,7 +189,7 @@ function plot_bubble_map(
                 "marker" => Dict(
                     "size" => vec(zs),
                     "color" => vec(zc),
-                    "colorscale" => LeMoColor.fractionate(co),
+                    "colorscale" => Omics.Color.fractionate(co),
                 ),
             ),
         ],
@@ -218,7 +216,7 @@ function plot_radar(
     ra_;
     na_ = eachindex(x_),
     sh_ = trues(lastindex(an_)),
-    cl_ = LeMoColor.color(eachindex(an_)),
+    cl_ = Omics.Color.color(eachindex(an_)),
     fi_ = fill("toself", lastindex(an_)),
     cf_ = cl_,
     la = Dict{String, Any}(),
@@ -228,7 +226,7 @@ function plot_radar(
 
     c1 = "#351e1c"
 
-    c2 = LeMoColor.FA
+    c2 = Omics.Color.FA
 
     c3 = "#2e211b"
 

@@ -1,4 +1,4 @@
-module HTML
+module HTM
 
 using Random: randstring
 

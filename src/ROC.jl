@@ -1,8 +1,6 @@
 module ROC
 
-using LeMoColor
-
-using Plot
+using ..Omics
 
 function make_matrix()
 
@@ -65,13 +63,13 @@ function plot_matrix(
     la = Dict{String, Any}(),
 )
 
-    Plot.plot_heat_map(
+    Omics.Plot.plot_heat_map(
         ht,
         ma;
         ro_ = ro_,
         co_ = co_,
-        co = LeMoColor.make(["#ffffff", LeMoColor.GR]),
-        la = Plot._merge(
+        co = Omics.Color.make(["#ffffff", Omics.Color.GR]),
+        la = Omics.Plot._merge(
             Dict(
                 "title" => Dict("text" => "Confusion Matrix"),
                 "yaxis" => _make_axis("Actual"),
@@ -80,26 +78,26 @@ function plot_matrix(
                     _make_annotation(
                         ro_[1],
                         co_[1],
-                        "$(ma[1, 1])<br>TNR (Specificity) $(Plot.shorten(tn))",
+                        "$(ma[1, 1])<br>TNR (Specificity) $(Omics.Plot.shorten(tn))",
                     ),
                     _make_annotation(
                         ro_[2],
                         co_[1],
-                        "$(ma[2, 1])<br>FNR (Type-2 Error) $(Plot.shorten(fn))",
+                        "$(ma[2, 1])<br>FNR (Type-2 Error) $(Omics.Plot.shorten(fn))",
                     ),
                     _make_annotation(
                         ro_[1],
                         co_[2],
-                        "$(ma[1, 2])<br>FPR (Type-1 Error) $(Plot.shorten(fp))",
+                        "$(ma[1, 2])<br>FPR (Type-1 Error) $(Omics.Plot.shorten(fp))",
                     ),
                     _make_annotation(
                         ro_[2],
                         co_[2],
-                        "$(ma[2, 2])<br>TPR (Sensitivity or Recall) $(Plot.shorten(tp))",
+                        "$(ma[2, 2])<br>TPR (Sensitivity or Recall) $(Omics.Plot.shorten(tp))",
                     ),
-                    _make_annotation(0.5, 0, "NPV $(Plot.shorten(np))"),
-                    _make_annotation(0.5, 1, "PPV (Precision) $(Plot.shorten(pp))"),
-                    _make_annotation(0.5, 0.5, "Accuracy $(Plot.shorten(ac))"),
+                    _make_annotation(0.5, 0, "NPV $(Omics.Plot.shorten(np))"),
+                    _make_annotation(0.5, 1, "PPV (Precision) $(Omics.Plot.shorten(pp))"),
+                    _make_annotation(0.5, 0.5, "Accuracy $(Omics.Plot.shorten(ac))"),
                 ),
             ),
             la,
@@ -140,7 +138,7 @@ function make_line(la_, pr_, th_ = range(extrema(pr_)..., 10))
             np,
             pp,
             ac;
-            la = Dict("title" => Dict("text" => "Threshold $(Plot.shorten(th))")),
+            la = Dict("title" => Dict("text" => "Threshold $(Omics.Plot.shorten(th))")),
         )
 
         fp_[it] = fp
@@ -159,11 +157,11 @@ function plot_line(ht, fp_, tp_)
 
     wi = 4
 
-    co = LeMoColor.BL
+    co = Omics.Color.BL
 
     ra = -0.02, 1.02
 
-    Plot.plot(
+    Omics.Plot.plot(
         ht,
         (
             Dict(
@@ -175,14 +173,14 @@ function plot_line(ht, fp_, tp_)
             ),
             Dict(
                 # TODO: Correct AUC calculation.
-                "name" => "Area = $(Plot.shorten(sum(tp_) / lastindex(tp_)))",
+                "name" => "Area = $(Omics.Plot.shorten(sum(tp_) / lastindex(tp_)))",
                 "y" => [0; tp_[id]],
                 "x" => [0; fp_[id]],
                 "mode" => "markers+lines",
                 "marker" => Dict("size" => wi * 2.4, "color" => co),
                 "line" => Dict("width" => wi, "color" => co),
                 "fill" => "tozeroy",
-                "fillcolor" => LeMoColor.fade(co, 0.4),
+                "fillcolor" => Omics.Color.fade(co, 0.4),
             ),
         ),
         Dict(

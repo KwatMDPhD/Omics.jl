@@ -1,4 +1,4 @@
-module LeMoNormalization
+module Normalization
 
 using StatsBase: competerank, denserank, mean, quantile, std, tiedrank
 

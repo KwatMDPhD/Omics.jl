@@ -6,7 +6,7 @@ using KernelDensity: default_bandwidth, kde
 
 using Statistics: cor
 
-using Probability
+using ..Omics
 
 function get_entropy(pr)
 
@@ -99,7 +99,7 @@ function _get_joint(
     n2_::AbstractVector{<:Integer},
 )
 
-    Probability._01!(Probability.count(n1_, n2_))
+    Omics.Probability._01!(Omics.Probability.count(n1_, n2_))
 
 end
 
@@ -107,7 +107,7 @@ function _get_joint(co, n1_, n2_)
 
     fa = 0.75 - 0.75 * abs(co)
 
-    Probability._01!(
+    Omics.Probability._01!(
         kde(
             (n2_, n1_);
             npoints = (32, 32),
