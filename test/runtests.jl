@@ -1,7 +1,9 @@
-using Nucleus
+using Omics
 
 using Test: @test
 
 # ----------------------------------------------------------------------------------------------- #
 
 # ---- #
+
+run(`julia --project Strin.jl`)

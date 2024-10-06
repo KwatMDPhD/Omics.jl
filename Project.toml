@@ -1,14 +1,12 @@
-name = "Nucleus"
-uuid = "e8386f20-3e60-497e-8358-52c6451f91c7"
-authors = ["AUTHOR"]
+name = "Omics"
+uuid = "55404059-57b2-473d-9cce-582834f19b54"
+authors = ["KwatMDPhD"]
 version = "0.1.0"
 
 [deps]
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 KernelDensity = "5ab0869b-81aa-558d-bb23-cbf5423bbe9b"
-Plot = "c304946e-9ce9-4c72-9b27-6674ff9fe73a"
-Probability = "ef331deb-e33d-4e79-bd03-a1cdae2f0229"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"

@@ -1,4 +1,4 @@
-module String
+module Strin
 
 function _strip(st)
 
