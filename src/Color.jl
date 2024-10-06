@@ -4,8 +4,6 @@ using ColorSchemes: ColorScheme, bwr
 
 using Colors: Colorant, coloralpha, hex
 
-const DA = "#171412"
-
 const FA = "#ebf6f7"
 
 const RE = "#ff1992"
@@ -15,6 +13,22 @@ const GR = "#93ff92"
 const BL = "#1993ff"
 
 const YE = "#ffff32"
+
+const KB = "#dd9159"
+
+const KG = "#6c9956"
+
+const KR = "#e06351"
+
+const KO = "#fc7f31"
+
+const KP = "#561649"
+
+const KY = "#fbb92d"
+
+const KE = "#a40522"
+
+const KW = "#790505"
 
 const GE = "#20d9ba"
 
@@ -26,13 +40,9 @@ const SR = "#8c1515"
 
 const SG = "#175e54"
 
-const IR = "#fc7f31"
+const CR = "#f47983"
 
-const IP = "#561649"
-
-const BR = "#f47983"
-
-const BB = "#003171"
+const CB = "#003171"
 
 function _parse(st)
 
@@ -84,8 +94,8 @@ const CA = make([
     SG,
     IR,
     IP,
-    BR,
-    BB,
+    CR,
+    CB,
 ])
 
 function pick(nu_)
