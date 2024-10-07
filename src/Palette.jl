@@ -2,11 +2,13 @@ module Palette
 
 using ColorSchemes: ColorScheme, bwr
 
+using Colors: Colorant
+
 using ..Omics
 
 function make(st_)
 
-    ColorScheme(map(Omics.Color.pars, st_))
+    ColorScheme(map(st -> parse(Colorant, st), st_))
 
 end
 

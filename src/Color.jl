@@ -42,21 +42,15 @@ const CR = "#f47983"
 
 const CB = "#003171"
 
-function pars(st)
-
-    parse(Colorant, st)
-
-end
-
-function hexify(rg)
+function hexify(rg::Colorant)
 
     "#$(hex(rg, :rrggbbaa))"
 
 end
 
-function fade(st, al)
+function hexify(st, al = 1)
 
-    hexify(coloralpha(pars(st), al))
+    hexify(coloralpha(parse(Colorant, st), al))
 
 end
 
