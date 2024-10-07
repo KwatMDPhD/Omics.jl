@@ -8,59 +8,12 @@ using OrderedCollections: OrderedDict
 
 # ---- #
 
-const DA = pkgdir(Omics, "data")
+const DA = pkgdir(Omics, "data", "Dictionary")
 
-# ---- #
-
-const WR = joinpath(tempdir(), "write")
-
-# ---- #
-
-const JS = joinpath(DA, "example_1.json")
-
-# ---- #
-
-@test typeof(LeMoIO.read_dictionary(JS)) === OrderedDict{String, Any}
-
-# ---- #
-
-@test typeof(LeMoIO.read_dictionary(JS, OrderedDict{String, String})) ===
-      OrderedDict{String, String}
-
-# ---- #
+const JS = joinpath(DA, "example.json")
 
 for (fi, re) in (
-    (
-        joinpath(DA, "example_2.json"),
-        OrderedDict{String, Any}(
-            "quiz" => Dict(
-                "sport" => Dict(
-                    "q1" => Dict(
-                        "options" => [
-                            "New York Bulls",
-                            "Los Angeles Kings",
-                            "Golden State Warriros",
-                            "Huston Rocket",
-                        ],
-                        "question" => "Which one is correct team name in NBA?",
-                        "answer" => "Huston Rocket",
-                    ),
-                ),
-                "maths" => Dict(
-                    "q1" => Dict(
-                        "options" => ["10", "11", "12", "13"],
-                        "question" => "5 + 7 = ?",
-                        "answer" => "12",
-                    ),
-                    "q2" => Dict(
-                        "options" => ["1", "2", "3", "4"],
-                        "question" => "12 - 8 = ?",
-                        "answer" => "4",
-                    ),
-                ),
-            ),
-        ),
-    ),
+    (JS, OrderedDict{String, Any}("fruit" => "Apple", "size" => "Large", "color" => "Red")),
     (
         joinpath(DA, "example.toml"),
         Dict{String, Any}(
@@ -82,13 +35,16 @@ for (fi, re) in (
     ),
 )
 
-    ke_va = LeMoIO.read_dictionary(fi)
+    ke_va = Omics.Dictionary.rea(fi)
 
     @test typeof(ke_va) === typeof(re)
 
     @test ke_va == re
 
 end
+
+@test typeof(Omics.Dictionary.rea(JS, OrderedDict{String, String})) ===
+      OrderedDict{String, String}
 
 # ---- #
 
@@ -109,6 +65,5 @@ const KE_VA = Dict(
     "episode" => 1030,
 )
 
-# ---- #
-
-@test KE_VA == LeMoIO.read_dictionary(LeMoIO.write_dictionary(WR, KE_VA))
+@test KE_VA ==
+      Omics.Dictionary.rea(Omics.Dictionary.writ(joinpath(tempdir(), "write.json"), KE_VA))

@@ -4,33 +4,25 @@ using Test: @test
 
 # ----------------------------------------------------------------------------------------------- #
 
-# ---- #
+const DA = pkgdir(Omics, "data", "Table")
 
-@test KE_VA == LeMoIO.read_dictionary(LeMoIO.write_dictionary(WR, KE_VA))
-
-# ---- #
-
-const TI = LeMoIO.read_table(joinpath(DA, "titanic.tsv"))
+const WR = joinpath(tempdir(), "write.tsv")
 
 # ---- #
 
-@test all(map(isequal, eachcol(TI), eachcol(LeMoIO.read_table(LeMoIO.write_table(WR, TI)))))
+const TI = Omics.Table.rea(joinpath(DA, "titanic.tsv"))
+
+@test all(map(isequal, eachcol(TI), eachcol(Omics.Table.rea(Omics.Table.writ(WR, TI)))))
 
 # ---- #
 
-const EN = LeMoIO.read_table(joinpath(DA, "enst_gene.tsv.gz"))
+const EN = Omics.Table.rea(joinpath(DA, "enst_gene.tsv.gz"))
+
+@test EN == Omics.Table.rea(Omics.Table.writ(WR, EN))
 
 # ---- #
 
-@test EN == LeMoIO.read_table(LeMoIO.write_table(WR, EN))
+const XL =
+    Omics.Table.rea(joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx"), "HumanSpecific Genes")
 
-# ---- #
-
-const XL = LeMoIO.read_table(
-    joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx"),
-    "HumanSpecific Genes",
-)
-
-# ---- #
-
-LeMoIO.read_table(LeMoIO.write_table(WR, XL))
+Omics.Table.rea(Omics.Table.writ(WR, XL))
