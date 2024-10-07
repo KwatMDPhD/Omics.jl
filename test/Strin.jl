@@ -49,9 +49,7 @@ for (si, pl) in (
 
     for uc in (-2, -1, 0, 1, 2)
 
-        @test Omics.Strin.count(uc, si) === "$uc $(abs(uc) <= 1 ? si : pl)"
-
-        #@btime Omics.Strin.count($uc, $si)
+        @test Omics.Strin.count(uc, si) === "$uc $(1 < abs(uc) ? pl : si)"
 
     end
 

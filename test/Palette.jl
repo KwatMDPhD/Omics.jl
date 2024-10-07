@@ -10,11 +10,14 @@ const RG_ = Omics.Palette.make(["#ff0000", "#00ff00", "#0000ff"])
 
 # ---- #
 
-@test Omics.Palette.pick(Float64[]) === Omics.Palette.bwr
+for (nu_, re) in (
+    (Float64[], Omics.Palette.bwr),
+    ([1], Omics.Palette.MO),
+    ([1, 2], Omics.Palette.BI),
+    ([1, 2, 3], Omics.Palette.CA),
+)
 
-for (uc, re) in ((1, Omics.Palette.MO), (2, Omics.Palette.BI), (3, Omics.Palette.CA))
-
-    @test Omics.Palette.pick(rand(Int, uc)) === re
+    @test Omics.Palette.pick(nu_) === re
 
 end
 
@@ -89,16 +92,6 @@ for (he_, re) in (
     ),
 )
 
-    rg_ = Omics.Palette.make(he_)
-
-    @test Omics.Palette.fractionate(rg_) == re
-
-    # 179.243 ns (8 allocations: 392 bytes)
-    # 379.063 ns (14 allocations: 624 bytes)
-    # 527.562 ns (20 allocations: 888 bytes)
-    # 661.012 ns (26 allocations: 1.11 KiB)
-    # 801.646 ns (32 allocations: 1.37 KiB)
-    # 930.129 ns (38 allocations: 1.61 KiB)
-    #@btime Omics.Palette.fractionate($rg_)
+    @test Omics.Palette.fractionate(Omics.Palette.make(he_)) == re
 
 end
