@@ -1,4 +1,4 @@
-using ROC
+using Omics
 
 using Test: @test
 

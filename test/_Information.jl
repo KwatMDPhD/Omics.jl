@@ -1,4 +1,4 @@
-using Information
+using Omics
 
 using Test: @test
 
@@ -11,10 +11,6 @@ using Distances: CorrDist, Euclidean, pairwise
 using KernelDensity: kde
 
 using Random: seed!
-
-using Plot
-
-using Probability
 
 # ---- #
 

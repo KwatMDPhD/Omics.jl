@@ -1,4 +1,4 @@
-using Probability
+using Omics
 
 using Test: @test
 
@@ -7,8 +7,6 @@ using Test: @test
 using KernelDensity: kde
 
 using Random: seed!
-
-using Plot
 
 # ---- #
 

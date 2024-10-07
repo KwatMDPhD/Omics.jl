@@ -1,4 +1,4 @@
-using LeMoNormalization
+using Omics
 
 using Test: @test
 
