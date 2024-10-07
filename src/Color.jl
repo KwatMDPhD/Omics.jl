@@ -54,9 +54,9 @@ function hexify(rg)
 
 end
 
-function fade(he, al)
+function fade(st, al)
 
-    hexify(coloralpha(pars(he), al))
+    hexify(coloralpha(pars(st), al))
 
 end
 

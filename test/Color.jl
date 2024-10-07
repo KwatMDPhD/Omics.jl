@@ -33,8 +33,8 @@ const ST_ = (
 
 # ---- #
 
-for (al, re) in ((0, "#00000000"), (0.5, "#00000080"), (1, "#000000ff"))
+for (al, re) in ((0, "#ff000000"), (0.5, "#ff000080"), (1, "#ff0000ff"))
 
-    @test Omics.Color.fade("#000000", al) === Omics.Color.fade("#00000000", al) === re
+    @test Omics.Color.fade("#ff000000", al) === Omics.Color.fade("#ff0000", al) === re
 
 end
