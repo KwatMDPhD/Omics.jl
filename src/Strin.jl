@@ -16,11 +16,7 @@ function title(st)
 
     _strip(
         join(
-            if isuppercase(c1)
-                c1
-            else
-                c2
-            end for (c1, c2) in zip(
+            isuppercase(or) ? or : re for (or, re) in zip(
                 st,
                 replace(
                     titlecase(st),
@@ -69,7 +65,7 @@ function count(uc, st)
 
     if !(iszero(uc) || isone(abs(uc)))
 
-        st = if lastindex(st) == 3 && st[2:3] == "ex"
+        st = if lastindex(st) == 3 && endswith(st, "ex")
 
             "$(st)es"
 

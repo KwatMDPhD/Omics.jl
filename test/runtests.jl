@@ -6,4 +6,10 @@ using Test: @test
 
 # ---- #
 
-run(`julia --project Strin.jl`)
+for mo in ("Color", "Palette", "Strin")
+
+    @info mo
+
+    run(`julia --project $mo.jl`)
+
+end

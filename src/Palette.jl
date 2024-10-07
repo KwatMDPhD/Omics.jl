@@ -6,12 +6,11 @@ using ..Omics
 
 function make(he_)
 
-    #ColorScheme(map(Omics.Color.parse, he_))
-    ColorScheme(he_)
+    ColorScheme(map(Omics.Color.pars, he_))
 
 end
 
-const MO = make([GP])
+const MO = make([Omics.Color.GP])
 
 const BI = make(["#006442", "#ffb61e"])
 
@@ -26,26 +25,26 @@ const CA = make([
     "#b6e880",
     "#ff97ff",
     "#fecb52",
-    FA,
-    RE,
-    GR,
-    BL,
-    YE,
-    KB,
-    KG,
-    KR,
-    KO,
-    KP,
-    KY,
-    KE,
-    KW,
-    GE,
-    GP,
-    GB,
-    SR,
-    SG,
-    CR,
-    CB,
+    Omics.Color.FA,
+    Omics.Color.RE,
+    Omics.Color.GR,
+    Omics.Color.BL,
+    Omics.Color.YE,
+    Omics.Color.KB,
+    Omics.Color.KG,
+    Omics.Color.KR,
+    Omics.Color.KO,
+    Omics.Color.KP,
+    Omics.Color.KY,
+    Omics.Color.KE,
+    Omics.Color.KW,
+    Omics.Color.GE,
+    Omics.Color.GP,
+    Omics.Color.GB,
+    Omics.Color.SR,
+    Omics.Color.SG,
+    Omics.Color.CR,
+    Omics.Color.CB,
 ])
 
 function pick(nu_)
@@ -78,13 +77,13 @@ function pick(nu_)
 
 end
 
-function color(nu::Real, pa)
+function color(nu::Real, rg_)
 
-    Omics.Color.hexify(pa[nu])
+    Omics.Color.hexify(rg_[nu])
 
 end
 
-function color(nu_, pa = pick(nu_))
+function color(nu_, rg_ = pick(nu_))
 
     if isempty(nu_)
 
@@ -92,23 +91,21 @@ function color(nu_, pa = pick(nu_))
 
     elseif isone(lastindex(unique(nu_)))
 
-        [color(0.5, pa)]
+        [color(0.5, rg_)]
 
     else
 
-        mi = minimum(nu_)
+        mi, ma = extrema(nu_)
 
-        ma = maximum(nu_)
-
-        map(nu -> color((nu - mi) / (ma - mi), pa), nu_)
+        map(nu -> color((nu - mi) / (ma - mi), rg_), nu_)
 
     end
 
 end
 
-function fractionate(pa)
+function fractionate(rg_)
 
-    he_ = map(Omics.Color.hexify, pa)
+    he_ = map(Omics.Color.hexify, rg_)
 
     uh = lastindex(he_)
 

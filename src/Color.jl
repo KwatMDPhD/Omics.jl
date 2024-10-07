@@ -42,7 +42,7 @@ const CR = "#f47983"
 
 const CB = "#003171"
 
-function parse(st)
+function pars(st)
 
     parse(Colorant, st)
 
@@ -56,7 +56,7 @@ end
 
 function fade(he, al)
 
-    hexify(coloralpha(parse(he), al))
+    hexify(coloralpha(pars(he), al))
 
 end
 
