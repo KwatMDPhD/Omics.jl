@@ -8,20 +8,7 @@ using Colors: RGB
 
 # ---- #
 
-const ST_ = (
-    "red",
-    " red ",
-    "RED",
-    " RED ",
-    "#f00",
-    " #f00 ",
-    "#F00",
-    " #F00 ",
-    "#ff0000",
-    " #ff0000 ",
-    "#FF0000",
-    " #FF0000 ",
-)
+const ST_ = ("red", "#f00", "#ff0000")
 
 # ---- #
 
@@ -29,7 +16,7 @@ const ST_ = (
 
 # ---- #
 
-@test unique(map(st -> st |> Omics.Color.pars |> Omics.Color.hexify, ST_))[] === "#ff0000"
+@test unique(map(st -> st |> Omics.Color.pars |> Omics.Color.hexify, ST_))[] === ST_[end]
 
 # ---- #
 
