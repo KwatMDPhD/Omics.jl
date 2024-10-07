@@ -6,12 +6,8 @@ using Test: @test
 
 # ---- #
 
-const RG_ = Omics.Palette.make(["#ff0000", "#00ff00", "#0000ff"])
-
-# ---- #
-
 for (nu_, re) in (
-    (Float64[], Omics.Palette.bwr),
+    ([1.0], Omics.Palette.bwr),
     ([1], Omics.Palette.MO),
     ([1, 2], Omics.Palette.BI),
     ([1, 2, 3], Omics.Palette.CA),
@@ -22,6 +18,8 @@ for (nu_, re) in (
 end
 
 # ---- #
+
+const RG_ = Omics.Palette.make(["#ff0000", "#00ff00", "#0000ff"])
 
 for (nu, re) in (
     # Indexed.

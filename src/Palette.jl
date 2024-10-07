@@ -4,9 +4,9 @@ using ColorSchemes: ColorScheme, bwr
 
 using ..Omics
 
-function make(he_)
+function make(st_)
 
-    ColorScheme(map(Omics.Color.pars, he_))
+    ColorScheme(map(Omics.Color.pars, st_))
 
 end
 
@@ -105,11 +105,11 @@ end
 
 function fractionate(rg_)
 
+    ur = lastindex(rg_)
+
     he_ = map(Omics.Color.hexify, rg_)
 
-    uh = lastindex(he_)
-
-    if isone(uh)
+    if isone(ur)
 
         he = he_[]
 
@@ -117,7 +117,7 @@ function fractionate(rg_)
 
     else
 
-        collect(zip(range(0, 1, uh), he_))
+        collect(zip(range(0, 1, ur), he_))
 
     end
 

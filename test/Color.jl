@@ -12,9 +12,9 @@ for st in ("red", "#f00", "#ff0000")
 
     rg = Omics.Color.pars(st)
 
-    rg === RGB(1, 0, 0)
+    @test rg === RGB(1, 0, 0)
 
-    Omics.Color.hexify(rg) === "#ff0000"
+    @test Omics.Color.hexify(rg) === "#ff0000"
 
 end
 
