@@ -50,7 +50,7 @@ end
 
 function hexify(rg)
 
-    "#$(lowercase(hex(rg, :AUTO)))"
+    "#$(hex(rg, :rrggbbaa))"
 
 end
 

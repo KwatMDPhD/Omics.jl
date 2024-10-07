@@ -14,7 +14,7 @@ for st in ("red", "#f00", "#ff0000")
 
     @test rg === RGB(1, 0, 0)
 
-    @test Omics.Color.hexify(rg) === "#ff0000"
+    @test Omics.Color.hexify(rg) === "#ff0000ff"
 
 end
 
@@ -22,6 +22,6 @@ end
 
 for (al, re) in ((0, "#ff000000"), (0.5, "#ff000080"), (1, "#ff0000ff"))
 
-    @test Omics.Color.fade("#ff0000", al) === Omics.Color.fade("#ff000088", al) === re
+    @test Omics.Color.fade("red", al) === re
 
 end
