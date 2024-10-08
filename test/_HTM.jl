@@ -6,21 +6,17 @@ using Test: @test
 
 # ---- #
 
-const HT = LeMoHTML.write(
+const HT = Omics.HTM.writ(
     joinpath(tempdir(), "name.html"),
     ("SRC 1", "SRC 2"),
     "SCRIPT";
     ba = "#ff0000",
 )
 
-# ---- #
+const ST = read(HT, String)
 
-@test lastindex(readlines(HT)) === 12
+println(ST)
 
-# ---- #
+@test count(==('\n'), ST) === 11
 
 run(`open --background $HT`)
-
-# ---- #
-
-println(read(HT, String))
