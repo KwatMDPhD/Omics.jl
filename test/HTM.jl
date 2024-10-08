@@ -10,7 +10,7 @@ const HT = Omics.HTM.writ(
     joinpath(tempdir(), "name.html"),
     ("SRC 1", "SRC 2"),
     "SCRIPT";
-    ba = "#ff0000",
+    ba = "#00ff00",
 )
 
 const ST = read(HT, String)
