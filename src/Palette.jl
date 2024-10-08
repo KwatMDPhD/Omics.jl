@@ -89,7 +89,7 @@ function color(nu_, rg_ = pick(nu_))
 
     if isempty(nu_)
 
-        String[]
+        error()
 
     elseif isone(lastindex(unique(nu_)))
 

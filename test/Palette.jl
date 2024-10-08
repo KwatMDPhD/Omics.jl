@@ -40,6 +40,15 @@ for (nu, re) in (
     (1.0, "#0000ffff"),
     (1.1, "#0000ffff"),
     (Inf, "#0000ffff"),
+)
+
+    @test Omics.Palette.color(nu, RG_) === re
+
+end
+
+# ---- #
+
+for (nu_, re) in (
     # Normalized between the extrema.
     ([NaN], ["#00ff00ff"]),
     ([-1], ["#00ff00ff"]),
@@ -49,7 +58,7 @@ for (nu, re) in (
     (1:4, ["#ff0000ff", "#55aa00ff", "#00aa55ff", "#0000ffff"]),
 )
 
-    @test Omics.Palette.color(nu, RG_) == re
+    @test Omics.Palette.color(nu_, RG_) == re
 
 end
 

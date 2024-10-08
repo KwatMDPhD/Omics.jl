@@ -6,9 +6,9 @@ using OrderedCollections: OrderedDict
 
 using TOML: parsefile as parsefil
 
-function rea(fi, dicttype = OrderedDict; ke_ar...)
+function rea(fi, dicttype = OrderedDict)
 
-    endswith(fi, ".toml") ? parsefil(fi; ke_ar...) : parsefile(fi; dicttype, ke_ar...)
+    endswith(fi, ".toml") ? parsefil(fi) : parsefile(fi; dicttype)
 
 end
 

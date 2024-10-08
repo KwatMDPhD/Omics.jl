@@ -8,62 +8,79 @@ using OrderedCollections: OrderedDict
 
 # ---- #
 
-const DA = pkgdir(Omics, "data", "Dictionary")
-
-const JS = joinpath(DA, "example.json")
+const JS = pkgdir(Omics, "data", "Dictionary", "example.json")
 
 for (fi, re) in (
-    (JS, OrderedDict{String, Any}("fruit" => "Apple", "size" => "Large", "color" => "Red")),
     (
-        joinpath(DA, "example.toml"),
+        JS,
+        OrderedDict{String, Any}(
+            "1" => "1",
+            "3" => "3",
+            "5" => "5",
+            "7" => "7",
+            "8" => 8,
+            "6" => 6,
+            "4" => 4,
+            "2" => 2,
+        ),
+    ),
+    (
+        replace(JS, "json" => "toml"),
         Dict{String, Any}(
-            "servers" => Dict(
-                "alpha" => Dict("dc" => "eqdc10", "ip" => "10.0.0.1"),
-                "beta" => Dict("dc" => "eqdc10", "ip" => "10.0.0.2"),
-            ),
             "clients" =>
                 Dict("hosts" => ["alpha", "omega"], "data" => [["gamma", "delta"], [1, 2]]),
-            "owner" => Dict("name" => "Tom Preston-Werner"),
-            "title" => "TOML Example",
+            "servers" => Dict(
+                "beta" => Dict("dc" => "eqdc10", "ip" => "10.0.0.2"),
+                "alpha" => Dict("dc" => "eqdc10", "ip" => "10.0.0.1"),
+            ),
             "database" => Dict(
-                "server" => "192.168.1.1",
+                "enabled" => true,
                 "connection_max" => 5000,
                 "ports" => [8000, 8001, 8002],
-                "enabled" => true,
+                "server" => "192.168.1.1",
             ),
+            "owner" => Dict("name" => "Tom Preston-Werner"),
+            "title" => "TOML Example",
         ),
     ),
 )
 
     ke_va = Omics.Dictionary.rea(fi)
 
+    @test ke_va == re
+
     @test typeof(ke_va) === typeof(re)
 
-    @test ke_va == re
+    @test ke_va isa OrderedDict ? collect(ke_va) == collect(re) :
+          collect(ke_va) != collect(re)
 
 end
 
-@test typeof(Omics.Dictionary.rea(JS, OrderedDict{String, String})) ===
-      OrderedDict{String, String}
+@test typeof(Omics.Dictionary.rea(JS, OrderedDict{String, Union{Int, String}})) ===
+      OrderedDict{String, Union{Int, String}}
 
 # ---- #
 
-const KE_VA = Dict(
-    "Luffy" => "Pirate King",
-    "Crews" => [
-        "Luffy",
-        "Zoro",
-        "Nami",
-        "Usopp",
-        "Sanji",
-        "Chopper",
-        "Robin",
-        "Franky",
-        "Brook",
-        "Jinbe",
-    ],
-    "episode" => 1030,
-)
+for ty in (OrderedDict, Dict)
 
-@test KE_VA ==
-      Omics.Dictionary.rea(Omics.Dictionary.writ(joinpath(tempdir(), "write.json"), KE_VA))
+    re = ty(
+        "1" => "1",
+        "2" => 2,
+        "3" => "3",
+        "4" => 4,
+        "5" => "5",
+        "6" => 6,
+        "7" => "7",
+        "8" => 8,
+    )
+
+    ke_va =
+        Omics.Dictionary.rea(Omics.Dictionary.writ(joinpath(tempdir(), "write.json"), re))
+
+    @test ke_va == re
+
+    @test typeof(ke_va) === OrderedDict{String, Any}
+
+    @test collect(ke_va) == collect(re)
+
+end
