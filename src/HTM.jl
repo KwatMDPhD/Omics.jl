@@ -1,8 +1,6 @@
 module HTM
 
-using Random: randstring
-
-function writ(ht, sr_, sc; id = randstring(), ba = "#000000")
+function writ(ht, sr_, sc; id = "HTM", ba = "#000000")
 
     write(
         ht,

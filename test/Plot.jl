@@ -23,7 +23,6 @@ Omics.Plot.plot(
         "yaxis" => Dict("title" => "Y-Axis Title"),
         "xaxis" => Dict("title" => "X-Axis Title"),
     ),
-    Dict("editable" => true),
 )
 
 # ---- #
@@ -55,7 +54,7 @@ Omics.Plot.plot_bubble_map("", MA * 40, reverse(MA); ro_ = RO_, co_ = CO_)
 
 # ---- #
 
-for (na, co) in (
+for (na, rg_) in (
     ("Monary", Omics.Palette.MO),
     ("Binary", Omics.Palette.BI),
     ("Categorical", Omics.Palette.CA),
@@ -64,9 +63,9 @@ for (na, co) in (
 
     Omics.Plot.plot_heat_map(
         joinpath(tempdir(), "$na.html"),
-        [id for _ in 1:1, id in eachindex(co.colors)];
-        co_ = map(rg -> "_$(Omics.Color.hexify(rg))", co.colors),
-        co,
+        [id for _ in 1:1, id in eachindex(rg_.colors)];
+        co_ = map(rg -> "_$(Omics.Color.hexify(rg))", rg_.colors),
+        rg_,
         la = Dict("title" => na, "yaxis" => Dict("tickvals" => ())),
     )
 

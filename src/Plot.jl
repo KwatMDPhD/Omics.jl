@@ -4,11 +4,13 @@ using JSON: json
 
 using Random: randstring
 
+using StatsBase: mean
+
 using ..Omics
 
 function animate(gi, pn_)
 
-    run(`magick -delay 32 -loop 0 $pn_ $gi`)
+    run(`magick -delay 32 $pn_ $gi`)
 
     Omics.Path.ope(gi)
 
@@ -16,7 +18,7 @@ end
 
 const SI = 832
 
-function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
+function plot(ht, da, la = Dict{String, Any}())
 
     if isempty(ht)
 
@@ -36,7 +38,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
 
     for (ke, va) in la
 
-        if contains(ke, r"^[xy]axis")
+        if startswith(ke, r"[xy]axis")
 
             la[ke] = Omics.Dictionary.merg(
                 Dict(
@@ -56,8 +58,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
         Omics.HTM.writ(
             ht,
             ("https://cdn.plot.ly/plotly-latest.min.js",),
-            "Plotly.newPlot(\"Plotly\", $(json(da)), $(json(la)), $(json(merge(Dict("displaylogo" => false), co))))";
-            id = "Plotly",
+            "Plotly.newPlot(\"HTM\", $(json(da)), $(json(la)))",
         ),
     )
 
@@ -79,41 +80,37 @@ function make_tickvals(nu_)
 
     mi, ma = extrema(nu_)
 
-    all(isinteger, nu_) ? (mi:ma) :
-    [
-        Omics.Strin.shorten(mi),
-        Omics.Strin.shorten(sum(nu_) / lastindex(nu_)),
-        Omics.Strin.shorten(ma),
-    ]
+    all(isinteger, nu_) ? Tuple(mi:ma) :
+    (Omics.Strin.shorten(mi), Omics.Strin.shorten(mean(nu_)), Omics.Strin.shorten(ma))
 
 end
 
 function plot_heat_map(
     ht,
-    zc;
-    ro_ = map(_label_1, axes(zc, 1)),
-    co_ = map(_label_2, axes(zc, 2)),
-    co = Omics.Palette.pick(zc),
+    cl;
+    ro_ = map(_label_1, axes(cl, 1)),
+    co_ = map(_label_2, axes(cl, 2)),
+    rg_ = Omics.Palette.pick(cl),
     la = Dict{String, Any}(),
 )
 
     plot(
         ht,
-        [
+        (
             Dict(
                 "type" => "heatmap",
                 "y" => ro_,
                 "x" => co_,
-                "z" => collect(eachrow(zc)),
-                "colorscale" => Omics.Palette.fractionate(co),
+                "z" => collect(eachrow(cl)),
+                "colorscale" => Omics.Palette.fractionate(rg_),
                 "colorbar" => Dict(
                     "len" => 0.4,
                     "thickness" => 16,
-                    "tickvals" => make_tickvals(filter(!isnan, zc)),
+                    "tickvals" => make_tickvals(filter(!isnan, cl)),
                     "tickfont" => Dict("family" => "Monospace", "size" => 16),
                 ),
             ),
-        ],
+        ),
         Omics.Dictionary.merg(Dict("yaxis" => Dict("autorange" => "reversed")), la),
     )
 
@@ -121,30 +118,30 @@ end
 
 function plot_bubble_map(
     ht,
-    zs,
-    zc;
-    ro_ = map(_label_1, axes(zs, 1)),
-    co_ = map(_label_2, axes(zs, 2)),
-    co = Omics.Palette.pick(zc),
+    si,
+    cl;
+    ro_ = map(_label_1, axes(si, 1)),
+    co_ = map(_label_2, axes(si, 2)),
+    rg_ = Omics.Palette.pick(cl),
     la = Dict{String, Any}(),
 )
 
-    ca_ = vec(CartesianIndices(zs))
+    id_ = vec(CartesianIndices(si))
 
     plot(
         ht,
-        [
+        (
             Dict(
-                "y" => map(ca -> ro_[ca[1]], ca_),
-                "x" => map(ca -> co_[ca[2]], ca_),
+                "y" => map(id -> ro_[id[1]], id_),
+                "x" => map(id -> co_[id[2]], id_),
                 "mode" => "markers",
                 "marker" => Dict(
-                    "size" => vec(zs),
-                    "color" => vec(zc),
-                    "colorscale" => Omics.Palette.fractionate(co),
+                    "size" => vec(si),
+                    "color" => vec(cl),
+                    "colorscale" => Omics.Palette.fractionate(rg_),
                 ),
             ),
-        ],
+        ),
         Omics.Dictionary.merg(
             Dict(
                 "yaxis" => Dict("autorange" => "reversed"),
@@ -156,17 +153,11 @@ function plot_bubble_map(
 
 end
 
-function _tie(an_)
-
-    vcat(an_, an_[1])
-
-end
-
 function plot_radar(
     ht,
     an_,
     ra_;
-    na_ = eachindex(x_),
+    na_ = eachindex(an_),
     sh_ = trues(lastindex(an_)),
     cl_ = Omics.Palette.color(eachindex(an_)),
     fi_ = fill("toself", lastindex(an_)),
@@ -176,22 +167,19 @@ function plot_radar(
 
     wi = 2
 
-    c1 = "#351e1c"
+    c1 = "#000000"
 
     c2 = Omics.Color.FA
-
-    c3 = "#2e211b"
 
     plot(
         ht,
         [
             Dict(
                 "type" => "scatterpolar",
-                "legendgroup" => id,
                 "name" => na_[id],
                 "showlegend" => sh_[id],
-                "theta" => _tie(an_[id]),
-                "r" => _tie(ra_[id]),
+                "theta" => vcat(an_[id], an_[id][1]),
+                "r" => vcat(ra_[id], ra_[id][1]),
                 "mode" => "lines",
                 "line" => Dict(
                     "shape" => "spline",
@@ -200,7 +188,7 @@ function plot_radar(
                     "color" => cl_[id],
                 ),
                 "fill" => fi_[id],
-                "fillcolor" => cf_[id],
+                "fillcolor" => cl_[id],
             ) for id in eachindex(ra_)
         ],
         Omics.Dictionary.merg(
@@ -213,8 +201,7 @@ function plot_radar(
                         "ticklen" => 16,
                         "tickwidth" => wi,
                         "tickcolor" => c1,
-                        "tickfont" =>
-                            Dict("family" => "Optima", "size" => 24, "color" => c3),
+                        "tickfont" => Dict("family" => "Optima", "size" => 24),
                         "gridwidth" => wi,
                         "gridcolor" => c2,
                     ),
@@ -225,19 +212,13 @@ function plot_radar(
                         "ticklen" => 8,
                         "tickwidth" => wi,
                         "tickcolor" => c1,
-                        "tickfont" => Dict(
-                            "family" => "Monospace",
-                            "size" => 12,
-                            "color" => c3,
-                        ),
+                        "tickfont" => Dict("family" => "Monospace", "size" => 12),
                         "gridwidth" => wi,
                         "gridcolor" => c2,
                     ),
                 ),
-                "title" => Dict(
-                    "x" => 0.008,
-                    "font" => Dict("family" => "Times New Roman", "color" => "#27221f"),
-                ),
+                "title" =>
+                    Dict("x" => 0.008, "font" => Dict("family" => "Times New Roman")),
             ),
             la,
         ),

@@ -12,7 +12,7 @@ function make(st_)
 
 end
 
-const MO = make([Omics.Color.GP])
+const MO = make([Omics.Color.GE])
 
 const BI = make(["#006442", "#ffb61e"])
 
