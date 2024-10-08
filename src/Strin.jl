@@ -1,5 +1,7 @@
 module Strin
 
+using Printf: @sprintf
+
 function _strip(st)
 
     replace(strip(st), r" +" => ' ')
@@ -90,6 +92,12 @@ function count(uc, st)
     end
 
     "$uc $st"
+
+end
+
+function shorten(nu)
+
+    @sprintf "%.2g" nu
 
 end
 

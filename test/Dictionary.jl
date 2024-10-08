@@ -8,6 +8,39 @@ using OrderedCollections: OrderedDict
 
 # ---- #
 
+for (k1_v1, k2_v2, re) in (
+    (Dict(1 => 'a'), Dict(2 => 'b'), Dict{Int, Char}),
+    (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Union{Int, Float64}, Union{Char, String}}),
+    (
+        Dict(1 => "Aa"),
+        Dict(2 => view("Bb", 1:2)),
+        Dict{Int, Union{String, SubString{String}}},
+    ),
+)
+
+    @test typeof(Omics.Dictionary.merg(k1_v1, k2_v2)) === re
+
+end
+
+const K1_V1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
+
+const K2_V2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
+
+for (k1_v1, k2_v2, re) in (
+    (K1_V1, K2_V2, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))),
+    (K2_V2, K1_V1, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))),
+)
+
+    @test Omics.Dictionary.merg(k1_v1, k2_v2) == re
+
+    # 1.025 μs (16 allocations: 1.50 KiB)
+    # 1.021 μs (16 allocations: 1.50 KiB)
+    #@btime Omics.Dictionary.merg($k1_v1, $k2_v2)
+
+end
+
+# ---- #
+
 const JS = pkgdir(Omics, "data", "Dictionary", "example.json")
 
 for (fi, re) in (

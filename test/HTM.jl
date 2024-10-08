@@ -19,4 +19,4 @@ println(ST)
 
 @test count(==('\n'), ST) === 11
 
-run(`open --background $HT`)
+Omics.Path.open(HT)

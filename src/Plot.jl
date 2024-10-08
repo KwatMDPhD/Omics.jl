@@ -2,71 +2,19 @@ module Plot
 
 using JSON: json
 
-using Printf: @sprintf
-
 using Random: randstring
 
 using ..Omics
-
-function _open(pa)
-
-    try
-
-        run(`open --background $pa`)
-
-    catch
-
-        @warn "Could not open $pa."
-
-    end
-
-end
 
 function animate(gi, pn_)
 
     run(`magick -delay 32 -loop 0 $pn_ $gi`)
 
-    _open(gi)
+    Omics.Path.ope(gi)
 
 end
 
 const SI = 832
-
-function shorten(nu)
-
-    @sprintf "%.2g" nu
-
-end
-
-function _merge(k1_v1, k2_v2)
-
-    ke_va = Dict{String, Any}()
-
-    for ke in union(keys(k1_v1), keys(k2_v2))
-
-        ke_va[ke] = if haskey(k1_v1, ke) && haskey(k2_v2, ke)
-
-            v1 = k1_v1[ke]
-
-            v2 = k2_v2[ke]
-
-            v1 isa AbstractDict && v2 isa AbstractDict ? _merge(v1, v2) : v2
-
-        elseif haskey(k1_v1, ke)
-
-            k1_v1[ke]
-
-        else
-
-            k2_v2[ke]
-
-        end
-
-    end
-
-    ke_va
-
-end
 
 function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
 
@@ -76,7 +24,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
 
     end
 
-    la = _merge(
+    la = Omics.Dictionary.merg(
         Dict(
             "height" => SI,
             "width" => SI * 1.618,
@@ -90,7 +38,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
 
         if contains(ke, r"^[xy]axis")
 
-            la[ke] = _merge(
+            la[ke] = Omics.Dictionary.merg(
                 Dict(
                     "automargin" => true,
                     "title" => Dict("font" => Dict("size" => 20)),
@@ -104,7 +52,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
 
     end
 
-    _open(
+    Omics.Path.ope(
         Omics.HTM.writ(
             ht,
             ("https://cdn.plot.ly/plotly-latest.min.js",),
@@ -132,7 +80,11 @@ function make_tickvals(nu_)
     mi, ma = extrema(nu_)
 
     all(isinteger, nu_) ? (mi:ma) :
-    [shorten(mi), shorten(sum(nu_) / lastindex(nu_)), shorten(ma)]
+    [
+        Omics.Strin.shorten(mi),
+        Omics.Strin.shorten(sum(nu_) / lastindex(nu_)),
+        Omics.Strin.shorten(ma),
+    ]
 
 end
 
@@ -162,7 +114,7 @@ function plot_heat_map(
                 ),
             ),
         ],
-        _merge(Dict("yaxis" => Dict("autorange" => "reversed")), la),
+        Omics.Dictionary.merg(Dict("yaxis" => Dict("autorange" => "reversed")), la),
     )
 
 end
@@ -193,7 +145,7 @@ function plot_bubble_map(
                 ),
             ),
         ],
-        _merge(
+        Omics.Dictionary.merg(
             Dict(
                 "yaxis" => Dict("autorange" => "reversed"),
                 "xaxis" => Dict{String, Any}(),
@@ -251,7 +203,7 @@ function plot_radar(
                 "fillcolor" => cf_[id],
             ) for id in eachindex(ra_)
         ],
-        _merge(
+        Omics.Dictionary.merg(
             Dict(
                 "polar" => Dict(
                     "angularaxis" => Dict(

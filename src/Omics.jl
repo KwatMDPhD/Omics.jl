@@ -8,6 +8,8 @@ include("HTM.jl")
 
 include("Palette.jl")
 
+include("Path.jl")
+
 include("Plot.jl")
 
 include("Strin.jl")

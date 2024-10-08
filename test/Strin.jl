@@ -54,3 +54,7 @@ for (si, pl) in (
     end
 
 end
+
+# ---- #
+
+@test Omics.Strin.shorten(pi) === "3.1"
