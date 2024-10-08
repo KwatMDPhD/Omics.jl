@@ -26,7 +26,7 @@ function plot(ht, da, la = Dict{String, Any}())
 
     end
 
-    la = Omics.Dictionary.merg(
+    la = Omics.Dic.merg(
         Dict(
             "height" => SI,
             "width" => SI * 1.618,
@@ -40,7 +40,7 @@ function plot(ht, da, la = Dict{String, Any}())
 
         if startswith(ke, r"[xy]axis")
 
-            la[ke] = Omics.Dictionary.merg(
+            la[ke] = Omics.Dic.merg(
                 Dict(
                     "automargin" => true,
                     "title" => Dict("font" => Dict("size" => 20)),
@@ -111,7 +111,7 @@ function plot_heat_map(
                 ),
             ),
         ),
-        Omics.Dictionary.merg(Dict("yaxis" => Dict("autorange" => "reversed")), la),
+        Omics.Dic.merg(Dict("yaxis" => Dict("autorange" => "reversed")), la),
     )
 
 end
@@ -142,7 +142,7 @@ function plot_bubble_map(
                 ),
             ),
         ),
-        Omics.Dictionary.merg(
+        Omics.Dic.merg(
             Dict(
                 "yaxis" => Dict("autorange" => "reversed"),
                 "xaxis" => Dict{String, Any}(),
@@ -191,7 +191,7 @@ function plot_radar(
                 "fillcolor" => cl_[id],
             ) for id in eachindex(ra_)
         ],
-        Omics.Dictionary.merg(
+        Omics.Dic.merg(
             Dict(
                 "polar" => Dict(
                     "angularaxis" => Dict(

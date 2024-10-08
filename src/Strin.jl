@@ -63,7 +63,7 @@ function title(st)
 
 end
 
-function count(uc, st)
+function coun(uc, st)
 
     if 1 < abs(uc)
 

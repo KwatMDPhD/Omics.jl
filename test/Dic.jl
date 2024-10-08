@@ -18,7 +18,7 @@ for (k1_v1, k2_v2, re) in (
     ),
 )
 
-    @test typeof(Omics.Dictionary.merg(k1_v1, k2_v2)) === re
+    @test typeof(Omics.Dic.merg(k1_v1, k2_v2)) === re
 
 end
 
@@ -31,17 +31,17 @@ for (k1_v1, k2_v2, re) in (
     (K2_V2, K1_V1, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))),
 )
 
-    @test Omics.Dictionary.merg(k1_v1, k2_v2) == re
+    @test Omics.Dic.merg(k1_v1, k2_v2) == re
 
     # 1.025 μs (16 allocations: 1.50 KiB)
     # 1.021 μs (16 allocations: 1.50 KiB)
-    #@btime Omics.Dictionary.merg($k1_v1, $k2_v2)
+    #@btime Omics.Dic.merg($k1_v1, $k2_v2)
 
 end
 
 # ---- #
 
-const JS = pkgdir(Omics, "data", "Dictionary", "example.json")
+const JS = pkgdir(Omics, "data", "Dic", "example.json")
 
 for (fi, re) in (
     (
@@ -78,7 +78,7 @@ for (fi, re) in (
     ),
 )
 
-    ke_va = Omics.Dictionary.rea(fi)
+    ke_va = Omics.Dic.rea(fi)
 
     @test ke_va == re
 
@@ -89,7 +89,7 @@ for (fi, re) in (
 
 end
 
-@test typeof(Omics.Dictionary.rea(JS, OrderedDict{String, Union{Int, String}})) ===
+@test typeof(Omics.Dic.rea(JS, OrderedDict{String, Union{Int, String}})) ===
       OrderedDict{String, Union{Int, String}}
 
 # ---- #
@@ -107,8 +107,7 @@ for ty in (OrderedDict, Dict)
         "8" => 8,
     )
 
-    ke_va =
-        Omics.Dictionary.rea(Omics.Dictionary.writ(joinpath(tempdir(), "write.json"), re))
+    ke_va = Omics.Dic.rea(Omics.Dic.writ(joinpath(tempdir(), "write.json"), re))
 
     @test ke_va == re
 

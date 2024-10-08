@@ -6,11 +6,9 @@ using Test: @test
 
 # ---- #
 
-const DA = pkgdir(Omics, "data", "Plot")
-
 Omics.Plot.animate(
     joinpath(tempdir(), "animate.gif"),
-    (joinpath(DA, "1.png"), joinpath(DA, "2.png")),
+    (pkgdir(Omics, "data", "Plot", "$id.png") for id in 1:2),
 )
 
 # ---- #
@@ -32,11 +30,7 @@ const MA = [
     2 4 6.001
 ]
 
-# ---- #
-
 const RO_ = ("Aa", "Bb")
-
-# ---- #
 
 const CO_ = ("Cc", "Dd", "Ee")
 
@@ -48,28 +42,7 @@ Omics.Plot.plot_heat_map("", MA; ro_ = RO_, co_ = CO_)
 
 Omics.Plot.plot_bubble_map("", MA * 40, MA; ro_ = RO_, co_ = CO_)
 
-# ---- #
-
 Omics.Plot.plot_bubble_map("", MA * 40, reverse(MA); ro_ = RO_, co_ = CO_)
-
-# ---- #
-
-for (na, rg_) in (
-    ("Monary", Omics.Palette.MO),
-    ("Binary", Omics.Palette.BI),
-    ("Categorical", Omics.Palette.CA),
-    ("Continuous", Omics.Palette.bwr),
-)
-
-    Omics.Plot.plot_heat_map(
-        joinpath(tempdir(), "$na.html"),
-        [id for _ in 1:1, id in eachindex(rg_.colors)];
-        co_ = map(rg -> "_$(Omics.Color.hexify(rg))", rg_.colors),
-        rg_,
-        la = Dict("title" => na, "yaxis" => Dict("tickvals" => ())),
-    )
-
-end
 
 # ---- #
 

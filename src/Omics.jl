@@ -2,7 +2,7 @@ module Omics
 
 include("Color.jl")
 
-include("Dictionary.jl")
+include("Dic.jl")
 
 include("HTM.jl")
 

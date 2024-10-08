@@ -1,4 +1,4 @@
-module Dictionary
+module Dic
 
 using JSON: parsefile, print
 

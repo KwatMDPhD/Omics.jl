@@ -76,3 +76,22 @@ for (he_, re) in (
     @test Omics.Palette.fractionate(Omics.Palette.make(he_)) == re
 
 end
+
+# ---- #
+
+for (na, rg_) in (
+    ("Monary", Omics.Palette.MO),
+    ("Binary", Omics.Palette.BI),
+    ("Categorical", Omics.Palette.CA),
+    ("Continuous", Omics.Palette.bwr),
+)
+
+    Omics.Plot.plot_heat_map(
+        joinpath(tempdir(), "$na.html"),
+        reshape(eachindex(rg_.colors), 1, :);
+        co_ = map(rg -> "_$(Omics.Color.hexify(rg))", rg_.colors),
+        rg_,
+        la = Dict("height" => 320, "title" => na, "yaxis" => Dict("tickvals" => ())),
+    )
+
+end
