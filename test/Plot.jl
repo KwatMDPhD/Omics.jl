@@ -6,16 +6,16 @@ using Test: @test
 
 # ---- #
 
-const DA = pkgdir(Plot, "data")
+const DA = pkgdir(Omics, "data", "Plot")
 
-Plot.animate(
+Omics.Plot.animate(
     joinpath(tempdir(), "animate.gif"),
     (joinpath(DA, "1.png"), joinpath(DA, "2.png")),
 )
 
 # ---- #
 
-Plot.plot(
+Omics.Plot.plot(
     "",
     (Dict("y" => (1, 2), "x" => (3, 4)),),
     Dict(
@@ -43,29 +43,29 @@ const CO_ = ("Cc", "Dd", "Ee")
 
 # ---- #
 
-Plot.plot_heat_map("", MA; ro_ = RO_, co_ = CO_)
+Omics.Plot.plot_heat_map("", MA; ro_ = RO_, co_ = CO_)
 
 # ---- #
 
-Plot.plot_bubble_map("", MA * 40, MA; ro_ = RO_, co_ = CO_)
+Omics.Plot.plot_bubble_map("", MA * 40, MA; ro_ = RO_, co_ = CO_)
 
 # ---- #
 
-Plot.plot_bubble_map("", MA * 40, reverse(MA); ro_ = RO_, co_ = CO_)
+Omics.Plot.plot_bubble_map("", MA * 40, reverse(MA); ro_ = RO_, co_ = CO_)
 
 # ---- #
 
 for (na, co) in (
-    ("Monary", LeMoColor.MO),
-    ("Binary", LeMoColor.BI),
-    ("Categorical", LeMoColor.CA),
-    ("Continuous", LeMoColor.bwr),
+    ("Monary", Omics.Palette.MO),
+    ("Binary", Omics.Palette.BI),
+    ("Categorical", Omics.Palette.CA),
+    ("Continuous", Omics.Palette.bwr),
 )
 
-    Plot.plot_heat_map(
+    Omics.Plot.plot_heat_map(
         joinpath(tempdir(), "$na.html"),
         [id for _ in 1:1, id in eachindex(co.colors)];
-        co_ = map(rg -> "_$(LeMoColor._hexify(rg))", co.colors),
+        co_ = map(rg -> "_$(Omics.Color.hexify(rg))", co.colors),
         co,
         la = Dict("title" => na, "yaxis" => Dict("tickvals" => ())),
     )
@@ -80,7 +80,7 @@ const T4 = 0:45:360
 
 const T6 = 0:60:360
 
-Plot.plot_radar(
+Omics.Plot.plot_radar(
     "",
     (T3_, T4, T6),
     (eachindex(T3_), eachindex(T4), eachindex(T6));

@@ -15,8 +15,12 @@ JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 KernelDensity = "5ab0869b-81aa-558d-bb23-cbf5423bbe9b"
 Mmap = "a63ad114-7e13-5084-954f-fe012c677804"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
+
+[compat]
+Printf = "1.11.0"

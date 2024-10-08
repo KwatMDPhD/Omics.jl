@@ -105,7 +105,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
     end
 
     _open(
-        Omics.HTM.write(
+        Omics.HTM.writ(
             ht,
             ("https://cdn.plot.ly/plotly-latest.min.js",),
             "Plotly.newPlot(\"Plotly\", $(json(da)), $(json(la)), $(json(merge(Dict("displaylogo" => false), co))))";
@@ -141,7 +141,7 @@ function plot_heat_map(
     zc;
     ro_ = map(_label_1, axes(zc, 1)),
     co_ = map(_label_2, axes(zc, 2)),
-    co = Omics.Color.pick(zc),
+    co = Omics.Palette.pick(zc),
     la = Dict{String, Any}(),
 )
 
@@ -153,7 +153,7 @@ function plot_heat_map(
                 "y" => ro_,
                 "x" => co_,
                 "z" => collect(eachrow(zc)),
-                "colorscale" => Omics.Color.fractionate(co),
+                "colorscale" => Omics.Palette.fractionate(co),
                 "colorbar" => Dict(
                     "len" => 0.4,
                     "thickness" => 16,
@@ -173,7 +173,7 @@ function plot_bubble_map(
     zc;
     ro_ = map(_label_1, axes(zs, 1)),
     co_ = map(_label_2, axes(zs, 2)),
-    co = Omics.Color.pick(zc),
+    co = Omics.Palette.pick(zc),
     la = Dict{String, Any}(),
 )
 
@@ -189,7 +189,7 @@ function plot_bubble_map(
                 "marker" => Dict(
                     "size" => vec(zs),
                     "color" => vec(zc),
-                    "colorscale" => Omics.Color.fractionate(co),
+                    "colorscale" => Omics.Palette.fractionate(co),
                 ),
             ),
         ],
@@ -216,7 +216,7 @@ function plot_radar(
     ra_;
     na_ = eachindex(x_),
     sh_ = trues(lastindex(an_)),
-    cl_ = Omics.Color.color(eachindex(an_)),
+    cl_ = Omics.Palette.color(eachindex(an_)),
     fi_ = fill("toself", lastindex(an_)),
     cf_ = cl_,
     la = Dict{String, Any}(),
