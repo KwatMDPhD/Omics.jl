@@ -14,6 +14,8 @@ include("Path.jl")
 
 include("Plot.jl")
 
+include("Significance.jl")
+
 include("Strin.jl")
 
 include("Table.jl")
