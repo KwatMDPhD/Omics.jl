@@ -73,11 +73,11 @@ function normalize_with_quantile!(nu_, qu_ = (0, 0.5, 1))
     # TODO: Make type stable.
     qu_ = quantile(nu_, qu_)
 
-    en = lastindex(qu_) - 1
+    iq_ = 1:(lastindex(qu_) - 1)
 
     for iu in eachindex(nu_)
 
-        for iq in 1:en
+        for iq in iq_
 
             if qu_[iq] <= nu_[iu] <= qu_[iq + 1]
 
