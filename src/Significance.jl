@@ -8,11 +8,11 @@ using StatsBase: std
 
 function get_margin_of_error(sa_, co = 0.95)
 
-    std(sa_) / sqrt(lastindex(sa_)) * quantile(Normal(), 0.5 + 0.5 * co)
+    std(sa_) / sqrt(lastindex(sa_)) * quantile(Normal(), 0.5 + co * 0.5)
 
 end
 
-function get_p_value(us, ur)
+function get_p_value(ur, us)
 
     if iszero(ur)
 
@@ -30,19 +30,21 @@ function get_p_value(us, ur)
 
 end
 
-function get_p_value(eq, nu_, ra_)
+function get_p_value(eq, ra_, nu_)
 
-    pv_ = map(nu -> get_p_value(sum(eq(nu), ra_; init = 0), lastindex(ra_)), nu_)
+    pv_ = map(nu -> get_p_value(lastindex(ra_), sum(eq(nu), ra_; init = 0)), nu_)
 
     pv_, adjust(pv_, BenjaminiHochberg())
 
 end
 
-function get_p_value(nu_, ie_, ip_, ra_)
+function get_p_value(ra_, nu_, ie_, ip_)
 
-    rn_ = eltype(ra_)[]
+    ty = eltype(ra_)
 
-    rp_ = eltype(ra_)[]
+    rn_ = ty[]
+
+    rp_ = ty[]
 
     for ra in ra_
 
@@ -58,7 +60,7 @@ function get_p_value(nu_, ie_, ip_, ra_)
 
     else
 
-        pn_, an_ = get_p_value(<=, nu_[ie_], rn_)
+        pn_, an_ = get_p_value(<=, rn_, nu_[ie_])
 
     end
 
@@ -70,7 +72,7 @@ function get_p_value(nu_, ie_, ip_, ra_)
 
     else
 
-        pp_, ap_ = get_p_value(>=, nu_[ip_], rp_)
+        pp_, ap_ = get_p_value(>=, rp_, nu_[ip_])
 
     end
 
