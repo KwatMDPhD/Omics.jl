@@ -14,9 +14,7 @@ end
 
 function normalize_with_01!(nu_)
 
-    mi = minimum(nu_)
-
-    ma = maximum(nu_)
+    mi, ma = extrema(nu_)
 
     ra = ma - mi
 
@@ -32,12 +30,17 @@ function normalize_with_sum!(nu_)
 
 end
 
-# TODO: Benchmark against 1 / (1 + exp(-nu))
-function _get_logistic(nu)
+function _get_logistic1(nu)
 
     ex = exp(nu)
 
     ex / (1 + ex)
+
+end
+
+function _get_logistic2(nu)
+
+    1 / (1 + exp(-nu))
 
 end
 
@@ -67,6 +70,7 @@ end
 
 function normalize_with_quantile!(nu_, qu_ = (0, 0.5, 1))
 
+    # TODO: Make type stable.
     qu_ = quantile(nu_, qu_)
 
     en = lastindex(qu_) - 1
