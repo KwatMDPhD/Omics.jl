@@ -30,17 +30,11 @@ function normalize_with_sum!(nu_)
 
 end
 
-function _get_logistic1(nu)
+function _get_logistic(nu)
 
     ex = exp(nu)
 
     ex / (1 + ex)
-
-end
-
-function _get_logistic2(nu)
-
-    1 / (1 + exp(-nu))
 
 end
 
@@ -68,18 +62,17 @@ function normalize_with_125254!(nu_)
 
 end
 
-function normalize_with_quantile!(nu_, qu_ = (0, 0.5, 1))
+function normalize_with_quantile!(nu_, qu_ = (0.0, 0.5, 1.0))
 
-    # TODO: Make type stable.
-    qu_ = quantile(nu_, qu_)
+    qa_ = quantile(nu_, qu_)
 
-    iq_ = 1:(lastindex(qu_) - 1)
+    iq_ = 1:(lastindex(qa_) - 1)
 
     for iu in eachindex(nu_)
 
         for iq in iq_
 
-            if qu_[iq] <= nu_[iu] <= qu_[iq + 1]
+            if qa_[iq] <= nu_[iu] <= qa_[iq + 1]
 
                 nu_[iu] = iq
 

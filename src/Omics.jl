@@ -6,6 +6,8 @@ include("Dic.jl")
 
 include("HTM.jl")
 
+include("Normalization.jl")
+
 include("Palette.jl")
 
 include("Path.jl")

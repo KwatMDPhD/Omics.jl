@@ -6,7 +6,8 @@ using Test: @test
 
 # ---- #
 
-for mo in ("Color", "Dic", "HTM", "Palette", "Path", "Plot", "Strin", "Table")
+for mo in
+    ("Color", "Dic", "HTM", "Normalization", "Palette", "Path", "Plot", "Strin", "Table")
 
     @info mo
 
