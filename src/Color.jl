@@ -42,6 +42,8 @@ const CR = "#f47983"
 
 const CB = "#003171"
 
+const HU = "#feb61d"
+
 function hexify(rg::Colorant)
 
     "#$(hex(rg, :rrggbbaa))"
