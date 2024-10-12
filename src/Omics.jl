@@ -2,6 +2,8 @@ module Omics
 
 include("Color.jl")
 
+include("Density.jl")
+
 include("Dic.jl")
 
 include("HTM.jl")

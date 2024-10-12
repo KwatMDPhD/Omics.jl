@@ -8,6 +8,7 @@ using Test: @test
 
 for mo in (
     "Color",
+    "Density",
     "Dic",
     "HTM",
     "Normalization",

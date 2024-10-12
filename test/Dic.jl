@@ -8,14 +8,23 @@ using OrderedCollections: OrderedDict
 
 # ---- #
 
-for (an_, re) in ((
-    ["Aa", "Cc", "Ee", "Ff", "Dd", "Bb"],
-    Dict("Aa" => 1, "Cc" => 2, "Ee" => 3, "Ff" => 4, "Dd" => 5, "Bb" => 6),
-),)
+for (an_, re) in (
+    (['a', 'b', 'c', 'd'], Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4)),
+    (
+        ['a', 'a', 'b', 'b', 'c', 'c', 'd', 'd'],
+        Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4),
+    ),
+    (
+        ['a', 'a', 'c', 'c', 'd', 'd', 'b', 'b'],
+        Dict('a' => 1, 'c' => 2, 'd' => 3, 'b' => 4),
+    ),
+)
 
     @test Omics.Dic.index(an_) == re
 
-    # 163.676 ns (4 allocations: 352 bytes)
+    # 69.331 ns (4 allocations: 288 bytes)
+    # 78.727 ns (4 allocations: 288 bytes)
+    # 78.652 ns (4 allocations: 288 bytes)
     #@btime Omics.Dic.index($an_)
 
 end
