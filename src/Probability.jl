@@ -1,7 +1,5 @@
 module Probability
 
-using KernelDensity: default_bandwidth, kde
-
 function grid(nu_, ug)
 
     mi, ma = extrema(nu_)
@@ -17,7 +15,7 @@ function find_index(gr_, nu)
 
 end
 
-function count(n1_, ug::Integer)
+function coun(n1_, ug::Integer)
 
     g1_ = grid(n1_, ug)
 
@@ -33,7 +31,7 @@ function count(n1_, ug::Integer)
 
 end
 
-function count(n1_, n2_, ug::Integer)
+function coun(n1_, n2_, ug::Integer)
 
     if !(lastindex(n1_) == lastindex(n2_))
 
@@ -57,27 +55,7 @@ function count(n1_, n2_, ug::Integer)
 
 end
 
-function map_index(an_)
-
-    an_id = Dict{eltype(an_), UInt16}()
-
-    id = 0
-
-    for an in an_
-
-        if !haskey(an_id, an)
-
-            an_id[an] = id += 1
-
-        end
-
-    end
-
-    an_id
-
-end
-
-function count(a1_, a2_)
+function coun(a1_, a2_)
 
     if !(lastindex(a1_) == lastindex(a2_))
 
@@ -85,9 +63,9 @@ function count(a1_, a2_)
 
     end
 
-    a1_i1 = map_index(a1_)
+    a1_i1 = index(a1_)
 
-    a2_i2 = map_index(a2_)
+    a2_i2 = index(a2_)
 
     co = zeros(length(a1_i1), length(a2_i2))
 

@@ -6,6 +6,26 @@ using OrderedCollections: OrderedDict
 
 using TOML: parsefile as parsefil
 
+function index(an_)
+
+    an_id = Dict{eltype(an_), UInt16}()
+
+    id = 0
+
+    for an in an_
+
+        if !haskey(an_id, an)
+
+            an_id[an] = id += 1
+
+        end
+
+    end
+
+    an_id
+
+end
+
 function merg(k1_v1, k2_v2)
 
     ke_va = Dict{

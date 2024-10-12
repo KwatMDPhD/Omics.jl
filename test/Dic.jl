@@ -8,6 +8,20 @@ using OrderedCollections: OrderedDict
 
 # ---- #
 
+for (an_, re) in ((
+    ["Aa", "Cc", "Ee", "Ff", "Dd", "Bb"],
+    Dict("Aa" => 1, "Cc" => 2, "Ee" => 3, "Ff" => 4, "Dd" => 5, "Bb" => 6),
+),)
+
+    @test Omics.Dic.index(an_) == re
+
+    # 163.676 ns (4 allocations: 352 bytes)
+    #@btime Omics.Dic.index($an_)
+
+end
+
+# ---- #
+
 for (k1_v1, k2_v2, re) in (
     (Dict(1 => 'a'), Dict(2 => 'b'), Dict{Int, Char}),
     (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Union{Int, Float64}, Union{Char, String}}),
