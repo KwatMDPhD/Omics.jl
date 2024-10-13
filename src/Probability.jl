@@ -1,8 +1,8 @@
 module Probability
 
-function get_odd(Pr)
+function get_odd(pr)
 
-    Pr / (1 - Pr)
+    pr / (1 - pr)
 
 end
 

@@ -6,7 +6,7 @@ using Test: @test
 
 # ---- #
 
-for (Pr, re) in (
+for (pr, re) in (
     (0, 0.0),
     (0.01, 0.010101010101010102),
     (0.2, 0.25),
@@ -18,17 +18,31 @@ for (Pr, re) in (
     (1, Inf),
 )
 
-    @test Omics.Probability.get_odd(Pr) === re
+    @test Omics.Probability.get_odd(pr) === re
 
 end
 
-const Pr_ = 0:0.1:1
+# ---- #
+
+const PR_ = 0:0.1:1
+
+const OD_ = map(Omics.Probability.get_odd, PR_)
 
 Omics.Plot.plot(
     "",
-    (Dict("y" => map(Omics.Probability.get_odd, Pr_), "x" => Pr_),),
+    (
+        Dict(
+            "showlegend" => false,
+            "y" => (0, 1),
+            "x" => (0, 1),
+            "mode" => "lines",
+            "line" => Dict("width" => 1, "color" => "#000000"),
+        ),
+        Dict("name" => "Odd", "y" => OD_, "x" => PR_),
+        Dict("name" => "Log2(Odd)", "y" => map(log2, OD_), "x" => PR_),
+    ),
     Dict(
-        "yaxis" => Dict("title" => Dict("text" => "Odd")),
+        "yaxis" => Dict("zeroline" => true),
         "xaxis" => Dict("title" => Dict("text" => "Probability")),
     ),
 )

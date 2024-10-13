@@ -2,21 +2,21 @@ module Evidence
 
 using ..Omics
 
-function get_evidence(P1, P1f)
+function get_evidence(p1, p1f)
 
-    log2(Omics.Probability.get_odd(P1f) / Omics.Probability.get_odd(P1))
+    log2(Omics.Probability.get_odd(p1f) / Omics.Probability.get_odd(p1))
 
 end
 
-function _range(mi, ma, ex = 0.04)
+function _range(mi, ma, ex)
 
-    ex *= (ma - mi)
+    ex *= ma - mi
 
     mi - ex, ma + ex
 
 end
 
-function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
+function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
 
     id_ = sortperm(fe_)
 
@@ -54,7 +54,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
             ),
             Dict(
                 "yaxis" => "y3",
-                "y" => P1f_,
+                "y" => p1f_,
                 "x" => sa_,
                 "marker" => Dict("size" => si, "color" => hf),
             ),
@@ -82,7 +82,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
                 "domain" => (0, dm - 0.02),
                 "position" => 0,
                 "title" => Dict("text" => nf, "font" => Dict("color" => hd)),
-                "range" => _range(extrema(fe_)...),
+                "range" => _range(extrema(fe_)..., 0.04),
                 "tickvals" => Omics.Plot.make_tickvals(fe_),
                 "tickangle" => -90,
             ),
@@ -90,7 +90,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
                 "overlaying" => "y2",
                 "title" =>
                     Dict("text" => "Probability of $nt", "font" => Dict("color" => hf)),
-                "range" => _range(0, 1),
+                "range" => _range(0, 1, 0.04),
                 "tickvals" => (0, 0.5, 1),
                 "tickangle" => -90,
             ),
@@ -181,9 +181,9 @@ function _make(yc, xc, pr, si)
 
 end
 
-function plot(ht, nt, P1, nf_, P1f_, ac = nothing; xa = 8)
+function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
 
-    be = log2(Omics.Probability.get_odd(P1))
+    be = log2(Omics.Probability.get_odd(p1))
 
     uf = lastindex(nf_)
 
@@ -193,7 +193,7 @@ function plot(ht, nt, P1, nf_, P1f_, ac = nothing; xa = 8)
 
     for id in eachindex(nf_)
 
-        af += ev_[id] = get_evidence(P1, P1f_[id])
+        af += ev_[id] = get_evidence(p1, p1f_[id])
 
     end
 

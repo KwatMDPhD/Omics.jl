@@ -6,7 +6,7 @@ using Test: @test
 
 # ---- #
 
-for (P1, P1f, re) in (
+for (p1, p1f, re) in (
     # 0 / 0
     (0, 0, NaN),
     # Inf / Inf
@@ -27,34 +27,36 @@ for (P1, P1f, re) in (
     (0.5, 1, Inf),
     # 1 / 2
     (2 / 3, 0.5, -0.9999999999999997),
-    # 1 / (1 / 2)
+    # 1 / 0.5 
     (1 / 3, 0.5, 1.0000000000000002),
 )
 
-    @test Omics.Evidence.get_evidence(P1, P1f) === re
+    @test Omics.Evidence.get_evidence(p1, p1f) === re
 
 end
 
-const P1_ = P1f_ = 0:0.1:1
+# ---- #
+
+const P1_ = P1F_ = 0:0.1:1
 
 Omics.Plot.plot(
     "",
     [
         Dict(
-            "name" => "Prior = $P1",
-            "y" => map(P1f -> Omics.Evidence.get_evidence(P1, P1f), P1f_),
-            "x" => P1f_,
-        ) for P1 in P1_
+            "name" => "Prior = $p1",
+            "y" => map(p1f -> Omics.Evidence.get_evidence(p1, p1f), P1F_),
+            "x" => P1F_,
+        ) for p1 in P1_
     ],
     Dict(
-        "yaxis" => Dict("title" => Dict("text" => "Evidence")),
-        "xaxis" => Dict("title" => Dict("text" => "Posterior")),
+        "yaxis" => Dict("title" => Dict("text" => "Evidence"), "zeroline" => true),
+        "xaxis" => Dict("title" => Dict("text" => "Posterior Probability")),
     ),
 )
 
 # ---- #
 
-for (ta_, fe_, P1f_) in (
+for (ta_, fe_, p1f_) in (
     ([0, 0, 0, 1, 1, 1], [0, 0, 0, 2, 2, 2], [0, 0, 0, 1, 1, 1]),
     ([1, 1, 1, 0, 0, 0], [2, 2, 2, 0, 0, 0], [1, 1, 1, 0, 0, 0]),
     ([0, 1, 0, 1, 0, 1], [0, 2, 0, 2, 0, 2], [0, 1, 0, 1, 0, 1]),
@@ -71,9 +73,9 @@ for (ta_, fe_, P1f_) in (
         ta_,
         "Feature",
         fe_,
-        P1f_,
-        map(nu -> nu - 0.1, P1f_),
-        map(nu -> nu + 0.1, P1f_);
+        p1f_,
+        map(nu -> nu - 0.1, p1f_),
+        map(nu -> nu + 0.1, p1f_);
         si = 24,
     )
 
