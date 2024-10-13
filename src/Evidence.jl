@@ -26,6 +26,8 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
 
     fe_ = fe_[id_]
 
+    # TODO: Consider sorting p1f_.
+
     hd = Omics.Color.RE
 
     hf = Omics.Color.BL
@@ -36,7 +38,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
 
     Omics.Plot.plot(
         ht,
-        [
+        (
             Dict(
                 "type" => "heatmap",
                 "z" => (ta_,),
@@ -74,7 +76,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
                 "mode" => "lines",
                 "line" => Dict("color" => Omics.Color.GR),
             ),
-        ],
+        ),
         Dict(
             "showlegend" => false,
             "yaxis" => Dict("domain" => (dm, 1), "ticks" => ""),
@@ -84,7 +86,6 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
                 "title" => Dict("text" => nf, "font" => Dict("color" => hd)),
                 "range" => _range(extrema(fe_)..., 0.04),
                 "tickvals" => Omics.Plot.make_tickvals(fe_),
-                "tickangle" => -90,
             ),
             "yaxis3" => Dict(
                 "overlaying" => "y2",
@@ -92,7 +93,6 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
                     Dict("text" => "Probability of $nt", "font" => Dict("color" => hf)),
                 "range" => _range(0, 1, 0.04),
                 "tickvals" => (0, 0.5, 1),
-                "tickangle" => -90,
             ),
             "xaxis" => Dict(
                 "anchor" => "y2",
@@ -105,7 +105,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
 
 end
 
-function _square_root(ev)
+function _root(ev)
 
     sign(ev) * sqrt(abs(ev))
 
@@ -197,11 +197,11 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
 
     end
 
-    be = _square_root(be)
+    be = _root(be)
 
-    map!(_square_root, ev_, ev_)
+    map!(_root, ev_, ev_)
 
-    af = _square_root(af)
+    af = _root(af)
 
     yi, ya = _range(0, uf + 1, 0.064)
 

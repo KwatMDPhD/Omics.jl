@@ -167,9 +167,9 @@ function plot_radar(
 
     wi = 2
 
-    c1 = "#000000"
+    hd = "#000000"
 
-    c2 = Omics.Color.FA
+    hf = Omics.Color.FA
 
     plot(
         ht,
@@ -197,24 +197,24 @@ function plot_radar(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
                         "linewidth" => wi,
-                        "linecolor" => c1,
+                        "linecolor" => hd,
                         "ticklen" => 16,
                         "tickwidth" => wi,
-                        "tickcolor" => c1,
+                        "tickcolor" => hd,
                         "tickfont" => Dict("family" => "Optima", "size" => 24),
                         "gridwidth" => wi,
-                        "gridcolor" => c2,
+                        "gridcolor" => hf,
                     ),
                     "radialaxis" => Dict(
                         "range" => (0, 1.08 * maximum(Iterators.flatten(ra_))),
                         "linewidth" => wi,
-                        "linecolor" => c1,
+                        "linecolor" => hd,
                         "ticklen" => 8,
                         "tickwidth" => wi,
-                        "tickcolor" => c1,
+                        "tickcolor" => hd,
                         "tickfont" => Dict("family" => "Monospace", "size" => 12),
                         "gridwidth" => wi,
-                        "gridcolor" => c2,
+                        "gridcolor" => hf,
                     ),
                 ),
                 "title" =>
