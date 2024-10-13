@@ -6,35 +6,28 @@ using Test: @test
 
 # ---- #
 
-for (P1, re) in (
-    (0, 0.0),
-    (0.01, 0.010101010101010102),
-    (0.2, 0.25),
-    (1 / 3, 0.49999999999999994),
-    (0.5, 1.0),
-    (2 / 3, 1.9999999999999998),
-    (0.8, 4.000000000000001),
-    (0.99, 98.99999999999991),
-    (1, Inf),
-)
-
-    @test Omics.Evidence.get_odd(P1) === re
-
-end
-
-# ---- #
-
 for (P1, P1f, re) in (
+    # 0 / 0
     (0, 0, NaN),
-    (0, 0.5, Inf),
-    (0, 1, Inf),
-    (1, 0, -Inf),
-    (1, 0.5, -Inf),
+    # Inf / Inf
     (1, 1, NaN),
+    # 1 / 0
+    (0, 0.5, Inf),
+    # Inf / 0
+    (0, 1, Inf),
+    # 0 / Inf
+    (1, 0, -Inf),
+    # 1 / Inf
+    (1, 0.5, -Inf),
+    # 0 / 1
     (0.5, 0, -Inf),
+    # 1 / 1
     (0.5, 0.5, 0.0),
+    # Inf / 1
     (0.5, 1, Inf),
+    # 1 / 2
     (2 / 3, 0.5, -0.9999999999999997),
+    # 1 / (1 / 2)
     (1 / 3, 0.5, 1.0000000000000002),
 )
 
@@ -42,42 +35,22 @@ for (P1, P1f, re) in (
 
 end
 
-# ---- #
-
 const P1_ = P1f_ = 0:0.1:1
 
-Plot.plot(
-    "",
-    (Dict("y" => map(Omics.Evidence.get_odd, 0:0.1:1), "x" => P1_),),
-    Dict(
-        "yaxis" => Dict("title" => Dict("text" => "Odd")),
-        "xaxis" => Dict("title" => Dict("text" => "Probability")),
-    ),
-)
-
-Plot.plot(
+Omics.Plot.plot(
     "",
     [
         Dict(
-            "name" => "Prior = $(P1_[id])",
-            "y" => map(P1f -> Omics.Evidence.get_evidence(P1_[id], P1f), P1f_),
+            "name" => "Prior = $P1",
+            "y" => map(P1f -> Omics.Evidence.get_evidence(P1, P1f), P1f_),
             "x" => P1f_,
-        ) for id in eachindex(P1_)
+        ) for P1 in P1_
     ],
     Dict(
         "yaxis" => Dict("title" => Dict("text" => "Evidence")),
         "xaxis" => Dict("title" => Dict("text" => "Posterior")),
     ),
 )
-
-# ---- #
-
-for (lo, re) in
-    ((-Inf, 0.0), (-2, 0.2), (-1, 1 / 3), (0, 0.5), (1, 2 / 3), (2, 0.8), (Inf, NaN))
-
-    @test Omics.Evidence.get_probability(lo) === re
-
-end
 
 # ---- #
 

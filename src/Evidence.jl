@@ -2,23 +2,9 @@ module Evidence
 
 using ..Omics
 
-function get_odd(P1)
-
-    P1 / (1 - P1)
-
-end
-
 function get_evidence(P1, P1f)
 
-    log2(get_odd(P1f) / get_odd(P1))
-
-end
-
-function get_probability(lo)
-
-    od = exp2(lo)
-
-    od / (1 + od)
+    log2(Omics.Probability.get_odd(P1f) / Omics.Probability.get_odd(P1))
 
 end
 
@@ -56,7 +42,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
                 "z" => (ta_,),
                 "y" => (nt,),
                 "x" => sa_,
-                "colorscale" => Omics.Color.fractionate(Omics.Color.BI),
+                "colorscale" => Omics.Palette.fractionate(Omics.Palette.BI),
                 "showscale" => false,
             ),
             Dict(
@@ -78,7 +64,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
                 Dict(
                     "y" => up_,
                     "fill" => "tonexty",
-                    "fillcolor" => Omics.Color.fade(hf, 0.16),
+                    "fillcolor" => Omics.Color.hexify(hf, 0.16),
                 ),
             ),
             Dict(
@@ -97,7 +83,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
                 "position" => 0,
                 "title" => Dict("text" => nf, "font" => Dict("color" => hd)),
                 "range" => _range(extrema(fe_)...),
-                "tickvals" => Plot.make_tickvals(fe_),
+                "tickvals" => Omics.Plot.make_tickvals(fe_),
                 "tickangle" => -90,
             ),
             "yaxis3" => Dict(
@@ -197,7 +183,7 @@ end
 
 function plot(ht, nt, P1, nf_, P1f_, ac = nothing; xa = 8)
 
-    be = log2(get_odd(P1))
+    be = log2(Omics.Probability.get_odd(P1))
 
     uf = lastindex(nf_)
 
@@ -221,15 +207,15 @@ function plot(ht, nt, P1, nf_, P1f_, ac = nothing; xa = 8)
 
     wi = 4
 
-    he = Omics.Color.DA
+    he = "#000000"
 
     si = 20
 
-    he_ = Omics.Color.color(1:uf)
+    he_ = Omics.Palette.color(1:uf)
 
     ti_ = (-xa):xa
 
-    Plot.plot(
+    Omics.Plot.plot(
         ht,
         [
             Dict(
@@ -255,7 +241,7 @@ function plot(ht, nt, P1, nf_, P1f_, ac = nothing; xa = 8)
             isnothing(ac) ? Dict{String, Any}() : _make(uf + 1, xa, ac, si)
         ],
         Dict(
-            "width" => Plot.SI,
+            "width" => Omics.Plot.SI,
             "margin" => Dict("b" => 0),
             "showlegend" => false,
             "yaxis" => Dict("visible" => false),
@@ -265,14 +251,16 @@ function plot(ht, nt, P1, nf_, P1f_, ac = nothing; xa = 8)
                 "range" => _range(-xa, xa, 0.02),
                 "tickvals" => ti_,
                 "ticktext" => map(
-                    ev -> "$ev | $(round(get_probability(ev); sigdigits = 2))",
+                    # TODO: Check.
+                    ev ->
+                        "$ev | $(round(Omics.Probability.get_probability(ev); sigdigits = 2))",
                     ti_,
                 ),
                 "tickangle" => -90,
                 "ticks" => "inside",
                 "ticklen" => 16,
                 "tickwidth" => 2,
-                "tickcolor" => Omics.Omics.Color.FA,
+                "tickcolor" => Omics.Color.FA,
             ),
         ),
     )
