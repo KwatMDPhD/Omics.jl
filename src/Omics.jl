@@ -6,6 +6,8 @@ include("Density.jl")
 
 include("Dic.jl")
 
+include("Evidence.jl")
+
 include("HTM.jl")
 
 include("Normalization.jl")

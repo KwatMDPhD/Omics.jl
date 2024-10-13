@@ -2,8 +2,6 @@ module Evidence
 
 using ..Omics
 
-using Plot
-
 function get_odd(P1)
 
     P1 / (1 - P1)
@@ -50,7 +48,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, P1f_, lo_, up_; si = 4)
 
     dm = 0.98
 
-    Plot.plot(
+    Omics.Plot.plot(
         ht,
         [
             Dict(

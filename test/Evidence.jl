@@ -18,7 +18,7 @@ for (P1, re) in (
     (1, Inf),
 )
 
-    @test Evidence.get_odd(P1) === re
+    @test Omics.Evidence.get_odd(P1) === re
 
 end
 
@@ -38,7 +38,7 @@ for (P1, P1f, re) in (
     (1 / 3, 0.5, 1.0000000000000002),
 )
 
-    @test Evidence.get_evidence(P1, P1f) === re
+    @test Omics.Evidence.get_evidence(P1, P1f) === re
 
 end
 
@@ -48,7 +48,7 @@ const P1_ = P1f_ = 0:0.1:1
 
 Plot.plot(
     "",
-    (Dict("y" => map(Evidence.get_odd, 0:0.1:1), "x" => P1_),),
+    (Dict("y" => map(Omics.Evidence.get_odd, 0:0.1:1), "x" => P1_),),
     Dict(
         "yaxis" => Dict("title" => Dict("text" => "Odd")),
         "xaxis" => Dict("title" => Dict("text" => "Probability")),
@@ -60,7 +60,7 @@ Plot.plot(
     [
         Dict(
             "name" => "Prior = $(P1_[id])",
-            "y" => map(P1f -> Evidence.get_evidence(P1_[id], P1f), P1f_),
+            "y" => map(P1f -> Omics.Evidence.get_evidence(P1_[id], P1f), P1f_),
             "x" => P1f_,
         ) for id in eachindex(P1_)
     ],
@@ -75,7 +75,7 @@ Plot.plot(
 for (lo, re) in
     ((-Inf, 0.0), (-2, 0.2), (-1, 1 / 3), (0, 0.5), (1, 2 / 3), (2, 0.8), (Inf, NaN))
 
-    @test Evidence.get_probability(lo) === re
+    @test Omics.Evidence.get_probability(lo) === re
 
 end
 
@@ -90,7 +90,7 @@ for (ta_, fe_, P1f_) in (
     ([0, 1, 0, 1, 0, 1], [2, 0, 2, 0, 2, 0], [0, 1, 0, 1, 0, 1]),
 )
 
-    Evidence.plot(
+    Omics.Evidence.plot(
         "",
         "Sample",
         map(id -> "_$id", eachindex(ta_)),
@@ -110,13 +110,13 @@ end
 
 for uf in 1:8
 
-    Evidence.plot("", "Target", 0.4, ["Feature $id = 1.234" for id in 1:uf], rand(uf))
+    Omics.Evidence.plot("", "Target", 0.4, ["Feature $id = 1.234" for id in 1:uf], rand(uf))
 
 end
 
 # ---- #
 
-Evidence.plot(
+Omics.Evidence.plot(
     "",
     "Something",
     0.6,

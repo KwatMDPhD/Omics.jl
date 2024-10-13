@@ -10,6 +10,7 @@ for mo in (
     "Color",
     "Density",
     "Dic",
+    "Evidence",
     "HTM",
     "Normalization",
     "Palette",
