@@ -15,7 +15,6 @@ for mo in (
     "Palette",
     "Path",
     "Plot",
-    "Probability",
     "Significance",
     "Strin",
     "Table",
