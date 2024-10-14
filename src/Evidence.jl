@@ -8,6 +8,14 @@ function get_evidence(p1, p1f)
 
 end
 
+function get_posterior_probability(p1, ev)
+
+    oe = Omics.Probability.get_odd(p1) * exp2(ev)
+
+    oe / (1 + oe)
+
+end
+
 function _range(mi, ma, ex)
 
     ex *= ma - mi
@@ -155,27 +163,23 @@ function _make(yc, xc, te, si, wi, hm, hl = hm)
 
 end
 
-function _make(yc, xc, pr, si)
+function _make(::Integer, ::Integer, ac::Nothing, ::Real)
 
-    if iszero(pr)
+    Dict{String, Any}()
 
-        xc = -xc
+end
 
-        di = "left"
+function _make(yc, xa, ac, si)
 
-    elseif isone(pr)
-
-        di = "right"
-
-    end
+    xc, tr, te = ac ? (xa, "right", "left") : (-xa, "left", "right")
 
     Dict(
         "y" => (yc,),
         "x" => (xc,),
         "text" => "Actual",
         "mode" => "markers+text",
-        "marker" => Dict("symbol" => "triangle-$di", "size" => si, "color" => _color(xc)),
-        "textposition" => xc < 0 ? "right" : "left",
+        "marker" => Dict("symbol" => "triangle-$tr", "size" => si, "color" => _color(xc)),
+        "textposition" => te,
         "textfont" => Dict("size" => si * 0.8),
     )
 
@@ -185,15 +189,17 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
 
     be = log2(Omics.Probability.get_odd(p1))
 
-    uf = lastindex(nf_)
+    uf = lastindex(p1f_)
 
     ev_ = Vector{Float64}(undef, uf)
 
     af = be
 
-    for id in eachindex(nf_)
+    ie_ = 1:uf
 
-        af += ev_[id] = get_evidence(p1, p1f_[id])
+    for ie in ie_
+
+        af += ev_[ie] = get_evidence(p1, p1f_[ie])
 
     end
 
@@ -211,7 +217,7 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
 
     si = 20
 
-    he_ = Omics.Palette.color(1:uf)
+    he_ = Omics.Palette.color(ie_)
 
     ti_ = (-xa):xa
 
@@ -236,9 +242,9 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
                 "line" => Dict("width" => wi, "color" => he),
             )
             _make(0, be, "Prior", si, wi, _color(be))
-            (_make(id, ev_[id], nf_[id], si, wi, he_[id]) for id in eachindex(nf_))...
+            (_make(ie, ev_[ie], nf_[ie], si, wi, he_[ie]) for ie in ie_)...
             _make(uf + 1, af, "Total", si * 1.6, wi, _color(af), he)
-            isnothing(ac) ? Dict{String, Any}() : _make(uf + 1, xa, ac, si)
+            _make(uf + 1, xa, ac, si)
         ],
         Dict(
             "width" => Omics.Plot.SI,
@@ -251,9 +257,8 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
                 "range" => _range(-xa, xa, 0.02),
                 "tickvals" => ti_,
                 "ticktext" => map(
-                    # TODO: Check.
                     ev ->
-                        "$ev | $(round(Omics.Probability.get_probability(ev); sigdigits = 2))",
+                        "$ev | $(Omics.Strin.shorten(get_posterior_probability(p1, ev)))",
                     ti_,
                 ),
                 "tickangle" => -90,

@@ -6,7 +6,7 @@ using Test: @test
 
 # ---- #
 
-for (p1, p1f, re) in (
+for (p1, p1f, ev) in (
     # 0 / 0
     (0, 0, NaN),
     # Inf / Inf
@@ -31,7 +31,13 @@ for (p1, p1f, re) in (
     (1 / 3, 0.5, 1.0000000000000002),
 )
 
-    @test Omics.Evidence.get_evidence(p1, p1f) === re
+    @test Omics.Evidence.get_evidence(p1, p1f) === ev
+
+    if isfinite(ev)
+
+        @test Omics.Evidence.get_posterior_probability(p1, ev) === p1f
+
+    end
 
 end
 

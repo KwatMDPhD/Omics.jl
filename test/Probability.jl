@@ -6,8 +6,8 @@ using Test: @test
 
 # ---- #
 
-for (pr, re) in (
-    (0, 0.0),
+for (pr, od) in (
+    (0.0, 0.0),
     (0.01, 0.010101010101010102),
     (0.2, 0.25),
     (1 / 3, 0.49999999999999994),
@@ -18,7 +18,13 @@ for (pr, re) in (
     (1, Inf),
 )
 
-    @test Omics.Probability.get_odd(pr) === re
+    @test Omics.Probability.get_odd(pr) === od
+
+    if isfinite(od)
+
+        @test Omics.Probability.get_probability(od) === pr
+
+    end
 
 end
 
@@ -46,12 +52,3 @@ Omics.Plot.plot(
         "xaxis" => Dict("title" => Dict("text" => "Probability")),
     ),
 )
-
-# ---- #
-
-for (lo, re) in
-    ((-Inf, 0.0), (-2, 0.2), (-1, 1 / 3), (0, 0.5), (1, 2 / 3), (2, 0.8), (Inf, NaN))
-
-    @test Omics.Probability.get_probability(lo) === re
-
-end

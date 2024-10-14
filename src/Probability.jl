@@ -6,9 +6,7 @@ function get_odd(pr)
 
 end
 
-function get_probability(lo)
-
-    od = exp2(lo)
+function get_probability(od)
 
     od / (1 + od)
 
