@@ -10,9 +10,7 @@ end
 
 function get_posterior_probability(p1, ev)
 
-    oe = Omics.Probability.get_odd(p1) * exp2(ev)
-
-    oe / (1 + oe)
+    Omics.Probability.get_probability(Omics.Probability.get_odd(p1) * exp2(ev))
 
 end
 
@@ -42,16 +40,14 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
 
     bo = Dict("yaxis" => "y3", "x" => sa_, "mode" => "lines", "line" => Dict("width" => 0))
 
-    dm = 0.98
-
     Omics.Plot.plot(
         ht,
         (
             Dict(
                 "type" => "heatmap",
-                "z" => (ta_,),
                 "y" => (nt,),
                 "x" => sa_,
+                "z" => (ta_,),
                 "colorscale" => Omics.Palette.fractionate(Omics.Palette.BI),
                 "showscale" => false,
             ),
@@ -61,12 +57,6 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
                 "x" => sa_,
                 "mode" => "markers",
                 "marker" => Dict("size" => si * 2, "color" => hd),
-            ),
-            Dict(
-                "yaxis" => "y3",
-                "y" => p1f_,
-                "x" => sa_,
-                "marker" => Dict("size" => si, "color" => hf),
             ),
             merge(bo, Dict("y" => lo_)),
             merge(
@@ -79,6 +69,12 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
             ),
             Dict(
                 "yaxis" => "y3",
+                "y" => p1f_,
+                "x" => sa_,
+                "marker" => Dict("size" => si, "color" => hf),
+            ),
+            Dict(
+                "yaxis" => "y3",
                 "y" => (0.5, 0.5),
                 "x" => (sa_[1], sa_[end]),
                 "mode" => "lines",
@@ -87,9 +83,9 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
         ),
         Dict(
             "showlegend" => false,
-            "yaxis" => Dict("domain" => (dm, 1), "ticks" => ""),
+            "yaxis" => Dict("domain" => (0.98, 1), "ticks" => ""),
             "yaxis2" => Dict(
-                "domain" => (0, dm - 0.02),
+                "domain" => (0, 0.96),
                 "position" => 0,
                 "title" => Dict("text" => nf, "font" => Dict("color" => hd)),
                 "range" => _range(extrema(fe_)..., 0.04),
@@ -104,7 +100,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
             ),
             "xaxis" => Dict(
                 "anchor" => "y2",
-                "domain" => (0.088, 1),
+                "domain" => (0.08, 1),
                 "title" => Dict("text" => ns),
                 "ticks" => "",
             ),
@@ -137,7 +133,7 @@ function _color(ev)
 
 end
 
-function _make(yc, xc, te, si, wi, hm, hl = hm)
+function _make(yc, xc, te, si, hm, wi, hl = hm)
 
     li = Dict("width" => wi, "color" => hl)
 
@@ -169,39 +165,29 @@ function _make(::Integer, ::Integer, ac::Nothing, ::Real)
 
 end
 
-function _make(yc, xa, ac, si)
+function _make(yc, xe, ac, si)
 
-    xc, tr, te = ac ? (xa, "right", "left") : (-xa, "left", "right")
+    xc, tr, te = ac ? (xe, "right", "left") : (-xe, "left", "right")
 
     Dict(
         "y" => (yc,),
         "x" => (xc,),
-        "text" => "Actual",
         "mode" => "markers+text",
         "marker" => Dict("symbol" => "triangle-$tr", "size" => si, "color" => _color(xc)),
-        "textposition" => te,
+        "text" => "Actual",
         "textfont" => Dict("size" => si * 0.8),
+        "textposition" => te,
     )
 
 end
 
-function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
+function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xe = 8)
 
     be = log2(Omics.Probability.get_odd(p1))
 
-    uf = lastindex(p1f_)
+    ev_ = [get_evidence(p1, p1f) for p1f in p1f_]
 
-    ev_ = Vector{Float64}(undef, uf)
-
-    af = be
-
-    ie_ = 1:uf
-
-    for ie in ie_
-
-        af += ev_[ie] = get_evidence(p1, p1f_[ie])
-
-    end
+    af = reduce(+, ev_; init = be)
 
     be = _root(be)
 
@@ -209,7 +195,9 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
 
     af = _root(af)
 
-    yi, ya = _range(0, uf + 1, 0.064)
+    ye = lastindex(nf_) + 1
+
+    yi, ya = _range(0, ye, 0.064)
 
     wi = 4
 
@@ -217,9 +205,11 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
 
     si = 20
 
+    ie_ = eachindex(nf_)
+
     he_ = Omics.Palette.color(ie_)
 
-    ti_ = (-xa):xa
+    ti_ = (-xe):xe
 
     Omics.Plot.plot(
         ht,
@@ -237,14 +227,14 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
             )
             Dict(
                 "y" => (ya, ya),
-                "x" => (-xa, xa),
+                "x" => (-xe, xe),
                 "mode" => "lines",
                 "line" => Dict("width" => wi, "color" => he),
             )
-            _make(0, be, "Prior", si, wi, _color(be))
-            (_make(ie, ev_[ie], nf_[ie], si, wi, he_[ie]) for ie in ie_)...
-            _make(uf + 1, af, "Total", si * 1.6, wi, _color(af), he)
-            _make(uf + 1, xa, ac, si)
+            _make(0, be, "Prior", si, _color(be), wi)
+            (_make(ie, ev_[ie], nf_[ie], si, he_[ie], wi) for ie in ie_)...
+            _make(ye, af, "Total", si * 1.6, _color(af), wi, he)
+            _make(ye, xe, ac, si)
         ],
         Dict(
             "width" => Omics.Plot.SI,
@@ -254,7 +244,7 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xa = 8)
             "xaxis" => Dict(
                 "side" => "top",
                 "title" => Dict("text" => "Evidence for $nt", "standoff" => 40),
-                "range" => _range(-xa, xa, 0.02),
+                "range" => _range(-xe, xe, 0.02),
                 "tickvals" => ti_,
                 "ticktext" => map(
                     ev ->
