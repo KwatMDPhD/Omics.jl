@@ -8,7 +8,7 @@ using Statistics: cor
 
 using ..Omics
 
-function get_entropy(pr)
+function get_shannon_entropy(pr)
 
     iszero(pr) ? 0.0 : -pr * log(pr)
 
@@ -77,7 +77,7 @@ end
 function _marginalize_entropy_sum(ea, jo)
 
     # TODO: Gain intuition.
-    sum(pr_ -> get_entropy(sum(pr_)), ea(jo))
+    sum(pr_ -> get_shannon_entropy(sum(pr_)), ea(jo))
 
 end
 
@@ -87,7 +87,7 @@ function get_mutual_information(jo, no)
 
     e2 = _marginalize_entropy_sum(eachcol, jo)
 
-    mu = e1 + e2 - sum(get_entropy, jo)
+    mu = e1 + e2 - sum(get_shannon_entropy, jo)
 
     no ? mu = 2.0 * mu / (e1 + e2) : mu
 
@@ -99,7 +99,9 @@ function _get_joint(
     n2_::AbstractVector{<:Integer},
 )
 
-    Omics.Probability._01!(Omics.Probability.count(n1_, n2_))
+    Omics.Normalization.normalize_with_sum!(
+        convert(Matrix{Float64}, Omics.Density.coun(n1_, n2_)),
+    )
 
 end
 
@@ -107,7 +109,7 @@ function _get_joint(co, n1_, n2_)
 
     fa = 0.75 - 0.75 * abs(co)
 
-    Omics.Probability._01!(
+    Omics.Normalization.normalize_with_sum!(
         kde(
             (n2_, n1_);
             npoints = (32, 32),

@@ -10,6 +10,8 @@ include("Evidence.jl")
 
 include("HTM.jl")
 
+include("Information.jl")
+
 include("Normalization.jl")
 
 include("Palette.jl")

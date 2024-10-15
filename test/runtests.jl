@@ -12,6 +12,7 @@ for mo in (
     "Dic",
     "Evidence",
     "HTM",
+    "Information",
     "Normalization",
     "Palette",
     "Path",
