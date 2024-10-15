@@ -1,7 +1,5 @@
 module Information
 
-using Distances: SemiMetric
-
 using KernelDensity: default_bandwidth, kde
 
 using Statistics: cor
@@ -127,20 +125,6 @@ function get_information_coefficient(n1_, n2_)
     isnan(co) || isone(abs(co)) ? co :
     sign(co) *
     sqrt(1.0 - exp(-2.0 * get_mutual_information(_get_joint(co, n1_, n2_), false)))
-
-end
-
-struct InformationDistance <: SemiMetric end
-
-function (::InformationDistance)(::Real, ::Real)
-
-    NaN
-
-end
-
-function (::InformationDistance)(n1_, n2_)
-
-    1 - get_information_coefficient(n1_, n2_)
 
 end
 

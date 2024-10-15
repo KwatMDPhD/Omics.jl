@@ -6,8 +6,6 @@ using Test: @test
 
 using Clustering: mutualinfo
 
-using Distances: CorrDist, Euclidean, pairwise
-
 using KernelDensity: kde
 
 using Random: seed!
@@ -296,74 +294,6 @@ for (i1_, i2_, r1, r2) in (
     #@btime Omics.Information.get_information_coefficient($i1_, $i2_)
 
     #@btime Omics.Information.get_information_coefficient($f1_, $f2_)
-
-end
-
-# ---- #
-
-const FU_ = Euclidean(), CorrDist(), Omics.Information.InformationDistance()
-
-# ---- #
-
-for (n1_, n2_, re_...) in (
-    ([1, 2], [1, 2], 0.0, 2.220446049250313e-16, 0.0),
-    ([1, 2], [2, 1], 1.4142135623730951, 1.9999999999999998, 2.0),
-    ([1, 2, 3], [1, 2, 3], 0.0, 2.220446049250313e-16, 0.0),
-    ([1, 2, 3], [3, 2, 1], 2.8284271247461903, 1.9999999999999998, 2.0),
-    ([1, 2, 3, 4], [1, 2, 3, 4], 0.0, 2.220446049250313e-16, 0.0),
-    ([1, 2, 3, 4], [4, 3, 2, 1], 4.47213595499958, 1.9999999999999998, 2.0),
-)
-
-    for (fu, re) in zip(FU_, re_)
-
-        @test fu(n1_, n2_) === re
-
-        # 3.333 ns (0 allocations: 0 bytes)
-        # 76.182 ns (4 allocations: 160 bytes)
-        # 40.494 ns (0 allocations: 0 bytes)
-        # 3.333 ns (0 allocations: 0 bytes)
-        # 76.217 ns (4 allocations: 160 bytes)
-        # 41.835 ns (0 allocations: 0 bytes)
-        # 4.583 ns (0 allocations: 0 bytes)
-        # 76.738 ns (4 allocations: 160 bytes)
-        # 29.355 ns (0 allocations: 0 bytes)
-        # 4.583 ns (0 allocations: 0 bytes)
-        # 77.473 ns (4 allocations: 160 bytes)
-        # 29.355 ns (0 allocations: 0 bytes)
-        # 3.625 ns (0 allocations: 0 bytes)
-        # 78.366 ns (4 allocations: 192 bytes)
-        # 30.570 ns (0 allocations: 0 bytes)
-        # 3.666 ns (0 allocations: 0 bytes)
-        # 78.441 ns (4 allocations: 192 bytes)
-        # 30.569 ns (0 allocations: 0 bytes)
-        #@btime $fu($n1_, $n2_)
-
-    end
-
-end
-
-# ---- #
-
-for un in (10, 100, 1000)
-
-    seed!(20240201)
-
-    nu___ = rand(un), rand(un), rand(un)
-
-    for fu in FU_
-
-        # 46.679 ns (2 allocations: 144 bytes)
-        # 170.895 ns (14 allocations: 1008 bytes)
-        # 86.917 μs (164 allocations: 132.09 KiB)
-        # 77.492 ns (2 allocations: 144 bytes)
-        # 355.464 ns (14 allocations: 5.58 KiB)
-        # 100.667 μs (164 allocations: 136.69 KiB)
-        # 472.148 ns (2 allocations: 144 bytes)
-        # 2.204 μs (20 allocations: 47.77 KiB)
-        # 258.709 μs (173 allocations: 178.92 KiB)
-        #@btime pairwise($fu, $nu___)
-
-    end
 
 end
 
