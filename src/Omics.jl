@@ -14,6 +14,8 @@ include("HTM.jl")
 
 include("Information.jl")
 
+include("MutualInformation.jl")
+
 include("Normalization.jl")
 
 include("Palette.jl")

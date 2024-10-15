@@ -14,6 +14,7 @@ for mo in (
     "Evidence",
     "HTM",
     "Information",
+    "MutualInformation",
     "Normalization",
     "Palette",
     "Path",
