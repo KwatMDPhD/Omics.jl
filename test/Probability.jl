@@ -22,7 +22,7 @@ for (pr, od) in (
 
     if isfinite(od)
 
-        @test Omics.Probability.get_probability(od) === pr
+        @test Omics.Probability.ge(od) === pr
 
     end
 
@@ -52,3 +52,23 @@ Omics.Plot.plot(
         "xaxis" => Dict("title" => Dict("text" => "Probability")),
     ),
 )
+
+# ---- #
+
+const JO = [
+    1/8 1/16 1/16 1/4
+    1/16 1/8 1/16 0
+    1/32 1/32 1/16 0
+    1/32 1/32 1/16 0
+]
+
+for (ea, re) in
+    ((eachrow, [1 / 2, 1 / 4, 1 / 8, 1 / 8]), (eachcol, [1 / 4, 1 / 4, 1 / 4, 1 / 4]))
+
+    @test Omics.Probability.ge(ea, JO) == re
+
+    # 21.941 ns (2 allocations: 96 bytes)
+    # 21.063 ns (2 allocations: 96 bytes)
+    @btime Omics.Probability.ge($ea, JO)
+
+end

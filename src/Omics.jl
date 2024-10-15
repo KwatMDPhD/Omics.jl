@@ -8,6 +8,8 @@ include("Dic.jl")
 
 include("Distance.jl")
 
+include("Entropy.jl")
+
 include("Evidence.jl")
 
 include("HTM.jl")

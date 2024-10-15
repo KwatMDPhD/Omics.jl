@@ -1,11 +1,5 @@
 module Information
 
-function get_shannon_entropy(pr)
-
-    -pr * log2(pr)
-
-end
-
 function get_kullback_leibler_divergence(n1, n2)
 
     n1 * log2(n1 / n2)
