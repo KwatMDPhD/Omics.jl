@@ -16,6 +16,7 @@ end
 
 function get_kullback_leibler_divergence(n1, n2)
 
+    # TODO: log2
     n1 * log(n1 / n2)
 
 end

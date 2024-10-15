@@ -49,7 +49,7 @@ for (pr_, re) in (
     # 21.690 ns (0 allocations: 0 bytes)
     # 26.481 ns (0 allocations: 0 bytes)
     # 50.532 ns (0 allocations: 0 bytes)
-    @btime sum(Omics.Information.get_shannon_entropy, $pr_)
+    #@btime sum(Omics.Information.get_shannon_entropy, $pr_)
 
 end
 
@@ -129,9 +129,9 @@ for (jo, r1, r2) in (
     # 149.226 ns (4 allocations: 192 bytes)
     # 166.442 ns (0 allocations: 0 bytes)
 
-    @btime Omics.Information.get_mutual_information($jo)
+    #@btime Omics.Information.get_mutual_information($jo)
 
-    @btime Omics.Information.get_mutual_information($jo, true)
+    #@btime Omics.Information.get_mutual_information($jo, true)
 
 end
 
@@ -180,13 +180,13 @@ for un in (10, 100, 1000, 10000, 100000)
     # 573.087 ns (4 allocations: 288 bytes)
     # 720.865 ns (0 allocations: 0 bytes)
 
-    @btime mutualinfo($i1_, $i2_)
+    #@btime mutualinfo($i1_, $i2_)
 
-    @btime Omics.Information._get_joint(NaN, $i1_, $i2_)
+    #@btime Omics.Information._get_joint(NaN, $i1_, $i2_)
 
-    @btime Omics.Information.get_mutual_information($jo)
+    #@btime Omics.Information.get_mutual_information($jo)
 
-    @btime Omics.Information.get_mutual_information($jo, true)
+    #@btime Omics.Information.get_mutual_information($jo, true)
 
 end
 
@@ -211,9 +211,9 @@ for (i1_, i2_) in (([1], [1]), ([1, 1], [1, 1]), ([1, 2], [1, 1]), ([1, 2, 3], [
     # 12.095 ns (0 allocations: 0 bytes)
     # 11.595 ns (0 allocations: 0 bytes)
 
-    @btime Omics.Information.get_information_coefficient($i1_, $i2_)
+    #@btime Omics.Information.get_information_coefficient($i1_, $i2_)
 
-    @btime Omics.Information.get_information_coefficient($f1_, $f2_)
+    #@btime Omics.Information.get_information_coefficient($f1_, $f2_)
 
 end
 
@@ -293,9 +293,9 @@ for (i1_, i2_, r1, r2) in (
     # 473.799 ns (12 allocations: 960 bytes)
     # 27.083 μs (54 allocations: 43.89 KiB)
 
-    @btime Omics.Information.get_information_coefficient($i1_, $i2_)
+    #@btime Omics.Information.get_information_coefficient($i1_, $i2_)
 
-    @btime Omics.Information.get_information_coefficient($f1_, $f2_)
+    #@btime Omics.Information.get_information_coefficient($f1_, $f2_)
 
 end
 
@@ -336,7 +336,7 @@ for (n1_, n2_, re_...) in (
         # 3.666 ns (0 allocations: 0 bytes)
         # 78.441 ns (4 allocations: 192 bytes)
         # 30.569 ns (0 allocations: 0 bytes)
-        @btime $fu($n1_, $n2_)
+        #@btime $fu($n1_, $n2_)
 
     end
 
@@ -361,7 +361,7 @@ for un in (10, 100, 1000)
         # 472.148 ns (2 allocations: 144 bytes)
         # 2.204 μs (20 allocations: 47.77 KiB)
         # 258.709 μs (173 allocations: 178.92 KiB)
-        @btime pairwise($fu, $nu___)
+        #@btime pairwise($fu, $nu___)
 
     end
 
