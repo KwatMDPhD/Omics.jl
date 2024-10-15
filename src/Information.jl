@@ -10,7 +10,7 @@ using ..Omics
 
 function get_shannon_entropy(pr)
 
-    iszero(pr) ? 0.0 : -pr * log(pr)
+    iszero(pr) ? 0.0 : -pr * log2(pr)
 
 end
 
