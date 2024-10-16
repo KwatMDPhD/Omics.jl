@@ -4,9 +4,9 @@ using KernelDensity: default_bandwidth, kde
 
 using ..Omics
 
-function ge(f1_, f2_; ke_ar...)
+function ge(n1_, n2_; ke_ar...)
 
-    kd = kde((f2_, f1_); ke_ar...)
+    kd = kde((n2_, n1_); ke_ar...)
 
     kd.y, kd.x, permutedims(kd.density)
 
