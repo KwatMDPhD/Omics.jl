@@ -19,10 +19,10 @@ for (nu_, ug, re) in (
 
     @test Omics.Density.grid(nu_, ug) === re
 
-    # 50.101 ns (0 allocations: 0 bytes)
-    # 50.109 ns (0 allocations: 0 bytes)
-    # 50.101 ns (0 allocations: 0 bytes)
-    # 50.109 ns (0 allocations: 0 bytes)
+    # 50.025 ns (0 allocations: 0 bytes)
+    # 49.983 ns (0 allocations: 0 bytes)
+    # 50.016 ns (0 allocations: 0 bytes)
+    # 49.992 ns (0 allocations: 0 bytes)
     #@btime Omics.Density.grid($nu_, $ug)
 
 end

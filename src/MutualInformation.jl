@@ -43,6 +43,9 @@ end
 function get_information_coefficient(n1_, n2_)
 
     co = cor(n1_, n2_)
+    fa = 0.75 - 0.75 * abs(co)
+    npoints = (32, 32)
+    bandwidth = (default_bandwidth(f2_) * fa, default_bandwidth(f1_) * fa)
 
     isnan(co) || isone(abs(co)) ? co :
     sign(co) *

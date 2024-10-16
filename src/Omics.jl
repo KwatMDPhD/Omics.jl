@@ -34,4 +34,6 @@ include("Strin.jl")
 
 include("Table.jl")
 
+#include("ROC.jl")
+
 end

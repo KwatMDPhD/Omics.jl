@@ -55,6 +55,54 @@ Omics.Plot.plot(
 
 # ---- #
 
+for (de, re) in (([1.0, 2, 3, 4], [0.1, 0.2, 0.3, 0.4]),)
+
+    @test Omics.Probability.ge(de) == re
+
+    # 8.083 ns (0 allocations: 0 bytes)
+    #@btime Omics.Probability.ge($de)
+
+end
+
+# ---- #
+
+for (i1_, i2_, re) in ((
+    [1, 2],
+    [1, 2],
+    [
+        0.5 0
+        0 0.5
+    ],
+),)
+
+    jo = Omics.Probability.ge(i1_, i2_)
+
+    @test jo == re
+
+    @test isone(sum(jo))
+
+    # 236.838 ns (12 allocations: 928 bytes)
+    #@btime Omics.Probability.ge($i1_, $i2_)
+
+end
+
+# ---- #
+
+# TODO: Get old testers
+
+for (f1_, f2_) in (([1.0, 2], [1, 2]),)
+
+    jo = Omics.Probability.ge(f1_, f2_; npoints = (2, 2))
+
+    @test isone(sum(jo))
+
+    # 837.584 μs (53 allocations: 2.51 MiB)
+    #@btime Omics.Probability.ge($f1_, $f2_)
+
+end
+
+# ---- #
+
 const JO = [
     1/8 1/16 1/16 1/4
     1/16 1/8 1/16 0
@@ -68,7 +116,7 @@ for (ea, re) in
     @test Omics.Probability.ge(ea, JO) == re
 
     # 21.941 ns (2 allocations: 96 bytes)
-    # 21.063 ns (2 allocations: 96 bytes)
-    @btime Omics.Probability.ge($ea, JO)
+    # 21.021 ns (2 allocations: 96 bytes)
+    #@btime Omics.Probability.ge($ea, JO)
 
 end

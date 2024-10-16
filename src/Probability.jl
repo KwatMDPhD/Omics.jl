@@ -18,31 +18,23 @@ end
 
 function ge(de)
 
-    Omics.Normalization.normalize_with_sum!(convert(Matrix{Float64}, de))
+    Omics.Normalization.normalize_with_sum!(de)
 
 end
 
-function ge(::AbstractFloat, i1_::AbstractVector{<:Integer}, i2_::AbstractVector{<:Integer})
+function ge(i1_::AbstractVector{<:Integer}, i2_::AbstractVector{<:Integer})
 
-    ge(Omics.Density.coun(i1_, i2_))
-
-end
-
-function ge(co, f1_, f2_)
-
-    fa = 0.75 - 0.75 * abs(co)
-
-    ge(
-        kde(
-            (f2_, f1_);
-            npoints = (32, 32),
-            bandwidth = (default_bandwidth(f2_) * fa, default_bandwidth(f1_) * fa),
-        ).density,
-    )
+    ge(convert(Matrix{Float64}, Omics.Density.coun(i1_, i2_)))
 
 end
 
-function ge(ea, jo)
+function ge(f1_, f2_; ke_ar...)
+
+    ge(kde((f2_, f1_); ke_ar...).density)
+
+end
+
+function ge(ea::Function, jo)
 
     map(sum, ea(jo))
 

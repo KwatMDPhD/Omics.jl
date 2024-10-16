@@ -11,6 +11,7 @@ for mo in (
     "Density",
     "Dic",
     "Distance",
+    "Entropy",
     "Evidence",
     "HTM",
     "Information",
@@ -23,6 +24,7 @@ for mo in (
     "Significance",
     "Strin",
     "Table",
+    #"ROC",
 )
 
     @info mo
