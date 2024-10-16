@@ -1,6 +1,16 @@
 module Density
 
+using KernelDensity: default_bandwidth, kde
+
 using ..Omics
+
+function ge(f1_, f2_; ke_ar...)
+
+    kd = kde((f2_, f1_); ke_ar...)
+
+    kd.y, kd.x, permutedims(kd.density)
+
+end
 
 function grid(nu_, ug)
 
@@ -10,7 +20,7 @@ function grid(nu_, ug)
 
 end
 
-function _find(gr_, nu)
+function find(gr_, nu)
 
     id = 1
 
@@ -32,17 +42,17 @@ end
 
 function coun(n1_, ug::Integer)
 
-    g1_ = grid(n1_, ug)
+    gr_ = grid(n1_, ug)
 
-    co = zeros(UInt, ug)
+    co_ = zeros(UInt, ug)
 
     for id in eachindex(n1_)
 
-        co[_find(g1_, n1_[id])] += 1
+        co_[find(gr_, n1_[id])] += 1
 
     end
 
-    g1_, co
+    gr_, co_
 
 end
 
@@ -62,7 +72,7 @@ function coun(n1_, n2_, ug::Integer)
 
     for id in eachindex(n1_)
 
-        co[_find(g1_, n1_[id]), _find(g2_, n2_[id])] += 1
+        co[find(g1_, n1_[id]), find(g2_, n2_[id])] += 1
 
     end
 
@@ -70,6 +80,7 @@ function coun(n1_, n2_, ug::Integer)
 
 end
 
+# TODO: Consider deleting
 function coun(a1_, a2_)
 
     if !(lastindex(a1_) == lastindex(a2_))
