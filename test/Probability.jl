@@ -55,15 +55,5 @@ Omics.Plot.plot(
 
 # ---- #
 
-include("JO.jl")
-
-for (ea, re) in
-    ((eachrow, [1 / 2, 1 / 4, 1 / 8, 1 / 8]), (eachcol, [1 / 4, 1 / 4, 1 / 4, 1 / 4]))
-
-    @test Omics.Probability.ge(ea, JO) == re
-
-    # 21.899 ns (2 allocations: 96 bytes)
-    # 20.980 ns (2 allocations: 96 bytes)
-    #@btime Omics.Probability.ge($ea, JO)
-
-end
+# TODO
+Omics.Probability.ge

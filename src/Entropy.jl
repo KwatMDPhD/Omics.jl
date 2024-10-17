@@ -8,7 +8,7 @@ end
 
 function ge(jo)
 
-    mapreduce(pr -> iszero(pr) ? 0.0 : ge(pr), +, jo)
+    sum(pr -> iszero(pr) ? 0.0 : ge(pr), jo)
 
 end
 

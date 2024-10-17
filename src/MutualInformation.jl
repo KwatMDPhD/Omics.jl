@@ -54,15 +54,15 @@ function get_information_coefficient(n1_, n2_)
 
     fa = 0.75 - 0.75 * abs(co)
 
-    # TODO: Pick one
     mu = get_mutual_information(
-        Omics.Normalization.normalize_with_01!(
-            Omics.Probability.ge(
+        Omics.Normalization.normalize_with_sum!(
+            # TODO: Dispatch count
+            Omics.Density.ge(
                 n1_,
                 n2_;
                 npoints = (32, 32),
                 bandwidth = (default_bandwidth(n1_) * fa, default_bandwidth(n2_) * fa),
-            ),
+            )[3],
         ),
     )
 
