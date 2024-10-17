@@ -7,7 +7,7 @@ using Test: @test
 # ---- #
 
 for (pr_, re) in (
-    ([1], 0.0),
+    ([1], -0.0),
     ([0.001, 0.999], 0.011407757737461138),
     ([0.01, 0.99], 0.08079313589591118),
     ([0.1, 0.9], 0.4689955935892812),
@@ -25,32 +25,27 @@ for (pr_, re) in (
 
     @test Omics.Entropy.ge(pr_) === re
 
-    # 5.833 ns (0 allocations: 0 bytes)
-    # 10.511 ns (0 allocations: 0 bytes)
-    # 10.511 ns (0 allocations: 0 bytes)
-    # 11.887 ns (0 allocations: 0 bytes)
-    # 11.887 ns (0 allocations: 0 bytes)
-    # 11.887 ns (0 allocations: 0 bytes)
-    # 11.887 ns (0 allocations: 0 bytes)
-    # 11.887 ns (0 allocations: 0 bytes)
+    # 6.750 ns (0 allocations: 0 bytes)
+    # 11.094 ns (0 allocations: 0 bytes)
+    # 11.094 ns (0 allocations: 0 bytes)
+    # 12.345 ns (0 allocations: 0 bytes)
+    # 12.345 ns (0 allocations: 0 bytes)
+    # 12.303 ns (0 allocations: 0 bytes)
+    # 12.303 ns (0 allocations: 0 bytes)
+    # 12.303 ns (0 allocations: 0 bytes)
     # 16.992 ns (0 allocations: 0 bytes)
-    # 22.107 ns (0 allocations: 0 bytes)
-    # 27.066 ns (0 allocations: 0 bytes)
-    # 52.558 ns (0 allocations: 0 bytes)
-    # 52.569 ns (0 allocations: 0 bytes)
-    # 52.612 ns (0 allocations: 0 bytes)
-    @btime Omics.Entropy.ge($pr_)
+    # 21.731 ns (0 allocations: 0 bytes)
+    # 26.481 ns (0 allocations: 0 bytes)
+    # 50.489 ns (0 allocations: 0 bytes)
+    # 50.481 ns (0 allocations: 0 bytes)
+    # 50.574 ns (0 allocations: 0 bytes)
+    #@btime Omics.Entropy.ge($pr_)
 
 end
 
 # ---- #
 
-const JO = [
-    1/8 1/16 1/16 1/4
-    1/16 1/8 1/16 0
-    1/32 1/32 1/16 0
-    1/32 1/32 1/16 0
-]
+include("JO.jl")
 
 for (ea, re) in ((eachrow, 7 / 4), (eachcol, 2.0))
 
@@ -58,6 +53,6 @@ for (ea, re) in ((eachrow, 7 / 4), (eachcol, 2.0))
 
     # 37.550 ns (0 allocations: 0 bytes)
     # 32.612 ns (0 allocations: 0 bytes)
-    @btime Omics.Entropy.ge($ea, JO)
+    #@btime Omics.Entropy.ge($ea, JO)
 
 end

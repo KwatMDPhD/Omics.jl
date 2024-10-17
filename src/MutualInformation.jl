@@ -45,13 +45,28 @@ end
 function get_information_coefficient(n1_, n2_)
 
     co = cor(n1_, n2_)
-    fa = 0.75 - 0.75 * abs(co)
-    npoints = (32, 32)
-    bandwidth = (default_bandwidth(f2_) * fa, default_bandwidth(f1_) * fa)
 
-    isnan(co) || isone(abs(co)) ? co :
-    sign(co) *
-    sqrt(1.0 - exp(-2.0 * get_mutual_information(Omics.Probability.ge(co, n1_, n2_))))
+    if isnan(co) || isone(abs(co))
+
+        return co
+
+    end
+
+    fa = 0.75 - 0.75 * abs(co)
+
+    # TODO: Pick one
+    mu = get_mutual_information(
+        Omics.Normalization.normalize_with_01!(
+            Omics.Probability.ge(
+                n1_,
+                n2_;
+                npoints = (32, 32),
+                bandwidth = (default_bandwidth(n1_) * fa, default_bandwidth(n2_) * fa),
+            ),
+        ),
+    )
+
+    sign(co) * sqrt(1.0 - exp(-2.0 * mu))
 
 end
 

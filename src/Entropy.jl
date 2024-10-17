@@ -6,22 +6,9 @@ function ge(pr::Real)
 
 end
 
-# TODO: Consider deleting
 function ge(jo)
 
-    en = 0.0
-
-    for pr in jo
-
-        if !iszero(pr)
-
-            en += ge(pr)
-
-        end
-
-    end
-
-    en
+    mapreduce(pr -> iszero(pr) ? 0.0 : ge(pr), +, jo)
 
 end
 
