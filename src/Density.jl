@@ -1,8 +1,6 @@
 module Density
 
-using KernelDensity: default_bandwidth, kde
-
-using ..Omics
+using KernelDensity: kde
 
 function ge(n1_, n2_; ke_ar...)
 

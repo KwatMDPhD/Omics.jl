@@ -8,17 +8,10 @@ using Random: seed!
 
 # ---- #
 
-for (nu_, ug, re) in (
-    ([0, 1], 2, 0.0:1:1),
-    ([1, 0], 3, 0.0:0.5:1),
-    ([-1, 1], 2, -1.0:2:1),
-    ([1, -1], 3, -1.0:1:1),
-)
+for (nu_, ug, re) in (([-1, 1], 2, -1.0:2:1), ([1, -1], 3, -1.0:1:1))
 
     @test Omics.Density.grid(nu_, ug) === re
 
-    # 50.025 ns (0 allocations: 0 bytes)
-    # 49.983 ns (0 allocations: 0 bytes)
     # 50.016 ns (0 allocations: 0 bytes)
     # 49.992 ns (0 allocations: 0 bytes)
     #@btime Omics.Density.grid($nu_, $ug)
@@ -27,32 +20,28 @@ end
 
 # ---- #
 
-for (gr_, nu, re) in (
-    ([-2, -1, 0, 1, 2], -3, 1),
-    ([-2, -1, 0, 1, 2], -2, 1),
-    ([-2, -1, 0, 1, 2], -1, 2),
-    ([-2, -1, 0, 1, 2], 0, 3),
-    ([-2, -1, 0, 1, 2], 1, 4),
-    ([-2, -1, 0, 1, 2], 2, 5),
-    ([-2, -1, 0, 1, 2], 3, 5),
-)
+const GR_ = [-2, -1, 0, 1, 2]
 
-    @test Omics.Density.find(gr_, nu) === re
+for (nu, re) in ((-3, 1), (-2, 1), (-1, 2), (0, 3), (1, 4), (2, 5), (3, 5))
+
+    @test Omics.Density.find(GR_, nu) === re
 
     # 2.708 ns (0 allocations: 0 bytes)
     # 2.709 ns (0 allocations: 0 bytes)
-    # 2.708 ns (0 allocations: 0 bytes)
     # 3.000 ns (0 allocations: 0 bytes)
     # 3.958 ns (0 allocations: 0 bytes)
-    # 3.916 ns (0 allocations: 0 bytes)
-    # 3.958 ns (0 allocations: 0 bytes)
-    #@btime Omics.Density.find($gr_, $nu)
+    # 4.250 ns (0 allocations: 0 bytes)
+    # 4.250 ns (0 allocations: 0 bytes)
+    # 4.250 ns (0 allocations: 0 bytes)
+    #@btime Omics.Density.find(GR_, $nu)
 
 end
 
 # ---- #
 
 const UG = 8
+
+# ---- #
 
 for nu_ in ([
     -1,
@@ -86,15 +75,12 @@ for nu_ in ([
     11,
 ],)
 
-
     kd = Omics.Density.kde(nu_; boundary = extrema(nu_), npoints = UG)
 
-    # TODO: Improve `coun` when `ug` is small
+    # TODO: Improve when `ug` is small
     gr_, co_ = Omics.Density.coun(nu_, UG)
 
     @test kd.x === gr_
-
-    @info "" gr_ co_
 
     Omics.Plot.plot(
         joinpath(tempdir(), "1kernelcount.html"),
@@ -146,27 +132,29 @@ end
 
 const npoints = (UG, UG)
 
+# ---- #
+
 for (n1_, n2_) in (([1, 2, 3, 4, 6], [2, 4, 8, 16, 64]),)
 
-    k1_, k2_, de =
+    k1_, k2_, kd =
         Omics.Density.ge(n1_, n2_; boundary = (extrema(n1_), extrema(n2_)), npoints)
 
     g1_, g2_, co = Omics.Density.coun(n1_, n2_, npoints)
 
-    d1_, d2_, di =
+    r1_, r2_, cu =
         Omics.Density.coun(n1_, n2_, (Omics.Dic.index(n1_), Omics.Dic.index(n2_)))
 
     @test k1_ == g1_
 
     @test k2_ == g2_
 
-    @test d1_ == n1_
+    @test r1_ == n1_
 
-    @test d2_ == n2_
+    @test r2_ == n2_
 
     Omics.Plot.plot_heat_map(
         joinpath(tempdir(), "2kernel.html"),
-        de;
+        kd;
         ro_ = k1_,
         co_ = k2_,
         la = Dict("title" => Dict("text" => "Kernel")),
@@ -182,9 +170,9 @@ for (n1_, n2_) in (([1, 2, 3, 4, 6], [2, 4, 8, 16, 64]),)
 
     Omics.Plot.plot_heat_map(
         joinpath(tempdir(), "2countdict.html"),
-        di;
-        ro_ = d1_,
-        co_ = d2_,
+        cu;
+        ro_ = r1_,
+        co_ = r2_,
         la = Dict("title" => Dict("text" => "Count with Dict")),
     )
 

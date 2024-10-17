@@ -1,5 +1,7 @@
 module MutualInformation
 
+using KernelDensity: default_bandwidthkde
+
 using Statistics: cor
 
 using ..Omics
