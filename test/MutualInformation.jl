@@ -35,7 +35,7 @@ for (i1_, i2_, ri, rf) in (
 
     f2_ = convert(Vector{Float64}, i2_)
 
-    #@test isapprox(Omics.MutualInformation.get_information_coefficient(i1_, i2_), ri)
+    @test isapprox(Omics.MutualInformation.get_information_coefficient(i1_, i2_), ri)
 
     @test isapprox(Omics.MutualInformation.get_information_coefficient(f1_, f2_), rf)
 

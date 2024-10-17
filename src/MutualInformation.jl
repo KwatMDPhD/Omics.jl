@@ -42,6 +42,27 @@ function get_mutual_information(jo, no)
 
 end
 
+function _get_density(n1_::AbstractVector{<:Integer}, n2_::AbstractVector{<:Integer}, _)
+
+    _, _, co = Omics.Density.coun(n1_, n2_, (Omics.Dic.index(n1_), Omics.Dic.index(n2_)))
+
+    convert(Matrix{Float64}, co)
+
+end
+
+function _get_density(n1_, n2_, fa)
+
+    _, _, de = Omics.Density.ge(
+        n1_,
+        n2_;
+        npoints = (32, 32),
+        bandwidth = (default_bandwidth(n1_) * fa, default_bandwidth(n2_) * fa),
+    )
+
+    de
+
+end
+
 function get_information_coefficient(n1_, n2_)
 
     co = cor(n1_, n2_)
@@ -55,15 +76,7 @@ function get_information_coefficient(n1_, n2_)
     fa = 0.75 - 0.75 * abs(co)
 
     mu = get_mutual_information(
-        Omics.Normalization.normalize_with_sum!(
-            # TODO: Dispatch count
-            Omics.Density.ge(
-                n1_,
-                n2_;
-                npoints = (32, 32),
-                bandwidth = (default_bandwidth(n1_) * fa, default_bandwidth(n2_) * fa),
-            )[3],
-        ),
+        Omics.Normalization.normalize_with_sum!(_get_density(n1_, n2_, fa)),
     )
 
     sign(co) * sqrt(1.0 - exp(-2.0 * mu))
