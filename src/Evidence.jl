@@ -10,7 +10,7 @@ end
 
 function get_posterior_probability(p1, ev)
 
-    Omics.Probability.get_probability(Omics.Probability.get_odd(p1) * exp2(ev))
+    Omics.Probability.ge(Omics.Probability.get_odd(p1) * exp2(ev))
 
 end
 

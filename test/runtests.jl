@@ -16,7 +16,6 @@ for mo in (
     "HTM",
     "Information",
     "MutualInformation",
-    "MutualInformation2.jl",
     "Normalization",
     "Palette",
     "Path",

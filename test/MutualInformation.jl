@@ -76,9 +76,9 @@ for (i1_, i2_, ri, rf) in (
     # 579.633 ns (40 allocations: 2.00 KiB)
     # 26.500 μs (58 allocations: 44.52 KiB)
 
-    @btime Omics.MutualInformation.get_information_coefficient($i1_, $i2_)
+    #@btime Omics.MutualInformation.get_information_coefficient($i1_, $i2_)
 
-    @btime Omics.MutualInformation.get_information_coefficient($f1_, $f2_)
+    #@btime Omics.MutualInformation.get_information_coefficient($f1_, $f2_)
 
 end
 
@@ -222,17 +222,17 @@ for ur in (10, 100, 1000, 10000)
     # 548.572 ns (4 allocations: 288 bytes)
     # 686.947 ns (0 allocations: 0 bytes)
 
-    @btime mutualinfo($i1_, $i2_; normed = false)
+    #@btime mutualinfo($i1_, $i2_; normed = false)
 
-    @btime Omics.Normalization.normalize_with_sum!(
-        convert(
-            Matrix{Float64},
-            Omics.Density.coun($i1_, $i2_, (Omics.Dic.index($i1_), Omics.Dic.index($i2_)))[3],
-        ),
-    )
+    #@btime Omics.Normalization.normalize_with_sum!(
+    #    convert(
+    #        Matrix{Float64},
+    #        Omics.Density.coun($i1_, $i2_, (Omics.Dic.index($i1_), Omics.Dic.index($i2_)))[3],
+    #    ),
+    #)
 
-    @btime Omics.MutualInformation.get_mutual_information($jo)
+    #@btime Omics.MutualInformation.get_mutual_information($jo)
 
-    @btime Omics.MutualInformation.get_mutual_information($jo, false)
+    #@btime Omics.MutualInformation.get_mutual_information($jo, false)
 
 end
