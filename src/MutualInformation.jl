@@ -1,6 +1,6 @@
 module MutualInformation
 
-using KernelDensity: default_bandwidthkde
+using KernelDensity: default_bandwidth
 
 using Statistics: cor
 

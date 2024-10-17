@@ -25,6 +25,9 @@ for (an_, re) in (
     # 69.729 ns (4 allocations: 384 bytes)
     # 79.291 ns (4 allocations: 384 bytes)
     # 79.260 ns (4 allocations: 384 bytes)
+    # 119.178 ns (9 allocations: 496 bytes)
+    # 137.731 ns (9 allocations: 496 bytes)
+    # 131.161 ns (9 allocations: 496 bytes)
     #@btime Omics.Dic.index($an_)
 
 end
@@ -56,8 +59,8 @@ for (k1_v1, k2_v2, re) in (
 
     @test Omics.Dic.merg(k1_v1, k2_v2) == re
 
-    # 1.012 μs (16 allocations: 1.50 KiB)
-    # 1.017 μs (16 allocations: 1.50 KiB)
+    # 1.008 μs (16 allocations: 1.50 KiB)
+    # 1.008 μs (16 allocations: 1.50 KiB)
     #@btime Omics.Dic.merg($k1_v1, $k2_v2)
 
 end
