@@ -8,7 +8,11 @@ using Statistics: cor
 
 using ..Omics
 
-function _get_density(i1_::AbstractVector{<:Integer}, i2_::AbstractVector{<:Integer}, _)
+function _get_density(
+    i1_::AbstractVector{<:Integer},
+    i2_::AbstractVector{<:Integer},
+    ::AbstractFloat,
+)
 
     ep = eps()
 
@@ -28,17 +32,11 @@ function _get_density(f1_, f2_, co; ug = 32, ma = 0.75)
 
 end
 
-function _marginalize(ea, jo)
-
-    map(sum, ea(jo))
-
-end
-
 function get_mutual_information(jo)
 
-    p1_ = _marginalize(eachrow, jo)
+    p1_ = map(sum, eachrow(jo))
 
-    p2_ = _marginalize(eachcol, jo)
+    p2_ = map(sum, eachcol(jo))
 
     mu = 0.0
 
@@ -58,19 +56,13 @@ function get_mutual_information(jo)
 
 end
 
-function _get_entropy(jo)
-
-    sum(pr -> iszero(pr) ? 0.0 : Omics.Entropy.ge(pr), jo)
-
-end
-
 function get_mutual_information(jo, no)
 
     e1 = Omics.Entropy.ge(eachrow, jo)
 
     e2 = Omics.Entropy.ge(eachcol, jo)
 
-    mu = e1 + e2 - _get_entropy(jo)
+    mu = e1 + e2 - sum(Omics.Entropy.ge, jo)
 
     no ? 2.0 * mu / (e1 + e2) : mu
 
@@ -91,7 +83,7 @@ function get_information_coefficient(n1_, n2_)
         false,
     )
 
-    # TODO: Check e instead of 2.
+    # TODO: Confirm e
     sign(co) * sqrt(1.0 - exp(-2.0 * mu))
 
 end
