@@ -20,6 +20,8 @@ function plot(y_, na_, fu)
 
 end
 
+# ---- #
+
 seed!(20241015)
 
 for (n1_, n2_) in (([1, 2, 3], [2, 3, 4]), (kde(rand(10)).density, kde(randn(10)).density))

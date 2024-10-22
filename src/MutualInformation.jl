@@ -1,16 +1,44 @@
 module MutualInformation
 
-using KernelDensity: default_bandwidth
+using KernelDensity: default_bandwidth, kde
+
+using StatsBase: counts
 
 using Statistics: cor
 
 using ..Omics
 
+function _get_density(i1_::AbstractVector{<:Integer}, i2_::AbstractVector{<:Integer}, _)
+
+    ep = eps()
+
+    map(co -> co + ep, counts(i1_, i2_))
+
+end
+
+function _get_density(f1_, f2_, co; ug = 32, ma = 0.75)
+
+    ba = ma - ma * abs(co)
+
+    kde(
+        (f1_, f2_);
+        npoints = (ug, ug),
+        bandwidth = (default_bandwidth(f1_) * ba, default_bandwidth(f2_) * ba),
+    ).density
+
+end
+
+function _marginalize(ea, jo)
+
+    map(sum, ea(jo))
+
+end
+
 function get_mutual_information(jo)
 
-    p1_ = Omics.Probability.ge(eachrow, jo)
+    p1_ = _marginalize(eachrow, jo)
 
-    p2_ = Omics.Probability.ge(eachcol, jo)
+    p2_ = _marginalize(eachcol, jo)
 
     mu = 0.0
 
@@ -30,36 +58,21 @@ function get_mutual_information(jo)
 
 end
 
+function _get_entropy(jo)
+
+    sum(pr -> iszero(pr) ? 0.0 : Omics.Entropy.ge(pr), jo)
+
+end
+
 function get_mutual_information(jo, no)
 
     e1 = Omics.Entropy.ge(eachrow, jo)
 
     e2 = Omics.Entropy.ge(eachcol, jo)
 
-    mu = e1 + e2 - Omics.Entropy.ge(jo)
+    mu = e1 + e2 - _get_entropy(jo)
 
     no ? 2.0 * mu / (e1 + e2) : mu
-
-end
-
-function _get_density(n1_::AbstractVector{<:Integer}, n2_::AbstractVector{<:Integer}, _)
-
-    _, _, co = Omics.Density.coun(n1_, n2_, (Omics.Dic.index(n1_), Omics.Dic.index(n2_)))
-
-    convert(Matrix{Float64}, co)
-
-end
-
-function _get_density(n1_, n2_, fa)
-
-    _, _, de = Omics.Density.ge(
-        n1_,
-        n2_;
-        npoints = (32, 32),
-        bandwidth = (default_bandwidth(n1_) * fa, default_bandwidth(n2_) * fa),
-    )
-
-    de
 
 end
 
@@ -73,12 +86,12 @@ function get_information_coefficient(n1_, n2_)
 
     end
 
-    fa = 0.75 - 0.75 * abs(co)
-
     mu = get_mutual_information(
-        Omics.Normalization.normalize_with_sum!(_get_density(n1_, n2_, fa)),
+        Omics.Normalization.normalize_with_sum!(_get_density(n1_, n2_, co)),
+        false,
     )
 
+    # TODO: Check e instead of 2.
     sign(co) * sqrt(1.0 - exp(-2.0 * mu))
 
 end

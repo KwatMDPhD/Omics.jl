@@ -1,6 +1,6 @@
 module Entropy
 
-function ge(pr::Real)
+function ge(pr)
 
     -pr * log2(pr)
 

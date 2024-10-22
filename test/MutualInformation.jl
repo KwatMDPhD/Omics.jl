@@ -8,79 +8,7 @@ using Clustering: mutualinfo
 
 using Random: seed!
 
-# ---- #
-
-for (i1_, i2_, ri, rf) in (
-    ([1, 2], [1, 2], 1.0, 1.0),
-    ([1, 2], [1, 3], 1.0, 1.0),
-    ([1, 2, 3], [1, 1, 2], 0.9168644108463501, 0.9140184400703145),
-    ([1, 2, 3], [1, 1, 3], 0.9168644108463501, 0.9140184400703149),
-    ([1, 2, 3], [1, 2, 1], 0.0, 0.0),
-    ([1, 2, 3], [1, 2, 2], 0.9168644108463501, 0.9140184400703141),
-    ([1, 2, 3], [1, 2, 3], 1.0, 1.0),
-    ([1, 2, 3], [1, 3, 1], 0.0, 0.0),
-    ([1, 2, 3], [1, 3, 2], 0.9787712969683778, 0.9749301137414429),
-    ([1, 2, 3], [1, 3, 3], 0.9168644108463501, 0.9140184400703142),
-    ([1, 2, 1, 2], [1, 2, 1, 2], 1.0, 1.0),
-    ([1, 2, 1, 2], [1, 3, 1, 3], 1.0, 1.0),
-    ([1, 2, 1, 2], [1, 2, 1, 3], 0.9298734950321937, 0.9269049805641629),
-    ([1, 2, 1, 2], [1, 3, 1, 2], 0.9298734950321937, 0.9269049805641629),
-    ([1, 2, 1, 2], [2, 1, 2, 1], -1.0, -1.0),
-    ([1, 2, 1, 2], [3, 1, 3, 1], -1.0, -1.0),
-    ([1, 2, 1, 2], [2, 1, 3, 1], -0.9298734950321937, -0.9269049805641629),
-    ([1, 2, 1, 2], [3, 1, 2, 1], -0.9298734950321937, -0.9269049805641629),
-)
-
-    f1_ = convert(Vector{Float64}, i1_)
-
-    f2_ = convert(Vector{Float64}, i2_)
-
-    @test isapprox(Omics.MutualInformation.get_information_coefficient(i1_, i2_), ri)
-
-    @test isapprox(Omics.MutualInformation.get_information_coefficient(f1_, f2_), rf)
-
-    # 11.136 ns (0 allocations: 0 bytes)
-    # 10.636 ns (0 allocations: 0 bytes)
-    # 11.261 ns (0 allocations: 0 bytes)
-    # 10.666 ns (0 allocations: 0 bytes)
-    # 576.850 ns (40 allocations: 2.00 KiB)
-    # 26.792 μs (58 allocations: 44.48 KiB)
-    # 588.856 ns (40 allocations: 2.00 KiB)
-    # 26.625 μs (58 allocations: 44.48 KiB)
-    # 571.429 ns (40 allocations: 2.00 KiB)
-    # 29.250 μs (58 allocations: 44.48 KiB)
-    # 567.623 ns (40 allocations: 2.00 KiB)
-    # 26.667 μs (58 allocations: 44.48 KiB)
-    # 12.262 ns (0 allocations: 0 bytes)
-    # 11.679 ns (0 allocations: 0 bytes)
-    # 574.257 ns (40 allocations: 2.00 KiB)
-    # 29.250 μs (58 allocations: 44.48 KiB)
-    # 569.293 ns (40 allocations: 2.05 KiB)
-    # 29.042 μs (58 allocations: 44.48 KiB)
-    # 605.769 ns (40 allocations: 2.00 KiB)
-    # 26.750 μs (58 allocations: 44.48 KiB)
-    # 13.346 ns (0 allocations: 0 bytes)
-    # 12.763 ns (0 allocations: 0 bytes)
-    # 13.263 ns (0 allocations: 0 bytes)
-    # 12.763 ns (0 allocations: 0 bytes)
-    # 581.717 ns (40 allocations: 2.00 KiB)
-    # 26.375 μs (58 allocations: 44.52 KiB)
-    # 582.873 ns (40 allocations: 2.00 KiB)
-    # 26.459 μs (58 allocations: 44.52 KiB)
-    # 13.346 ns (0 allocations: 0 bytes)
-    # 12.763 ns (0 allocations: 0 bytes)
-    # 13.263 ns (0 allocations: 0 bytes)
-    # 12.763 ns (0 allocations: 0 bytes)
-    # 579.167 ns (40 allocations: 2.00 KiB)
-    # 26.458 μs (58 allocations: 44.52 KiB)
-    # 579.633 ns (40 allocations: 2.00 KiB)
-    # 26.500 μs (58 allocations: 44.52 KiB)
-
-    #@btime Omics.MutualInformation.get_information_coefficient($i1_, $i2_)
-
-    #@btime Omics.MutualInformation.get_information_coefficient($f1_, $f2_)
-
-end
+using Statistics: cor
 
 # ---- #
 
@@ -91,11 +19,11 @@ const JO = [
     1/32 1/32 1/16 0
 ]
 
-const P1_ = Omics.Probability.ge(eachrow, JO)
+const P1_ = Omics.MutualInformation._marginalize(eachrow, JO)
 
 @test P1_ == [1 / 2, 1 / 4, 1 / 8, 1 / 8]
 
-const P2_ = Omics.Probability.ge(eachcol, JO)
+const P2_ = Omics.MutualInformation._marginalize(eachcol, JO)
 
 @test P2_ == [1 / 4, 1 / 4, 1 / 4, 1 / 4]
 
@@ -107,20 +35,26 @@ const E2 = Omics.Entropy.ge(eachcol, JO)
 
 @test E2 === 2.0
 
-const EN = Omics.Entropy.ge(JO)
+const EN = Omics.MutualInformation._get_entropy(JO)
 
 @test EN === 27 / 8
 
 const E12 = EN - E2
 
 @test E12 ===
-      sum(pr * Omics.Entropy.ge(pr_ / pr) for (pr, pr_) in zip(P2_, eachcol(JO))) ===
+      sum(
+          pr * Omics.MutualInformation._get_entropy(pr_ / pr) for
+          (pr, pr_) in zip(P2_, eachcol(JO))
+      ) ===
       11 / 8
 
 const E21 = EN - E1
 
 @test E21 ===
-      sum(pr * Omics.Entropy.ge(pr_ / pr) for (pr, pr_) in zip(P1_, eachrow(JO))) ===
+      sum(
+          pr * Omics.MutualInformation._get_entropy(pr_ / pr) for
+          (pr, pr_) in zip(P1_, eachrow(JO))
+      ) ===
       13 / 8
 
 const MU = E1 + E2 - EN
@@ -129,11 +63,135 @@ const MU = E1 + E2 - EN
 
 # ---- #
 
-function Omics.Entropy.ge(pr::Real)
+for (i1_, i2_, ri, rf) in (
+    ([1, 2], [1, 2], 1.0, 1.0),
+    ([1, 2], [1, 3], 1.0, 1.0),
+    ([1, 2, 3], [1, 1, 2], 0.9168644108463481, 0.9140184400703142),
+    ([1, 2, 3], [1, 1, 3], 0.916864410846348, 0.9140184400703134),
+    ([1, 2, 3], [1, 2, 1], 0.0, 0.0),
+    ([1, 2, 3], [1, 2, 2], 0.9168644108463481, 0.9140184400703132),
+    ([1, 2, 3], [1, 2, 3], 1.0, 1.0),
+    ([1, 2, 3], [1, 3, 1], 0.0, 0.0),
+    ([1, 2, 3], [1, 3, 2], 0.9787712969683768, 0.9749301137414429),
+    ([1, 2, 3], [1, 3, 3], 0.916864410846348, 0.9140184400703134),
+    ([1, 2, 1, 2], [1, 2, 1, 2], 1.0, 1.0),
+    ([1, 2, 1, 2], [1, 3, 1, 3], 1.0, 1.0),
+    ([1, 2, 1, 2], [1, 2, 1, 3], 0.9298734950321925, 0.9269049805641628),
+    ([1, 2, 1, 2], [1, 3, 1, 2], 0.9298734950321925, 0.9269049805641628),
+    ([1, 2, 1, 2], [2, 1, 2, 1], -1.0, -1.0),
+    ([1, 2, 1, 2], [3, 1, 3, 1], -1.0, -1.0),
+    ([1, 2, 1, 2], [2, 1, 3, 1], -0.9298734950321924, -0.9269049805641624),
+    ([1, 2, 1, 2], [3, 1, 2, 1], -0.9298734950321924, -0.9269049805641624),
+)
+
+    f1_ = convert(Vector{Float64}, i1_)
+
+    f2_ = convert(Vector{Float64}, i2_)
+
+    @test Omics.MutualInformation.get_information_coefficient(i1_, i2_) === ri
+
+    @test Omics.MutualInformation.get_information_coefficient(f1_, f2_) === rf
+
+end
+
+# ---- #
+
+# 18.328 ns (0 allocations: 0 bytes)
+# 16.658 ns (0 allocations: 0 bytes)
+# 98.248 ns (4 allocations: 1.84 KiB)
+# 21.666 μs (54 allocations: 43.98 KiB)
+# 732.504 ns (4 allocations: 288 bytes)
+# 6.142 μs (4 allocations: 640 bytes)
+# 688.195 ns (0 allocations: 0 bytes)
+# 5.625 μs (0 allocations: 0 bytes)
+# 892.217 ns (4 allocations: 1.84 KiB)
+# 27.875 μs (54 allocations: 43.98 KiB)
+
+# 111.920 ns (0 allocations: 0 bytes)
+# 50.025 ns (0 allocations: 0 bytes)
+# 254.643 ns (4 allocations: 1.84 KiB)
+# 26.334 μs (54 allocations: 45.52 KiB)
+# 733.015 ns (4 allocations: 288 bytes)
+# 6.417 μs (4 allocations: 640 bytes)
+# 657.812 ns (0 allocations: 0 bytes)
+# 5.882 μs (0 allocations: 0 bytes)
+# 1.137 μs (4 allocations: 1.84 KiB)
+# 32.791 μs (54 allocations: 45.52 KiB)
+
+# 1.150 μs (0 allocations: 0 bytes)
+# 417.920 ns (0 allocations: 0 bytes)
+# 2.032 μs (4 allocations: 1.84 KiB)
+# 73.417 μs (57 allocations: 59.59 KiB)
+# 734.292 ns (4 allocations: 288 bytes)
+# 6.392 μs (4 allocations: 640 bytes)
+# 706.570 ns (0 allocations: 0 bytes)
+# 5.917 μs (0 allocations: 0 bytes)
+# 3.938 μs (4 allocations: 1.84 KiB)
+# 80.209 μs (57 allocations: 59.59 KiB)
+
+# 11.542 μs (0 allocations: 0 bytes)
+# 4.083 μs (0 allocations: 0 bytes)
+# 19.458 μs (4 allocations: 1.84 KiB)
+# 981.084 μs (57 allocations: 200.09 KiB)
+# 734.375 ns (4 allocations: 288 bytes)
+# 6.108 μs (4 allocations: 640 bytes)
+# 706.858 ns (0 allocations: 0 bytes)
+# 5.694 μs (0 allocations: 0 bytes)
+# 31.875 μs (4 allocations: 1.84 KiB)
+# 988.666 μs (57 allocations: 200.09 KiB)
+for ur in (10, 100, 1000, 10000)
+
+    seed!(20241021)
+
+    i1_ = rand(0:9, ur)
+
+    i2_ = rand(0:9, ur)
+
+    f1_ = randn(ur)
+
+    f2_ = randn(ur)
+
+    ci = cor(i1_, i2_)
+
+    cf = cor(f1_, f2_)
+
+    ji = Omics.MutualInformation._get_density(i1_, i2_, ci)
+
+    jf = Omics.MutualInformation._get_density(f1_, f2_, cf)
+
+    #@btime cor($i1_, $i2_)
+
+    #@btime cor($f1_, $f2_)
+
+    #@btime Omics.MutualInformation._get_density($i1_, $i2_, $ci)
+
+    #@btime Omics.MutualInformation._get_density($f1_, $f2_, $cf)
+
+    #@btime Omics.MutualInformation.get_mutual_information($ji)
+
+    #@btime Omics.MutualInformation.get_mutual_information($jf)
+
+    #@btime Omics.MutualInformation.get_mutual_information($ji, false)
+
+    #@btime Omics.MutualInformation.get_mutual_information($jf, false)
+
+    #@btime Omics.MutualInformation.get_information_coefficient($i1_, $i2_)
+
+    #@btime Omics.MutualInformation.get_information_coefficient($f1_, $f2_)
+
+    println()
+
+end
+
+# ---- #
+
+function Omics.Entropy.ge(pr)
 
     -pr * log(pr)
 
 end
+
+# ---- #
 
 function Omics.Information.get_kullback_leibler_divergence(n1, n2)
 
@@ -146,8 +204,6 @@ end
 # https://cdanielaam.medium.com/how-to-compare-and-evaluate-unsupervised-clustering-methods-84f3617e3769
 
 const RF = 1.5534700710552343
-
-const RT = 0.9653404496537963
 
 for jo in (
     [
@@ -170,7 +226,10 @@ for jo in (
 
     @test isapprox(Omics.MutualInformation.get_mutual_information(jo, false), RF)
 
-    @test isapprox(Omics.MutualInformation.get_mutual_information(jo, true), RT)
+    @test isapprox(
+        Omics.MutualInformation.get_mutual_information(jo, true),
+        0.9653404496537963,
+    )
 
 end
 
@@ -186,53 +245,49 @@ for ur in (10, 100, 1000, 10000)
 
     rf = mutualinfo(i1_, i2_; normed = false)
 
-    rt = mutualinfo(i1_, i2_)
-
     jo = Omics.Normalization.normalize_with_sum!(
-        convert(
-            Matrix{Float64},
-            Omics.Density.coun(i1_, i2_, (Omics.Dic.index(i1_), Omics.Dic.index(i2_)))[3],
-        ),
+        Omics.MutualInformation._get_density(i1_, i2_, NaN),
     )
 
     @test isapprox(Omics.MutualInformation.get_mutual_information(jo), rf)
 
     @test isapprox(Omics.MutualInformation.get_mutual_information(jo, false), rf)
 
-    @test isapprox(Omics.MutualInformation.get_mutual_information(jo, true), rt)
+    @test isapprox(
+        Omics.MutualInformation.get_mutual_information(jo, true),
+        mutualinfo(i1_, i2_),
+    )
 
-    # 432.869 ns (6 allocations: 1.00 KiB)
-    # 435.914 ns (12 allocations: 1.50 KiB)
-    # 150.909 ns (4 allocations: 224 bytes)
-    # 181.655 ns (0 allocations: 0 bytes)
-    # 778.698 ns (6 allocations: 1.23 KiB)
-    # 1.562 μs (12 allocations: 2.53 KiB)
-    # 484.831 ns (4 allocations: 288 bytes)
-    # 515.406 ns (0 allocations: 0 bytes)
-    # 2.718 μs (6 allocations: 1.23 KiB)
-    # 15.625 μs (12 allocations: 2.53 KiB)
-    # 661.975 ns (4 allocations: 288 bytes)
-    # 689.167 ns (0 allocations: 0 bytes)
-    # 20.167 μs (6 allocations: 1.23 KiB)
-    # 197.708 μs (12 allocations: 2.53 KiB)
-    # 619.152 ns (4 allocations: 288 bytes)
-    # 685.430 ns (0 allocations: 0 bytes)
-    # 193.833 μs (6 allocations: 1.23 KiB)
-    # 2.414 ms (12 allocations: 2.53 KiB)
-    # 548.572 ns (4 allocations: 288 bytes)
-    # 686.947 ns (0 allocations: 0 bytes)
+    # 468.964 ns (6 allocations: 1.00 KiB)
+    # 135.632 ns (4 allocations: 1.41 KiB)
+    # 586.785 ns (4 allocations: 272 bytes)
+    # 570.049 ns (0 allocations: 0 bytes)
+
+    # 825.667 ns (6 allocations: 1.23 KiB)
+    # 315.500 ns (4 allocations: 1.84 KiB)
+    # 729.962 ns (4 allocations: 288 bytes)
+    # 688.758 ns (0 allocations: 0 bytes)
+
+    # 2.764 μs (6 allocations: 1.23 KiB)
+    # 2.074 μs (4 allocations: 1.84 KiB)
+    # 690.034 ns (4 allocations: 288 bytes)
+    # 688.477 ns (0 allocations: 0 bytes)
+
+    # 20.208 μs (6 allocations: 1.23 KiB)
+    # 19.500 μs (4 allocations: 1.84 KiB)
+    # 649.646 ns (4 allocations: 288 bytes)
+    # 691.113 ns (0 allocations: 0 bytes)
 
     #@btime mutualinfo($i1_, $i2_; normed = false)
 
     #@btime Omics.Normalization.normalize_with_sum!(
-    #    convert(
-    #        Matrix{Float64},
-    #        Omics.Density.coun($i1_, $i2_, (Omics.Dic.index($i1_), Omics.Dic.index($i2_)))[3],
-    #    ),
+    #    Omics.MutualInformation._get_density($i1_, $i2_, NaN),
     #)
 
     #@btime Omics.MutualInformation.get_mutual_information($jo)
 
     #@btime Omics.MutualInformation.get_mutual_information($jo, false)
+
+    println()
 
 end
