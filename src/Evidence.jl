@@ -149,11 +149,11 @@ function _make(yc, xc, te, si, hm, wi, hl = hm)
             "legendgroup" => yc,
             "y" => (yc,),
             "x" => (xc,),
-            "text" => te,
             "mode" => "markers+text",
             "marker" => Dict("size" => si, "color" => hm, "line" => li),
-            "textposition" => xc < 0 ? "left" : "right",
+            "text" => te,
             "textfont" => Dict("size" => si * 0.8),
+            "textposition" => xc < 0 ? "left" : "right",
         ),
     ]
 
@@ -232,7 +232,7 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xe = 8)
                 "line" => Dict("width" => wi, "color" => he),
             )
             _make(0, be, "Prior", si, _color(be), wi)
-            (_make(ie, ev_[ie], nf_[ie], si, he_[ie], wi) for ie in ie_)...
+            [_make(ie, ev_[ie], nf_[ie], si, he_[ie], wi) for ie in ie_]
             _make(ye, af, "Total", si * 1.6, _color(af), wi, he)
             _make(ye, xe, ac, si)
         ],

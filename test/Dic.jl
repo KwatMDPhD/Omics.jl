@@ -70,6 +70,11 @@ const JS = pkgdir(Omics, "data", "Dic", "example.json")
 
 # ---- #
 
+@test typeof(Omics.Dic.rea(JS, OrderedDict{String, Union{Int, String}})) ===
+      OrderedDict{String, Union{Int, String}}
+
+# ---- #
+
 for (fi, re) in (
     (
         JS,
@@ -115,11 +120,6 @@ for (fi, re) in (
           collect(ke_va) != collect(re)
 
 end
-
-# ---- #
-
-@test typeof(Omics.Dic.rea(JS, OrderedDict{String, Union{Int, String}})) ===
-      OrderedDict{String, Union{Int, String}}
 
 # ---- #
 

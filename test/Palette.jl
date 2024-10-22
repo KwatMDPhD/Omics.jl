@@ -87,7 +87,7 @@ for (na, rg_) in (
 )
 
     Omics.Plot.plot_heat_map(
-        joinpath(tempdir(), "$na.html"),
+        "",
         reshape(eachindex(rg_.colors), 1, :);
         co_ = map(rg -> "_$(Omics.Color.hexify(rg))", rg_.colors),
         rg_,

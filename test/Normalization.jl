@@ -172,8 +172,6 @@ end
 
 # ---- #
 
-# TODO: Refactor.
-
 const RE_ = [
     ones(10),
     ones(10),
