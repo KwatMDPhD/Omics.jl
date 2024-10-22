@@ -6,9 +6,9 @@ function ge(pr::Real)
 
 end
 
-function ge(jo)
+function ge(pr_)
 
-    sum(pr -> iszero(pr) ? 0.0 : ge(pr), jo)
+    sum(pr -> iszero(pr) ? 0.0 : ge(pr), pr_)
 
 end
 
