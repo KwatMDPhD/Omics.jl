@@ -37,13 +37,7 @@ const OD_ = map(Omics.Probability.get_odd, PR_)
 Omics.Plot.plot(
     "",
     (
-        Dict(
-            "showlegend" => false,
-            "y" => (0, 1),
-            "x" => (0, 1),
-            "mode" => "lines",
-            "line" => Dict("width" => 1, "color" => "#000000"),
-        ),
+        Dict("name" => "Probability", "y" => (0, 1), "x" => (0, 1)),
         Dict("name" => "Odd", "y" => OD_, "x" => PR_),
         Dict("name" => "Log2(Odd)", "y" => map(log2, OD_), "x" => PR_),
     ),
@@ -52,8 +46,3 @@ Omics.Plot.plot(
         "xaxis" => Dict("title" => Dict("text" => "Probability")),
     ),
 )
-
-# ---- #
-
-# TODO
-Omics.Probability.ge
