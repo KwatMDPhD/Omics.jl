@@ -8,8 +8,7 @@ using TOML: parsefile as parsefil
 
 function index(an_)
 
-    # TODO: Test
-    an_id = OrderedDict{eltype(an_), UInt}()
+    an_id = Dict{eltype(an_), UInt}()
 
     id = 0
 

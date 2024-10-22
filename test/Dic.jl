@@ -22,12 +22,9 @@ for (an_, re) in (
 
     @test Omics.Dic.index(an_) == re
 
-    # 69.729 ns (4 allocations: 384 bytes)
-    # 79.291 ns (4 allocations: 384 bytes)
-    # 79.260 ns (4 allocations: 384 bytes)
-    # 119.178 ns (9 allocations: 496 bytes)
-    # 137.731 ns (9 allocations: 496 bytes)
-    # 131.161 ns (9 allocations: 496 bytes)
+    # 69.757 ns (4 allocations: 384 bytes)
+    # 79.636 ns (4 allocations: 384 bytes)
+    # 79.510 ns (4 allocations: 384 bytes)
     #@btime Omics.Dic.index($an_)
 
 end
@@ -47,6 +44,8 @@ for (k1_v1, k2_v2, re) in (
     @test typeof(Omics.Dic.merg(k1_v1, k2_v2)) === re
 
 end
+
+# ---- #
 
 const K1_V1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 
@@ -68,6 +67,8 @@ end
 # ---- #
 
 const JS = pkgdir(Omics, "data", "Dic", "example.json")
+
+# ---- #
 
 for (fi, re) in (
     (
@@ -114,6 +115,8 @@ for (fi, re) in (
           collect(ke_va) != collect(re)
 
 end
+
+# ---- #
 
 @test typeof(Omics.Dic.rea(JS, OrderedDict{String, Union{Int, String}})) ===
       OrderedDict{String, Union{Int, String}}
