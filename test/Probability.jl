@@ -41,8 +41,5 @@ Omics.Plot.plot(
         Dict("name" => "Odd", "y" => OD_, "x" => PR_),
         Dict("name" => "Log2(Odd)", "y" => map(log2, OD_), "x" => PR_),
     ),
-    Dict(
-        "yaxis" => Dict("zeroline" => true),
-        "xaxis" => Dict("title" => Dict("text" => "Probability")),
-    ),
+    Dict("xaxis" => Dict("title" => Dict("text" => "Probability"))),
 )
