@@ -24,7 +24,7 @@ for mo in (
     "Significance",
     "Strin",
     "Table",
-    #"ROC",
+    "ROC",
 )
 
     @info mo

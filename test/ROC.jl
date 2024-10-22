@@ -6,7 +6,7 @@ using Test: @test
 
 # ---- #
 
-const MA = ROC.make_matrix()
+const MA = Omics.ROC.make_matrix()
 
 # ---- #
 
@@ -57,7 +57,7 @@ for (th, re) in (
 
     fill!(MA, 0)
 
-    ROC.fill_matrix!(MA, [1, 1, 2, 2], [0, 0.4, 0.6, 1], th)
+    Omics.ROC.fill_matrix!(MA, [1, 1, 2, 2], [0, 0.4, 0.6, 1], th)
 
     @test MA == re
 
@@ -65,7 +65,7 @@ end
 
 # ---- #
 
-ROC.plot_matrix("", MA, ROC.summarize_matrix(MA)...)
+Omics.ROC.plot_matrix("", MA, Omics.ROC.summarize_matrix(MA)...)
 
 # ---- #
 
@@ -79,15 +79,15 @@ for (la_, pr_) in (
     ),
 )
 
-    ROC.plot_line("", ROC.make_line(la_, pr_)...)
+    Omics.ROC.plot_line("", Omics.ROC.make_line(la_, pr_)...)
 
 end
 
 # ---- #
 
-ROC.plot_line(
+Omics.ROC.plot_line(
     "",
-    ROC.make_line(
+    Omics.ROC.make_line(
         [1, 2, 2, 1, 2, 1, 1, 1, 2, 1],
         [0.98, 0.67, 0.58, 0.78, 0.85, 0.86, 0.79, 0.89, 0.82, 0.86],
         (0.6, 0.7, 0.8),
