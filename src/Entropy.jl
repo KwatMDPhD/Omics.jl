@@ -6,12 +6,6 @@ function ge(pr::Real)
 
 end
 
-function ge(pr_)
-
-    sum(pr -> iszero(pr) ? 0.0 : ge(pr), pr_)
-
-end
-
 function ge(ea, jo)
 
     sum(pr_ -> ge(sum(pr_)), ea(jo))

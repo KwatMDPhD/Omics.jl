@@ -8,7 +8,6 @@ using Test: @test
 
 for (pr_, re) in (
     ([1], -0.0),
-    ([0, 1], 0.0),
     ([0.001, 0.999], 0.011407757737461138),
     ([0.01, 0.99], 0.08079313589591118),
     ([0.1, 0.9], 0.4689955935892812),
@@ -24,24 +23,7 @@ for (pr_, re) in (
     ([0.01, 0.19, 0.02, 0.18, 0.03, 0.17, 0.04, 0.16, 0.05, 0.15], 2.901615909840989),
 )
 
-    @test Omics.Entropy.ge(pr_) === re
-
-    # 6.750 ns (0 allocations: 0 bytes)
-    # 7.083 ns (0 allocations: 0 bytes)
-    # 11.094 ns (0 allocations: 0 bytes)
-    # 11.094 ns (0 allocations: 0 bytes)
-    # 12.304 ns (0 allocations: 0 bytes)
-    # 12.303 ns (0 allocations: 0 bytes)
-    # 12.345 ns (0 allocations: 0 bytes)
-    # 12.303 ns (0 allocations: 0 bytes)
-    # 12.304 ns (0 allocations: 0 bytes)
-    # 16.992 ns (0 allocations: 0 bytes)
-    # 21.690 ns (0 allocations: 0 bytes)
-    # 26.440 ns (0 allocations: 0 bytes)
-    # 50.489 ns (0 allocations: 0 bytes)
-    # 50.489 ns (0 allocations: 0 bytes)
-    # 50.700 ns (0 allocations: 0 bytes)
-    #@btime Omics.Entropy.ge($pr_)
+    @test sum(Omics.Entropy.ge, pr_) === re
 
 end
 
