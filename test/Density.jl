@@ -4,6 +4,8 @@ using Test: @test
 
 # ----------------------------------------------------------------------------------------------- #
 
+using KernelDensity: kde
+
 using Random: seed!
 
 # ---- #
@@ -20,157 +22,109 @@ end
 
 # ---- #
 
-const GR_ = [-2, -1, 0, 1, 2]
+const GR_ = [-4, -2, -1, 0, 1, 2, 4]
 
-for (nu, re) in ((-3, 1), (-2, 1), (-1, 2), (0, 3), (1, 4), (2, 5), (3, 5))
+for (nu, re) in (
+    (-5, 1),
+    (-4, 1),
+    (-3, 2),
+    (-2, 2),
+    (-1, 3),
+    (0, 4),
+    (1, 5),
+    (2, 6),
+    (3, 7),
+    (4, 7),
+    (5, 7),
+)
 
     @test Omics.Density.find(GR_, nu) === re
 
-    # 2.708 ns (0 allocations: 0 bytes)
-    # 2.709 ns (0 allocations: 0 bytes)
+    # 2.416 ns (0 allocations: 0 bytes)
+    # 2.375 ns (0 allocations: 0 bytes)
+    # 3.000 ns (0 allocations: 0 bytes)
     # 3.000 ns (0 allocations: 0 bytes)
     # 3.958 ns (0 allocations: 0 bytes)
     # 4.250 ns (0 allocations: 0 bytes)
-    # 4.250 ns (0 allocations: 0 bytes)
-    # 4.250 ns (0 allocations: 0 bytes)
+    # 4.583 ns (0 allocations: 0 bytes)
+    # 4.875 ns (0 allocations: 0 bytes)
+    # 5.208 ns (0 allocations: 0 bytes)
+    # 5.167 ns (0 allocations: 0 bytes)
+    # 5.500 ns (0 allocations: 0 bytes)
     #@btime Omics.Density.find(GR_, $nu)
 
 end
 
 # ---- #
 
-const UG = 8
+const UG = 16
 
-for nu_ in ([
-    -1,
-    0,
-    1,
-    2,
-    2,
-    3,
-    3,
-    3,
-    4,
-    4,
-    4,
-    4,
-    5,
-    5,
-    5,
-    5,
-    5,
-    6,
-    6,
-    6,
-    6,
-    7,
-    7,
-    7,
-    8,
-    8,
-    9,
-    10,
-    11,
-],)
+# ---- #
 
-    kd = Omics.Density.kde(nu_; boundary = extrema(nu_), npoints = UG)
+for nu_ in ([1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9],)
 
-    # TODO: Improve when `ug` is small
     gr_, co_ = Omics.Density.coun(nu_, UG)
 
-    @test kd.x === gr_
+    kd = kde(nu_; boundary = extrema(nu_), npoints = UG)
+
+    @test gr_ === kd.x
 
     Omics.Plot.plot(
-        joinpath(tempdir(), "1kernelcount.html"),
-        (
-            Dict(
-                "type" => "bar",
-                "name" => "Kernel",
-                "y" => Omics.Normalization.normalize_with_sum!(kd.density),
-                "x" => kd.x,
-            ),
-            Dict(
-                "type" => "bar",
-                "name" => "Count",
-                "y" =>
-                    Omics.Normalization.normalize_with_sum!(convert(Vector{Float64}, co_)),
-                "x" => gr_,
-            ),
-        ),
+        "",
+        (Dict("type" => "bar", "y" => co_, "x" => gr_),),
+        Dict("xaxis" => Dict("tickvals" => gr_)),
     )
 
-end
-
-for ur in (10, 100, 1000, 10000, 100000)
-
-    seed!(20240831)
-
-    nu_ = rand(ur)
-
-    # 3.724 μs (36 allocations: 1.70 KiB)
-    # 365.986 ns (2 allocations: 128 bytes)
-    # 5.556 μs (36 allocations: 2.47 KiB)
-    # 1.363 μs (2 allocations: 128 bytes)
-    # 24.625 μs (38 allocations: 9.52 KiB)
-    # 11.042 μs (2 allocations: 128 bytes)
-    # 412.791 μs (38 allocations: 79.77 KiB)
-    # 233.416 μs (2 allocations: 128 bytes)
-    # 5.044 ms (38 allocations: 782.89 KiB)
-    # 2.585 ms (2 allocations: 128 bytes)
-
-    #@btime Omics.Density.kde($nu_; boundary = $(extrema(nu_)), npoints = UG)
-
-    #@btime Omics.Density.coun($nu_, UG)
+    Omics.Plot.plot(
+        "",
+        (Dict("type" => "bar", "y" => kd.density, "x" => kd.x),),
+        Dict("xaxis" => Dict("tickvals" => kd.x)),
+    )
 
 end
 
 # ---- #
 
-const npoints = (8, 8)
+for ur in (10, 100, 1000, 10000)
+
+    seed!(20240831)
+
+    nu_ = rand(ur)
+
+    # 407.080 ns (2 allocations: 192 bytes)
+    # 3.982 μs (36 allocations: 1.89 KiB)
+    # 1.854 μs (2 allocations: 192 bytes)
+    # 5.854 μs (36 allocations: 2.66 KiB)
+    # 16.500 μs (2 allocations: 192 bytes)
+    # 24.875 μs (38 allocations: 9.70 KiB)
+    # 302.000 μs (2 allocations: 192 bytes)
+    # 414.125 μs (38 allocations: 79.95 KiB)
+
+    #@btime Omics.Density.coun($nu_, UG)
+
+    #@btime kde($nu_; boundary = $(extrema(nu_)), npoints = UG)
+
+end
+
+# ---- #
 
 for (n1_, n2_) in (([1, 2, 3, 4, 6], [2, 4, 8, 16, 64]),)
 
-    k1_, k2_, kd =
-        Omics.Density.ge(n1_, n2_; boundary = (extrema(n1_), extrema(n2_)), npoints)
+    g1_, g2_, co = Omics.Density.coun(n1_, n2_, UG, UG)
 
-    g1_, g2_, co = Omics.Density.coun(n1_, n2_, npoints)
+    kd = kde((n1_, n2_); boundary = (extrema(n1_), extrema(n2_)), npoints = (UG, UG))
 
-    r1_, r2_, cu =
-        Omics.Density.coun(n1_, n2_, (Omics.Dic.index(n1_), Omics.Dic.index(n2_)))
+    @test g1_ == kd.x
 
-    @test k1_ == g1_
+    @test g2_ == kd.y
 
-    @test k2_ == g2_
+    Omics.Plot.plot_heat_map("", co; ro_ = g1_, co_ = g2_)
 
-    @test r1_ == n1_
-
-    @test r2_ == n2_
-
-    Omics.Plot.plot_heat_map(
-        joinpath(tempdir(), "2kernel.html"),
-        kd;
-        ro_ = k1_,
-        co_ = k2_,
-        la = Dict("title" => Dict("text" => "Kernel")),
-    )
-
-    Omics.Plot.plot_heat_map(
-        joinpath(tempdir(), "2count.html"),
-        co;
-        ro_ = g1_,
-        co_ = g2_,
-        la = Dict("title" => Dict("text" => "Count")),
-    )
-
-    Omics.Plot.plot_heat_map(
-        joinpath(tempdir(), "2countdict.html"),
-        cu;
-        ro_ = r1_,
-        co_ = r2_,
-        la = Dict("title" => Dict("text" => "Count with Dict")),
-    )
+    Omics.Plot.plot_heat_map("", kd.density; ro_ = kd.x, co_ = kd.y)
 
 end
+
+# ---- #
 
 for ur in (10, 100, 1000, 10000)
 
@@ -180,26 +134,21 @@ for ur in (10, 100, 1000, 10000)
 
     n2_ = rand(ur)
 
-    # 11.833 μs (49 allocations: 5.36 KiB)
-    # 793.796 ns (2 allocations: 592 bytes)
-    # 562.162 ns (16 allocations: 2.69 KiB)
-    # 15.375 μs (49 allocations: 6.89 KiB)
-    # 2.648 μs (2 allocations: 592 bytes)
-    # 15.333 μs (22 allocations: 163.66 KiB)
-    # 54.000 μs (52 allocations: 20.97 KiB)
-    # 25.208 μs (2 allocations: 592 bytes)
-    # 1.397 ms (30 allocations: 15.32 MiB)
-    # 910.417 μs (52 allocations: 161.47 KiB)
-    # 494.000 μs (2 allocations: 592 bytes)
-    # 227.661 ms (30 allocations: 1.49 GiB)
-    # 10.451 ms (52 allocations: 1.53 MiB)
-    # 5.154 ms (2 allocations: 592 bytes)
-    # 40.399 s (30 allocations: 149.02 GiB)
+    # 927.094 ns (3 allocations: 2.08 KiB)
+    # 13.916 μs (54 allocations: 13.23 KiB)
+    # 3.635 μs (3 allocations: 2.08 KiB)
+    # 17.500 μs (54 allocations: 14.77 KiB)
+    # 35.208 μs (3 allocations: 2.08 KiB)
+    # 55.792 μs (57 allocations: 28.84 KiB)
+    # 627.667 μs (3 allocations: 2.08 KiB)
+    # 914.083 μs (57 allocations: 169.34 KiB)
 
-    #@btime Omics.Density.ge($n1_, $n2_; boundary = $(extrema(n1_), extrema(n2_)), npoints)
+    #@btime Omics.Density.coun($n1_, $n2_, UG, UG)
 
-    #@btime Omics.Density.coun($n1_, $n2_, npoints)
-
-    #@btime Omics.Density.coun($n1_, $n2_, $(Omics.Dic.index(n1_), Omics.Dic.index(n2_)))
+    #@btime kde(
+    #    ($n1_, $n2_);
+    #    boundary = ($(extrema(n1_)), $(extrema(n2_))),
+    #    npoints = (UG, UG),
+    #)
 
 end
