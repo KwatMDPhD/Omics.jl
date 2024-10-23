@@ -36,7 +36,7 @@ for (nu_, re) in zip(
     # 24.417 ns (0 allocations: 0 bytes)
     # 26.375 ns (0 allocations: 0 bytes)
     # 29.708 ns (0 allocations: 0 bytes)
-    #@btime Omics.Normalization.normalize_with_0!(co) setup = (co = copy($nu_)) evals = 1000
+    #@btime Omics.Normalization.normalize_with_0!($co)
 
 end
 
@@ -51,13 +51,10 @@ for (nu_, re) in
 
     @test co == re
 
-    # 10.291 ns (0 allocations: 0 bytes)
-    # 10.917 ns (0 allocations: 0 bytes)
-    # 12.666 ns (0 allocations: 0 bytes)
     # 21.000 ns (0 allocations: 0 bytes)
-    # 24.750 ns (0 allocations: 0 bytes)
-    # 34.542 ns (0 allocations: 0 bytes)
-    #@btime Omics.Normalization.normalize_with_01!(co) setup = (co = copy($nu_)) evals = 1000
+    # 24.866 ns (0 allocations: 0 bytes)
+    # 34.631 ns (0 allocations: 0 bytes)
+    #@btime Omics.Normalization.normalize_with_01!($co)
 
 end
 
@@ -82,8 +79,7 @@ for (nu_, re) in zip(
 
     # 8.333 ns (0 allocations: 0 bytes)
     # 9.833 ns (0 allocations: 0 bytes)
-    #@btime Omics.Normalization.normalize_with_sum!(co) setup = (co = copy($nu_)) evals =
-    1000
+    #@btime Omics.Normalization.normalize_with_sum!($co)
 
 end
 
@@ -107,11 +103,10 @@ for (nu_, re) in zip(
 
     @test co == re
 
-    # 21.833 ns (0 allocations: 0 bytes)
-    # 24.167 ns (0 allocations: 0 bytes)
-    # 23.750 ns (0 allocations: 0 bytes)
-    #@btime Omics.Normalization.normalize_with_logistic!(co) setup = (co = copy($nu_)) evals =
-    1000
+    # 22.234 ns (0 allocations: 0 bytes)
+    # 24.740 ns (0 allocations: 0 bytes)
+    # 24.180 ns (0 allocations: 0 bytes)
+    #@btime Omics.Normalization.normalize_with_logistic!($co)
 
 end
 
@@ -129,10 +124,9 @@ for (nu_, re) in zip(NR___, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
     @test co == re
 
-    # 55.792 ns (4 allocations: 224 bytes)
-    # 246.500 ns (6 allocations: 352 bytes)
-    #@btime Omics.Normalization.normalize_with_1223!(co) setup = (co = copy($nu_)) evals =
-    1000
+    # 55.118 ns (4 allocations: 224 bytes)
+    # 246.474 ns (6 allocations: 352 bytes)
+    #@btime Omics.Normalization.normalize_with_1223!($co)
 
 end
 
@@ -146,10 +140,9 @@ for (nu_, re) in zip(NR___, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
 
     @test co == re
 
-    # 55.917 ns (4 allocations: 224 bytes)
-    # 246.458 ns (6 allocations: 352 bytes)
-    #@btime Omics.Normalization.normalize_with_1224!(co) setup = (co = copy($nu_)) evals =
-    1000
+    # 55.118 ns (4 allocations: 224 bytes)
+    # 246.398 ns (6 allocations: 352 bytes)
+    #@btime Omics.Normalization.normalize_with_1224!($co)
 
 end
 
@@ -163,10 +156,9 @@ for (nu_, re) in zip(NR___, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
 
     @test co == re
 
-    # 65.291 ns (4 allocations: 224 bytes)
-    # 263.125 ns (6 allocations: 352 bytes)
-    #@btime Omics.Normalization.normalize_with_125254!(co) setup = (co = map(float, $nu_)) evals =
-    1000
+    # 64.498 ns (4 allocations: 224 bytes)
+    # 262.208 ns (6 allocations: 352 bytes)
+    #@btime Omics.Normalization.normalize_with_125254!($co)
 
 end
 
@@ -221,36 +213,35 @@ for nu_ in (
 
         @test co == popfirst!(RE_)
 
-        # 60.625 ns (2 allocations: 144 bytes)
-        # 60.667 ns (2 allocations: 144 bytes)
-        # 60.666 ns (2 allocations: 144 bytes)
-        # 60.666 ns (2 allocations: 144 bytes)
-        # 60.708 ns (2 allocations: 144 bytes)
-        # 60.708 ns (2 allocations: 144 bytes)
-        # 61.541 ns (2 allocations: 144 bytes)
-        # 61.833 ns (2 allocations: 144 bytes)
-        # 60.667 ns (2 allocations: 144 bytes)
-        # 61.250 ns (2 allocations: 144 bytes)
-        # 60.708 ns (2 allocations: 144 bytes)
-        # 60.625 ns (2 allocations: 144 bytes)
-        # 63.500 ns (2 allocations: 144 bytes)
-        # 63.500 ns (2 allocations: 144 bytes)
-        # 63.541 ns (2 allocations: 144 bytes)
-        # 63.500 ns (2 allocations: 144 bytes)
-        # 74.958 ns (2 allocations: 144 bytes)
-        # 75.500 ns (2 allocations: 144 bytes)
-        # 74.875 ns (2 allocations: 144 bytes)
-        # 75.458 ns (2 allocations: 144 bytes)
-        # 75.417 ns (2 allocations: 144 bytes)
-        # 75.000 ns (2 allocations: 144 bytes)
-        # 76.000 ns (2 allocations: 144 bytes)
-        # 75.167 ns (2 allocations: 144 bytes)
-        # 75.750 ns (2 allocations: 144 bytes)
-        # 76.000 ns (2 allocations: 144 bytes)
-        # 76.000 ns (2 allocations: 144 bytes)
-        # 75.875 ns (2 allocations: 144 bytes)
-        #@btime Omics.Normalization.normalize_with_quantile!(co) setup = (co = copy($nu_)) evals =
-        1000
+        # 58.919 ns (2 allocations: 144 bytes)
+        # 58.918 ns (2 allocations: 144 bytes)
+        # 59.766 ns (2 allocations: 144 bytes)
+        # 58.918 ns (2 allocations: 144 bytes)
+        # 60.359 ns (2 allocations: 144 bytes)
+        # 60.359 ns (2 allocations: 144 bytes)
+        # 60.378 ns (2 allocations: 144 bytes)
+        # 60.359 ns (2 allocations: 144 bytes)
+        # 60.463 ns (2 allocations: 144 bytes)
+        # 60.359 ns (2 allocations: 144 bytes)
+        # 60.374 ns (2 allocations: 144 bytes)
+        # 60.336 ns (2 allocations: 144 bytes)
+        # 60.336 ns (2 allocations: 144 bytes)
+        # 63.201 ns (2 allocations: 144 bytes)
+        # 61.968 ns (2 allocations: 144 bytes)
+        # 61.906 ns (2 allocations: 144 bytes)
+        # 68.476 ns (2 allocations: 144 bytes)
+        # 74.255 ns (2 allocations: 144 bytes)
+        # 72.597 ns (2 allocations: 144 bytes)
+        # 72.970 ns (2 allocations: 144 bytes)
+        # 68.705 ns (2 allocations: 144 bytes)
+        # 73.869 ns (2 allocations: 144 bytes)
+        # 72.937 ns (2 allocations: 144 bytes)
+        # 72.949 ns (2 allocations: 144 bytes)
+        # 68.833 ns (2 allocations: 144 bytes)
+        # 74.460 ns (2 allocations: 144 bytes)
+        # 72.713 ns (2 allocations: 144 bytes)
+        # 72.928 ns (2 allocations: 144 bytes)
+        #@btime Omics.Normalization.normalize_with_quantile!($co)
 
     end
 

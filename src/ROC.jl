@@ -4,7 +4,7 @@ using ..Omics
 
 function make_matrix()
 
-    Matrix{UInt16}(undef, 2, 2)
+    Matrix{UInt}(undef, 2, 2)
 
 end
 
@@ -12,7 +12,7 @@ function fill_matrix!(ma, la_, pr_, th)
 
     for id in eachindex(la_)
 
-        ma[la_[id], pr_[id] < th ? 1 : 2] += 1
+        ma[la_[id], pr_[id] < th ? 1 : 2] += one(UInt)
 
     end
 
