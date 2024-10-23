@@ -122,7 +122,7 @@ function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
 
         th = th_[it]
 
-        fill!(ma, 0)
+        fill!(ma, zero(UInt))
 
         fill_matrix!(ma, la_, pr_, th)
 
@@ -155,7 +155,7 @@ function plot_line(ht, fp_, tp_)
 
     id = sortperm(fp_)
 
-    wi = 4
+    wi = 2
 
     co = Omics.Color.BL
 
@@ -172,7 +172,7 @@ function plot_line(ht, fp_, tp_)
                 "line" => Dict("width" => wi, "color" => "#000000"),
             ),
             Dict(
-                # TODO: Correct AUC calculation.
+                # TODO: Check
                 "name" => "Area = $(Omics.Strin.shorten(sum(tp_) / lastindex(tp_)))",
                 "y" => [0; tp_[id]],
                 "x" => [0; fp_[id]],

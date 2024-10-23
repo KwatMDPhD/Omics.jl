@@ -38,20 +38,19 @@ end
 
 # ---- #
 
+# 480.554 ns (2 allocations: 192 bytes)
+# 3.849 μs (36 allocations: 1.89 KiB)
+# 1.929 μs (2 allocations: 192 bytes)
+# 5.576 μs (36 allocations: 2.66 KiB)
+# 16.708 μs (2 allocations: 192 bytes)
+# 24.875 μs (38 allocations: 9.70 KiB)
+# 305.708 μs (2 allocations: 192 bytes)
+# 415.750 μs (38 allocations: 79.95 KiB)
 for ur in (10, 100, 1000, 10000)
 
-    seed!(20240831)
+    seed!(20241023)
 
-    nu_ = rand(ur)
-
-    # 407.080 ns (2 allocations: 192 bytes)
-    # 3.797 μs (36 allocations: 1.89 KiB)
-    # 1.858 μs (2 allocations: 192 bytes)
-    # 5.632 μs (36 allocations: 2.66 KiB)
-    # 17.625 μs (2 allocations: 192 bytes)
-    # 24.667 μs (38 allocations: 9.70 KiB)
-    # 304.625 μs (2 allocations: 192 bytes)
-    # 415.542 μs (38 allocations: 79.95 KiB)
+    nu_ = randn(ur)
 
     #@btime Omics.Density.coun($nu_, UG)
 
@@ -79,22 +78,21 @@ end
 
 # ---- #
 
+# 877.404 ns (3 allocations: 2.08 KiB)
+# 14.083 μs (54 allocations: 13.23 KiB)
+# 3.927 μs (3 allocations: 2.08 KiB)
+# 17.792 μs (54 allocations: 14.77 KiB)
+# 47.417 μs (3 allocations: 2.08 KiB)
+# 56.125 μs (57 allocations: 28.84 KiB)
+# 630.708 μs (3 allocations: 2.08 KiB)
+# 901.041 μs (57 allocations: 169.34 KiB)
 for ur in (10, 100, 1000, 10000)
 
-    seed!(20240831)
+    seed!(20241023)
 
-    n1_ = rand(ur)
+    n1_ = randn(ur)
 
-    n2_ = rand(ur)
-
-    # 954.545 ns (3 allocations: 2.08 KiB)
-    # 14.125 μs (54 allocations: 13.23 KiB)
-    # 3.656 μs (3 allocations: 2.08 KiB)
-    # 17.584 μs (54 allocations: 14.77 KiB)
-    # 43.041 μs (3 allocations: 2.08 KiB)
-    # 56.041 μs (57 allocations: 28.84 KiB)
-    # 624.958 μs (3 allocations: 2.08 KiB)
-    # 914.458 μs (57 allocations: 169.34 KiB)
+    n2_ = randn(ur)
 
     #@btime Omics.Density.coun($n1_, $n2_, UG, UG)
 

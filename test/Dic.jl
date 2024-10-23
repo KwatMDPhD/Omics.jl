@@ -8,6 +8,9 @@ using OrderedCollections: OrderedDict
 
 # ---- #
 
+# 69.757 ns (4 allocations: 384 bytes)
+# 79.636 ns (4 allocations: 384 bytes)
+# 79.510 ns (4 allocations: 384 bytes)
 for (an_, re) in (
     (['a', 'b', 'c', 'd'], Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4)),
     (
@@ -22,9 +25,6 @@ for (an_, re) in (
 
     @test Omics.Dic.index(an_) == re
 
-    # 69.757 ns (4 allocations: 384 bytes)
-    # 79.636 ns (4 allocations: 384 bytes)
-    # 79.510 ns (4 allocations: 384 bytes)
     #@btime Omics.Dic.index($an_)
 
 end
@@ -51,6 +51,8 @@ const K1_V1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 
 const K2_V2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
+# 1.008 μs (16 allocations: 1.50 KiB)
+# 1.008 μs (16 allocations: 1.50 KiB)
 for (k1_v1, k2_v2, re) in (
     (K1_V1, K2_V2, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))),
     (K2_V2, K1_V1, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))),
@@ -58,8 +60,6 @@ for (k1_v1, k2_v2, re) in (
 
     @test Omics.Dic.merg(k1_v1, k2_v2) == re
 
-    # 1.008 μs (16 allocations: 1.50 KiB)
-    # 1.008 μs (16 allocations: 1.50 KiB)
     #@btime Omics.Dic.merg($k1_v1, $k2_v2)
 
 end

@@ -6,6 +6,23 @@ using Test: @test
 
 # ---- #
 
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.084 ns (0 allocations: 0 bytes)
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
 for (pr, od) in (
     (0.0, 0.0),
     (0.01, 0.010101010101010102),
@@ -20,9 +37,13 @@ for (pr, od) in (
 
     @test Omics.Probability.get_odd(pr) === od
 
+    #@btime Omics.Probability.get_odd($pr)
+
     if isfinite(od)
 
         @test Omics.Probability.ge(od) === pr
+
+        #@btime Omics.Probability.ge($od)
 
     end
 

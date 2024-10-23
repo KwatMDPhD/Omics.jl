@@ -8,6 +8,10 @@ using Random: seed!
 
 # ---- #
 
+# 31.019 ns (0 allocations: 0 bytes)
+# 54.865 ns (0 allocations: 0 bytes)
+# 297.233 ns (0 allocations: 0 bytes)
+# 2.343 μs (0 allocations: 0 bytes)
 for (un, re) in (
     (10, 6.597957136428492),
     (100, 1.8754776361269154),
@@ -21,10 +25,6 @@ for (un, re) in (
 
     @test isapprox(Omics.Significance.get_margin_of_error(sa_), re)
 
-    # 31.019 ns (0 allocations: 0 bytes)
-    # 54.865 ns (0 allocations: 0 bytes)
-    # 297.233 ns (0 allocations: 0 bytes)
-    # 2.343 μs (0 allocations: 0 bytes)
     #@btime Omics.Significance.get_margin_of_error($sa_)
 
 end
@@ -35,6 +35,11 @@ seed!(20230612)
 
 const SA_ = randn(1000)
 
+# 294.610 ns (0 allocations: 0 bytes)
+# 293.680 ns (0 allocations: 0 bytes)
+# 293.680 ns (0 allocations: 0 bytes)
+# 297.253 ns (0 allocations: 0 bytes)
+# 294.610 ns (0 allocations: 0 bytes)
 for (co, re) in (
     (0, 0.0),
     (0.001, 4.0685463561927655e-5),
@@ -45,11 +50,6 @@ for (co, re) in (
 
     @test isapprox(Omics.Significance.get_margin_of_error(SA_, co), re)
 
-    # 294.610 ns (0 allocations: 0 bytes)
-    # 293.680 ns (0 allocations: 0 bytes)
-    # 293.680 ns (0 allocations: 0 bytes)
-    # 297.253 ns (0 allocations: 0 bytes)
-    # 294.610 ns (0 allocations: 0 bytes)
     #@btime Omics.Significance.get_margin_of_error(SA_, $co)
 
 end
@@ -58,13 +58,13 @@ end
 
 @test Omics.Significance.get_p_value(0, NaN) === 1.0
 
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.084 ns (0 allocations: 0 bytes)
 for (us, re) in ((0, 0.1), (1, 0.1), (2, 0.2))
 
     @test Omics.Significance.get_p_value(10, us) === re
 
-    # 2.083 ns (0 allocations: 0 bytes)
-    # 2.083 ns (0 allocations: 0 bytes)
-    # 2.084 ns (0 allocations: 0 bytes)
     #@btime Omics.Significance.get_p_value(10, $us)
 
 end
@@ -77,6 +77,8 @@ const NU_ = [-1, -0.0, 0, 1]
 
 # ---- #
 
+# 148.441 ns (11 allocations: 512 bytes)
+# 157.663 ns (11 allocations: 512 bytes)
 for (fu, re) in (
     (<=, ([0.4, 0.6, 0.6, 0.7], [0.7, 0.7, 0.7, 0.7])),
     (>=, ([0.7, 0.6, 0.6, 0.4], [0.7, 0.7, 0.7, 0.7])),
@@ -84,8 +86,6 @@ for (fu, re) in (
 
     @test Omics.Significance.get_p_value(fu, RA_, NU_) == re
 
-    # 148.441 ns (11 allocations: 512 bytes)
-    # 157.663 ns (11 allocations: 512 bytes)
     #@btime Omics.Significance.get_p_value($fu, RA_, NU_)
 
 end

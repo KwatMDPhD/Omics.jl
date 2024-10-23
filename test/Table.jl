@@ -4,6 +4,8 @@ using Test: @test
 
 # ----------------------------------------------------------------------------------------------- #
 
+# ---- #
+
 const DA = pkgdir(Omics, "data", "Table")
 
 const WR = joinpath(tempdir(), "write.tsv")
