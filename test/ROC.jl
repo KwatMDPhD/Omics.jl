@@ -8,8 +8,6 @@ using Test: @test
 
 const MA = Omics.ROC.make_matrix()
 
-# ---- #
-
 const LA_ = [1, 1, 2, 2]
 
 const PR_ = [0, 0.4, 0.6, 1]
@@ -71,13 +69,18 @@ for (th, re) in (
     # 7.958 ns (0 allocations: 0 bytes)
     # 6.000 ns (0 allocations: 0 bytes)
     # 6.541 ns (0 allocations: 0 bytes)
-    @btime Omics.ROC.fill_matrix!(MA, LA_, PR_, $th)
+    #@btime Omics.ROC.fill_matrix!(MA, LA_, PR_, $th)
 
 end
 
 # ---- #
 
-Omics.ROC.plot_matrix("", MA, Omics.ROC.summarize_matrix(MA)...)
+const MT = [
+    1 3
+    2 4
+]
+
+Omics.ROC.plot_matrix("", MT, Omics.ROC.summarize_matrix(MT)...)
 
 # ---- #
 

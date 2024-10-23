@@ -12,14 +12,6 @@ using Statistics: cor
 
 # ---- #
 
-function get_entropy(pr_)
-
-    sum(pr -> iszero(pr) ? 0.0 : Omics.Entropy.ge(pr), pr_)
-
-end
-
-# ---- #
-
 const JO = [
     1/8 1/16 1/16 1/4
     1/16 1/8 1/16 0
@@ -43,20 +35,20 @@ const E2 = Omics.Entropy.ge(eachcol, JO)
 
 @test E2 === 2.0
 
-const EN = get_entropy(JO)
+const EN = sum(Omics.Entropy.ge, JO)
 
 @test EN === 27 / 8
 
 const E12 = EN - E2
 
 @test E12 ===
-      sum(pr * get_entropy(pr_ / pr) for (pr, pr_) in zip(P2_, eachcol(JO))) ===
+      sum(pr * sum(Omics.Entropy.ge, pr_ / pr) for (pr, pr_) in zip(P2_, eachcol(JO))) ===
       11 / 8
 
 const E21 = EN - E1
 
 @test E21 ===
-      sum(pr * get_entropy(pr_ / pr) for (pr, pr_) in zip(P1_, eachrow(JO))) ===
+      sum(pr * sum(Omics.Entropy.ge, pr_ / pr) for (pr, pr_) in zip(P1_, eachrow(JO))) ===
       13 / 8
 
 const MU = E1 + E2 - EN
@@ -68,22 +60,22 @@ const MU = E1 + E2 - EN
 for (i1_, i2_, ri, rf) in (
     ([1, 2], [1, 2], 1.0, 1.0),
     ([1, 2], [1, 3], 1.0, 1.0),
-    ([1, 2, 3], [1, 1, 2], 0.9168644108463481, 0.9140184400703142),
-    ([1, 2, 3], [1, 1, 3], 0.916864410846348, 0.9140184400703134),
+    ([1, 2, 3], [1, 1, 2], 0.9168644108463501, 0.9140184400703142),
+    ([1, 2, 3], [1, 1, 3], 0.9168644108463501, 0.9140184400703134),
     ([1, 2, 3], [1, 2, 1], 0.0, 0.0),
-    ([1, 2, 3], [1, 2, 2], 0.9168644108463481, 0.9140184400703132),
+    ([1, 2, 3], [1, 2, 2], 0.9168644108463501, 0.9140184400703132),
     ([1, 2, 3], [1, 2, 3], 1.0, 1.0),
     ([1, 2, 3], [1, 3, 1], 0.0, 0.0),
-    ([1, 2, 3], [1, 3, 2], 0.9787712969683768, 0.9749301137414429),
-    ([1, 2, 3], [1, 3, 3], 0.916864410846348, 0.9140184400703134),
+    ([1, 2, 3], [1, 3, 2], 0.9787712969683778, 0.9749301137414429),
+    ([1, 2, 3], [1, 3, 3], 0.9168644108463501, 0.9140184400703134),
     ([1, 2, 1, 2], [1, 2, 1, 2], 1.0, 1.0),
     ([1, 2, 1, 2], [1, 3, 1, 3], 1.0, 1.0),
-    ([1, 2, 1, 2], [1, 2, 1, 3], 0.9298734950321925, 0.9269049805641628),
-    ([1, 2, 1, 2], [1, 3, 1, 2], 0.9298734950321925, 0.9269049805641628),
+    ([1, 2, 1, 2], [1, 2, 1, 3], 0.9298734950321937, 0.9269049805641628),
+    ([1, 2, 1, 2], [1, 3, 1, 2], 0.9298734950321937, 0.9269049805641628),
     ([1, 2, 1, 2], [2, 1, 2, 1], -1.0, -1.0),
     ([1, 2, 1, 2], [3, 1, 3, 1], -1.0, -1.0),
-    ([1, 2, 1, 2], [2, 1, 3, 1], -0.9298734950321924, -0.9269049805641624),
-    ([1, 2, 1, 2], [3, 1, 2, 1], -0.9298734950321924, -0.9269049805641624),
+    ([1, 2, 1, 2], [2, 1, 3, 1], -0.9298734950321937, -0.9269049805641624),
+    ([1, 2, 1, 2], [3, 1, 2, 1], -0.9298734950321937, -0.9269049805641624),
 )
 
     f1_ = convert(Vector{Float64}, i1_)
@@ -98,49 +90,46 @@ end
 
 # ---- #
 
-# 18.202 ns (0 allocations: 0 bytes)
-# 16.658 ns (0 allocations: 0 bytes)
-# 97.193 ns (4 allocations: 1.84 KiB)
+# 18.556 ns (0 allocations: 0 bytes)
+# 15.949 ns (0 allocations: 0 bytes)
+# 82.121 ns (4 allocations: 1.84 KiB)
 # 21.709 μs (54 allocations: 43.98 KiB)
-# 731.408 ns (4 allocations: 288 bytes)
+# 253.432 ns (4 allocations: 288 bytes)
 # 6.150 μs (4 allocations: 640 bytes)
-# 692.845 ns (0 allocations: 0 bytes)
-# 5.979 μs (0 allocations: 0 bytes)
-# 932.692 ns (4 allocations: 1.84 KiB)
-# 28.209 μs (54 allocations: 43.98 KiB)
-
-# 113.269 ns (0 allocations: 0 bytes)
-# 49.763 ns (0 allocations: 0 bytes)
-# 253.213 ns (4 allocations: 1.84 KiB)
+# 257.222 ns (0 allocations: 0 bytes)
+# 5.618 μs (0 allocations: 0 bytes)
+# 481.531 ns (4 allocations: 1.84 KiB)
+# 27.708 μs (54 allocations: 43.98 KiB)
+# 112.071 ns (0 allocations: 0 bytes)
+# 49.856 ns (0 allocations: 0 bytes)
+# 240.934 ns (4 allocations: 1.84 KiB)
 # 26.209 μs (54 allocations: 45.52 KiB)
-# 732.558 ns (4 allocations: 288 bytes)
-# 6.442 μs (4 allocations: 640 bytes)
-# 666.134 ns (0 allocations: 0 bytes)
-# 6.007 μs (0 allocations: 0 bytes)
-# 1.167 μs (4 allocations: 1.84 KiB)
-# 32.833 μs (54 allocations: 45.52 KiB)
-
+# 529.605 ns (4 allocations: 288 bytes)
+# 6.433 μs (4 allocations: 640 bytes)
+# 494.629 ns (0 allocations: 0 bytes)
+# 5.861 μs (0 allocations: 0 bytes)
+# 975.000 ns (4 allocations: 1.84 KiB)
+# 32.667 μs (54 allocations: 45.52 KiB)
 # 1.150 μs (0 allocations: 0 bytes)
-# 417.714 ns (0 allocations: 0 bytes)
-# 2.019 μs (4 allocations: 1.84 KiB)
-# 73.250 μs (57 allocations: 59.59 KiB)
-# 733.727 ns (4 allocations: 288 bytes)
-# 6.392 μs (4 allocations: 640 bytes)
-# 713.464 ns (0 allocations: 0 bytes)
-# 6.017 μs (0 allocations: 0 bytes)
-# 3.963 μs (4 allocations: 1.84 KiB)
-# 80.292 μs (57 allocations: 59.59 KiB)
-
+# 417.920 ns (0 allocations: 0 bytes)
+# 1.996 μs (4 allocations: 1.84 KiB)
+# 73.292 μs (57 allocations: 59.59 KiB)
+# 756.165 ns (4 allocations: 288 bytes)
+# 6.400 μs (4 allocations: 640 bytes)
+# 708.624 ns (0 allocations: 0 bytes)
+# 5.882 μs (0 allocations: 0 bytes)
+# 3.943 μs (4 allocations: 1.84 KiB)
+# 80.166 μs (57 allocations: 59.59 KiB)
 # 11.541 μs (0 allocations: 0 bytes)
 # 4.077 μs (0 allocations: 0 bytes)
 # 19.416 μs (4 allocations: 1.84 KiB)
-# 980.166 μs (57 allocations: 200.09 KiB)
-# 734.496 ns (4 allocations: 288 bytes)
-# 6.108 μs (4 allocations: 640 bytes)
-# 708.941 ns (0 allocations: 0 bytes)
-# 6.042 μs (0 allocations: 0 bytes)
+# 981.375 μs (57 allocations: 200.09 KiB)
+# 749.314 ns (4 allocations: 288 bytes)
+# 6.117 μs (4 allocations: 640 bytes)
+# 708.624 ns (0 allocations: 0 bytes)
+# 5.688 μs (0 allocations: 0 bytes)
 # 31.875 μs (4 allocations: 1.84 KiB)
-# 991.375 μs (57 allocations: 200.09 KiB)
+# 995.708 μs (57 allocations: 200.09 KiB)
 for ur in (10, 100, 1000, 10000)
 
     seed!(20241021)
@@ -181,15 +170,13 @@ for ur in (10, 100, 1000, 10000)
 
     #@btime Omics.MutualInformation.get_information_coefficient($f1_, $f2_)
 
-    println()
-
 end
 
 # ---- #
 
 function Omics.Entropy.ge(pr)
 
-    -pr * log(pr)
+    iszero(pr) ? 0.0 : -pr * log(pr)
 
 end
 
@@ -260,25 +247,22 @@ for ur in (10, 100, 1000, 10000)
         mutualinfo(i1_, i2_),
     )
 
-    # 460.673 ns (6 allocations: 1.00 KiB)
-    # 136.255 ns (4 allocations: 1.41 KiB)
-    # 585.409 ns (4 allocations: 272 bytes)
-    # 564.189 ns (0 allocations: 0 bytes)
-
-    # 813.235 ns (6 allocations: 1.23 KiB)
-    # 314.970 ns (4 allocations: 1.84 KiB)
-    # 726.060 ns (4 allocations: 288 bytes)
-    # 676.196 ns (0 allocations: 0 bytes)
-
-    # 2.759 μs (6 allocations: 1.23 KiB)
-    # 2.074 μs (4 allocations: 1.84 KiB)
-    # 685.980 ns (4 allocations: 288 bytes)
-    # 669.643 ns (0 allocations: 0 bytes)
-
-    # 20.333 μs (6 allocations: 1.23 KiB)
-    # 19.666 μs (4 allocations: 1.84 KiB)
-    # 644.078 ns (4 allocations: 288 bytes)
-    # 673.796 ns (0 allocations: 0 bytes)
+    # 488.186 ns (6 allocations: 1.00 KiB)
+    # 138.956 ns (4 allocations: 1.41 KiB)
+    # 207.807 ns (4 allocations: 272 bytes)
+    # 238.397 ns (0 allocations: 0 bytes)
+    # 832.773 ns (6 allocations: 1.23 KiB)
+    # 307.377 ns (4 allocations: 1.84 KiB)
+    # 483.333 ns (4 allocations: 288 bytes)
+    # 505.829 ns (0 allocations: 0 bytes)
+    # 2.764 μs (6 allocations: 1.23 KiB)
+    # 2.060 μs (4 allocations: 1.84 KiB)
+    # 663.019 ns (4 allocations: 288 bytes)
+    # 663.780 ns (0 allocations: 0 bytes)
+    # 20.250 μs (6 allocations: 1.23 KiB)
+    # 19.500 μs (4 allocations: 1.84 KiB)
+    # 620.395 ns (4 allocations: 288 bytes)
+    # 663.766 ns (0 allocations: 0 bytes)
 
     #@btime mutualinfo($i1_, $i2_; normed = false)
 
@@ -289,7 +273,5 @@ for ur in (10, 100, 1000, 10000)
     #@btime Omics.MutualInformation.get_mutual_information($jo)
 
     #@btime Omics.MutualInformation.get_mutual_information($jo, false)
-
-    println()
 
 end

@@ -66,8 +66,8 @@ function plot_matrix(
     Omics.Plot.plot_heat_map(
         ht,
         ma;
-        ro_ = ro_,
-        co_ = co_,
+        ro_,
+        co_,
         rg_ = Omics.Palette.make(["#ffffff", Omics.Color.GR]),
         la = Omics.Dic.merge(
             Dict(
@@ -106,7 +106,7 @@ function plot_matrix(
 
 end
 
-function make_line(la_, pr_, th_ = range(extrema(pr_)..., 10))
+function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
 
     ut = lastindex(th_)
 

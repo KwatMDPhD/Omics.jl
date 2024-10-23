@@ -14,9 +14,7 @@ function _get_density(
     ::AbstractFloat,
 )
 
-    ep = eps()
-
-    map(co -> co + ep, counts(i1_, i2_))
+    convert(Matrix{Float64}, counts(i1_, i2_))
 
 end
 

@@ -2,7 +2,7 @@ module Entropy
 
 function ge(pr)
 
-    -pr * log2(pr)
+    iszero(pr) ? 0.0 : -pr * log2(pr)
 
 end
 

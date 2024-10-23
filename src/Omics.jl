@@ -12,6 +12,8 @@ include("Entropy.jl")
 
 include("Evidence.jl")
 
+include("Grid.jl")
+
 include("HTM.jl")
 
 include("Information.jl")
@@ -28,12 +30,12 @@ include("Plot.jl")
 
 include("Probability.jl")
 
+include("ROC.jl")
+
 include("Significance.jl")
 
 include("Strin.jl")
 
 include("Table.jl")
-
-include("ROC.jl")
 
 end

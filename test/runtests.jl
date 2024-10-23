@@ -13,6 +13,7 @@ for mo in (
     "Distance",
     "Entropy",
     "Evidence",
+    "Grid",
     "HTM",
     "Information",
     "MutualInformation",
@@ -21,10 +22,10 @@ for mo in (
     "Path",
     "Plot",
     "Probability",
+    "ROC",
     "Significance",
     "Strin",
     "Table",
-    "ROC",
 )
 
     @info mo
