@@ -6,15 +6,15 @@ using Random: randstring
 
 using ..Omics
 
-function animate(gi, pn_)
+const SI = 832
 
-    run(`magick -delay 32 $pn_ $gi`)
+function rang(mi, ma, ex)
 
-    Omics.Path.ope(gi)
+    ex *= ma - mi
+
+    mi - ex, ma + ex
 
 end
-
-const SI = 832
 
 function plot(ht, da, la = Dict{String, Any}())
 
@@ -223,6 +223,14 @@ function plot_radar(
             la,
         ),
     )
+
+end
+
+function animate(gi, pn_)
+
+    run(`magick -delay 32 $pn_ $gi`)
+
+    Omics.Path.ope(gi)
 
 end
 

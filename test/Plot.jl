@@ -6,10 +6,17 @@ using Test: @test
 
 # ---- #
 
-Omics.Plot.animate(
-    joinpath(tempdir(), "animate.gif"),
-    (pkgdir(Omics, "data", "Plot", "$id.png") for id in 1:2),
-)
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.084 ns (0 allocations: 0 bytes)
+for (mi, ma, ex, re) in
+    ((0, 1, 0.1, (-0.1, 1.1)), (-1, 1, 0.1, (-1.2, 1.2)), (900, 1000, 0.1, (890.0, 1010.0)))
+
+    @test Omics.Plot.rang(mi, ma, ex) === re
+
+    #@btime Omics.Plot.rang($mi, $ma, $ex)
+
+end
 
 # ---- #
 
@@ -58,4 +65,11 @@ Omics.Plot.plot_radar(
     (eachindex(T3_), eachindex(T4), eachindex(T6));
     na_ = (30, 45, 60),
     la = Dict("title" => Dict("text" => "Title Text")),
+)
+
+# ---- #
+
+Omics.Plot.animate(
+    joinpath(tempdir(), "animate.gif"),
+    (pkgdir(Omics, "data", "Plot", "$id.png") for id in 1:2),
 )
