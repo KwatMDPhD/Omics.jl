@@ -53,14 +53,40 @@ end
 
 const PR_ = 0:0.1:1
 
+# ---- #
+
 const OD_ = map(Omics.Probability.get_odd, PR_)
 
 Omics.Plot.plot(
     "",
     (
-        Dict("name" => "Probability", "y" => (0, 1), "x" => (0, 1)),
         Dict("name" => "Odd", "y" => OD_, "x" => PR_),
         Dict("name" => "Log2(Odd)", "y" => map(log2, OD_), "x" => PR_),
     ),
     Dict("xaxis" => Dict("title" => Dict("text" => "Probability"))),
+)
+
+# ---- #
+
+# 4.875 ns (0 allocations: 0 bytes)
+for (nu, re) in ((0, 0.5),)
+
+    @test Omics.Probability.get_logistic(nu) === re
+
+    #@btime Omics.Probability.get_logistic($nu)
+
+end
+
+# ---- #
+
+Omics.Plot.plot(
+    "",
+    [
+        Dict(
+            "name" => "$(nu_[1]) ... $(nu_[end])",
+            "y" => map(Omics.Probability.get_logistic, nu_),
+            "x" => nu_,
+        ) for nu_ in (-10:10, -1:0.1:1, PR_)
+    ],
+    Dict("yaxis" => Dict("title" => Dict("text" => "Logistic Probability"))),
 )

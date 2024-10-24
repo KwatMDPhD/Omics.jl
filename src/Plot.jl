@@ -4,8 +4,6 @@ using JSON: json
 
 using Random: randstring
 
-using StatsBase: mean
-
 using ..Omics
 
 function animate(gi, pn_)
@@ -80,8 +78,10 @@ function make_tickvals(nu_)
 
     mi, ma = extrema(nu_)
 
+    me = sum(nu_) / lastindex(nu_)
+
     all(isinteger, nu_) ? Tuple(mi:ma) :
-    (Omics.Strin.shorten(mi), Omics.Strin.shorten(mean(nu_)), Omics.Strin.shorten(ma))
+    (Omics.Strin.shorten(mi), Omics.Strin.shorten(me), Omics.Strin.shorten(ma))
 
 end
 

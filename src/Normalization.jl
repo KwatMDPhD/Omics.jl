@@ -2,6 +2,8 @@ module Normalization
 
 using StatsBase: competerank, denserank, mean, quantile, std, tiedrank
 
+using ..Omics
+
 function normalize_with_0!(nu_)
 
     me = mean(nu_)
@@ -30,17 +32,9 @@ function normalize_with_sum!(nu_)
 
 end
 
-function _get_logistic(nu)
-
-    ex = exp(nu)
-
-    ex / (1 + ex)
-
-end
-
 function normalize_with_logistic!(nu_)
 
-    map!(_get_logistic, nu_, nu_)
+    map!(Omics.Probability.get_logistic, nu_, nu_)
 
 end
 

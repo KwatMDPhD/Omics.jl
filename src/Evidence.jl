@@ -2,7 +2,7 @@ module Evidence
 
 using ..Omics
 
-function get_evidence(p1, p1f)
+function ge(p1, p1f)
 
     log2(Omics.Probability.get_odd(p1f) / Omics.Probability.get_odd(p1))
 
@@ -185,7 +185,7 @@ function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xe = 8)
 
     be = log2(Omics.Probability.get_odd(p1))
 
-    ev_ = [get_evidence(p1, p1f) for p1f in p1f_]
+    ev_ = [ge(p1, p1f) for p1f in p1f_]
 
     af = reduce(+, ev_; init = be)
 

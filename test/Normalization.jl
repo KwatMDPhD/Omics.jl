@@ -43,8 +43,8 @@ end
 # ---- #
 
 # 21.000 ns (0 allocations: 0 bytes)
-# 24.866 ns (0 allocations: 0 bytes)
-# 34.631 ns (0 allocations: 0 bytes)
+# 25.033 ns (0 allocations: 0 bytes)
+# 34.582 ns (0 allocations: 0 bytes)
 for (nu_, re) in
     zip(NU___, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1], [0 0.4 0.8; 0.2 0.6 1]))
 
@@ -85,9 +85,9 @@ end
 
 # ---- #
 
-# 22.234 ns (0 allocations: 0 bytes)
-# 24.740 ns (0 allocations: 0 bytes)
-# 24.180 ns (0 allocations: 0 bytes)
+# 21.773 ns (0 allocations: 0 bytes)
+# 24.658 ns (0 allocations: 0 bytes)
+# 24.006 ns (0 allocations: 0 bytes)
 for (nu_, re) in zip(
     NU___,
     (
@@ -116,8 +116,8 @@ const NR___ = [-1, 0, 0, 1, 1, 1, 2], [-1 0 1 2; 0 1 1 3]
 
 # ---- #
 
-# 54.949 ns (4 allocations: 224 bytes)
-# 245.452 ns (6 allocations: 352 bytes)
+# 55.147 ns (4 allocations: 224 bytes)
+# 254.404 ns (6 allocations: 352 bytes)
 for (nu_, re) in zip(NR___, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
     co = copy(nu_)
@@ -132,8 +132,8 @@ end
 
 # ---- #
 
-# 55.118 ns (4 allocations: 224 bytes)
-# 246.398 ns (6 allocations: 352 bytes)
+# 54.992 ns (4 allocations: 224 bytes)
+# 245.876 ns (6 allocations: 352 bytes)
 for (nu_, re) in zip(NR___, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
 
     co = copy(nu_)

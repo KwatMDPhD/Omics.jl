@@ -12,4 +12,10 @@ function ge(od)
 
 end
 
+function get_logistic(nu)
+
+    ge(exp(nu))
+
+end
+
 end
