@@ -6,4 +6,4 @@ using Test: @test
 
 # ---- #
 
-Omics.Path.ope(joinpath(homedir(), "Downloads"))
+Omics.Path.ope(homedir())
