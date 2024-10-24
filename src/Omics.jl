@@ -12,6 +12,8 @@ include("Entropy.jl")
 
 include("Evidence.jl")
 
+include("Fit.jl")
+
 include("Grid.jl")
 
 include("HTM.jl")

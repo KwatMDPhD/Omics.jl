@@ -13,6 +13,7 @@ for mo in (
     "Distance",
     "Entropy",
     "Evidence",
+    "Fit",
     "Grid",
     "HTM",
     "Information",
