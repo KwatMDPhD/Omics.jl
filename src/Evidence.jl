@@ -72,7 +72,7 @@ end
 
 function _make(yc, xe, ac, si)
 
-    xc, tr, te = ac ? (xe, "right", "left") : (-xe, "left", "right")
+    xc, tr, te = isnothing(ac) ? (xe, "right", "left") : (-xe, "left", "right")
 
     Dict(
         "y" => (yc,),
