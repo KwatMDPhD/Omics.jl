@@ -58,3 +58,7 @@ end
 # ---- #
 
 @test Omics.Strin.shorten(pi) === "3.1"
+
+# ---- #
+
+Omics.Strin.date("2024 10 28")

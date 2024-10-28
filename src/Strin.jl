@@ -1,5 +1,7 @@
 module Strin
 
+using Dates: @dateformat_str, Date
+
 using Printf: @sprintf
 
 function _strip(st)
@@ -98,6 +100,12 @@ end
 function shorten(nu)
 
     @sprintf "%.2g" nu
+
+end
+
+function date(st)
+
+    Date(st, dateformat"yyyy mm dd")
 
 end
 
