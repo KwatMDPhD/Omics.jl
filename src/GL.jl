@@ -8,24 +8,14 @@ function fit(ta_, fe_)
 
     gl = glm(@formula(ta ~ fe), (ta = ta_, fe = fe_), Binomial())
 
-    P1f_, lo_, up_ =
-        predict(gl, (fe = range(extrema(fe_)..., lastindex(fe_)),); interval = :confidence)
+    p1f_, lo_, up_ =
+        predict(gl, (fe = range(fe_[1], fe_[end], lastindex(fe_)),); interval = :confidence)
 
-    gl, P1f_, lo_, up_
+    gl, p1f_, lo_, up_
 
 end
 
 function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
-
-    id_ = sortperm(fe_)
-
-    sa_ = sa_[id_]
-
-    ta_ = ta_[id_]
-
-    fe_ = fe_[id_]
-
-    # TODO: Consider sorting p1f_.
 
     hd = Omics.Color.RE
 
