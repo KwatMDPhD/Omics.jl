@@ -12,7 +12,7 @@ include("Entropy.jl")
 
 include("Evidence.jl")
 
-include("Fit.jl")
+include("GL.jl")
 
 include("Grid.jl")
 
