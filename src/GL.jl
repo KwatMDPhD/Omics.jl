@@ -1,6 +1,6 @@
 module GL
 
-using GLM: @formula, Binomial, StatisticalModel, glm, predict
+using GLM: @formula, Binomial, glm, predict
 
 using ..Omics
 
