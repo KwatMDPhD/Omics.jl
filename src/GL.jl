@@ -6,16 +6,18 @@ using ..Omics
 
 function fit(ta_, fe_)
 
+    @assert issorted(fe_)
+
     gl = glm(@formula(ta ~ fe), (ta = ta_, fe = fe_), Binomial())
 
     p1f_, lo_, up_ =
         predict(gl, (fe = range(fe_[1], fe_[end], lastindex(fe_)),); interval = :confidence)
 
-    gl, p1f_, lo_, up_
+    gl, convert(Vector{Float64}, p1f_), lo_, up_
 
 end
 
-function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
+function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 2)
 
     hd = Omics.Color.RE
 
@@ -41,6 +43,13 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
                 "mode" => "markers",
                 "marker" => Dict("size" => si * 2, "color" => hd),
             ),
+            Dict(
+                "yaxis" => "y3",
+                "y" => (0.5, 0.5),
+                "x" => (sa_[1], sa_[end]),
+                "mode" => "lines",
+                "line" => Dict("width" => 1.6, "color" => "#000000"),
+            ),
             merge(bo, Dict("y" => lo_)),
             merge(
                 bo,
@@ -55,13 +64,6 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
                 "y" => p1f_,
                 "x" => sa_,
                 "marker" => Dict("size" => si, "color" => hf),
-            ),
-            Dict(
-                "yaxis" => "y3",
-                "y" => (0.5, 0.5),
-                "x" => (sa_[1], sa_[end]),
-                "mode" => "lines",
-                "line" => Dict("color" => Omics.Color.GR),
             ),
         ),
         Dict(
@@ -84,7 +86,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 4)
             "xaxis" => Dict(
                 "anchor" => "y2",
                 "domain" => (0.08, 1),
-                "title" => Dict("text" => ns),
+                "title" => Dict("text" => "$ns ($(lastindex(ta_)))"),
                 "ticks" => "",
             ),
         ),
