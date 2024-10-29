@@ -8,6 +8,12 @@ function ge(p1, p1f)
 
 end
 
+function ge(p1, p1f_::AbstractVector)
+
+    reduce(+, (ge(p1, p1f) for p1f in p1f_); init = log2(Omics.Probability.get_odd(p1)))
+
+end
+
 function get_posterior_probability(p1, ev)
 
     Omics.Probability.ge(Omics.Probability.get_odd(p1) * exp2(ev))
