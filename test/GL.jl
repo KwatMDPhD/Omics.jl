@@ -14,6 +14,16 @@ end
 
 # ---- #
 
+function sor(sa_, ta_, fe_)
+
+    id_ = sortperm(fe_)
+
+    sa_[id_], ta_[id_], fe_[id_]
+
+end
+
+# ---- #
+
 for (ta_, fe_, re) in (
     (
         [1, 0, 1, 0, 1, 0],
@@ -41,9 +51,11 @@ for (ta_, fe_, re) in (
     ),
 )
 
-    sa_, ta_, fe_ = Omics.GL.sor(make_sample(lastindex(ta_)), ta_, fe_)
+    up = lastindex(ta_)
 
-    _gl, p1f_, lo_, up_ = Omics.GL.fit(ta_, fe_)
+    sa_, ta_, fe_ = sor(make_sample(up), ta_, fe_)
+
+    p1f_, lo_, up_ = Omics.GL.predic(Omics.GL.fit(ta_, fe_), Omics.Grid.make(fe_, up))
 
     @test p1f_ == re
 
@@ -55,9 +67,9 @@ end
 
 for ur in (10, 100, 1000)
 
-    sa_, ta_, fe_ = Omics.GL.sor(make_sample(ur), rand((0, 1), ur), randn(ur))
+    sa_, ta_, fe_ = sor(make_sample(ur), rand((0, 1), ur), randn(ur))
 
-    _gl, p1f_, lo_, up_ = Omics.GL.fit(ta_, fe_)
+    p1f_, lo_, up_ = Omics.GL.predic(Omics.GL.fit(ta_, fe_), Omics.Grid.make(fe_, ur))
 
     Omics.GL.plot("", "Sample", sa_, "Target", ta_, "Feature", fe_, p1f_, lo_, up_)
 

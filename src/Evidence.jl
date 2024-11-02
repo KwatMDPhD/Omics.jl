@@ -2,13 +2,13 @@ module Evidence
 
 using ..Omics
 
-function ge(p1, p1f)
+function ge(p1, p1f::Real)
 
     log2(Omics.Probability.get_odd(p1f) / Omics.Probability.get_odd(p1))
 
 end
 
-function ge(p1, p1f_::AbstractVector)
+function ge(p1, p1f_)
 
     reduce(+, (ge(p1, p1f) for p1f in p1f_); init = log2(Omics.Probability.get_odd(p1)))
 
@@ -70,7 +70,7 @@ function _make(yc, xc, te, si, hm, wi, hl = hm)
 
 end
 
-function _make(::Integer, ::Integer, ac::Nothing, ::Real)
+function _make(::Integer, ::Integer, ::Nothing, ::Real)
 
     Dict{String, Any}()
 
