@@ -4,22 +4,23 @@ using GLM: @formula, Binomial, glm, predict
 
 using ..Omics
 
-function sor(sa_, ta_, fe_)
+function fit(ta_, fe_)
 
-    id_ = sortperm(fe_)
-
-    sa_[id_], ta_[id_], fe_[id_]
+    glm(@formula(ta ~ fe), (ta = ta_, fe = fe_), Binomial())
 
 end
 
-function fit(ta_, fe_)
+function predic(gl, fe_)
 
-    gl = glm(@formula(ta ~ fe), (ta = ta_, fe = fe_), Binomial())
+    predict(gl, (fe = fe_,); interval = :confidence)
 
-    p1f_, lo_, up_ =
-        predict(gl, (fe = range(fe_[1], fe_[end], lastindex(fe_)),); interval = :confidence)
+end
 
-    gl, convert(Vector{Float64}, p1f_), lo_, up_
+function predic(gl, fe::Real)
+
+    p1f_, lo_, up_ = predic(gl, [fe])
+
+    p1f_[], lo_[], up_[]
 
 end
 
@@ -87,7 +88,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 2)
                 "title" =>
                     Dict("text" => "Probability of $nt", "font" => Dict("color" => hf)),
                 "range" => Omics.Plot.rang(0, 1, 0.04),
-                "tickvals" => (0, 0.5, 1),
+                "tickvals" => (0, 0.5, 1, map(Omics.Strin.shorten, extrema(p1f_))...),
             ),
             "xaxis" => Dict(
                 "anchor" => "y2",

@@ -92,6 +92,7 @@ function _make(yc, xe, ac, si)
 
 end
 
+# TODO: Plot range
 function plot(ht, nt, p1, nf_, p1f_, ac = nothing; xe = 8)
 
     be = log2(Omics.Probability.get_odd(p1))
