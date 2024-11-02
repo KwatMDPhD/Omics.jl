@@ -4,9 +4,15 @@ using GLM: @formula, Binomial, glm, predict
 
 using ..Omics
 
-function fit(ta_, fe_)
+function sor(sa_, ta_, fe_)
 
-    @assert issorted(fe_)
+    id_ = sortperm(fe_)
+
+    sa_[id_], ta_[id_], fe_[id_]
+
+end
+
+function fit(ta_, fe_)
 
     gl = glm(@formula(ta ~ fe), (ta = ta_, fe = fe_), Binomial())
 

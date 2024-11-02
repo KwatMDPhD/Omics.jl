@@ -6,10 +6,18 @@ using Test: @test
 
 # ---- #
 
+function make_sample(us)
+
+    map(id -> "Sample $id", 1:us)
+
+end
+
+# ---- #
+
 for (ta_, fe_, re) in (
     (
-        [0, 0, 0, 1, 1, 1],
-        [0, 0, 0, 2, 2, 2],
+        [1, 0, 1, 0, 1, 0],
+        [2, 0, 2, 0, 2, 0],
         [
             2.3504627745014825e-8,
             2.646552652540957e-5,
@@ -20,8 +28,8 @@ for (ta_, fe_, re) in (
         ],
     ),
     (
-        [1, 1, 1, 0, 0, 0],
-        [0, 0, 0, 2, 2, 2],
+        [0, 1, 0, 1, 0, 1],
+        [2, 0, 2, 0, 2, 0],
         [
             0.9999999764953722,
             0.9999735344734746,
@@ -33,23 +41,13 @@ for (ta_, fe_, re) in (
     ),
 )
 
-    gl, p1f_, lo_, up_ = Omics.GL.fit(ta_, fe_)
+    sa_, ta_, fe_ = Omics.GL.sor(make_sample(lastindex(ta_)), ta_, fe_)
+
+    _gl, p1f_, lo_, up_ = Omics.GL.fit(ta_, fe_)
 
     @test p1f_ == re
 
-    Omics.GL.plot(
-        "",
-        "Sample",
-        map(id -> "Sample $id", eachindex(fe_)),
-        "Target",
-        ta_,
-        "Feature",
-        fe_,
-        p1f_,
-        lo_,
-        up_;
-        si = 20,
-    )
+    Omics.GL.plot("", "Sample", sa_, "Target", ta_, "Feature", fe_, p1f_, lo_, up_; si = 20)
 
 end
 
@@ -57,23 +55,10 @@ end
 
 for ur in (10, 100, 1000)
 
-    ta_ = rand((0, 1), ur)
+    sa_, ta_, fe_ = Omics.GL.sor(make_sample(ur), rand((0, 1), ur), randn(ur))
 
-    fe_ = sort!(randn(ur))
+    _gl, p1f_, lo_, up_ = Omics.GL.fit(ta_, fe_)
 
-    gl, p1f_, lo_, up_ = Omics.GL.fit(ta_, fe_)
-
-    Omics.GL.plot(
-        "",
-        "Sample",
-        map(id -> "Sample $id", eachindex(fe_)),
-        "Target",
-        ta_,
-        "Feature",
-        fe_,
-        p1f_,
-        lo_,
-        up_,
-    )
+    Omics.GL.plot("", "Sample", sa_, "Target", ta_, "Feature", fe_, p1f_, lo_, up_)
 
 end
