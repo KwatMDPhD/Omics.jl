@@ -1,0 +1,141 @@
+using Omics
+
+using Test: @test
+
+# ----------------------------------------------------------------------------------------------- #
+
+# ---- #
+
+# 2.083 ns (0 allocations: 0 bytes)
+# 2.125 ns (0 allocations: 0 bytes)
+# 2.084 ns (0 allocations: 0 bytes)
+for (mi, ma, ex, re) in
+    ((0, 1, 0.1, (-0.1, 1.1)), (-1, 1, 0.1, (-1.2, 1.2)), (900, 1000, 0.1, (890.0, 1010.0)))
+
+    @test Omics.Plot.rang(mi, ma, ex) === re
+
+    #@btime Omics.Plot.rang($mi, $ma, $ex)
+
+end
+
+# ---- #
+
+Omics.Plot.plot(
+    "",
+    (Dict("y" => (1, 2), "x" => (3, 4)),),
+    Dict(
+        "title" => "Title",
+        "yaxis" => Dict("title" => Dict("text" => "Y-Axis Title")),
+        "xaxis" => Dict("title" => Dict("text" => "X-Axis Title")),
+    ),
+)
+
+# ---- #
+
+const MA = [
+    0.999 3 5
+    2 4 6.001
+]
+
+const RO_ = ("Aa", "Bb")
+
+const CO_ = ("Cc", "Dd", "Ee")
+
+# ---- #
+
+Omics.Plot.plot_heat_map("", MA; ro_ = RO_, co_ = CO_)
+
+# ---- #
+
+Omics.Plot.plot_bubble_map("", MA * 40, MA; ro_ = RO_, co_ = CO_)
+
+Omics.Plot.plot_bubble_map("", MA * 40, reverse(MA); ro_ = RO_, co_ = CO_)
+
+# ---- #
+
+const T3_ = 0:30:360
+
+const T4 = 0:45:360
+
+const T6 = 0:60:360
+
+Omics.Plot.plot_radar(
+    "",
+    (T3_, T4, T6),
+    (eachindex(T3_), eachindex(T4), eachindex(T6));
+    na_ = (30, 45, 60),
+    la = Dict("title" => Dict("text" => "Title Text")),
+)
+
+# ---- #
+
+Omics.Plot.animate(
+    joinpath(tempdir(), "animate.gif"),
+    (pkgdir(Omics, "data", "Plot", "$id.png") for id in 1:2),
+)
+
+# ---- #
+
+ht = joinpath(tempdir(), "timeline.html")
+
+ti_ = (1999, 2024)
+
+hb = ""
+
+hi = ""
+
+ev_ = (
+    (1996, "Spin Column Nucleic Acid Purification", hb),
+    (1999, "RNAlater", hb),
+    (2000, "Structural Causal Model", hb),
+    (2003, "The PAXgene Blood RNA Tube", hb),
+    (2005, "Globin Depletion", hb),
+    (2006, "Sequencing by Synthesis (SBS)", hb),
+    (2009, "Probabilistic Graphical Models", hb),
+    (2010, "Nucleic Acid Extraction Filter Plates", hb),
+    (2010, "Vicarious", hb),
+    (2011, "Whole-Blood RNA Sequencing", hb),
+    (2015, "Illumina NextSeq", hb),
+    (2018, "Julia Language 1.0", hb),
+    (2019, "MacBook with 64 GB of RAM", hb),
+    (2022, "Self-Collection Blood Sampling", hb),
+    (2023, "XLEAP SBS", hb),
+    (2023, "Illumina NovaSeq X", hb),
+)
+
+function _annotate(ti, st, he)
+
+    Dict(
+        "y" => 0,
+        "x" => ti,
+        "text" => st,
+        "textangle" => -90,
+        "font" => Dict("size" => 32),
+        "startstandoff" => 8,
+        "arrowside" => "none",
+        "arrowwidth" => 4,
+        "arrowcolor" => he,
+    )
+
+end
+
+he = "#000000"
+
+Omics.Plot.plot(
+    ht,
+    (),
+    Dict(
+        "yaxis" => Dict("range" => (0, 1), "tickvals" => ()),
+        "xaxis" => Dict(
+            "range" => ti_,
+            "linewidth" => 6.4,
+            "linecolor" => he,
+            "dtick" => 1,
+            "tickcolor" => he,
+            "tickfont" => Dict("size" => 24),
+            "tickangle" => -90,
+        ),
+        "annotations" => [_annotate(ti, st, he) for (ti, st, he) in ev_],
+    ),
+    Dict("editable" => true),
+)

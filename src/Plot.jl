@@ -16,7 +16,7 @@ function rang(mi, ma, ex)
 
 end
 
-function plot(ht, da, la = Dict{String, Any}())
+function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
 
     if isempty(ht)
 
@@ -33,6 +33,8 @@ function plot(ht, da, la = Dict{String, Any}())
         ),
         la,
     )
+
+    co = Omics.Dic.merg(Dict("displaylogo" => false), co)
 
     for (ke, va) in la
 
@@ -56,7 +58,7 @@ function plot(ht, da, la = Dict{String, Any}())
         Omics.HTM.writ(
             ht,
             ("https://cdn.plot.ly/plotly-latest.min.js",),
-            "Plotly.newPlot(\"HTM\", $(json(da)), $(json(la)))",
+            "Plotly.newPlot(\"HTM\", $(json(da)), $(json(la)), $(json(co)))",
         ),
     )
 
