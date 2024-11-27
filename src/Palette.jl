@@ -48,6 +48,7 @@ const CA = make([
     Omics.Color.CR,
     Omics.Color.CB,
     Omics.Color.HU,
+    Omics.Color.DA,
 ])
 
 function pick(nu_)
