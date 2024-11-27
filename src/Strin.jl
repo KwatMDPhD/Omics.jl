@@ -65,6 +65,12 @@ function title(st)
 
 end
 
+function date(st)
+
+    Date(st, dateformat"yyyy mm dd")
+
+end
+
 function coun(uc, st)
 
     if 1 < abs(uc)
@@ -103,9 +109,9 @@ function shorten(nu)
 
 end
 
-function date(st)
+function chain(st_)
 
-    Date(st, dateformat"yyyy mm dd")
+    join(st_, " · ")
 
 end
 

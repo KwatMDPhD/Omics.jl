@@ -39,6 +39,10 @@ end
 
 # ---- #
 
+Omics.Strin.date("2024 10 28")
+
+# ---- #
+
 for (si, pl) in (
     ("vertex", "vertices"),
     ("edge", "edges"),
@@ -61,4 +65,4 @@ end
 
 # ---- #
 
-Omics.Strin.date("2024 10 28")
+@test Omics.Strin.chain(('A', "Bb", "Cc")) === "A · Bb · Cc"
