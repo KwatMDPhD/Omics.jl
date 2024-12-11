@@ -2,47 +2,41 @@ module Color
 
 using Colors: Colorant, coloralpha, hex
 
-const FA = "#ebf6f7"
+const RE = "#ff1993"
 
-const RE = "#ff1992"
+const GR = "#92ff93"
 
-const GR = "#93ff92"
+const BL = "#1992ff"
 
-const BL = "#1993ff"
+const YE = "#ffff93"
 
-const YE = "#ffff32"
+const MA = "#ff32ff"
 
-const KB = "#dd9159"
+const CY = "#92ffff"
 
-const KG = "#6c9956"
+const IN = "#4e40d8"
 
-const KR = "#e06351"
+const CH = "#a40522"
 
-const KO = "#fc7f31"
+const MO = "#f47983"
 
-const KP = "#561649"
+const KO = "#003171"
 
-const KY = "#fbb92d"
+const TU = "#20d9ba"
 
-const KE = "#a40522"
+const VI = "#9017e6"
 
-const KW = "#790505"
+const OR = "#fc7f31"
 
-const GE = "#20d9ba"
+const PU = "#561649"
 
-const GP = "#9017e6"
+const HU = "#fbb92d"
 
-const GB = "#4e40d8"
+const S1 = "#8c1515"
 
-const SR = "#8c1515"
+const S2 = "#175e54"
 
-const SG = "#175e54"
-
-const CR = "#f47983"
-
-const CB = "#003171"
-
-const HU = "#feb61d"
+const LI = "#ebf6f7"
 
 const DA = "#27221f"
 
