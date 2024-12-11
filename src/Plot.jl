@@ -171,7 +171,7 @@ function plot_radar(
 
     hd = "#000000"
 
-    hf = Omics.Color.FA
+    hf = Omics.Color.LI
 
     plot(
         ht,
