@@ -8,48 +8,9 @@ using ..Omics
 
 function make(st_)
 
-    ColorScheme(map(st -> parse(Colorant, st), st_))
+    ColorScheme([parse(Colorant, st) for st in st_])
 
 end
-
-const MO = make([Omics.Color.GE])
-
-const BI = make(["#006442", "#ffb61e"])
-
-const CA = make([
-    "#636efa",
-    "#ef553b",
-    "#00cc96",
-    "#ab63fa",
-    "#ffa15a",
-    "#19d3f3",
-    "#ff6692",
-    "#b6e880",
-    "#ff97ff",
-    "#fecb52",
-    Omics.Color.FA,
-    Omics.Color.RE,
-    Omics.Color.GR,
-    Omics.Color.BL,
-    Omics.Color.YE,
-    Omics.Color.KB,
-    Omics.Color.KG,
-    Omics.Color.KR,
-    Omics.Color.KO,
-    Omics.Color.KP,
-    Omics.Color.KY,
-    Omics.Color.KE,
-    Omics.Color.KW,
-    Omics.Color.GE,
-    Omics.Color.GP,
-    Omics.Color.GB,
-    Omics.Color.SR,
-    Omics.Color.SG,
-    Omics.Color.CR,
-    Omics.Color.CB,
-    Omics.Color.HU,
-    Omics.Color.DA,
-])
 
 function pick(nu_)
 
@@ -65,15 +26,37 @@ function pick(nu_)
 
         if isone(uu)
 
-            MO
+            make((Omics.Color.RE,))
 
         elseif uu == 2
 
-            BI
+            make((Omics.Color.LI, Omics.Color.DA))
 
         elseif 2 < uu
 
-            CA
+            make(
+                (
+                    Omics.Color.RE,
+                    Omics.Color.GR,
+                    Omics.Color.BL,
+                    Omics.Color.YE,
+                    Omics.Color.MA,
+                    Omics.Color.CY,
+                    Omics.Color.IN,
+                    Omics.Color.CH,
+                    Omics.Color.MO,
+                    Omics.Color.KO,
+                    Omics.Color.TU,
+                    Omics.Color.VI,
+                    Omics.Color.OR,
+                    Omics.Color.PU,
+                    Omics.Color.HU,
+                    Omics.Color.S1,
+                    Omics.Color.S2,
+                    Omics.Color.LI,
+                    Omics.Color.DA,
+                )[1:uu],
+            )
 
         end
 

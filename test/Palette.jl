@@ -6,7 +6,7 @@ using Test: @test
 
 # ---- #
 
-const RG_ = Omics.Palette.make(["#ff0000", "#00ff00", "#0000ff"])
+const RG_ = Omics.Palette.make(("#ff0000", "#00ff00", "#0000ff"))
 
 @test lastindex(RG_) === 3
 
@@ -14,12 +14,35 @@ const RG_ = Omics.Palette.make(["#ff0000", "#00ff00", "#0000ff"])
 
 for (nu_, re) in (
     ([1.0], Omics.Palette.bwr),
-    ([1], Omics.Palette.MO),
-    ([1, 2], Omics.Palette.BI),
-    ([1, 2, 3], Omics.Palette.CA),
+    ([1], Omics.Palette.make((Omics.Color.RE,))),
+    ([1, 2], Omics.Palette.make((Omics.Color.LI, Omics.Color.DA))),
+    ([1, 2, 3], Omics.Palette.make((Omics.Color.RE, Omics.Color.GR, Omics.Color.BL),)),
 )
 
-    @test Omics.Palette.pick(nu_) === re
+    rg_ = Omics.Palette.pick(nu_)
+
+    @test lastindex(rg_) == lastindex(re)
+
+    @test all(rg_[id] == re[id] for id in 1:lastindex(rg_))
+
+end
+
+# ---- #
+
+for rg_ in (
+    Omics.Palette.bwr,
+    Omics.Palette.pick(1:1),
+    Omics.Palette.pick(1:2),
+    Omics.Palette.pick(1:19),
+)
+
+    Omics.Plot.plot_heat_map(
+        "",
+        reshape(1:lastindex(rg_), 1, :);
+        co_ = map(Omics.Color.hexify, rg_),
+        rg_,
+        la = Dict("height" => 320, "yaxis" => Dict("tickvals" => ())),
+    )
 
 end
 
@@ -65,33 +88,14 @@ end
 # ---- #
 
 for (he_, re) in (
-    (["#ff0000"], [(0, "#ff0000ff"), (1, "#ff0000ff")]),
-    (["#ff0000", "#00ff00"], [(0.0, "#ff0000ff"), (1.0, "#00ff00ff")]),
+    (("#ff0000",), [(0, "#ff0000ff"), (1, "#ff0000ff")]),
+    (("#ff0000", "#00ff00"), [(0.0, "#ff0000ff"), (1.0, "#00ff00ff")]),
     (
-        ["#ff0000", "#00ff00", "#0000ff"],
+        ("#ff0000", "#00ff00", "#0000ff"),
         [(0.0, "#ff0000ff"), (0.5, "#00ff00ff"), (1.0, "#0000ffff")],
     ),
 )
 
     @test Omics.Palette.fractionate(Omics.Palette.make(he_)) == re
-
-end
-
-# ---- #
-
-for (na, rg_) in (
-    ("Monary", Omics.Palette.MO),
-    ("Binary", Omics.Palette.BI),
-    ("Categorical", Omics.Palette.CA),
-    ("Continuous", Omics.Palette.bwr),
-)
-
-    Omics.Plot.plot_heat_map(
-        "",
-        reshape(eachindex(rg_.colors), 1, :);
-        co_ = map(rg -> "_$(Omics.Color.hexify(rg))", rg_.colors),
-        rg_,
-        la = Dict("height" => 320, "title" => na, "yaxis" => Dict("tickvals" => ())),
-    )
 
 end
