@@ -33,7 +33,7 @@ for rg_ in (
     Omics.Palette.bwr,
     Omics.Palette.pick(1:1),
     Omics.Palette.pick(1:2),
-    Omics.Palette.pick(1:19),
+    Omics.Palette.pick(1:21),
 )
 
     Omics.Plot.plot_heat_map(

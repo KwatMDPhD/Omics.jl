@@ -40,6 +40,10 @@ const LI = "#ebf6f7"
 
 const DA = "#27221f"
 
+const AK = "#ffffff"
+
+const KA = "#000000"
+
 function hexify(rg::Colorant)
 
     "#$(hex(rg, :rrggbbaa))"
