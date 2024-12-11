@@ -18,13 +18,13 @@ end
 
 function predic(gl, fe::Real)
 
-    p1f_, lo_, up_ = predic(gl, [fe])
+    pr_, lo_, up_ = predic(gl, [fe])
 
-    p1f_[], lo_[], up_[]
+    pr_[], lo_[], up_[]
 
 end
 
-function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 2)
+function plot(ht, ns, sa_, nt, ta_, nf, fe_, pr_, lo_, up_; si = 2)
 
     hd = Omics.Color.RE
 
@@ -68,7 +68,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 2)
             ),
             Dict(
                 "yaxis" => "y3",
-                "y" => p1f_,
+                "y" => pr_,
                 "x" => sa_,
                 "marker" => Dict("size" => si, "color" => hf),
             ),
@@ -88,7 +88,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, p1f_, lo_, up_; si = 2)
                 "title" =>
                     Dict("text" => "Probability of $nt", "font" => Dict("color" => hf)),
                 "range" => Omics.Plot.rang(0, 1, 0.04),
-                "tickvals" => (0, 0.5, 1, map(Omics.Strin.shorten, extrema(p1f_))...),
+                "tickvals" => (0, 0.5, 1, map(Omics.Strin.shorten, extrema(pr_))...),
             ),
             "xaxis" => Dict(
                 "anchor" => "y2",
