@@ -55,8 +55,6 @@ function pick(nu_)
                     Omics.Color.S2,
                     Omics.Color.LI,
                     Omics.Color.DA,
-                    Omics.Color.WH,
-                    Omics.Color.BA,
                 )[1:uu],
             )
 
