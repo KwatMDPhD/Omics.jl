@@ -43,7 +43,7 @@ function _make_annotation(yc, xc, te)
         "x" => xc,
         "showarrow" => false,
         "text" => te,
-        "font" => Dict("family" => "Monospace", "size" => 24, "color" => "#000000"),
+        "font" => Dict("family" => "Monospace", "size" => 24),
     )
 
 end
