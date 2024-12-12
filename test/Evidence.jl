@@ -20,7 +20,7 @@ using Test: @test
 # 4.583 ns (0 allocations: 0 bytes)
 # 6.458 ns (0 allocations: 0 bytes)
 # 4.583 ns (0 allocations: 0 bytes)
-for (p1, p1f, ev) in (
+for (pr, po, ev) in (
     # 0 / 0
     (0, 0, NaN),
     # Inf / Inf
@@ -45,15 +45,15 @@ for (p1, p1f, ev) in (
     (1 / 3, 0.5, 1.0000000000000002),
 )
 
-    @test Omics.Evidence.ge(p1, p1f) === ev
+    @test Omics.Evidence.ge(pr, po) === ev
 
-    #@btime Omics.Evidence.ge($p1, $p1f)
+    #@btime Omics.Evidence.ge($pr, $po)
 
     if isfinite(ev)
 
-        @test Omics.Evidence.get_posterior_probability(p1, ev) === p1f
+        @test Omics.Evidence.get_posterior_probability(pr, ev) === po
 
-        #@btime Omics.Evidence.get_posterior_probability($p1, $ev)
+        #@btime Omics.Evidence.get_posterior_probability($pr, $ev)
 
     end
 
@@ -61,16 +61,24 @@ end
 
 # ---- #
 
-const P1_ = P1F_ = 0:0.1:1
+for po_ in ((0.5,), (0.4, 0.6))
+
+    @test isapprox(Omics.Evidence.ge(0.5, po_), 0; atol = 1e-15)
+
+end
+
+# ---- #
+
+const PR_ = PO_ = 0:0.1:1
 
 Omics.Plot.plot(
     "",
     [
         Dict(
-            "name" => "Prior = $p1",
-            "y" => map(p1f -> Omics.Evidence.ge(p1, p1f), P1F_),
-            "x" => P1F_,
-        ) for p1 in P1_
+            "name" => "Prior Probability = $pr",
+            "y" => map(po -> Omics.Evidence.ge(pr, po), PO_),
+            "x" => PO_,
+        ) for pr in PR_
     ],
     Dict(
         "yaxis" => Dict("title" => Dict("text" => "Evidence"), "zeroline" => true),
@@ -82,16 +90,24 @@ Omics.Plot.plot(
 
 Omics.Evidence.plot(
     "",
-    "Something",
+    "Target",
     0.6,
-    ("Aa = 0.5", "Bb = 0.6", "Cc = 0.7", "Dd = 0.8", "Ee = 0.9"),
-    (0.5, 0.6, 0.7, 0.8, 0.9),
+    ("Feature 1 = 0.4", "Feature 2 = 0.6", "Feature 3 = 0.8", "Feature 4", "Feature 5"),
+    (0.4, 0.6, 0.8, NaN, NaN);
+    ac = false,
 )
 
 # ---- #
 
 for uf in 1:8
 
-    Omics.Evidence.plot("", "Target", 0.4, ["Feature $id = 1.234" for id in 1:uf], rand(uf))
+    Omics.Evidence.plot(
+        "",
+        "Target",
+        0.4,
+        ["Feature $id = 1.234" for id in 1:uf],
+        rand(uf);
+        ac = rand(Bool),
+    )
 
 end
