@@ -35,7 +35,7 @@ function _root(ev)
 end
 
 function _translate(pr, ev)
-    
+
     "$ev | $(@sprintf("%g", get_posterior_probability(pr, ev^2)))"
 
 end

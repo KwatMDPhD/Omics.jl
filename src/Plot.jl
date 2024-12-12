@@ -2,6 +2,8 @@ module Plot
 
 using JSON: json
 
+using Printf: @sprintf
+
 using Random: randstring
 
 using ..Omics
@@ -76,14 +78,19 @@ function _label_2(nu)
 
 end
 
+function _shorten(nu)
+
+    @sprintf "%g" nu
+
+end
+
 function make_tickvals(nu_)
 
     mi, ma = extrema(nu_)
 
     me = sum(nu_) / lastindex(nu_)
 
-    all(isinteger, nu_) ? Tuple(mi:ma) :
-    (Omics.Strin.shorten(mi), Omics.Strin.shorten(me), Omics.Strin.shorten(ma))
+    all(isinteger, nu_) ? Tuple(mi:ma) : (_shorten(mi), _shorten(me), _shorten(ma))
 
 end
 
