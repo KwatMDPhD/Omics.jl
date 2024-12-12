@@ -1,5 +1,7 @@
 module Evidence
 
+using Printf: @sprintf
+
 using ..Omics
 
 function ge(pr)
@@ -33,8 +35,8 @@ function _root(ev)
 end
 
 function _translate(pr, ev)
-
-    "$ev | $(Omics.Strin.shorten("%g", get_posterior_probability(pr, ev^2)))"
+    
+    "$ev | $(@sprintf("%g", get_posterior_probability(pr, ev^2)))"
 
 end
 

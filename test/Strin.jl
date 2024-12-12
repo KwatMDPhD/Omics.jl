@@ -61,8 +61,4 @@ end
 
 # ---- #
 
-@test Omics.Strin.shorten(pi) === "3.1"
-
-# ---- #
-
 @test Omics.Strin.chain(('A', "Bb", "Cc")) === "A · Bb · Cc"
