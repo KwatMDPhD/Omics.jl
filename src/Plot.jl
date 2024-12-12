@@ -2,8 +2,6 @@ module Plot
 
 using JSON: json
 
-using Printf: @sprintf
-
 using Random: randstring
 
 using ..Omics
@@ -78,11 +76,7 @@ function _label_2(nu)
 
 end
 
-function _shorten(nu)
-
-    @sprintf "%g" nu
-
-end
+const _CL = Omics.Palette.fractionate(Omics.Palette.bwr)
 
 function make_tickvals(nu_)
 
@@ -90,16 +84,17 @@ function make_tickvals(nu_)
 
     me = sum(nu_) / lastindex(nu_)
 
-    all(isinteger, nu_) ? Tuple(mi:ma) : (_shorten(mi), _shorten(me), _shorten(ma))
+    all(isinteger, nu_) ? Tuple(mi:ma) :
+    (Omics.Strin.shorten(mi), Omics.Strin.shorten(me), Omics.Strin.shorten(ma))
 
 end
 
 function plot_heat_map(
     ht,
-    cl;
-    ro_ = map(_label_1, axes(cl, 1)),
-    co_ = map(_label_2, axes(cl, 2)),
-    rg_ = Omics.Palette.pick(cl),
+    ma;
+    ro_ = map(_label_1, axes(ma, 1)),
+    co_ = map(_label_2, axes(ma, 2)),
+    cl = _CL,
     la = Dict{String, Any}(),
 )
 
@@ -110,12 +105,12 @@ function plot_heat_map(
                 "type" => "heatmap",
                 "y" => ro_,
                 "x" => co_,
-                "z" => collect(eachrow(cl)),
-                "colorscale" => Omics.Palette.fractionate(rg_),
+                "z" => collect(eachrow(ma)),
+                "colorscale" => cl,
                 "colorbar" => Dict(
                     "len" => 0.4,
                     "thickness" => 16,
-                    "tickvals" => make_tickvals(filter(!isnan, cl)),
+                    "tickvals" => make_tickvals(filter(!isnan, ma)),
                     "tickfont" => Dict("family" => "Monospace", "size" => 16),
                 ),
             ),
@@ -127,15 +122,15 @@ end
 
 function plot_bubble_map(
     ht,
-    si,
-    cl;
-    ro_ = map(_label_1, axes(si, 1)),
-    co_ = map(_label_2, axes(si, 2)),
-    rg_ = Omics.Palette.pick(cl),
+    ma,
+    mc;
+    ro_ = map(_label_1, axes(ma, 1)),
+    co_ = map(_label_2, axes(ma, 2)),
+    cl = _CL,
     la = Dict{String, Any}(),
 )
 
-    id_ = vec(CartesianIndices(si))
+    id_ = vec(CartesianIndices(ma))
 
     plot(
         ht,
@@ -144,11 +139,7 @@ function plot_bubble_map(
                 "y" => map(id -> ro_[id[1]], id_),
                 "x" => map(id -> co_[id[2]], id_),
                 "mode" => "markers",
-                "marker" => Dict(
-                    "size" => vec(si),
-                    "color" => vec(cl),
-                    "colorscale" => Omics.Palette.fractionate(rg_),
-                ),
+                "marker" => Dict("size" => vec(ma), "color" => vec(mc), "colorscale" => cl),
             ),
         ),
         Omics.Dic.merg(
@@ -168,9 +159,8 @@ function plot_radar(
     ra_;
     na_ = eachindex(an_),
     sh_ = trues(lastindex(an_)),
-    cl_ = Omics.Palette.color(eachindex(an_)),
+    he_ = Omics.Palette.HE_,
     fi_ = fill("toself", lastindex(an_)),
-    cf_ = cl_,
     la = Dict{String, Any}(),
 )
 
@@ -194,10 +184,10 @@ function plot_radar(
                     "shape" => "spline",
                     "smoothing" => 0,
                     "width" => 4,
-                    "color" => cl_[id],
+                    "color" => he_[id],
                 ),
                 "fill" => fi_[id],
-                "fillcolor" => cl_[id],
+                "fillcolor" => he_[id],
             ) for id in eachindex(ra_)
         ],
         Omics.Dic.merg(

@@ -36,7 +36,7 @@ end
 
 function _translate(pr, ev)
 
-    "$ev | $(@sprintf("%g", get_posterior_probability(pr, ev^2)))"
+    "$ev | $(@sprintf "%g" get_posterior_probability(pr, ev^2))"
 
 end
 
@@ -105,12 +105,12 @@ function plot(
     pr,
     nf_,
     po_,
-    he_ = Omics.Palette.color(eachindex(nf_));
+    ac = nothing;
     xi = _root(ge(pr, 1e-6)),
     xa = _root(ge(pr, 0.999999)),
     lo_ = fill(xi, lastindex(nf_)),
     up_ = fill(xa, lastindex(nf_)),
-    ac = nothing,
+    he_ = Omics.Palette.HE_,
 )
 
     ur = lastindex(nf_) + 2

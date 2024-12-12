@@ -1,14 +1,6 @@
 module ROC
 
-using Printf: @sprintf
-
 using ..Omics
-
-function _shorten(nu)
-
-    @sprintf "%g" nu
-
-end
 
 function make_matrix()
 
@@ -76,7 +68,7 @@ function plot_matrix(
         ma;
         ro_,
         co_,
-        rg_ = Omics.Palette.make(["#ffffff", Omics.Color.GR]),
+        cl = Omics.Palette.fractionate(Omics.Palette.make(("#ffffff", Omics.Color.GR))),
         la = Omics.Dic.merge(
             Dict(
                 "title" => Dict("text" => "Confusion Matrix"),
@@ -86,26 +78,26 @@ function plot_matrix(
                     _make_annotation(
                         ro_[1],
                         co_[1],
-                        "$(ma[1, 1])<br>TNR (Specificity) $(_shorten(tn))",
+                        "$(ma[1, 1])<br>TNR (Specificity) $(Omics.Strin.shorten(tn))",
                     ),
                     _make_annotation(
                         ro_[2],
                         co_[1],
-                        "$(ma[2, 1])<br>FNR (Type-2 Error) $(_shorten(fn))",
+                        "$(ma[2, 1])<br>FNR (Type-2 Error) $(Omics.Strin.shorten(fn))",
                     ),
                     _make_annotation(
                         ro_[1],
                         co_[2],
-                        "$(ma[1, 2])<br>FPR (Type-1 Error) $(_shorten(fp))",
+                        "$(ma[1, 2])<br>FPR (Type-1 Error) $(Omics.Strin.shorten(fp))",
                     ),
                     _make_annotation(
                         ro_[2],
                         co_[2],
-                        "$(ma[2, 2])<br>TPR (Sensitivity or Recall) $(_shorten(tp))",
+                        "$(ma[2, 2])<br>TPR (Sensitivity or Recall) $(Omics.Strin.shorten(tp))",
                     ),
-                    _make_annotation(0.5, 0, "NPV $(_shorten(np))"),
-                    _make_annotation(0.5, 1, "PPV (Precision) $(_shorten(pp))"),
-                    _make_annotation(0.5, 0.5, "Accuracy $(_shorten(ac))"),
+                    _make_annotation(0.5, 0, "NPV $(Omics.Strin.shorten(np))"),
+                    _make_annotation(0.5, 1, "PPV (Precision) $(Omics.Strin.shorten(pp))"),
+                    _make_annotation(0.5, 0.5, "Accuracy $(Omics.Strin.shorten(ac))"),
                 ),
             ),
             la,
@@ -146,7 +138,7 @@ function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
             np,
             pp,
             ac;
-            la = Dict("title" => Dict("text" => "Threshold $(_shorten(th))")),
+            la = Dict("title" => Dict("text" => "Threshold $(Omics.Strin.shorten(th))")),
         )
 
         fp_[it] = fp
@@ -181,7 +173,7 @@ function plot_line(ht, fp_, tp_)
             ),
             Dict(
                 # TODO: Check
-                "name" => "Area = $(_shorten(sum(tp_) / lastindex(tp_)))",
+                "name" => "Area = $(Omics.Strin.shorten(sum(tp_) / lastindex(tp_)))",
                 "y" => [0; tp_[id]],
                 "x" => [0; fp_[id]],
                 "mode" => "markers+lines",

@@ -4,65 +4,58 @@ using Test: @test
 
 # ----------------------------------------------------------------------------------------------- #
 
+using Colors: RGB
+
+# ---- #
+
+@test allunique(Omics.Palette.HE_)
+
 # ---- #
 
 const RG_ = Omics.Palette.make(("#ff0000", "#00ff00", "#0000ff"))
 
 @test lastindex(RG_) === 3
 
+@test RG_[1] === RGB(1, 0, 0)
+
 # ---- #
 
 for (nu_, re) in (
     ([1.0], Omics.Palette.bwr),
-    ([1], Omics.Palette.make((Omics.Color.RE,))),
-    ([1, 2], Omics.Palette.make((Omics.Color.LI, Omics.Color.DA))),
-    ([1, 2, 3], Omics.Palette.make((Omics.Color.RE, Omics.Color.GR, Omics.Color.BL),)),
+    ([1], Omics.Palette.MO),
+    (1:2, Omics.Palette.BI),
+    (1:3, Omics.Palette.CA),
 )
 
-    rg_ = Omics.Palette.pick(nu_)
-
-    @test lastindex(rg_) == lastindex(re)
-
-    @test all(rg_[id] == re[id] for id in 1:lastindex(rg_))
+    @test Omics.Palette.pick(nu_) === re
 
 end
 
 # ---- #
 
-for rg_ in (
-    Omics.Palette.bwr,
-    Omics.Palette.pick(1:1),
-    Omics.Palette.pick(1:2),
-    Omics.Palette.pick(1:19),
-)
+const RE = "#ff0000ff"
 
-    Omics.Plot.plot_heat_map(
-        "",
-        reshape(1:lastindex(rg_), 1, :);
-        co_ = map(Omics.Color.hexify, rg_),
-        rg_,
-        la = Dict("height" => 320, "yaxis" => Dict("tickvals" => ())),
-    )
+const GR = "#00ff00ff"
 
-end
+const BL = "#0000ffff"
 
 # ---- #
 
 for (nu, re) in (
     # Indexed.
-    (1, "#ff0000ff"),
-    (2, "#00ff00ff"),
-    (3, "#0000ffff"),
+    (1, RE),
+    (2, GR),
+    (3, BL),
     # Normalized between 0 and 1.
-    (-Inf, "#ff0000ff"),
-    (-0.1, "#ff0000ff"),
-    (0.0, "#ff0000ff"),
+    (-Inf, RE),
+    (-0.1, RE),
+    (0.0, RE),
     (0.01, "#fa0500ff"),
-    (0.5, "#00ff00ff"),
+    (0.5, GR),
     (0.99, "#0005faff"),
-    (1.0, "#0000ffff"),
-    (1.1, "#0000ffff"),
-    (Inf, "#0000ffff"),
+    (1.0, BL),
+    (1.1, BL),
+    (Inf, BL),
 )
 
     @test Omics.Palette.color(nu, RG_) === re
@@ -73,12 +66,11 @@ end
 
 for (nu_, re) in (
     # Normalized between the extrema.
-    ([NaN], ["#00ff00ff"]),
-    ([-1], ["#00ff00ff"]),
-    ([0], ["#00ff00ff"]),
-    ([4], ["#00ff00ff"]),
-    (1:3, ["#ff0000ff", "#00ff00ff", "#0000ffff"]),
-    (1:4, ["#ff0000ff", "#55aa00ff", "#00aa55ff", "#0000ffff"]),
+    ([NaN], [GR]),
+    (1:1, [GR]),
+    (1:2, [RE, BL]),
+    (1:3, [RE, GR, BL]),
+    (1:4, [RE, "#55aa00ff", "#00aa55ff", BL]),
 )
 
     @test Omics.Palette.color(nu_, RG_) == re
@@ -88,12 +80,9 @@ end
 # ---- #
 
 for (he_, re) in (
-    (("#ff0000",), [(0, "#ff0000ff"), (1, "#ff0000ff")]),
-    (("#ff0000", "#00ff00"), [(0.0, "#ff0000ff"), (1.0, "#00ff00ff")]),
-    (
-        ("#ff0000", "#00ff00", "#0000ff"),
-        [(0.0, "#ff0000ff"), (0.5, "#00ff00ff"), (1.0, "#0000ffff")],
-    ),
+    (Omics.Palette.make(("#ff0000",)), [(0, RE), (1, RE)]),
+    (Omics.Palette.make(("#ff0000", "#00ff00")), [(0, RE), (1, GR)]),
+    (RG_, [(0, RE), (0.5, GR), (1, BL)]),
 )
 
     @test Omics.Palette.fractionate(Omics.Palette.make(he_)) == re

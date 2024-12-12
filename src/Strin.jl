@@ -2,6 +2,8 @@ module Strin
 
 using Dates: @dateformat_str, Date
 
+using Printf: @sprintf
+
 function _strip(st)
 
     replace(strip(st), r" +" => ' ')
@@ -98,6 +100,12 @@ function coun(uc, st)
     end
 
     "$uc $st"
+
+end
+
+function shorten(nu)
+
+    @sprintf "%.2g" nu
 
 end
 

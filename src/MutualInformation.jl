@@ -2,9 +2,9 @@ module MutualInformation
 
 using KernelDensity: default_bandwidth, kde
 
-using StatsBase: counts
-
 using Statistics: cor
+
+using StatsBase: counts
 
 using ..Omics
 

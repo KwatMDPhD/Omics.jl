@@ -2,8 +2,6 @@ module GL
 
 using GLM: @formula, Binomial, glm, predict
 
-using Printf: @sprintf
-
 using ..Omics
 
 function fit(ta_, fe_)
@@ -90,8 +88,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, pr_, lo_, up_; si = 2)
                 "title" =>
                     Dict("text" => "Probability of $nt", "font" => Dict("color" => hf)),
                 "range" => Omics.Plot.rang(0, 1, 0.04),
-                "tickvals" =>
-                    (0, 0.5, 1, map(pr -> @sprintf("%g", pr), extrema(pr_))...),
+                "tickvals" => (0, 1, map(Omics.Strin.shorten, extrema(pr_))...),
             ),
             "xaxis" => Dict(
                 "anchor" => "y2",

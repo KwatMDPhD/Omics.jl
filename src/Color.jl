@@ -10,7 +10,7 @@ const BL = "#1992ff"
 
 const YE = "#ffff93"
 
-const MA = "#ff32ff"
+const MA = "#ff23ff"
 
 const CY = "#92ffff"
 
@@ -32,9 +32,9 @@ const PU = "#561649"
 
 const HU = "#fbb92d"
 
-const S1 = "#8c1515"
+const SR = "#8c1515"
 
-const S2 = "#175e54"
+const SG = "#175e54"
 
 const LI = "#ebf6f7"
 

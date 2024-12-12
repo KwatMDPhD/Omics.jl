@@ -93,8 +93,8 @@ Omics.Evidence.plot(
     "Target",
     0.6,
     ("Feature 1 = 0.4", "Feature 2 = 0.6", "Feature 3 = 0.8", "Feature 4", "Feature 5"),
-    (0.4, 0.6, 0.8, NaN, NaN);
-    ac = false,
+    (0.4, 0.6, 0.8, NaN, NaN),
+    false,
 )
 
 # ---- #
@@ -106,8 +106,8 @@ for uf in 1:8
         "Target",
         0.4,
         ["Feature $id = 1.234" for id in 1:uf],
-        rand(uf);
-        ac = rand(Bool),
+        rand(uf),
+        rand(Bool),
     )
 
 end
