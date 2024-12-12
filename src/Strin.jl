@@ -103,6 +103,12 @@ function coun(uc, st)
 
 end
 
+function shorten(nu)
+
+    @sprintf "%g" nu
+
+end
+
 function chain(st_)
 
     join(st_, " · ")

@@ -34,7 +34,7 @@ end
 
 function _translate(pr, ev)
 
-    "$ev | $(Omics.Strin.@sprintf("%g", get_posterior_probability(pr, ev^2)))"
+    "$ev | $(Omics.Strin.shorten("%g", get_posterior_probability(pr, ev^2)))"
 
 end
 
