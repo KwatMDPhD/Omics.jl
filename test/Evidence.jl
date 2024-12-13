@@ -6,14 +6,28 @@ using Test: @test
 
 # ---- #
 
-# 3.041 ns (0 allocations: 0 bytes)
-# 3.041 ns (0 allocations: 0 bytes)
+Omics.Evidence.ge(0.4, 0.3)
+
+Omics.Evidence.ge(0.4, 0.5)
+
+Omics.Evidence.ge(0.5, 0.4)
+
+Omics.Evidence.ge(0.5, 0.6)
+
+Omics.Evidence.ge(0.6, 0.5)
+
+Omics.Evidence.ge(0.6, 0.7)
+
+# ---- #
+
+# 3.000 ns (0 allocations: 0 bytes)
+# 3.000 ns (0 allocations: 0 bytes)
 # 3.625 ns (0 allocations: 0 bytes)
-# 3.625 ns (0 allocations: 0 bytes)
-# 3.375 ns (0 allocations: 0 bytes)
+# 3.666 ns (0 allocations: 0 bytes)
 # 3.333 ns (0 allocations: 0 bytes)
 # 3.333 ns (0 allocations: 0 bytes)
-# 5.125 ns (0 allocations: 0 bytes)
+# 3.333 ns (0 allocations: 0 bytes)
+# 5.084 ns (0 allocations: 0 bytes)
 # 4.583 ns (0 allocations: 0 bytes)
 # 3.666 ns (0 allocations: 0 bytes)
 # 6.458 ns (0 allocations: 0 bytes)
@@ -93,8 +107,12 @@ Omics.Evidence.plot(
     "Target",
     0.6,
     ("Feature 1 = 0.4", "Feature 2 = 0.6", "Feature 3 = 0.8", "Feature 4", "Feature 5"),
-    (0.4, 0.6, 0.8, NaN, NaN),
-    false,
+    (0.5, 0.6, 0.7, 0, 0),
+    false;
+    xi = -5,
+    xa = 5,
+    lo_ = (0.59, 0.5, 0.4, 0.21, 0.01),
+    up_ = (0.61, 0.7, 0.8, 0.99, 0.99),
 )
 
 # ---- #
@@ -107,7 +125,7 @@ for uf in 1:8
         0.4,
         ["Feature $id = 1.234" for id in 1:uf],
         rand(uf),
-        rand(Bool),
+        rand(Bool);
     )
 
 end

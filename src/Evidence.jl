@@ -34,67 +34,76 @@ function _root(ev)
 
 end
 
-function _translate(pr, ev)
+function _translate(pr, ro)
 
-    "$ev | $(@sprintf "%g" get_posterior_probability(pr, ev^2))"
-
-end
-
-function _trace(yc, xc, wi, si, he)
-
-    [
-        Dict(
-            "legendgroup" => yc,
-            "y" => (yc, yc),
-            "x" => (0, xc),
-            "mode" => "lines",
-            "line" => Dict("width" => wi, "color" => he),
-        ),
-        Dict(
-            "legendgroup" => yc,
-            "y" => (yc,),
-            "x" => (xc,),
-            "marker" => Dict("size" => si, "color" => he),
-        ),
-    ]
+    "$ro | $(@sprintf "%g" get_posterior_probability(pr, ro^2))"
 
 end
 
-function _annotate(yc, xc, te, si, he)
+function _trace_annotate(da_, an_, yc, xc, xl, xu, he, wi, si, te)
 
-    if iszero(xc)
+    if !(iszero(xl) || iszero(xu))
 
-        xa = "center"
-
-        xs = 0
-
-
-    elseif xc < 0
-
-        xa = "right"
-
-        xs = -1
-
-    else
-
-        xa = "left"
-
-        xs = 1
+        push!(
+            da_,
+            Dict(
+                "y" => (yc, yc),
+                "x" => (xl, xu),
+                "mode" => "lines",
+                "line" => Dict("width" => wi * 2, "color" => Omics.Color.hexify(he, 0.2)),
+            ),
+        )
 
     end
 
-    Dict(
-        "showarrow" => false,
-        "y" => yc,
-        "x" => xc,
-        "xanchor" => xa,
-        "xshift" => xs * si * 1.6,
-        "text" => te,
-        "font" => Dict("family" => "Monospace", "size" => si),
-        "bgcolor" => "#ffffff",
-        "borderpad" => 4,
-        "borderwidth" => 2,
-        "bordercolor" => he,
+    xa, xs = if iszero(xc)
+
+        "center", 0
+
+    else
+
+        push!(
+            da_,
+            Dict(
+                "legendgroup" => yc,
+                "y" => (yc, yc),
+                "x" => (0, xc),
+                "mode" => "lines",
+                "line" => Dict("width" => wi, "color" => he),
+            ),
+        )
+
+        push!(
+            da_,
+            Dict(
+                "legendgroup" => yc,
+                "y" => (yc,),
+                "x" => (xc,),
+                "marker" => Dict("size" => si, "color" => he),
+            ),
+        )
+
+        xc < 0 ? ("right", -1) : ("left", 1)
+
+    end
+
+    push!(
+        an_,
+        Dict(
+            "showarrow" => false,
+            "y" => yc,
+            "x" => xc,
+            "yanchor" => "top",
+            "xanchor" => xa,
+            "yshift" => - wi *2,
+            "xshift" => xs * si,
+            "text" => te,
+            "font" => Dict("size" => si * 0.56),
+            "bgcolor" => "#ffffff",
+            "borderpad" => 4,
+            "borderwidth" => 2,
+            "bordercolor" => he,
+        ),
     )
 
 end
@@ -108,8 +117,8 @@ function plot(
     ac = nothing;
     xi = _root(ge(pr, 1e-6)),
     xa = _root(ge(pr, 0.999999)),
-    lo_ = fill(xi, lastindex(nf_)),
-    up_ = fill(xa, lastindex(nf_)),
+    lo_ = zeros(lastindex(nf_)),
+    up_ = zeros(lastindex(nf_)),
     he_ = Omics.Palette.HE_,
 )
 
@@ -117,35 +126,25 @@ function plot(
 
     wi = 4
 
+    si = 24
+
     he = "#000000"
 
     yi, ya = Omics.Plot.rang(1, ur, 0.08)
+
+    li = "line" => Dict("width" => wi, "color" => he)
 
     da_ = [
         Dict(
             "y" => (yi,),
             "x" => (0,),
-            "marker" => Dict("symbol" => "triangle-up", "size" => 24, "color" => he),
+            "marker" => Dict("symbol" => "triangle-up", "size" => si, "color" => he),
         ),
-        Dict(
-            "y" => (yi, ya),
-            "x" => (0, 0),
-            "mode" => "lines",
-            "line" => Dict("width" => wi, "color" => he),
-        ),
-        Dict(
-            "y" => (ya, ya),
-            "x" => (xi, xa),
-            "mode" => "lines",
-            "line" => Dict("width" => wi, "color" => he),
-        ),
+        Dict("y" => (yi, ya), "x" => (0, 0), "mode" => "lines", li),
+        Dict("y" => (ya, ya), "x" => (xi, xa), "mode" => "lines", li),
     ]
 
     an_ = Dict{String, Any}[]
-
-    si = 24
-
-    st = 16
 
     if !isnothing(ac)
 
@@ -154,7 +153,7 @@ function plot(
             Dict(
                 "y" => (ya,),
                 "x" => (ac ? xa : xi,),
-                "marker" => Dict("symbol" => "diamond", "size" => si * 0.8, "color" => he),
+                "marker" => Dict("symbol" => "diamond", "size" => si, "color" => he),
                 "cliponaxis" => false,
             ),
         )
@@ -165,79 +164,42 @@ function plot(
 
     to = ev
 
-    lo = up = 0.0
+    tl = tu = 0
 
-    yc = 1
-
-    xc = _root(ev)
-
-    append!(da_, _trace(yc, xc, wi, si, he))
-
-    push!(an_, _annotate(yc, xc, "Prior", st, he))
+    _trace_annotate(da_, an_, 1, _root(ev), tl, tu, he, wi, si, "Prior = $pr")
 
     for id in eachindex(nf_)
 
-        yc = 1 + id
-
-        nf = nf_[id]
-
-        hx = he_[id]
-
-        lw = lo_[id]
-
-        ue = up_[id]
-
-        lo += lw
-
-        up += ue
-
-        push!(
-            da_,
-            Dict(
-                "y" => (yc, yc),
-                "x" => (lw, ue),
-                "mode" => "lines",
-                "line" => Dict("width" => wi, "color" => Omics.Color.hexify(hx, 0.2)),
-            ),
-        )
-
         po = po_[id]
 
-        if isnan(po)
+        ev = iszero(po) ? 0 : ge(pr, po)
 
-            xc = 0
+        lo = ge(pr, lo_[id])
 
-        else
+        up = ge(pr, up_[id])
 
-            ev = ge(pr, po)
+        to += ev
 
-            to += ev
+        tl += lo
 
-            xc = _root(ev)
+        tu += up
 
-            append!(da_, _trace(yc, xc, wi, si, hx))
-
-        end
-
-        push!(an_, _annotate(yc, xc, nf, st, hx))
+        _trace_annotate(
+            da_,
+            an_,
+            1 + id,
+            _root(ev),
+            _root(lo),
+            _root(up),
+            he_[id],
+            wi,
+            si,
+            nf_[id],
+        )
 
     end
 
-    xc = _root(to)
-
-    push!(
-        da_,
-        Dict(
-            "y" => (ur, ur),
-            "x" => (lo, up),
-            "mode" => "lines",
-            "line" => Dict("width" => wi, "color" => Omics.Color.hexify(he, 0.2)),
-        ),
-    )
-
-    append!(da_, _trace(ur, xc, wi, si * 2, he))
-
-    push!(an_, _annotate(ur, xc, "Total", st * 1.6, he))
+    _trace_annotate(da_, an_, ur, _root(to), _root(tl), _root(tu), he, wi, si * 2, "Total")
 
     ti_ = floor(xi):ceil(xa)
 

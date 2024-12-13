@@ -39,9 +39,9 @@ end
 function _make_annotation(yc, xc, te)
 
     Dict(
+        "showarrow" => false,
         "y" => yc,
         "x" => xc,
-        "showarrow" => false,
         "text" => te,
         "font" => Dict("family" => "Monospace", "size" => 24),
     )
