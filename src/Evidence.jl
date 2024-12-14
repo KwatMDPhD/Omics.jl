@@ -18,7 +18,7 @@ end
 
 function ge(pr, po_)
 
-    reduce(+, (ge(pr, po) for po in po_); init = log2(Omics.Probability.get_odd(pr)))
+    reduce(+, (ge(pr, po) for po in po_); init = ge(pr))
 
 end
 
@@ -36,7 +36,9 @@ end
 
 function _translate(pr, ro)
 
-    "$ro | $(@sprintf "%g" get_posterior_probability(pr, ro^2))"
+    ev = ro^2
+
+    "$ev | $(@sprintf "%g" get_posterior_probability(pr, ev))"
 
 end
 
@@ -50,7 +52,8 @@ function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
                 "y" => (yc, yc),
                 "x" => (_root(el), _root(eu)),
                 "mode" => "lines",
-                "line" => Dict("width" => si * 1.6, "color" => Omics.Color.hexify(he, 0.2)),
+                "line" =>
+                    Dict("width" => si * 1.64, "color" => Omics.Color.hexify(he, 0.4)),
             ),
         )
 
@@ -73,7 +76,6 @@ function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
         push!(
             da_,
             Dict(
-                "legendgroup" => yc,
                 "y" => (yc, yc),
                 "x" => (0, xc),
                 "mode" => "lines",
@@ -83,12 +85,7 @@ function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
 
         push!(
             da_,
-            Dict(
-                "legendgroup" => yc,
-                "y" => (yc,),
-                "x" => (xc,),
-                "marker" => Dict("size" => si, "color" => he),
-            ),
+            Dict("y" => (yc,), "x" => (xc,), "marker" => Dict("size" => si, "color" => he)),
         )
 
         if xc < 0
@@ -124,7 +121,7 @@ function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
             "yshift" => ys,
             "xshift" => xs,
             "text" => te,
-            "font" => Dict("size" => si * 0.56),
+            "font" => Dict("size" => si * 0.64),
             "bgcolor" => "#ffffff",
             "borderpad" => 4,
             "borderwidth" => 2,
@@ -145,9 +142,10 @@ function plot(
     pu_ = fill(nothing, lastindex(nf_)),
     xi = floor(_root(ge(pr, 1e-6))),
     xa = ceil(_root(ge(pr, 0.999999))),
+    la = Dict{String, Any}(),
 )
 
-    ur = lastindex(nf_) + 2
+    ur = 1 + lastindex(nf_) + 1
 
     wi = 4
 
@@ -227,31 +225,32 @@ function plot(
 
     end
 
-    _trace_annotate!(da_, an_, ur, to, tl, tu, he, wi, si * 1.6, "Total")
-
-    ti_ = floor(xi):ceil(xa)
+    _trace_annotate!(da_, an_, ur, to, tl, tu, he, wi, si * 1.56, "Total")
 
     Omics.Plot.plot(
         ht,
         da_,
-        Dict(
-            "width" => Omics.Plot.SI,
-            "margin" => Dict("b" => 0),
-            "showlegend" => false,
-            "yaxis" => Dict("visible" => false),
-            "xaxis" => Dict(
-                "side" => "top",
-                "title" => Dict("text" => "Evidence for $nt", "standoff" => 40),
-                "range" => (xi, xa),
-                "tickvals" => ti_,
-                "ticktext" => map(ti -> _translate(pr, ti), ti_),
-                "tickangle" => -90,
-                "ticks" => "inside",
-                "ticklen" => 16,
-                "tickwidth" => 2,
-                "tickcolor" => Omics.Color.LI,
+        Omics.Dic.merg(
+            Dict(
+                "width" => Omics.Plot.SI,
+                "margin" => Dict("b" => 0),
+                "showlegend" => false,
+                "yaxis" => Dict("visible" => false),
+                "xaxis" => Dict(
+                    "side" => "top",
+                    "title" => Dict(
+                        "text" => "Evidence for $nt",
+                        "font" => Dict("size" => 32),
+                        "standoff" => 32,
+                    ),
+                    "range" => (xi, xa),
+                    "tickvals" => xi:xa,
+                    "ticktext" => map(ti -> _translate(pr, ti), xi:xa),
+                    "tickangle" => -90,
+                ),
+                "annotations" => an_,
             ),
-            "annotations" => an_,
+            la,
         ),
     )
 

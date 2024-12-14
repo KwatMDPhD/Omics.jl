@@ -29,17 +29,20 @@ const PR_ = PO_ = 0.1:0.1:0.9
 
 Omics.Plot.plot(
     "",
-    push!([
+    push!(
+        [
+            Dict(
+                "name" => "Prior = $pr",
+                "y" => map(po -> Omics.Evidence.ge(pr, po), PO_),
+                "x" => PO_,
+            ) for pr in PR_
+        ],
         Dict(
-            "name" => "Prior = $pr",
-            "y" => map(po -> Omics.Evidence.ge(pr, po), PO_),
+            "name" => "Prior = 1 - Posterior",
+            "y" => map(po -> Omics.Evidence.ge(1 - po, po), PO_),
             "x" => PO_,
-        ) for pr in PR_
-            ],Dict(
-                   "name"=>"Prior = 1 - Posterior",
-                   "y"=>map(po->Omics.Evidence.ge(1-po, po), PO_),
-                   "x"=>PO_,
-                  )),
+        ),
+    ),
     Dict(
         "yaxis" => Dict("title" => Dict("text" => "Evidence"), "zeroline" => true),
         "xaxis" => Dict("title" => Dict("text" => "Posterior")),
@@ -91,7 +94,7 @@ for po_ in ([0.5], [0.4, 0.6])
 
     @test isapprox(Omics.Evidence.ge(0.5, po_), 0; atol = 1e-15)
 
-    @btime Omics.Evidence.ge(0.5, $po_)
+    #@btime Omics.Evidence.ge(0.5, $po_)
 
 end
 
@@ -123,6 +126,7 @@ for uf in 1:8
         0.1,
         ["Feature $id = 1.234" for id in 1:uf],
         rand(uf);
+        la = Dict("margin" => Dict("r" => 80)),
     )
 
 end
