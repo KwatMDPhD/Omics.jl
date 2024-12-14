@@ -18,6 +18,7 @@ for mo in (
     "HTM",
     "Information",
     "Matri",
+    "Match",
     "MutualInformation",
     "Normalization",
     "Palette",

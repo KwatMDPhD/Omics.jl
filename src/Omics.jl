@@ -22,6 +22,8 @@ include("Information.jl")
 
 include("Matri.jl")
 
+include("Match.jl")
+
 include("MutualInformation.jl")
 
 include("Normalization.jl")
