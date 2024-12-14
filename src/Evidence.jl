@@ -24,7 +24,7 @@ end
 
 function get_posterior_probability(pr, ev)
 
-    Omics.Probability.ge(Omics.Probability.get_odd(pr) * exp2(ev))
+    Omics.Probability.ge(exp2(ev) * Omics.Probability.get_odd(pr))
 
 end
 
@@ -40,27 +40,35 @@ function _translate(pr, ro)
 
 end
 
-function _trace_annotate(da_, an_, yc, xc, xl, xu, he, wi, si, te)
+function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
 
-    if !(iszero(xl) || iszero(xu))
+    if !(isnothing(el) || isnothing(eu))
 
         push!(
             da_,
             Dict(
                 "y" => (yc, yc),
-                "x" => (xl, xu),
+                "x" => (_root(el), _root(eu)),
                 "mode" => "lines",
-                "line" => Dict("width" => wi * 2, "color" => Omics.Color.hexify(he, 0.2)),
+                "line" => Dict("width" => si * 1.6, "color" => Omics.Color.hexify(he, 0.2)),
             ),
         )
 
     end
 
-    xa, xs = if iszero(xc)
+    xc = 0
 
-        "center", 0
+    ya = "middle"
 
-    else
+    xa = "center"
+
+    ys = 0
+
+    xs = 0
+
+    if !isnothing(ev)
+
+        xc = _root(ev)
 
         push!(
             da_,
@@ -83,7 +91,25 @@ function _trace_annotate(da_, an_, yc, xc, xl, xu, he, wi, si, te)
             ),
         )
 
-        xc < 0 ? ("right", -1) : ("left", 1)
+        if xc < 0
+
+            xa = "right"
+
+            xs = si * -0.64
+
+        elseif 0 < xc
+
+            xa = "left"
+
+            xs = si * 0.64
+
+        else
+
+            ya = "top"
+
+            ys = si * -0.56
+
+        end
 
     end
 
@@ -93,10 +119,10 @@ function _trace_annotate(da_, an_, yc, xc, xl, xu, he, wi, si, te)
             "showarrow" => false,
             "y" => yc,
             "x" => xc,
-            "yanchor" => "top",
+            "yanchor" => ya,
             "xanchor" => xa,
-            "yshift" => - wi *2,
-            "xshift" => xs * si,
+            "yshift" => ys,
+            "xshift" => xs,
             "text" => te,
             "font" => Dict("size" => si * 0.56),
             "bgcolor" => "#ffffff",
@@ -114,12 +140,11 @@ function plot(
     pr,
     nf_,
     po_,
-    ac = nothing;
-    xi = _root(ge(pr, 1e-6)),
-    xa = _root(ge(pr, 0.999999)),
-    lo_ = zeros(lastindex(nf_)),
-    up_ = zeros(lastindex(nf_)),
-    he_ = Omics.Palette.HE_,
+    he_ = Omics.Palette.HE_;
+    pl_ = fill(nothing, lastindex(nf_)),
+    pu_ = fill(nothing, lastindex(nf_)),
+    xi = floor(_root(ge(pr, 1e-6))),
+    xa = ceil(_root(ge(pr, 0.999999))),
 )
 
     ur = lastindex(nf_) + 2
@@ -138,7 +163,7 @@ function plot(
         Dict(
             "y" => (yi,),
             "x" => (0,),
-            "marker" => Dict("symbol" => "triangle-up", "size" => si, "color" => he),
+            "marker" => Dict("symbol" => "diamond", "size" => si, "color" => he),
         ),
         Dict("y" => (yi, ya), "x" => (0, 0), "mode" => "lines", li),
         Dict("y" => (ya, ya), "x" => (xi, xa), "mode" => "lines", li),
@@ -146,60 +171,63 @@ function plot(
 
     an_ = Dict{String, Any}[]
 
-    if !isnothing(ac)
-
-        push!(
-            da_,
-            Dict(
-                "y" => (ya,),
-                "x" => (ac ? xa : xi,),
-                "marker" => Dict("symbol" => "diamond", "size" => si, "color" => he),
-                "cliponaxis" => false,
-            ),
-        )
-
-    end
-
     ev = ge(pr)
 
     to = ev
 
     tl = tu = 0
 
-    _trace_annotate(da_, an_, 1, _root(ev), tl, tu, he, wi, si, "Prior = $pr")
+    _trace_annotate!(da_, an_, 1, ev, nothing, nothing, he, wi, si, "Prior = $pr")
 
     for id in eachindex(nf_)
 
         po = po_[id]
 
-        ev = iszero(po) ? 0 : ge(pr, po)
+        if isnothing(po)
 
-        lo = ge(pr, lo_[id])
+            ev = nothing
 
-        up = ge(pr, up_[id])
+        else
 
-        to += ev
+            ev = ge(pr, po)
 
-        tl += lo
+            to += ev
 
-        tu += up
+        end
 
-        _trace_annotate(
-            da_,
-            an_,
-            1 + id,
-            _root(ev),
-            _root(lo),
-            _root(up),
-            he_[id],
-            wi,
-            si,
-            nf_[id],
-        )
+        pl = pl_[id]
+
+        if isnothing(pl)
+
+            el = nothing
+
+        else
+
+            el = ge(pr, pl)
+
+            tl += el
+
+        end
+
+        pu = pu_[id]
+
+        if isnothing(pu)
+
+            eu = nothing
+
+        else
+
+            eu = ge(pr, pu)
+
+            tu += eu
+
+        end
+
+        _trace_annotate!(da_, an_, 1 + id, ev, el, eu, he_[id], wi, si, nf_[id])
 
     end
 
-    _trace_annotate(da_, an_, ur, _root(to), _root(tl), _root(tu), he, wi, si * 2, "Total")
+    _trace_annotate!(da_, an_, ur, to, tl, tu, he, wi, si * 1.6, "Total")
 
     ti_ = floor(xi):ceil(xa)
 

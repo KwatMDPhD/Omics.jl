@@ -6,34 +6,48 @@ using Test: @test
 
 # ---- #
 
-Omics.Evidence.ge(0.4, 0.3)
+# 0.4
+@test abs(Omics.Evidence.ge(0.4, 0.5)) < abs(Omics.Evidence.ge(0.4, 0.3))
 
-Omics.Evidence.ge(0.4, 0.5)
+# 0.6
+@test abs(Omics.Evidence.ge(0.6, 0.5)) < abs(Omics.Evidence.ge(0.6, 0.7))
 
-Omics.Evidence.ge(0.5, 0.4)
+# 0.5
+@test isapprox(Omics.Evidence.ge(0.5, 0.4), -Omics.Evidence.ge(0.5, 0.6))
 
-Omics.Evidence.ge(0.5, 0.6)
+for pr in 0.1:0.1:0.5
 
-Omics.Evidence.ge(0.6, 0.5)
+    po = 1 - pr
 
-Omics.Evidence.ge(0.6, 0.7)
+    @test isapprox(Omics.Evidence.ge(pr, po), -Omics.Evidence.ge(po, pr))
+
+end
 
 # ---- #
 
-# 3.000 ns (0 allocations: 0 bytes)
-# 3.000 ns (0 allocations: 0 bytes)
-# 3.625 ns (0 allocations: 0 bytes)
-# 3.666 ns (0 allocations: 0 bytes)
-# 3.333 ns (0 allocations: 0 bytes)
-# 3.333 ns (0 allocations: 0 bytes)
-# 3.333 ns (0 allocations: 0 bytes)
-# 5.084 ns (0 allocations: 0 bytes)
-# 4.583 ns (0 allocations: 0 bytes)
-# 3.666 ns (0 allocations: 0 bytes)
-# 6.458 ns (0 allocations: 0 bytes)
-# 4.583 ns (0 allocations: 0 bytes)
-# 6.458 ns (0 allocations: 0 bytes)
-# 4.583 ns (0 allocations: 0 bytes)
+const PR_ = PO_ = 0.1:0.1:0.9
+
+Omics.Plot.plot(
+    "",
+    push!([
+        Dict(
+            "name" => "Prior = $pr",
+            "y" => map(po -> Omics.Evidence.ge(pr, po), PO_),
+            "x" => PO_,
+        ) for pr in PR_
+            ],Dict(
+                   "name"=>"Prior = 1 - Posterior",
+                   "y"=>map(po->Omics.Evidence.ge(1-po, po), PO_),
+                   "x"=>PO_,
+                  )),
+    Dict(
+        "yaxis" => Dict("title" => Dict("text" => "Evidence"), "zeroline" => true),
+        "xaxis" => Dict("title" => Dict("text" => "Posterior")),
+    ),
+)
+
+# ---- #
+
 for (pr, po, ev) in (
     # 0 / 0
     (0, 0, NaN),
@@ -61,13 +75,9 @@ for (pr, po, ev) in (
 
     @test Omics.Evidence.ge(pr, po) === ev
 
-    #@btime Omics.Evidence.ge($pr, $po)
-
     if isfinite(ev)
 
         @test Omics.Evidence.get_posterior_probability(pr, ev) === po
-
-        #@btime Omics.Evidence.get_posterior_probability($pr, $ev)
 
     end
 
@@ -75,30 +85,15 @@ end
 
 # ---- #
 
-for po_ in ((0.5,), (0.4, 0.6))
+# 7.125 ns (0 allocations: 0 bytes)
+# 14.153 ns (0 allocations: 0 bytes)
+for po_ in ([0.5], [0.4, 0.6])
 
     @test isapprox(Omics.Evidence.ge(0.5, po_), 0; atol = 1e-15)
 
+    @btime Omics.Evidence.ge(0.5, $po_)
+
 end
-
-# ---- #
-
-const PR_ = PO_ = 0:0.1:1
-
-Omics.Plot.plot(
-    "",
-    [
-        Dict(
-            "name" => "Prior Probability = $pr",
-            "y" => map(po -> Omics.Evidence.ge(pr, po), PO_),
-            "x" => PO_,
-        ) for pr in PR_
-    ],
-    Dict(
-        "yaxis" => Dict("title" => Dict("text" => "Evidence"), "zeroline" => true),
-        "xaxis" => Dict("title" => Dict("text" => "Posterior Probability")),
-    ),
-)
 
 # ---- #
 
@@ -106,13 +101,16 @@ Omics.Evidence.plot(
     "",
     "Target",
     0.6,
-    ("Feature 1 = 0.4", "Feature 2 = 0.6", "Feature 3 = 0.8", "Feature 4", "Feature 5"),
-    (0.5, 0.6, 0.7, 0, 0),
-    false;
-    xi = -5,
-    xa = 5,
-    lo_ = (0.59, 0.5, 0.4, 0.21, 0.01),
-    up_ = (0.61, 0.7, 0.8, 0.99, 0.99),
+    (
+        "Feature 1 = 0.5",
+        "Feature 2 = 0.6",
+        "Feature 3 = 0.7",
+        "Feature 4 = ?",
+        "Feature 5 = ?",
+    ),
+    (0.5, 0.6, 0.7, nothing, nothing);
+    pl_ = (0.59, 0.5, 0.4, 0.21, 0.01),
+    pu_ = (0.61, 0.7, 0.8, 0.99, 0.99),
 )
 
 # ---- #
@@ -122,10 +120,9 @@ for uf in 1:8
     Omics.Evidence.plot(
         "",
         "Target",
-        0.4,
+        0.1,
         ["Feature $id = 1.234" for id in 1:uf],
-        rand(uf),
-        rand(Bool);
+        rand(uf);
     )
 
 end
