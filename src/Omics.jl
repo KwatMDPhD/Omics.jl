@@ -20,6 +20,8 @@ include("HTM.jl")
 
 include("Information.jl")
 
+include("Matri.jl")
+
 include("MutualInformation.jl")
 
 include("Normalization.jl")

@@ -17,6 +17,7 @@ for mo in (
     "Grid",
     "HTM",
     "Information",
+    "Matri",
     "MutualInformation",
     "Normalization",
     "Palette",

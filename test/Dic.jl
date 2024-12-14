@@ -8,9 +8,9 @@ using OrderedCollections: OrderedDict
 
 # ---- #
 
-# 69.757 ns (4 allocations: 384 bytes)
-# 79.636 ns (4 allocations: 384 bytes)
-# 79.510 ns (4 allocations: 384 bytes)
+# 68.720 ns (4 allocations: 384 bytes)
+# 78.523 ns (4 allocations: 384 bytes)
+# 78.431 ns (4 allocations: 384 bytes)
 for (an_, re) in (
     (['a', 'b', 'c', 'd'], Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4)),
     (
@@ -26,6 +26,26 @@ for (an_, re) in (
     @test Omics.Dic.index(an_) == re
 
     #@btime Omics.Dic.index($an_)
+
+end
+
+# ---- #
+
+# 156.616 ns (10 allocations: 768 bytes)
+# 177.501 ns (10 allocations: 768 bytes)
+# 152.643 ns (10 allocations: 832 bytes)
+for (an_, re) in (
+    (['a', 'b', 'b', 'c', 'c', 'c'], Dict('a' => [1], 'b' => [2, 3], 'c' => [4, 5, 6])),
+    (
+        ['c', 'b', 'a', 'a', 'a', 'b', 'b', 'c', 'c'],
+        Dict('c' => [1, 8, 9], 'b' => [2, 6, 7], 'a' => [3, 4, 5]),
+    ),
+    ([1, 2, 3, 3, 2, 1], Dict(1 => [1, 6], 2 => [2, 5], 3 => [3, 4])),
+)
+
+    @test Omics.Dic.index2(an_) == re
+
+    #@btime Omics.Dic.index2($an_)
 
 end
 
