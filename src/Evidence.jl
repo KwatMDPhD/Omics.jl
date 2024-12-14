@@ -175,7 +175,18 @@ function plot(
 
     tl = tu = 0
 
-    _trace_annotate!(da_, an_, 1, ev, nothing, nothing, he, wi, si, "Prior = $pr")
+    _trace_annotate!(
+        da_,
+        an_,
+        1,
+        ev,
+        nothing,
+        nothing,
+        he,
+        wi,
+        si,
+        "Prior = $(Omics.Strin.shorten(pr))",
+    )
 
     for id in eachindex(nf_)
 
@@ -225,7 +236,7 @@ function plot(
 
     end
 
-    _trace_annotate!(da_, an_, ur, to, tl, tu, he, wi, si * 1.56, "Total")
+    _trace_annotate!(da_, an_, ur, to, tl, tu, Omics.Color.BR, wi, si * 1.56, "Total")
 
     Omics.Plot.plot(
         ht,

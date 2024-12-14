@@ -38,6 +38,8 @@ const SG = "#175e54"
 
 const LI = "#ebf6f7"
 
+const BR = "#4c221b"
+
 const DA = "#27221f"
 
 function hexify(rg::Colorant)
