@@ -31,9 +31,9 @@ end
 
 # ---- #
 
-# 156.616 ns (10 allocations: 768 bytes)
-# 177.501 ns (10 allocations: 768 bytes)
-# 152.643 ns (10 allocations: 832 bytes)
+# 154.748 ns (10 allocations: 768 bytes)
+# 174.837 ns (10 allocations: 768 bytes)
+# 153.850 ns (10 allocations: 832 bytes)
 for (an_, re) in (
     (['a', 'b', 'b', 'c', 'c', 'c'], Dict('a' => [1], 'b' => [2, 3], 'c' => [4, 5, 6])),
     (

@@ -6,8 +6,6 @@ using ProgressMeter: @showprogress
 
 using Random: shuffle!
 
-using Statistics: cor
-
 using StatsBase: mean, quantile, sample
 
 using ..Omics
@@ -20,7 +18,7 @@ end
 
 function _align!(it, ::Real)
 
-    Omics.Collection.get_minimum_maximum(it)
+    extrema(it)
 
 end
 
@@ -81,7 +79,7 @@ function _annotate(y, la, th, fe_, fe_x_st_x_fl)
 
             push!(
                 annotations,
-                Omics.Plot.merg(
+                Omics.Dic.merg(
                     _ANNOTATION,
                     Dict(
                         "y" => y,
@@ -100,13 +98,13 @@ function _annotate(y, la, th, fe_, fe_x_st_x_fl)
 
     for id in eachindex(fe_)
 
-        sc, ma, pv, ad = (Omics.Number.format2(fl) for fl in view(fe_x_st_x_fl, id, :))
+        sc, ma, pv, ad = (Omics.Strin.shorten(fl) for fl in view(fe_x_st_x_fl, id, :))
 
         for (id, text) in enumerate(("$sc ($ma)", pv, ad))
 
             push!(
                 annotations,
-                Omics.Plot.merg(
+                Omics.Dic.merg(
                     _ANNOTATION,
                     Dict(
                         "y" => y,
@@ -127,11 +125,11 @@ function _annotate(y, la, th, fe_, fe_x_st_x_fl)
 
 end
 
-function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, layout)
+function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, la)
 
     if eltype(ta_) <: Integer
 
-        #@info "Clustering within groups"
+        @info "Clustering within groups"
 
         sa_, ta_, fe_x_sa_x_nu = _order(
             Omics.Clustering.order(CorrDist(), ta_, eachcol(fe_x_sa_x_nu)),
@@ -150,9 +148,9 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
 
     fei, fea = _align!(fe_x_sa_x_nuc, st)
 
-    #@info "\"$nat\" colors can range from $tai to $taa."
+    @info "\"$nat\" colors can range from $tai to $taa."
 
-    #@info "\"$naf\" colors can range from $fei to $fea."
+    @info "\"$naf\" colors can range from $fei to $fea."
 
     n_ro = lastindex(fe_) + 2
 
@@ -169,7 +167,7 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
 
     Omics.Plot.plot(
         ht,
-        [
+        (
             Dict(
                 "type" => "heatmap",
                 "name" => "Target",
@@ -180,10 +178,15 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
                 "text" => [ta_],
                 "zmin" => tai,
                 "zmax" => taa,
-                "colorscale" => Omics.Color.fractionate(Omics.Color.pick_color_scheme(tac_)),
-                "colorbar" => merge(
-                    Omics.Plot.COLORBAR,
-                    Dict("y" => 0.5, "x" => -0.32, "title" => Dict("text" => "Target")),
+                "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(tac_)),
+                "colorbar" => Dict(
+                    "y" => 0.5,
+                    "x" => -0.32,
+                    "len" => 0.4,
+                    "thickness" => 16,
+                    "title" => Dict("text" => "Target"),
+                    "tickvals" => Omics.Plot.make_tickvals(tac_),
+                    "tickfont" => Dict("family" => "Monospace", "size" => 16),
                 ),
             ),
             Dict(
@@ -196,31 +199,39 @@ function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st,
                 "zmin" => fei,
                 "zmax" => fea,
                 "colorscale" =>
-                    Omics.Color.fractionate(Omics.Color.pick_color_scheme(fe_x_sa_x_nuc)),
-                "colorbar" => merge(
-                    Omics.Plot.COLORBAR,
-                    Dict("y" => 0.5, "x" => -0.24, "title" => Dict("text" => "Feature")),
+                    Omics.Palette.fractionate(Omics.Palette.pick(fe_x_sa_x_nuc)),
+                "colorbar" => Dict(
+                    "y" => 0.5,
+                    "x" => -0.24,
+                    "len" => 0.4,
+                    "thickness" => 16,
+                    "title" => Dict("text" => "Feature"),
+                    "tickvals" => Omics.Plot.make_tickvals(fe_x_sa_x_nuc),
+                    "tickfont" => Dict("family" => "Monospace", "size" => 16),
                 ),
             ),
-        ],
-        Omics.Plot.merg(
+        ),
+        Omics.Dic.merg(
             Dict(
                 "margin" => Dict("l" => 220, "r" => 220),
                 "height" => max(640, 40n_ro),
                 "width" => 1280,
-                "title" => Dict("font" => Dict("family" => _FONT_FAMILY, "size" => 2_FONT_SIZE)),
+                "title" =>
+                    Dict("font" => Dict("family" => _FONT_FAMILY, "size" => 2_FONT_SIZE)),
                 "yaxis2" => merge(axis, Dict("domain" => (1 - th, 1))),
-                "yaxis" => merge(axis, Dict("domain" => (0, 1 - 2th), "autorange" => "reversed")),
+                "yaxis" =>
+                    merge(axis, Dict("domain" => (0, 1 - 2th), "autorange" => "reversed")),
                 "xaxis" => merge(
                     axis,
                     Dict(
                         "automargin" => true,
-                        "title" => Dict("text" => Omics.Strin.count(lastindex(sa_), nas)),
+                        "title" =>
+                            Dict("text" => Omics.Strin.coun(lastindex(sa_), nas)),
                     ),
                 ),
                 "annotations" => _annotate(1 - 3th2, true, th, fe_, fe_x_st_x_fl),
             ),
-            layout,
+            la,
         ),
     )
 
@@ -237,20 +248,20 @@ function make(
     fe_,
     fe_x_sa_x_nu;
     ts = "feature_x_statistic_x_number",
-    nm = 10,
-    np = 10,
-    ne = 8,
+    um = 10,
+    up = 10,
+    ue = 8,
     st = 4,
-    layout = Dict{String, Any}(),
+    la = Dict{String, Any}(),
 )
 
     n_fe, n_sa = size(fe_x_sa_x_nu)
 
-    #@info "🩰 Matching \"$nat\" and $(Omics.Strin.count(n_fe, "\"$naf\"")) with `$fu`"
+    @info "🩰 Matching \"$nat\" and $(Omics.Strin.coun(n_fe, "\"$naf\"")) with `$fu`"
 
     sa_, ta_, fe_x_sa_x_nu = _order(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
 
-    #@info "Calculating scores"
+    @info "Calculating scores"
 
     sc_ = (nu_ -> fu(ta_, nu_)).(eachrow(fe_x_sa_x_nu))
 
@@ -258,7 +269,7 @@ function make(
 
     if any(is_)
 
-        @warn "Scores have $(Omics.Strin.count(sum(is_), "NaN"))."
+        @warn "Scores have $(Omics.Strin.coun(sum(is_), "NaN"))."
 
     end
 
@@ -268,11 +279,11 @@ function make(
 
     ad_ = fill(NaN, n_fe)
 
-    if 0 < nm
+    if 0 < um
 
-        #@info "Calculating the margin of errors using $(Omics.Strin.count(nm, "sampling"))"
+        @info "Calculating the margin of errors using $(Omics.Strin.coun(um, "sampling"))"
 
-        ra_ = Vector{Float64}(undef, nm)
+        ra_ = Vector{Float64}(undef, um)
 
         id_ = 1:n_sa
 
@@ -284,7 +295,7 @@ function make(
 
             nu_ = fe_x_sa_x_nu[id, :]
 
-            for id in 1:nm
+            for id in 1:um
 
                 ids_ .= sample(id_, n_sm; replace = false)
 
@@ -292,25 +303,25 @@ function make(
 
             end
 
-            ma_[id] = Omics.Statistics.get_margin_of_error(ra_)
+            ma_[id] = Omics.Significance.get_margin_of_error(ra_)
 
         end
 
     end
 
-    if 0 < np
+    if 0 < up
 
-        #@info "Calculating p-values using $(Omics.Strin.count(np, "permutation"))"
+        @info "Calculating p-values using $(Omics.Strin.coun(up, "permutation"))"
 
         co = copy(ta_)
 
-        fe_x_id_x_ra = Matrix{Float64}(undef, n_fe, np)
+        fe_x_id_x_ra = Matrix{Float64}(undef, n_fe, up)
 
         @showprogress for idf in 1:n_fe
 
             nu_ = fe_x_sa_x_nu[idf, :]
 
-            for idr in 1:np
+            for idr in 1:up
 
                 fe_x_id_x_ra[idf, idr] = fu(shuffle!(co), nu_)
 
@@ -322,7 +333,7 @@ function make(
 
         idp_ = findall(>=(0), sc_)
 
-        np_, na_, pp_, pa_ = Omics.Statistics.get_p_value(sc_, idn_, idp_, fe_x_id_x_ra)
+        np_, na_, pp_, pa_ = Omics.Significance.get_p_value(fe_x_id_x_ra, sc_, idn_, idp_)
 
         pv_[idn_] = np_
 
@@ -338,17 +349,19 @@ function make(
 
     pr = joinpath(di, ts)
 
-    Omics.DataFrame.write(
+    Omics.Table.writ(
         "$pr.tsv",
-        naf,
-        fe_,
-        ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
-        fe_x_st_x_fl,
+        Omics.Table.make(
+            naf,
+            fe_,
+            ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
+            fe_x_st_x_fl,
+        ),
     )
 
-    if 0 < ne
+    if 0 < ue
 
-        id_ = reverse!(Omics.Rank.get_extreme(sc_, ne))
+        id_ = reverse!(Omics.Rank.get_extreme(sc_, ue))
 
         _plot(
             "$pr.html",
@@ -361,7 +374,7 @@ function make(
             fe_x_sa_x_nu[id_, :],
             fe_x_st_x_fl[id_, :],
             st,
-            layout,
+            la,
         )
 
     end

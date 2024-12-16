@@ -1,5 +1,7 @@
 module Omics
 
+include("Clustering.jl")
+
 include("Color.jl")
 
 include("Density.jl")
@@ -20,9 +22,9 @@ include("HTM.jl")
 
 include("Information.jl")
 
-include("Matri.jl")
-
 include("Match.jl")
+
+include("Matri.jl")
 
 include("MutualInformation.jl")
 
@@ -37,6 +39,8 @@ include("Plot.jl")
 include("Probability.jl")
 
 include("ROC.jl")
+
+include("Rank.jl")
 
 include("Significance.jl")
 

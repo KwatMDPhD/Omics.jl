@@ -7,6 +7,7 @@ using Test: @test
 # ---- #
 
 for mo in (
+    "Clustering",
     "Color",
     "Density",
     "Dic",
@@ -17,8 +18,8 @@ for mo in (
     "Grid",
     "HTM",
     "Information",
-    "Matri",
     "Match",
+    "Matri",
     "MutualInformation",
     "Normalization",
     "Palette",
@@ -26,6 +27,7 @@ for mo in (
     "Plot",
     "Probability",
     "ROC",
+    "Rank",
     "Significance",
     "Strin",
     "Table",

@@ -34,7 +34,7 @@ function joi(fi, r1_, c1_, a1, r2_, c2_, a2)
 
     rj_ = union(r1_, r2_)
 
-    cj_ = vcat(c1_, c2_)
+    cj_ = union(c1_, c2_)
 
     aj = fill(fi, lastindex(rj_), lastindex(cj_))
 
@@ -42,15 +42,13 @@ function joi(fi, r1_, c1_, a1, r2_, c2_, a2)
 
     cj_id = Omics.Dic.index(cj_)
 
-    for (ic, co) in enumerate(c1_), (ir, ro) in enumerate(r1_)
+    for (ro_, co_, an) in ((r1_, c1_, a1), (r2_, c2_, a2))
 
-        aj[rj_id[ro], cj_id[co]] = a1[ir, ic]
+        for (ic, co) in enumerate(co_), (ir, ro) in enumerate(ro_)
 
-    end
+            aj[rj_id[ro], cj_id[co]] = an[ir, ic]
 
-    for (ic, co) in enumerate(c2_), (ir, ro) in enumerate(r2_)
-
-        aj[rj_id[ro], cj_id[co]] = a2[ir, ic]
+        end
 
     end
 
