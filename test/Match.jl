@@ -8,7 +8,7 @@ using Statistics: cor
 
 # ---- #
 
-const TE = joinpath(homedir(), "Downloads")
+const TE = tempdir()
 
 # ---- #
 

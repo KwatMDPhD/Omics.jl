@@ -6,7 +6,9 @@ using Random: randstring
 
 using ..Omics
 
-const SI = 832
+const SS = 832
+
+const SL = SS * 1.618
 
 function rang(mi, ma, ex)
 
@@ -26,8 +28,8 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
 
     la = Omics.Dic.merg(
         Dict(
-            "height" => SI,
-            "width" => SI * 1.618,
+            "height" => SS,
+            "width" => SL,
             "title" => Dict("font" => Dict("size" => 32)),
             "hovermode" => "closest",
         ),
@@ -84,8 +86,7 @@ function make_tickvals(nu_)
 
     me = sum(nu_) / lastindex(nu_)
 
-    all(isinteger, nu_) ? Tuple(mi:ma) :
-    (Omics.Strin.shorten(mi), Omics.Strin.shorten(me), Omics.Strin.shorten(ma))
+    all(isinteger, nu_) ? Tuple(mi:ma) : (mi, me, ma)
 
 end
 

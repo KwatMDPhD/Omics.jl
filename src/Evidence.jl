@@ -113,7 +113,6 @@ function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
     push!(
         an_,
         Dict(
-            "showarrow" => false,
             "y" => yc,
             "x" => xc,
             "yanchor" => ya,
@@ -126,6 +125,7 @@ function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
             "borderpad" => 4,
             "borderwidth" => 2,
             "bordercolor" => he,
+            "showarrow" => false,
         ),
     )
 

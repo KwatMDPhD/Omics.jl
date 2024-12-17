@@ -10,82 +10,89 @@ using StatsBase: mean, quantile, sample
 
 using ..Omics
 
-function _order(id_, sa_, ta_, fe_x_sa_x_nu)
+function _order_sample(id_, sa_, ta_, ma)
 
-    sa_[id_], ta_[id_], fe_x_sa_x_nu[:, id_]
-
-end
-
-function _align!(it, ::Real)
-
-    extrema(it)
+    sa_[id_], ta_[id_], ma[:, id_]
 
 end
 
-function _align!(fl_::AbstractVector{<:AbstractFloat}, st::Real)
+function _order(ta_, ma)
 
-    if allequal(fl_)
+    Omics.Clustering.order(Omics.Distance.InformationDistance(), ta_, eachcol(ma))
 
-        @warn "All numbers are $(fl_[1])."
+end
 
-        fl_ .= 0.0
+function _order(ta_::AbstractVector{<:AbstractFloat}, ::AbstractMatrix)
+
+    eachindex(ta_)
+
+end
+
+function _align!(nu_, st)
+
+    if allequal(nu_)
+
+        @warn "All numbers are $(nu_[1])."
+
+        fill!(nu_, 0.0)
 
     else
 
-        Omics.Normalization.normalize_with_0!(fl_)
+        Omics.Normalization.normalize_with_0!(nu_)
 
-        clamp!(fl_, -st, st)
+        clamp!(nu_, -st, st)
 
     end
 
-    -st, st
-
 end
 
-function _align!(fe_x_sa_x_fl::AbstractMatrix{<:AbstractFloat}, st::Real)
+function _align!(nu_::AbstractVector{<:Integer}, ::Real) end
 
-    foreach(fl_ -> _align!(fl_, st), eachrow(fe_x_sa_x_fl))
-
-    -st, st
-
-end
-
-const _FONT_FAMILY = "Gravitas One"
-
-const _FONT_SIZE = 16
-
-const _ANNOTATION = Dict(
-    "yref" => "paper",
-    "xref" => "paper",
-    "yanchor" => "middle",
-    "xanchor" => "center",
-    "showarrow" => false,
-    "font" => Dict("family" => "Droid Serif"),
-)
+const _FO = 16
 
 function _get_x(id)
 
-    0.977 + 0.088id
+    if isone(id)
+
+        1.016
+
+    elseif id == 2
+
+        1.176
+
+    elseif id == 3
+
+        1.272
+
+    end
 
 end
 
-function _annotate(y, la, th, fe_, fe_x_st_x_fl)
+function _annotate(yc, la, th, fe_, ft)
 
-    annotations = Dict{String, Any}[]
+    an_ = Dict{String, Any}[]
+
+    an = Dict(
+        "yref" => "paper",
+        "xref" => "paper",
+        "yanchor" => "middle",
+        "xanchor" => "left",
+        "showarrow" => false,
+    )
 
     if la
 
-        for (id, text) in enumerate(("Sc (⧳)", "Pv", "Ad"))
+        for (id, te) in enumerate(("Sc (⧳)", "Pv", "Ad"))
 
             push!(
-                annotations,
+                an_,
                 Omics.Dic.merg(
-                    _ANNOTATION,
+                    an,
                     Dict(
-                        "y" => y,
+                        "y" => yc,
                         "x" => _get_x(id),
-                        "text" => "<b>$text</b>",
-                        "font" => Dict("size" => _FONT_SIZE),
+                        "text" => "<b>$te</b>",
+                        "font" => Dict("size" => _FO),
                     ),
                 ),
             )
@@ -94,142 +101,111 @@ function _annotate(y, la, th, fe_, fe_x_st_x_fl)
 
     end
 
-    y -= th
+    yc -= th
 
     for id in eachindex(fe_)
 
-        sc, ma, pv, ad = (Omics.Strin.shorten(fl) for fl in view(fe_x_st_x_fl, id, :))
+        sc, ma, pv, ad = (Omics.Strin.shorten(fl) for fl in view(ft, id, :))
 
-        for (id, text) in enumerate(("$sc ($ma)", pv, ad))
+        for (id, te) in enumerate(("$sc ($ma)", pv, ad))
 
             push!(
-                annotations,
+                an_,
                 Omics.Dic.merg(
-                    _ANNOTATION,
+                    an,
                     Dict(
-                        "y" => y,
+                        "y" => yc,
                         "x" => _get_x(id),
-                        "text" => text,
-                        "font" => Dict("size" => 13),
+                        "text" => te,
+                        "font" => Dict("size" => 10.8),
                     ),
                 ),
             )
 
         end
 
-        y -= th
+        yc -= th
 
     end
 
-    annotations
+    an_
 
 end
 
-function _plot(ht, nat, naf, nas, fe_, sa_, ta_, fe_x_sa_x_nu, fe_x_st_x_fl, st, la)
+function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
 
-    if eltype(ta_) <: Integer
+    sa_, ta_, fs = _order_sample(_order(ta_, fs), sa_, ta_, fs)
 
-        @info "Clustering within groups"
+    _align!(ta_, st)
 
-        sa_, ta_, fe_x_sa_x_nu = _order(
-            Omics.Clustering.order(CorrDist(), ta_, eachcol(fe_x_sa_x_nu)),
-            sa_,
-            ta_,
-            fe_x_sa_x_nu,
-        )
+    foreach(nu_ -> _align!(nu_, st), eachrow(fs))
 
-    end
+    ti, tx = extrema(ta_)
 
-    tac_ = copy(ta_)
+    fi, fx = extrema(fs)
 
-    fe_x_sa_x_nuc = copy(fe_x_sa_x_nu)
+    ur = 2 + lastindex(fe_)
 
-    tai, taa = _align!(tac_, st)
+    th = inv(ur)
 
-    fei, fea = _align!(fe_x_sa_x_nuc, st)
+    ax = Dict("tickfont" => Dict("size" => _FO))
 
-    @info "\"$nat\" colors can range from $tai to $taa."
-
-    @info "\"$naf\" colors can range from $fei to $fea."
-
-    n_ro = lastindex(fe_) + 2
-
-    th = 1 / n_ro
-
-    th2 = 0.5th
-
-    n_li = 30
-
-    axis = Dict(
-        "tickcolor" => "#6c9956",
-        "tickfont" => Dict("family" => _FONT_FAMILY, "size" => _FONT_SIZE),
-    )
+    co = Dict("y" => 0, "len" => 0.48, "thickness" => 16, "tickfont" => Dict("size" => 8.8))
 
     Omics.Plot.plot(
         ht,
         (
             Dict(
                 "type" => "heatmap",
-                "name" => "Target",
                 "yaxis" => "y2",
-                "y" => ["<b>$nat</b>"],
+                "y" => ("<b>$nt</b>",),
                 "x" => sa_,
-                "z" => [tac_],
-                "text" => [ta_],
-                "zmin" => tai,
-                "zmax" => taa,
-                "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(tac_)),
-                "colorbar" => Dict(
-                    "y" => 0.5,
-                    "x" => -0.32,
-                    "len" => 0.4,
-                    "thickness" => 16,
-                    "title" => Dict("text" => "Target"),
-                    "tickvals" => Omics.Plot.make_tickvals(tac_),
-                    "tickfont" => Dict("family" => "Monospace", "size" => 16),
+                "z" => (ta_,),
+                "zmin" => Omics.Strin.shorten(ti),
+                "zmax" => Omics.Strin.shorten(tx),
+                "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(ta_)),
+                "colorbar" => Omics.Dic.merg(
+                    co,
+                    Dict(
+                        "x" => -0.56,
+                        "title" => Dict("text" => "Target"),
+                        "tickvals" =>
+                            map(Omics.Strin.shorten, Omics.Plot.make_tickvals(ta_)),
+                    ),
                 ),
             ),
             Dict(
                 "type" => "heatmap",
-                "name" => "Feature",
                 "y" => fe_,
                 "x" => sa_,
-                "z" => collect(eachrow(fe_x_sa_x_nuc)),
-                "text" => collect(eachrow(fe_x_sa_x_nu)),
-                "zmin" => fei,
-                "zmax" => fea,
-                "colorscale" =>
-                    Omics.Palette.fractionate(Omics.Palette.pick(fe_x_sa_x_nuc)),
-                "colorbar" => Dict(
-                    "y" => 0.5,
-                    "x" => -0.24,
-                    "len" => 0.4,
-                    "thickness" => 16,
-                    "title" => Dict("text" => "Feature"),
-                    "tickvals" => Omics.Plot.make_tickvals(fe_x_sa_x_nuc),
-                    "tickfont" => Dict("family" => "Monospace", "size" => 16),
+                "z" => collect(eachrow(fs)),
+                "zmin" => Omics.Strin.shorten(fi),
+                "zmax" => Omics.Strin.shorten(fx),
+                "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(fs)),
+                "colorbar" => Omics.Dic.merg(
+                    co,
+                    Dict(
+                        "x" => -0.4,
+                        "title" => Dict("text" => "Feature"),
+                        "tickvals" =>
+                            map(Omics.Strin.shorten, Omics.Plot.make_tickvals(fs)),
+                    ),
                 ),
             ),
         ),
         Omics.Dic.merg(
             Dict(
-                "margin" => Dict("l" => 220, "r" => 220),
-                "height" => max(640, 40n_ro),
-                "width" => 1280,
-                "title" =>
-                    Dict("font" => Dict("family" => _FONT_FAMILY, "size" => 2_FONT_SIZE)),
-                "yaxis2" => merge(axis, Dict("domain" => (1 - th, 1))),
+                "margin" => Dict("r" => 220),
+                "height" => max(Omics.Plot.SS, ur * 40),
+                "width" => Omics.Plot.SL,
+                "yaxis2" => merge(ax, Dict("domain" => (1 - th, 1))),
                 "yaxis" =>
-                    merge(axis, Dict("domain" => (0, 1 - 2th), "autorange" => "reversed")),
+                    merge(ax, Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed")),
                 "xaxis" => merge(
-                    axis,
-                    Dict(
-                        "automargin" => true,
-                        "title" =>
-                            Dict("text" => Omics.Strin.coun(lastindex(sa_), nas)),
-                    ),
+                    ax,
+                    Dict("title" => Dict("text" => Omics.Strin.coun(lastindex(sa_), ns))),
                 ),
-                "annotations" => _annotate(1 - 3th2, true, th, fe_, fe_x_st_x_fl),
+                "annotations" => _annotate(1 - th * 1.5, true, th, fe_, ft),
             ),
             la,
         ),
@@ -240,13 +216,13 @@ end
 function make(
     di,
     fu,
-    nas,
+    ns,
     sa_,
-    nat,
+    nt,
     ta_,
-    naf,
+    nf,
     fe_,
-    fe_x_sa_x_nu;
+    fs;
     ts = "feature_x_statistic_x_number",
     um = 10,
     up = 10,
@@ -255,29 +231,27 @@ function make(
     la = Dict{String, Any}(),
 )
 
-    n_fe, n_sa = size(fe_x_sa_x_nu)
+    uf, us = size(fs)
 
-    @info "🩰 Matching \"$nat\" and $(Omics.Strin.coun(n_fe, "\"$naf\"")) with `$fu`"
-
-    sa_, ta_, fe_x_sa_x_nu = _order(sortperm(ta_), sa_, ta_, fe_x_sa_x_nu)
+    sa_, ta_, fs = _order_sample(sortperm(ta_), sa_, ta_, fs)
 
     @info "Calculating scores"
 
-    sc_ = (nu_ -> fu(ta_, nu_)).(eachrow(fe_x_sa_x_nu))
+    sc_ = map(nu_ -> fu(ta_, nu_), eachrow(fs))
 
-    is_ = isnan.(sc_)
+    id_ = findall(isnan, sc_)
 
-    if any(is_)
+    if any(id_)
 
-        @warn "Scores have $(Omics.Strin.coun(sum(is_), "NaN"))."
+        @warn "Scores have $(Omics.Strin.coun(sum(id_), "NaN"))."
 
     end
 
-    ma_ = fill(NaN, n_fe)
+    ma_ = fill(NaN, uf)
 
-    pv_ = fill(NaN, n_fe)
+    pv_ = fill(NaN, uf)
 
-    ad_ = fill(NaN, n_fe)
+    ad_ = fill(NaN, uf)
 
     if 0 < um
 
@@ -285,21 +259,15 @@ function make(
 
         ra_ = Vector{Float64}(undef, um)
 
-        id_ = 1:n_sa
+        @showprogress for id in 1:uf
 
-        n_sm = round(Int, 0.632n_sa)
-
-        ids_ = Vector{Int}(undef, n_sm)
-
-        @showprogress for id in 1:n_fe
-
-            nu_ = fe_x_sa_x_nu[id, :]
+            nu_ = fs[id, :]
 
             for id in 1:um
 
-                ids_ .= sample(id_, n_sm; replace = false)
+                ie_ = sample(1:us, round(Int, us * 0.632); replace = false)
 
-                ra_[id] = fu(ta_[ids_], nu_[ids_])
+                ra_[id] = fu(ta_[ie_], nu_[ie_])
 
             end
 
@@ -313,49 +281,42 @@ function make(
 
         @info "Calculating p-values using $(Omics.Strin.coun(up, "permutation"))"
 
-        co = copy(ta_)
+        tr_ = copy(ta_)
 
-        fe_x_id_x_ra = Matrix{Float64}(undef, n_fe, up)
+        fr = Matrix{Float64}(undef, uf, up)
 
-        @showprogress for idf in 1:n_fe
+        @showprogress for ie in 1:uf
 
-            nu_ = fe_x_sa_x_nu[idf, :]
+            nu_ = fs[ie, :]
 
-            for idr in 1:up
+            for id in 1:up
 
-                fe_x_id_x_ra[idf, idr] = fu(shuffle!(co), nu_)
+                fr[ie, id] = fu(shuffle!(tr_), nu_)
 
             end
 
         end
 
-        idn_ = findall(<(0), sc_)
+        ie_ = findall(<(0), sc_)
 
-        idp_ = findall(>=(0), sc_)
+        ip_ = findall(>=(0), sc_)
 
-        np_, na_, pp_, pa_ = Omics.Significance.get_p_value(fe_x_id_x_ra, sc_, idn_, idp_)
-
-        pv_[idn_] = np_
-
-        pv_[idp_] = pp_
-
-        ad_[idn_] = na_
-
-        ad_[idp_] = pa_
+        pv_[ie_], ad_[ie_], pv_[ip_], ad_[ip_] =
+            Omics.Significance.get_p_value(fr, sc_, ie_, ip_)
 
     end
 
-    fe_x_st_x_fl = hcat(sc_, ma_, pv_, ad_)
+    ft = hcat(sc_, ma_, pv_, ad_)
 
     pr = joinpath(di, ts)
 
     Omics.Table.writ(
         "$pr.tsv",
         Omics.Table.make(
-            naf,
+            nf,
             fe_,
             ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
-            fe_x_st_x_fl,
+            ft,
         ),
     )
 
@@ -363,23 +324,11 @@ function make(
 
         id_ = reverse!(Omics.Rank.get_extreme(sc_, ue))
 
-        _plot(
-            "$pr.html",
-            nat,
-            naf,
-            nas,
-            fe_[id_],
-            sa_,
-            ta_,
-            fe_x_sa_x_nu[id_, :],
-            fe_x_st_x_fl[id_, :],
-            st,
-            la,
-        )
+        _plot("$pr.html", nt, nf, ns, fe_[id_], sa_, ta_, fs[id_, :], ft[id_, :], st, la)
 
     end
 
-    fe_x_st_x_fl
+    ft
 
 end
 
