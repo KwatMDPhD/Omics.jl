@@ -44,6 +44,8 @@ include("Rank.jl")
 
 include("Significance.jl")
 
+include("Simulation.jl")
+
 include("Strin.jl")
 
 include("Table.jl")

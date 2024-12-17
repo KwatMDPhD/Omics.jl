@@ -2,33 +2,31 @@ module Match
 
 using Distances: CorrDist
 
-using ProgressMeter: @showprogress
-
 using Random: shuffle!
 
 using StatsBase: mean, quantile, sample
 
 using ..Omics
 
-function _order_sample(id_, sa_, ta_, fs)
+function _order(id_, sa_, ta_, fs)
 
     sa_[id_], ta_[id_], fs[:, id_]
 
 end
 
-function _order(ta_, fs)
+function _cluster(ta_, fs)
 
     Omics.Clustering.order(CorrDist(), ta_, eachcol(fs))
 
 end
 
-function _order(ta_::AbstractVector{<:AbstractFloat}, ::AbstractMatrix)
+function _cluster(ta_::AbstractVector{<:AbstractFloat}, ::AbstractMatrix)
 
     eachindex(ta_)
 
 end
 
-function _align!(nu_, st)
+function _normalize!(nu_, st)
 
     if allequal(nu_)
 
@@ -46,9 +44,9 @@ function _align!(nu_, st)
 
 end
 
-function _align!(::AbstractVector{<:Integer}, ::Real) end
+function _normalize!(::AbstractVector{<:Integer}, ::Real) end
 
-function _combine(n1, n2)
+function _print(n1, n2)
 
     "$(Omics.Strin.shorten(n1)) ($(Omics.Strin.shorten(n2)))"
 
@@ -60,20 +58,21 @@ function _annotate(yc, th, ft)
 
     for (ir, (sc, pv)) in enumerate((
         ("Score (⧱)", "P Value (𝐪)"),
-        ((_combine(sc, ma), _combine(pv, ad)) for (sc, ma, pv, ad) in eachrow(ft))...,
+        ((_print(sc, ma), _print(pv, qv)) for (sc, ma, pv, qv) in eachrow(ft))...,
     ))
 
         for ic in 1:2
 
+            xc, te = isone(ic) ? (1.016, sc) : (1.128, pv)
+
             an_[(ir - 1) * 2 + ic] = Dict(
-                "y" => yc,
-                "x" => isone(ic) ? 1.008 : 1.188,
                 "yref" => "paper",
                 "xref" => "paper",
+                "y" => yc,
+                "x" => xc,
                 "yanchor" => "middle",
                 "xanchor" => "left",
-                "text" => isone(ic) ? sc : pv,
-                "font" => Dict("size" => 16),
+                "text" => te,
                 "showarrow" => false,
             )
 
@@ -87,26 +86,26 @@ function _annotate(yc, th, ft)
 
 end
 
-function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
+function _plot(ht, ns, sa_, nt, ta_, nf, fe_, fs, ft, st, la)
 
-    sa_, ta_, fs = _order_sample(_order(ta_, fs), sa_, ta_, fs)
+    sa_, ta_, fs = _order(_cluster(ta_, fs), sa_, ta_, fs)
 
-    _align!(ta_, st)
+    _normalize!(ta_, st)
 
-    foreach(nu_ -> _align!(nu_, st), eachrow(fs))
+    foreach(nu_ -> _normalize!(nu_, st), eachrow(fs))
 
     ti, tx = extrema(ta_)
 
     fi, fa = extrema(fs)
 
     co = Dict(
-        "y" => 0.5,
+        "x" => 0.5,
+        "orientation" => "h",
         "len" => 0.48,
         "thickness" => 16,
-        "tickfont" => Dict("size" => 10.8),
+        "outlinewidth" => 0,
+        "title" => Dict("side" => "top"),
     )
-
-    ax = Dict("tickfont" => Dict("size" => 16))
 
     ur = 2 + lastindex(fe_)
 
@@ -127,8 +126,7 @@ function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
                 "colorbar" => merge(
                     co,
                     Dict(
-                        "x" => -0.32,
-                        "title" => Dict("text" => "Target"),
+                        "y" => -0.48,
                         "tickvals" =>
                             map(Omics.Strin.shorten, Omics.Plot.make_tickvals(ta_)),
                     ),
@@ -145,8 +143,7 @@ function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
                 "colorbar" => merge(
                     co,
                     Dict(
-                        "x" => -0.24,
-                        "title" => Dict("text" => "Feature"),
+                        "y" => -0.64,
                         "tickvals" =>
                             map(Omics.Strin.shorten, Omics.Plot.make_tickvals(fs)),
                     ),
@@ -157,14 +154,12 @@ function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
             Dict(
                 "height" => max(Omics.Plot.SS, ur * 40),
                 "width" => Omics.Plot.SL,
-                "margin" => Dict("r" => 280),
-                "yaxis2" => merge(ax, Dict("domain" => (1 - th, 1))),
-                "yaxis" =>
-                    merge(ax, Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed")),
-                "xaxis" => merge(
-                    ax,
+                "margin" => Dict("r" => 248),
+                "title" => Dict("xref" => "paper"),
+                "yaxis2" => Dict("domain" => (1 - th, 1)),
+                "yaxis" => Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed"),
+                "xaxis" =>
                     Dict("title" => Dict("text" => Omics.Strin.coun(lastindex(sa_), ns))),
-                ),
                 "annotations" => _annotate(1 - th * 1.5, th, ft),
             ),
             la,
@@ -173,7 +168,7 @@ function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
 
 end
 
-function make(
+function go(
     di,
     fu,
     ns,
@@ -193,9 +188,7 @@ function make(
 
     uf, us = size(fs)
 
-    sa_, ta_, fs = _order_sample(sortperm(ta_), sa_, ta_, fs)
-
-    @info "Calculating scores using $fu"
+    sa_, ta_, fs = _order(sortperm(ta_), sa_, ta_, fs)
 
     sc_ = map(nu_ -> fu(ta_, nu_), eachrow(fs))
 
@@ -207,33 +200,32 @@ function make(
 
     end
 
-    ma_ = fill(NaN, uf)
+    ma_ = similar(sc_)
 
-    pv_ = fill(NaN, uf)
+    pv_ = similar(sc_)
 
-    ad_ = fill(NaN, uf)
+    qv_ = similar(sc_)
 
     if 0 < um
-
-        @info "Calculating the margin of errors using $(Omics.Strin.coun(um, "sampling"))"
 
         ra_ = Vector{Float64}(undef, um)
 
         ua = round(Int, us * 0.632)
 
-        @showprogress for ie in 1:uf
+        for id in 1:uf
 
-            nu_ = fs[ie, :]
+            nu_ = fs[id, :]
 
             for ir in 1:um
 
+                # TODO
                 is_ = sample(1:us, ua; replace = false)
 
                 ra_[ir] = fu(ta_[is_], nu_[is_])
 
             end
 
-            ma_[ie] = Omics.Significance.get_margin_of_error(ra_)
+            ma_[id] = Omics.Significance.get_margin_of_error(ra_)
 
         end
 
@@ -241,19 +233,17 @@ function make(
 
     if 0 < up
 
-        @info "Calculating p-values using $(Omics.Strin.coun(up, "permutation"))"
+        ra_ = Vector{Float64}(undef, up * uf)
 
-        ra_ = Vector{Float64}(undef, uf * up)
+        co = copy(ta_)
 
-        tr_ = copy(ta_)
+        for id in 1:uf
 
-        @showprogress for ie in 1:uf
-
-            nu_ = fs[ie, :]
+            nu_ = fs[id, :]
 
             for ir in 1:up
 
-                ra_[(ie - 1) * up + ir] = fu(shuffle!(tr_), nu_)
+                ra_[(id - 1) * up + ir] = fu(shuffle!(co), nu_)
 
             end
 
@@ -263,30 +253,25 @@ function make(
 
         ip_ = findall(>=(0), sc_)
 
-        pv_[ie_], ad_[ie_], pv_[ip_], ad_[ip_] =
+        pv_[ie_], qv_[ie_], pv_[ip_], qv_[ip_] =
             Omics.Significance.get_p_value(ra_, sc_, ie_, ip_)
 
     end
 
-    ft = hcat(sc_, ma_, pv_, ad_)
+    ft = hcat(sc_, ma_, pv_, qv_)
 
     pr = joinpath(di, ts)
 
     Omics.Table.writ(
         "$pr.tsv",
-        Omics.Table.make(
-            nf,
-            fe_,
-            ["Score", "Margin of Error", "P-Value", "Adjusted P-Value"],
-            ft,
-        ),
+        Omics.Table.make(nf, fe_, ["Score", "Margin of Error", "P-Value", "Q-Value"], ft),
     )
 
     if 0 < ue
 
         id_ = reverse!(Omics.Rank.get_extreme(sc_, ue))
 
-        _plot("$pr.html", nt, nf, ns, fe_[id_], sa_, ta_, fs[id_, :], ft[id_, :], st, la)
+        _plot("$pr.html", ns, sa_, nt, ta_, nf, fe_[id_], fs[id_, :], ft[id_, :], st, la)
 
     end
 
