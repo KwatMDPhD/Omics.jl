@@ -10,15 +10,15 @@ using StatsBase: mean, quantile, sample
 
 using ..Omics
 
-function _order_sample(id_, sa_, ta_, ma)
+function _order_sample(id_, sa_, ta_, fs)
 
-    sa_[id_], ta_[id_], ma[:, id_]
+    sa_[id_], ta_[id_], fs[:, id_]
 
 end
 
-function _order(ta_, ma)
+function _order(ta_, fs)
 
-    Omics.Clustering.order(Omics.Distance.InformationDistance(), ta_, eachcol(ma))
+    Omics.Clustering.order(CorrDist(), ta_, eachcol(fs))
 
 end
 
@@ -46,80 +46,35 @@ function _align!(nu_, st)
 
 end
 
-function _align!(nu_::AbstractVector{<:Integer}, ::Real) end
+function _align!(::AbstractVector{<:Integer}, ::Real) end
 
-const _FO = 16
+function _combine(n1, n2)
 
-function _get_x(id)
-
-    if isone(id)
-
-        1.016
-
-    elseif id == 2
-
-        1.176
-
-    elseif id == 3
-
-        1.272
-
-    end
+    "$(Omics.Strin.shorten(n1)) ($(Omics.Strin.shorten(n2)))"
 
 end
 
-function _annotate(yc, la, th, fe_, ft)
+function _annotate(yc, th, ft)
 
-    an_ = Dict{String, Any}[]
+    an_ = Vector{Dict{String, Any}}(undef, (1 + size(ft, 1)) * 2)
 
-    an = Dict(
-        "yref" => "paper",
-        "xref" => "paper",
-        "yanchor" => "middle",
-        "xanchor" => "left",
-        "showarrow" => false,
-    )
+    for (ir, (sc, pv)) in enumerate((
+        ("Score (⧱)", "P Value (𝐪)"),
+        ((_combine(sc, ma), _combine(pv, ad)) for (sc, ma, pv, ad) in eachrow(ft))...,
+    ))
 
-    if la
+        for ic in 1:2
 
-        for (id, te) in enumerate(("Sc (⧳)", "Pv", "Ad"))
-
-            push!(
-                an_,
-                Omics.Dic.merg(
-                    an,
-                    Dict(
-                        "y" => yc,
-                        "x" => _get_x(id),
-                        "text" => "<b>$te</b>",
-                        "font" => Dict("size" => _FO),
-                    ),
-                ),
-            )
-
-        end
-
-    end
-
-    yc -= th
-
-    for id in eachindex(fe_)
-
-        sc, ma, pv, ad = (Omics.Strin.shorten(fl) for fl in view(ft, id, :))
-
-        for (id, te) in enumerate(("$sc ($ma)", pv, ad))
-
-            push!(
-                an_,
-                Omics.Dic.merg(
-                    an,
-                    Dict(
-                        "y" => yc,
-                        "x" => _get_x(id),
-                        "text" => te,
-                        "font" => Dict("size" => 10.8),
-                    ),
-                ),
+            an_[(ir - 1) * 2 + ic] = Dict(
+                "y" => yc,
+                "x" => isone(ic) ? 1.008 : 1.188,
+                "yref" => "paper",
+                "xref" => "paper",
+                "yanchor" => "middle",
+                "xanchor" => "left",
+                "text" => isone(ic) ? sc : pv,
+                "font" => Dict("size" => 16),
+                "showarrow" => false,
             )
 
         end
@@ -142,15 +97,20 @@ function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
 
     ti, tx = extrema(ta_)
 
-    fi, fx = extrema(fs)
+    fi, fa = extrema(fs)
+
+    co = Dict(
+        "y" => 0.5,
+        "len" => 0.48,
+        "thickness" => 16,
+        "tickfont" => Dict("size" => 10.8),
+    )
+
+    ax = Dict("tickfont" => Dict("size" => 16))
 
     ur = 2 + lastindex(fe_)
 
     th = inv(ur)
-
-    ax = Dict("tickfont" => Dict("size" => _FO))
-
-    co = Dict("y" => 0, "len" => 0.48, "thickness" => 16, "tickfont" => Dict("size" => 8.8))
 
     Omics.Plot.plot(
         ht,
@@ -158,16 +118,16 @@ function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
             Dict(
                 "type" => "heatmap",
                 "yaxis" => "y2",
-                "y" => ("<b>$nt</b>",),
+                "y" => (nt,),
                 "x" => sa_,
                 "z" => (ta_,),
                 "zmin" => Omics.Strin.shorten(ti),
                 "zmax" => Omics.Strin.shorten(tx),
                 "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(ta_)),
-                "colorbar" => Omics.Dic.merg(
+                "colorbar" => merge(
                     co,
                     Dict(
-                        "x" => -0.56,
+                        "x" => -0.32,
                         "title" => Dict("text" => "Target"),
                         "tickvals" =>
                             map(Omics.Strin.shorten, Omics.Plot.make_tickvals(ta_)),
@@ -180,12 +140,12 @@ function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
                 "x" => sa_,
                 "z" => collect(eachrow(fs)),
                 "zmin" => Omics.Strin.shorten(fi),
-                "zmax" => Omics.Strin.shorten(fx),
+                "zmax" => Omics.Strin.shorten(fa),
                 "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(fs)),
-                "colorbar" => Omics.Dic.merg(
+                "colorbar" => merge(
                     co,
                     Dict(
-                        "x" => -0.4,
+                        "x" => -0.24,
                         "title" => Dict("text" => "Feature"),
                         "tickvals" =>
                             map(Omics.Strin.shorten, Omics.Plot.make_tickvals(fs)),
@@ -195,9 +155,9 @@ function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
         ),
         Omics.Dic.merg(
             Dict(
-                "margin" => Dict("r" => 220),
                 "height" => max(Omics.Plot.SS, ur * 40),
                 "width" => Omics.Plot.SL,
+                "margin" => Dict("r" => 280),
                 "yaxis2" => merge(ax, Dict("domain" => (1 - th, 1))),
                 "yaxis" =>
                     merge(ax, Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed")),
@@ -205,7 +165,7 @@ function _plot(ht, nt, nf, ns, fe_, sa_, ta_, fs, ft, st, la)
                     ax,
                     Dict("title" => Dict("text" => Omics.Strin.coun(lastindex(sa_), ns))),
                 ),
-                "annotations" => _annotate(1 - th * 1.5, true, th, fe_, ft),
+                "annotations" => _annotate(1 - th * 1.5, th, ft),
             ),
             la,
         ),
@@ -235,15 +195,15 @@ function make(
 
     sa_, ta_, fs = _order_sample(sortperm(ta_), sa_, ta_, fs)
 
-    @info "Calculating scores"
+    @info "Calculating scores using $fu"
 
     sc_ = map(nu_ -> fu(ta_, nu_), eachrow(fs))
 
-    id_ = findall(isnan, sc_)
+    un = sum(isnan, sc_)
 
-    if any(id_)
+    if 0 < un
 
-        @warn "Scores have $(Omics.Strin.coun(sum(id_), "NaN"))."
+        @warn "Scores have $(Omics.Strin.coun(un, "NaN"))."
 
     end
 
@@ -259,19 +219,21 @@ function make(
 
         ra_ = Vector{Float64}(undef, um)
 
-        @showprogress for id in 1:uf
+        ua = round(Int, us * 0.632)
 
-            nu_ = fs[id, :]
+        @showprogress for ie in 1:uf
 
-            for id in 1:um
+            nu_ = fs[ie, :]
 
-                ie_ = sample(1:us, round(Int, us * 0.632); replace = false)
+            for ir in 1:um
 
-                ra_[id] = fu(ta_[ie_], nu_[ie_])
+                is_ = sample(1:us, ua; replace = false)
+
+                ra_[ir] = fu(ta_[is_], nu_[is_])
 
             end
 
-            ma_[id] = Omics.Significance.get_margin_of_error(ra_)
+            ma_[ie] = Omics.Significance.get_margin_of_error(ra_)
 
         end
 
@@ -281,17 +243,17 @@ function make(
 
         @info "Calculating p-values using $(Omics.Strin.coun(up, "permutation"))"
 
-        tr_ = copy(ta_)
+        ra_ = Vector{Float64}(undef, uf * up)
 
-        fr = Matrix{Float64}(undef, uf, up)
+        tr_ = copy(ta_)
 
         @showprogress for ie in 1:uf
 
             nu_ = fs[ie, :]
 
-            for id in 1:up
+            for ir in 1:up
 
-                fr[ie, id] = fu(shuffle!(tr_), nu_)
+                ra_[(ie - 1) * up + ir] = fu(shuffle!(tr_), nu_)
 
             end
 
@@ -302,7 +264,7 @@ function make(
         ip_ = findall(>=(0), sc_)
 
         pv_[ie_], ad_[ie_], pv_[ip_], ad_[ip_] =
-            Omics.Significance.get_p_value(fr, sc_, ie_, ip_)
+            Omics.Significance.get_p_value(ra_, sc_, ie_, ip_)
 
     end
 
@@ -329,34 +291,6 @@ function make(
     end
 
     ft
-
-end
-
-function summarize_top(st, qu = 0.99)
-
-    ab_ = abs.(view(st, :, 1))
-
-    mean(filter!(>=(quantile(ab_, qu)), ab_))
-
-end
-
-function summarize_significant(st, ad = 0.1)
-
-    ns = ab = 0
-
-    for i1 in 1:size(st, 1)
-
-        if st[i1, 4] < ad
-
-            ns += 1
-
-            ab += abs(st[i1, 1])
-
-        end
-
-    end
-
-    iszero(ns) ? 0.0 : ab / ns
 
 end
 

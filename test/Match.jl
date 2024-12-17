@@ -119,7 +119,7 @@ function make_argument(ho, uf, us)
     cor,
     "Sample",
     (id -> "Sample $id").(1:us),
-    "1234567890123456789012345678901234567890",
+    "Target",
     ta_,
     "Feature",
     (id -> "Feature $id").(1:uf),
