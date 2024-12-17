@@ -8,9 +8,9 @@ using OrderedCollections: OrderedDict
 
 # ---- #
 
-# 68.720 ns (4 allocations: 384 bytes)
-# 78.523 ns (4 allocations: 384 bytes)
-# 78.431 ns (4 allocations: 384 bytes)
+# 68.620 ns (4 allocations: 384 bytes)
+# 78.532 ns (4 allocations: 384 bytes)
+# 78.436 ns (4 allocations: 384 bytes)
 for (an_, re) in (
     (['a', 'b', 'c', 'd'], Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4)),
     (
@@ -31,9 +31,9 @@ end
 
 # ---- #
 
-# 154.748 ns (10 allocations: 768 bytes)
-# 174.837 ns (10 allocations: 768 bytes)
-# 153.850 ns (10 allocations: 832 bytes)
+# 154.856 ns (10 allocations: 768 bytes)
+# 175.034 ns (10 allocations: 768 bytes)
+# 160.401 ns (10 allocations: 832 bytes)
 for (an_, re) in (
     (['a', 'b', 'b', 'c', 'c', 'c'], Dict('a' => [1], 'b' => [2, 3], 'c' => [4, 5, 6])),
     (

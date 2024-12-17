@@ -8,13 +8,9 @@ function collapse(fu, ty, ro_, ma)
 
     r2_id_ = Omics.Dic.index2(ro_)
 
-    u2 = length(r2_id_)
-
-    @info "Collapsing using `$fu` and making ($ur -->) $u2 x $uc"
-
     r2_ = sort(collect(keys(r2_id_)))
 
-    m2 = Matrix{ty}(undef, u2, uc)
+    m2 = Matrix{ty}(undef, lastindex(r2_), uc)
 
     for i2 in eachindex(r2_)
 
@@ -42,11 +38,25 @@ function joi(fi, r1_, c1_, a1, r2_, c2_, a2)
 
     cj_id = Omics.Dic.index(cj_)
 
-    for (ro_, co_, an) in ((r1_, c1_, a1), (r2_, c2_, a2))
+    for ic in eachindex(c1_)
 
-        for (ic, co) in enumerate(co_), (ir, ro) in enumerate(ro_)
+        id = cj_id[c1_[ic]]
 
-            aj[rj_id[ro], cj_id[co]] = an[ir, ic]
+        for ir in eachindex(r1_)
+
+            aj[rj_id[r1_[ir]], id] = a1[ir, ic]
+
+        end
+
+    end
+
+    for ic in eachindex(c2_)
+
+        id = cj_id[c2_[ic]]
+
+        for ir in eachindex(r2_)
+
+            aj[rj_id[r2_[ir]], id] = a2[ir, ic]
 
         end
 

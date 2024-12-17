@@ -29,7 +29,7 @@ for mo in (
     "ROC",
     "Rank",
     "Significance",
-    "Simulation.jl",
+    "Simulation",
     "Strin",
     "Table",
 )

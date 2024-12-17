@@ -34,30 +34,27 @@ end
 
 # ---- #
 
-# 24.458 μs (408 allocations: 126.67 KiB)
-# 2.636 ms (2708 allocations: 11.93 MiB)
-# 611.325 ms (3466 allocations: 815.53 MiB)
-for ur in (100, 1000, 10000)
+# 23.417 μs (408 allocations: 126.67 KiB)
+# 2.678 ms (2708 allocations: 11.93 MiB)
+for ur in (100, 1000)
 
     seed!(20230920)
 
-    #disable_logging(Info)
     #@btime Omics.Matri.collapse(
     #    mean,
     #    Float64,
     #    $([randstring('A':'G', 3) for _ in 1:ur]),
     #    $(rand(ur, ur)),
     #)
-    #disable_logging(Debug)
 
 end
 
 # ---- #
 
-# 1.267 μs (22 allocations: 2.02 KiB)
-# 1.283 μs (22 allocations: 1.97 KiB)
-# 1.250 μs (22 allocations: 1.95 KiB)
-# 1.242 μs (22 allocations: 1.92 KiB)
+# 1.208 μs (22 allocations: 2.02 KiB)
+# 1.221 μs (22 allocations: 1.97 KiB)
+# 1.146 μs (22 allocations: 1.95 KiB)
+# 1.146 μs (22 allocations: 1.92 KiB)
 for (fi, r1_, c1_, a1, r2_, c2_, a2, re) in (
     (
         0,

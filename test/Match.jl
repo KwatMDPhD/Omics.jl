@@ -22,27 +22,23 @@ end
 
 function make_argument(ho, uf, us)
 
-    if ho == "f12"
+    ta_, fs = if ho == "f12"
 
-        ta_ = collect(1.0:us)
-
-        fs = Omics.Simulation.make_matrix_1n(Float64, uf, us)
+        collect(1.0:us), Omics.Simulation.make_matrix_1n(Float64, uf, us)
 
     elseif ho == "ra"
 
-        ta_ = Omics.Simulation.make_vector_mirror(cld(us, 2), iseven(us))
-
-        fs = randn(uf, us)
+        Omics.Simulation.make_vector_mirror(cld(us, 2), iseven(us)), randn(uf, us)
 
     end
 
     cor,
     "Sample",
-    (id -> "Sample $id").(1:us),
+    map(id -> "Sample $id", 1:us),
     "Target",
     ta_,
     "Feature",
-    (id -> "Feature $id").(1:uf),
+    map(id -> "Feature $id", 1:uf),
     fs
 
 end
@@ -61,24 +57,39 @@ end
 
 const SI = 100000, 100
 
+# ---- #
+
+# 44.250 μs (204 allocations: 4.01 MiB)
+# 46.208 μs (285 allocations: 4.01 MiB)
+# 50.834 μs (475 allocations: 4.02 MiB)
+# 59.750 μs (815 allocations: 4.04 MiB)
+# 91.750 μs (1522 allocations: 4.12 MiB)
+# 822.792 μs (7166 allocations: 5.85 MiB)
+# 2.127 ms (96619 allocations: 8.17 MiB)
+# 458.792 μs (652 allocations: 5.03 MiB)
+# 6.231 s (9897592 allocations: 2.79 GiB)
 for (uf, us) in
     ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), SI)
 
     di, la = make_output("$uf x $us")
 
-    Omics.Match.go(di, make_argument("ra", uf, us)...; la)
+    ar_ = make_argument("ra", uf, us)
+
+    Omics.Match.go(di, ar_...; la)
+
+    #@btime Omics.Match.go($di, $ar_...; ue = 0)
 
 end
 
 # ---- #
 
-const FU, NS, SA_, NT, TA_, NF, FE_, fs = make_argument("f12", 1, 19)
+const FU, NS, SA_, NT, TA_, NF, FE_, FS = make_argument("f12", 1, 19)
 
-const TR_ = convert(Vector{Int}, TA_)
+const TI_ = convert(Vector{Int}, TA_)
 
-const FA = convert(Matrix{Int}, fs)
+const FI = convert(Matrix{Int}, FS)
 
-for (ta_, fs) in ((TA_, fs), (TR_, fs), (TA_, FA), (TR_, FA))
+for (ta_, fs) in ((TA_, FS), (TI_, FS), (TA_, FI), (TI_, FI))
 
     di, la = make_output("$(eltype(ta_)) x $(eltype(fs))")
 
@@ -88,36 +99,36 @@ end
 
 # ---- #
 
-AR_ = make_argument("ra", SI...)
+const AS_ = make_argument("ra", SI...)
 
-for (um, up) in ((0, 0), (0, 10), (10, 0), (10, 10), (30, 30))
+for (um, uv) in ((0, 0), (0, 10), (10, 0), (10, 10), (40, 40))
 
-    di, la = make_output("um = $um, up = $up")
+    di, la = make_output("um = $um, uv = $uv")
 
-    Omics.Match.go(di, AR_...; um, up, la)
+    Omics.Match.go(di, AS_...; um, uv, la)
 
 end
 
 # ---- #
 
-AR_ = make_argument("f12", 5, 2)
+const AE_ = make_argument("f12", 5, 2)
 
 for ue in (0, 1, 2, 3, 6)
 
     di, la = make_output("ue = $ue")
 
-    Omics.Match.go(di, AR_...; ue, la)
+    Omics.Match.go(di, AE_...; ue, la)
 
 end
 
 # ---- #
 
-AR_ = make_argument("ra", 2, 3)
+const AC_ = make_argument("ra", 2, 3)
 
 for st in (0, 0.1, 1, 2, 4, 8)
 
     di, la = make_output("st = $st")
 
-    Omics.Match.go(di, AR_...; st, la)
+    Omics.Match.go(di, AC_...; st, la)
 
 end

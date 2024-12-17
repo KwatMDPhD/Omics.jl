@@ -30,7 +30,9 @@ function index2(an_)
 
     an_id_ = Dict{eltype(an_), Vector{UInt}}()
 
-    for (id, an) in enumerate(an_)
+    for id in eachindex(an_)
+
+        an = an_[id]
 
         if !haskey(an_id_, an)
 

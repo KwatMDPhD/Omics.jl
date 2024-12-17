@@ -243,7 +243,7 @@ function plot(
         da_,
         Omics.Dic.merg(
             Dict(
-                "width" => Omics.Plot.SI,
+                "width" => Omics.Plot.SL,
                 "margin" => Dict("b" => 0),
                 "showlegend" => false,
                 "yaxis" => Dict("visible" => false),

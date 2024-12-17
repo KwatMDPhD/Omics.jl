@@ -46,6 +46,12 @@ end
 
 function _normalize!(::AbstractVector{<:Integer}, ::Real) end
 
+function _index(i1, u2, i2)
+
+    (i1 - 1) * u2 + i2
+
+end
+
 function _print(n1, n2)
 
     "$(Omics.Strin.shorten(n1)) ($(Omics.Strin.shorten(n2)))"
@@ -54,25 +60,29 @@ end
 
 function _annotate(yc, th, ft)
 
-    an_ = Vector{Dict{String, Any}}(undef, (1 + size(ft, 1)) * 2)
+    uc = 2
 
-    for (ir, (sc, pv)) in enumerate((
+    an_ = Vector{Dict{String, Any}}(undef, (1 + size(ft, 1)) * uc)
+
+    te___ = vcat(
         ("Score (⧱)", "P Value (𝐪)"),
-        ((_print(sc, ma), _print(pv, qv)) for (sc, ma, pv, qv) in eachrow(ft))...,
-    ))
+        [(_print(sc, ma), _print(pv, qv)) for (sc, ma, pv, qv) in eachrow(ft)],
+    )
+
+    for ir in eachindex(te___)
+
+        te_ = te___[ir]
 
         for ic in 1:2
 
-            xc, te = isone(ic) ? (1.016, sc) : (1.128, pv)
-
-            an_[(ir - 1) * 2 + ic] = Dict(
+            an_[_index(ir, uc, ic)] = Dict(
                 "yref" => "paper",
                 "xref" => "paper",
                 "y" => yc,
-                "x" => xc,
+                "x" => isone(ic) ? 1.016 : 1.128,
                 "yanchor" => "middle",
                 "xanchor" => "left",
-                "text" => te,
+                "text" => te_[ic],
                 "showarrow" => false,
             )
 
@@ -154,12 +164,11 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, fs, ft, st, la)
             Dict(
                 "height" => max(Omics.Plot.SS, ur * 40),
                 "width" => Omics.Plot.SL,
-                "margin" => Dict("r" => 248),
+                "margin" => Dict("r" => 232),
                 "title" => Dict("xref" => "paper"),
                 "yaxis2" => Dict("domain" => (1 - th, 1)),
                 "yaxis" => Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed"),
-                "xaxis" =>
-                    Dict("title" => Dict("text" => Omics.Strin.coun(lastindex(sa_), ns))),
+                "xaxis" => Dict("title" => Dict("text" => "$ns ($(lastindex(sa_)))")),
                 "annotations" => _annotate(1 - th * 1.5, th, ft),
             ),
             la,
@@ -180,7 +189,7 @@ function go(
     fs;
     ts = "feature_x_statistic_x_number",
     um = 10,
-    up = 10,
+    uv = 10,
     ue = 8,
     st = 4,
     la = Dict{String, Any}(),
@@ -192,19 +201,11 @@ function go(
 
     sc_ = map(nu_ -> fu(ta_, nu_), eachrow(fs))
 
-    un = sum(isnan, sc_)
+    ma_ = fill(NaN, uf)
 
-    if 0 < un
+    pv_ = fill(NaN, uf)
 
-        @warn "Scores have $(Omics.Strin.coun(un, "NaN"))."
-
-    end
-
-    ma_ = similar(sc_)
-
-    pv_ = similar(sc_)
-
-    qv_ = similar(sc_)
+    qv_ = fill(NaN, uf)
 
     if 0 < um
 
@@ -218,7 +219,6 @@ function go(
 
             for ir in 1:um
 
-                # TODO
                 is_ = sample(1:us, ua; replace = false)
 
                 ra_[ir] = fu(ta_[is_], nu_[is_])
@@ -231,9 +231,9 @@ function go(
 
     end
 
-    if 0 < up
+    if 0 < uv
 
-        ra_ = Vector{Float64}(undef, up * uf)
+        ra_ = Vector{Float64}(undef, uv * uf)
 
         co = copy(ta_)
 
@@ -241,9 +241,9 @@ function go(
 
             nu_ = fs[id, :]
 
-            for ir in 1:up
+            for ir in 1:uv
 
-                ra_[(id - 1) * up + ir] = fu(shuffle!(co), nu_)
+                ra_[_index(id, uv, ir)] = fu(shuffle!(co), nu_)
 
             end
 
