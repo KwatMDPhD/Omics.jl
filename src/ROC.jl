@@ -159,7 +159,7 @@ function plot_line(ht, fp_, tp_)
 
     co = Omics.Color.BL
 
-    ra = -0.02, 1.02
+    ra = -0.016, 1.016
 
     Omics.Plot.plot(
         ht,
@@ -177,10 +177,10 @@ function plot_line(ht, fp_, tp_)
                 "y" => [0; tp_[id]],
                 "x" => [0; fp_[id]],
                 "mode" => "markers+lines",
-                "marker" => Dict("size" => wi * 2.4, "color" => co),
+                "marker" => Dict("size" => wi * 2.8, "color" => co),
                 "line" => Dict("width" => wi, "color" => co),
                 "fill" => "tozeroy",
-                "fillcolor" => Omics.Color.hexify(co, 0.4),
+                "fillcolor" => Omics.Color.hexify(co, 0.56),
             ),
         ),
         Dict(
@@ -188,12 +188,8 @@ function plot_line(ht, fp_, tp_)
             "yaxis" => Dict("range" => ra, "title" => Dict("text" => "True-Positive Rate")),
             "xaxis" =>
                 Dict("range" => ra, "title" => Dict("text" => "False-Positive Rate")),
-            "legend" => Dict(
-                "y" => 0.04,
-                "x" => 0.968,
-                "yanchor" => "bottom",
-                "xanchor" => "right",
-            ),
+            "legend" =>
+                Dict("y" => 0.08, "x" => 0.96, "yanchor" => "bottom", "xanchor" => "right"),
         ),
     )
 

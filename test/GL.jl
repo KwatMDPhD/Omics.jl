@@ -59,7 +59,7 @@ for (ta_, fe_, re) in (
 
     @test pr_ == re
 
-    Omics.GL.plot("", "Sample", sa_, "Target", ta_, "Feature", fe_, pr_, lo_, up_; si = 20)
+    Omics.GL.plot("", "Sample", sa_, "Target", ta_, "Feature", fe_, pr_, lo_, up_; si = 16)
 
 end
 

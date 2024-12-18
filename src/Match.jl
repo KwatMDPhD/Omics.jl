@@ -32,7 +32,7 @@ function _normalize!(nu_, st)
 
         @warn "All numbers are $(nu_[1])."
 
-        fill!(nu_, 0.0)
+        fill!(nu_, 0)
 
     else
 
@@ -111,7 +111,7 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, fs, ft, st, la)
     co = Dict(
         "x" => 0.5,
         "orientation" => "h",
-        "len" => 0.48,
+        "len" => 0.56,
         "thickness" => 16,
         "outlinewidth" => 0,
         "title" => Dict("side" => "top"),
@@ -191,7 +191,7 @@ function go(
     um = 10,
     uv = 10,
     ue = 8,
-    st = 4,
+    st = 3,
     la = Dict{String, Any}(),
 )
 

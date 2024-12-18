@@ -69,7 +69,7 @@ for (th, re) in (
 
     @test MA == re
 
-    #@btime Omics.ROC.fill_matrix!(MA, LA_, PR_, $th)
+    @btime Omics.ROC.fill_matrix!(MA, LA_, PR_, $th)
 
 end
 

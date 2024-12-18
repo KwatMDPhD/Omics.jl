@@ -37,13 +37,13 @@ for (pr, od) in (
 
     @test Omics.Probability.get_odd(pr) === od
 
-    #@btime Omics.Probability.get_odd($pr)
+    @btime Omics.Probability.get_odd($pr)
 
     if isfinite(od)
 
         @test Omics.Probability.ge(od) === pr
 
-        #@btime Omics.Probability.ge($od)
+        @btime Omics.Probability.ge($od)
 
     end
 
@@ -73,7 +73,7 @@ for (nu, re) in ((0, 0.5),)
 
     @test Omics.Probability.get_logistic(nu) === re
 
-    #@btime Omics.Probability.get_logistic($nu)
+    @btime Omics.Probability.get_logistic($nu)
 
 end
 

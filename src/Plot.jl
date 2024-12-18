@@ -45,7 +45,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
             la[ke] = Omics.Dic.merg(
                 Dict(
                     "automargin" => true,
-                    "title" => Dict("font" => Dict("size" => 20)),
+                    "title" => Dict("font" => Dict("size" => 24)),
                     "zeroline" => false,
                     "showgrid" => false,
                 ),
@@ -109,7 +109,7 @@ function plot_heat_map(
                 "z" => collect(eachrow(ma)),
                 "colorscale" => cl,
                 "colorbar" => Dict(
-                    "len" => 0.4,
+                    "len" => 0.56,
                     "thickness" => 16,
                     "tickvals" => make_tickvals(filter(!isnan, ma)),
                     "tickfont" => Dict("family" => "Monospace", "size" => 16),
@@ -212,7 +212,7 @@ function plot_radar(
                         "ticklen" => 8,
                         "tickwidth" => wi,
                         "tickcolor" => hd,
-                        "tickfont" => Dict("family" => "Monospace", "size" => 12),
+                        "tickfont" => Dict("family" => "Monospace", "size" => 16),
                         "gridwidth" => wi,
                         "gridcolor" => hf,
                     ),

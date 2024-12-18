@@ -56,7 +56,7 @@ function normalize_with_125254!(nu_)
 
 end
 
-function normalize_with_quantile!(nu_, qu_ = (0.0, 0.5, 1.0))
+function normalize_with_quantile!(nu_, qu_ = (0, 0.5, 1))
 
     qa_ = quantile(nu_, qu_)
 

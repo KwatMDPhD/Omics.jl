@@ -6,13 +6,13 @@ using Test: @test
 
 # ---- #
 
-# 2.375 ns (0 allocations: 0 bytes)
-# 6.417 ns (0 allocations: 0 bytes)
+# 2.416 ns (0 allocations: 0 bytes)
 # 6.458 ns (0 allocations: 0 bytes)
 # 6.417 ns (0 allocations: 0 bytes)
-# 6.417 ns (0 allocations: 0 bytes)
 # 6.458 ns (0 allocations: 0 bytes)
-# 5.166 ns (0 allocations: 0 bytes)
+# 6.416 ns (0 allocations: 0 bytes)
+# 6.458 ns (0 allocations: 0 bytes)
+# 5.208 ns (0 allocations: 0 bytes)
 for (pr, re) in (
     (0, 0.0),
     (0.03125, 0.15625),
@@ -25,7 +25,7 @@ for (pr, re) in (
 
     @test Omics.Entropy.ge(pr) === re
 
-    #@btime Omics.Entropy.ge($pr)
+    @btime Omics.Entropy.ge($pr)
 
 end
 
@@ -65,12 +65,12 @@ const JO = [
     0.0416667 0.0833333 0.125 0.0
 ]
 
-# 37.970 ns (0 allocations: 0 bytes)
-# 33.451 ns (0 allocations: 0 bytes)
+# 37.886 ns (0 allocations: 0 bytes)
+# 33.400 ns (0 allocations: 0 bytes)
 for ea in (eachrow, eachcol)
 
     @test Omics.Entropy.ge(ea, JO) === 2.0
 
-    #@btime Omics.Entropy.ge($ea, JO)
+    @btime Omics.Entropy.ge($ea, JO)
 
 end

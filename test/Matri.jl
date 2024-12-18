@@ -40,21 +40,21 @@ for ur in (100, 1000)
 
     seed!(20230920)
 
-    #@btime Omics.Matri.collapse(
-    #    mean,
-    #    Float64,
-    #    $([randstring('A':'G', 3) for _ in 1:ur]),
-    #    $(rand(ur, ur)),
-    #)
+    @btime Omics.Matri.collapse(
+        mean,
+        Float64,
+        $([randstring('A':'G', 3) for _ in 1:ur]),
+        $(rand(ur, ur)),
+    )
 
 end
 
 # ---- #
 
-# 1.208 μs (22 allocations: 2.02 KiB)
-# 1.221 μs (22 allocations: 1.97 KiB)
-# 1.146 μs (22 allocations: 1.95 KiB)
-# 1.146 μs (22 allocations: 1.92 KiB)
+# 813.253 ns (22 allocations: 2.02 KiB)
+# 798.177 ns (22 allocations: 1.97 KiB)
+# 788.957 ns (22 allocations: 1.95 KiB)
+# 756.060 ns (22 allocations: 1.92 KiB)
 for (fi, r1_, c1_, a1, r2_, c2_, a2, re) in (
     (
         0,
@@ -158,6 +158,6 @@ for (fi, r1_, c1_, a1, r2_, c2_, a2, re) in (
 
     @test Omics.Matri.joi(fi, r1_, c1_, a1, r2_, c2_, a2) == re
 
-    #@btime Omics.Matri.joi($fi, $r1_, $c1_, $a1, $r2_, $c2_, $a2)
+    @btime Omics.Matri.joi($fi, $r1_, $c1_, $a1, $r2_, $c2_, $a2)
 
 end

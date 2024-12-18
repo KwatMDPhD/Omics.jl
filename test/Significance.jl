@@ -97,7 +97,7 @@ const IE_ = findall(<(0), NU_)
 const IP_ = findall(>=(0), NU_)
 
 @test Omics.Significance.get_p_value(RA_, NU_, IE_, IP_) ==
-      ([1.0], [1.0], [1.0, 1.0, 2 / 3], [1.0, 1.0, 1.0])
+      ([1.0], [1.0], [1, 1, 2 / 3], [1.0, 1, 1])
 
 # 290.275 ns (24 allocations: 1.00 KiB)
 #@btime Omics.Significance.get_p_value(RA_, NU_, IE_, IP_);

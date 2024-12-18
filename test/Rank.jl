@@ -27,7 +27,7 @@ for (ua, ue, re) in (
 
     @test Omics.Rank.get_extreme(ua, ue) == re
 
-    #@btime Omics.Rank.get_extreme($ua, $ue)
+    @btime Omics.Rank.get_extreme($ua, $ue)
 
 end
 
@@ -68,16 +68,16 @@ const CH_ = [
 
 # ---- #
 
-# 20.186 ns (3 allocations: 96 bytes)
-# 19.642 ns (3 allocations: 96 bytes)
-# 46.843 ns (4 allocations: 176 bytes)
-# 63.328 ns (6 allocations: 272 bytes)
-# 65.986 ns (6 allocations: 304 bytes)
-# 68.593 ns (6 allocations: 336 bytes)
-# 229.396 ns (6 allocations: 608 bytes)
-# 233.002 ns (8 allocations: 704 bytes)
-# 249.670 ns (8 allocations: 736 bytes)
-# 247.361 ns (8 allocations: 1.06 KiB)
+# 19.622 ns (3 allocations: 96 bytes)
+# 19.622 ns (3 allocations: 96 bytes)
+# 46.885 ns (4 allocations: 176 bytes)
+# 63.009 ns (6 allocations: 272 bytes)
+# 66.096 ns (6 allocations: 304 bytes)
+# 68.820 ns (6 allocations: 336 bytes)
+# 211.560 ns (6 allocations: 608 bytes)
+# 246.721 ns (8 allocations: 704 bytes)
+# 235.627 ns (8 allocations: 736 bytes)
+# 259.146 ns (8 allocations: 1.06 KiB)
 for (an_, ue, re) in (
     (ID_, 0, ID_),
     (ID_, 1, ID_),
@@ -93,6 +93,6 @@ for (an_, ue, re) in (
 
     @test an_[Omics.Rank.get_extreme(an_, ue)] == re
 
-    #@btime Omics.Rank.get_extreme($an_, $ue)
+    @btime Omics.Rank.get_extreme($an_, $ue)
 
 end

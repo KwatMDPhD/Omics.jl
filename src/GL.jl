@@ -32,6 +32,10 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, pr_, lo_, up_; si = 2)
 
     bo = Dict("yaxis" => "y3", "x" => sa_, "mode" => "lines", "line" => Dict("width" => 0))
 
+    dm = 0.96
+
+    ex = 0.032
+
     Omics.Plot.plot(
         ht,
         (
@@ -55,7 +59,7 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, pr_, lo_, up_; si = 2)
                 "y" => (0.5, 0.5),
                 "x" => (sa_[1], sa_[end]),
                 "mode" => "lines",
-                "line" => Dict("width" => 1.6, "color" => "#000000"),
+                "line" => Dict("width" => 1.64, "color" => "#000000"),
             ),
             merge(bo, Dict("y" => lo_)),
             merge(
@@ -75,19 +79,20 @@ function plot(ht, ns, sa_, nt, ta_, nf, fe_, pr_, lo_, up_; si = 2)
         ),
         Dict(
             "showlegend" => false,
-            "yaxis" => Dict("domain" => (0.98, 1), "ticks" => ""),
+            "yaxis" => Dict("domain" => (dm, 1), "ticks" => ""),
             "yaxis2" => Dict(
-                "domain" => (0, 0.96),
+                "domain" => (0, dm),
                 "position" => 0,
                 "title" => Dict("text" => nf, "font" => Dict("color" => hd)),
-                "range" => Omics.Plot.rang(extrema(fe_)..., 0.04),
-                "tickvals" => Omics.Plot.make_tickvals(fe_),
+                "range" => Omics.Plot.rang(extrema(fe_)..., ex),
+                "tickvals" => map(Omics.Strin.shorten, Omics.Plot.make_tickvals(fe_)),
             ),
             "yaxis3" => Dict(
                 "overlaying" => "y2",
+                "position" => 0.112,
                 "title" =>
                     Dict("text" => "Probability of $nt", "font" => Dict("color" => hf)),
-                "range" => Omics.Plot.rang(0, 1, 0.04),
+                "range" => Omics.Plot.rang(0, 1, ex),
                 "tickvals" => (0, 1, map(Omics.Strin.shorten, extrema(pr_))...),
             ),
             "xaxis" => Dict(

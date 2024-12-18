@@ -16,17 +16,14 @@ function order(fu, la_, nu___)
 
     id_ = Vector{Int}(undef, lastindex(la_))
 
-    st = 1
+    en = 0
 
     for la in sort!(unique(la_))
 
         il_ = findall(==(la), la_)
 
-        en = st + lastindex(il_) - 1
-
-        id_[st:en] = il_[hierarchize(pairwise(fu, nu___[il_])).order]
-
-        st = en + 1
+        id_[(en + 1):(en += lastindex(il_))] =
+            il_[hierarchize(pairwise(fu, nu___[il_])).order]
 
     end
 

@@ -59,15 +59,15 @@ const SI = 100000, 100
 
 # ---- #
 
-# 44.250 μs (204 allocations: 4.01 MiB)
-# 46.208 μs (285 allocations: 4.01 MiB)
-# 50.834 μs (475 allocations: 4.02 MiB)
-# 59.750 μs (815 allocations: 4.04 MiB)
-# 91.750 μs (1522 allocations: 4.12 MiB)
-# 822.792 μs (7166 allocations: 5.85 MiB)
-# 2.127 ms (96619 allocations: 8.17 MiB)
-# 458.792 μs (652 allocations: 5.03 MiB)
-# 6.231 s (9897592 allocations: 2.79 GiB)
+# 44.833 μs (204 allocations: 4.01 MiB)
+# 45.000 μs (285 allocations: 4.01 MiB)
+# 50.208 μs (479 allocations: 4.02 MiB)
+# 60.416 μs (814 allocations: 4.04 MiB)
+# 90.667 μs (1523 allocations: 4.12 MiB)
+# 828.833 μs (7166 allocations: 5.85 MiB)
+# 2.085 ms (96619 allocations: 8.17 MiB)
+# 457.459 μs (652 allocations: 5.03 MiB)
+# 6.066 s (9897592 allocations: 2.79 GiB)
 for (uf, us) in
     ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), SI)
 
@@ -77,7 +77,7 @@ for (uf, us) in
 
     Omics.Match.go(di, ar_...; la)
 
-    #@btime Omics.Match.go($di, $ar_...; ue = 0)
+    @btime Omics.Match.go($di, $ar_...; ue = 0)
 
 end
 

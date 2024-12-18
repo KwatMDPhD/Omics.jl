@@ -6,7 +6,7 @@ function _mirror(up)
 
     id = 1
 
-    po_[id] = 0.0
+    po_[id] = 0
 
     while id < up
 
@@ -64,7 +64,7 @@ function make_vector_mirror_wide(up, ze = true)
 
         if id < up
 
-            ng_[ie] = (ne + ne_[id + 1]) / 2
+            ng_[ie] = (ne + ne_[id + 1]) * 0.5
 
         end
 

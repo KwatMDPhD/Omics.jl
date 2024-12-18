@@ -38,23 +38,23 @@ end
 
 # ---- #
 
-# 412.295 ns (2 allocations: 192 bytes)
-# 3.859 μs (36 allocations: 1.89 KiB)
+# 412.500 ns (2 allocations: 192 bytes)
+# 3.802 μs (36 allocations: 1.89 KiB)
 # 1.892 μs (2 allocations: 192 bytes)
-# 5.701 μs (36 allocations: 2.66 KiB)
-# 21.708 μs (2 allocations: 192 bytes)
-# 25.250 μs (38 allocations: 9.70 KiB)
-# 299.791 μs (2 allocations: 192 bytes)
-# 404.833 μs (38 allocations: 79.95 KiB)
+# 5.653 μs (36 allocations: 2.66 KiB)
+# 20.209 μs (2 allocations: 192 bytes)
+# 25.083 μs (38 allocations: 9.70 KiB)
+# 302.708 μs (2 allocations: 192 bytes)
+# 423.042 μs (38 allocations: 79.95 KiB)
 for ur in (10, 100, 1000, 10000)
 
     seed!(20241023)
 
     nu_ = randn(ur)
 
-    #@btime Omics.Density.coun($nu_, UG)
+    @btime Omics.Density.coun($nu_, UG)
 
-    #@btime kde($nu_; boundary = $(extrema(nu_)), npoints = UG)
+    @btime kde($nu_; boundary = $(extrema(nu_)), npoints = UG)
 
 end
 
@@ -78,14 +78,14 @@ end
 
 # ---- #
 
-# 857.516 ns (3 allocations: 2.08 KiB)
-# 13.958 μs (54 allocations: 13.23 KiB)
-# 3.906 μs (3 allocations: 2.08 KiB)
-# 17.709 μs (54 allocations: 14.77 KiB)
-# 49.791 μs (3 allocations: 2.08 KiB)
-# 56.083 μs (57 allocations: 28.84 KiB)
-# 622.375 μs (3 allocations: 2.08 KiB)
-# 892.250 μs (57 allocations: 169.34 KiB)
+# 879.808 ns (3 allocations: 2.08 KiB)
+# 13.959 μs (54 allocations: 13.23 KiB)
+# 3.927 μs (3 allocations: 2.08 KiB)
+# 17.750 μs (54 allocations: 14.77 KiB)
+# 45.625 μs (3 allocations: 2.08 KiB)
+# 56.166 μs (57 allocations: 28.84 KiB)
+# 627.459 μs (3 allocations: 2.08 KiB)
+# 902.417 μs (57 allocations: 169.34 KiB)
 for ur in (10, 100, 1000, 10000)
 
     seed!(20241023)
@@ -94,12 +94,12 @@ for ur in (10, 100, 1000, 10000)
 
     n2_ = randn(ur)
 
-    #@btime Omics.Density.coun($n1_, $n2_, UG, UG)
+    @btime Omics.Density.coun($n1_, $n2_, UG, UG)
 
-    #@btime kde(
-    #    ($n1_, $n2_);
-    #    boundary = ($(extrema(n1_)), $(extrema(n2_))),
-    #    npoints = (UG, UG),
-    #)
+    @btime kde(
+        ($n1_, $n2_);
+        boundary = ($(extrema(n1_)), $(extrema(n2_))),
+        npoints = (UG, UG),
+    )
 
 end

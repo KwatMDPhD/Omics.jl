@@ -36,14 +36,14 @@ for (nu_, re) in zip(
 
     @test co == re
 
-    #@btime Omics.Normalization.normalize_with_0!($co)
+    @btime Omics.Normalization.normalize_with_0!($co)
 
 end
 
 # ---- #
 
-# 21.000 ns (0 allocations: 0 bytes)
-# 25.033 ns (0 allocations: 0 bytes)
+# 20.958 ns (0 allocations: 0 bytes)
+# 24.991 ns (0 allocations: 0 bytes)
 # 34.582 ns (0 allocations: 0 bytes)
 for (nu_, re) in
     zip(NU___, ([0, 0.5, 1], [0, 0.5, 0.6666666666666666, 1], [0 0.4 0.8; 0.2 0.6 1]))
@@ -54,14 +54,14 @@ for (nu_, re) in
 
     @test co == re
 
-    #@btime Omics.Normalization.normalize_with_01!($co)
+    @btime Omics.Normalization.normalize_with_01!($co)
 
 end
 
 # ---- #
 
-# 8.333 ns (0 allocations: 0 bytes)
-# 9.833 ns (0 allocations: 0 bytes)
+# 8.583 ns (0 allocations: 0 bytes)
+# 9.875 ns (0 allocations: 0 bytes)
 for (nu_, re) in zip(
     NU___[[1, 3]],
     (
@@ -79,15 +79,15 @@ for (nu_, re) in zip(
 
     @test co == re
 
-    #@btime Omics.Normalization.normalize_with_sum!($co)
+    @btime Omics.Normalization.normalize_with_sum!($co)
 
 end
 
 # ---- #
 
-# 21.773 ns (0 allocations: 0 bytes)
-# 24.658 ns (0 allocations: 0 bytes)
-# 24.006 ns (0 allocations: 0 bytes)
+# 21.857 ns (0 allocations: 0 bytes)
+# 24.031 ns (0 allocations: 0 bytes)
+# 23.510 ns (0 allocations: 0 bytes)
 for (nu_, re) in zip(
     NU___,
     (
@@ -106,7 +106,7 @@ for (nu_, re) in zip(
 
     @test co == re
 
-    #@btime Omics.Normalization.normalize_with_logistic!($co)
+    @btime Omics.Normalization.normalize_with_logistic!($co)
 
 end
 
@@ -116,8 +116,8 @@ const NR___ = [-1, 0, 0, 1, 1, 1, 2], [-1 0 1 2; 0 1 1 3]
 
 # ---- #
 
-# 55.147 ns (4 allocations: 224 bytes)
-# 254.404 ns (6 allocations: 352 bytes)
+# 53.921 ns (4 allocations: 224 bytes)
+# 243.663 ns (6 allocations: 352 bytes)
 for (nu_, re) in zip(NR___, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
     co = copy(nu_)
@@ -126,14 +126,14 @@ for (nu_, re) in zip(NR___, ([1, 2, 2, 3, 3, 3, 4], [1 2 3 4; 2 3 3 5]))
 
     @test co == re
 
-    #@btime Omics.Normalization.normalize_with_1223!($co)
+    @btime Omics.Normalization.normalize_with_1223!($co)
 
 end
 
 # ---- #
 
-# 54.992 ns (4 allocations: 224 bytes)
-# 245.876 ns (6 allocations: 352 bytes)
+# 53.245 ns (4 allocations: 224 bytes)
+# 243.542 ns (6 allocations: 352 bytes)
 for (nu_, re) in zip(NR___, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
 
     co = copy(nu_)
@@ -142,14 +142,14 @@ for (nu_, re) in zip(NR___, ([1, 2, 2, 4, 4, 4, 7], [1 2 4 7; 2 4 4 8]))
 
     @test co == re
 
-    #@btime Omics.Normalization.normalize_with_1224!($co)
+    @btime Omics.Normalization.normalize_with_1224!($co)
 
 end
 
 # ---- #
 
-# 64.498 ns (4 allocations: 224 bytes)
-# 262.208 ns (6 allocations: 352 bytes)
+# 62.436 ns (4 allocations: 224 bytes)
+# 260.418 ns (6 allocations: 352 bytes)
 for (nu_, re) in zip(NR___, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
 
     co = map(float, nu_)
@@ -158,7 +158,7 @@ for (nu_, re) in zip(NR___, ([1, 2.5, 2.5, 5, 5, 5, 7], [1 2.5 5 7; 2.5 5 5 8]))
 
     @test co == re
 
-    #@btime Omics.Normalization.normalize_with_125254!($co)
+    @btime Omics.Normalization.normalize_with_125254!($co)
 
 end
 
@@ -199,34 +199,34 @@ const RE_ = [
     [1.0, 1, 2, 2, 3, 3, 4, 4, 5, 5],
 ]
 
-# 58.919 ns (2 allocations: 144 bytes)
-# 58.918 ns (2 allocations: 144 bytes)
-# 60.378 ns (2 allocations: 144 bytes)
-# 58.893 ns (2 allocations: 144 bytes)
-# 58.833 ns (2 allocations: 144 bytes)
-# 58.918 ns (2 allocations: 144 bytes)
-# 58.918 ns (2 allocations: 144 bytes)
-# 59.766 ns (2 allocations: 144 bytes)
-# 58.900 ns (2 allocations: 144 bytes)
-# 58.851 ns (2 allocations: 144 bytes)
-# 58.960 ns (2 allocations: 144 bytes)
-# 58.919 ns (2 allocations: 144 bytes)
-# 58.876 ns (2 allocations: 144 bytes)
-# 62.542 ns (2 allocations: 144 bytes)
-# 60.572 ns (2 allocations: 144 bytes)
-# 60.632 ns (2 allocations: 144 bytes)
-# 69.587 ns (2 allocations: 144 bytes)
-# 74.897 ns (2 allocations: 144 bytes)
-# 74.340 ns (2 allocations: 144 bytes)
-# 74.427 ns (2 allocations: 144 bytes)
-# 70.398 ns (2 allocations: 144 bytes)
-# 75.737 ns (2 allocations: 144 bytes)
-# 74.417 ns (2 allocations: 144 bytes)
-# 74.374 ns (2 allocations: 144 bytes)
-# 69.928 ns (2 allocations: 144 bytes)
-# 75.609 ns (2 allocations: 144 bytes)
-# 74.588 ns (2 allocations: 144 bytes)
-# 74.374 ns (2 allocations: 144 bytes)
+# 54.611 ns (2 allocations: 144 bytes)
+# 55.160 ns (2 allocations: 144 bytes)
+# 54.682 ns (2 allocations: 144 bytes)
+# 54.653 ns (2 allocations: 144 bytes)
+# 54.695 ns (2 allocations: 144 bytes)
+# 55.034 ns (2 allocations: 144 bytes)
+# 54.653 ns (2 allocations: 144 bytes)
+# 54.682 ns (2 allocations: 144 bytes)
+# 55.301 ns (2 allocations: 144 bytes)
+# 54.695 ns (2 allocations: 144 bytes)
+# 54.653 ns (2 allocations: 144 bytes)
+# 56.233 ns (2 allocations: 144 bytes)
+# 56.233 ns (2 allocations: 144 bytes)
+# 59.808 ns (2 allocations: 144 bytes)
+# 58.453 ns (2 allocations: 144 bytes)
+# 58.367 ns (2 allocations: 144 bytes)
+# 360.714 ns (32 allocations: 944 bytes)
+# 505.582 ns (47 allocations: 1.31 KiB)
+# 479.703 ns (44 allocations: 1.23 KiB)
+# 479.487 ns (44 allocations: 1.23 KiB)
+# 360.514 ns (32 allocations: 944 bytes)
+# 504.722 ns (47 allocations: 1.31 KiB)
+# 480.015 ns (44 allocations: 1.23 KiB)
+# 479.487 ns (44 allocations: 1.23 KiB)
+# 360.249 ns (32 allocations: 944 bytes)
+# 506.689 ns (47 allocations: 1.31 KiB)
+# 479.913 ns (44 allocations: 1.23 KiB)
+# 479.383 ns (44 allocations: 1.23 KiB)
 for nu_ in (
     zeros(10),
     fill(0.1, 10),
@@ -245,7 +245,7 @@ for nu_ in (
 
         @test co == popfirst!(RE_)
 
-        #@btime Omics.Normalization.normalize_with_quantile!($co)
+        @btime Omics.Normalization.normalize_with_quantile!($co)
 
     end
 

@@ -89,12 +89,12 @@ end
 # ---- #
 
 # 7.125 ns (0 allocations: 0 bytes)
-# 14.153 ns (0 allocations: 0 bytes)
+# 14.055 ns (0 allocations: 0 bytes)
 for po_ in ([0.5], [0.4, 0.6])
 
     @test isapprox(Omics.Evidence.ge(0.5, po_), 0; atol = 1e-15)
 
-    #@btime Omics.Evidence.ge(0.5, $po_)
+    @btime Omics.Evidence.ge(0.5, $po_)
 
 end
 

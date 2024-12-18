@@ -53,7 +53,7 @@ function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
                 "x" => (_root(el), _root(eu)),
                 "mode" => "lines",
                 "line" =>
-                    Dict("width" => si * 1.64, "color" => Omics.Color.hexify(he, 0.4)),
+                    Dict("width" => si * 1.64, "color" => Omics.Color.hexify(he, 0.48)),
             ),
         )
 

@@ -36,7 +36,7 @@ function get_mutual_information(jo)
 
     p2_ = map(sum, eachcol(jo))
 
-    mu = 0.0
+    mu = 0
 
     for i2 in eachindex(p2_), i1 in eachindex(p1_)
 
@@ -62,7 +62,7 @@ function get_mutual_information(jo, no)
 
     mu = e1 + e2 - sum(Omics.Entropy.ge, jo)
 
-    no ? 2.0 * mu / (e1 + e2) : mu
+    no ? 2 * mu / (e1 + e2) : mu
 
 end
 
@@ -82,7 +82,7 @@ function get_information_coefficient(n1_, n2_)
     )
 
     # TODO: Confirm e
-    sign(co) * sqrt(1.0 - exp(-2.0 * mu))
+    sign(co) * sqrt(1 - exp(-2 * mu))
 
 end
 

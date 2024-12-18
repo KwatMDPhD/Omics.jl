@@ -106,46 +106,46 @@ end
 
 # ---- #
 
-# 18.597 ns (0 allocations: 0 bytes)
-# 15.782 ns (0 allocations: 0 bytes)
-# 83.290 ns (4 allocations: 1.84 KiB)
-# 21.666 μs (54 allocations: 43.98 KiB)
-# 235.612 ns (4 allocations: 288 bytes)
-# 6.142 μs (4 allocations: 640 bytes)
-# 256.628 ns (0 allocations: 0 bytes)
-# 5.604 μs (0 allocations: 0 bytes)
-# 502.373 ns (4 allocations: 1.84 KiB)
+# 18.244 ns (0 allocations: 0 bytes)
+# 16.325 ns (0 allocations: 0 bytes)
+# 82.469 ns (4 allocations: 1.84 KiB)
+# 21.625 μs (54 allocations: 43.98 KiB)
+# 245.500 ns (4 allocations: 288 bytes)
+# 6.708 μs (4 allocations: 640 bytes)
+# 257.980 ns (0 allocations: 0 bytes)
+# 5.611 μs (0 allocations: 0 bytes)
+# 485.046 ns (4 allocations: 1.84 KiB)
 # 27.750 μs (54 allocations: 43.98 KiB)
-# 112.072 ns (0 allocations: 0 bytes)
-# 49.687 ns (0 allocations: 0 bytes)
-# 240.315 ns (4 allocations: 1.84 KiB)
-# 26.209 μs (54 allocations: 45.52 KiB)
-# 511.932 ns (4 allocations: 288 bytes)
-# 6.408 μs (4 allocations: 640 bytes)
-# 493.124 ns (0 allocations: 0 bytes)
-# 5.861 μs (0 allocations: 0 bytes)
-# 995.800 ns (4 allocations: 1.84 KiB)
+# 111.982 ns (0 allocations: 0 bytes)
+# 50.025 ns (0 allocations: 0 bytes)
+# 230.967 ns (4 allocations: 1.84 KiB)
+# 26.125 μs (54 allocations: 45.52 KiB)
+# 561.032 ns (4 allocations: 288 bytes)
+# 6.989 μs (4 allocations: 640 bytes)
+# 493.985 ns (0 allocations: 0 bytes)
+# 5.854 μs (0 allocations: 0 bytes)
+# 995.900 ns (4 allocations: 1.84 KiB)
 # 32.500 μs (54 allocations: 45.52 KiB)
 # 1.150 μs (0 allocations: 0 bytes)
-# 417.920 ns (0 allocations: 0 bytes)
-# 2.000 μs (4 allocations: 1.84 KiB)
-# 73.292 μs (57 allocations: 59.59 KiB)
-# 734.171 ns (4 allocations: 288 bytes)
-# 6.392 μs (4 allocations: 640 bytes)
-# 709.809 ns (0 allocations: 0 bytes)
-# 5.882 μs (0 allocations: 0 bytes)
-# 3.969 μs (4 allocations: 1.84 KiB)
-# 80.250 μs (57 allocations: 59.59 KiB)
+# 417.714 ns (0 allocations: 0 bytes)
+# 1.750 μs (4 allocations: 1.84 KiB)
+# 73.333 μs (57 allocations: 59.59 KiB)
+# 808.045 ns (4 allocations: 288 bytes)
+# 6.950 μs (4 allocations: 640 bytes)
+# 711.556 ns (0 allocations: 0 bytes)
+# 5.896 μs (0 allocations: 0 bytes)
+# 3.713 μs (4 allocations: 1.84 KiB)
+# 80.042 μs (57 allocations: 59.59 KiB)
 # 11.541 μs (0 allocations: 0 bytes)
 # 4.077 μs (0 allocations: 0 bytes)
-# 19.416 μs (4 allocations: 1.84 KiB)
-# 982.000 μs (57 allocations: 200.09 KiB)
-# 733.070 ns (4 allocations: 288 bytes)
-# 6.100 μs (4 allocations: 640 bytes)
-# 708.636 ns (0 allocations: 0 bytes)
-# 5.653 μs (0 allocations: 0 bytes)
-# 31.833 μs (4 allocations: 1.84 KiB)
-# 992.041 μs (57 allocations: 200.09 KiB)
+# 16.958 μs (4 allocations: 1.84 KiB)
+# 982.583 μs (57 allocations: 200.09 KiB)
+# 809.066 ns (4 allocations: 288 bytes)
+# 6.617 μs (4 allocations: 640 bytes)
+# 708.629 ns (0 allocations: 0 bytes)
+# 5.660 μs (0 allocations: 0 bytes)
+# 29.458 μs (4 allocations: 1.84 KiB)
+# 992.291 μs (57 allocations: 200.09 KiB)
 for ur in (10, 100, 1000, 10000)
 
     seed!(20241021)
@@ -166,25 +166,25 @@ for ur in (10, 100, 1000, 10000)
 
     jf = Omics.MutualInformation._get_density(f1_, f2_, cf)
 
-    #@btime cor($i1_, $i2_)
+    @btime cor($i1_, $i2_)
 
-    #@btime cor($f1_, $f2_)
+    @btime cor($f1_, $f2_)
 
-    #@btime Omics.MutualInformation._get_density($i1_, $i2_, $ci)
+    @btime Omics.MutualInformation._get_density($i1_, $i2_, $ci)
 
-    #@btime Omics.MutualInformation._get_density($f1_, $f2_, $cf)
+    @btime Omics.MutualInformation._get_density($f1_, $f2_, $cf)
 
-    #@btime Omics.MutualInformation.get_mutual_information($ji)
+    @btime Omics.MutualInformation.get_mutual_information($ji)
 
-    #@btime Omics.MutualInformation.get_mutual_information($jf)
+    @btime Omics.MutualInformation.get_mutual_information($jf)
 
-    #@btime Omics.MutualInformation.get_mutual_information($ji, false)
+    @btime Omics.MutualInformation.get_mutual_information($ji, false)
 
-    #@btime Omics.MutualInformation.get_mutual_information($jf, false)
+    @btime Omics.MutualInformation.get_mutual_information($jf, false)
 
-    #@btime Omics.MutualInformation.get_information_coefficient($i1_, $i2_)
+    @btime Omics.MutualInformation.get_information_coefficient($i1_, $i2_)
 
-    #@btime Omics.MutualInformation.get_information_coefficient($f1_, $f2_)
+    @btime Omics.MutualInformation.get_information_coefficient($f1_, $f2_)
 
 end
 
@@ -240,22 +240,22 @@ end
 
 # ---- #
 
-# 446.487 ns (6 allocations: 1.00 KiB)
-# 200.281 ns (4 allocations: 1.41 KiB)
-# 208.182 ns (4 allocations: 272 bytes)
-# 253.285 ns (0 allocations: 0 bytes)
-# 801.022 ns (6 allocations: 1.23 KiB)
-# 334.118 ns (4 allocations: 1.84 KiB)
-# 483.118 ns (4 allocations: 288 bytes)
-# 521.162 ns (0 allocations: 0 bytes)
-# 2.741 μs (6 allocations: 1.23 KiB)
-# 2.097 μs (4 allocations: 1.84 KiB)
-# 661.421 ns (4 allocations: 288 bytes)
-# 681.947 ns (0 allocations: 0 bytes)
-# 20.208 μs (6 allocations: 1.23 KiB)
-# 19.541 μs (4 allocations: 1.84 KiB)
-# 619.699 ns (4 allocations: 288 bytes)
-# 686.667 ns (0 allocations: 0 bytes)
+# 469.173 ns (6 allocations: 1.00 KiB)
+# 175.484 ns (4 allocations: 1.41 KiB)
+# 216.587 ns (4 allocations: 272 bytes)
+# 239.508 ns (0 allocations: 0 bytes)
+# 801.978 ns (6 allocations: 1.23 KiB)
+# 320.763 ns (4 allocations: 1.84 KiB)
+# 531.634 ns (4 allocations: 288 bytes)
+# 505.611 ns (0 allocations: 0 bytes)
+# 2.495 μs (6 allocations: 1.23 KiB)
+# 1.829 μs (4 allocations: 1.84 KiB)
+# 744.381 ns (4 allocations: 288 bytes)
+# 662.756 ns (0 allocations: 0 bytes)
+# 17.791 μs (6 allocations: 1.23 KiB)
+# 17.125 μs (4 allocations: 1.84 KiB)
+# 712.468 ns (4 allocations: 288 bytes)
+# 664.044 ns (0 allocations: 0 bytes)
 for ur in (10, 100, 1000, 10000)
 
     seed!(20240903)
@@ -279,14 +279,14 @@ for ur in (10, 100, 1000, 10000)
         mutualinfo(i1_, i2_),
     )
 
-    #@btime mutualinfo($i1_, $i2_; normed = false)
+    @btime mutualinfo($i1_, $i2_; normed = false)
 
-    #@btime Omics.Normalization.normalize_with_sum!(
-    #    Omics.MutualInformation._get_density($i1_, $i2_, NaN),
-    #)
+    @btime Omics.Normalization.normalize_with_sum!(
+        Omics.MutualInformation._get_density($i1_, $i2_, NaN),
+    )
 
-    #@btime Omics.MutualInformation.get_mutual_information($jo)
+    @btime Omics.MutualInformation.get_mutual_information($jo)
 
-    #@btime Omics.MutualInformation.get_mutual_information($jo, false)
+    @btime Omics.MutualInformation.get_mutual_information($jo, false)
 
 end

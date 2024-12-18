@@ -8,13 +8,13 @@ using Test: @test
 
 # 2.083 ns (0 allocations: 0 bytes)
 # 2.125 ns (0 allocations: 0 bytes)
-# 2.084 ns (0 allocations: 0 bytes)
+# 2.083 ns (0 allocations: 0 bytes)
 for (mi, ma, ex, re) in
     ((0, 1, 0.1, (-0.1, 1.1)), (-1, 1, 0.1, (-1.2, 1.2)), (900, 1000, 0.1, (890.0, 1010.0)))
 
     @test Omics.Plot.rang(mi, ma, ex) === re
 
-    #@btime Omics.Plot.rang($mi, $ma, $ex)
+    @btime Omics.Plot.rang($mi, $ma, $ex)
 
 end
 

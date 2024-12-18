@@ -8,9 +8,9 @@ using OrderedCollections: OrderedDict
 
 # ---- #
 
-# 67.825 ns (4 allocations: 384 bytes)
-# 77.497 ns (4 allocations: 384 bytes)
-# 77.877 ns (4 allocations: 384 bytes)
+# 68.108 ns (4 allocations: 384 bytes)
+# 77.798 ns (4 allocations: 384 bytes)
+# 78.012 ns (4 allocations: 384 bytes)
 for (an_, re) in (
     (['a', 'b', 'c', 'd'], Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4)),
     (
@@ -25,15 +25,15 @@ for (an_, re) in (
 
     @test Omics.Dic.index(an_) == re
 
-    #@btime Omics.Dic.index($an_)
+    @btime Omics.Dic.index($an_)
 
 end
 
 # ---- #
 
-# 153.771 ns (10 allocations: 768 bytes)
-# 172.796 ns (10 allocations: 768 bytes)
-# 152.525 ns (10 allocations: 832 bytes)
+# 155.511 ns (10 allocations: 768 bytes)
+# 174.375 ns (10 allocations: 768 bytes)
+# 152.593 ns (10 allocations: 832 bytes)
 for (an_, re) in (
     (['a', 'b', 'b', 'c', 'c', 'c'], Dict('a' => [1], 'b' => [2, 3], 'c' => [4, 5, 6])),
     (
@@ -45,7 +45,7 @@ for (an_, re) in (
 
     @test Omics.Dic.index2(an_) == re
 
-    #@btime Omics.Dic.index2($an_)
+    @btime Omics.Dic.index2($an_)
 
 end
 
@@ -54,6 +54,11 @@ end
 for (k1_v1, k2_v2, re) in (
     (Dict(1 => 'a'), Dict(2 => 'b'), Dict{Int, Char}),
     (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Union{Int, Float64}, Union{Char, String}}),
+    (
+        Dict(1 => "Aa"),
+        Dict(2 => view("Bb", 1:2)),
+        Dict{Int, Union{String, SubString{String}}},
+    ),
 )
 
     @test typeof(Omics.Dic.merg(k1_v1, k2_v2)) === re
@@ -75,7 +80,7 @@ for (k1_v1, k2_v2, re) in (
 
     @test Omics.Dic.merg(k1_v1, k2_v2) == re
 
-    #@btime Omics.Dic.merg($k1_v1, $k2_v2)
+    @btime Omics.Dic.merg($k1_v1, $k2_v2)
 
 end
 
