@@ -17,8 +17,7 @@ function collapse(fu, ty, ro_, ma)
         id_ = r2_id_[r2_[i2]]
 
         m2[i2, :] =
-            isone(lastindex(id_)) ? view(ma, id_[], :) :
-            [fu(an_) for an_ in eachcol(ma[id_, :])]
+            isone(lastindex(id_)) ? ma[id_[], :] : [fu(an_) for an_ in eachcol(ma[id_, :])]
 
     end
 

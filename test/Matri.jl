@@ -34,8 +34,8 @@ end
 
 # ---- #
 
-# 23.417 μs (408 allocations: 126.67 KiB)
-# 2.678 ms (2708 allocations: 11.93 MiB)
+# 26.500 μs (480 allocations: 188.55 KiB)
+# 2.754 ms (2818 allocations: 12.36 MiB)
 for ur in (100, 1000)
 
     seed!(20230920)

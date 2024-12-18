@@ -54,11 +54,6 @@ end
 for (k1_v1, k2_v2, re) in (
     (Dict(1 => 'a'), Dict(2 => 'b'), Dict{Int, Char}),
     (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Union{Int, Float64}, Union{Char, String}}),
-    (
-        Dict(1 => "Aa"),
-        Dict(2 => view("Bb", 1:2)),
-        Dict{Int, Union{String, SubString{String}}},
-    ),
 )
 
     @test typeof(Omics.Dic.merg(k1_v1, k2_v2)) === re

@@ -91,7 +91,7 @@ for (an_, ue, re) in (
     (CH_, lastindex(CH_) + 1, sort(CH_)),
 )
 
-    @test view(an_, Omics.Rank.get_extreme(an_, ue)) == re
+    @test an_[Omics.Rank.get_extreme(an_, ue)] == re
 
     #@btime Omics.Rank.get_extreme($an_, $ue)
 

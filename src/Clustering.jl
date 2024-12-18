@@ -24,7 +24,7 @@ function order(fu, la_, nu___)
 
         en = st + lastindex(il_) - 1
 
-        id_[st:en] = view(il_, hierarchize(pairwise(fu, view(nu___, il_))).order)
+        id_[st:en] = il_[hierarchize(pairwise(fu, nu___[il_])).order]
 
         st = en + 1
 
