@@ -26,7 +26,7 @@ function index(an_)
 
 end
 
-function index2(an_)
+function inde(an_)
 
     an_id_ = Dict{eltype(an_), Vector{Int}}()
 

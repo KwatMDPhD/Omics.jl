@@ -33,7 +33,7 @@ end
 # 1.825 μs (128 allocations: 7.19 KiB)
 # 1.821 μs (128 allocations: 7.19 KiB)
 # 1.837 μs (128 allocations: 7.19 KiB)
-for (la_, ma, re) in (
+for (gr_, ma, re) in (
     (
         [1, 1, 1, 1, 2, 2, 2, 2],
         [
@@ -86,8 +86,8 @@ for (la_, ma, re) in (
 
     nu___ = eachcol(ma)
 
-    @test Omics.Clustering.order(EU, la_, nu___) == re
+    @test Omics.Clustering.order(EU, gr_, nu___) == re
 
-    #@btime Omics.Clustering.order(EU, $la_, $nu___)
+    #@btime Omics.Clustering.order(EU, $gr_, $nu___)
 
 end

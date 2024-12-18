@@ -18,10 +18,10 @@ const RE = "#ff0000ff"
 
 for st in ("red", "#f00", "#ff0000")
 
-    @test Omics.Color.hexify(st, 0) === "#ff000000"
+    @test Omics.Color.hexify(st) === RE
+
+    @test Omics.Color.hexify(st, 0.0) === "#ff000000"
 
     @test Omics.Color.hexify(st, 0.5) === "#ff000080"
-
-    @test Omics.Color.hexify(st) === RE
 
 end

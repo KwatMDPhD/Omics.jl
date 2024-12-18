@@ -10,22 +10,22 @@ function hierarchize(di, linkage = :ward)
 
 end
 
-function order(fu, la_, nu___)
+function order(fu, gr_, nu___)
 
-    io_ = Vector{Int}(undef, lastindex(la_))
+    id_ = Vector{Int}(undef, lastindex(gr_))
 
     en = 0
 
-    for la in sort!(unique(la_))
+    for gr in sort!(unique(gr_))
 
-        il_ = findall(==(la), la_)
+        ig_ = findall(==(gr), gr_)
 
-        io_[(en + 1):(en += lastindex(il_))] =
-            il_[hierarchize(pairwise(fu, nu___[il_])).order]
+        id_[(en + 1):(en += lastindex(ig_))] =
+            ig_[hierarchize(pairwise(fu, nu___[ig_])).order]
 
     end
 
-    io_
+    id_
 
 end
 
