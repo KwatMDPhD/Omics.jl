@@ -38,14 +38,14 @@ end
 
 # ---- #
 
-# 480.554 ns (2 allocations: 192 bytes)
-# 3.849 μs (36 allocations: 1.89 KiB)
-# 1.929 μs (2 allocations: 192 bytes)
-# 5.576 μs (36 allocations: 2.66 KiB)
-# 16.708 μs (2 allocations: 192 bytes)
-# 24.875 μs (38 allocations: 9.70 KiB)
-# 305.708 μs (2 allocations: 192 bytes)
-# 415.750 μs (38 allocations: 79.95 KiB)
+# 412.295 ns (2 allocations: 192 bytes)
+# 3.859 μs (36 allocations: 1.89 KiB)
+# 1.892 μs (2 allocations: 192 bytes)
+# 5.701 μs (36 allocations: 2.66 KiB)
+# 21.708 μs (2 allocations: 192 bytes)
+# 25.250 μs (38 allocations: 9.70 KiB)
+# 299.791 μs (2 allocations: 192 bytes)
+# 404.833 μs (38 allocations: 79.95 KiB)
 for ur in (10, 100, 1000, 10000)
 
     seed!(20241023)
@@ -78,14 +78,14 @@ end
 
 # ---- #
 
-# 877.404 ns (3 allocations: 2.08 KiB)
-# 14.083 μs (54 allocations: 13.23 KiB)
-# 3.927 μs (3 allocations: 2.08 KiB)
-# 17.792 μs (54 allocations: 14.77 KiB)
-# 47.417 μs (3 allocations: 2.08 KiB)
-# 56.125 μs (57 allocations: 28.84 KiB)
-# 630.708 μs (3 allocations: 2.08 KiB)
-# 901.041 μs (57 allocations: 169.34 KiB)
+# 857.516 ns (3 allocations: 2.08 KiB)
+# 13.958 μs (54 allocations: 13.23 KiB)
+# 3.906 μs (3 allocations: 2.08 KiB)
+# 17.709 μs (54 allocations: 14.77 KiB)
+# 49.791 μs (3 allocations: 2.08 KiB)
+# 56.083 μs (57 allocations: 28.84 KiB)
+# 622.375 μs (3 allocations: 2.08 KiB)
+# 892.250 μs (57 allocations: 169.34 KiB)
 for ur in (10, 100, 1000, 10000)
 
     seed!(20241023)

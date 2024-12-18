@@ -25,12 +25,12 @@ end
 
 # ---- #
 
-# 2.079 μs (128 allocations: 7.19 KiB)
-# 2.083 μs (128 allocations: 7.19 KiB)
-# 2.144 μs (128 allocations: 7.19 KiB)
-# 2.079 μs (128 allocations: 7.19 KiB)
-# 2.116 μs (128 allocations: 7.19 KiB)
-# 2.079 μs (128 allocations: 7.19 KiB)
+# 1.866 μs (128 allocations: 7.19 KiB)
+# 1.907 μs (128 allocations: 7.19 KiB)
+# 1.893 μs (128 allocations: 7.19 KiB)
+# 1.870 μs (128 allocations: 7.19 KiB)
+# 1.829 μs (128 allocations: 7.19 KiB)
+# 1.866 μs (128 allocations: 7.19 KiB)
 for (la_, ma, re) in (
     (
         [1, 1, 1, 1, 2, 2, 2, 2],

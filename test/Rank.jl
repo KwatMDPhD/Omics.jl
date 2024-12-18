@@ -6,7 +6,7 @@ using Test: @test
 
 # ---- #
 
-const ID_ = UInt[]
+const ID_ = Int[]
 
 # ---- #
 

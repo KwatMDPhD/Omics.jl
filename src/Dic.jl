@@ -8,7 +8,7 @@ using TOML: parsefile as parsefil
 
 function index(an_)
 
-    an_id = Dict{eltype(an_), UInt}()
+    an_id = Dict{eltype(an_), Int}()
 
     id = 0
 
@@ -28,7 +28,7 @@ end
 
 function index2(an_)
 
-    an_id_ = Dict{eltype(an_), Vector{UInt}}()
+    an_id_ = Dict{eltype(an_), Vector{Int}}()
 
     for id in eachindex(an_)
 
@@ -36,7 +36,7 @@ function index2(an_)
 
         if !haskey(an_id_, an)
 
-            an_id_[an] = UInt[]
+            an_id_[an] = Int[]
 
         end
 

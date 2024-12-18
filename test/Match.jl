@@ -85,9 +85,9 @@ end
 
 const FU, NS, SA_, NT, TA_, NF, FE_, FS = make_argument("f12", 1, 19)
 
-const TI_ = convert(Vector{UInt}, TA_)
+const TI_ = convert(Vector{Int}, TA_)
 
-const FI = convert(Matrix{UInt}, FS)
+const FI = convert(Matrix{Int}, FS)
 
 for (ta_, fs) in ((TA_, FS), (TI_, FS), (TA_, FI), (TI_, FI))
 

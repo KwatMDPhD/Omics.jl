@@ -12,12 +12,12 @@ const LA_ = [1, 1, 2, 2]
 
 const PR_ = [0, 0.4, 0.6, 1]
 
-# 7.966 ns (0 allocations: 0 bytes)
-# 5.917 ns (0 allocations: 0 bytes)
+# 8.083 ns (0 allocations: 0 bytes)
+# 5.916 ns (0 allocations: 0 bytes)
 # 8.000 ns (0 allocations: 0 bytes)
-# 8.000 ns (0 allocations: 0 bytes)
-# 5.958 ns (0 allocations: 0 bytes)
-# 7.042 ns (0 allocations: 0 bytes)
+# 8.041 ns (0 allocations: 0 bytes)
+# 6.000 ns (0 allocations: 0 bytes)
+# 7.083 ns (0 allocations: 0 bytes)
 for (th, re) in (
     (
         0,
@@ -63,7 +63,7 @@ for (th, re) in (
     ),
 )
 
-    fill!(MA, zero(UInt))
+    fill!(MA, 0)
 
     Omics.ROC.fill_matrix!(MA, LA_, PR_, th)
 

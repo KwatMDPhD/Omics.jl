@@ -14,7 +14,7 @@ end
 
 function order(fu, la_, nu___)
 
-    id_ = Vector{UInt}(undef, lastindex(la_))
+    id_ = Vector{Int}(undef, lastindex(la_))
 
     st = 1
 

@@ -4,7 +4,7 @@ using ..Omics
 
 function make_matrix()
 
-    Matrix{UInt}(undef, 2, 2)
+    Matrix{Int}(undef, 2, 2)
 
 end
 
@@ -12,7 +12,7 @@ function fill_matrix!(ma, la_, pr_, th)
 
     for id in eachindex(la_)
 
-        ma[la_[id], pr_[id] < th ? 1 : 2] += one(UInt)
+        ma[la_[id], pr_[id] < th ? 1 : 2] += 1
 
     end
 
@@ -122,7 +122,7 @@ function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
 
         th = th_[it]
 
-        fill!(ma, zero(UInt))
+        fill!(ma, 0)
 
         fill_matrix!(ma, la_, pr_, th)
 
