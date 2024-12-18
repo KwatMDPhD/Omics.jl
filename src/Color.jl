@@ -48,7 +48,7 @@ function hexify(rg::Colorant)
 
 end
 
-function hexify(st, al = 1)
+function hexify(st, al = 1.0)
 
     hexify(coloralpha(parse(Colorant, st), al))
 

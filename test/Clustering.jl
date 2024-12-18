@@ -4,7 +4,7 @@ using Test: @test
 
 # ----------------------------------------------------------------------------------------------- #
 
-using Distances: Euclidean
+using Distances: Euclidean, pairwise
 
 # ---- #
 
@@ -21,7 +21,7 @@ const MA = [
 
 for (ea, re) in ((eachcol, [4, 1, 2, 3, 7, 5, 6]), (eachrow, [1, 3, 2, 4]))
 
-    @test Omics.Clustering.hierarchize(Omics.Clustering.pairwise(EU, ea(MA))).order == re
+    @test Omics.Clustering.hierarchize(pairwise(EU, ea(MA))).order == re
 
 end
 
@@ -88,6 +88,6 @@ for (la_, ma, re) in (
 
     @test Omics.Clustering.order(EU, la_, nu___) == re
 
-    @btime Omics.Clustering.order(EU, $la_, $nu___)
+    #@btime Omics.Clustering.order(EU, $la_, $nu___)
 
 end
