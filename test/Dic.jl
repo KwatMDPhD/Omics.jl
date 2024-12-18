@@ -81,18 +81,18 @@ end
 
 # ---- #
 
-const JS = pkgdir(Omics, "data", "Dic", "example.json")
+const RE = pkgdir(Omics, "data", "Dic", "example.json")
 
 # ---- #
 
-@test typeof(Omics.Dic.rea(JS, OrderedDict{String, Union{Int, String}})) ===
+@test typeof(Omics.Dic.rea(RE, OrderedDict{String, Union{Int, String}})) ===
       OrderedDict{String, Union{Int, String}}
 
 # ---- #
 
 for (fi, re) in (
     (
-        JS,
+        RE,
         OrderedDict{String, Any}(
             "1" => "1",
             "3" => "3",
@@ -105,7 +105,7 @@ for (fi, re) in (
         ),
     ),
     (
-        replace(JS, "json" => "toml"),
+        replace(RE, "json" => "toml"),
         Dict{String, Any}(
             "clients" =>
                 Dict("hosts" => ["alpha", "omega"], "data" => [["gamma", "delta"], [1, 2]]),
@@ -138,6 +138,8 @@ end
 
 # ---- #
 
+const WR = joinpath(tempdir(), "write.json")
+
 for ty in (OrderedDict, Dict)
 
     re = ty(
@@ -151,7 +153,7 @@ for ty in (OrderedDict, Dict)
         "8" => 8,
     )
 
-    ke_va = Omics.Dic.rea(Omics.Dic.writ(joinpath(tempdir(), "write.json"), re))
+    ke_va = Omics.Dic.rea(Omics.Dic.writ(WR, re))
 
     @test ke_va == re
 

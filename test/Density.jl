@@ -24,11 +24,13 @@ for nu_ in ([1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8
 
     xc_ = gr_
 
+    tr = Dict("type" => "bar", "x" => xc_)
+
     la = Dict("xaxis" => Dict("tickvals" => xc_))
 
-    Omics.Plot.plot("", (Dict("type" => "bar", "y" => co_, "x" => xc_),), la)
+    Omics.Plot.plot("", (merge(tr, Dict("y" => co_)),), la)
 
-    Omics.Plot.plot("", (Dict("type" => "bar", "y" => kd.density, "x" => xc_),), la)
+    Omics.Plot.plot("", (merge(tr, Dict("y" => kd.density)),), la)
 
 end
 

@@ -8,10 +8,6 @@ using Distances: Euclidean, pairwise
 
 # ---- #
 
-const EU = Euclidean()
-
-# ---- #
-
 const MA = [
     0 1 2 3 10 20 30
     0 2 1 3 20 10 30
@@ -21,18 +17,18 @@ const MA = [
 
 for (ea, re) in ((eachcol, [4, 1, 2, 3, 7, 5, 6]), (eachrow, [1, 3, 2, 4]))
 
-    @test Omics.Clustering.hierarchize(pairwise(EU, ea(MA))).order == re
+    @test Omics.Clustering.hierarchize(pairwise(Euclidean(), ea(MA))).order == re
 
 end
 
 # ---- #
 
-# 1.817 μs (128 allocations: 7.19 KiB)
-# 1.825 μs (128 allocations: 7.19 KiB)
-# 1.829 μs (128 allocations: 7.19 KiB)
-# 1.825 μs (128 allocations: 7.19 KiB)
-# 1.821 μs (128 allocations: 7.19 KiB)
-# 1.837 μs (128 allocations: 7.19 KiB)
+# 1.725 μs (128 allocations: 7.19 KiB)
+# 1.738 μs (128 allocations: 7.19 KiB)
+# 1.738 μs (128 allocations: 7.19 KiB)
+# 1.758 μs (128 allocations: 7.19 KiB)
+# 1.729 μs (128 allocations: 7.19 KiB)
+# 1.746 μs (128 allocations: 7.19 KiB)
 for (gr_, ma, re) in (
     (
         [1, 1, 1, 1, 2, 2, 2, 2],
@@ -86,8 +82,8 @@ for (gr_, ma, re) in (
 
     nu___ = eachcol(ma)
 
-    @test Omics.Clustering.order(EU, gr_, nu___) == re
+    @test Omics.Clustering.order(Euclidean(), gr_, nu___) == re
 
-    #@btime Omics.Clustering.order(EU, $gr_, $nu___)
+    @btime Omics.Clustering.order(Euclidean(), $gr_, $nu___)
 
 end
