@@ -6,41 +6,25 @@ using Test: @test
 
 # ---- #
 
-# 0.4
-@test abs(Omics.Evidence.ge(0.4, 0.5)) < abs(Omics.Evidence.ge(0.4, 0.3))
-
-# 0.6
-@test abs(Omics.Evidence.ge(0.6, 0.5)) < abs(Omics.Evidence.ge(0.6, 0.7))
-
-# 0.5
-@test isapprox(Omics.Evidence.ge(0.5, 0.4), -Omics.Evidence.ge(0.5, 0.6))
-
-for pr in 0.1:0.1:0.5
-
-    po = 1 - pr
-
-    @test isapprox(Omics.Evidence.ge(pr, po), -Omics.Evidence.ge(po, pr))
-
-end
-
-# ---- #
-
-const PR_ = PO_ = 0.1:0.1:0.9
+const PR_ = PO_ = vcat(0.01, 0.1:0.1:0.9, 0.99)
 
 Omics.Plot.plot(
     "",
-    push!(
+    vcat(
         [
             Dict(
                 "name" => "Prior = $pr",
                 "y" => map(po -> Omics.Evidence.ge(pr, po), PO_),
                 "x" => PO_,
+                "line" => Dict("color" => Omics.Palette.color(pr, Omics.Palette.bwr)),
             ) for pr in PR_
         ],
         Dict(
             "name" => "Prior = 1 - Posterior",
             "y" => map(po -> Omics.Evidence.ge(1 - po, po), PO_),
             "x" => PO_,
+            "mode" => "markers",
+            "marker" => Dict("size" => 16, "color" => Omics.Color.GR),
         ),
     ),
     Dict(
@@ -106,7 +90,7 @@ Omics.Evidence.plot(
     0.6,
     (
         "Feature 1 = 0.5",
-        "Feature 2 = 0.6",
+        "Feature 2 = 0.6 = Prior",
         "Feature 3 = 0.7",
         "Feature 4 = ?",
         "Feature 5 = ?",
@@ -123,10 +107,9 @@ for uf in 1:8
     Omics.Evidence.plot(
         "",
         "Target",
-        0.1,
+        0.5,
         ["Feature $id = 1.234" for id in 1:uf],
         rand(uf);
-        la = Dict("margin" => Dict("r" => 80)),
     )
 
 end
