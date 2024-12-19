@@ -6,13 +6,13 @@ using Test: @test
 
 # ---- #
 
-# 50.236 ns (0 allocations: 0 bytes)
 # 50.025 ns (0 allocations: 0 bytes)
+# 50.067 ns (0 allocations: 0 bytes)
 for (nu_, ug, re) in (([-1, 1], 2, -1.0:2:1), ([1, -1], 3, -1.0:1:1))
 
     @test Omics.Grid.make(nu_, ug) === re
 
-    @btime Omics.Grid.make($nu_, $ug)
+    #@btime Omics.Grid.make($nu_, $ug)
 
 end
 
@@ -47,6 +47,6 @@ for (nu, re) in (
 
     @test Omics.Grid.find(GR_, nu) === re
 
-    @btime Omics.Grid.find(GR_, $nu)
+    #@btime Omics.Grid.find(GR_, $nu)
 
 end

@@ -80,4 +80,10 @@ function make_matrix_1n(ty, ur, uc)
 
 end
 
+function label(ul, la = "Label")
+
+    map(id -> "$la $id", 1:ul)
+
+end
+
 end

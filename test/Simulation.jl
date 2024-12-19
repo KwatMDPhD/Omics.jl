@@ -76,3 +76,7 @@ for (ty, re) in ((Int, MA), (Float64, convert(Matrix{Float64}, MA)))
     @test Omics.Simulation.make_matrix_1n(ty, UR, UC) == re
 
 end
+
+# ---- #
+
+@test Omics.Simulation.label(2, "Sample") == ["Sample 1", "Sample 2"]

@@ -34,11 +34,11 @@ function make_argument(ho, uf, us)
 
     cor,
     "Sample",
-    map(id -> "Sample $id", 1:us),
+    Omics.Simulation.label(us, "Sample"),
     "Target",
     ta_,
     "Feature",
-    map(id -> "Feature $id", 1:uf),
+    Omics.Simulation.label(uf, "Feature"),
     fs
 
 end
