@@ -14,7 +14,7 @@ for mo in (
     "Distance",
     "Entropy",
     "Evidence",
-    "GL",
+    "GeneralizedLinearModel",
     "Grid",
     "HTM",
     "Information",

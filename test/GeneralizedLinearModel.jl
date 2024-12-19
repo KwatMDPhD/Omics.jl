@@ -55,11 +55,11 @@ for (ta_, fe_, re) in (
 
     sa_, ta_, fe_ = sor(make_sample(up), ta_, fe_)
 
-    pr_, lo_, up_ = Omics.GL.predic(Omics.GL.fit(ta_, fe_), Omics.Grid.make(fe_, up))
+    pr_, lo_, up_ = Omics.GeneralizedLinearModel.predic(Omics.GeneralizedLinearModel.fit(ta_, fe_), Omics.Grid.make(fe_, up))
 
     @test pr_ == re
 
-    Omics.GL.plot("", "Sample", sa_, "Target", ta_, "Feature", fe_, pr_, lo_, up_; si = 16)
+    Omics.GeneralizedLinearModel.plot("", "Sample", sa_, "Target", ta_, "Feature", fe_, pr_, lo_, up_; si = 16)
 
 end
 
@@ -69,8 +69,8 @@ for ur in (10, 100, 1000)
 
     sa_, ta_, fe_ = sor(make_sample(ur), rand((0, 1), ur), randn(ur))
 
-    pr_, lo_, up_ = Omics.GL.predic(Omics.GL.fit(ta_, fe_), Omics.Grid.make(fe_, ur))
+    pr_, lo_, up_ = Omics.GeneralizedLinearModel.predic(Omics.GeneralizedLinearModel.fit(ta_, fe_), Omics.Grid.make(fe_, ur))
 
-    Omics.GL.plot("", "Sample", sa_, "Target", ta_, "Feature", fe_, pr_, lo_, up_)
+    Omics.GeneralizedLinearModel.plot("", "Sample", sa_, "Target", ta_, "Feature", fe_, pr_, lo_, up_)
 
 end

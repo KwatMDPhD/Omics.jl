@@ -14,7 +14,7 @@ include("Entropy.jl")
 
 include("Evidence.jl")
 
-include("GL.jl")
+include("GeneralizedLinearModel.jl")
 
 include("Grid.jl")
 

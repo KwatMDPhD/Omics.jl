@@ -1,4 +1,4 @@
-module GL
+module GeneralizedLinearModel
 
 using GLM: @formula, Binomial, glm, predict
 
