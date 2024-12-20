@@ -14,8 +14,8 @@ Omics.HTM.writ(
     HT,
     ("SRC 1", "SRC 2"),
     """
-    SCRIPT 1
-    SCRIPT 2""";
+    SCRIPT LINE 1
+    SCRIPT LINE 2""";
     ba = "#ff0000",
 )
 
