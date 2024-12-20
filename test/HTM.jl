@@ -6,12 +6,8 @@ using Test: @test
 
 # ---- #
 
-const HT = joinpath(tempdir(), "writ.html")
-
-# ---- #
-
-Omics.HTM.writ(
-    HT,
+const HT = Omics.HTM.writ(
+    joinpath(tempdir(), "writ.html"),
     ("SRC 1", "SRC 2"),
     """
     SCRIPT LINE 1
@@ -29,4 +25,4 @@ Omics.Path.ope(HT)
 
 # ---- #
 
-Omics.Plot.plot(HT, (), Dict("paper_bgcolor" => "#00ff00", "plot_bgcolor" => "#0000ff"))
+Omics.Plot.plot("", (), Dict("paper_bgcolor" => "#00ff00", "plot_bgcolor" => "#0000ff"))
