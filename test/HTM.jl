@@ -15,12 +15,9 @@ const HT = Omics.HTM.writ(
     """
     SCRIPT LINE 1
     SCRIPT LINE 2""",
-    "#ff0000",
 )
 
 const ST = read(HT, String)
-
-println(ST)
 
 @test count(==('\n'), ST) === 14
 
@@ -34,7 +31,7 @@ const ID = "id"
 
 Omics.Path.ope(
     Omics.HTM.writ(
-        HT,
+        joinpath(tempdir(), "pl.html"),
         ("https://cdn.plot.ly/plotly-2.35.2.min.js",),
         ID,
         """
@@ -54,7 +51,7 @@ Omics.Path.ope(
 
 Omics.Path.ope(
     Omics.HTM.writ(
-        HT,
+        joinpath(tempdir(), "cy.html"),
         ("https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.29.2/cytoscape.min.js",),
         ID,
         """
@@ -62,7 +59,7 @@ Omics.Path.ope(
             container: document.getElementById("$ID"),
             elements: $(json((
                           Dict("data" => Dict("id" => "A"), "position" => Dict("y" => 0, "x" => 0)),
-                          Dict("data" => Dict("id" => "B"), "position" => Dict("y" => 100, "x" => 100)),
+                          Dict("data" => Dict("id" => "B"), "position" => Dict("y" => 80, "x" => 80)),
                       ))),
             layout: $(json(Dict("name" => "preset"))),
         })""",
