@@ -56,11 +56,14 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
 
     end
 
+    id = "pl"
+
     Omics.Path.ope(
         Omics.HTM.writ(
             ht,
             ("https://cdn.plot.ly/plotly-2.35.2.min.js",),
-            "Plotly.newPlot(\"wr\", $(json(da)), $(json(la)), $(json(co)))",
+            id,
+            "Plotly.newPlot(\"$id\", $(json(da)), $(json(la)), $(json(co)))",
         ),
     )
 

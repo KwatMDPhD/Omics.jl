@@ -1,6 +1,6 @@
 module HTM
 
-function writ(ht, sr_, sc; id = "wr", ba = "#ffffff")
+function writ(ht, sr_, id, sc, ba = "#000000")
 
     write(
         ht,
@@ -8,12 +8,11 @@ function writ(ht, sr_, sc; id = "wr", ba = "#ffffff")
         <!doctype html>
         <html>
           <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
             <meta charset="utf-8" />
           </head>
           $(join(("<script src=\"$sr\"></script>" for sr in sr_), '\n'))
-          <body style="display: flex; justify-content: center; background: $ba">
-            <div id=\"$id\"></div>
+          <body style="height: 100vh; width: 100vw; background: $ba">
+            <div id="$id" style="height: 100%; width: 100%"></div>
           </body>
           <script>
             $sc
