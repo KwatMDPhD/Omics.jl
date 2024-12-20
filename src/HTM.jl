@@ -1,20 +1,23 @@
 module HTM
 
-function writ(ht, sr_, sc; id = "HTM", ba = "#000000")
+function writ(ht, sr_, sc; id = "wr", ba = "#ffffff")
 
     write(
         ht,
         """
-        <!DOCTYPE html>
+        <!doctype html>
         <html>
-        <head>
-            <meta charset="utf-8">
-        </head>
-        $(join(("<script src=\"$sr\"></script>" for sr in sr_), '\n'))
-        <div id=\"$id\" style="min-height: fit-content; min-width: fit-content; display: flex; justify-content: center; align-items: center; padding: 8px; background: $ba;"></div>
-        <script>
+          <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta charset="utf-8" />
+          </head>
+          $(join(("<script src=\"$sr\"></script>" for sr in sr_), '\n'))
+          <body style="display: flex; justify-content: center; background: $ba">
+            <div id=\"$id\"></div>
+          </body>
+          <script>
             $sc
-        </script>
+          </script>
         </html>""",
     )
 

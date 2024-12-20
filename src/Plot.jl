@@ -60,7 +60,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
         Omics.HTM.writ(
             ht,
             ("https://cdn.plot.ly/plotly-2.35.2.min.js",),
-            "Plotly.newPlot(\"HTM\", $(json(da)), $(json(la)), $(json(co)))",
+            "Plotly.newPlot(\"wr\", $(json(da)), $(json(la)), $(json(co)))",
         ),
     )
 
