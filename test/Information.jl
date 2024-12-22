@@ -10,11 +10,11 @@ using Random: seed!
 
 # ---- #
 
-function plot(y_, na_, fu)
+function plot(yc_, na_, fu)
 
     Omics.Plot.plot(
         "",
-        [Dict("name" => na_[id], "y" => y_[id]) for id in eachindex(y_)],
+        [Dict("name" => na_[id], "y" => yc_[id]) for id in eachindex(yc_)],
         Dict("title" => Dict("text" => string(fu))),
     )
 

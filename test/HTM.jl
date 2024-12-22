@@ -29,21 +29,46 @@ const ID = "id"
 
 # ---- #
 
+const SR_ = ("https://cdn.plot.ly/plotly-2.35.2.min.js",)
+
+const DA = json(())
+
+const LA = Dict(
+    "paper_bgcolor" => "#00ff00",
+    "plot_bgcolor" => "#0000ff",
+    "title" => Dict("text" => "🤠"),
+)
+
+# ---- #
+
 Omics.Path.ope(
     Omics.HTM.writ(
-        joinpath(tempdir(), "pl.html"),
-        ("https://cdn.plot.ly/plotly-2.35.2.min.js",),
+        joinpath(tempdir(), "pl1.html"),
+        SR_,
         ID,
-        """
-        Plotly.newPlot(
-            "$ID",
-            $(json(())),
-            $(json(Dict(
-                "paper_bgcolor" => "#00ff00",
-                "plot_bgcolor" => "#0000ff",
-                "title" => Dict("text" => "🤠"),
-            ))),
-        )""",
+        """Plotly.newPlot("$ID", $DA, $(json(LA)))""",
+    ),
+)
+
+# ---- #
+
+Omics.Path.ope(
+    Omics.HTM.writ(
+        joinpath(tempdir(), "pl2.html"),
+        SR_,
+        ID,
+        """Plotly.newPlot("$ID", $DA, $(json(merge(LA, Dict("height" => 800, "width" => 800)))))""",
+    ),
+)
+
+# ---- #
+
+Omics.Path.ope(
+    Omics.HTM.writ(
+        joinpath(tempdir(), "pl3.html"),
+        SR_,
+        ID,
+        """Plotly.newPlot("$ID", $DA, $(json(merge(LA, Dict("height" => 2000, "width" => 2000)))))""",
     ),
 )
 
