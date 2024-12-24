@@ -8,11 +8,7 @@ using StatsBase: counts
 
 using ..Omics
 
-function _get_density(
-    i1_::AbstractVector{<:Integer},
-    i2_::AbstractVector{<:Integer},
-    ::AbstractFloat,
-)
+function _get_density(i1_::AbstractVector{<:Integer}, i2_::AbstractVector{<:Integer}, ::Any)
 
     convert(Matrix{Float64}, counts(i1_, i2_))
 

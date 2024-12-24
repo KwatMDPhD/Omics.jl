@@ -4,23 +4,23 @@ using Distances: CorrDist
 
 using Random: shuffle!
 
-using StatsBase: mean, quantile, sample
+using StatsBase: sample
 
 using ..Omics
 
-function _order(id_, sa_, ta_, fs)
+function _sort(id_, sa_, ta_, nu)
 
-    sa_[id_], ta_[id_], fs[:, id_]
-
-end
-
-function _cluster(ta_, fs)
-
-    Omics.Clustering.order(CorrDist(), ta_, eachcol(fs))
+    sa_[id_], ta_[id_], nu[:, id_]
 
 end
 
-function _cluster(ta_::AbstractVector{<:AbstractFloat}, ::AbstractMatrix)
+function _order(ta_, nu)
+
+    Omics.Clustering.order(CorrDist(), ta_, eachcol(nu))
+
+end
+
+function _order(ta_::AbstractVector{<:AbstractFloat}, ::Any)
 
     eachindex(ta_)
 
@@ -32,7 +32,7 @@ function _normalize!(nu_, st)
 
         @warn "All numbers are $(nu_[1])."
 
-        fill!(nu_, 0)
+        fill!(nu_, 0.0)
 
     else
 
@@ -44,7 +44,7 @@ function _normalize!(nu_, st)
 
 end
 
-function _normalize!(::AbstractVector{<:Integer}, ::Real) end
+function _normalize!(::AbstractVector{<:Integer}, ::Any) end
 
 function _index(i1, u2, i2)
 
@@ -58,22 +58,22 @@ function _print(n1, n2)
 
 end
 
-function _annotate(yc, th, ft)
+function _annotate(yc, th, re)
 
     uc = 2
 
-    an_ = Vector{Dict{String, Any}}(undef, (1 + size(ft, 1)) * uc)
+    an_ = Vector{Dict{String, Any}}(undef, (1 + size(re, 1)) * uc)
 
     te___ = vcat(
         ("Score (⧱)", "P Value (𝐪)"),
-        [(_print(sc, ma), _print(pv, qv)) for (sc, ma, pv, qv) in eachrow(ft)],
+        [(_print(sc, ma), _print(pv, qv)) for (sc, ma, pv, qv) in eachrow(re)],
     )
 
     for ir in eachindex(te___)
 
         te_ = te___[ir]
 
-        for ic in 1:2
+        for ic in 1:uc
 
             an_[_index(ir, uc, ic)] = Dict(
                 "yref" => "paper",
@@ -96,17 +96,17 @@ function _annotate(yc, th, ft)
 
 end
 
-function _plot(ht, ns, sa_, nt, ta_, nf, fe_, fs, ft, st, la)
+function _plot(ht, ns, sa_, nt, ta_, nf, fe_, nu, re, st, la)
 
-    sa_, ta_, fs = _order(_cluster(ta_, fs), sa_, ta_, fs)
+    sa_, ta_, nu = _sort(_order(ta_, nu), sa_, ta_, nu)
 
     _normalize!(ta_, st)
 
-    foreach(nu_ -> _normalize!(nu_, st), eachrow(fs))
+    foreach(nu_ -> _normalize!(nu_, st), eachrow(nu))
 
     ti, tx = extrema(ta_)
 
-    fi, fa = extrema(fs)
+    fi, fa = extrema(nu)
 
     co = Dict(
         "x" => 0.5,
@@ -146,16 +146,16 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, fs, ft, st, la)
                 "type" => "heatmap",
                 "y" => fe_,
                 "x" => sa_,
-                "z" => collect(eachrow(fs)),
+                "z" => collect(eachrow(nu)),
                 "zmin" => Omics.Strin.shorten(fi),
                 "zmax" => Omics.Strin.shorten(fa),
-                "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(fs)),
+                "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(nu)),
                 "colorbar" => merge(
                     co,
                     Dict(
                         "y" => -0.64,
                         "tickvals" =>
-                            map(Omics.Strin.shorten, Omics.Plot.make_tickvals(fs)),
+                            map(Omics.Strin.shorten, Omics.Plot.make_tickvals(nu)),
                     ),
                 ),
             ),
@@ -165,11 +165,11 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, fs, ft, st, la)
                 "height" => max(Omics.Plot.SS, ur * 40),
                 "width" => Omics.Plot.SL,
                 "margin" => Dict("r" => 232),
-                "title" => Dict("xref" => "paper"),
+                "title" => Dict("xref" => "paper", "text" => nf),
                 "yaxis2" => Dict("domain" => (1 - th, 1)),
                 "yaxis" => Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed"),
                 "xaxis" => Dict("title" => Dict("text" => "$ns ($(lastindex(sa_)))")),
-                "annotations" => _annotate(1 - th * 1.5, th, ft),
+                "annotations" => _annotate(1 - th * 1.5, th, re),
             ),
             la,
         ),
@@ -186,7 +186,7 @@ function go(
     ta_,
     nf,
     fe_,
-    fs;
+    nu;
     ts = "feature_x_statistic_x_number",
     um = 10,
     uv = 10,
@@ -195,11 +195,11 @@ function go(
     la = Dict{String, Any}(),
 )
 
-    uf, us = size(fs)
+    uf, us = size(nu)
 
-    sa_, ta_, fs = _order(sortperm(ta_), sa_, ta_, fs)
+    sa_, ta_, nu = _sort(sortperm(ta_), sa_, ta_, nu)
 
-    sc_ = map(nu_ -> fu(ta_, nu_), eachrow(fs))
+    sc_ = map(nu_ -> fu(ta_, nu_), eachrow(nu))
 
     ma_ = fill(NaN, uf)
 
@@ -215,7 +215,7 @@ function go(
 
         for id in 1:uf
 
-            nu_ = fs[id, :]
+            nu_ = nu[id, :]
 
             for ir in 1:um
 
@@ -233,13 +233,13 @@ function go(
 
     if 0 < uv
 
-        ra_ = Vector{Float64}(undef, uv * uf)
+        ra_ = Vector{Float64}(undef, uf * uv)
 
         co = copy(ta_)
 
         for id in 1:uf
 
-            nu_ = fs[id, :]
+            nu_ = nu[id, :]
 
             for ir in 1:uv
 
@@ -258,24 +258,24 @@ function go(
 
     end
 
-    ft = hcat(sc_, ma_, pv_, qv_)
+    re = hcat(sc_, ma_, pv_, qv_)
 
     pr = joinpath(di, ts)
 
     Omics.Table.writ(
         "$pr.tsv",
-        Omics.Table.make(nf, fe_, ["Score", "Margin of Error", "P-Value", "Q-Value"], ft),
+        Omics.Table.make(nf, fe_, ["Score", "Margin of Error", "P-Value", "Q-Value"], re),
     )
 
     if 0 < ue
 
         id_ = reverse!(Omics.Rank.get_extreme(sc_, ue))
 
-        _plot("$pr.html", ns, sa_, nt, ta_, nf, fe_[id_], fs[id_, :], ft[id_, :], st, la)
+        _plot("$pr.html", ns, sa_, nt, ta_, nf, fe_[id_], nu[id_, :], re[id_, :], st, la)
 
     end
 
-    ft
+    re
 
 end
 

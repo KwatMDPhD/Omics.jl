@@ -30,4 +30,10 @@ function get_symmetric_kullback_leibler_divergence(n1, n2, n3, n4 = n3)
 
 end
 
+function get_jensen_shannon_divergence(n1, n2)
+
+    get_symmetric_kullback_leibler_divergence(n1, n2, (n1 + n2) * 0.5)
+
+end
+
 end

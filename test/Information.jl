@@ -30,6 +30,7 @@ for (n1_, n2_) in (([1, 2, 3], [2, 3, 4]), (kde(randn(10)).density, kde(randn(10
         Omics.Information.get_kullback_leibler_divergence,
         Omics.Information.get_thermodynamic_depth,
         Omics.Information.get_thermodynamic_breadth,
+        Omics.Information.get_jensen_shannon_divergence,
     )
 
         plot((n1_, n2_, map(fu, n1_, n2_)), (1, 2, "Result"), fu)

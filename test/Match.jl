@@ -8,13 +8,9 @@ using Statistics: cor
 
 # ---- #
 
-const TE = tempdir()
-
-# ---- #
-
 function make_output(ti)
 
-    mkpath(joinpath(TE, ti)), Dict("title" => Dict("text" => ti))
+    mkpath(joinpath(tempdir(), ti)), Dict("title" => Dict("text" => ti))
 
 end
 
@@ -22,7 +18,7 @@ end
 
 function make_argument(ho, uf, us)
 
-    ta_, fs = if ho == "f12"
+    ta_, nu = if ho == "f12"
 
         collect(1.0:us), Omics.Simulation.make_matrix_1n(Float64, uf, us)
 
@@ -39,17 +35,17 @@ function make_argument(ho, uf, us)
     ta_,
     "Feature",
     Omics.Simulation.label(uf, "Feature"),
-    fs
+    nu
 
 end
 
 # ---- #
 
-Omics.Match.go(TE, make_argument("f12", 1, 2)...)
+Omics.Match.go(tempdir(), make_argument("f12", 1, 2)...)
 
 for ex in ("tsv", "html")
 
-    @test isfile(joinpath(TE, "feature_x_statistic_x_number.$ex"))
+    @test isfile(joinpath(tempdir(), "feature_x_statistic_x_number.$ex"))
 
 end
 
@@ -77,23 +73,23 @@ for (uf, us) in
 
     Omics.Match.go(di, ar_...; la)
 
-    @btime Omics.Match.go($di, $ar_...; ue = 0)
+    #@btime Omics.Match.go($di, $ar_...; ue = 0)
 
 end
 
 # ---- #
 
-const FU, NS, SA_, NT, TA_, NF, FE_, FS = make_argument("f12", 1, 19)
+const FU, NS, SA_, NT, TA_, NF, FE_, NU = make_argument("f12", 1, 19)
 
 const TI_ = convert(Vector{Int}, TA_)
 
-const FI = convert(Matrix{Int}, FS)
+const FI = convert(Matrix{Int}, NU)
 
-for (ta_, fs) in ((TA_, FS), (TI_, FS), (TA_, FI), (TI_, FI))
+for (ta_, nu) in ((TA_, NU), (TI_, NU), (TA_, FI), (TI_, FI))
 
-    di, la = make_output("$(eltype(ta_)) x $(eltype(fs))")
+    di, la = make_output("$(eltype(ta_)) x $(eltype(nu))")
 
-    Omics.Match.go(di, FU, NS, SA_, NT, ta_, NF, FE_, fs; la)
+    Omics.Match.go(di, FU, NS, SA_, NT, ta_, NF, FE_, nu; la)
 
 end
 
@@ -101,7 +97,7 @@ end
 
 const AS_ = make_argument("ra", SI...)
 
-for (um, uv) in ((0, 0), (0, 10), (10, 0), (10, 10), (40, 40))
+for (um, uv) in ((0, 0), (0, 10), (10, 0), (10, 10), (20, 20))
 
     di, la = make_output("um = $um, uv = $uv")
 
