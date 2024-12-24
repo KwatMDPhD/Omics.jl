@@ -10,7 +10,7 @@ function hierarchize(di, linkage = :ward)
 
 end
 
-function order(fu, gr_, nu___)
+function order(fu, gr_, an___)
 
     id_ = Vector{Int}(undef, lastindex(gr_))
 
@@ -21,7 +21,7 @@ function order(fu, gr_, nu___)
         ig_ = findall(==(gr), gr_)
 
         id_[(en + 1):(en += lastindex(ig_))] =
-            ig_[hierarchize(pairwise(fu, nu___[ig_])).order]
+            ig_[hierarchize(pairwise(fu, an___[ig_])).order]
 
     end
 

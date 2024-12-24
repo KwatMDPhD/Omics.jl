@@ -16,36 +16,35 @@ const MA = [
     100 200
 ]
 
-for (ro_, r2_, m2) in (
-    (
-        ["Row 1", "Row 1", "Row 2"],
+for (ro_, re) in (
+    (["Row 1", "Row 1", "Row 2"], (
         ["Row 1", "Row 2"],
         [
             5.5 11
             100 200
         ],
-    ),
-    (["Row 1", "Row 1", "Row 1"], ["Row 1"], [37.0 74]),
+    )),
+    (["Row 1", "Row 1", "Row 1"], (["Row 1"], [37.0 74])),
 )
 
-    @test Omics.Matri.collapse(mean, Float64, ro_, MA) == (r2_, m2)
+    @test Omics.Matri.collapse(mean, Float64, ro_, MA) == re
 
 end
 
 # ---- #
 
-# 26.500 μs (480 allocations: 188.55 KiB)
-# 2.754 ms (2818 allocations: 12.36 MiB)
+# 27.042 μs (478 allocations: 187.80 KiB)
+# 2.681 ms (2815 allocations: 12.36 MiB)
 for ur in (100, 1000)
 
     seed!(20230920)
 
-    @btime Omics.Matri.collapse(
-        mean,
-        Float64,
-        $([randstring('A':'G', 3) for _ in 1:ur]),
-        $(rand(ur, ur)),
-    )
+    #@btime Omics.Matri.collapse(
+    #    mean,
+    #    Float64,
+    #    $([randstring('A':'G', 3) for _ in 1:ur]),
+    #    $(rand(ur, ur)),
+    #)
 
 end
 
@@ -158,6 +157,6 @@ for (fi, r1_, c1_, a1, r2_, c2_, a2, re) in (
 
     @test Omics.Matri.joi(fi, r1_, c1_, a1, r2_, c2_, a2) == re
 
-    @btime Omics.Matri.joi($fi, $r1_, $c1_, $a1, $r2_, $c2_, $a2)
+    #@btime Omics.Matri.joi($fi, $r1_, $c1_, $a1, $r2_, $c2_, $a2)
 
 end

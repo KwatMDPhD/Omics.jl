@@ -2,26 +2,26 @@ module Matri
 
 using ..Omics
 
-function collapse(fu, ty, ro_, ma)
+function collapse(fu, ty, ro_, an)
 
-    ur, uc = size(ma)
+    ur, uc = size(an)
 
-    r2_id_ = Omics.Dic.index2(ro_)
+    ro_id_ = Omics.Dic.inde(ro_)
 
-    r2_ = sort(collect(keys(r2_id_)))
+    ro_ = sort!(collect(keys(ro_id_)))
 
-    m2 = Matrix{ty}(undef, lastindex(r2_), uc)
+    re = Matrix{ty}(undef, lastindex(ro_), uc)
 
-    for i2 in eachindex(r2_)
+    for ir in eachindex(ro_)
 
-        id_ = r2_id_[r2_[i2]]
+        id_ = ro_id_[ro_[ir]]
 
-        m2[i2, :] =
-            isone(lastindex(id_)) ? ma[id_[], :] : [fu(an_) for an_ in eachcol(ma[id_, :])]
+        re[ir, :] =
+            isone(lastindex(id_)) ? an[id_[], :] : [fu(an_) for an_ in eachcol(an[id_, :])]
 
     end
 
-    r2_, m2
+    ro_, re
 
 end
 
