@@ -11,7 +11,7 @@ function writ(ht, sr_, id, sc, ba = "#000000")
             <meta charset="utf-8" />
           </head>
         $(join(("<script src=\"$sr\"></script>" for sr in sr_), '\n'))
-          <body style="background: $ba; margin: 0">
+          <body style="margin: 0; background: $ba">
             <div id="$id" style="min-height: 100vh; min-width: fit-content; display: flex; justify-content: center; align-items: center"></div>
           </body>
           <script>
