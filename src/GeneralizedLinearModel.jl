@@ -48,7 +48,7 @@ function plot(
 
     bo = Dict("yaxis" => "y3", "x" => sa_, "mode" => "lines", "line" => Dict("width" => 0))
 
-    dm = 0.96
+    di = 0.96
 
     ex = 0.032
 
@@ -91,9 +91,9 @@ function plot(
         Omics.Dic.merg(
             Dict(
                 "showlegend" => false,
-                "yaxis" => Dict("domain" => (dm, 1), "ticks" => ""),
+                "yaxis" => Dict("domain" => (di, 1), "ticks" => ""),
                 "yaxis2" => Dict(
-                    "domain" => (0, dm),
+                    "domain" => (0, di),
                     "position" => 0,
                     "title" => Dict("text" => nf, "font" => Dict("color" => hd)),
                     "range" => Omics.Plot.rang(extrema(fe_)..., ex),

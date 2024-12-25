@@ -42,17 +42,17 @@ function _translate(pr, ro)
 
 end
 
-function _trace_annotate!(da_, an_, yc, ev, lo, up, he, wi, si, te)
+function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
 
     fr = 0.64
 
-    if !(isnothing(lo) || isnothing(up))
+    if !(isnothing(el) || isnothing(eu))
 
         push!(
             da_,
             Dict(
                 "y" => (yc, yc),
-                "x" => (_root(lo), _root(up)),
+                "x" => (_root(el), _root(eu)),
                 "mode" => "lines",
                 "line" => Dict(
                     "width" => si * (1 + fr),
