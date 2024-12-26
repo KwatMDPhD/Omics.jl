@@ -94,13 +94,12 @@ for (i1_, i2_, ri, rf) in (
     ([1, 2, 1, 2], [3, 1, 2, 1], -0.9298734950321937, -0.9269049805641624),
 )
 
-    f1_ = convert(Vector{Float64}, i1_)
-
-    f2_ = convert(Vector{Float64}, i2_)
-
     @test Omics.MutualInformation.get_information_coefficient(i1_, i2_) === ri
 
-    @test Omics.MutualInformation.get_information_coefficient(f1_, f2_) === rf
+    @test Omics.MutualInformation.get_information_coefficient(
+        convert(Vector{Float64}, i1_),
+        convert(Vector{Float64}, i2_),
+    ) === rf
 
 end
 
