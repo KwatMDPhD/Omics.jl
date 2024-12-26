@@ -39,11 +39,11 @@ function joi(fi, r1_, c1_, a1, r2_, c2_, a2)
 
     for ic in eachindex(c1_)
 
-        id = cj_id[c1_[ic]]
+        il = cj_id[c1_[ic]]
 
         for ir in eachindex(r1_)
 
-            aj[rj_id[r1_[ir]], id] = a1[ir, ic]
+            aj[rj_id[r1_[ir]], il] = a1[ir, ic]
 
         end
 
@@ -51,11 +51,11 @@ function joi(fi, r1_, c1_, a1, r2_, c2_, a2)
 
     for ic in eachindex(c2_)
 
-        id = cj_id[c2_[ic]]
+        il = cj_id[c2_[ic]]
 
         for ir in eachindex(r2_)
 
-            aj[rj_id[r2_[ir]], id] = a2[ir, ic]
+            aj[rj_id[r2_[ir]], il] = a2[ir, ic]
 
         end
 

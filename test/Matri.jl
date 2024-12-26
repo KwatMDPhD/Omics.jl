@@ -10,7 +10,7 @@ using StatsBase: mean
 
 # ---- #
 
-const MA = [
+const AN = [
     1 2
     10 20
     100 200
@@ -27,14 +27,14 @@ for (ro_, re) in (
     (["Row 1", "Row 1", "Row 1"], (["Row 1"], [37.0 74])),
 )
 
-    @test Omics.Matri.collapse(mean, Float64, ro_, MA) == re
+    @test Omics.Matri.collapse(mean, Float64, ro_, AN) == re
 
 end
 
 # ---- #
 
-# 27.042 μs (478 allocations: 187.80 KiB)
-# 2.681 ms (2815 allocations: 12.36 MiB)
+# 26.916 μs (478 allocations: 187.80 KiB)
+# 2.815 ms (2815 allocations: 12.36 MiB)
 for ur in (100, 1000)
 
     seed!(20230920)
@@ -50,10 +50,10 @@ end
 
 # ---- #
 
-# 813.253 ns (22 allocations: 2.02 KiB)
-# 798.177 ns (22 allocations: 1.97 KiB)
-# 788.957 ns (22 allocations: 1.95 KiB)
-# 756.060 ns (22 allocations: 1.92 KiB)
+# 814.488 ns (22 allocations: 2.02 KiB)
+# 800.824 ns (22 allocations: 1.97 KiB)
+# 788.946 ns (22 allocations: 1.95 KiB)
+# 755.342 ns (22 allocations: 1.92 KiB)
 for (fi, r1_, c1_, a1, r2_, c2_, a2, re) in (
     (
         0,
