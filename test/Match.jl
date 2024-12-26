@@ -4,6 +4,8 @@ using Test: @test
 
 # ----------------------------------------------------------------------------------------------- #
 
+using Random: seed!
+
 using Statistics: cor
 
 # ---- #
@@ -18,7 +20,7 @@ end
 
 function make_argument(ho, uf, us)
 
-    ta_, nu = if ho == "f12"
+    ta_, da = if ho == "12"
 
         collect(1.0:us), Omics.Simulation.make_matrix_1n(Float64, uf, us)
 
@@ -35,13 +37,13 @@ function make_argument(ho, uf, us)
     ta_,
     "Feature",
     Omics.Simulation.label(uf, "Feature"),
-    nu
+    da
 
 end
 
 # ---- #
 
-Omics.Match.go(tempdir(), make_argument("f12", 1, 2)...)
+Omics.Match.go(tempdir(), make_argument("12", 1, 2)...)
 
 for ex in ("tsv", "html")
 
@@ -79,17 +81,17 @@ end
 
 # ---- #
 
-const FU, NS, SA_, NT, TA_, NF, FE_, NU = make_argument("f12", 1, 19)
+const FU, NS, SA_, NT, TF_, NF, FE_, DF = make_argument("12", 1, 19)
 
-const TI_ = convert(Vector{Int}, TA_)
+const TI_ = convert(Vector{Int}, TF_)
 
-const FI = convert(Matrix{Int}, NU)
+const DI = convert(Matrix{Int}, DF)
 
-for (ta_, nu) in ((TA_, NU), (TI_, NU), (TA_, FI), (TI_, FI))
+for (ta_, da) in ((TF_, DF), (TI_, DF), (TF_, DI), (TI_, DI))
 
-    di, la = make_output("$(eltype(ta_)) x $(eltype(nu))")
+    di, la = make_output("$(eltype(ta_)) x $(eltype(da))")
 
-    Omics.Match.go(di, FU, NS, SA_, NT, ta_, NF, FE_, nu; la)
+    Omics.Match.go(di, FU, NS, SA_, NT, ta_, NF, FE_, da; la)
 
 end
 
@@ -97,9 +99,11 @@ end
 
 const AS_ = make_argument("ra", SI...)
 
-for (um, uv) in ((0, 0), (0, 10), (10, 0), (10, 10), (20, 20))
+for (um, uv) in ((0, 0), (10, 0), (0, 10), (10, 10), (20, 20))
 
     di, la = make_output("um = $um, uv = $uv")
+
+    seed!(20241226)
 
     Omics.Match.go(di, AS_...; um, uv, la)
 
@@ -107,7 +111,7 @@ end
 
 # ---- #
 
-const AE_ = make_argument("f12", 5, 2)
+const AE_ = make_argument("12", 5, 2)
 
 for ue in (0, 1, 2, 3, 6)
 
@@ -119,12 +123,12 @@ end
 
 # ---- #
 
-const AC_ = make_argument("ra", 2, 3)
+const AT_ = make_argument("ra", 2, 3)
 
-for st in (0, 0.1, 1, 2, 4, 8)
+for st in (0, 0.1, 1, 2, 4)
 
     di, la = make_output("st = $st")
 
-    Omics.Match.go(di, AC_...; st, la)
+    Omics.Match.go(di, AT_...; st, la)
 
 end

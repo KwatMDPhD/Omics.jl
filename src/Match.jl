@@ -8,15 +8,22 @@ using StatsBase: sample
 
 using ..Omics
 
-function _sort(id_, sa_, ta_, nu)
+# TODO: Publicize
+function _linearize(i1, u2, i2)
 
-    sa_[id_], ta_[id_], nu[:, id_]
+    (i1 - 1) * u2 + i2
 
 end
 
-function _order(ta_, nu)
+function _sort(id_, sa_, ta_, da)
 
-    Omics.Clustering.order(CorrDist(), ta_, eachcol(nu))
+    sa_[id_], ta_[id_], da[:, id_]
+
+end
+
+function _order(ta_, da)
+
+    Omics.Clustering.order(CorrDist(), ta_, eachcol(da))
 
 end
 
@@ -46,19 +53,13 @@ end
 
 function _normalize!(::AbstractVector{<:Integer}, ::Any) end
 
-function _index(i1, u2, i2)
-
-    (i1 - 1) * u2 + i2
-
-end
-
 function _print(n1, n2)
 
     "$(Omics.Strin.shorten(n1)) ($(Omics.Strin.shorten(n2)))"
 
 end
 
-function _annotate(yc, th, re)
+function _annotate(yc, wi, re)
 
     uc = 2
 
@@ -75,7 +76,8 @@ function _annotate(yc, th, re)
 
         for ic in 1:uc
 
-            an_[_index(ir, uc, ic)] = Dict(
+            an_[_linearize(ir, uc, ic)] = Dict(
+                "showarrow" => false,
                 "yref" => "paper",
                 "xref" => "paper",
                 "y" => yc,
@@ -83,12 +85,11 @@ function _annotate(yc, th, re)
                 "yanchor" => "middle",
                 "xanchor" => "left",
                 "text" => te_[ic],
-                "showarrow" => false,
             )
 
         end
 
-        yc -= th
+        yc -= wi
 
     end
 
@@ -96,21 +97,21 @@ function _annotate(yc, th, re)
 
 end
 
-function _plot(ht, ns, sa_, nt, ta_, nf, fe_, nu, re, st, la)
+function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
 
-    sa_, ta_, nu = _sort(_order(ta_, nu), sa_, ta_, nu)
+    sa_, ta_, da = _sort(_order(ta_, da), sa_, ta_, da)
 
     _normalize!(ta_, st)
 
-    foreach(nu_ -> _normalize!(nu_, st), eachrow(nu))
+    foreach(nu_ -> _normalize!(nu_, st), eachrow(da))
 
     ti, tx = extrema(ta_)
 
-    fi, fa = extrema(nu)
+    ni, na = extrema(da)
 
     co = Dict(
-        "x" => 0.5,
         "orientation" => "h",
+        "x" => 0.5,
         "len" => 0.56,
         "thickness" => 16,
         "outlinewidth" => 0,
@@ -119,7 +120,7 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, nu, re, st, la)
 
     ur = 2 + lastindex(fe_)
 
-    th = inv(ur)
+    wi = inv(ur)
 
     Omics.Plot.plot(
         ht,
@@ -146,16 +147,16 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, nu, re, st, la)
                 "type" => "heatmap",
                 "y" => fe_,
                 "x" => sa_,
-                "z" => collect(eachrow(nu)),
-                "zmin" => Omics.Strin.shorten(fi),
-                "zmax" => Omics.Strin.shorten(fa),
-                "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(nu)),
+                "z" => collect(eachrow(da)),
+                "zmin" => Omics.Strin.shorten(ni),
+                "zmax" => Omics.Strin.shorten(na),
+                "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(da)),
                 "colorbar" => merge(
                     co,
                     Dict(
                         "y" => -0.64,
                         "tickvals" =>
-                            map(Omics.Strin.shorten, Omics.Plot.make_tickvals(nu)),
+                            map(Omics.Strin.shorten, Omics.Plot.make_tickvals(da)),
                     ),
                 ),
             ),
@@ -166,10 +167,10 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, nu, re, st, la)
                 "width" => Omics.Plot.SL,
                 "margin" => Dict("r" => 232),
                 "title" => Dict("xref" => "paper", "text" => nf),
-                "yaxis2" => Dict("domain" => (1 - th, 1)),
-                "yaxis" => Dict("domain" => (0, 1 - th * 2), "autorange" => "reversed"),
+                "yaxis2" => Dict("domain" => (1 - wi, 1)),
+                "yaxis" => Dict("domain" => (0, 1 - wi * 2), "autorange" => "reversed"),
                 "xaxis" => Dict("title" => Dict("text" => "$ns ($(lastindex(sa_)))")),
-                "annotations" => _annotate(1 - th * 1.5, th, re),
+                "annotations" => _annotate(1 - wi * 1.5, wi, re),
             ),
             la,
         ),
@@ -186,8 +187,8 @@ function go(
     ta_,
     nf,
     fe_,
-    nu;
-    ts = "feature_x_statistic_x_number",
+    da;
+    ts = "feature_x_result_x_number",
     um = 10,
     uv = 10,
     ue = 8,
@@ -195,11 +196,11 @@ function go(
     la = Dict{String, Any}(),
 )
 
-    uf, us = size(nu)
+    uf, us = size(da)
 
-    sa_, ta_, nu = _sort(sortperm(ta_), sa_, ta_, nu)
+    sa_, ta_, da = _sort(sortperm(ta_), sa_, ta_, da)
 
-    sc_ = map(nu_ -> fu(ta_, nu_), eachrow(nu))
+    sc_ = map(nu_ -> fu(ta_, nu_), eachrow(da))
 
     ma_ = fill(NaN, uf)
 
@@ -213,9 +214,9 @@ function go(
 
         ua = round(Int, us * 0.632)
 
-        for id in 1:uf
+        for ie in 1:uf
 
-            nu_ = nu[id, :]
+            nu_ = da[ie, :]
 
             for ir in 1:um
 
@@ -225,7 +226,7 @@ function go(
 
             end
 
-            ma_[id] = Omics.Significance.get_margin_of_error(ra_)
+            ma_[ie] = Omics.Significance.get_margin_of_error(ra_)
 
         end
 
@@ -237,24 +238,24 @@ function go(
 
         co = copy(ta_)
 
-        for id in 1:uf
+        for ie in 1:uf
 
-            nu_ = nu[id, :]
+            nu_ = da[ie, :]
 
             for ir in 1:uv
 
-                ra_[_index(id, uv, ir)] = fu(shuffle!(co), nu_)
+                ra_[_linearize(ie, uv, ir)] = fu(shuffle!(co), nu_)
 
             end
 
         end
 
-        ie_ = findall(<(0), sc_)
+        il_ = findall(<(0), sc_)
 
-        ip_ = findall(>=(0), sc_)
+        ig_ = findall(>=(0), sc_)
 
-        pv_[ie_], qv_[ie_], pv_[ip_], qv_[ip_] =
-            Omics.Significance.get_p_value(ra_, sc_, ie_, ip_)
+        pv_[il_], qv_[il_], pv_[ig_], qv_[ig_] =
+            Omics.Significance.get_p_value(ra_, sc_, il_, ig_)
 
     end
 
@@ -264,14 +265,19 @@ function go(
 
     Omics.Table.writ(
         "$pr.tsv",
-        Omics.Table.make(nf, fe_, ["Score", "Margin of Error", "P-Value", "Q-Value"], re),
+        Omics.Table.make(
+            nf,
+            fe_,
+            ["Score", "95% Margin of Error", "P-Value", "Q-Value"],
+            re,
+        ),
     )
 
     if 0 < ue
 
-        id_ = reverse!(Omics.Rank.get_extreme(sc_, ue))
+        ix_ = reverse!(Omics.Rank.get_extreme(sc_, ue))
 
-        _plot("$pr.html", ns, sa_, nt, ta_, nf, fe_[id_], nu[id_, :], re[id_, :], st, la)
+        _plot("$pr.html", ns, sa_, nt, ta_, nf, fe_[ix_], da[ix_, :], re[ix_, :], st, la)
 
     end
 
