@@ -68,13 +68,13 @@ for (n1_, n2_) in (([1, 2, 3, 4, 6], [2, 4, 8, 16, 64]),)
 
     @test g2_ == kd.y
 
-    l1_ = g1_
+    ro_ = g1_
 
-    l2_ = g2_
+    co_ = g2_
 
-    Omics.Plot.plot_heat_map("", co; l1_, l2_)
+    Omics.Plot.plot_heat_map("", co; ro_, co_)
 
-    Omics.Plot.plot_heat_map("", kd.density; l1_, l2_)
+    Omics.Plot.plot_heat_map("", kd.density; ro_, co_)
 
 end
 

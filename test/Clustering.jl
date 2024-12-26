@@ -84,6 +84,6 @@ for (gr_, ma, re) in (
 
     @test Omics.Clustering.order(Euclidean(), gr_, nu___) == re
 
-    @btime Omics.Clustering.order(Euclidean(), $gr_, $nu___)
+    #@btime Omics.Clustering.order(Euclidean(), $gr_, $nu___)
 
 end

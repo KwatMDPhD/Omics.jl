@@ -78,7 +78,7 @@ for po_ in ([0.5], [0.4, 0.6])
 
     @test isapprox(Omics.Evidence.ge(0.5, po_), 0; atol = 1e-15)
 
-    @btime Omics.Evidence.ge(0.5, $po_)
+    #@btime Omics.Evidence.ge(0.5, $po_)
 
 end
 

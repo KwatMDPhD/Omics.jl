@@ -51,17 +51,17 @@ const EN = sum(Omics.Entropy.ge, JO)
 
 # ---- #
 
-const E21 = EN - E1
+const N2 = EN - E1
 
-@test E21 ===
+@test N2 ===
       sum(pr * sum(Omics.Entropy.ge, pr_ / pr) for (pr, pr_) in zip(P1_, eachrow(JO))) ===
       13 / 8
 
 # ---- #
 
-const E12 = EN - E2
+const N1 = EN - E2
 
-@test E12 ===
+@test N1 ===
       sum(pr * sum(Omics.Entropy.ge, pr_ / pr) for (pr, pr_) in zip(P2_, eachcol(JO))) ===
       11 / 8
 
@@ -69,7 +69,7 @@ const E12 = EN - E2
 
 const MU = E1 + E2 - EN
 
-@test MU === E1 - E12 === E2 - E21 === 3 / 8
+@test MU === E1 - N1 === E2 - N2 === 3 / 8
 
 # ---- #
 
@@ -106,46 +106,46 @@ end
 
 # ---- #
 
-# 18.244 ns (0 allocations: 0 bytes)
-# 16.325 ns (0 allocations: 0 bytes)
-# 82.469 ns (4 allocations: 1.84 KiB)
-# 21.625 μs (54 allocations: 43.98 KiB)
-# 245.500 ns (4 allocations: 288 bytes)
-# 6.708 μs (4 allocations: 640 bytes)
-# 257.980 ns (0 allocations: 0 bytes)
-# 5.611 μs (0 allocations: 0 bytes)
-# 485.046 ns (4 allocations: 1.84 KiB)
-# 27.750 μs (54 allocations: 43.98 KiB)
-# 111.982 ns (0 allocations: 0 bytes)
-# 50.025 ns (0 allocations: 0 bytes)
-# 230.967 ns (4 allocations: 1.84 KiB)
-# 26.125 μs (54 allocations: 45.52 KiB)
-# 561.032 ns (4 allocations: 288 bytes)
-# 6.989 μs (4 allocations: 640 bytes)
-# 493.985 ns (0 allocations: 0 bytes)
-# 5.854 μs (0 allocations: 0 bytes)
-# 995.900 ns (4 allocations: 1.84 KiB)
-# 32.500 μs (54 allocations: 45.52 KiB)
+# 18.208 ns (0 allocations: 0 bytes)
+# 16.408 ns (0 allocations: 0 bytes)
+# 81.736 ns (4 allocations: 1.84 KiB)
+# 23.083 μs (54 allocations: 43.98 KiB)
+# 245.497 ns (4 allocations: 288 bytes)
+# 6.692 μs (4 allocations: 640 bytes)
+# 257.696 ns (0 allocations: 0 bytes)
+# 5.604 μs (0 allocations: 0 bytes)
+# 490.979 ns (4 allocations: 1.84 KiB)
+# 29.167 μs (54 allocations: 43.98 KiB)
+# 113.825 ns (0 allocations: 0 bytes)
+# 50.101 ns (0 allocations: 0 bytes)
+# 232.973 ns (4 allocations: 1.84 KiB)
+# 27.625 μs (54 allocations: 45.52 KiB)
+# 562.611 ns (4 allocations: 288 bytes)
+# 6.983 μs (4 allocations: 640 bytes)
+# 494.201 ns (0 allocations: 0 bytes)
+# 5.861 μs (0 allocations: 0 bytes)
+# 992.455 ns (4 allocations: 1.84 KiB)
+# 34.041 μs (54 allocations: 45.52 KiB)
 # 1.150 μs (0 allocations: 0 bytes)
-# 417.714 ns (0 allocations: 0 bytes)
-# 1.750 μs (4 allocations: 1.84 KiB)
-# 73.333 μs (57 allocations: 59.59 KiB)
-# 808.045 ns (4 allocations: 288 bytes)
-# 6.950 μs (4 allocations: 640 bytes)
-# 711.556 ns (0 allocations: 0 bytes)
-# 5.896 μs (0 allocations: 0 bytes)
+# 417.920 ns (0 allocations: 0 bytes)
+# 1.746 μs (4 allocations: 1.84 KiB)
+# 74.792 μs (57 allocations: 59.59 KiB)
+# 807.511 ns (4 allocations: 288 bytes)
+# 6.942 μs (4 allocations: 640 bytes)
+# 709.809 ns (0 allocations: 0 bytes)
+# 5.882 μs (0 allocations: 0 bytes)
 # 3.713 μs (4 allocations: 1.84 KiB)
-# 80.042 μs (57 allocations: 59.59 KiB)
+# 81.542 μs (57 allocations: 59.59 KiB)
 # 11.541 μs (0 allocations: 0 bytes)
-# 4.077 μs (0 allocations: 0 bytes)
-# 16.958 μs (4 allocations: 1.84 KiB)
-# 982.583 μs (57 allocations: 200.09 KiB)
-# 809.066 ns (4 allocations: 288 bytes)
+# 4.089 μs (0 allocations: 0 bytes)
+# 17.000 μs (4 allocations: 1.84 KiB)
+# 980.875 μs (57 allocations: 200.09 KiB)
+# 807.522 ns (4 allocations: 288 bytes)
 # 6.617 μs (4 allocations: 640 bytes)
-# 708.629 ns (0 allocations: 0 bytes)
+# 711.307 ns (0 allocations: 0 bytes)
 # 5.660 μs (0 allocations: 0 bytes)
 # 29.458 μs (4 allocations: 1.84 KiB)
-# 992.291 μs (57 allocations: 200.09 KiB)
+# 991.625 μs (57 allocations: 200.09 KiB)
 for ur in (10, 100, 1000, 10000)
 
     seed!(20241021)
@@ -166,25 +166,25 @@ for ur in (10, 100, 1000, 10000)
 
     jf = Omics.MutualInformation._get_density(f1_, f2_, cf)
 
-    @btime cor($i1_, $i2_)
+    #@btime cor($i1_, $i2_)
 
-    @btime cor($f1_, $f2_)
+    #@btime cor($f1_, $f2_)
 
-    @btime Omics.MutualInformation._get_density($i1_, $i2_, $ci)
+    #@btime Omics.MutualInformation._get_density($i1_, $i2_, $ci)
 
-    @btime Omics.MutualInformation._get_density($f1_, $f2_, $cf)
+    #@btime Omics.MutualInformation._get_density($f1_, $f2_, $cf)
 
-    @btime Omics.MutualInformation.get_mutual_information($ji)
+    #@btime Omics.MutualInformation.get_mutual_information($ji)
 
-    @btime Omics.MutualInformation.get_mutual_information($jf)
+    #@btime Omics.MutualInformation.get_mutual_information($jf)
 
-    @btime Omics.MutualInformation.get_mutual_information($ji, false)
+    #@btime Omics.MutualInformation.get_mutual_information($ji, false)
 
-    @btime Omics.MutualInformation.get_mutual_information($jf, false)
+    #@btime Omics.MutualInformation.get_mutual_information($jf, false)
 
-    @btime Omics.MutualInformation.get_information_coefficient($i1_, $i2_)
+    #@btime Omics.MutualInformation.get_information_coefficient($i1_, $i2_)
 
-    @btime Omics.MutualInformation.get_information_coefficient($f1_, $f2_)
+    #@btime Omics.MutualInformation.get_information_coefficient($f1_, $f2_)
 
 end
 
@@ -208,7 +208,7 @@ end
 
 # https://cdanielaam.medium.com/how-to-compare-and-evaluate-unsupervised-clustering-methods-84f3617e3769
 
-const RF = 1.5534700710552343
+const RE = 1.5534700710552343
 
 for jo in (
     [
@@ -227,9 +227,9 @@ for jo in (
     ],
 )
 
-    @test Omics.MutualInformation.get_mutual_information(jo) === RF
+    @test Omics.MutualInformation.get_mutual_information(jo) === RE
 
-    @test isapprox(Omics.MutualInformation.get_mutual_information(jo, false), RF)
+    @test isapprox(Omics.MutualInformation.get_mutual_information(jo, false), RE)
 
     @test isapprox(
         Omics.MutualInformation.get_mutual_information(jo, true),
@@ -264,29 +264,29 @@ for ur in (10, 100, 1000, 10000)
 
     i2_ = rand(0:9, ur)
 
-    rf = mutualinfo(i1_, i2_; normed = false)
+    re = mutualinfo(i1_, i2_; normed = false)
 
     jo = Omics.Normalization.normalize_with_sum!(
         Omics.MutualInformation._get_density(i1_, i2_, NaN),
     )
 
-    @test isapprox(Omics.MutualInformation.get_mutual_information(jo), rf)
+    @test isapprox(Omics.MutualInformation.get_mutual_information(jo), re)
 
-    @test isapprox(Omics.MutualInformation.get_mutual_information(jo, false), rf)
+    @test isapprox(Omics.MutualInformation.get_mutual_information(jo, false), re)
 
     @test isapprox(
         Omics.MutualInformation.get_mutual_information(jo, true),
         mutualinfo(i1_, i2_),
     )
 
-    @btime mutualinfo($i1_, $i2_; normed = false)
+    #@btime mutualinfo($i1_, $i2_; normed = false)
 
-    @btime Omics.Normalization.normalize_with_sum!(
-        Omics.MutualInformation._get_density($i1_, $i2_, NaN),
-    )
+    #@btime Omics.Normalization.normalize_with_sum!(
+    #    Omics.MutualInformation._get_density($i1_, $i2_, NaN),
+    #)
 
-    @btime Omics.MutualInformation.get_mutual_information($jo)
+    #@btime Omics.MutualInformation.get_mutual_information($jo)
 
-    @btime Omics.MutualInformation.get_mutual_information($jo, false)
+    #@btime Omics.MutualInformation.get_mutual_information($jo, false)
 
 end

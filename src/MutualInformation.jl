@@ -16,12 +16,12 @@ end
 
 function _get_density(f1_, f2_, co; ug = 32, ma = 0.75)
 
-    ba = ma - ma * abs(co)
+    fa = ma - ma * abs(co)
 
     kde(
         (f1_, f2_);
         npoints = (ug, ug),
-        bandwidth = (default_bandwidth(f1_) * ba, default_bandwidth(f2_) * ba),
+        bandwidth = (default_bandwidth(f1_) * fa, default_bandwidth(f2_) * fa),
     ).density
 
 end
@@ -58,7 +58,7 @@ function get_mutual_information(jo, no)
 
     mu = e1 + e2 - sum(Omics.Entropy.ge, jo)
 
-    no ? 2 * mu / (e1 + e2) : mu
+    no ? 2.0 * mu / (e1 + e2) : mu
 
 end
 
@@ -78,7 +78,7 @@ function get_information_coefficient(n1_, n2_)
     )
 
     # TODO: Confirm e
-    sign(co) * sqrt(1 - exp(-2 * mu))
+    sign(co) * sqrt(1.0 - exp(-2.0 * mu))
 
 end
 
