@@ -13,6 +13,7 @@ for mo in (
     "Dic",
     "Distance",
     "Entropy",
+    "ErrorMatrix",
     "Evidence",
     "GeneralizedLinearModel",
     "Grid",

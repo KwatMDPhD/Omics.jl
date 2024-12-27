@@ -2,110 +2,6 @@ module ROC
 
 using ..Omics
 
-function make_matrix()
-
-    Matrix{Int}(undef, 2, 2)
-
-end
-
-function fill_matrix!(ma, la_, pr_, th)
-
-    for id in eachindex(la_)
-
-        ma[la_[id], pr_[id] < th ? 1 : 2] += 1
-
-    end
-
-end
-
-function summarize_matrix(ma, to = sum(ma))
-
-    tn, fn, fp, tp = ma
-
-    an = tn + fp
-
-    ap = fn + tp
-
-    tn / an, fn / ap, fp / an, tp / ap, tn / (tn + fn), tp / (tp + fp), (tn + tp) / to
-
-end
-
-function _make_axis(te)
-
-    Dict("title" => Dict("text" => te), "tickfont" => Dict("size" => 40))
-
-end
-
-function _make_annotation(yc, xc, te)
-
-    Dict(
-        "y" => yc,
-        "x" => xc,
-        "text" => te,
-        "font" => Dict("family" => "Monospace", "size" => 24),
-        "showarrow" => false,
-    )
-
-end
-
-function plot_matrix(
-    ht,
-    ma,
-    tn,
-    fn,
-    fp,
-    tp,
-    np,
-    pp,
-    ac;
-    ro_ = ("😵", "😊"),
-    co_ = ("👎 ", "👍"),
-    la = Dict{String, Any}(),
-)
-
-    Omics.Plot.plot_heat_map(
-        ht,
-        ma;
-        ro_,
-        co_,
-        cl = Omics.Palette.fractionate(Omics.Palette.make(("#ffffff", Omics.Color.GR))),
-        la = Omics.Dic.merge(
-            Dict(
-                "title" => Dict("text" => "Confusion Matrix"),
-                "yaxis" => _make_axis("Actual"),
-                "xaxis" => _make_axis("Predicted"),
-                "annotations" => (
-                    _make_annotation(
-                        ro_[1],
-                        co_[1],
-                        "$(ma[1, 1])<br>TNR (Specificity) $(Omics.Strin.shorten(tn))",
-                    ),
-                    _make_annotation(
-                        ro_[2],
-                        co_[1],
-                        "$(ma[2, 1])<br>FNR (Type-2 Error) $(Omics.Strin.shorten(fn))",
-                    ),
-                    _make_annotation(
-                        ro_[1],
-                        co_[2],
-                        "$(ma[1, 2])<br>FPR (Type-1 Error) $(Omics.Strin.shorten(fp))",
-                    ),
-                    _make_annotation(
-                        ro_[2],
-                        co_[2],
-                        "$(ma[2, 2])<br>TPR (Sensitivity or Recall) $(Omics.Strin.shorten(tp))",
-                    ),
-                    _make_annotation(0.5, 0, "NPV $(Omics.Strin.shorten(np))"),
-                    _make_annotation(0.5, 1, "PPV (Precision) $(Omics.Strin.shorten(pp))"),
-                    _make_annotation(0.5, 0.5, "Accuracy $(Omics.Strin.shorten(ac))"),
-                ),
-            ),
-            la,
-        ),
-    )
-
-end
-
 function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
 
     ut = lastindex(th_)
@@ -114,7 +10,7 @@ function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
 
     tp_ = Vector{Float64}(undef, ut)
 
-    ma = make_matrix()
+    er = Omics.ErrorMatrix.make()
 
     to = lastindex(la_)
 
@@ -122,15 +18,15 @@ function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
 
         th = th_[it]
 
-        fill!(ma, 0)
+        fill!(er, 0)
 
-        fill_matrix!(ma, la_, pr_, th)
+        Omics.ErrorMatrix.fil!(er, la_, pr_, th)
 
-        tn, fn, fp, tp, np, pp, ac = summarize_matrix(ma, to)
+        tn, fn, fp, tp, np, pp, ac = Omics.ErrorMatrix.summarize(er, to)
 
-        plot_matrix(
+        Omics.ErrorMatrix.plot(
             "",
-            ma,
+            er,
             tn,
             fn,
             fp,

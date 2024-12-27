@@ -12,6 +12,8 @@ include("Distance.jl")
 
 include("Entropy.jl")
 
+include("ErrorMatrix.jl")
+
 include("Evidence.jl")
 
 include("GeneralizedLinearModel.jl")
