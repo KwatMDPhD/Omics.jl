@@ -2,7 +2,7 @@ module ROC
 
 using ..Omics
 
-function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
+function line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
 
     ut = lastindex(th_)
 
@@ -34,7 +34,7 @@ function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
             np,
             pp,
             ac;
-            la = Dict("title" => Dict("text" => "Threshold $(Omics.Strin.shorten(th))")),
+            la = Dict("title" => Dict("text" => "◑ $(Omics.Strin.shorten(th))")),
         )
 
         fp_[it] = fp
@@ -47,13 +47,13 @@ function make_line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
 
 end
 
-function plot_line(ht, fp_, tp_)
+function plot(ht, fp_, tp_)
 
-    id = sortperm(fp_)
+    io_ = sortperm(fp_)
 
     wi = 2
 
-    co = Omics.Color.BL
+    co = Omics.Color.VI
 
     ra = -0.016, 1.016
 
@@ -65,13 +65,12 @@ function plot_line(ht, fp_, tp_)
                 "y" => (0, 1),
                 "x" => (0, 1),
                 "mode" => "lines",
-                "line" => Dict("width" => wi, "color" => "#000000"),
+                "line" => Dict("color" => "#000000"),
             ),
             Dict(
-                # TODO: Check
                 "name" => "Area = $(Omics.Strin.shorten(sum(tp_) / lastindex(tp_)))",
-                "y" => [0; tp_[id]],
-                "x" => [0; fp_[id]],
+                "y" => vcat(0, tp_[io_]),
+                "x" => vcat(0, fp_[io_]),
                 "mode" => "markers+lines",
                 "marker" => Dict("size" => wi * 2.8, "color" => co),
                 "line" => Dict("width" => wi, "color" => co),
