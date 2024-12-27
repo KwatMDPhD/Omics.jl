@@ -42,9 +42,9 @@ function rea(xl, sh; ke_ar...)
 
 end
 
-function writ(ts, da)
+function writ(ts, an)
 
-    write(ts, da; delim = '\t')
+    write(ts, an; delim = '\t')
 
 end
 

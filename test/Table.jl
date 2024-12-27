@@ -4,11 +4,25 @@ using Test: @test
 
 # ----------------------------------------------------------------------------------------------- #
 
+using DataFrames: DataFrame
+
+# ---- #
+
+@test Omics.Table.make(
+    "Name",
+    ["R1", "R2"],
+    ["C1", "C2", "C3"],
+    [
+        1 3 5
+        2 4 6
+    ],
+) == DataFrame("Name" => ["R1", "R2"], "C1" => [1, 2], "C2" => [3, 4], "C3" => [5, 6])
+
 # ---- #
 
 const DA = pkgdir(Omics, "data", "Table")
 
-const WR = joinpath(tempdir(), "write.tsv")
+const WR = joinpath(tempdir(), "writ.tsv")
 
 # ---- #
 
