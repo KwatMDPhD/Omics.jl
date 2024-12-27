@@ -98,7 +98,7 @@ function plot(
                     "title" => Dict("text" => nf, "font" => Dict("color" => hd)),
                     "range" => Omics.Plot.rang(extrema(fe_)..., ex),
                     "tickvals" =>
-                        map(Omics.Strin.shorten, Omics.Plot.make_tickvals(fe_)),
+                        map(Omics.Strin.shorten, Omics.Plot.tick(fe_)),
                 ),
                 "yaxis3" => Dict(
                     "overlaying" => "y2",

@@ -139,7 +139,7 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
                     Dict(
                         "y" => -0.48,
                         "tickvals" =>
-                            map(Omics.Strin.shorten, Omics.Plot.make_tickvals(ta_)),
+                            map(Omics.Strin.shorten, Omics.Plot.tick(ta_)),
                     ),
                 ),
             ),
@@ -156,7 +156,7 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
                     Dict(
                         "y" => -0.64,
                         "tickvals" =>
-                            map(Omics.Strin.shorten, Omics.Plot.make_tickvals(da)),
+                            map(Omics.Strin.shorten, Omics.Plot.tick(da)),
                     ),
                 ),
             ),

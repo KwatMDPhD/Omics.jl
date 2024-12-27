@@ -8,7 +8,13 @@ using ..Omics
 
 const SS = 832
 
-const SL = SS * 1.618
+const SL = SS * MathConstants.golden
+
+const S1 = 32
+
+const S2 = 24
+
+const S3 = 16
 
 function rang(mi, ma, ex)
 
@@ -18,7 +24,21 @@ function rang(mi, ma, ex)
 
 end
 
-function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
+function tick(it_::AbstractArray{<:Integer})
+
+    extrema(it_)
+
+end
+
+function tick(fl_)
+
+    mi, ma = extrema(fl_)
+
+    mi, sum(fl_) / lastindex(fl_), ma
+
+end
+
+function plot(ht, da_, la = Dict{String, Any}(), co = Dict{String, Any}())
 
     if isempty(ht)
 
@@ -30,7 +50,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
         Dict(
             "height" => SS,
             "width" => SL,
-            "title" => Dict("font" => Dict("size" => 32)),
+            "title" => Dict("font" => Dict("size" => S1)),
             "hovermode" => "closest",
         ),
         la,
@@ -45,7 +65,7 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
             la[ke] = Omics.Dic.merg(
                 Dict(
                     "automargin" => true,
-                    "title" => Dict("font" => Dict("size" => 24)),
+                    "title" => Dict("font" => Dict("size" => S2)),
                     "zeroline" => false,
                     "showgrid" => false,
                 ),
@@ -63,44 +83,15 @@ function plot(ht, da, la = Dict{String, Any}(), co = Dict{String, Any}())
             ht,
             ("https://cdn.plot.ly/plotly-2.35.2.min.js",),
             id,
-            "Plotly.newPlot(\"$id\", $(json(da)), $(json(la)), $(json(co)))",
+            "Plotly.newPlot(\"$id\", $(json(da_)), $(json(la)), $(json(co)))",
         ),
     )
 
 end
 
-function _label_1(nu)
+const _CO = Omics.Palette.fractionate(Omics.Palette.bwr)
 
-    "$nu ●"
-
-end
-
-function _label_2(nu)
-
-    "● $nu"
-
-end
-
-const _CL = Omics.Palette.fractionate(Omics.Palette.bwr)
-
-function make_tickvals(nu_)
-
-    mi, ma = extrema(nu_)
-
-    me = sum(nu_) / lastindex(nu_)
-
-    all(isinteger, nu_) ? Tuple(mi:ma) : (mi, me, ma)
-
-end
-
-function plot_heat_map(
-    ht,
-    ma;
-    ro_ = map(_label_1, axes(ma, 1)),
-    co_ = map(_label_2, axes(ma, 2)),
-    cl = _CL,
-    la = Dict{String, Any}(),
-)
+function plot_heat_map(ht, nu; ro_ = (), co_ = (), cl = _CO, la = Dict{String, Any}())
 
     plot(
         ht,
@@ -109,13 +100,13 @@ function plot_heat_map(
                 "type" => "heatmap",
                 "y" => ro_,
                 "x" => co_,
-                "z" => collect(eachrow(ma)),
+                "z" => collect(eachrow(nu)),
                 "colorscale" => cl,
                 "colorbar" => Dict(
                     "len" => 0.56,
                     "thickness" => 16,
-                    "tickvals" => make_tickvals(filter(!isnan, ma)),
-                    "tickfont" => Dict("family" => "Monospace", "size" => 16),
+                    "tickvals" => tick(filter(!isnan, nu)),
+                    "tickfont" => Dict("size" => S3),
                 ),
             ),
         ),
@@ -126,15 +117,15 @@ end
 
 function plot_bubble_map(
     ht,
-    ma,
-    mc;
-    ro_ = map(_label_1, axes(ma, 1)),
-    co_ = map(_label_2, axes(ma, 2)),
-    cl = _CL,
+    ns,
+    nc;
+    ro_ = map(id -> "$id ●", axes(ns, 1)),
+    co_ = map(id -> "● $id", axes(ns, 2)),
+    cl = _CO,
     la = Dict{String, Any}(),
 )
 
-    id_ = vec(CartesianIndices(ma))
+    id_ = vec(CartesianIndices(ns))
 
     plot(
         ht,
@@ -143,7 +134,7 @@ function plot_bubble_map(
                 "y" => map(id -> ro_[id[1]], id_),
                 "x" => map(id -> co_[id[2]], id_),
                 "mode" => "markers",
-                "marker" => Dict("size" => vec(ma), "color" => vec(mc), "colorscale" => cl),
+                "marker" => Dict("size" => vec(ns), "color" => vec(nc), "colorscale" => cl),
             ),
         ),
         Omics.Dic.merg(
@@ -165,6 +156,7 @@ function plot_radar(
     sh_ = trues(lastindex(an_)),
     he_ = Omics.Palette.HE_,
     fi_ = fill("toself", lastindex(an_)),
+    ma = 1.08 * maximum(Iterators.flatten(ra_)),
     la = Dict{String, Any}(),
 )
 
@@ -192,10 +184,11 @@ function plot_radar(
                 ),
                 "fill" => fi_[id],
                 "fillcolor" => he_[id],
-            ) for id in eachindex(ra_)
+            ) for id in eachindex(an_)
         ],
         Omics.Dic.merg(
             Dict(
+                "title" => Dict("x" => 0.008, "font" => Dict("size" => S1)),
                 "polar" => Dict(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
@@ -204,24 +197,22 @@ function plot_radar(
                         "ticklen" => 16,
                         "tickwidth" => wi,
                         "tickcolor" => hd,
-                        "tickfont" => Dict("family" => "Optima", "size" => 24),
+                        "tickfont" => Dict("size" => S2),
                         "gridwidth" => wi,
                         "gridcolor" => hf,
                     ),
                     "radialaxis" => Dict(
-                        "range" => (0, 1.08 * maximum(Iterators.flatten(ra_))),
+                        "range" => (0, ma),
                         "linewidth" => wi,
                         "linecolor" => hd,
                         "ticklen" => 8,
                         "tickwidth" => wi,
                         "tickcolor" => hd,
-                        "tickfont" => Dict("family" => "Monospace", "size" => 16),
+                        "tickfont" => Dict("size" => S3),
                         "gridwidth" => wi,
                         "gridcolor" => hf,
                     ),
                 ),
-                "title" =>
-                    Dict("x" => 0.008, "font" => Dict("family" => "Times New Roman")),
             ),
             la,
         ),
