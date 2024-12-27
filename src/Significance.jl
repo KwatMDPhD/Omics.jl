@@ -12,7 +12,7 @@ function get_margin_of_error(sa_, co = 0.95)
 
 end
 
-function get_p_value(ur, us)
+function get(ur, us)
 
     if iszero(ur)
 
@@ -30,53 +30,55 @@ function get_p_value(ur, us)
 
 end
 
-function get_p_value(eq, ra_, nu_)
+function get(eq, ra_, nu_)
 
-    pv_ = map(nu -> get_p_value(lastindex(ra_), sum(eq(nu), ra_; init = 0)), nu_)
+    ur = lastindex(ra_)
+
+    pv_ = map(nu -> get(ur, sum(eq(nu), ra_; init = 0)), nu_)
 
     pv_, adjust(pv_, BenjaminiHochberg())
 
 end
 
-function get_p_value(ra_, nu_, ie_, ip_)
+function get(ra_, nu_, il_, ig_)
 
     ty = eltype(ra_)
 
-    rn_ = ty[]
+    rl_ = ty[]
 
-    rp_ = ty[]
+    rg_ = ty[]
 
     for ra in ra_
 
-        push!(ra < 0 ? rn_ : rp_, ra)
+        push!(ra < 0 ? rl_ : rg_, ra)
 
     end
 
-    if isempty(ie_)
+    if isempty(il_)
 
-        pn_ = Float64[]
+        pl_ = Float64[]
 
-        an_ = Float64[]
+        ql_ = Float64[]
 
     else
 
-        pn_, an_ = get_p_value(<=, rn_, nu_[ie_])
+        pl_, ql_ = get(<=, rl_, nu_[il_])
 
     end
 
-    if isempty(ip_)
+    if isempty(ig_)
 
-        pp_ = Float64[]
+        pg_ = Float64[]
 
-        ap_ = Float64[]
+        qg_ = Float64[]
 
     else
 
-        pp_, ap_ = get_p_value(>=, rp_, nu_[ip_])
+        pg_, qg_ = get(>=, rg_, nu_[ig_])
 
     end
 
-    pn_, an_, pp_, ap_
+    pl_, ql_, pg_, qg_
 
 end
 
