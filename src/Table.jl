@@ -10,9 +10,9 @@ using Mmap: mmap
 
 using XLSX: readtable
 
-function make(na, ro_, co_, ma)
+function make(na, ro_, co_, an)
 
-    insertcols!(DataFrame(ma, co_), 1, na => ro_)
+    insertcols!(DataFrame(an, co_), 1, na => ro_)
 
 end
 

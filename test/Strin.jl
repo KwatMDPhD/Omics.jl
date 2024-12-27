@@ -51,9 +51,9 @@ for (si, pl) in (
     ("hero", "heroes"),
 )
 
-    for uc in (-2, -1, 0, 1, 2)
+    for us in (-2, -1, 0, 1, 2)
 
-        @test Omics.Strin.coun(uc, si) === "$uc $(1 < abs(uc) ? pl : si)"
+        @test Omics.Strin.coun(us, si) === "$us $(1 < abs(us) ? pl : si)"
 
     end
 

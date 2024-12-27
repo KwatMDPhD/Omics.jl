@@ -71,9 +71,9 @@ function date(st)
 
 end
 
-function coun(uc, st)
+function coun(us, st)
 
-    if 1 < abs(uc)
+    if 1 < abs(us)
 
         st = if lastindex(st) == 3 && endswith(st, "ex")
 
@@ -99,7 +99,7 @@ function coun(uc, st)
 
     end
 
-    "$uc $st"
+    "$us $st"
 
 end
 
