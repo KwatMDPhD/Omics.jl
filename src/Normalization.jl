@@ -56,17 +56,17 @@ function normalize_with_125254!(nu_)
 
 end
 
-function normalize_with_quantile!(nu_, qu_ = (0, 0.5, 1))
+function normalize_with_quantile!(nu_, fr_ = (0.0, 0.5, 1.0))
 
-    qa_ = quantile(nu_, qu_)
+    qu_ = quantile(nu_, fr_)
 
-    iq_ = 1:(lastindex(qa_) - 1)
+    iq_ = 1:(lastindex(qu_) - 1)
 
     for iu in eachindex(nu_)
 
         for iq in iq_
 
-            if qa_[iq] <= nu_[iu] <= qa_[iq + 1]
+            if qu_[iq] <= nu_[iu] <= qu_[iq + 1]
 
                 nu_[iu] = iq
 
