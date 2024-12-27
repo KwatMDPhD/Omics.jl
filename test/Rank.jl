@@ -27,15 +27,13 @@ for (ua, ue, re) in (
 
     @test Omics.Rank.get_extreme(ua, ue) == re
 
-    @btime Omics.Rank.get_extreme($ua, $ue)
+    #@btime Omics.Rank.get_extreme($ua, $ue)
 
 end
 
 # ---- #
 
 const IT_ = [20, 40, 60, 50, 30, 10]
-
-# ---- #
 
 const CH_ = [
     'b',
@@ -93,6 +91,6 @@ for (an_, ue, re) in (
 
     @test an_[Omics.Rank.get_extreme(an_, ue)] == re
 
-    @btime Omics.Rank.get_extreme($an_, $ue)
+    #@btime Omics.Rank.get_extreme($an_, $ue)
 
 end

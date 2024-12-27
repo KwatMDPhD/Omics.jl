@@ -2,13 +2,13 @@ module Probability
 
 function get_odd(pr)
 
-    pr / (1 - pr)
+    pr / (1.0 - pr)
 
 end
 
 function ge(od)
 
-    od / (1 + od)
+    od / (1.0 + od)
 
 end
 

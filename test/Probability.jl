@@ -37,13 +37,13 @@ for (pr, od) in (
 
     @test Omics.Probability.get_odd(pr) === od
 
-    @btime Omics.Probability.get_odd($pr)
+    #@btime Omics.Probability.get_odd($pr)
 
     if isfinite(od)
 
         @test Omics.Probability.ge(od) === pr
 
-        @btime Omics.Probability.ge($od)
+        #@btime Omics.Probability.ge($od)
 
     end
 
@@ -51,7 +51,7 @@ end
 
 # ---- #
 
-const PR_ = 0:0.1:1
+const PR_ = 0.0:0.1:1.0
 
 # ---- #
 
@@ -73,7 +73,7 @@ for (nu, re) in ((0, 0.5),)
 
     @test Omics.Probability.get_logistic(nu) === re
 
-    @btime Omics.Probability.get_logistic($nu)
+    #@btime Omics.Probability.get_logistic($nu)
 
 end
 
@@ -86,7 +86,8 @@ Omics.Plot.plot(
             "name" => "$(nu_[1]) ... $(nu_[end])",
             "y" => map(Omics.Probability.get_logistic, nu_),
             "x" => nu_,
-        ) for nu_ in (-10:10, -1:0.1:1, PR_)
+            "mode" => "markers",
+        ) for nu_ in (-10:10, -1.0:0.1:1.0, PR_)
     ],
     Dict("yaxis" => Dict("title" => Dict("text" => "Logistic Probability"))),
 )
