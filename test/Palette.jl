@@ -42,11 +42,11 @@ const BL = "#0000ffff"
 # ---- #
 
 for (nu, re) in (
-    # Indexed.
+    # Indexed
     (1, RE),
     (2, GR),
     (3, BL),
-    # Normalized between 0 and 1.
+    # Normalized between 0 and 1
     (-Inf, RE),
     (-0.1, RE),
     (0.0, RE),
@@ -65,7 +65,7 @@ end
 # ---- #
 
 for (nu_, re) in (
-    # Normalized between the extrema.
+    # 0-1 normalized between the extrema
     ([NaN], [GR]),
     (1:1, [GR]),
     (1:2, [RE, BL]),

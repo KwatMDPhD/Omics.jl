@@ -178,7 +178,9 @@ function color(nu_, rg_ = pick(nu_))
 
         mi, ma = extrema(nu_)
 
-        map(nu -> color((nu - mi) / (ma - mi), rg_), nu_)
+        ra = ma - mi
+
+        map(nu -> color((nu - mi) / ra, rg_), nu_)
 
     end
 
@@ -194,7 +196,7 @@ function fractionate(rg_)
 
         he = he_[]
 
-        [(0, he), (1, he)]
+        [(0.0, he), (1.0, he)]
 
     else
 
