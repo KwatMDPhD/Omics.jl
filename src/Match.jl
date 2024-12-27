@@ -252,8 +252,7 @@ function go(
 
         ig_ = findall(>=(0), sc_)
 
-        pv_[il_], qv_[il_], pv_[ig_], qv_[ig_] =
-            Omics.Significance.get_p_value(ra_, sc_, il_, ig_)
+        pv_[il_], qv_[il_], pv_[ig_], qv_[ig_] = Omics.Significance.get(ra_, sc_, il_, ig_)
 
     end
 

@@ -44,7 +44,7 @@ function make_vector_mirror_deep(up, ze = true)
 
     ne_, po_ = _mirror(up)
 
-    _concatenate(ne_ * 2, ze, po_)
+    _concatenate(ne_ * 2.0, ze, po_)
 
 end
 

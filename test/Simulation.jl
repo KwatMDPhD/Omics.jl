@@ -42,9 +42,9 @@ end
 
 # ---- #
 
-const N2_ = NE_ * 2
+const NG_ = NE_ * 2.0
 
-for (ze, re) in ((false, vcat(N2_[1:(end - 1)], PO_)), (true, vcat(N2_, PO_)))
+for (ze, re) in ((false, vcat(NG_[1:(end - 1)], PO_)), (true, vcat(NG_, PO_)))
 
     seed!(SE)
 
@@ -54,10 +54,10 @@ end
 
 # ---- #
 
-const RW_ =
+const RE =
     [-1.1507841949280184, -0.651242930242011, -0.15170166555600342, -0.07585083277800171]
 
-for (ze, re) in ((false, vcat(RW_, PO_)), (true, vcat(RW_, -0.0, PO_)))
+for (ze, re) in ((false, vcat(RE, PO_)), (true, vcat(RE, -0.0, PO_)))
 
     seed!(SE)
 
@@ -67,11 +67,11 @@ end
 
 # ---- #
 
-const MA = [1 3 5; 2 4 6]
+const SI = [1 3 5; 2 4 6]
 
-const UR, UC = size(MA)
+const UR, UC = size(SI)
 
-for (ty, re) in ((Int, MA), (Float64, convert(Matrix{Float64}, MA)))
+for (ty, re) in ((Int, SI), (Float64, convert(Matrix{Float64}, SI)))
 
     @test Omics.Simulation.make_matrix_1n(ty, UR, UC) == re
 
