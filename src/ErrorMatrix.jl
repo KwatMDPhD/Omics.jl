@@ -68,7 +68,7 @@ function plot(
         er;
         ro_,
         co_,
-        cl = Omics.Palette.fractionate(Omics.Palette.make(("#ffffff", Omics.Color.GR))),
+        cl = Omics.Palette.fractionate(Omics.Palette.make(("#ffffff", Omics.Color.VI))),
         la = Omics.Dic.merge(
             Dict(
                 "title" => Dict("text" => "Error Matrix"),
