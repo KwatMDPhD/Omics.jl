@@ -94,9 +94,9 @@ end
 
 # ---- #
 
-const IL_ = findall(<(0), NU_)
+const IL_ = findall(<(0.0), NU_)
 
-const IG_ = findall(>=(0), NU_)
+const IG_ = findall(>=(0.0), NU_)
 
 @test Omics.Significance.get(RA_, NU_, IL_, IG_) ==
       ([1.0], [1.0], [1, 1, 2 / 3], [1.0, 1, 1])

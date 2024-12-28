@@ -77,7 +77,6 @@ function _annotate(yc, wi, re)
         for ic in 1:uc
 
             an_[_linearize(ir, uc, ic)] = Dict(
-                "showarrow" => false,
                 "yref" => "paper",
                 "xref" => "paper",
                 "y" => yc,
@@ -85,6 +84,7 @@ function _annotate(yc, wi, re)
                 "yanchor" => "middle",
                 "xanchor" => "left",
                 "text" => te_[ic],
+                "showarrow" => false,
             )
 
         end
@@ -165,10 +165,10 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
                 "width" => Omics.Plot.SL,
                 "margin" => Dict("r" => 232),
                 "title" => Dict("xref" => "paper", "text" => nf),
-                "yaxis2" => Dict("domain" => (1 - wi, 1)),
-                "yaxis" => Dict("domain" => (0, 1 - wi * 2), "autorange" => "reversed"),
+                "yaxis2" => Dict("domain" => (1.0 - wi, 1.0)),
+                "yaxis" => Dict("domain" => (0.0, 1.0 - wi * 2.0), "autorange" => "reversed"),
                 "xaxis" => Dict("title" => Dict("text" => "$ns ($(lastindex(sa_)))")),
-                "annotations" => _annotate(1 - wi * 1.5, wi, re),
+                "annotations" => _annotate(1.0 - wi * 1.5, wi, re),
             ),
             la,
         ),
@@ -190,7 +190,7 @@ function go(
     um = 10,
     uv = 10,
     ue = 8,
-    st = 3,
+    st = 3.0,
     la = Dict{String, Any}(),
 )
 
@@ -248,9 +248,9 @@ function go(
 
         end
 
-        il_ = findall(<(0), sc_)
+        il_ = findall(<(0.0), sc_)
 
-        ig_ = findall(>=(0), sc_)
+        ig_ = findall(>=(0.0), sc_)
 
         pv_[il_], qv_[il_], pv_[ig_], qv_[ig_] = Omics.Significance.get(ra_, sc_, il_, ig_)
 

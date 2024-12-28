@@ -55,7 +55,7 @@ function _trace_annotate!(da_, an_, yc, ev, el, eu, he, wi, si, te)
                 "x" => (_root(el), _root(eu)),
                 "mode" => "lines",
                 "line" => Dict(
-                    "width" => si * (1 + fr),
+                    "width" => si * (1.0 + fr),
                     "color" => Omics.Color.hexify(he, fr * 0.5),
                 ),
             ),
@@ -157,7 +157,7 @@ function plot(
     pl_ = fill(nothing, lastindex(nf_)),
     pu_ = fill(nothing, lastindex(nf_)),
     xi = floor(Int, _root(ge(pr, 1e-6))),
-    xa = ceil(Int, _root(ge(pr, 1.0 - 1e-6))),
+    xa = ceil(Int, _root(ge(pr, 0.999999))),
     la = Dict{String, Any}(),
 )
 
@@ -229,7 +229,7 @@ function plot(
                     "side" => "top",
                     "title" => Dict(
                         "text" => "Evidence for $nt",
-                        "font" => Dict("size" => 32),
+                        "font" => Dict("size" => Omics.Plot.S1),
                         "standoff" => 40,
                     ),
                     "range" => (xi, xa),

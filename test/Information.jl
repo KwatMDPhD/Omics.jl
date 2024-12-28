@@ -42,7 +42,7 @@ for (n1_, n2_) in (([1, 2, 3], [2, 3, 4]), (kde(randn(10)).density, kde(randn(10
         Omics.Information.get_symmetric_kullback_leibler_divergence,
     )
 
-        n3_ = (n1_ + n2_) / 2
+        n3_ = (n1_ + n2_) * 0.5
 
         plot((n1_, n2_, n3_, map(fu, n1_, n2_, n3_)), (1, 2, 3, "Result"), fu)
 

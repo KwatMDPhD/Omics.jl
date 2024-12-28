@@ -8,7 +8,7 @@ using Colors: RGB
 
 # ---- #
 
-@test Omics.Color.hexify(RGB(1, 0, 0)) === "#ff0000ff"
+@test Omics.Color.hexify(RGB(1.0, 0.0, 0.0)) === "#ff0000ff"
 
 # ---- #
 

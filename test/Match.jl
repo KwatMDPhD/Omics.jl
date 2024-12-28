@@ -81,7 +81,7 @@ end
 
 # ---- #
 
-const FU, NS, SA_, NT, TF_, NF, FE_, DF = make_argument("12", 1, 19)
+const FU, NS, SA_, NT, TF_, NF, FE_, DF = make_argument("12", 1, 4)
 
 const TI_ = convert(Vector{Int}, TF_)
 
@@ -125,7 +125,7 @@ end
 
 const AT_ = make_argument("ra", 2, 3)
 
-for st in (0, 0.1, 1, 2, 4)
+for st in (0.0, 0.1, 1.0, 2.0, 4.0)
 
     di, la = make_output("st = $st")
 

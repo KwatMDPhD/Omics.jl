@@ -75,7 +75,7 @@ end
 
 for ur in (10, 100, 1000, 10000, 100000)
 
-    sa_, ta_, fe_ = sor(Omics.Simulation.label(ur), rand((0, 1), ur), randn(ur))
+    sa_, ta_, fe_ = sor(Omics.Simulation.label(ur), rand(0:1, ur), randn(ur))
 
     pr_, lo_, up_ = Omics.GeneralizedLinearModel.predic(
         Omics.GeneralizedLinearModel.fit(ta_, fe_),

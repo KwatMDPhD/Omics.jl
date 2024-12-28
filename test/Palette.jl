@@ -16,15 +16,15 @@ const RG_ = Omics.Palette.make(("#ff0000", "#00ff00", "#0000ff"))
 
 @test lastindex(RG_) === 3
 
-@test RG_[1] === RGB(1, 0, 0)
+@test RG_[1] === RGB(1.0, 0.0, 0.0)
 
 # ---- #
 
 for (nu_, re) in (
     ([1.0], Omics.Palette.bwr),
     ([1], Omics.Palette.MO),
-    (1:2, Omics.Palette.BI),
-    (1:3, Omics.Palette.CA),
+    ([1,2], Omics.Palette.BI),
+    ([1,2,3], Omics.Palette.CA),
 )
 
     @test Omics.Palette.pick(nu_) === re
@@ -82,7 +82,7 @@ end
 for (he_, re) in (
     (Omics.Palette.make(("#ff0000",)), [(0, RE), (1, RE)]),
     (Omics.Palette.make(("#ff0000", "#00ff00")), [(0, RE), (1, GR)]),
-    (RG_, [(0, RE), (0.5, GR), (1, BL)]),
+    (RG_, [(0.0, RE), (0.5, GR), (1.0, BL)]),
 )
 
     @test Omics.Palette.fractionate(Omics.Palette.make(he_)) == re

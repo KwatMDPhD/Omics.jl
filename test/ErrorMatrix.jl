@@ -20,7 +20,7 @@ const PR_ = [0, 0.4, 0.6, 1]
 # 7.041 ns (0 allocations: 0 bytes)
 for (th, re) in (
     (
-        0,
+        0.0,
         [
             0 2
             0 2
@@ -55,7 +55,7 @@ for (th, re) in (
         ],
     ),
     (
-        1,
+        1.0,
         [
             2 0
             1 1

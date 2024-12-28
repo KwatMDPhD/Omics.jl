@@ -6,13 +6,13 @@ function _mirror(up)
 
     id = 1
 
-    po_[id] = 0
+    po_[id] = 0.0
 
     while id < up
 
         ra = randn()
 
-        if 0 < ra
+        if 0.0 < ra
 
             po_[id += 1] = ra
 

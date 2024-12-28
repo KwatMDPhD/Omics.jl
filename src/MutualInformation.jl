@@ -32,7 +32,7 @@ function get_mutual_information(jo)
 
     p2_ = map(sum, eachcol(jo))
 
-    mu = 0
+    mu = 0.0
 
     for i2 in eachindex(p2_), i1 in eachindex(p1_)
 

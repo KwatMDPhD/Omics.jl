@@ -91,9 +91,9 @@ function plot(
         Omics.Dic.merg(
             Dict(
                 "showlegend" => false,
-                "yaxis" => Dict("domain" => (di, 1), "ticks" => ""),
+                "yaxis" => Dict("domain" => (di, 1.0), "ticks" => ""),
                 "yaxis2" => Dict(
-                    "domain" => (0, di),
+                    "domain" => (0.0, di),
                     "position" => 0,
                     "title" => Dict("text" => nf, "font" => Dict("color" => hd)),
                     "range" => Omics.Plot.rang(extrema(fe_)..., ex),
@@ -107,11 +107,11 @@ function plot(
                         "font" => Dict("color" => hp),
                     ),
                     "range" => Omics.Plot.rang(0, 1, ex),
-                    "tickvals" => (0, 1, map(Omics.Strin.shorten, extrema(pr_))...),
+                    "tickvals" => (0.0, map(Omics.Strin.shorten, extrema(pr_))..., 1.0),
                 ),
                 "xaxis" => Dict(
                     "anchor" => "y2",
-                    "domain" => (0.08, 1),
+                    "domain" => (0.08, 1.0),
                     "title" => Dict("text" => "$ns ($(lastindex(ta_)))"),
                     "ticks" => "",
                 ),

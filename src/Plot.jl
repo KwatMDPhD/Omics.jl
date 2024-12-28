@@ -202,7 +202,7 @@ function plot_radar(
                         "gridcolor" => hf,
                     ),
                     "radialaxis" => Dict(
-                        "range" => (0, ma),
+                        "range" => (0.0, ma),
                         "linewidth" => wi,
                         "linecolor" => hd,
                         "ticklen" => 8,

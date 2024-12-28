@@ -14,7 +14,7 @@ end
 
 function (::Information)(n1_, n2_)
 
-    1 - Omics.MutualInformation.get_information_coefficient(n1_, n2_)
+    1.0 - Omics.MutualInformation.get_information_coefficient(n1_, n2_)
 
 end
 

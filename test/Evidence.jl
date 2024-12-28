@@ -21,7 +21,7 @@ Omics.Plot.plot(
         ],
         Dict(
             "name" => "Prior = 1 - Posterior",
-            "y" => map(po -> Omics.Evidence.ge(1 - po, po), PO_),
+            "y" => map(po -> Omics.Evidence.ge(1.0 - po, po), PO_),
             "x" => PO_,
             "mode" => "markers",
             "marker" => Dict("size" => 16, "color" => Omics.Color.GR),
@@ -36,27 +36,16 @@ Omics.Plot.plot(
 # ---- #
 
 for (pr, po, ev) in (
-    # 0 / 0
-    (0, 0, NaN),
-    # Inf / Inf
-    (1, 1, NaN),
-    # 1 / 0
-    (0, 0.5, Inf),
-    # Inf / 0
-    (0, 1, Inf),
-    # 0 / Inf
-    (1, 0, -Inf),
-    # 1 / Inf
-    (1, 0.5, -Inf),
-    # 0 / 1
-    (0.5, 0, -Inf),
-    # 1 / 1
+    (0.0, 0.0, NaN),
+    (1.0, 1.0, NaN),
+    (0.0, 0.5, Inf),
+    (0.0, 1.0, Inf),
+    (1.0, 0.0, -Inf),
+    (1.0, 0.5, -Inf),
+    (0.5, 0.0, -Inf),
     (0.5, 0.5, 0.0),
-    # Inf / 1
-    (0.5, 1, Inf),
-    # 1 / 2
+    (0.5, 1.0, Inf),
     (2 / 3, 0.5, -0.9999999999999997),
-    # 1 / 0.5 
     (1 / 3, 0.5, 1.0000000000000002),
 )
 
@@ -76,7 +65,7 @@ end
 # 14.055 ns (0 allocations: 0 bytes)
 for po_ in ([0.5], [0.4, 0.6])
 
-    @test isapprox(Omics.Evidence.ge(0.5, po_), 0; atol = 1e-15)
+    @test isapprox(Omics.Evidence.ge(0.5, po_), 0.0; atol = 1e-15)
 
     #@btime Omics.Evidence.ge(0.5, $po_)
 
@@ -104,12 +93,6 @@ Omics.Evidence.plot(
 
 for uf in 1:8
 
-    Omics.Evidence.plot(
-        "",
-        "Target",
-        0.5,
-        ["Feature $id = 1.234" for id in 1:uf],
-        rand(uf);
-    )
+    Omics.Evidence.plot("", "Target", 0.5, ["Feature $id = 1.234" for id in 1:uf], rand(uf))
 
 end

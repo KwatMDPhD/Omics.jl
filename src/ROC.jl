@@ -69,8 +69,8 @@ function plot(ht, fp_, tp_)
             ),
             Dict(
                 "name" => "Area = $(Omics.Strin.shorten(sum(tp_) / lastindex(tp_)))",
-                "y" => vcat(0, tp_[io_]),
-                "x" => vcat(0, fp_[io_]),
+                "y" => vcat(0.0, tp_[io_]),
+                "x" => vcat(0.0, fp_[io_]),
                 "mode" => "markers+lines",
                 "marker" => Dict("size" => wi * 2.8, "color" => co),
                 "line" => Dict("width" => wi, "color" => co),
