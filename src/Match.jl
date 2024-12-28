@@ -166,7 +166,8 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
                 "margin" => Dict("r" => 232),
                 "title" => Dict("xref" => "paper", "text" => nf),
                 "yaxis2" => Dict("domain" => (1.0 - wi, 1.0)),
-                "yaxis" => Dict("domain" => (0.0, 1.0 - wi * 2.0), "autorange" => "reversed"),
+                "yaxis" =>
+                    Dict("domain" => (0.0, 1.0 - wi * 2.0), "autorange" => "reversed"),
                 "xaxis" => Dict("title" => Dict("text" => "$ns ($(lastindex(sa_)))")),
                 "annotations" => _annotate(1.0 - wi * 1.5, wi, re),
             ),

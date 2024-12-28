@@ -79,8 +79,8 @@ const NU_ = [-1, -0.0, 0, 1]
 
 # ---- #
 
-# 148.422 ns (11 allocations: 512 bytes)
-# 157.670 ns (11 allocations: 512 bytes)
+# 147.637 ns (11 allocations: 512 bytes)
+# 155.833 ns (11 allocations: 512 bytes)
 for (eq, re) in (
     (<=, ([0.4, 0.6, 0.6, 0.7], [0.7, 0.7, 0.7, 0.7])),
     (>=, ([0.7, 0.6, 0.6, 0.4], [0.7, 0.7, 0.7, 0.7])),
@@ -101,5 +101,5 @@ const IG_ = findall(>=(0.0), NU_)
 @test Omics.Significance.get(RA_, NU_, IL_, IG_) ==
       ([1.0], [1.0], [1, 1, 2 / 3], [1.0, 1, 1])
 
-# 283.101 ns (24 allocations: 1.00 KiB)
+# 267.857 ns (24 allocations: 1.00 KiB)
 #@btime Omics.Significance.get(RA_, NU_, IL_, IG_);

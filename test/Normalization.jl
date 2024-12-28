@@ -149,7 +149,7 @@ end
 # ---- #
 
 # 53.245 ns (4 allocations: 224 bytes)
-# 243.542 ns (6 allocations: 352 bytes)
+# 242.359 ns (6 allocations: 352 bytes)
 for (nu_, re) in zip(NR___, (
     [1, 2, 2, 4, 4, 4, 7],
     [
@@ -227,34 +227,34 @@ const RE_ = [
     [1.0, 1, 2, 2, 3, 3, 4, 4, 5, 5],
 ]
 
-# 54.653 ns (2 allocations: 144 bytes)
-# 54.698 ns (2 allocations: 144 bytes)
-# 54.682 ns (2 allocations: 144 bytes)
-# 54.695 ns (2 allocations: 144 bytes)
-# 54.654 ns (2 allocations: 144 bytes)
-# 54.780 ns (2 allocations: 144 bytes)
-# 54.682 ns (2 allocations: 144 bytes)
-# 54.711 ns (2 allocations: 144 bytes)
-# 55.287 ns (2 allocations: 144 bytes)
-# 54.695 ns (2 allocations: 144 bytes)
-# 54.695 ns (2 allocations: 144 bytes)
-# 56.784 ns (2 allocations: 144 bytes)
-# 56.245 ns (2 allocations: 144 bytes)
-# 59.809 ns (2 allocations: 144 bytes)
-# 58.435 ns (2 allocations: 144 bytes)
-# 58.435 ns (2 allocations: 144 bytes)
-# 322.918 ns (32 allocations: 944 bytes)
-# 466.837 ns (47 allocations: 1.31 KiB)
-# 441.712 ns (44 allocations: 1.23 KiB)
-# 443.606 ns (44 allocations: 1.23 KiB)
-# 324.382 ns (32 allocations: 944 bytes)
-# 467.005 ns (47 allocations: 1.31 KiB)
-# 442.551 ns (44 allocations: 1.23 KiB)
-# 443.394 ns (44 allocations: 1.23 KiB)
-# 322.605 ns (32 allocations: 944 bytes)
-# 467.218 ns (47 allocations: 1.31 KiB)
-# 441.919 ns (44 allocations: 1.23 KiB)
-# 441.495 ns (44 allocations: 1.23 KiB)
+# 56.260 ns (2 allocations: 144 bytes)
+# 56.234 ns (2 allocations: 144 bytes)
+# 56.218 ns (2 allocations: 144 bytes)
+# 56.261 ns (2 allocations: 144 bytes)
+# 56.191 ns (2 allocations: 144 bytes)
+# 56.261 ns (2 allocations: 144 bytes)
+# 56.218 ns (2 allocations: 144 bytes)
+# 56.317 ns (2 allocations: 144 bytes)
+# 56.218 ns (2 allocations: 144 bytes)
+# 56.260 ns (2 allocations: 144 bytes)
+# 56.218 ns (2 allocations: 144 bytes)
+# 56.176 ns (2 allocations: 144 bytes)
+# 56.275 ns (2 allocations: 144 bytes)
+# 61.609 ns (2 allocations: 144 bytes)
+# 59.257 ns (2 allocations: 144 bytes)
+# 59.299 ns (2 allocations: 144 bytes)
+# 67.229 ns (2 allocations: 144 bytes)
+# 72.606 ns (2 allocations: 144 bytes)
+# 71.612 ns (2 allocations: 144 bytes)
+# 71.282 ns (2 allocations: 144 bytes)
+# 67.400 ns (2 allocations: 144 bytes)
+# 72.895 ns (2 allocations: 144 bytes)
+# 71.635 ns (2 allocations: 144 bytes)
+# 71.582 ns (2 allocations: 144 bytes)
+# 67.442 ns (2 allocations: 144 bytes)
+# 72.810 ns (2 allocations: 144 bytes)
+# 71.367 ns (2 allocations: 144 bytes)
+# 71.624 ns (2 allocations: 144 bytes)
 for nu_ in (
     zeros(10),
     fill(0.1, 10),
@@ -265,7 +265,12 @@ for nu_ in (
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 1000],
 )
 
-    for qu_ in ((0.0, 1.0), (0.0, 0.5, 1.0), (0.0, 1 / 3, 2 / 3, 1.0), (0.0, 0.2, 0.4, 0.6, 0.8, 1.0))
+    for qu_ in (
+        (0.0, 1.0),
+        (0.0, 0.5, 1.0),
+        (0.0, 1 / 3, 2 / 3, 1.0),
+        (0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
+    )
 
         co = copy(nu_)
 

@@ -12,12 +12,12 @@ const LA_ = [1, 1, 2, 2]
 
 const PR_ = [0, 0.4, 0.6, 1]
 
-# 7.958 ns (0 allocations: 0 bytes)
-# 5.916 ns (0 allocations: 0 bytes)
 # 8.041 ns (0 allocations: 0 bytes)
-# 8.000 ns (0 allocations: 0 bytes)
-# 5.959 ns (0 allocations: 0 bytes)
-# 7.041 ns (0 allocations: 0 bytes)
+# 6.000 ns (0 allocations: 0 bytes)
+# 8.042 ns (0 allocations: 0 bytes)
+# 8.042 ns (0 allocations: 0 bytes)
+# 6.000 ns (0 allocations: 0 bytes)
+# 6.000 ns (0 allocations: 0 bytes)
 for (th, re) in (
     (
         0.0,

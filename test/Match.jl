@@ -57,15 +57,15 @@ const SI = 100000, 100
 
 # ---- #
 
-# 44.833 μs (204 allocations: 4.01 MiB)
-# 45.000 μs (285 allocations: 4.01 MiB)
-# 50.208 μs (479 allocations: 4.02 MiB)
-# 60.416 μs (814 allocations: 4.04 MiB)
-# 90.667 μs (1523 allocations: 4.12 MiB)
-# 828.833 μs (7166 allocations: 5.85 MiB)
-# 2.085 ms (96619 allocations: 8.17 MiB)
-# 457.459 μs (652 allocations: 5.03 MiB)
-# 6.066 s (9897592 allocations: 2.79 GiB)
+# 45.125 μs (204 allocations: 4.01 MiB)
+# 47.083 μs (285 allocations: 4.01 MiB)
+# 51.250 μs (479 allocations: 4.02 MiB)
+# 61.166 μs (815 allocations: 4.04 MiB)
+# 90.167 μs (1525 allocations: 4.12 MiB)
+# 828.958 μs (7166 allocations: 5.84 MiB)
+# 2.111 ms (96618 allocations: 8.17 MiB)
+# 459.417 μs (653 allocations: 5.03 MiB)
+# 6.052 s (9897592 allocations: 2.79 GiB)
 for (uf, us) in
     ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), SI)
 

@@ -66,16 +66,16 @@ const CH_ = [
 
 # ---- #
 
-# 19.622 ns (3 allocations: 96 bytes)
-# 19.622 ns (3 allocations: 96 bytes)
-# 46.885 ns (4 allocations: 176 bytes)
-# 63.009 ns (6 allocations: 272 bytes)
-# 66.096 ns (6 allocations: 304 bytes)
-# 68.820 ns (6 allocations: 336 bytes)
-# 211.560 ns (6 allocations: 608 bytes)
-# 246.721 ns (8 allocations: 704 bytes)
-# 235.627 ns (8 allocations: 736 bytes)
-# 259.146 ns (8 allocations: 1.06 KiB)
+# 19.581 ns (3 allocations: 96 bytes)
+# 19.642 ns (3 allocations: 96 bytes)
+# 47.101 ns (4 allocations: 176 bytes)
+# 64.007 ns (6 allocations: 272 bytes)
+# 66.607 ns (6 allocations: 304 bytes)
+# 68.747 ns (6 allocations: 336 bytes)
+# 215.168 ns (6 allocations: 608 bytes)
+# 247.608 ns (8 allocations: 704 bytes)
+# 239.959 ns (8 allocations: 736 bytes)
+# 266.488 ns (8 allocations: 1.06 KiB)
 for (an_, ue, re) in (
     (ID_, 0, ID_),
     (ID_, 1, ID_),

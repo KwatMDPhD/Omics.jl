@@ -50,10 +50,10 @@ end
 
 # ---- #
 
-# 814.488 ns (22 allocations: 2.02 KiB)
-# 800.824 ns (22 allocations: 1.97 KiB)
-# 788.946 ns (22 allocations: 1.95 KiB)
-# 755.342 ns (22 allocations: 1.92 KiB)
+# 815.549 ns (22 allocations: 2.02 KiB)
+# 797.811 ns (22 allocations: 1.97 KiB)
+# 793.648 ns (22 allocations: 1.95 KiB)
+# 756.545 ns (22 allocations: 1.92 KiB)
 for (fi, r1_, c1_, a1, r2_, c2_, a2, re) in (
     (
         0,
