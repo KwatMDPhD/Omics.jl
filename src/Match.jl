@@ -273,7 +273,7 @@ function go(
 
     if 0 < ue
 
-        ix_ = reverse!(Omics.Rank.get_extreme(sc_, ue))
+        ix_ = reverse!(Omics.Extreme.get(sc_, ue))
 
         _plot("$pr.html", ns, sa_, nt, ta_, nf, fe_[ix_], da[ix_, :], re[ix_, :], st, la)
 

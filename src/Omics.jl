@@ -16,6 +16,8 @@ include("ErrorMatrix.jl")
 
 include("Evidence.jl")
 
+include("Extreme.jl")
+
 include("GeneralizedLinearModel.jl")
 
 include("Grid.jl")
@@ -41,8 +43,6 @@ include("Plot.jl")
 include("Probability.jl")
 
 include("ROC.jl")
-
-include("Rank.jl")
 
 include("Significance.jl")
 
