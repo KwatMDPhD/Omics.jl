@@ -6,36 +6,34 @@ using Colors: Colorant
 
 using ..Omics
 
-# Plotly.js
-const PJ = (
-    "#1f77b4",
-    "#ff7f0e",
-    "#2ca02c",
-    "#d62728",
-    "#9467bd",
-    "#8c564b",
-    "#e377c2",
-    "#7f7f7f",
-    "#bcbd22",
-    "#17becf",
+# Dutch Field
+const DU_ = (
+    "#e60049",
+    "#0bb4ff",
+    "#50e991",
+    "#e6d800",
+    "#9b19f5",
+    "#ffa300",
+    "#dc0ab4",
+    "#b3d4ff",
+    "#00bfa0",
 )
 
-# Plotly.py
-const PP = (
-    "#636efa",
-    "#ef553b",
-    "#00cc96",
-    "#ab63fa",
-    "#ffa15a",
-    "#19d3f3",
-    "#ff6692",
-    "#b6e880",
-    "#ff97ff",
-    "#fecb52",
+# Spring Pastels
+const SP_ = (
+    "#fd7f6f",
+    "#7eb0d5",
+    "#b2e061",
+    "#bd7ebe",
+    "#ffb55a",
+    "#ffee65",
+    "#beb9db",
+    "#fdcce5",
+    "#8bd3c7",
 )
 
 # IBM Light
-const IL = (
+const IL_ = (
     "#6929c5",
     "#1192e8",
     "#005d5d",
@@ -53,7 +51,7 @@ const IL = (
 )
 
 # IBM Dark
-const ID = (
+const ID_ = (
     "#8a3ffc",
     "#33b1ff",
     "#007d79",
@@ -70,8 +68,36 @@ const ID = (
     "#d4bbff",
 )
 
+# Plotly.js
+const PJ_ = (
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+)
+
+# Plotly.py
+const PP_ = (
+    "#636efa",
+    "#ef553b",
+    "#00cc96",
+    "#ab63fa",
+    "#ffa15a",
+    "#19d3f3",
+    "#ff6692",
+    "#b6e880",
+    "#ff97ff",
+    "#fecb52",
+)
+
 # Retro Metro
-const RE = (
+const RE_ = (
     "#ea5545",
     "#f46a9b",
     "#ef9b20",
@@ -83,21 +109,8 @@ const RE = (
     "#b33dc6",
 )
 
-# Dutch Field
-const DU = (
-    "#e60049",
-    "#0bb4ff",
-    "#50e991",
-    "#e6d800",
-    "#9b19f5",
-    "#ffa300",
-    "#dc0ab4",
-    "#b3d4ff",
-    "#00bfa0",
-)
-
 # River Nights
-const RI = (
+const RI_ = (
     "#b30000",
     "#7c1158",
     "#4421af",
@@ -109,20 +122,7 @@ const RI = (
     "#ebdc78",
 )
 
-# Spring Pastels
-const SP = (
-    "#fd7f6f",
-    "#7eb0d5",
-    "#b2e061",
-    "#bd7ebe",
-    "#ffb55a",
-    "#ffee65",
-    "#beb9db",
-    "#fdcce5",
-    "#8bd3c7",
-)
-
-const HE_ = (PP..., ID..., RE..., DU..., RI..., SP..., PJ..., IL...)
+const HE_ = (DU_..., SP_..., IL_..., ID_..., PJ_..., PP_..., RE_..., RI_...)
 
 function make(st_)
 
