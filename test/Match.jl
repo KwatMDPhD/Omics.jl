@@ -47,7 +47,7 @@ Omics.Match.go(tempdir(), make_argument("12", 1, 2)...)
 
 for ex in ("tsv", "html")
 
-    @test isfile(joinpath(tempdir(), "feature_x_statistic_x_number.$ex"))
+    @test isfile(joinpath(tempdir(), "feature_x_result_x_number.$ex"))
 
 end
 
