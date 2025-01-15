@@ -253,7 +253,7 @@ function go(
 
         ig_ = findall(>=(0.0), sc_)
 
-        pv_[il_], qv_[il_], pv_[ig_], qv_[ig_] = Omics.Significance.get(ra_, sc_, il_, ig_)
+        pv_[il_], qv_[il_], pv_[ig_], qv_[ig_] = Omics.Significance.ge(ra_, sc_, il_, ig_)
 
     end
 
@@ -273,7 +273,7 @@ function go(
 
     if 0 < ue
 
-        ix_ = reverse!(Omics.Extreme.get(sc_, ue))
+        ix_ = reverse!(Omics.Extreme.ge(sc_, ue))
 
         _plot("$pr.html", ns, sa_, nt, ta_, nf, fe_[ix_], da[ix_, :], re[ix_, :], st, la)
 

@@ -25,9 +25,9 @@ for (ua, ue, re) in (
     (5, 6, [1, 2, 3, 4, 5]),
 )
 
-    @test Omics.Extreme.get(ua, ue) == re
+    @test Omics.Extreme.ge(ua, ue) == re
 
-    #@btime Omics.Extreme.get($ua, $ue)
+    #@btime Omics.Extreme.ge($ua, $ue)
 
 end
 
@@ -89,8 +89,8 @@ for (an_, ue, re) in (
     (CH_, lastindex(CH_) + 1, sort(CH_)),
 )
 
-    @test an_[Omics.Extreme.get(an_, ue)] == re
+    @test an_[Omics.Extreme.ge(an_, ue)] == re
 
-    #@btime Omics.Extreme.get($an_, $ue)
+    #@btime Omics.Extreme.ge($an_, $ue)
 
 end

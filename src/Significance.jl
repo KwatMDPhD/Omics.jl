@@ -12,7 +12,7 @@ function get_margin_of_error(sa_, co = 0.95)
 
 end
 
-function get(ur, us)
+function ge(ur, us)
 
     if iszero(ur)
 
@@ -30,17 +30,17 @@ function get(ur, us)
 
 end
 
-function get(eq, ra_, nu_)
+function ge(eq, ra_, nu_)
 
     ur = lastindex(ra_)
 
-    pv_ = map(nu -> get(ur, sum(eq(nu), ra_; init = 0)), nu_)
+    pv_ = map(nu -> ge(ur, sum(eq(nu), ra_; init = 0)), nu_)
 
     pv_, adjust(pv_, BenjaminiHochberg())
 
 end
 
-function get(ra_, nu_, il_, ig_)
+function ge(ra_, nu_, il_, ig_)
 
     ty = eltype(ra_)
 
@@ -62,7 +62,7 @@ function get(ra_, nu_, il_, ig_)
 
     else
 
-        pl_, ql_ = get(<=, rl_, nu_[il_])
+        pl_, ql_ = ge(<=, rl_, nu_[il_])
 
     end
 
@@ -74,7 +74,7 @@ function get(ra_, nu_, il_, ig_)
 
     else
 
-        pg_, qg_ = get(>=, rg_, nu_[ig_])
+        pg_, qg_ = ge(>=, rg_, nu_[ig_])
 
     end
 

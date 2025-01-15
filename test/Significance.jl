@@ -56,7 +56,7 @@ end
 
 # ---- #
 
-@test Omics.Significance.get(0, NaN) === 1.0
+@test Omics.Significance.ge(0, NaN) === 1.0
 
 # ---- #
 
@@ -65,9 +65,9 @@ end
 # 2.084 ns (0 allocations: 0 bytes)
 for (us, re) in ((0, 0.1), (1, 0.1), (2, 0.2))
 
-    @test Omics.Significance.get(10, us) === re
+    @test Omics.Significance.ge(10, us) === re
 
-    #@btime Omics.Significance.get(10, $us)
+    #@btime Omics.Significance.ge(10, $us)
 
 end
 
@@ -86,9 +86,9 @@ for (eq, re) in (
     (>=, ([0.7, 0.6, 0.6, 0.4], [0.7, 0.7, 0.7, 0.7])),
 )
 
-    @test Omics.Significance.get(eq, RA_, NU_) == re
+    @test Omics.Significance.ge(eq, RA_, NU_) == re
 
-    #@btime Omics.Significance.get($eq, RA_, NU_)
+    #@btime Omics.Significance.ge($eq, RA_, NU_)
 
 end
 
@@ -98,8 +98,8 @@ const IL_ = findall(<(0.0), NU_)
 
 const IG_ = findall(>=(0.0), NU_)
 
-@test Omics.Significance.get(RA_, NU_, IL_, IG_) ==
+@test Omics.Significance.ge(RA_, NU_, IL_, IG_) ==
       ([1.0], [1.0], [1, 1, 2 / 3], [1.0, 1, 1])
 
 # 267.857 ns (24 allocations: 1.00 KiB)
-#@btime Omics.Significance.get(RA_, NU_, IL_, IG_);
+#@btime Omics.Significance.ge(RA_, NU_, IL_, IG_);

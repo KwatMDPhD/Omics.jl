@@ -1,6 +1,6 @@
 module Extreme
 
-function get(ua::Integer, ue)
+function ge(ua::Integer, ue)
 
     if ua * 0.5 <= ue
 
@@ -14,9 +14,9 @@ function get(ua::Integer, ue)
 
 end
 
-function get(an_, ue)
+function ge(an_, ue)
 
-    sortperm(an_)[get(lastindex(an_), ue)]
+    sortperm(an_)[ge(lastindex(an_), ue)]
 
 end
 
