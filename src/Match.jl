@@ -187,7 +187,7 @@ function go(
     nf,
     fe_,
     da;
-    ts = "feature_x_result_x_number",
+    ts = "feature_x_metric_x_result",
     um = 10,
     uv = 10,
     ue = 8,

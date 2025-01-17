@@ -59,17 +59,19 @@ function rea(ts, co, sa_; ta_ = ones(Int, lastindex(sa_)), mi = 1.0)
 
     fe_ = ta[!, co]
 
-    da = stack((get_sample(ta, sa) for sa in sa_))
+    @info "Read $(lastindex(fe_))."
 
-    @info "Selecting"
+    da = stack((get_sample(ta, sa) for sa in sa_))
 
     fe_, da = index_feature(fe_, da, select(ta_, da, mi))
 
+    @info "Selected $(lastindex(fe_))."
+
     if !allunique(fe_)
 
-        @info "Collapsing"
-
         fe_, da = collapse(mean, Float64, fe_, da)
+
+        @info "Collapsed into $(lastindex(fe_))."
 
     end
 
@@ -77,9 +79,9 @@ function rea(ts, co, sa_; ta_ = ones(Int, lastindex(sa_)), mi = 1.0)
 
     if any(allequal, da___)
 
-        @info "Removing"
-
         fe_, da = index_feature(fe_, da, map(!allequal, da___))
+
+        @info "Kept $(lastindex(fe_))."
 
     end
 
