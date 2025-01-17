@@ -18,6 +18,8 @@ include("Evidence.jl")
 
 include("Extreme.jl")
 
+include("FeatureBySample.jl")
+
 include("GeneralizedLinearModel.jl")
 
 include("Grid.jl")
@@ -27,8 +29,6 @@ include("HTM.jl")
 include("Information.jl")
 
 include("Match.jl")
-
-include("Matri.jl")
 
 include("MutualInformation.jl")
 

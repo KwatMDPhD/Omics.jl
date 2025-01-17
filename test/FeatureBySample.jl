@@ -10,13 +10,25 @@ using StatsBase: mean
 
 # ---- #
 
-const AN = [
+Omics.FeatureBySample.get_sample
+
+# ---- #
+
+Omics.FeatureBySample.index_feature
+
+# ---- #
+
+Omics.FeatureBySample.select
+
+# ---- #
+
+const DA = [
     1 2
     10 20
     100 200
 ]
 
-for (ro_, re) in (
+for (fe_, re) in (
     (["Row 1", "Row 1", "Row 2"], (
         ["Row 1", "Row 2"],
         [
@@ -27,19 +39,19 @@ for (ro_, re) in (
     (["Row 1", "Row 1", "Row 1"], (["Row 1"], [37.0 74])),
 )
 
-    @test Omics.Matri.collapse(mean, Float64, ro_, AN) == re
+    @test Omics.FeatureBySample.collapse(mean, Float64, fe_, DA) == re
 
 end
 
 # ---- #
 
-# 26.916 μs (478 allocations: 187.80 KiB)
-# 2.815 ms (2815 allocations: 12.36 MiB)
+# 26.625 μs (478 allocations: 187.80 KiB)
+# 2.777 ms (2815 allocations: 12.36 MiB)
 for ur in (100, 1000)
 
     seed!(20230920)
 
-    #@btime Omics.Matri.collapse(
+    #@btime Omics.FeatureBySample.collapse(
     #    mean,
     #    Float64,
     #    $([randstring('A':'G', 3) for _ in 1:ur]),
@@ -50,11 +62,15 @@ end
 
 # ---- #
 
-# 815.549 ns (22 allocations: 2.02 KiB)
-# 797.811 ns (22 allocations: 1.97 KiB)
-# 793.648 ns (22 allocations: 1.95 KiB)
-# 756.545 ns (22 allocations: 1.92 KiB)
-for (fi, r1_, c1_, a1, r2_, c2_, a2, re) in (
+Omics.FeatureBySample.rea
+
+# ---- #
+
+# 964.286 ns (22 allocations: 2.02 KiB)
+# 938.320 ns (22 allocations: 1.97 KiB)
+# 916.675 ns (22 allocations: 1.95 KiB)
+# 876.694 ns (22 allocations: 1.92 KiB)
+for (fi, f1_, s1_, d1, f2_, s2_, d2, re) in (
     (
         0,
         ["R1", "R2"],
@@ -155,8 +171,8 @@ for (fi, r1_, c1_, a1, r2_, c2_, a2, re) in (
     ),
 )
 
-    @test Omics.Matri.joi(fi, r1_, c1_, a1, r2_, c2_, a2) == re
+    @test Omics.FeatureBySample.joi(fi, f1_, s1_, d1, f2_, s2_, d2) == re
 
-    #@btime Omics.Matri.joi($fi, $r1_, $c1_, $a1, $r2_, $c2_, $a2)
+    #@btime Omics.FeatureBySample.joi($fi, $f1_, $s1_, $d1, $f2_, $s2_, $d2)
 
 end

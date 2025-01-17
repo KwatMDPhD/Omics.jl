@@ -137,7 +137,7 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
                 "colorbar" => merge(
                     co,
                     Dict(
-                        "y" => -0.48,
+                        "y" => -0.344,
                         "tickvals" => map(Omics.Strin.shorten, Omics.Plot.tick(ta_)),
                     ),
                 ),
@@ -153,7 +153,7 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
                 "colorbar" => merge(
                     co,
                     Dict(
-                        "y" => -0.64,
+                        "y" => -0.432,
                         "tickvals" => map(Omics.Strin.shorten, Omics.Plot.tick(da)),
                     ),
                 ),
