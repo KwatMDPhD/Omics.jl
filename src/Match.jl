@@ -187,7 +187,7 @@ function go(
     nf,
     fe_,
     da;
-    ts = "feature_x_metric_x_result",
+    ts = "match",
     um = 10,
     uv = 10,
     ue = 8,
