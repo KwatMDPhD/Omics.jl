@@ -4,8 +4,6 @@ using Test: @test
 
 # ----------------------------------------------------------------------------------------------- #
 
-# ---- #
-
 for mo in (
     "Clustering",
     "Color",
@@ -35,7 +33,7 @@ for mo in (
     "Table",
 )
 
-    @info mo
+    @info "🎬 Running $mo"
 
     run(`julia --project $mo.jl`)
 
