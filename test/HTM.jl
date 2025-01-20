@@ -9,7 +9,7 @@ using JSON: json
 # ---- #
 
 const HT = Omics.HTM.writ(
-    joinpath(homedir(), "Downloads", "writ.html"),
+    joinpath(tempdir(), "writ.html"),
     ("SRC 1", "SRC 2"),
     "",
     """

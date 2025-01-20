@@ -1,7 +1,7 @@
 name = "Omics"
 uuid = "55404059-57b2-473d-9cce-582834f19b54"
 authors = ["KwatMDPhD"]
-version = "0.5.0"
+version = "0.6.0"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"

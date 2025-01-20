@@ -209,6 +209,8 @@ function go(
 
     if 0 < um
 
+        # TODO: Subsample from each group.
+
         ra_ = Vector{Float64}(undef, um)
 
         ua = round(Int, us * 0.632)

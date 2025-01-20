@@ -30,6 +30,7 @@ for mo in (
     "Simulation",
     "Strin",
     "Table",
+    "Target",
     "XSample",
 )
 

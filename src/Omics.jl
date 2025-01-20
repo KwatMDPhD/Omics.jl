@@ -52,6 +52,8 @@ include("Strin.jl")
 
 include("Table.jl")
 
+include("Target.jl")
+
 include("XSample.jl")
 
 end
