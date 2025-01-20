@@ -122,6 +122,12 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
 
     wi = inv(ur)
 
+    if eltype(ta_) == Bool
+
+        ta_ = convert(Vector{Int}, ta_)
+
+    end
+
     Omics.Plot.plot(
         ht,
         (
@@ -144,7 +150,7 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
             ),
             Dict(
                 "type" => "heatmap",
-                "y" => fe_,
+                "y" => map(fe -> Omics.Strin.limit(fe, 32), fe_),
                 "x" => sa_,
                 "z" => collect(eachrow(da)),
                 "zmin" => Omics.Strin.shorten(ni),
@@ -187,7 +193,7 @@ function go(
     nf,
     fe_,
     da;
-    ts = "match",
+    ts = "result",
     um = 10,
     uv = 10,
     ue = 8,
@@ -251,11 +257,11 @@ function go(
 
         end
 
-        il_ = findall(<(0.0), sc_)
+        ig_ = findall(<(0.0), sc_)
 
-        ig_ = findall(>=(0.0), sc_)
+        ip_ = findall(>=(0.0), sc_)
 
-        pv_[il_], qv_[il_], pv_[ig_], qv_[ig_] = Omics.Significance.ge(ra_, sc_, il_, ig_)
+        pv_[ig_], qv_[ig_], pv_[ip_], qv_[ip_] = Omics.Significance.ge(ra_, sc_, ig_, ip_)
 
     end
 
@@ -275,7 +281,9 @@ function go(
 
     if 0 < ue
 
-        ix_ = reverse!(Omics.Extreme.ge(sc_, ue))
+        io_ = findall(!isnan, sc_)
+
+        ix_ = io_[reverse!(Omics.Extreme.ge(sc_[io_], ue))]
 
         _plot("$pr.html", ns, sa_, nt, ta_, nf, fe_[ix_], da[ix_, :], re[ix_, :], st, la)
 

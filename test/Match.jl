@@ -47,7 +47,7 @@ Omics.Match.go(tempdir(), make_argument("12", 1, 2)...)
 
 for ex in ("tsv", "html")
 
-    @test isfile(joinpath(tempdir(), "match.$ex"))
+    @test isfile(joinpath(tempdir(), "result.$ex"))
 
 end
 
@@ -81,15 +81,18 @@ end
 
 # ---- #
 
-const FU, NS, SA_, NT, TF_, NF, FE_, DF = make_argument("12", 1, 4)
+const FU, NS, SA_, NT, TF_, NF, FE_, DF = make_argument("12", 2, 4)
 
 const TI_ = convert(Vector{Int}, TF_)
 
+const BO_ = [false, false, true, true]
+
 const DI = convert(Matrix{Int}, DF)
 
-for (ta_, da) in ((TF_, DF), (TI_, DF), (TF_, DI), (TI_, DI))
+for (ta_, da) in
+    ((TF_, DF), (TI_, DF), (BO_, DF), (convert(BitVector, BO_), DF), (TF_, DI), (TI_, DI))
 
-    di, la = make_output("$(eltype(ta_)) x $(eltype(da))")
+    di, la = make_output("$(typeof(ta_)) x $(eltype(da))")
 
     Omics.Match.go(di, FU, NS, SA_, NT, ta_, NF, FE_, da; la)
 
@@ -120,6 +123,32 @@ for ue in (0, 1, 2, 3, 6)
     Omics.Match.go(di, AE_...; ue, la)
 
 end
+
+# ---- #
+
+const DR, LA = make_output("Skip Plotting NaN")
+
+const TA_ = [0.1, 0.2, 1.3, 1.4]
+
+Omics.Match.go(
+    DR,
+    cor,
+    "Sample",
+    Omics.Simulation.label(4, "Sample"),
+    "Target",
+    TA_,
+    "Feature",
+    ["-", "1 NaN", "Constant", "2 NaN", "+", "3 NaN"],
+    [
+        1 1 0 0
+        NaN NaN NaN NaN
+        0.49 0.51 0.49 0.51
+        NaN NaN NaN NaN
+        0 0 1 1
+        NaN NaN NaN NaN
+    ];
+    la = LA,
+)
 
 # ---- #
 

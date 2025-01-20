@@ -103,6 +103,12 @@ function coun(us, st)
 
 end
 
+function limit(st, uc)
+
+    lastindex(st) <= uc ? st : "$(st[1:uc])..."
+
+end
+
 function shorten(nu)
 
     @sprintf "%.2g" nu

@@ -61,6 +61,16 @@ end
 
 # ---- #
 
+const LO = "1234567890"
+
+for (uc, re) in ((1, "1..."), (2, "12..."), (11, LO))
+
+    @test Omics.Strin.limit(LO, uc) === re
+
+end
+
+# ---- #
+
 @test Omics.Strin.shorten(pi) === "3.1"
 
 # ---- #
