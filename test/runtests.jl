@@ -14,7 +14,6 @@ for mo in (
     "ErrorMatrix",
     "Evidence",
     "Extreme",
-    "FeatureBySample",
     "GeneralizedLinearModel",
     "Grid",
     "HTM",
@@ -31,6 +30,7 @@ for mo in (
     "Simulation",
     "Strin",
     "Table",
+    "XSample",
 )
 
     @info "🎬 Running $mo"

@@ -20,8 +20,6 @@ include("Evidence.jl")
 
 include("Extreme.jl")
 
-include("FeatureBySample.jl")
-
 include("GeneralizedLinearModel.jl")
 
 include("Grid.jl")
@@ -53,5 +51,7 @@ include("Simulation.jl")
 include("Strin.jl")
 
 include("Table.jl")
+
+include("XSample.jl")
 
 end
