@@ -39,11 +39,3 @@ for mo in (
     run(`julia --project $mo.jl`)
 
 end
-
-# ---- #
-
-xs = rand(1000);
-
-@btime pushfirst!(xs, 0.0);
-
-@btime vcat(0.0, xs);
