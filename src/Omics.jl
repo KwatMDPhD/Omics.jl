@@ -20,6 +20,8 @@ include("Evidence.jl")
 
 include("Extreme.jl")
 
+include("Gene.jl")
+
 include("GeneralizedLinearModel.jl")
 
 include("Grid.jl")

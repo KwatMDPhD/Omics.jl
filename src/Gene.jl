@@ -2,31 +2,17 @@ module Gene
 
 using ..Omics
 
-function _read_hgnc()
-
-    Omics.DataFrame.read(joinpath(Omics._DA, "Gene", "hgnc.tsv.gz"))
-
-end
-
-function _read_ensemble()
-
-    Omics.DataFrame.read(joinpath(Omics._DA, "Gene", "ensembl.tsv.gz"))
-
-end
-
-function _read_uniprot()
-
-    Omics.DataFrame.read(joinpath(Omics._DA, "Gene", "uniprot.tsv.gz"))
-
-end
-
-function map(kc_, vc = "symbol"; da = _read_hgnc())
+function ma(ta, ck_, cv)
 
     ke_va = Dict{String, String}()
 
-    for ro in eachrow(da)
+    ke = ta[!, ck_]
 
-        va = ro[vc]
+    va_ = ta[!, cv]
+
+    for iv in eachindex(va_)
+
+        va = va_[iv]
 
         if ismissing(va)
 
@@ -34,111 +20,97 @@ function map(kc_, vc = "symbol"; da = _read_hgnc())
 
         end
 
-        for kc in kc_
+        for ik in eachindex(ck_)
 
-            ke = ro[kc]
+            ky = ke[iv, ik]
 
-            if ismissing(ke)
-
-                continue
-
-            end
-
-            ke_va[string(ke)] = va
-
-        end
-
-    end
-
-    sort(ke_va; byvalue = true)
-
-end
-
-function map_ensembl(da = _read_ensemble())
-
-    ke_va = Dict{String, String}()
-
-    ma = Matrix(
-        da[
-            !,
-            [
-                "Transcript stable ID version",
-                "Transcript stable ID",
-                "Transcript name",
-                "Gene stable ID version",
-                "Gene stable ID",
-                "Gene name",
-            ],
-        ],
-    )
-
-    for st_ in eachrow(ma)
-
-        ge = st_[end]
-
-        if ismissing(ge)
-
-            continue
-
-        end
-
-        for en in st_[1:(end - 1)]
-
-            for sp in eachsplit(en, '|')
-
-                ke_va[sp] = ge
-
-            end
-
-        end
-
-    end
-
-    sort(ke_va; byvalue = true)
-
-end
-
-function map_uniprot(da = _read_uniprot())
-
-    ke_va = Dict{String, Dict{String, Any}}()
-
-    ir_ = names(da)
-
-    id = 2
-
-    popat!(ir_, id)
-
-    for (pr, an_) in zip(da[!, id], eachrow(Matrix(da[!, ir_])))
-
-        ir_an = Dict{String, Any}()
-
-        for (ir, an) in zip(ir_, an_)
-
-            if ismissing(an)
+            if ismissing(ky)
 
                 continue
 
             end
 
-            if ir == "Gene Names"
+            for sp in eachsplit(ky, '|')
 
-                an = split(an)
-
-            elseif ir == "Interacts with"
-
-                an = split(an, "; ")
+                ke_va[sp] = va
 
             end
 
-            ir_an[ir] = an
-
         end
-
-        ke_va[pr[1:(end - 6)]] = ir_an
 
     end
 
     ke_va
+
+end
+
+const _DA = pkgdir(Omics, "data", "Gene")
+
+const HT = joinpath(_DA, "hgnc.tsv.gz")
+
+const ET = joinpath(_DA, "ensembl.tsv.gz")
+
+const UT = joinpath(_DA, "uniprot.tsv.gz")
+
+const EK_ = [
+    "Transcript stable ID version",
+    "Transcript stable ID",
+    "Transcript name",
+    "Gene stable ID version",
+    "Gene stable ID",
+]
+
+const HV = "symbol"
+
+const EV = "Gene name"
+
+function map_uniprot(ta)
+
+    pr_ir = Dict{String, Dict{String, Any}}()
+
+    pr_ = ta[!, 2]
+
+    ir_ = names(ta)[vcat(1, 3:end)]
+
+    va = Matrix(ta[!, ir_])
+
+    for ip in eachindex(pr_)
+
+        ir_va = Dict{String, Any}()
+
+        for ii in eachindex(ir_)
+
+            vl = va[ip, ii]
+
+            if ismissing(vl)
+
+                continue
+
+            end
+
+            ir = ir_[ii]
+
+            ir_va[ir] = if ir == "Gene Names"
+
+                split(vl)
+
+            elseif ir == "Interacts with"
+
+                split(vl, "; ")
+
+            else
+
+                vl
+
+            end
+
+        end
+
+        pr_ir[pr_[ip][1:(end - 6)]] = ir_va
+
+    end
+
+    pr_ir
 
 end
 
