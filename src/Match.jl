@@ -193,7 +193,6 @@ function go(
     nf,
     fe_,
     da;
-    ts = "result",
     um = 10,
     uv = 10,
     ue = 8,
@@ -267,7 +266,7 @@ function go(
 
     re = hcat(sc_, ma_, pv_, qv_)
 
-    pr = joinpath(di, ts)
+    pr = joinpath(di, "result")
 
     Omics.Table.writ(
         "$pr.tsv",

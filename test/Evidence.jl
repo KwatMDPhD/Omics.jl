@@ -10,15 +10,16 @@ const PR_ = PO_ = vcat(0.01, 0.1:0.1:0.9, 0.99)
 
 Omics.Plot.plot(
     "",
-    vcat(
-        [
-            Dict(
+    push!(
+        map(
+            pr -> Dict(
                 "name" => "Prior = $pr",
                 "y" => map(po -> Omics.Evidence.ge(pr, po), PO_),
                 "x" => PO_,
                 "line" => Dict("color" => Omics.Palette.color(pr, Omics.Palette.bwr)),
-            ) for pr in PR_
-        ],
+            ),
+            PR_,
+        ),
         Dict(
             "name" => "Prior = 1 - Posterior",
             "y" => map(po -> Omics.Evidence.ge(1.0 - po, po), PO_),

@@ -14,7 +14,7 @@ function plot(yc_, na_, fu)
 
     Omics.Plot.plot(
         "",
-        [Dict("name" => na_[id], "y" => yc_[id]) for id in eachindex(yc_)],
+        map(id -> Dict("name" => na_[id], "y" => yc_[id]), eachindex(yc_)),
         Dict("title" => Dict("text" => string(fu))),
     )
 

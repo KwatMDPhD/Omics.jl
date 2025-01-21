@@ -81,13 +81,14 @@ end
 
 Omics.Plot.plot(
     "",
-    [
-        Dict(
+    map(
+        nu_ -> Dict(
             "name" => "$(nu_[1]) ... $(nu_[end])",
             "y" => map(Omics.Probability.get_logistic, nu_),
             "x" => nu_,
             "mode" => "markers",
-        ) for nu_ in (-10:10, -1.0:0.1:1.0, PR_)
-    ],
+        ),
+        (-10:10, -1.0:0.1:1.0, PR_),
+    ),
     Dict("yaxis" => Dict("title" => Dict("text" => "Logistic Probability"))),
 )
