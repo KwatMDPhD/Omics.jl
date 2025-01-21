@@ -85,12 +85,12 @@ const FU, NS, SA_, NT, TF_, NF, FE_, DF = make_argument("12", 2, 4)
 
 const TI_ = convert(Vector{Int}, TF_)
 
-const BO_ = [false, false, true, true]
+const IS_ = [false, false, true, true]
 
 const DI = convert(Matrix{Int}, DF)
 
 for (ta_, da) in
-    ((TF_, DF), (TI_, DF), (BO_, DF), (convert(BitVector, BO_), DF), (TF_, DI), (TI_, DI))
+    ((TF_, DF), (TI_, DF), (IS_, DF), (convert(BitVector, IS_), DF), (TF_, DI), (TI_, DI))
 
     di, la = make_output("$(typeof(ta_)) x $(eltype(da))")
 
