@@ -150,7 +150,7 @@ function _plot(ht, ns, sa_, nt, ta_, nf, fe_, da, re, st, la)
             ),
             Dict(
                 "type" => "heatmap",
-                "y" => map(fe -> Omics.Strin.limit(fe, 32), fe_),
+                "y" => map(fe -> Omics.Strin.limit(fe, 40), fe_),
                 "x" => sa_,
                 "z" => collect(eachrow(da)),
                 "zmin" => Omics.Strin.shorten(ni),
