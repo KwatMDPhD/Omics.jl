@@ -26,11 +26,11 @@ const TU = "#20d9ba"
 
 const VI = "#9017e6"
 
+const HU = "#fbb92d"
+
 const OR = "#fc7f31"
 
 const PU = "#561649"
-
-const HU = "#fbb92d"
 
 const SR = "#8c1515"
 

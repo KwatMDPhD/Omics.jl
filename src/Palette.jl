@@ -122,7 +122,20 @@ const RI_ = (
     "#ebdc78",
 )
 
-const HE_ = (DU_..., SP_..., IL_..., ID_..., PJ_..., PP_..., RE_..., RI_...)
+const HE_ = (
+    Omics.Color.RE,
+    Omics.Color.GR,
+    Omics.Color.BL,
+    Omics.Color.YE,
+    Omics.Color.MA,
+    Omics.Color.CY,
+    "#ff0000",
+    "#00ff00",
+    "#0000ff",
+    "#ffff00",
+    "#ff00ff",
+    "#00ffff",
+)
 
 function make(st_)
 
@@ -130,7 +143,7 @@ function make(st_)
 
 end
 
-const MO = make(("#ff0000",))
+const MO = make((HE_[1],))
 
 const BI = make((Omics.Color.LI, Omics.Color.DA))
 
