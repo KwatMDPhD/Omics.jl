@@ -60,17 +60,17 @@ function collapse(fu, ty, fe_, da)
 
 end
 
+function index_feature(fe_, da, id_)
+
+    fe_[id_], da[id_, :]
+
+end
+
 function shift_log2!(da)
 
     mi = minimum(da)
 
     map!(da -> log2(da - mi + 1), da, da)
-
-end
-
-function index_feature(fe_, da, id_)
-
-    fe_[id_], da[id_, :]
 
 end
 
