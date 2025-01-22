@@ -1,36 +1,42 @@
 module XSample
 
-using DataFrames: dropmissing!
-
 using StatsBase: mean
 
 using ..Omics
 
-function get_sample(ta, sa)
+function rename!(fe_, fe_fa)
 
-    ta[!, sa]
+    ur = 0
+
+    for id in eachindex(fe_)
+
+        fe = fe_[id]
+
+        fe_[id] = if haskey(fe_fa, fe)
+
+            ur += 1
+
+            fe_fa[fe]
+
+        else
+
+            "_$fe"
+
+        end
+
+    end
+
+    uf = lastindex(fe_)
+
+    @info "📛 Renamed $ur / $uf ($(ur / uf * 100)%)."
 
 end
 
-function get_sample(ta, sa::Regex)
+function select_non_nan(ta_, da, mi)
 
-    ta[!, findall(contains(sa), names(ta))[]]
+    re___ = [(id_, round(lastindex(id_) * mi)) for id_ in values(Omics.Dic.inde(ta_))]
 
-end
-
-function read_feature_sample(ts, fa, sa_)
-
-    ta = dropmissing!(Omics.Table.rea(ts), fa)
-
-    convert(Vector{String}, ta[!, fa]), stack((get_sample(ta, sa) for sa in sa_))
-
-end
-
-function select_non_nan(gr_, da, mi)
-
-    re___ = [(id_, round(lastindex(id_) * mi)) for id_ in values(Omics.Dic.inde(gr_))]
-
-    map(da_ -> all(re_ -> re_[2] <= sum(!isnan, da_[re_[1]]), re___), eachrow(da))
+    findall(da_ -> all(re_ -> re_[2] <= sum(!isnan, da_[re_[1]]), re___), eachrow(da))
 
 end
 
@@ -68,15 +74,30 @@ function index_feature(fe_, da, id_)
 
 end
 
-function rea(ts, fa, sa_; ta_ = ones(Int, lastindex(sa_)), mi = 1.0, lo = false)
+function process(
+    fe_,
+    da;
+    fe_fa = Dict{String, String}(),
+    ta_ = trues(size(da, 2)),
+    mi = 1.0,
+    lo = false,
+)
 
-    fe_, da = read_feature_sample(ts, fa, sa_)
+    @info "Processing $(lastindex(fe_))"
 
-    @info "Read $(lastindex(fe_))."
+    if !isempty(fe_fa)
 
-    fe_, da = index_feature(fe_, da, select_non_nan(ta_, da, mi))
+        rename!(fe_, fe_fa)
 
-    @info "Selected non-NaN $(lastindex(fe_))."
+    end
+
+    if any(isnan, da)
+
+        fe_, da = index_feature(fe_, da, select_non_nan(ta_, da, mi))
+
+        @info "Selected non-NaN $(lastindex(fe_))."
+
+    end
 
     if !allunique(fe_)
 
@@ -90,7 +111,7 @@ function rea(ts, fa, sa_; ta_ = ones(Int, lastindex(sa_)), mi = 1.0, lo = false)
 
     if any(allequal, da___)
 
-        fe_, da = index_feature(fe_, da, map(!allequal, da___))
+        fe_, da = index_feature(fe_, da, findall(!allequal, da___))
 
         @info "Kept $(lastindex(fe_))."
 
@@ -105,6 +126,36 @@ function rea(ts, fa, sa_; ta_ = ones(Int, lastindex(sa_)), mi = 1.0, lo = false)
     end
 
     fe_, da
+
+end
+
+function write_plot(pr, nf, fe_, ns, sa_, nd, da)
+
+    Omics.Table.writ("$pr.tsv", Omics.Table.make(nf, fe_, sa_, da))
+
+    Omics.Plot.plot_heat_map(
+        "$pr.html",
+        da;
+        ro_ = fe_,
+        co_ = sa_,
+        la = Dict(
+            "title" => Dict("text" => nd),
+            "yaxis" => Dict("title" => Omics.Strin.coun(lastindex(fe_), nf)),
+            "xaxis" => Dict("title" => Omics.Strin.coun(lastindex(sa_), ns)),
+        ),
+    )
+
+    Omics.Plot.plot(
+        "$pr.histogram.html",
+        (
+            Dict(
+                "type" => "histogram",
+                "x" => vec(da),
+                "marker" => Dict("color" => Omics.Color.RE),
+            ),
+        ),
+        Dict("yaxis" => Dict("title" => "Count"), "xaxis" => Dict("title" => nd)),
+    )
 
 end
 
@@ -145,36 +196,6 @@ function joi(fi, f1_, s1_, d1, f2_, s2_, d2)
     end
 
     f3_, s3_, d3
-
-end
-
-function write_plot(pr, nf, fe_, ns, sa_, nd, da)
-
-    Omics.Table.writ("$pr.tsv", Omics.Table.make(nf, fe_, sa_, da))
-
-    Omics.Plot.plot_heat_map(
-        "$pr.html",
-        da;
-        ro_ = fe_,
-        co_ = sa_,
-        la = Dict(
-            "title" => Dict("text" => nd),
-            "yaxis" => Dict("title" => Omics.Strin.coun(lastindex(fe_), nf)),
-            "xaxis" => Dict("title" => Omics.Strin.coun(lastindex(sa_), ns)),
-        ),
-    )
-
-    Omics.Plot.plot(
-        "$pr.histogram.html",
-        (
-            Dict(
-                "type" => "histogram",
-                "x" => vec(da),
-                "marker" => Dict("color" => Omics.Color.RE),
-            ),
-        ),
-        Dict("yaxis" => Dict("title" => "Count"), "xaxis" => Dict("title" => nd)),
-    )
 
 end
 
