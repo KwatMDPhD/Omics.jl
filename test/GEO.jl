@@ -51,8 +51,8 @@ const PL = "GPL16686"
 
 @test length(BL_TH["SAMPLE"]["GSM3466115"]) === 37
 
-# 368.565 ms (10663 allocations: 54.01 MiB)
-@btime Omics.GEO.rea(GZ);
+# 369.377 ms (10622 allocations: 54.01 MiB)
+#@btime Omics.GEO.rea(GZ);
 
 # ---- #
 
@@ -79,10 +79,8 @@ const PL = "GPL16686"
     "GSM3466134 D458_Resistant_JQ1_5"
 ]
 
-# 907.051 ns (22 allocations: 1.23 KiB)
-disable_logging(Info);
-@btime Omics.GEO.get_sample(BL_TH);
-disable_logging(Debug);
+# 903.463 ns (22 allocations: 1.23 KiB)
+#@btime Omics.GEO.get_sample(BL_TH);
 
 # ---- #
 
@@ -94,50 +92,47 @@ disable_logging(Debug);
 )
 
 # 10.625 μs (746 allocations: 18.09 KiB)
-disable_logging(Info);
-@btime Omics.GEO.get_characteristic(BL_TH);
-disable_logging(Debug);
+#@btime Omics.GEO.get_characteristic(BL_TH);
 
 # ---- #
 
 @test Omics.GEO.get_platform(BL_TH) === PL
 
-# 39.442 ns (2 allocations: 64 bytes)
-disable_logging(Info);
-@btime Omics.GEO.get_platform(BL_TH);
-disable_logging(Debug);
+# 36.924 ns (2 allocations: 64 bytes)
+#@btime Omics.GEO.get_platform(BL_TH);
 
 # ---- #
 
 @test size.(Omics.GEO.get_feature(BL_TH, PL)) === ((53617,), (20,), (53617, 20))
 
-# 227.714 ms (4829306 allocations: 463.28 MiB)
-disable_logging(Info);
-@btime Omics.GEO.get_feature(BL_TH, PL);
-disable_logging(Debug);
+# 223.606 ms (4829306 allocations: 463.28 MiB)
+#@btime Omics.GEO.get_feature(BL_TH, PL);
 
 # ---- #
 
-const FE_GE = Omics.GEO.get_map(BL_TH, PL)
+const FE_GE = Omics.GEO.get_feature_map(BL_TH, PL)
 
 @test length(FE_GE) === 17623
 
-# 319.181 ms (2953659 allocations: 227.50 MiB)
-@btime Omics.GEO.get_map(BL_TH, PL);
+# 266.525 ms (2936036 allocations: 226.96 MiB)
+#@btime Omics.GEO.get_feature_map(BL_TH, PL);
 
 # ---- #
 
-for (gs, ir, rs, rf) in (
+for (gs, nt, rc, rf) in (
     ("GSE13534", "", (0, 4), (14295, 4)),
     ("GSE16059", "diagnonsis", (3, 88), (31773, 88)),
-    ("GSE67311", "diagnosis", (8, 142), (31403, 142)),
+    ("GSE67311", "diagnosis", (9, 142), (31403, 142)),
 )
 
-    sa_, ch_, cs, pl, fe_, fs =
-        Omics.GEO.ge(tempdir(), joinpath(DA, Omics.GEO.make_soft(gs)); ir)
+    sa_, ch_, vc, nf, fe_, vf = Omics.GEO.read_process_write_plot(
+        mkpath(joinpath(tempdir(), gs)),
+        joinpath(DA, Omics.GEO.make_soft(gs));
+        nt,
+    )
 
-    @test size(cs) === rs
+    @test size(vc) === rc
 
-    @test size(fs) === rf
+    @test size(vf) === rf
 
 end

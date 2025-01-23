@@ -1,8 +1,18 @@
 module XSample
 
-using StatsBase: mean
+using OrderedCollections: OrderedDict
+
+using StatsBase: countmap, mean
 
 using ..Omics
+
+function select_non_nan(ta_, da, mi)
+
+    re___ = [(id_, round(lastindex(id_) * mi)) for id_ in values(Omics.Dic.inde(ta_))]
+
+    findall(da_ -> all(re_ -> re_[2] <= sum(!isnan, da_[re_[1]]), re___), eachrow(da))
+
+end
 
 function rename!(fe_, fe_fa)
 
@@ -32,14 +42,6 @@ function rename!(fe_, fe_fa)
 
 end
 
-function select_non_nan(ta_, da, mi)
-
-    re___ = [(id_, round(lastindex(id_) * mi)) for id_ in values(Omics.Dic.inde(ta_))]
-
-    findall(da_ -> all(re_ -> re_[2] <= sum(!isnan, da_[re_[1]]), re___), eachrow(da))
-
-end
-
 function collapse(fu, ty, fe_, da)
 
     fe_id_ = Omics.Dic.inde(fe_)
@@ -60,12 +62,6 @@ function collapse(fu, ty, fe_, da)
 
 end
 
-function index_feature(fe_, da, id_)
-
-    fe_[id_], da[id_, :]
-
-end
-
 function shift_log2!(da)
 
     mi = minimum(da)
@@ -74,29 +70,13 @@ function shift_log2!(da)
 
 end
 
-function rename_collapse_log(fe_, fs; fe_f2 = Dict{String, String}(), lo = false)
-    fe_ = copy(fe_)
-    fs = copy(fs)
-    if !isempty(fe_f2)
-        Nucleus.Collection.rename!(fe_, fe_f2)
-        id_ = findall(fe -> !isempty(fe) && fe[1] != '_', fe_)
-        ug = lastindex(id_)
-        if ug < lastindex(fe_)
-            fe_ = fe_[id_]
-            fs = fs[id_, :]
-            @warn "Kept $ug."
-        end
-    end
-    if !allunique(fe_)
-        fe_, fs = Nucleus.Matrix.collapse(median, Float64, fe_, fs)
-    end
-    if lo
-        shift_log!(fs)
-    end
-    fe_, fs
+function _index_feature(fe_, da, id_)
+
+    fe_[id_], da[id_, :]
+
 end
 
-function process(
+function process!(
     fe_,
     da;
     fe_fa = Dict{String, String}(),
@@ -107,17 +87,17 @@ function process(
 
     @info "Processing $(lastindex(fe_))"
 
-    if !isempty(fe_fa)
+    if any(isnan, da)
 
-        rename!(fe_, fe_fa)
+        fe_, da = _index_feature(fe_, da, select_non_nan(ta_, da, mi))
+
+        @info "Selected non-NaN $(lastindex(fe_))."
 
     end
 
-    if any(isnan, da)
+    if !isempty(fe_fa)
 
-        fe_, da = index_feature(fe_, da, select_non_nan(ta_, da, mi))
-
-        @info "Selected non-NaN $(lastindex(fe_))."
+        rename!(fe_, fe_fa)
 
     end
 
@@ -133,9 +113,9 @@ function process(
 
     if any(allequal, da___)
 
-        fe_, da = index_feature(fe_, da, findall(!allequal, da___))
+        fe_, da = _index_feature(fe_, da, findall(!allequal, da___))
 
-        @info "Kept $(lastindex(fe_))."
+        @info "Kept nonconstant $(lastindex(fe_))."
 
     end
 
@@ -151,40 +131,24 @@ function process(
 
 end
 
-function write(di, ns, sa_, ir_, is, nf, fe_, fs, ir, ps_, pf_)
+function _count_sort_string(an_, mi = 1)
 
-    ts = Nucleus.Path.clean(joinpath(di, "information_x_$(ns)_x_any.tsv"))
-    ke_ar = if isempty(ir)
-        ()
-    else
-        la_ = is[findfirst(==(ir), ir_), :]
-        is_ = isempty.(la_)
-        if any(is_)
-            st = Nucleus.String.count(sum(is_), "sample")
-            @warn "Removing $st with an empty \"$ir\"\n$(join(sa_[is_], '\n'))."
-            is_ .= .!is_
-            sa_ = sa_[is_]
-            is = is[:, is_]
-            fs = fs[:, is_]
-            la_ = la_[is_]
-        end
-        (gc_ = la_,)
-    end
-    Nucleus.DataFrame.write(ts, "Information", ir_, sa_, is)
-    Nucleus.Collection.log_unique(ir_, eachrow(is))
-    pr = joinpath(di, "$(nf)_x_$(ns)_x_number")
-    write_plot(pr, nf, fe_, ns, sa_, basename(di), fs; ke_ar...)
-    Nucleus.Dict.write(
-        joinpath(di, "$(Nucleus.Path.clean(ns)).json"),
-        OrderedDict(
-            "information_tsv" => ts,
-            "feature_tsv" => "$(Nucleus.Path.clean(pr)).tsv",
-            "peek_sample" => ps_,
-            "peek_feature" => pf_,
-            "target" => ir,
-        ),
+    an_na = countmap(an_)
+
+    join(
+        "$(rpad(na, 8))$an.\n" for
+        (an, na) in sort(an_na; by = an -> (an_na[an], an)) if mi <= na
     )
-    sa_, ir_, is, nf, fe_, fs
+
+end
+
+function _log_unique(na_, an___)
+
+    for id in sortperm(an___; by = an_ -> lastindex(unique(an_)), rev = true)
+
+        @info "🔦 ($id) $(na_[id])\n$(_count_sort_string(an___[id]))"
+
+    end
 
 end
 
@@ -214,6 +178,31 @@ function write_plot(pr, nf, fe_, ns, sa_, nd, da)
             ),
         ),
         Dict("yaxis" => Dict("title" => "Count"), "xaxis" => Dict("title" => nd)),
+    )
+
+end
+
+function write_plot(di, ns, sa_, ch_, vc, nf, fe_, vf, nt, ps_, pf_)
+
+    ts = joinpath(di, "$ns.tsv")
+
+    Omics.Table.writ(ts, Omics.Table.make("Characteristic", ch_, sa_, vc))
+
+    _log_unique(ch_, eachrow(vc))
+
+    pr = joinpath(di, "$ns.$nf")
+
+    write_plot(pr, nf, fe_, ns, sa_, "Value", vf)
+
+    Omics.Dic.writ(
+        joinpath(di, "$ns.json"),
+        OrderedDict(
+            "Characteristic" => ts,
+            "Feature" => "$pr.tsv",
+            "Peek Sample" => ps_,
+            "Peek Feature" => pf_,
+            "Target" => nt,
+        ),
     )
 
 end
