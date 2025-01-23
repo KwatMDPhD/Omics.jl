@@ -1,10 +1,8 @@
-using Omics
+using DataFrames: DataFrame
 
 using Test: @test
 
-# ----------------------------------------------------------------------------------------------- #
-
-using DataFrames: DataFrame
+using Omics
 
 # ---- #
 

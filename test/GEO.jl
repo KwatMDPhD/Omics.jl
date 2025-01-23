@@ -1,9 +1,5 @@
 using Test: @test
 
-using XSample
-
-# ---- #
-
 using Omics
 
 # ---- #

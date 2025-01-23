@@ -1,12 +1,10 @@
-using Omics
-
-using Test: @test
-
-# ----------------------------------------------------------------------------------------------- #
-
 using KernelDensity: kde
 
 using Random: seed!
+
+using Test: @test
+
+using Omics
 
 # ---- #
 

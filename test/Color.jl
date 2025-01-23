@@ -1,10 +1,8 @@
-using Omics
+using Colors: RGB
 
 using Test: @test
 
-# ----------------------------------------------------------------------------------------------- #
-
-using Colors: RGB
+using Omics
 
 # ---- #
 

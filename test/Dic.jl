@@ -1,10 +1,8 @@
-using Omics
+using OrderedCollections: OrderedDict
 
 using Test: @test
 
-# ----------------------------------------------------------------------------------------------- #
-
-using OrderedCollections: OrderedDict
+using Omics
 
 # ---- #
 

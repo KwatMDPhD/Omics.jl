@@ -1,10 +1,8 @@
-using Omics
+using Random: seed!
 
 using Test: @test
 
-# ----------------------------------------------------------------------------------------------- #
-
-using Random: seed!
+using Omics
 
 # ---- #
 

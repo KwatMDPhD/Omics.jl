@@ -1,12 +1,10 @@
-using Omics
-
-using Test: @test
-
-# ----------------------------------------------------------------------------------------------- #
-
 using Distances: CorrDist, Euclidean
 
 using Random: seed!
+
+using Test: @test
+
+using Omics
 
 # ---- #
 

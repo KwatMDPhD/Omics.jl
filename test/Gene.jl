@@ -1,6 +1,6 @@
-using Omics
-
 using Test: @test
+
+using Omics
 
 # ---- #
 

@@ -1,10 +1,8 @@
-using Omics
+using JSON: json
 
 using Test: @test
 
-# ----------------------------------------------------------------------------------------------- #
-
-using JSON: json
+using Omics
 
 # ---- #
 

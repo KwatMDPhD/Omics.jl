@@ -1,10 +1,8 @@
-using Omics
+using Distances: Euclidean, pairwise
 
 using Test: @test
 
-# ----------------------------------------------------------------------------------------------- #
-
-using Distances: Euclidean, pairwise
+using Omics
 
 # ---- #
 

@@ -1,14 +1,12 @@
-using Omics
-
-using Test: @test
-
-# ----------------------------------------------------------------------------------------------- #
-
 using Clustering: mutualinfo
 
 using Random: seed!
 
 using Statistics: cor
+
+using Test: @test
+
+using Omics
 
 # ---- #
 

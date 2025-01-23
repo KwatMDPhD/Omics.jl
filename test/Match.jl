@@ -1,12 +1,10 @@
-using Omics
-
-using Test: @test
-
-# ----------------------------------------------------------------------------------------------- #
-
 using Random: seed!
 
 using Statistics: cor
+
+using Test: @test
+
+using Omics
 
 # ---- #
 
