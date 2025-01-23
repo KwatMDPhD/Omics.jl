@@ -4,6 +4,57 @@ using Omics
 
 # ---- #
 
+for ba in (
+    "",
+    "α",
+    "π",
+    " ",
+    "!",
+    "\"",
+    "#",
+    "%",
+    "&",
+    "'",
+    "(",
+    ")",
+    "*",
+    "+",
+    ",",
+    "-",
+    ".",
+    "/",
+    ":",
+    ";",
+    "<",
+    "=",
+    ">",
+    "?",
+    "@",
+    "[",
+    "]",
+    "^",
+    "_",
+    "`",
+    "{",
+    "|",
+    "}",
+    "~",
+)
+
+    @test Omics.Strin.is_bad(ba)
+
+    @test Omics.Strin.is_bad(ba^2)
+
+    @test !Omics.Strin.is_bad("A$ba")
+
+    @test !Omics.Strin.is_bad("$(ba)B")
+
+    @test !Omics.Strin.is_bad("A$(ba)B")
+
+end
+
+# ---- #
+
 for (st, re) in (
     (" less  is   more    ", "_less__is___more____"),
     ("    DNA   RNA  protein ", "____dna___rna__protein_"),
@@ -37,7 +88,35 @@ end
 
 # ---- #
 
-Omics.Strin.date("2024 10 28")
+const LO = "1234567890"
+
+for (uc, re) in ((1, "1..."), (2, "12..."), (11, LO))
+
+    @test Omics.Strin.limit(LO, uc) === re
+
+end
+
+# ---- #
+
+const ST = "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z"
+
+# 433.211 ns (3 allocations: 1.23 KiB)
+# 44.862 ns (2 allocations: 256 bytes)
+# 433.839 ns (3 allocations: 1.23 KiB)
+# 63.776 ns (2 allocations: 256 bytes)
+# 430.487 ns (3 allocations: 1.23 KiB)
+# 77.276 ns (2 allocations: 256 bytes)
+# 430.065 ns (3 allocations: 1.23 KiB)
+# 430.065 ns (3 allocations: 1.23 KiB)
+for (id, re) in ((1, "a"), (2, "b"), (3, "c"), (26, "z"))
+
+    @test Omics.Strin.split_get(ST, '.', id) == re
+
+    #@btime split(ST, '.')[$id]
+
+    #@btime Omics.Strin.split_get(ST, '.', $id)
+
+end
 
 # ---- #
 
@@ -59,18 +138,12 @@ end
 
 # ---- #
 
-const LO = "1234567890"
+@test Omics.Strin.chain(('A', "Bb", "Cc")) === "A · Bb · Cc"
 
-for (uc, re) in ((1, "1..."), (2, "12..."), (11, LO))
+# ---- #
 
-    @test Omics.Strin.limit(LO, uc) === re
-
-end
+Omics.Strin.date("2024 10 28")
 
 # ---- #
 
 @test Omics.Strin.shorten(pi) === "3.1"
-
-# ---- #
-
-@test Omics.Strin.chain(('A', "Bb", "Cc")) === "A · Bb · Cc"

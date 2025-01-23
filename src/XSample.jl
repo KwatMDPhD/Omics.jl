@@ -74,6 +74,28 @@ function shift_log2!(da)
 
 end
 
+function rename_collapse_log(fe_, fs; fe_f2 = Dict{String, String}(), lo = false)
+    fe_ = copy(fe_)
+    fs = copy(fs)
+    if !isempty(fe_f2)
+        Nucleus.Collection.rename!(fe_, fe_f2)
+        id_ = findall(fe -> !isempty(fe) && fe[1] != '_', fe_)
+        ug = lastindex(id_)
+        if ug < lastindex(fe_)
+            fe_ = fe_[id_]
+            fs = fs[id_, :]
+            @warn "Kept $ug."
+        end
+    end
+    if !allunique(fe_)
+        fe_, fs = Nucleus.Matrix.collapse(median, Float64, fe_, fs)
+    end
+    if lo
+        shift_log!(fs)
+    end
+    fe_, fs
+end
+
 function process(
     fe_,
     da;
@@ -126,6 +148,43 @@ function process(
     end
 
     fe_, da
+
+end
+
+function write(di, ns, sa_, ir_, is, nf, fe_, fs, ir, ps_, pf_)
+
+    ts = Nucleus.Path.clean(joinpath(di, "information_x_$(ns)_x_any.tsv"))
+    ke_ar = if isempty(ir)
+        ()
+    else
+        la_ = is[findfirst(==(ir), ir_), :]
+        is_ = isempty.(la_)
+        if any(is_)
+            st = Nucleus.String.count(sum(is_), "sample")
+            @warn "Removing $st with an empty \"$ir\"\n$(join(sa_[is_], '\n'))."
+            is_ .= .!is_
+            sa_ = sa_[is_]
+            is = is[:, is_]
+            fs = fs[:, is_]
+            la_ = la_[is_]
+        end
+        (gc_ = la_,)
+    end
+    Nucleus.DataFrame.write(ts, "Information", ir_, sa_, is)
+    Nucleus.Collection.log_unique(ir_, eachrow(is))
+    pr = joinpath(di, "$(nf)_x_$(ns)_x_number")
+    write_plot(pr, nf, fe_, ns, sa_, basename(di), fs; ke_ar...)
+    Nucleus.Dict.write(
+        joinpath(di, "$(Nucleus.Path.clean(ns)).json"),
+        OrderedDict(
+            "information_tsv" => ts,
+            "feature_tsv" => "$(Nucleus.Path.clean(pr)).tsv",
+            "peek_sample" => ps_,
+            "peek_feature" => pf_,
+            "target" => ir,
+        ),
+    )
+    sa_, ir_, is, nf, fe_, fs
 
 end
 

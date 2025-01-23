@@ -4,6 +4,12 @@ using Dates: @dateformat_str, Date
 
 using Printf: @sprintf
 
+function is_bad(st)
+
+    isempty(st) || contains(st, r"^[^0-9A-Za-z]+$")
+
+end
+
 function _strip(st)
 
     replace(strip(st), r" +" => ' ')
@@ -65,9 +71,15 @@ function title(st)
 
 end
 
-function date(st)
+function limit(st, uc)
 
-    Date(st, dateformat"yyyy mm dd")
+    lastindex(st) <= uc ? st : "$(st[1:uc])..."
+
+end
+
+function split_get(st, de, id)
+
+    split(st, de; limit = id + 1)[id]
 
 end
 
@@ -103,21 +115,21 @@ function coun(us, st)
 
 end
 
-function limit(st, uc)
+function chain(st_)
 
-    lastindex(st) <= uc ? st : "$(st[1:uc])..."
+    join(st_, " · ")
+
+end
+
+function date(st)
+
+    Date(st, dateformat"yyyy mm dd")
 
 end
 
 function shorten(nu)
 
     @sprintf "%.2g" nu
-
-end
-
-function chain(st_)
-
-    join(st_, " · ")
 
 end
 

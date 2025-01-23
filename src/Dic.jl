@@ -6,6 +6,20 @@ using OrderedCollections: OrderedDict
 
 using TOML: parsefile as parsefil
 
+function set_with_suffix!(ke_va, ke, va)
+
+    uk = 1
+
+    while haskey(ke_va, ke)
+
+        ke = "$(isone(uk) ? ke : rsplit(ke, '.'; limit = 2)[1]).$(uk += 1)"
+
+    end
+
+    ke_va[ke] = va
+
+end
+
 function index(an_)
 
     an_id = Dict{eltype(an_), Int}()

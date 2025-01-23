@@ -12,13 +12,7 @@ function make_soft(gs)
 
 end
 
-function _splitting(st, de)
-
-    (string(sp) for sp in eachsplit(st, de; limit = 2))
-
-end
-
-function _read(so)
+function rea(so)
 
     bl_th = Dict(
         "DATABASE" => OrderedDict{String, OrderedDict{String, String}}(),
@@ -27,7 +21,7 @@ function _read(so)
         "SAMPLE" => OrderedDict{String, OrderedDict{String, String}}(),
     )
 
-    bl = th = be = ""
+    bl = th = ta = ""
 
     dk = " = "
 
@@ -41,31 +35,31 @@ function _read(so)
 
         if li[1] == '^'
 
-            bl, th = _splitting(li[2:end], dk)
+            bl, th = eachsplit(li[2:end], dk; limit = 2)
 
             bl_th[bl][th] = OrderedDict{String, String}()
 
-            be = "!$(lowercase(bl))_table_begin"
+            ta = "!$(lowercase(bl))_table_begin"
 
-        elseif li == be
+        elseif li == ta
 
-            bl_th[bl][th]["_co"] = readline(io; keep = false)
+            bl_th[bl][th]["_he"] = readline(io; keep = false)
 
-            bl_th[bl][th]["_ro"] = readuntil(io, "$(be[1:(end - 5)])end\n")
+            bl_th[bl][th]["_bo"] = readuntil(io, "$(ta[1:(end - 5)])end\n")
 
         else
 
-            ke, va = _splitting(li, dk)
+            ke, va = eachsplit(li, dk; limit = 2)
 
             if startswith(ke, "!Sample_characteristics") && contains(va, dc)
 
-                ke, va = _splitting(va, dc)
+                ch, va = eachsplit(va, dc; limit = 2)
 
-                ke = "_ch$ke"
+                ke = "_ch$ch"
 
             end
 
-            Omics.Dict.set_with_suffix!(bl_th[bl][th], ke, va)
+            Omics.Dic.set_with_suffix!(bl_th[bl][th], ke, va)
 
         end
 
@@ -83,9 +77,9 @@ function _name_sample(ke_va)
 
 end
 
-function _get_sample(bl_th)
+function get_sample(bl_th)
 
-    sa_ = _name_sample.(values(bl_th["SAMPLE"]))
+    sa_ = map(_name_sample, values(bl_th["SAMPLE"]))
 
     @info "👥" sa_
 
@@ -93,49 +87,37 @@ function _get_sample(bl_th)
 
 end
 
-function _get_characteristic(bl_th)
+function get_characteristic(bl_th)
 
     ke_va__ = values(bl_th["SAMPLE"])
 
     ch_ = String[]
 
-    for ke_va in ke_va__
+    for ke_va in ke_va__, ke in keys(ke_va)
 
-        for ke in keys(ke_va)
+        if ke[1:3] == "_ch"
 
-            if ke[1:3] == "_ch"
-
-                push!(ch_, ke)
-
-            end
+            push!(ch_, ke)
 
         end
 
     end
 
-    ch_ = unique!(ch_)
+    unique!(ch_)
 
-    cs = [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
+    va = [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
 
-    ch_ .= (ch[4:end] for ch in ch_)
+    map!(ch -> ch[4:end], ch_, ch_)
 
-    @info "🔬" ch_ cs
+    @info "🔬" ch_ va
 
-    ch_, cs
+    ch_, va
 
 end
 
-function _get_platform(bl_th)
+function get_platform(bl_th)
 
-    pl_ = collect(keys(bl_th["PLATFORM"]))
-
-    if !isone(lastindex(pl_))
-
-        error("There is not one platform. $pl_.")
-
-    end
-
-    pl = pl_[1]
+    pl = collect(keys(bl_th["PLATFORM"]))[]
 
     @info "🧪 $pl."
 
@@ -143,53 +125,54 @@ function _get_platform(bl_th)
 
 end
 
-function _dicing(st)
+function _each(bo)
 
-    (split(sp, '\t') for sp in eachsplit(st, '\n'; keepempty = false))
+    (split(li, '\t') for li in eachsplit(bo, '\n'; keepempty = false))
 
 end
 
-function _get_feature(bl_th, pl)
+function get_feature(bl_th, pl)
 
-    fe_ = [ro[1] for ro in _dicing(bl_th["PLATFORM"][pl]["_ro"])]
-
-    # TODO: Remove.
-    Omics.Error.error_duplicate(fe_)
-
-    nf = lastindex(fe_)
-
-    fe_id = Omics.Collection._map_index(fe_)
-
-    se_ = falses(nf)
+    fe_ = map(sp_ -> sp_[1], _each(bl_th["PLATFORM"][pl]["_bo"]))
 
     ke_va__ = filter!(
         ke_va -> ke_va["!Sample_platform_id"] == pl,
         collect(values(bl_th["SAMPLE"])),
     )
 
-    sa_ = _name_sample.(ke_va__)
+    uf = lastindex(fe_)
 
-    fs = fill(NaN, nf, lastindex(sa_))
+    us = length(ke_va__)
 
-    for (is, ke_va) in enumerate(ke_va__)
+    va = fill(NaN, uf, us)
 
-        iv = findfirst(==("VALUE"), split(ke_va["_co"], '\t'))
+    is_ = falses(uf)
 
-        for ro in _dicing(ke_va["_ro"])
+    fe_ie = Omics.Dic.index(fe_)
 
-            va = ro[iv]
+    for is in 1:us
 
-            if !isempty(va)
+        ke_va = ke_va__[is]
 
-                ie = fe_id[ro[1]]
+        iv = findfirst(==("VALUE"), split(ke_va["_he"], '\t'))
 
-                fs[ie, is] = va == "null" ? NaN : parse(Float64, va)
+        for sp_ in _each(ke_va["_bo"])
 
-                if !se_[ie]
+            vl = sp_[iv]
 
-                    se_[ie] = true
+            if isempty(vl) || vl == "null"
 
-                end
+                continue
+
+            end
+
+            ie = fe_ie[sp_[1]]
+
+            va[ie, is] = parse(Float64, vl)
+
+            if !is_[ie]
+
+                is_[ie] = true
 
             end
 
@@ -197,23 +180,31 @@ function _get_feature(bl_th, pl)
 
     end
 
-    fe_ = fe_[se_]
+    fe_ = fe_[is_]
 
-    fs = fs[se_, :]
+    va = va[is_, :]
 
-    @info "🧬 $pl $(lastindex(fe_)) / $nf" fe_ sa_ fs
+    sa_ = map(_name_sample, ke_va__)
 
-    fe_, sa_, fs
+    @info "🧬 $pl $(lastindex(fe_)) / $uf" fe_ sa_ va
 
-end
-
-function get_slash_slash_2(ge)
-
-    split(ge, " // "; limit = 3)[2]
+    fe_, sa_, va
 
 end
 
-function _get_feature_map(bl_th, pl)
+function _get_slash_slash_2(st)
+
+    split_get(st, " // ", 2)
+
+end
+
+function _get_hgnc_map(hk_)
+
+    Omics.Gene.ma(Omics.Table.rea(Omics.Gene.HT), hk_, Omics.Gene.HV)
+
+end
+
+function get_map(bl_th, pl)
 
     it = parse(Int, pl[4:end])
 
@@ -229,15 +220,15 @@ function _get_feature_map(bl_th, pl)
        it == 13667 ||
        it == 15207
 
-        ge = "Gene Symbol"
+        co = "Gene Symbol"
 
-        fu = ge -> split(ge, " /// "; limit = 2)[1]
+        fu = ge -> split_get(ge, " /// ", 1)
 
     elseif it == 5175 || it == 6244 || it == 11532 || it == 17586
 
-        ge = "gene_assignment"
+        co = "gene_assignment"
 
-        fu = get_slash_slash_2
+        fu = _get_slash_slash_2
 
     elseif it == 6098 ||
            it == 6104 ||
@@ -247,65 +238,65 @@ function _get_feature_map(bl_th, pl)
            it == 10558 ||
            it == 14951
 
-        ge = "Symbol"
+        co = "Symbol"
 
     elseif it == 7567 || it == 9700 || it == 10465 || it == 16686
 
-        ge = "GB_ACC"
+        co = "GB_ACC"
 
-        ke_va = Omics.Gene.map(("refseq_accession", "ena"))
+        ke_va = _get_hgnc_map(["refseq_accession", "ena"])
 
         fu = ge -> get(ke_va, ge, ge)
 
     elseif it == 9741 || it == 9742
 
-        ge = "Official Symbol"
+        co = "Official Symbol"
 
     elseif it == 10647 || it == 21975
 
-        ge = "ENTREZ_GENE_ID"
+        co = "ENTREZ_GENE_ID"
 
-        ke_va = Omics.Gene.map(("entrez_id",))
+        ke_va = _get_hgnc_map(["entrez_id"])
 
         fu = ge -> get(ke_va, ge, ge)
 
     elseif it == 32416
 
-        ge = "SPOT_ID"
+        co = "SPOT_ID"
 
-        ke_va = Omics.Gene.map(("entrez_id",))
+        ke_va = _get_hgnc_map(["entrez_id"])
 
         fu = ge -> get(ke_va, ge, ge)
 
     elseif it == 1708 || it == 6480 || it == 10332
 
-        ge = "GENE_SYMBOL"
+        co = "GENE_SYMBOL"
 
     elseif it == 15048
 
-        ge = "GeneSymbol"
+        co = "GeneSymbol"
 
-        fu = ge -> split(ge; limit = 2)[1]
+        fu = ge -> split_get(ge, ' ', 1)
 
     elseif it == 16209
 
-        ge = "gene_assignment"
+        co = "gene_assignment"
 
-        fu = ge -> get_slash_slash_2(split(ge, " /// "; limit = 2)[1])
+        fu = ge -> _get_slash_slash_2(split_get(ge, " /// ", 1))
 
     elseif it == 17585 || it == 17586
 
-        ge = "gene_symbols"
+        co = "gene_symbols"
 
     elseif it == 23126
 
-        ge = "gene_assignment"
+        co = "gene_assignment"
 
-        fu = ge -> contains(ge, "AceView") ? "" : get_slash_slash_2(ge)
+        fu = ge -> contains(ge, "AceView") ? "" : _get_slash_slash_2(ge)
 
     elseif it == 25336
 
-        ge = "ORF"
+        co = "ORF"
 
     elseif it == 10999 || it == 16791
 
@@ -313,7 +304,7 @@ function _get_feature_map(bl_th, pl)
 
     elseif it == 13669
 
-        ge = "Description"
+        co = "Description"
 
         fu =
             ge ->
@@ -328,15 +319,15 @@ function _get_feature_map(bl_th, pl)
 
     fe_ge = Dict{String, String}()
 
-    ig = findfirst(==(ge), split(bl_th["PLATFORM"][pl]["_co"], '\t'))
+    id = findfirst(==(co), split(bl_th["PLATFORM"][pl]["_he"], '\t'))
 
-    for ro in _dicing(bl_th["PLATFORM"][pl]["_ro"])
+    for sp_ in _each(bl_th["PLATFORM"][pl]["_bo"])
 
-        ge = ro[ig]
+        ge = sp_[id]
 
-        if !Omics.String.is_bad(ge)
+        if !Omics.Strin.is_bad(ge)
 
-            fe_ge[ro[1]] = fu(ge)
+            fe_ge[sp_[1]] = fu(ge)
 
         end
 
@@ -352,15 +343,15 @@ function ge(so)
 
     sa_ = _get_sample(bl_th)
 
-    ir_, ia = _get_characteristic(bl_th)
+    ch_, va = _get_characteristic(bl_th)
 
-    bl_th, sa_, ir_, ia
+    bl_th, sa_, ch_, va
 
 end
 
-function ge(ou, so, pl = ""; ns = "All", lo = false, ir = "", ps_ = (), pf_ = ())
+function ge(pr, so, pl = ""; ns = "All", lo = false, ta = "", ps_ = (), pf_ = ())
 
-    bl_th, sa_, ir_, ia = ge(so)
+    bl_th, sa_, ch_, vc = ge(so)
 
     if isempty(pl)
 
@@ -368,13 +359,13 @@ function ge(ou, so, pl = ""; ns = "All", lo = false, ir = "", ps_ = (), pf_ = ()
 
     end
 
-    fe_, sf_, fs = _get_feature(bl_th, pl)
+    fe_, sm_, vf = _get_feature(bl_th, pl)
 
-    is = ia[:, indexin(sf_, sa_)]
+    vc = vc[:, indexin(sm_, sa_)]
 
-    fe_, fs = XSample.rename_collapse_log(fe_, fs; fe_f2 = _get_feature_map(bl_th, pl), lo)
+    fe_, vf = Omics.XSample.process(fe_, vf; fe_fa = get_map(bl_th, pl), lo)
 
-    XSample.write(ou, ns, sf_, ir_, is, pl, fe_, fs, ir, ps_, pf_)
+    Omics.XSample.write(pr, ns, sm_, ch_, vc, pl, fe_, vf, ta, ps_, pf_)
 
 end
 

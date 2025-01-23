@@ -4,53 +4,27 @@ using Omics
 
 # ---- #
 
-const DA = joinpath(XSample._DA, "GEO")
-
-# ---- #
-
-@test readdir(DA) == [
-    "GSE122404_family.soft.gz",
-    "GSE13534_family.soft.gz",
-    "GSE16059_family.soft.gz",
-    "GSE168940_family.soft.gz",
-    "GSE67311_family.soft.gz",
-]
-
-# ---- #
-
-const SO = XSample.GEO.make_soft("GSE122404")
-
-# ---- #
+const SO = Omics.GEO.make_soft("GSE122404")
 
 @test SO === "GSE122404_family.soft.gz"
 
 # ---- #
 
+const DA = joinpath(pkgdir(Omics), "data", "GEO")
+
 const GZ = joinpath(DA, SO)
 
-# ---- #
-
-const BL_TH = XSample.GEO._read(GZ)
-
-# ---- #
+const BL_TH = Omics.GEO.rea(GZ)
 
 const PL = "GPL16686"
 
-# ---- #
-
 @test collect(keys(BL_TH["PLATFORM"])) == [PL]
-
-# ---- #
 
 @test length(BL_TH["PLATFORM"][PL]) === 48
 
-# ---- #
-
 @test parse(Int, BL_TH["PLATFORM"][PL]["!Platform_data_row_count"]) ===
-      lastindex(collect(XSample.GEO._dicing(BL_TH["PLATFORM"][PL]["_ro"]))) ===
+      lastindex(collect(Omics.GEO._each(BL_TH["PLATFORM"][PL]["_bo"]))) ===
       53981
-
-# ---- #
 
 @test collect(keys(BL_TH["SAMPLE"])) == [
     "GSM3466115"
@@ -75,18 +49,14 @@ const PL = "GPL16686"
     "GSM3466134"
 ]
 
-# ---- #
-
 @test length(BL_TH["SAMPLE"]["GSM3466115"]) === 37
 
-# ---- #
-
-# 573.117 ms (10699 allocations: 27.75 MiB)
-#@btime XSample.GEO._read(GZ);
+# 368.565 ms (10663 allocations: 54.01 MiB)
+@btime Omics.GEO.rea(GZ);
 
 # ---- #
 
-@test XSample.GEO._get_sample(BL_TH) == [
+@test Omics.GEO.get_sample(BL_TH) == [
     "GSM3466115 D458_Sensitive_DMSO_1"
     "GSM3466116 D458_Sensitive_DMSO_2"
     "GSM3466117 D458_Sensitive_DMSO_3"
@@ -109,61 +79,51 @@ const PL = "GPL16686"
     "GSM3466134 D458_Resistant_JQ1_5"
 ]
 
-# ---- #
-
-# 1.067 μs (22 allocations: 1.42 KiB)
-#disable_logging(Info);
-#@btime XSample.GEO._get_sample(BL_TH);
-#disable_logging(Debug);
+# 907.051 ns (22 allocations: 1.23 KiB)
+disable_logging(Info);
+@btime Omics.GEO.get_sample(BL_TH);
+disable_logging(Debug);
 
 # ---- #
 
-@test XSample.GEO._get_characteristic(BL_TH) == (
+@test Omics.GEO.get_characteristic(BL_TH) == (
     ["cell type"],
     [
         "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant"
     ],
 )
 
-# ---- #
-
-# 9.333 μs (6 allocations: 768 bytes)
-#disable_logging(Info);
-#@btime XSample.GEO._get_characteristic(BL_TH);
-#disable_logging(Debug);
+# 10.625 μs (746 allocations: 18.09 KiB)
+disable_logging(Info);
+@btime Omics.GEO.get_characteristic(BL_TH);
+disable_logging(Debug);
 
 # ---- #
 
-@test Omics.Error.@is XSample.GEO._get_platform(
-    XSample.GEO._read(joinpath(DA, XSample.GEO.make_soft("GSE168940"))),
-)
+@test Omics.GEO.get_platform(BL_TH) === PL
+
+# 39.442 ns (2 allocations: 64 bytes)
+disable_logging(Info);
+@btime Omics.GEO.get_platform(BL_TH);
+disable_logging(Debug);
 
 # ---- #
 
-@test XSample.GEO._get_platform(BL_TH) === PL
+@test size.(Omics.GEO.get_feature(BL_TH, PL)) === ((53617,), (20,), (53617, 20))
+
+# 227.714 ms (4829306 allocations: 463.28 MiB)
+disable_logging(Info);
+@btime Omics.GEO.get_feature(BL_TH, PL);
+disable_logging(Debug);
 
 # ---- #
 
-# 38.432 ns (1 allocation: 64 bytes)
-#disable_logging(Info);
-#@btime XSample.GEO._get_platform(BL_TH);
-#disable_logging(Debug);
+const FE_GE = Omics.GEO.get_map(BL_TH, PL)
 
-# ---- #
+@test length(FE_GE) === 17623
 
-# 1.500 ns (0 allocations: 0 bytes)
-#@btime XSample.GEO._dicing($(BL_TH["PLATFORM"][PL]["_ro"]));
-
-# ---- #
-
-@test size.(XSample.GEO._get_feature(BL_TH, PL)) === ((53617,), (20,), (53617, 20))
-
-# ---- #
-
-# 351.175 ms (2253754 allocations: 319.63 MiB)
-#disable_logging(Info);
-#@btime XSample.GEO._get_feature(BL_TH, PL);
-#disable_logging(Debug);
+# 319.181 ms (2953659 allocations: 227.50 MiB)
+@btime Omics.GEO.get_map(BL_TH, PL);
 
 # ---- #
 
@@ -174,7 +134,7 @@ for (gs, ir, rs, rf) in (
 )
 
     sa_, ch_, cs, pl, fe_, fs =
-        XSample.GEO.get(Omics.TE, joinpath(DA, XSample.GEO.make_soft(gs)); ir)
+        Omics.GEO.ge(tempdir(), joinpath(DA, Omics.GEO.make_soft(gs)); ir)
 
     @test size(cs) === rs
 

@@ -6,6 +6,33 @@ using Omics
 
 # ---- #
 
+for (ke, va, re) in (
+    (
+        "Existing",
+        2,
+        Dict("Existing" => 1, "Existing.2" => 2, "Existing.3" => 2, "Existing.4" => 2),
+    ),
+    ("New", 2, Dict("Existing" => 1, "New" => 2, "New.2" => 2, "New.3" => 2)),
+)
+
+    ke_va = Dict("Existing" => 1)
+
+    for _ in 1:3
+
+        Omics.Dic.set_with_suffix!(ke_va, ke, va)
+
+    end
+
+    @test ke_va == re
+
+    # 97.064 μs (4146 allocations: 233.79 KiB)
+    # 96.797 μs (4138 allocations: 229.40 KiB)
+    #@btime Omics.Dic.set_with_suffix!($ke_va, $ke, $va) evals = 1000
+
+end
+
+# ---- #
+
 # 68.011 ns (4 allocations: 384 bytes)
 # 77.797 ns (4 allocations: 384 bytes)
 # 77.583 ns (4 allocations: 384 bytes)
