@@ -14,6 +14,7 @@ for mo in (
     "ErrorMatrix",
     "Evidence",
     "Extreme",
+    "GEO",
     "Gene",
     "GeneralizedLinearModel",
     "Grid",
