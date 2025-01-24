@@ -2,118 +2,124 @@ module XSample
 
 using OrderedCollections: OrderedDict
 
-using StatsBase: countmap, mean
+using StatsBase: mean
 
 using ..Omics
 
-function select_non_nan(ta_, da, mi)
+function _index_feature(fe_, vf, id_)
 
-    re___ = [(id_, round(lastindex(id_) * mi)) for id_ in values(Omics.Dic.inde(ta_))]
-
-    findall(da_ -> all(re_ -> re_[2] <= sum(!isnan, da_[re_[1]]), re___), eachrow(da))
+    fe_[id_], vf[id_, :]
 
 end
 
-function rename!(fe_, fe_fa)
+function select_non_nan(vt_, vf, mi)
 
-    ur = 0
+    is___ = map(un -> findall(==(un), vt_), unique(vt_))
 
-    for id in eachindex(fe_)
+    mi_ = map(is_ -> lastindex(is_) * mi, is___)
 
-        fe = fe_[id]
+    map(
+        vf_ -> all(iu -> mi_[iu] <= sum(!isnan, view(vf_, is___[iu])), eachindex(is___)),
+        eachrow(vf),
+    )
 
-        fe_[id] = if haskey(fe_fa, fe)
+end
 
-            ur += 1
+function rename!(f1_, f1_f2)
 
-            fe_fa[fe]
+    u2 = 0
+
+    for id in eachindex(f1_)
+
+        f1 = f1_[id]
+
+        f1_[id] = if haskey(f1_f2, f1)
+
+            u2 += 1
+
+            f1_f2[f1]
 
         else
 
-            "_$fe"
+            "_$f1"
 
         end
 
     end
 
-    uf = lastindex(fe_)
+    u1 = lastindex(f1_)
 
-    @info "📛 Renamed $ur / $uf ($(ur / uf * 100)%)."
+    @info "📛 Renamed $u2 / $u1 ($(u2 / u1 * 100)%)."
 
 end
 
-function collapse(fu, ty, fe_, da)
+function collapse(fu, ty, f1_, v1)
 
-    fe_id_ = Omics.Dic.inde(fe_)
+    f1_i1_ = Omics.Dic.inde(f1_)
 
-    fa_ = sort!(collect(keys(fe_id_)))
+    f2_ = sort!(collect(keys(f1_i1_)))
 
-    dt = Matrix{ty}(undef, lastindex(fa_), size(da, 2))
+    v2 = Matrix{ty}(undef, lastindex(f2_), size(v1, 2))
 
-    for ie in eachindex(fa_)
+    for i2 in eachindex(f2_)
 
-        id_ = fe_id_[fa_[ie]]
+        i1_ = f1_i1_[f2_[i2]]
 
-        dt[ie, :] = isone(lastindex(id_)) ? da[id_[], :] : map(fu, eachcol(da[id_, :]))
+        v2[i2, :] =
+            isone(lastindex(i1_)) ? v1[i1_[], :] : [fu(v1_) for v1_ in eachcol(v1[i1_, :])]
 
     end
 
-    fa_, dt
+    f2_, v2
 
 end
 
-function shift_log2!(da)
+function shift_log2!(vf)
 
-    mi = minimum(da)
+    mi = minimum(vf)
 
-    map!(da -> log2(da - mi + 1), da, da)
-
-end
-
-function _index_feature(fe_, da, id_)
-
-    fe_[id_], da[id_, :]
+    map!(va -> log2(va - mi + 1), vf, vf)
 
 end
 
 function process!(
     fe_,
-    da;
-    fe_fa = Dict{String, String}(),
-    ta_ = trues(size(da, 2)),
+    vf;
+    f1_f2 = Dict{String, String}(),
+    vt_ = trues(size(vf, 2)),
     mi = 1.0,
     lo = false,
 )
 
     @info "Processing $(lastindex(fe_))"
 
-    if any(isnan, da)
+    if any(isnan, vf)
 
-        fe_, da = _index_feature(fe_, da, select_non_nan(ta_, da, mi))
+        fe_, vf = _index_feature(fe_, vf, select_non_nan(vt_, vf, mi))
 
         @info "Selected non-NaN $(lastindex(fe_))."
 
     end
 
-    if !isempty(fe_fa)
+    if !isempty(f1_f2)
 
-        rename!(fe_, fe_fa)
+        rename!(fe_, f1_f2)
 
     end
 
     if !allunique(fe_)
 
-        fe_, da = collapse(mean, Float64, fe_, da)
+        fe_, vf = collapse(mean, Float64, fe_, vf)
 
         @info "Collapsed into $(lastindex(fe_))."
 
     end
 
-    da___ = eachrow(da)
+    vf___ = eachrow(vf)
 
-    if any(allequal, da___)
+    if any(allequal, vf___)
 
-        fe_, da = _index_feature(fe_, da, findall(!allequal, da___))
+        fe_, vf = _index_feature(fe_, vf, findall(!allequal, vf___))
 
         @info "Kept nonconstant $(lastindex(fe_))."
 
@@ -121,50 +127,29 @@ function process!(
 
     if lo
 
-        shift_log2!(da)
+        shift_log2!(vf)
 
         @info "Log2ed."
 
     end
 
-    fe_, da
+    fe_, vf
 
 end
 
-function _count_sort_string(an_, mi = 1)
+function write_plot(pr, nf, fe_, ns, sa_, nv, vf)
 
-    an_na = countmap(an_)
-
-    join(
-        "$(rpad(na, 8))$an.\n" for
-        (an, na) in sort(an_na; by = an -> (an_na[an], an)) if mi <= na
-    )
-
-end
-
-function _log_unique(na_, an___)
-
-    for id in sortperm(an___; by = an_ -> lastindex(unique(an_)), rev = true)
-
-        @info "🔦 ($id) $(na_[id])\n$(_count_sort_string(an___[id]))"
-
-    end
-
-end
-
-function write_plot(pr, nf, fe_, ns, sa_, nd, da)
-
-    Omics.Table.writ("$pr.tsv", Omics.Table.make(nf, fe_, sa_, da))
+    Omics.Table.writ("$pr.tsv", Omics.Table.make(nf, fe_, sa_, vf))
 
     Omics.Plot.plot_heat_map(
         "$pr.html",
-        da;
+        vf;
         ro_ = fe_,
         co_ = sa_,
         la = Dict(
-            "title" => Dict("text" => nd),
-            "yaxis" => Dict("title" => Omics.Strin.coun(lastindex(fe_), nf)),
-            "xaxis" => Dict("title" => Omics.Strin.coun(lastindex(sa_), ns)),
+            "title" => Dict("text" => nv),
+            "yaxis" => Dict("title" => "$nf ($(lastindex(fe_))"),
+            "xaxis" => Dict("title" => "$ns ($(lastindex(sa_))"),
         ),
     )
 
@@ -173,24 +158,40 @@ function write_plot(pr, nf, fe_, ns, sa_, nd, da)
         (
             Dict(
                 "type" => "histogram",
-                "x" => vec(da),
+                "x" => vec(vf),
                 "marker" => Dict("color" => Omics.Color.RE),
             ),
         ),
-        Dict("yaxis" => Dict("title" => "Count"), "xaxis" => Dict("title" => nd)),
+        Dict("yaxis" => Dict("title" => "Count"), "xaxis" => Dict("title" => nv)),
     )
+
+end
+
+function _count(vc_)
+
+    join("$uu $un.\n" for (uu, un) in sort((count(==(un), vc_), un) for un in unique(vc_)))
+
+end
+
+function _count(ch_, vc___)
+
+    for id in sortperm(vc___; by = an_ -> lastindex(unique(an_)), rev = true)
+
+        @info "🔦 ($id) $(ch_[id])\n$(_count(vc___[id]))"
+
+    end
 
 end
 
 function write_plot(di, ns, sa_, ch_, vc, nf, fe_, vf, nt, ps_, pf_)
 
-    ts = joinpath(di, "$ns.tsv")
+    ts = joinpath(di, "$ns.1.tsv")
 
     Omics.Table.writ(ts, Omics.Table.make("Characteristic", ch_, sa_, vc))
 
-    _log_unique(ch_, eachrow(vc))
+    _count(ch_, eachrow(vc))
 
-    pr = joinpath(di, "$ns.$nf")
+    pr = joinpath(di, "$ns.2")
 
     write_plot(pr, nf, fe_, ns, sa_, "Value", vf)
 
@@ -207,25 +208,25 @@ function write_plot(di, ns, sa_, ch_, vc, nf, fe_, vf, nt, ps_, pf_)
 
 end
 
-function joi(fi, f1_, s1_, d1, f2_, s2_, d2)
+function joi(fi, f1_, s1_, v1, f2_, s2_, v2)
 
     f3_ = union(f1_, f2_)
 
     s3_ = union(s1_, s2_)
 
-    d3 = fill(fi, lastindex(f3_), lastindex(s3_))
+    v3 = fill(fi, lastindex(f3_), lastindex(s3_))
 
-    fe_id = Omics.Dic.index(f3_)
+    f3_id = Omics.Dic.index(f3_)
 
-    sa_id = Omics.Dic.index(s3_)
+    s3_id = Omics.Dic.index(s3_)
 
     for is in eachindex(s1_)
 
-        ia = sa_id[s1_[is]]
+        i3 = s3_id[s1_[is]]
 
         for ie in eachindex(f1_)
 
-            d3[fe_id[f1_[ie]], ia] = d1[ie, is]
+            v3[f3_id[f1_[ie]], i3] = v1[ie, is]
 
         end
 
@@ -233,17 +234,17 @@ function joi(fi, f1_, s1_, d1, f2_, s2_, d2)
 
     for is in eachindex(s2_)
 
-        ia = sa_id[s2_[is]]
+        i3 = s3_id[s2_[is]]
 
         for ie in eachindex(f2_)
 
-            d3[fe_id[f2_[ie]], ia] = d2[ie, is]
+            v3[f3_id[f2_[ie]], i3] = v2[ie, is]
 
         end
 
     end
 
-    f3_, s3_, d3
+    f3_, s3_, v3
 
 end
 
