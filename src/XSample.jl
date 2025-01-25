@@ -6,6 +6,15 @@ using StatsBase: mean
 
 using ..Omics
 
+function rea(ta, sa_, cf = 1)
+
+    co_ = names(ta)
+
+    # TODO: Consider getting features separately.
+    ta[!, cf], stack((ta[!, findall(==(sa), co_)[]] for sa in sa_))
+
+end
+
 function _index_feature(fe_, vf, id_)
 
     fe_[id_], vf[id_, :]
