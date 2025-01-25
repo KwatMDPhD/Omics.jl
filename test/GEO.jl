@@ -23,7 +23,7 @@ const PL = "GPL16686"
 @test length(BL_TH["PLATFORM"][PL]) === 48
 
 @test parse(Int, BL_TH["PLATFORM"][PL]["!Platform_data_row_count"]) ===
-      lastindex(collect(Omics.GEO._each(BL_TH["PLATFORM"][PL]["_bo"]))) ===
+      lastindex(collect(Omics.GEO._each(BL_TH["PLATFORM"][PL]["bo"]))) ===
       53981
 
 @test collect(keys(BL_TH["SAMPLE"])) == [
@@ -91,7 +91,7 @@ const PL = "GPL16686"
     ],
 )
 
-# 10.625 μs (746 allocations: 18.09 KiB)
+# 9.875 μs (746 allocations: 18.09 KiB)
 #@btime Omics.GEO.get_characteristic(BL_TH);
 
 # ---- #
@@ -110,12 +110,12 @@ const PL = "GPL16686"
 
 # ---- #
 
-const FE_GE = Omics.GEO.get_feature_map(BL_TH, PL)
+const FE_GE = Omics.GEO.ma(BL_TH, PL)
 
 @test length(FE_GE) === 17623
 
 # 266.525 ms (2936036 allocations: 226.96 MiB)
-#@btime Omics.GEO.get_feature_map(BL_TH, PL);
+#@btime Omics.GEO.ma(BL_TH, PL);
 
 # ---- #
 

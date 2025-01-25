@@ -169,7 +169,9 @@ end
 
 function _count(vc_)
 
-    join("$uu $un.\n" for (uu, un) in sort((count(==(un), vc_), un) for un in unique(vc_)))
+    join(
+        "$uu $un.\n" for (uu, un) in sort(map(un -> (count(==(un), vc_), un), unique(vc_)))
+    )
 
 end
 

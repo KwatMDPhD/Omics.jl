@@ -45,9 +45,9 @@ function rea(so)
 
         elseif li == be
 
-            ke_va["_he"] = readline(io; keep = false)
+            ke_va["he"] = readline(io; keep = false)
 
-            ke_va["_bo"] = readuntil(io, "$(be[1:(end - 5)])end\n")
+            ke_va["bo"] = readuntil(io, "$(be[1:(end - 5)])end\n")
 
         else
 
@@ -57,7 +57,7 @@ function rea(so)
 
                 ch, va = eachsplit(va, dc; limit = 2)
 
-                ke = "_ch$ch"
+                ke = "ch$ch"
 
             end
 
@@ -93,7 +93,7 @@ function get_characteristic(bl_th)
 
     for ke_va in ke_va__, ke in keys(ke_va)
 
-        if ke[1:3] == "_ch"
+        if ke[1:2] == "ch"
 
             push!(ch_, ke)
 
@@ -105,7 +105,7 @@ function get_characteristic(bl_th)
 
     vc = [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
 
-    map!(ch -> ch[4:end], ch_, ch_), vc
+    map!(ch -> ch[3:end], ch_, ch_), vc
 
 end
 
@@ -123,7 +123,7 @@ end
 
 function get_feature(bl_th, pl)
 
-    fe_ = map(sp_ -> sp_[1], _each(bl_th["PLATFORM"][pl]["_bo"]))
+    fe_ = map(sp_ -> sp_[1], _each(bl_th["PLATFORM"][pl]["bo"]))
 
     ke_va__ = filter!(
         ke_va -> ke_va["!Sample_platform_id"] == pl,
@@ -134,7 +134,7 @@ function get_feature(bl_th, pl)
 
     vf = fill(NaN, uf, length(ke_va__))
 
-    is_ = falses(uf)
+    se_ = falses(uf)
 
     fe_ie = Omics.Dic.index(fe_)
 
@@ -142,9 +142,9 @@ function get_feature(bl_th, pl)
 
         ke_va = ke_va__[is]
 
-        iv = findfirst(==("VALUE"), split(ke_va["_he"], '\t'))
+        iv = findfirst(==("VALUE"), split(ke_va["he"], '\t'))
 
-        for sp_ in _each(ke_va["_bo"])
+        for sp_ in _each(ke_va["bo"])
 
             va = sp_[iv]
 
@@ -154,13 +154,14 @@ function get_feature(bl_th, pl)
 
             end
 
+            # TODO: Check if column 1 is always for features
             ie = fe_ie[sp_[1]]
 
             vf[ie, is] = parse(Float64, va)
 
-            if !is_[ie]
+            if !se_[ie]
 
-                is_[ie] = true
+                se_[ie] = true
 
             end
 
@@ -168,13 +169,13 @@ function get_feature(bl_th, pl)
 
     end
 
-    fe_[is_], map(_name_sample, ke_va__), vf[is_, :]
+    fe_[se_], map(_name_sample, ke_va__), vf[se_, :]
 
 end
 
-function _get_slash_slash_2(ge)
+function _get_slash_slash_2(fe)
 
-    Omics.Strin.split_get(ge, " // ", 2)
+    Omics.Strin.split_get(fe, " // ", 2)
 
 end
 
@@ -184,112 +185,112 @@ function _get_hgnc_map(ke_)
 
 end
 
-function get_feature_map(bl_th, pl)
+function ma(bl_th, pl)
 
-    it = parse(Int, pl[4:end])
+    id = parse(Int, pl[4:end])
 
     fu = identity
 
-    if it == 96 ||
-       it == 97 ||
-       it == 570 ||
-       it == 571 ||
-       it == 3921 ||
-       it == 4685 ||
-       it == 13158 ||
-       it == 13667 ||
-       it == 15207
+    if id == 96 ||
+       id == 97 ||
+       id == 570 ||
+       id == 571 ||
+       id == 3921 ||
+       id == 4685 ||
+       id == 13158 ||
+       id == 13667 ||
+       id == 15207
 
         co = "Gene Symbol"
 
-        fu = ge -> Omics.Strin.split_get(ge, " /// ", 1)
+        fu = fe -> Omics.Strin.split_get(fe, " /// ", 1)
 
-    elseif it == 5175 || it == 6244 || it == 11532 || it == 17586
+    elseif id == 5175 || id == 6244 || id == 11532 || id == 17586
 
         co = "gene_assignment"
 
         fu = _get_slash_slash_2
 
-    elseif it == 6098 ||
-           it == 6104 ||
-           it == 6883 ||
-           it == 6884 ||
-           it == 6947 ||
-           it == 10558 ||
-           it == 14951
+    elseif id == 6098 ||
+           id == 6104 ||
+           id == 6883 ||
+           id == 6884 ||
+           id == 6947 ||
+           id == 10558 ||
+           id == 14951
 
         co = "Symbol"
 
-    elseif it == 7567 || it == 9700 || it == 10465 || it == 16686
+    elseif id == 7567 || id == 9700 || id == 10465 || id == 16686
 
         co = "GB_ACC"
 
         hg_ge = _get_hgnc_map(["refseq_accession", "ena"])
 
-        fu = ge -> get(hg_ge, ge, ge)
+        fu = fe -> get(hg_ge, fe, fe)
 
-    elseif it == 9741 || it == 9742
+    elseif id == 9741 || id == 9742
 
         co = "Official Symbol"
 
-    elseif it == 10647 || it == 21975
+    elseif id == 10647 || id == 21975
 
         co = "ENTREZ_GENE_ID"
 
         hg_ge = _get_hgnc_map(["entrez_id"])
 
-        fu = ge -> get(hg_ge, ge, ge)
+        fu = fe -> get(hg_ge, fe, fe)
 
-    elseif it == 32416
+    elseif id == 32416
 
         co = "SPOT_ID"
 
         hg_ge = _get_hgnc_map(["entrez_id"])
 
-        fu = ge -> get(hg_ge, ge, ge)
+        fu = fe -> get(hg_ge, fe, fe)
 
-    elseif it == 1708 || it == 6480 || it == 10332
+    elseif id == 1708 || id == 6480 || id == 10332
 
         co = "GENE_SYMBOL"
 
-    elseif it == 15048
+    elseif id == 15048
 
         co = "GeneSymbol"
 
-        fu = ge -> Omics.Strin.split_get(ge, ' ', 1)
+        fu = fe -> Omics.Strin.split_get(fe, ' ', 1)
 
-    elseif it == 16209
+    elseif id == 16209
 
         co = "gene_assignment"
 
-        fu = ge -> _get_slash_slash_2(Omics.Strin.split_get(ge, " /// ", 1))
+        fu = fe -> _get_slash_slash_2(Omics.Strin.split_get(fe, " /// ", 1))
 
-    elseif it == 17585 || it == 17586
+    elseif id == 17585 || id == 17586
 
         co = "gene_symbols"
 
-    elseif it == 23126
+    elseif id == 23126
 
         co = "gene_assignment"
 
-        fu = ge -> contains(ge, "AceView") ? "" : _get_slash_slash_2(ge)
+        fu = fe -> contains(fe, "AceView") ? "" : _get_slash_slash_2(fe)
 
-    elseif it == 25336
+    elseif id == 25336
 
         co = "ORF"
 
-    elseif it == 10999 || it == 16791
+    elseif id == 10999 || id == 16791
 
         error("$pl lacks gene mapping.")
 
-    elseif it == 13669
+    elseif id == 13669
 
         co = "Description"
 
         fu =
-            ge ->
-                contains(ge, '(') ?
-                ge[(findlast(==('('), ge) + 1):(findlast(==(')'), ge) - 1)] : ge
+            fe ->
+                contains(fe, '(') ?
+                fe[(findlast(==('('), fe) + 1):(findlast(==(')'), fe) - 1)] : fe
 
     else
 
@@ -299,15 +300,16 @@ function get_feature_map(bl_th, pl)
 
     fe_ge = Dict{String, String}()
 
-    id = findfirst(==(co), split(bl_th["PLATFORM"][pl]["_he"], '\t'))
+    ic = findfirst(==(co), split(bl_th["PLATFORM"][pl]["he"], '\t'))
 
-    for sp_ in _each(bl_th["PLATFORM"][pl]["_bo"])
+    for sp_ in _each(bl_th["PLATFORM"][pl]["bo"])
 
-        ge = sp_[id]
+        fe = sp_[ic]
 
-        if !Omics.Strin.is_bad(ge)
+        if !Omics.Strin.is_bad(fe)
 
-            fe_ge[sp_[1]] = fu(ge)
+            # TODO: Check if column 1 is always for features
+            fe_ge[sp_[1]] = fu(fe)
 
         end
 
@@ -330,7 +332,7 @@ function read_process_write_plot(
 
     bl_th = rea(so)
 
-    sa_ = get_sample(bl_th)
+    sc_ = get_sample(bl_th)
 
     ch_, vc = get_characteristic(bl_th)
 
@@ -340,15 +342,15 @@ function read_process_write_plot(
 
     end
 
-    fe_, sm_, vf = get_feature(bl_th, pl)
+    fe_, sf_, vf = get_feature(bl_th, pl)
 
-    vc = vc[:, indexin(sm_, sa_)]
+    vc = vc[:, indexin(sf_, sc_)]
 
-    fe_, vf = Omics.XSample.process!(fe_, vf; fe_fa = get_feature_map(bl_th, pl), lo)
+    fe_, vf = Omics.XSample.process!(fe_, vf; f1_f2 = ma(bl_th, pl), lo)
 
-    Omics.XSample.write_plot(pr, ns, sm_, ch_, vc, pl, fe_, vf, nt, ps_, pf_)
+    Omics.XSample.write_plot(pr, ns, sf_, ch_, vc, pl, fe_, vf, nt, ps_, pf_)
 
-    sm_, ch_, vc, pl, fe_, vf
+    sf_, ch_, vc, pl, fe_, vf
 
 end
 
