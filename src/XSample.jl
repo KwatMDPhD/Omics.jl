@@ -82,7 +82,7 @@ function shift_log2!(vf)
 
 end
 
-function process!(
+function process(
     fe_,
     vf;
     f1_f2 = Dict{String, String}(),
@@ -90,6 +90,10 @@ function process!(
     mi = 1.0,
     lo = false,
 )
+
+    fe_ = copy(fe_)
+
+    vf = copy(vf)
 
     @info "Processing $(lastindex(fe_))"
 

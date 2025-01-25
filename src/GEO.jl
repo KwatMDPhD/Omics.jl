@@ -346,7 +346,7 @@ function read_process_write_plot(
 
     vc = vc[:, indexin(sf_, sc_)]
 
-    fe_, vf = Omics.XSample.process!(fe_, vf; f1_f2 = ma(bl_th, pl), lo)
+    fe_, vf = Omics.XSample.process(fe_, vf; f1_f2 = ma(bl_th, pl), lo)
 
     Omics.XSample.write_plot(pr, ns, sf_, ch_, vc, pl, fe_, vf, nt, ps_, pf_)
 
