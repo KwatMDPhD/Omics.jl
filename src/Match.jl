@@ -1,6 +1,6 @@
 module Match
 
-using Distances: CorrDist
+using Distances: CorrDist, Euclidean
 
 using Random: shuffle!
 
@@ -23,7 +23,7 @@ end
 
 function _order(ta_, da)
 
-    Omics.Clustering.order(CorrDist(), ta_, eachcol(da))
+    Omics.Clustering.order(isone(size(da, 1)) ? Euclidean() : CorrDist(), ta_, eachcol(da))
 
 end
 
@@ -59,35 +59,78 @@ function _print(n1, n2)
 
 end
 
-function _annotate(yc, wi, re)
+function _annotate(yc, wi, nf, he, re)
 
-    uc = 2
-
-    an_ = Vector{Dict{String, Any}}(undef, (1 + size(re, 1)) * uc)
-
-    te___ = vcat(
-        ("Score (⧱)", "P Value (𝐪)"),
-        [(_print(sc, ma), _print(pv, qv)) for (sc, ma, pv, qv) in eachrow(re)],
+    an = Dict(
+        "yref" => "paper",
+        "xref" => "paper",
+        "yanchor" => "middle",
+        "showarrow" => false,
     )
 
-    for ir in eachindex(te___)
+    yh = yc + wi * 0.32
 
-        te_ = te___[ir]
+    an_ = [
+        merge(
+            an,
+            Dict(
+                "y" => yh,
+                "x" => 0.5,
+                "text" => nf,
+                "font" => Dict("size" => Omics.Plot.S2),
+            ),
+        ),
+    ]
 
-        for ic in 1:uc
+    if he
 
-            an_[_linearize(ir, uc, ic)] = Dict(
-                "yref" => "paper",
-                "xref" => "paper",
-                "y" => yc,
-                "x" => isone(ic) ? 1.016 : 1.128,
-                "yanchor" => "middle",
-                "xanchor" => "left",
-                "text" => te_[ic],
-                "showarrow" => false,
-            )
+        push!(
+            an_,
+            merge(
+                an,
+                Dict("y" => yh, "x" => 1.016, "xanchor" => "left", "text" => "Score (⧱)"),
+            ),
+        )
 
-        end
+        push!(
+            an_,
+            merge(
+                an,
+                Dict("y" => yh, "x" => 1.128, "xanchor" => "left", "text" => "P Value (𝐪)"),
+            ),
+        )
+
+    end
+
+    yc -= wi * 0.5
+
+    for (sc, ma, pv, qv) in eachrow(re)
+
+        push!(
+            an_,
+            merge(
+                an,
+                Dict(
+                    "y" => yc,
+                    "x" => 1.016,
+                    "xanchor" => "left",
+                    "text" => _print(sc, ma),
+                ),
+            ),
+        )
+
+        push!(
+            an_,
+            merge(
+                an,
+                Dict(
+                    "y" => yc,
+                    "x" => 1.128,
+                    "xanchor" => "left",
+                    "text" => _print(pv, qv),
+                ),
+            ),
+        )
 
         yc -= wi
 
@@ -289,6 +332,130 @@ function go(
     end
 
     re
+
+end
+
+function summarize(ht, ns, sa_, nt, vt_, na___, nh___; st = 3.0, la = Dict{String, Any}())
+
+    io_ = sortperm(vt_)
+
+    vt_ = vt_[io_]
+
+    _normalize!(vt_, st)
+
+    ti, tx = extrema(vt_)
+
+    co = Dict(
+        "orientation" => "h",
+        "x" => 0.5,
+        "len" => 0.56,
+        "thickness" => 16,
+        "outlinewidth" => 0,
+        "title" => Dict("side" => "top"),
+    )
+
+    if eltype(vt_) == Bool
+
+        vt_ = convert(Vector{Int}, vt_)
+
+    end
+
+    tr_ = [
+        Dict(
+            "type" => "heatmap",
+            "y" => (nt,),
+            "x" => sa_,
+            "z" => (vt_,),
+            "zmin" => Omics.Strin.shorten(ti),
+            "zmax" => Omics.Strin.shorten(tx),
+            "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(vt_)),
+            "colorbar" => merge(
+                co,
+                Dict(
+                    "y" => -0.344,
+                    "tickvals" => map(Omics.Strin.shorten, Omics.Plot.tick(vt_)),
+                ),
+            ),
+        ),
+    ]
+
+    ur = 1 + lastindex(nh___) + sum(nh_ -> lastindex(nh_[2]), nh___)
+
+    wi = inv(ur)
+
+    ba = 1.0 - wi
+
+    la = Omics.Dic.merg(
+        Dict(
+            "height" => max(Omics.Plot.SS, ur * 40),
+            "width" => Omics.Plot.SL,
+            "margin" => Dict("r" => 232),
+            "yaxis" => Dict("domain" => (ba, 1.0)),
+            "xaxis" => Dict(
+                "side" => "top",
+                "title" => Dict("text" => "$ns ($(lastindex(sa_)))"),
+            ),
+        ),
+        la,
+    )
+
+    an_ = Dict{String, Any}[]
+
+    for ih in eachindex(nh___)
+
+        nf, fe_ = nh___[ih]
+
+        na_ = filter(na_ -> na_[1] == nf, na___)[]
+
+        ie_ = indexin(fe_, na_[2])
+
+        vf = na_[3][ie_, io_]
+
+        vr = na_[4][ie_, :]
+
+        foreach(nu_ -> _normalize!(nu_, st), eachrow(vf))
+
+        ni, na = extrema(vf)
+
+        it = ih + 1
+
+        push!(
+            tr_,
+            Dict(
+                "yaxis" => "y$it",
+                "type" => "heatmap",
+                "y" => map(fe -> Omics.Strin.limit(fe, 40), fe_),
+                "x" => sa_,
+                "z" => collect(eachrow(vf)),
+                "zmin" => Omics.Strin.shorten(ni),
+                "zmax" => Omics.Strin.shorten(na),
+                "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(vf)),
+                isone(ih) ?
+                "colorbar" => merge(
+                    co,
+                    Dict(
+                        "y" => -0.432,
+                        "tickvals" => map(Omics.Strin.shorten, Omics.Plot.tick(vf)),
+                    ),
+                ) : "showscale" => false,
+            ),
+        )
+
+        th = ba - wi
+
+        bh = th - wi * lastindex(fe_)
+
+        la["yaxis$it"] = Dict("domain" => (bh, th), "autorange" => "reversed")
+
+        append!(an_, _annotate(th, wi, nf, isone(ih), vr))
+
+        ba = bh
+
+    end
+
+    la["annotations"] = an_
+
+    Omics.Plot.plot(ht, tr_, la, Dict("editable" => true))
 
 end
 
