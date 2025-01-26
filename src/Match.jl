@@ -256,11 +256,11 @@ function go(
 
         end
 
-        ig_ = findall(<(0.0), sc_)
+        pn_, qn_, pp_, qp_ = Omics.Significance.ge(ra_, sc_)
 
-        ip_ = findall(>=(0.0), sc_)
+        pv_ = vcat(pn_, pp_)
 
-        pv_[ig_], qv_[ig_], pv_[ip_], qv_[ip_] = Omics.Significance.ge(ra_, sc_, ig_, ip_)
+        qv_ = vcat(qn_, qp_)
 
     end
 

@@ -8,10 +8,8 @@ using ..Omics
 
 function rea(ta, sa_, cf = 1)
 
-    co_ = names(ta)
-
     # TODO: Consider getting features separately.
-    ta[!, cf], stack((ta[!, findall(==(sa), co_)[]] for sa in sa_))
+    ta[!, cf], Matrix(ta[!, indexin(sa_, names(ta))])
 
 end
 
@@ -161,8 +159,8 @@ function write_plot(pr, nf, fe_, ns, sa_, nv, vf)
         co_ = sa_,
         la = Dict(
             "title" => Dict("text" => nv),
-            "yaxis" => Dict("title" => "$nf ($(lastindex(fe_))"),
-            "xaxis" => Dict("title" => "$ns ($(lastindex(sa_))"),
+            "yaxis" => Dict("title" => "$nf ($(lastindex(fe_)))"),
+            "xaxis" => Dict("title" => "$ns ($(lastindex(sa_)))"),
         ),
     )
 

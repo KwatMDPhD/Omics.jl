@@ -8,11 +8,12 @@ using Omics
 
 # ---- #
 
+# 15.708 μs (22 allocations: 2.03 KiB)
+
 for (vt_, vf, mi, re) in (([1, 2, 1, 2], rand(1000, 4), 1.0, trues(1000)),)
 
     @test Omics.XSample.select_non_nan(vt_, vf, mi) == re
 
-    # 15.708 μs (22 allocations: 2.03 KiB)
     #@btime Omics.XSample.select_non_nan($vt_, $vf, $mi)
 
 end
@@ -42,7 +43,8 @@ end
 
 # ---- #
 
-# 26.750 μs (478 allocations: 187.80 KiB)
+# 26.667 μs (478 allocations: 187.80 KiB)
+
 for ur in (100,)
 
     seed!(20230920)
@@ -58,9 +60,10 @@ end
 
 # ---- #
 
+# 5.792 μs (0 allocations: 0 bytes)
+
 seed!(20250123)
 
-# 5.792 μs (0 allocations: 0 bytes)
 for vf in (rand(100, 10),)
 
     #@btime Omics.XSample.shift_log2!($vf)
@@ -73,6 +76,7 @@ end
 # 776.291 ns (22 allocations: 1.97 KiB)
 # 776.442 ns (22 allocations: 1.95 KiB)
 # 735.680 ns (22 allocations: 1.92 KiB)
+
 for (fi, f1_, s1_, v1, f2_, s2_, v2, re) in (
     (
         0,

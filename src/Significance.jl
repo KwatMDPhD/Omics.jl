@@ -6,13 +6,31 @@ using MultipleTesting: BenjaminiHochberg, adjust
 
 using StatsBase: std
 
+function _separate(nu_)
+
+    ty = eltype(nu_)
+
+    nn_ = ty[]
+
+    np_ = ty[]
+
+    for nu in nu_
+
+        push!(nu < 0 ? nn_ : np_, nu)
+
+    end
+
+    nn_, np_
+
+end
+
 function get_margin_of_error(sa_, co = 0.95)
 
     std(sa_) / sqrt(lastindex(sa_)) * quantile(Normal(), 0.5 + co * 0.5)
 
 end
 
-function ge(ur, us)
+function ge(ur::Integer, us)
 
     if iszero(ur)
 
@@ -40,45 +58,39 @@ function ge(eq, ra_, nu_)
 
 end
 
-function ge(ra_, nu_, il_, ig_)
+function ge(ra_, nu_)
 
     ty = eltype(ra_)
 
-    rl_ = ty[]
+    rn_, rp_ = _separate(ra_)
 
-    rg_ = ty[]
+    nn_, np_ = _separate(nu_)
 
-    for ra in ra_
+    if isempty(nn_)
 
-        push!(ra < 0 ? rl_ : rg_, ra)
+        pn_ = Float64[]
 
-    end
-
-    if isempty(il_)
-
-        pl_ = Float64[]
-
-        ql_ = Float64[]
+        qn_ = Float64[]
 
     else
 
-        pl_, ql_ = ge(<=, rl_, nu_[il_])
+        pn_, qn_ = ge(<=, rn_, nn_)
 
     end
 
-    if isempty(ig_)
+    if isempty(np_)
 
-        pg_ = Float64[]
+        pp_ = Float64[]
 
-        qg_ = Float64[]
+        qp_ = Float64[]
 
     else
 
-        pg_, qg_ = ge(>=, rg_, nu_[ig_])
+        pp_, qp_ = ge(>=, rp_, np_)
 
     end
 
-    pl_, ql_, pg_, qg_
+    pn_, qn_, pp_, qp_
 
 end
 
