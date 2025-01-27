@@ -8,17 +8,9 @@ using Omics
 
 # ---- #
 
-function make_output(ti)
-
-    mkpath(joinpath(tempdir(), ti)), Dict("title" => Dict("text" => ti))
-
-end
-
-# ---- #
-
 function make_argument(ho, uf, us)
 
-    ta_, da = if ho == "12"
+    vt_, vf = if ho == "12"
 
         collect(1.0:us), Omics.Simulation.make_matrix_1n(Float64, uf, us)
 
@@ -32,16 +24,36 @@ function make_argument(ho, uf, us)
     "Sample",
     Omics.Simulation.label(us, "Sample"),
     "Target",
-    ta_,
+    vt_,
     "Feature",
     Omics.Simulation.label(uf, "Feature"),
-    da
+    vf
 
 end
 
 # ---- #
 
-Omics.Match.go(tempdir(), make_argument("12", 1, 2)...)
+function make_output(ti)
+
+    mkpath(joinpath(tempdir(), ti)), Dict("title" => Dict("text" => ti))
+
+end
+
+# ---- #
+
+fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("12", 1, 2)
+
+Omics.Match.write_plot(
+    tempdir(),
+    ns,
+    sa_,
+    nt,
+    vt_,
+    nf,
+    fe_,
+    vf,
+    Omics.Match.ge(fu, vt_, vf),
+)
 
 for ex in ("tsv", "html")
 
@@ -55,51 +67,73 @@ const SI = 100000, 100
 
 # ---- #
 
-# 43.125 μs (201 allocations: 4.01 MiB)
-# 44.500 μs (276 allocations: 4.01 MiB)
-# 48.875 μs (470 allocations: 4.02 MiB)
-# 59.375 μs (808 allocations: 4.04 MiB)
-# 89.541 μs (1516 allocations: 4.12 MiB)
-# 819.833 μs (7162 allocations: 5.85 MiB)
-# 2.097 ms (96617 allocations: 8.18 MiB)
-# 459.625 μs (643 allocations: 5.03 MiB)
-# 6.208 s (9897609 allocations: 2.80 GiB)
+# 1.229 μs (101 allocations: 4.09 KiB)
+# 2.139 μs (168 allocations: 7.27 KiB)
+# 4.965 μs (343 allocations: 15.85 KiB)
+# 12.375 μs (642 allocations: 36.19 KiB)
+# 37.292 μs (1236 allocations: 107.27 KiB)
+# 716.375 μs (5985 allocations: 1.75 MiB)
+# 1.513 ms (74100 allocations: 3.54 MiB)
+# 392.250 μs (512 allocations: 998.02 KiB)
+# 5.893 s (7400140 allocations: 2.65 GiB)
 
 for (uf, us) in
     ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), SI)
 
+    fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("ra", uf, us)
+
     di, la = make_output("$uf x $us")
 
-    ar_ = make_argument("ra", uf, us)
+    Omics.Match.write_plot(
+        di,
+        ns,
+        sa_,
+        nt,
+        vt_,
+        nf,
+        fe_,
+        vf,
+        Omics.Match.ge(fu, vt_, vf);
+        la,
+    )
 
-    Omics.Match.go(di, ar_...; la)
-
-    #@btime Omics.Match.go($di, $ar_...; ue = 0)
-
-end
-
-# ---- #
-
-const FU, NS, SA_, NT, TF_, NF, FE_, DF = make_argument("12", 2, 4)
-
-const TI_ = convert(Vector{Int}, TF_)
-
-const IS_ = [false, false, true, true]
-
-const DI = convert(Matrix{Int}, DF)
-
-for (ta_, da) in
-    ((TF_, DF), (TI_, DF), (IS_, DF), (convert(BitVector, IS_), DF), (TF_, DI), (TI_, DI))
-
-    di, la = make_output("$(typeof(ta_)) x $(eltype(da))")
-
-    Omics.Match.go(di, FU, NS, SA_, NT, ta_, NF, FE_, da; la)
+    #@btime Omics.Match.ge($fu, $vt_, $vf)
 
 end
 
 # ---- #
 
-const AS_ = make_argument("ra", SI...)
+fu, ns, sa_, nt, tf_, nf, fe_, ff = make_argument("12", 2, 4)
+
+ti_ = convert(Vector{Int}, tf_)
+
+tb_ = [false, false, true, true]
+
+fi = convert(Matrix{Int}, ff)
+
+for (vt_, vf) in
+    ((tf_, ff), (ti_, ff), (tb_, ff), (convert(BitVector, tb_), ff), (tf_, fi), (ti_, fi))
+
+    di, la = make_output("$(typeof(vt_)) x $(eltype(vf))")
+
+    Omics.Match.write_plot(
+        di,
+        ns,
+        sa_,
+        nt,
+        vt_,
+        nf,
+        fe_,
+        vf,
+        Omics.Match.ge(fu, vt_, vf);
+        la,
+    )
+
+end
+
+# ---- #
+
+fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("ra", SI...)
 
 for (um, uv) in ((0, 0), (10, 0), (0, 10), (10, 10), (20, 20))
 
@@ -107,56 +141,93 @@ for (um, uv) in ((0, 0), (10, 0), (0, 10), (10, 10), (20, 20))
 
     seed!(20241226)
 
-    Omics.Match.go(di, AS_...; um, uv, la)
+    Omics.Match.write_plot(
+        di,
+        ns,
+        sa_,
+        nt,
+        vt_,
+        nf,
+        fe_,
+        vf,
+        Omics.Match.ge(fu, vt_, vf; um, uv);
+        la,
+    )
 
 end
 
 # ---- #
 
-const AE_ = make_argument("12", 5, 2)
+fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("12", 5, 2)
 
-for ue in (0, 1, 2, 3, 6)
+for ue in (1, 2, 3, 6)
 
     di, la = make_output("ue = $ue")
 
-    Omics.Match.go(di, AE_...; ue, la)
+    Omics.Match.write_plot(
+        di,
+        ns,
+        sa_,
+        nt,
+        vt_,
+        nf,
+        fe_,
+        vf,
+        Omics.Match.ge(fu, vt_, vf);
+        ue,
+        la,
+    )
 
 end
 
 # ---- #
 
-const DR, LA = make_output("Skip Plotting NaN")
-
-const TA_ = [0.1, 0.2, 1.3, 1.4]
-
-Omics.Match.go(
-    DR,
-    cor,
-    "Sample",
-    Omics.Simulation.label(4, "Sample"),
-    "Target",
-    TA_,
-    "Feature",
-    ["-", "1 NaN", "Constant", "2 NaN", "+", "3 NaN"],
-    [
-        1 1 0 0
-        NaN NaN NaN NaN
-        0.49 0.51 0.49 0.51
-        NaN NaN NaN NaN
-        0 0 1 1
-        NaN NaN NaN NaN
-    ];
-    la = LA,
-)
-
-# ---- #
-
-const AT_ = make_argument("ra", 2, 3)
+fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("ra", 2, 3)
 
 for st in (0.0, 0.1, 1.0, 2.0, 4.0)
 
     di, la = make_output("st = $st")
 
-    Omics.Match.go(di, AT_...; st, la)
+    Omics.Match.write_plot(
+        di,
+        ns,
+        sa_,
+        nt,
+        vt_,
+        nf,
+        fe_,
+        vf,
+        Omics.Match.ge(fu, vt_, vf);
+        st,
+        la,
+    )
 
 end
+
+# ---- #
+
+di, la = make_output("Skip Plotting NaN")
+
+vt_ = [0.1, 0.2, 1.3, 1.4]
+
+vf = [
+    1 1 0 0
+    NaN NaN NaN NaN
+    0.49 0.51 0.49 0.51
+    NaN NaN NaN NaN
+    0 0 1 1
+    NaN NaN NaN NaN
+]
+
+Omics.Match.write_plot(
+    di,
+    "Sample",
+    Omics.Simulation.label(4, "Sample"),
+    "Target",
+    vt_,
+    "Feature",
+    ["-", "1 NaN", "Constant", "2 NaN", "+", "3 NaN"],
+    vf,
+    Omics.Match.ge(cor, vt_, vf);
+    la,
+)

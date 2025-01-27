@@ -261,4 +261,24 @@ function joi(fi, f1_, s1_, v1, f2_, s2_, v2)
 
 end
 
+function standardize_clamp!(va_, st)
+
+    if allequal(va_)
+
+        @warn "All values are $(va_[1])."
+
+        fill!(va_, 0.0)
+
+    else
+
+        Omics.Normalization.normalize_with_0!(va_)
+
+        clamp!(va_, -st, st)
+
+    end
+
+end
+
+function standardize_clamp!(::AbstractVector{<:Integer}, ::Any) end
+
 end
