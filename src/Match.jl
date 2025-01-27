@@ -79,7 +79,7 @@ function ge(fu, vt_, vf; um = 10, uv = 10)
 
     end
 
-    hcat(sc_, ma_, pv_, qv_)
+    stack((sc_, ma_, pv_, qv_))
 
 end
 

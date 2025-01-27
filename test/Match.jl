@@ -8,7 +8,7 @@ using Omics
 
 # ---- #
 
-function make_argument(ho, uf, us)
+function simulate(ho, uf, us)
 
     vt_, vf = if ho == "12"
 
@@ -20,14 +20,7 @@ function make_argument(ho, uf, us)
 
     end
 
-    cor,
-    "Sample",
-    Omics.Simulation.label(us, "Sample"),
-    "Target",
-    vt_,
-    "Feature",
-    Omics.Simulation.label(uf, "Feature"),
-    vf
+    Omics.Simulation.label(us, "Sample"), vt_, Omics.Simulation.label(uf, "Feature"), vf
 
 end
 
@@ -41,18 +34,18 @@ end
 
 # ---- #
 
-fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("12", 1, 2)
+sa_, vt_, fe_, vf = simulate("12", 1, 2)
 
 Omics.Match.write_plot(
     tempdir(),
-    ns,
+    "Sample",
     sa_,
-    nt,
+    "Target",
     vt_,
-    nf,
+    "Feature",
     fe_,
     vf,
-    Omics.Match.ge(fu, vt_, vf),
+    Omics.Match.ge(cor, vt_, vf),
 )
 
 for ex in ("tsv", "html")
@@ -63,47 +56,52 @@ end
 
 # ---- #
 
-const SI = 100000, 100
+# 1.196 μs (101 allocations: 4.09 KiB)
+# 2.065 μs (168 allocations: 7.27 KiB)
+# 4.839 μs (345 allocations: 15.96 KiB)
+# 12.166 μs (642 allocations: 36.11 KiB)
+# 36.959 μs (1237 allocations: 107.55 KiB)
+# 713.167 μs (5985 allocations: 1.75 MiB)
+# 1.496 ms (74100 allocations: 3.54 MiB)
+# 391.250 μs (514 allocations: 998.12 KiB)
+# 6.065 s (7400140 allocations: 2.65 GiB)
 
-# ---- #
+for (uf, us) in (
+    (1, 3),
+    (2, 3),
+    (4, 4),
+    (8, 8),
+    (16, 16),
+    (80, 80),
+    (1000, 4),
+    (4, 1000),
+    (100000, 100),
+)
 
-# 1.229 μs (101 allocations: 4.09 KiB)
-# 2.139 μs (168 allocations: 7.27 KiB)
-# 4.965 μs (343 allocations: 15.85 KiB)
-# 12.375 μs (642 allocations: 36.19 KiB)
-# 37.292 μs (1236 allocations: 107.27 KiB)
-# 716.375 μs (5985 allocations: 1.75 MiB)
-# 1.513 ms (74100 allocations: 3.54 MiB)
-# 392.250 μs (512 allocations: 998.02 KiB)
-# 5.893 s (7400140 allocations: 2.65 GiB)
-
-for (uf, us) in
-    ((1, 3), (2, 3), (4, 4), (8, 8), (16, 16), (80, 80), (1000, 4), (4, 1000), SI)
-
-    fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("ra", uf, us)
+    sa_, vt_, fe_, vf = simulate("ra", uf, us)
 
     di, la = make_output("$uf x $us")
 
     Omics.Match.write_plot(
         di,
-        ns,
+        "Sample",
         sa_,
-        nt,
+        "Target",
         vt_,
-        nf,
+        "Feature",
         fe_,
         vf,
-        Omics.Match.ge(fu, vt_, vf);
+        Omics.Match.ge(cor, vt_, vf);
         la,
     )
 
-    #@btime Omics.Match.ge($fu, $vt_, $vf)
+    #@btime Omics.Match.ge($cor, $vt_, $vf)
 
 end
 
 # ---- #
 
-fu, ns, sa_, nt, tf_, nf, fe_, ff = make_argument("12", 2, 4)
+sa_, tf_, fe_, ff = simulate("12", 2, 4)
 
 ti_ = convert(Vector{Int}, tf_)
 
@@ -118,14 +116,14 @@ for (vt_, vf) in
 
     Omics.Match.write_plot(
         di,
-        ns,
+        "Sample",
         sa_,
-        nt,
+        "Target",
         vt_,
-        nf,
+        "Feature",
         fe_,
         vf,
-        Omics.Match.ge(fu, vt_, vf);
+        Omics.Match.ge(cor, vt_, vf);
         la,
     )
 
@@ -133,7 +131,7 @@ end
 
 # ---- #
 
-fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("ra", SI...)
+sa_, vt_, fe_, vf = simulate("ra", 100000, 100)
 
 for (um, uv) in ((0, 0), (10, 0), (0, 10), (10, 10), (20, 20))
 
@@ -143,14 +141,14 @@ for (um, uv) in ((0, 0), (10, 0), (0, 10), (10, 10), (20, 20))
 
     Omics.Match.write_plot(
         di,
-        ns,
+        "Sample",
         sa_,
-        nt,
+        "Target",
         vt_,
-        nf,
+        "Feature",
         fe_,
         vf,
-        Omics.Match.ge(fu, vt_, vf; um, uv);
+        Omics.Match.ge(cor, vt_, vf; um, uv);
         la,
     )
 
@@ -158,7 +156,7 @@ end
 
 # ---- #
 
-fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("12", 5, 2)
+sa_, vt_, fe_, vf = simulate("12", 5, 2)
 
 for ue in (1, 2, 3, 6)
 
@@ -166,14 +164,14 @@ for ue in (1, 2, 3, 6)
 
     Omics.Match.write_plot(
         di,
-        ns,
+        "Sample",
         sa_,
-        nt,
+        "Target",
         vt_,
-        nf,
+        "Feature",
         fe_,
         vf,
-        Omics.Match.ge(fu, vt_, vf);
+        Omics.Match.ge(cor, vt_, vf);
         ue,
         la,
     )
@@ -182,7 +180,7 @@ end
 
 # ---- #
 
-fu, ns, sa_, nt, vt_, nf, fe_, vf = make_argument("ra", 2, 3)
+sa_, vt_, fe_, vf = simulate("ra", 2, 3)
 
 for st in (0.0, 0.1, 1.0, 2.0, 4.0)
 
@@ -190,14 +188,14 @@ for st in (0.0, 0.1, 1.0, 2.0, 4.0)
 
     Omics.Match.write_plot(
         di,
-        ns,
+        "Sample",
         sa_,
-        nt,
+        "Target",
         vt_,
-        nf,
+        "Feature",
         fe_,
         vf,
-        Omics.Match.ge(fu, vt_, vf);
+        Omics.Match.ge(cor, vt_, vf);
         st,
         la,
     )
@@ -208,15 +206,15 @@ end
 
 di, la = make_output("Skip Plotting NaN")
 
-vt_ = [0.1, 0.2, 1.3, 1.4]
+vt_ = [1.4, 1.3, 0.2, 0.1]
 
 vf = [
     1 1 0 0
-    NaN NaN NaN NaN
-    0.49 0.51 0.49 0.51
-    NaN NaN NaN NaN
+    1 NaN 3 4
+    0.5 0.5 0.5 0.5
+    0.49 0.51 0.48 0.52
+    1 2 NaN 4
     0 0 1 1
-    NaN NaN NaN NaN
 ]
 
 Omics.Match.write_plot(
@@ -226,7 +224,7 @@ Omics.Match.write_plot(
     "Target",
     vt_,
     "Feature",
-    ["-", "1 NaN", "Constant", "2 NaN", "+", "3 NaN"],
+    ["+ Correlation", 2, "Constant", "Nosie", 5, "- Correlation"],
     vf,
     Omics.Match.ge(cor, vt_, vf);
     la,
