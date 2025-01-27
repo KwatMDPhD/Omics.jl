@@ -6,10 +6,12 @@ using StatsBase: mean
 
 using ..Omics
 
-function rea(ta, sa_, cf = 1)
+function rea(ta, nf, sa_)
+
+    na_ = names(ta)
 
     # TODO: Consider getting features separately.
-    ta[!, cf], Matrix(ta[!, indexin(sa_, names(ta))])
+    ta[!, nf], Matrix(ta[!, map(sa -> findall(contains(sa), na_)[], sa_)])
 
 end
 
