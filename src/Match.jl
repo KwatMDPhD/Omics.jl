@@ -130,7 +130,7 @@ function _trace_target(ns, sa_, nt, vt_, st, ur)
         "height" => max(Omics.Plot.SS, ur * 40),
         "width" => Omics.Plot.SL,
         "margin" => Dict("r" => 232),
-        "yaxis" => Dict("domain" => (bo, 1.0), "tickfont" => Dict("size" => Omics.Plot.S2)),
+        "yaxis" => Dict("domain" => (bo, 1.0), "tickfont" => Dict("size" => Omics.Plot.S3)),
         "xaxis" =>
             Dict("side" => "top", "title" => Dict("text" => "$ns ($(lastindex(sa_)))")),
         "annotations" => Dict{String, Any}[],
@@ -163,7 +163,7 @@ function _annotate(to, wi, nf, he, vr)
                 "y" => yc,
                 "x" => 0.5,
                 "text" => nf,
-                "font" => Dict("size" => Omics.Plot.S2),
+                "font" => Dict("size" => Omics.Plot.S3),
             ),
         ),
     ]
