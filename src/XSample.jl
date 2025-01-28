@@ -6,18 +6,55 @@ using StatsBase: mean
 
 using ..Omics
 
+# TODO: Generalize.
+function coun(he::AbstractString, vc_)
+
+    bo = join(
+        "$uu $un.\n" for (uu, un) in sort(map(un -> (count(==(un), vc_), un), unique(vc_)))
+    )
+
+    @info "$he\n$bo"
+
+end
+
+# TODO: Generalize.
+function coun(ch_, vc___)
+
+    for id in sortperm(vc___; by = an_ -> lastindex(unique(an_)), rev = true)
+
+        coun("🔦 ($id) $(ch_[id])", vc___[id])
+
+    end
+
+end
+
+# TODO: Generalize.
+function standardize_clamp!(va_, st)
+
+    if allequal(va_)
+
+        @warn "All values are $(va_[1])."
+
+        fill!(va_, 0.0)
+
+    else
+
+        Omics.Normalization.normalize_with_0!(va_)
+
+        clamp!(va_, -st, st)
+
+    end
+
+end
+
+# TODO: Generalize.
+function standardize_clamp!(::AbstractVector{<:Integer}, ::Any) end
+
 function rea(ta, nf, sa_)
 
     na_ = names(ta)
 
-    # TODO: Consider getting features separately.
     ta[!, nf], Matrix(ta[!, map(sa -> findall(contains(sa), na_)[], sa_)])
-
-end
-
-function _index_feature(fe_, vf, id_)
-
-    fe_[id_], vf[id_, :]
 
 end
 
@@ -88,6 +125,12 @@ function shift_log2!(vf)
     mi = minimum(vf)
 
     map!(va -> log2(va - mi + 1), vf, vf)
+
+end
+
+function _index_feature(fe_, vf, id_)
+
+    fe_[id_], vf[id_, :]
 
 end
 
@@ -180,33 +223,15 @@ function write_plot(pr, nf, fe_, ns, sa_, nv, vf)
 
 end
 
-function _count(vc_)
-
-    join(
-        "$uu $un.\n" for (uu, un) in sort(map(un -> (count(==(un), vc_), un), unique(vc_)))
-    )
-
-end
-
-function _count(ch_, vc___)
-
-    for id in sortperm(vc___; by = an_ -> lastindex(unique(an_)), rev = true)
-
-        @info "🔦 ($id) $(ch_[id])\n$(_count(vc___[id]))"
-
-    end
-
-end
-
 function write_plot(di, ns, sa_, ch_, vc, nf, fe_, vf, nt, ps_, pf_)
 
-    ts = joinpath(di, "$ns.1.tsv")
+    ts = joinpath(di, "$ns.ch.tsv")
 
     Omics.Table.writ(ts, Omics.Table.make("Characteristic", ch_, sa_, vc))
 
-    _count(ch_, eachrow(vc))
+    coun(ch_, eachrow(vc))
 
-    pr = joinpath(di, "$ns.2")
+    pr = joinpath(di, "$ns.fe")
 
     write_plot(pr, nf, fe_, ns, sa_, "Value", vf)
 
@@ -262,25 +287,5 @@ function joi(fi, f1_, s1_, v1, f2_, s2_, v2)
     f3_, s3_, v3
 
 end
-
-function standardize_clamp!(va_, st)
-
-    if allequal(va_)
-
-        @warn "All values are $(va_[1])."
-
-        fill!(va_, 0.0)
-
-    else
-
-        Omics.Normalization.normalize_with_0!(va_)
-
-        clamp!(va_, -st, st)
-
-    end
-
-end
-
-function standardize_clamp!(::AbstractVector{<:Integer}, ::Any) end
 
 end
