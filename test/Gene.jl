@@ -4,68 +4,71 @@ using Omics
 
 # ---- #
 
-const HG = Omics.Table.rea(Omics.Gene.HT)
+const HT = Omics.Table.rea(Omics.Gene.HT)
 
-@test size(HG) === (43840, 54)
-
-# ---- #
-
-const EN = Omics.Table.rea(Omics.Gene.ET)
-
-@test size(EN) === (591229, 10)
+@test size(HT) === (43840, 54)
 
 # ---- #
 
-const UN = Omics.Table.rea(Omics.Gene.UT)
+const ET = Omics.Table.rea(Omics.Gene.ET)
 
-@test size(UN) === (20398, 7)
-
-@test allunique(UN[!, 2])
+@test size(ET) === (591229, 10)
 
 # ---- #
+
+const UT = Omics.Table.rea(Omics.Gene.UT)
+
+@test size(UT) === (20398, 7)
+
+@test allunique(UT[!, 2])
+
+# ---- #
+
+# 236.937 ms (2330237 allocations: 189.26 MiB)
 
 const HK_ = ["hgnc_id"]
 
-const HG_GE = Omics.Gene.ma(HG, HK_, Omics.Gene.HV)
+const HK_HV = Omics.Gene.map_hgnc(HK_)
 
-@test length(HG_GE) === 43840
+@test length(HK_HV) === 43840
 
 for (ke, re) in ()
 
-    @test HG_GE[ke] === re
+    @test HK_HV[ke] === re
 
 end
 
-# 19.180 ms (742290 allocations: 32.79 MiB)
-#@btime Omics.Gene.ma(HG, HK_, Omics.Gene.HV);
+#@btime Omics.Gene.map_hgnc(HK_);
 
 # ---- #
 
-const EN_GE = Omics.Gene.ma(EN, Omics.Gene.EK_, Omics.Gene.EV)
+# 2.709 s (44291549 allocations: 2.46 GiB)
 
-@test length(EN_GE) === 788360
+const EK_EV = Omics.Gene.map_ensembl()
+
+@test length(EK_EV) === 788360
 
 for (ke, re) in
     (("GPI-214", "GPI"), ("ENST00000303227", "GLOD5"), ("ENST00000592956.1", "SYT5"))
 
-    @test EN_GE[ke] === re
+    @test EK_EV[ke] === re
 
 end
 
-# 1.931 s (38278731 allocations: 1.60 GiB)
-#@btime Omics.Gene.ma(EN, Omics.Gene.EK_, Omics.Gene.EV);
+#@btime Omics.Gene.map_ensembl();
 
 # ---- #
 
-const UN_IR = Omics.Gene.map_uniprot(UN)
+# 119.177 ms (443387 allocations: 65.41 MiB)
 
-@test length(UN_IR) === 20398
+const UK_UV = Omics.Gene.map_uniprot()
 
-for (ir, ke, re) in (("CD8A", "Gene Names", ["CD8A", "MAL"]),)
+@test length(UK_UV) === 20398
 
-    @test UN_IR[ir][ke] == re
+for (pr, ke, re) in (("CD8A", "Gene Names", ["CD8A", "MAL"]),)
+
+    @test UK_UV[pr][ke] == re
 
 end
 
-# 21.909 ms (315019 allocations: 32.09 MiB)
-#@btime Omics.Gene.map_uniprot(UN);
+#@btime Omics.Gene.map_uniprot();

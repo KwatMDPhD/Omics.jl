@@ -179,12 +179,6 @@ function _get_slash_slash_2(fe)
 
 end
 
-function _get_hgnc_map(ke_)
-
-    Omics.Gene.ma(Omics.Table.rea(Omics.Gene.HT), ke_, Omics.Gene.HV)
-
-end
-
 function ma(bl_th, pl)
 
     id = parse(Int, pl[4:end])
@@ -225,7 +219,7 @@ function ma(bl_th, pl)
 
         co = "GB_ACC"
 
-        hg_ge = _get_hgnc_map(["refseq_accession", "ena"])
+        hg_ge = Omics.Gene.map_hgnc(["refseq_accession", "ena"])
 
         fu = fe -> get(hg_ge, fe, fe)
 
@@ -237,7 +231,7 @@ function ma(bl_th, pl)
 
         co = "ENTREZ_GENE_ID"
 
-        hg_ge = _get_hgnc_map(["entrez_id"])
+        hg_ge = Omics.Gene.map_hgnc(["entrez_id"])
 
         fu = fe -> get(hg_ge, fe, fe)
 
@@ -245,7 +239,7 @@ function ma(bl_th, pl)
 
         co = "SPOT_ID"
 
-        hg_ge = _get_hgnc_map(["entrez_id"])
+        hg_ge = Omics.Gene.map_hgnc(["entrez_id"])
 
         fu = fe -> get(hg_ge, fe, fe)
 

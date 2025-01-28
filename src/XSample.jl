@@ -248,6 +248,18 @@ function write_plot(di, ns, sa_, ch_, vc, nf, fe_, vf, nt, ps_, pf_)
 
 end
 
+function align(s1_, v1, s2_, v2, sa_ = s1_)
+
+    it_ = intersect(s1_, s2_)
+
+    i1_ = indexin(it_, s1_)
+
+    i2_ = indexin(it_, s2_)
+
+    sa_[i1_], v1[:, i1_], v2[:, i2_]
+
+end
+
 function joi(fi, f1_, s1_, v1, f2_, s2_, v2)
 
     f3_ = union(f1_, f2_)

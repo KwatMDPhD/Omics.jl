@@ -2,6 +2,7 @@ module Gene
 
 using ..Omics
 
+# TODO: Generalize.
 function ma(ta, ck_, cv)
 
     ke_va = Dict{String, String}()
@@ -52,35 +53,47 @@ const ET = joinpath(_DA, "ensembl.tsv.gz")
 
 const UT = joinpath(_DA, "uniprot.tsv.gz")
 
-const EK_ = [
-    "Transcript stable ID version",
-    "Transcript stable ID",
-    "Transcript name",
-    "Gene stable ID version",
-    "Gene stable ID",
-]
+function map_hgnc(hk_)
 
-const HV = "symbol"
+    ma(Omics.Table.rea(HT), hk_, "symbol")
 
-const EV = "Gene name"
+end
 
-function map_uniprot(ta)
+function map_ensembl()
 
-    pr_ir = Dict{String, Dict{String, Any}}()
+    ma(
+        Omics.Table.rea(ET),
+        [
+            "Transcript stable ID version",
+            "Transcript stable ID",
+            "Transcript name",
+            "Gene stable ID version",
+            "Gene stable ID",
+        ],
+        "Gene name",
+    )
+
+end
+
+function map_uniprot()
+
+    ta = Omics.Table.rea(UT)
+
+    pr_ke = Dict{String, Dict{String, Any}}()
 
     pr_ = ta[!, 2]
 
-    ir_ = names(ta)[vcat(1, 3:end)]
+    ke_ = names(ta)[vcat(1, 3:end)]
 
-    va = Matrix(ta[!, ir_])
+    va = Matrix(ta[!, ke_])
 
     for ip in eachindex(pr_)
 
-        ir_va = Dict{String, Any}()
+        ke_va = Dict{String, Any}()
 
-        for ii in eachindex(ir_)
+        for ik in eachindex(ke_)
 
-            vl = va[ip, ii]
+            vl = va[ip, ik]
 
             if ismissing(vl)
 
@@ -88,13 +101,13 @@ function map_uniprot(ta)
 
             end
 
-            ir = ir_[ii]
+            ke = ke_[ik]
 
-            ir_va[ir] = if ir == "Gene Names"
+            ke_va[ke] = if ke == "Gene Names"
 
                 split(vl)
 
-            elseif ir == "Interacts with"
+            elseif ke == "Interacts with"
 
                 split(vl, "; ")
 
@@ -106,11 +119,11 @@ function map_uniprot(ta)
 
         end
 
-        pr_ir[pr_[ip][1:(end - 6)]] = ir_va
+        pr_ke[pr_[ip][1:(end - 6)]] = ke_va
 
     end
 
-    pr_ir
+    pr_ke
 
 end
 
