@@ -7,6 +7,7 @@ using Omics
 for mo in (
     "Clustering",
     "Color",
+    "Cytoscape",
     "Density",
     "Dic",
     "Distance",

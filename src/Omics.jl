@@ -6,6 +6,8 @@ include("Clustering.jl")
 
 include("Color.jl")
 
+include("Cytoscape.jl")
+
 include("Density.jl")
 
 include("Dic.jl")

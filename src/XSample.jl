@@ -252,6 +252,8 @@ function align(s1_, v1, s2_, v2, sa_ = s1_)
 
     it_ = intersect(s1_, s2_)
 
+    @info "TODO" setdiff(union(s1_, s2_), it_)
+
     i1_ = indexin(it_, s1_)
 
     i2_ = indexin(it_, s2_)

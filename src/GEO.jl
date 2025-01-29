@@ -243,7 +243,7 @@ function ma(bl_th, pl)
 
         fu = fe -> get(hg_ge, fe, fe)
 
-    elseif id == 1708 || id == 6480 || id == 10332
+    elseif id == 1708 || id == 6480 || id == 10332 || id == 17077
 
         co = "GENE_SYMBOL"
 
