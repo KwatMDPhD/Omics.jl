@@ -20,6 +20,7 @@ for mo in (
     "Grid",
     "HTM",
     "Information",
+    "Kumo",
     "Match",
     "MutualInformation",
     "Normalization",

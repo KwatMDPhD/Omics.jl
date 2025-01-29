@@ -32,6 +32,8 @@ include("HTM.jl")
 
 include("Information.jl")
 
+include("Kumo.jl")
+
 include("Match.jl")
 
 include("MutualInformation.jl")
