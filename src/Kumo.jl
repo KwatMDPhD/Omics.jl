@@ -166,9 +166,9 @@ function report()
 
     end
 
-    @info "$(Omics.Strin.count(length(NO_), "node")) ($(sum(!isempty, CL___)) classed, $ud decreasing, and $ui increasing)." NO_
+    @info "$(Omics.Strin.coun(length(NO_), "node")) ($(sum(!isempty, CL___)) classed, $ud decreasing, and $ui increasing)." NO_
 
-    @info "$(Omics.Strin.count(length(ED_), "edge"))." ED_
+    @info "$(Omics.Strin.coun(length(ED_), "edge"))." ED_
 
 end
 
