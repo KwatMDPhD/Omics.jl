@@ -8,9 +8,6 @@ using StatsBase: mean
 
 using ..Omics
 
-# TODO: Generalize.
-const TR_ = 0.866, 0.5, -0.866, 0.5, 0, -1
-
 const NO_ = OrderedSet{String}()
 
 const CL___ = Tuple{Vararg{String}}[]
@@ -101,15 +98,15 @@ function _add_edge!(a1_::Tuple, a2_::Tuple)
 
 end
 
-function _make_how_node(a1, ho)
+function _make_how_node(an, ho)
 
-    "$a1.$ho"
+    "$an.$ho"
 
 end
 
-function _make_how_node(a1_::Tuple, ho)
+function _make_how_node(an_::Tuple, ho)
 
-    _make_how_node(join(a1_, '_'), ho)
+    _make_how_node(join(an_, '_'), ho)
 
 end
 
@@ -246,6 +243,8 @@ function plot(
 
     h1 = Omics.Color.TU
 
+    tr_ = 0.866, 0.5, -0.866, 0.5, 0, -1
+
     Omics.Cytoscape.plot(
         ht,
         vcat(en_, _elementize.(ED_));
@@ -270,14 +269,14 @@ function plot(
                 Dict(
                     "selector" => ".de",
                     "style" => Dict(
-                        "shape-polygon-points" => map(co -> -co, TR_),
+                        "shape-polygon-points" => map(co -> -co, tr_),
                         "background-color" => Omics.Color.AY,
                     ),
                 ),
                 Dict(
                     "selector" => ".in",
                     "style" => Dict(
-                        "shape-polygon-points" => TR_,
+                        "shape-polygon-points" => tr_,
                         "background-color" => Omics.Color.AG,
                     ),
                 ),
@@ -333,8 +332,11 @@ function plot(
 
 end
 
-# TODO: Consider `+1`.
-function heat(fe_sc; no_al_ = Dict{String, Vector{String}}())
+function heat(fe_, sc_, no_al_ = Dict{String, Vector{String}}())
+
+    fe_id = Dict(fe => id for (id, fe) in enumerate(fe_))
+
+    u1 = u2 = 0
 
     he_ = zeros(length(NO_))
 
@@ -348,27 +350,33 @@ function heat(fe_sc; no_al_ = Dict{String, Vector{String}}())
 
         end
 
-        if haskey(fe_sc, no)
+        if haskey(fe_id, no)
 
-            he_[id] = fe_sc[no]
+            u1 += 1
+
+            he_[id] = sc_[fe_id[no]]
 
         else
 
-            sc_ = Float64[]
+            u2 += 1
+
+            ua = su = 0
 
             for al in no_al_[no]
 
-                if haskey(fe_sc, al)
+                if haskey(fe_id, al)
 
-                    push!(sc_, fe_sc[al])
+                    ua += 1
+
+                    su += sc_[fe_id[al]]
 
                 end
 
             end
 
-            if !isempty(sc_)
+            if !iszero(su)
 
-                he_[id] = mean(sc_)
+                he_[id] = su / ua
 
             end
 
@@ -380,111 +388,79 @@ function heat(fe_sc; no_al_ = Dict{String, Vector{String}}())
 
 end
 
-function heat(fe_, fe_x_sa_x_sc; ke_ar...)
-
-    no_x_sa_x_he = Matrix{Float64}(undef, length(NO_), size(fe_x_sa_x_sc, 2))
-
-    if lastindex(fe_) != size(fe_x_sa_x_sc, 1)
-
-        error("Numbers of features differ.")
-
-    end
-
-    for (id, sc_) in enumerate(eachcol(fe_x_sa_x_sc))
-
-        no_x_sa_x_he[:, id] = heat(Dict(zip(fe_, sc_)); ke_ar...)
-
-    end
-
-    no_x_sa_x_he
-
-end
-
 function make_edge_matrix()
 
-    n = length(NO_)
+    un = length(NO_)
 
-    so_x_ta_x_ed = falses(n, n)
+    li = falses(un, un)
 
     no_id = Dict(no => id for (id, no) in enumerate(NO_))
 
     for (n1, n2) in ED_
 
-        so_x_ta_x_ed[no_id[n1], no_id[n2]] = true
+        li[no_id[n1], no_id[n2]] = true
 
     end
 
-    so_x_ta_x_ed
+    li
 
 end
 
-function play(he_, so_x_ta_x_ed; n_it = 1000, de = 0.5, ch = 0.000001)
+function play(he_, li; ni = 1000, de = 0.5, ch = 0.000001)
 
-    n_no = length(NO_)
+    hi = Matrix{Float64}(undef, length(NO_), 1 + ni)
 
-    if !(n_no == lastindex(he_) == size(so_x_ta_x_ed, 1) == size(so_x_ta_x_ed, 2))
+    hi[:, 1] = he_
 
-        error("Numbers of nodes differ.")
+    for ii in 1:ni
 
-    end
+        i1 = ii + 1
 
-    no_x_id_x_he = Matrix{Float64}(undef, n_no, 1 + n_it)
+        ex = exp((1 - ii) * de)
 
-    no_x_id_x_he[:, 1] = he_
+        for (io, (li_, no)) in enumerate(zip(eachcol(li), NO_))
 
-    en = enumerate(zip(eachcol(so_x_ta_x_ed), NO_))
+            cu = hi[io, ii]
 
-    for id in 1:n_it
+            if !any(li_)
 
-        id1 = id + 1
-
-        ex = exp((1 - id) * de)
-
-        for (idt, (ed_, at)) in en
-
-            cu = no_x_id_x_he[idt, id]
-
-            if !any(ed_)
-
-                no_x_id_x_he[idt, id1] = cu
+                hi[io, i1] = cu
 
                 continue
 
             end
 
-            he_ = no_x_id_x_he[ed_, id]
+            he_ = hi[li_, ii]
 
             me = mean(he_)
 
-            if contains(at, '.')
+            if contains(no, '.')
 
                 if any(iszero, he_)
 
-                    no_x_id_x_he[idt, id1] = 0.0
+                    hi[io, i1] = 0.0
 
                     continue
 
                 end
 
-                n_ch = lastindex(at)
-
-                no_x_id_x_he[idt, id1] = view(at, (n_ch - 1):n_ch) == "de" ? -me : me
+                hi[io, i1] = no[(end - 1):end] == "de" ? -me : me
 
             else
 
-                no_x_id_x_he[idt, id1] = max(0.0, cu + me * ex)
+                hi[io, i1] = max(0.0, cu + me * ex)
 
             end
 
         end
 
-        if abs(norm(view(no_x_id_x_he, :, id1)) - norm(view(no_x_id_x_he, :, id))) < ch
+        if abs(norm(view(hi, :, i1)) - norm(view(hi, :, ii))) < ch
 
-            return no_x_id_x_he[:, 1:id1]
+            return hi[:, 1:i1]
 
-        elseif id == n_it
+        elseif ii == ni
 
-            error("Failed to converge.")
+            error("failed to converge.")
 
         end
 
@@ -492,22 +468,9 @@ function play(he_, so_x_ta_x_ed; n_it = 1000, de = 0.5, ch = 0.000001)
 
 end
 
-# TODO: Test.
-function play!(no_x_sa_x_he, so_x_ta_x_ed; ke_ar...)
+function animate(pr, ep_, hi; pe = 0, st_ = Dict{String, Any}[])
 
-    for (id, he_) in enumerate(eachcol(no_x_sa_x_he))
-
-        no_x_sa_x_he[:, id] = play(he_, so_x_ta_x_ed; ke_ar...)[:, end]
-
-    end
-
-end
-
-function animate(di, el_, no_x_id_x_he; pe = 0, st_ = Dict{String, Any}[])
-
-    n = size(no_x_id_x_he, 2)
-
-    @info "Animating $(Omics.Strin.count(n, "set")) of heat"
+    ui = size(hi, 2)
 
     if iszero(pe)
 
@@ -515,51 +478,43 @@ function animate(di, el_, no_x_id_x_he; pe = 0, st_ = Dict{String, Any}[])
 
         pe = 1
 
-        st = "change"
-
     else
 
         ch = false
 
         if pe < 1
 
-            pe = round(Int, n * pe)
+            pe = round(Int, ui * pe)
 
         end
 
-        st = "every $pe"
-
     end
-
-    @info "Plotting $st"
 
     pn_ = String[]
 
-    pr = joinpath(di, randstring())
+    for ii in 1:ui
 
-    for id in 1:n
+        go = !isone(ii)
 
-        tw = !isone(id)
-
-        if tw && !iszero(id % pe) && id != n
+        if !(isone(ii) || iszero(ii % pe) || ii == ui)
 
             continue
 
         end
 
-        pri = "$(pr)_$id"
+        p2 = "$(pr)_$ii"
 
-        he_ = no_x_id_x_he[:, id]
+        he_ = hi[:, ii]
 
-        if ch && tw
+        if ch && go
 
-            he_ .-= view(no_x_id_x_he, :, id - 1)
+            he_ -= view(hi, :, ii - 1)
 
         end
 
-        plot("$pri.html"; el_, he_, st_, ex = "png")
+        plot("$p2.html"; ep_, he_, st_, ex = "png")
 
-        push!(pn_, "$pri.png")
+        push!(pn_, "$p2.png")
 
     end
 

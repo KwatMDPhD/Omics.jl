@@ -28,7 +28,7 @@ function plot(
     la = Dict{String, Any}(),
     ba = "#ffffff",
     ex = "",
-    sc = 1.0,
+    sc = 1,
 )
 
     if isempty(ht)
@@ -37,19 +37,17 @@ function plot(
 
     end
 
-    if isempty(ex)
+    re = ""
 
-        dw = re = ""
+    if !isempty(ex)
 
-    else
+        fi = "$(basename(ht)[1:(end - 5)]).$ex"
 
-        ba = "$(basename(ht)[1:(end - 5)]).$ex"
+        fd = joinpath(homedir(), "Downloads", fi)
 
-        dw = joinpath(homedir(), "Downloads", ba)
+        if isfile(fd)
 
-        if isfile(dw)
-
-            rm(dw)
+            rm(fd)
 
         end
 
@@ -63,7 +61,7 @@ function plot(
 
         end
 
-        re = "cy.ready(function() {saveAs($bl, \"$ba\")});"
+        re = "cy.ready(function() {saveAs($bl, \"$fi\")});"
 
     end
 
@@ -107,15 +105,21 @@ function plot(
         ),
     )
 
-    if isempty(dw)
+    if isempty(ex)
 
         return
 
     end
 
-    _wait(dw, 40)
+    _wait(fd, 32)
 
-    mv(dw, joinpath(dirname(ht), ba); force = true)
+    fh = joinpath(dirname(ht), fi)
+
+    if fd != fh
+
+        mv(fd, fh; force = true)
+
+    end
 
 end
 

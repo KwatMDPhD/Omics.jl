@@ -6,7 +6,7 @@ using Omics.Kumo: @st, <<, >>
 
 # ---- #
 
-function test_collection(no_, cl___, ed_, pl = true)
+function test_collection(no_, cl___, ed_)
 
     @test Tuple(Omics.Kumo.NO_) == no_
 
@@ -32,9 +32,11 @@ test_collection(("Luffy", "Zoro"), fill((), 2), ())
 
 # ---- #
 
-Omics.Kumo._add_node!("Nami")
+for _ in 1:2
 
-Omics.Kumo._add_node!("Nami", ("Arlong Pirate",))
+    Omics.Kumo._add_node!("Nami")
+
+end
 
 test_collection(("Luffy", "Zoro", "Nami"), fill((), 3), ())
 
@@ -90,9 +92,9 @@ test_collection(
 
 # ---- #
 
-for no in ("和道一文字", "三代鬼徹", "閻魔")
+for an in ("和道一文字", "三代鬼徹", "閻魔")
 
-    Omics.Kumo._add_node!(no)
+    Omics.Kumo._add_node!(an)
 
 end
 
@@ -115,9 +117,9 @@ test_collection(
 
 # ---- #
 
-for no in ("Sanji", "Respect", "Competitiveness")
+for an in ("Sanji", "Respect", "Competitiveness")
 
-    Omics.Kumo._add_node!(no)
+    Omics.Kumo._add_node!(an)
 
 end
 
@@ -161,26 +163,28 @@ test_collection((), [], ())
 
 # ---- #
 
-for (so, ho, re) in (("A", "de", "A.de"), (("A", "B"), "in", "A_B.in"))
+for (an, ho, re) in (("A", "de", "A.de"), (("A", "B"), "in", "A_B.in"))
 
-    @test Omics.Kumo._make_how_node(so, ho) === re
-
-end
-
-for no in ("Ka", "Kw", "Ay", "Zo", "Distraction", "Complexity", "Bad")
-
-    Omics.Kumo._add_node!(no)
+    @test Omics.Kumo._make_how_node(an, ho) === re
 
 end
 
-for (so, ho, ta) in (
+# ---- #
+
+for an in ("Ka", "Kw", "Ay", "Zo", "Distraction", "Complexity", "Bad")
+
+    Omics.Kumo._add_node!(an)
+
+end
+
+for (a1, ho, a2) in (
     ("Ka", "de", "Distraction"),
     ("Kw", "de", ("Bad", "Complexity")),
     (("Ka", "Kw"), "in", "Ay"),
     (("Ka", "Kw"), "in", ("Ay", "Zo")),
 )
 
-    Omics.Kumo._add_edge!(so, ho, ta)
+    Omics.Kumo._add_edge!(a1, ho, a2)
 
 end
 
@@ -211,9 +215,9 @@ test_collection(
     ),
 )
 
-Omics.Kumo.clear!()
-
 # ---- #
+
+Omics.Kumo.clear!()
 
 @macroexpand @st Node
 
@@ -223,11 +227,13 @@ test_collection(("Node",), fill((), 1), ())
 
 # ---- #
 
+Omics.Kumo.clear!()
+
 @macroexpand @st NodeWithClass Class1 Class2
 
 @st NodeWithClass Class1 Class2
 
-test_collection(("Node", "NodeWithClass"), [(), ("Class1", "Class2")], ())
+test_collection(("NodeWithClass",), [("Class1", "Class2")], ())
 
 # ---- #
 
@@ -247,41 +253,35 @@ end
 
 clear_st('A':'Z')
 
-A << B
+A << A
 
-(C, D) << E
+B << C
 
-F << (G, H)
+(D, E) << F
 
-(I, J) << (K, L)
+G << (H, I)
 
-Omics.Kumo.plot("")
+(J, K) << (L, M)
 
-# ---- #
+N >> N
 
-clear_st('A':'Z')
+O >> P
 
-A >> B
+(Q, R) >> S
 
-(C, D) >> E
+T >> (U, V)
 
-F >> (G, H)
-
-(I, J) >> (K, L)
+(W, X) >> (Y, Z)
 
 Omics.Kumo.plot("")
 
 # ---- #
 
-const GP_ = ("Ligand", "GPCR", "GPCRLigand", "GP", "GPCRGP", "GOn", "GPCRDone", "Arrestin")
+const FE_ = "Ligand", "GPCR", "GPCRLigand", "GP", "GPCRGP", "GOn", "GPCRDone", "Arrestin"
 
-const UG = lastindex(GP_)
+const UF = lastindex(FE_)
 
-const PR = joinpath(tempdir(), "GPCR")
-
-# ---- #
-
-clear_st(GP_)
+clear_st(FE_)
 
 (Ligand, GPCR) >> GPCRLigand
 
@@ -292,8 +292,8 @@ GPCRGP >> (GOn, GPCRDone)
 Arrestin << GPCRDone
 
 test_collection(
-    (GP_..., "Ligand_GPCR.in", "GPCRLigand_GP.in", "GPCRGP.in", "Arrestin.de"),
-    fill((), UG + 4),
+    (FE_..., "Ligand_GPCR.in", "GPCRLigand_GP.in", "GPCRGP.in", "Arrestin.de"),
+    fill((), UF + 4),
     (
         ("Ligand", "Ligand_GPCR.in"),
         ("GPCR", "Ligand_GPCR.in"),
@@ -307,65 +307,40 @@ test_collection(
         ("Arrestin", "Arrestin.de"),
         ("Arrestin.de", "GPCRDone"),
     ),
-    false,
 )
-
-Omics.Kumo.plot("$PR.html"; ex = "json")
-
-const EP_ = Omics.Cytoscape.rea("$PR.json")
 
 # ---- #
 
-const SC_ = vcat(range(0, 1, UG), Inf)
+const EP_ =
+    Omics.Cytoscape.rea(Omics.Kumo.plot("$(joinpath(tempdir(), "GPCR")).html"; ex = "json"))
 
-const FE_SC = Dict(zip(GP_, SC_))
+# ---- #
 
-FE_SC["Kaido"] = SC_[end]
+# 958.294 ns (7 allocations: 688 bytes)
 
-const HE_ = Omics.Kumo.heat(FE_SC)
+const SC_ = range(0, 1, UF)
 
-const R1 = vcat(SC_[1:(end - 1)], zeros(4))
+const HE_ = Omics.Kumo.heat(FE_, SC_)
 
-@test HE_ == R1
+@test HE_ == vcat(SC_, zeros(4))
 
-# 429.226 ns (7 allocations: 752 bytes)
-#@btime Omics.Kumo.heat(FE_SC);
+#@btime Omics.Kumo.heat(FE_, SC_);
 
 Omics.Kumo.plot(""; ep_ = EP_, he_ = HE_)
 
 # ---- #
 
-const SC = hcat(SC_, SC_ * 10)
-
-@test try
-
-    Omics.Kumo.heat(GP_, SC)
-
-catch
-
-    true
-
-end
-
-const FE_ = vcat(collect(GP_), "Kaido")
-
-const HE = Omics.Kumo.heat(FE_, SC)
-
-@test HE == hcat(R1, R1 * 10)
-
-# 1.242 μs (19 allocations: 2.25 KiB)
-#@btime Omics.Kumo.heat(FE_, SC);
-
-# ---- #
+#  521.698 ns (7 allocations: 848 bytes)
 
 const ED = Omics.Kumo.make_edge_matrix()
 
 @test sum(ED) === length(Omics.Kumo.ED_)
 
-# 709.835 ns (10 allocations: 2.08 KiB)
 #@btime Omics.Kumo.make_edge_matrix();
 
 # ---- #
+
+# 10.875 μs (557 allocations: 114.80 KiB)
 
 const HI = Omics.Kumo.play(HE_, ED)
 
@@ -404,7 +379,7 @@ const HI = Omics.Kumo.play(HE_, ED)
     5.871666074164041,
 ]
 
-const R2 = [
+@test HI[:, end] == [
     0.0,
     0.14285714285714285,
     0.2857142857142857,
@@ -419,22 +394,12 @@ const R2 = [
     -1.0,
 ]
 
-@test HI[:, end] == R2
-
-# 15.625 μs (264 allocations: 113.62 KiB)
 #@btime Omics.Kumo.play(HE_, ED);
 
 # ---- #
 
-@test isapprox(Omics.Kumo.play(HE, ED), hcat(R2, R2 * 10); atol = 0.0001)
+for pe in (0, 0.5, 8)
 
-# 34.333 μs (574 allocations: 230.89 KiB)
-#@btime Omics.Kumo.play(HE, ED);
-
-# ---- #
-
-for pe in (0, 0.5, 1)
-
-    Omics.Kumo.animate(TE, EP_, HI; pe)
+    Omics.Kumo.animate(joinpath(homedir(), "Downloads", "animate_$pe"), EP_, HI; pe)
 
 end

@@ -17,23 +17,25 @@ const EL_ = Dict{String, Any}[
     Dict("data" => Dict("id" => "J", "source" => "H", "target" => "I")),
 ]
 
-const ST_ = map(
-    id -> Dict(
-        "selector" => "#$(EL_[id]["data"]["id"])",
-        "style" => Dict("background-color" => Omics.Palette.HE_[id]),
-    ),
-    eachindex('a':'i'),
-)
+Omics.Cytoscape.plot("", EL_)
 
 # ---- #
 
-@test isfile(
+Omics.Path.ope(
     Omics.Cytoscape.plot(
         joinpath(tempdir(), "1.html"),
         EL_;
-        st_ = ST_,
+        st_ = map(
+            id -> Dict(
+                "selector" => "#$(EL_[id]["data"]["id"])",
+                "style" => Dict("background-color" => Omics.Palette.HE_[id]),
+            ),
+            eachindex('a':'i'),
+        ),
         la = Dict("name" => "preset"),
+        ba = "#000000",
         ex = "png",
+        sc = 2,
     ),
 )
 
@@ -70,7 +72,6 @@ test_element(EL_, E2_, ("data", "position"))
     Omics.Cytoscape.plot(
         joinpath(tempdir(), "3.html"),
         EL_;
-        st_ = ST_,
         la = Dict("name" => "preset"),
         ex = "json",
     ),
