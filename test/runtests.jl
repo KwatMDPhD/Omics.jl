@@ -7,6 +7,7 @@ using Omics
 for mo in (
     "Clustering",
     "Color",
+    "Coordinate",
     "Cytoscape",
     "Density",
     "Dic",
@@ -16,6 +17,7 @@ for mo in (
     "Evidence",
     "Extreme",
     "GEO",
+    "GPSMap",
     "Gene",
     "GeneralizedLinearModel",
     "Grid",
@@ -23,6 +25,7 @@ for mo in (
     "Information",
     "Kumo",
     "Match",
+    "MatrixFactorization",
     "MutualInformation",
     "Normalization",
     "Palette",

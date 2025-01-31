@@ -2,11 +2,10 @@ module XSample
 
 using OrderedCollections: OrderedDict
 
-using StatsBase: mean
+using StatsBase: mean, std
 
 using ..Omics
 
-# TODO: Generalize.
 function coun(he::AbstractString, vc_)
 
     bo = join(
@@ -17,7 +16,6 @@ function coun(he::AbstractString, vc_)
 
 end
 
-# TODO: Generalize.
 function coun(ch_, vc___)
 
     for id in sortperm(vc___; by = an_ -> lastindex(unique(an_)), rev = true)
@@ -28,7 +26,22 @@ function coun(ch_, vc___)
 
 end
 
-# TODO: Generalize.
+function shift!(va_)
+
+    mi = minimum(va_)
+
+    map!(nu -> nu - mi, va_, va_)
+
+end
+
+function shift_log2!(va_)
+
+    mi = minimum(va_)
+
+    map!(nu -> log2(nu - mi + 1), va_, va_)
+
+end
+
 function standardize_clamp!(va_, st)
 
     if allequal(va_)
@@ -47,14 +60,19 @@ function standardize_clamp!(va_, st)
 
 end
 
-# TODO: Generalize.
 function standardize_clamp!(::AbstractVector{<:Integer}, ::Any) end
 
-function rea(ta, nf, sa_)
+function rank_01!(va_)
 
-    na_ = names(ta)
+    Omics.Normalization.normalize_with_125254!(va_)
 
-    ta[!, nf], Matrix(ta[!, map(sa -> findall(contains(sa), na_)[], sa_)])
+    Omics.Normalization.normalize_with_01!(va_)
+
+end
+
+function index_feature(fe_, vf, id_)
+
+    fe_[id_], vf[id_, :]
 
 end
 
@@ -68,6 +86,29 @@ function select_non_nan(vt_, vf, mi)
         vf_ -> all(iu -> mi_[iu] <= sum(!isnan, view(vf_, is___[iu])), eachindex(is___)),
         eachrow(vf),
     )
+
+end
+
+function select(::Any, vf, us::Integer)
+
+    size(vf, 1) <= us ? axes(vf, 1) :
+    Omics.Extreme.ge(map(std, eachrow(vf)), us)[(us + 1):end]
+
+end
+
+function select(fe_, ::Any, se_)
+
+    indexin(intersect(fe_, se_), fe_)
+
+end
+
+#
+
+function rea(ta, nf, sa_)
+
+    na_ = names(ta)
+
+    ta[!, nf], Matrix(ta[!, map(sa -> findall(contains(sa), na_)[], sa_)])
 
 end
 
@@ -120,20 +161,6 @@ function collapse(fu, ty, f1_, v1)
 
 end
 
-function shift_log2!(vf)
-
-    mi = minimum(vf)
-
-    map!(va -> log2(va - mi + 1), vf, vf)
-
-end
-
-function _index_feature(fe_, vf, id_)
-
-    fe_[id_], vf[id_, :]
-
-end
-
 function process(
     fe_,
     vf;
@@ -151,7 +178,7 @@ function process(
 
     if any(isnan, vf)
 
-        fe_, vf = _index_feature(fe_, vf, select_non_nan(vt_, vf, mi))
+        fe_, vf = index_feature(fe_, vf, select_non_nan(vt_, vf, mi))
 
         @info "Selected non-NaN $(lastindex(fe_))."
 
@@ -175,7 +202,7 @@ function process(
 
     if any(allequal, vf___)
 
-        fe_, vf = _index_feature(fe_, vf, findall(!allequal, vf___))
+        fe_, vf = index_feature(fe_, vf, findall(!allequal, vf___))
 
         @info "Kept nonconstant $(lastindex(fe_))."
 

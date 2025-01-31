@@ -6,6 +6,8 @@ include("Clustering.jl")
 
 include("Color.jl")
 
+include("Coordinate.jl")
+
 include("Cytoscape.jl")
 
 include("Density.jl")
@@ -24,6 +26,8 @@ include("Extreme.jl")
 
 include("GEO.jl")
 
+include("GPSMap.jl")
+
 include("Gene.jl")
 
 include("GeneralizedLinearModel.jl")
@@ -37,6 +41,8 @@ include("Information.jl")
 include("Kumo.jl")
 
 include("Match.jl")
+
+include("MatrixFactorization.jl")
 
 include("MutualInformation.jl")
 
