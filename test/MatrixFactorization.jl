@@ -38,7 +38,7 @@ for (A_, re) in
 
     @test Omics.MatrixFactorization._get_coefficient(A_) == re
 
-    @btime Omics.MatrixFactorization._get_coefficient($A_)
+    #@btime Omics.MatrixFactorization._get_coefficient($A_)
 
 end
 
@@ -112,20 +112,20 @@ for (id, A) in enumerate((A1, A2, A3, A4))
 
     @test isapprox(H, AWi; rtol = 1e-2)
 
-    disable_logging(Warn)
-    @btime Omics.MatrixFactorization.factorize(
-        $A,
-        UF;
-        init = :custom,
-        W0 = $W0,
-        H0 = $H0,
-        alg = :multmse,
-        tol = to,
-        maxiter = ma,
-    )
-    disable_logging(Debug)
+    #disable_logging(Warn)
+    #@btime Omics.MatrixFactorization.factorize(
+    #    $A,
+    #    UF;
+    #    init = :custom,
+    #    W0 = $W0,
+    #    H0 = $H0,
+    #    alg = :multmse,
+    #    tol = to,
+    #    maxiter = ma,
+    #)
+    #disable_logging(Debug)
 
-    @btime Omics.MatrixFactorization.solve_h($W, $A)
+    #@btime Omics.MatrixFactorization.solve_h($W, $A)
 
 end
 
@@ -182,16 +182,16 @@ for (id, A) in enumerate((A1, A2, A3, A4))
 
     end
 
-    disable_logging(Warn)
-    @btime Omics.MatrixFactorization.factorize_wide(
-        $(A,),
-        UF;
-        W = $W0,
-        H_ = $(H0_[1],),
-        to,
-        ma,
-    )
-    disable_logging(Debug)
+    #disable_logging(Warn)
+    #@btime Omics.MatrixFactorization.factorize_wide(
+    #    $(A,),
+    #    UF;
+    #    W = $W0,
+    #    H_ = $(H0_[1],),
+    #    to,
+    #    ma,
+    #)
+    #disable_logging(Debug)
 
 end
 
