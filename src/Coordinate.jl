@@ -148,7 +148,7 @@ function get_polar(aa; ma = 2000, st = 0.2 * pi, te = 2 / log(2), de = 0.01, pl 
                     "mode" => "markers+text",
                     "x" => (id - 1,),
                     "y" => (ma,),
-                    "text" => Omics.Strin.shorten(ma),
+                    "text" => Omics.Numbe.shorten(ma),
                     "marker" => Dict("size" => 16, "color" => Omics.Color.YE),
                 ),
             ),

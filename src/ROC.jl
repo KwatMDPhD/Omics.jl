@@ -34,7 +34,7 @@ function line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
             np,
             pp,
             ac;
-            la = Dict("title" => Dict("text" => "◑ $(Omics.Strin.shorten(th))")),
+            la = Dict("title" => Dict("text" => "◑ $(Omics.Numbe.shorten(th))")),
         )
 
         fp_[it] = fp
@@ -68,7 +68,7 @@ function plot(ht, fp_, tp_)
                 "line" => Dict("color" => "#000000"),
             ),
             Dict(
-                "name" => "Area = $(Omics.Strin.shorten(sum(tp_) / lastindex(tp_)))",
+                "name" => "Area = $(Omics.Numbe.shorten(sum(tp_) / lastindex(tp_)))",
                 "y" => vcat(0.0, tp_[io_]),
                 "x" => vcat(0.0, fp_[io_]),
                 "mode" => "markers+lines",

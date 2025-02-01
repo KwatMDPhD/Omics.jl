@@ -97,7 +97,7 @@ function plot(
                     "position" => 0,
                     "title" => Dict("text" => nf, "font" => Dict("color" => hd)),
                     "range" => Omics.Plot.rang(extrema(fe_)..., ex),
-                    "tickvals" => map(Omics.Strin.shorten, Omics.Plot.tick(fe_)),
+                    "tickvals" => map(Omics.Numbe.shorten, Omics.Plot.tick(fe_)),
                 ),
                 "yaxis3" => Dict(
                     "overlaying" => "y2",
@@ -107,7 +107,7 @@ function plot(
                         "font" => Dict("color" => hp),
                     ),
                     "range" => Omics.Plot.rang(0, 1, ex),
-                    "tickvals" => (0.0, map(Omics.Strin.shorten, extrema(pr_))..., 1.0),
+                    "tickvals" => (0.0, map(Omics.Numbe.shorten, extrema(pr_))..., 1.0),
                 ),
                 "xaxis" => Dict(
                     "anchor" => "y2",

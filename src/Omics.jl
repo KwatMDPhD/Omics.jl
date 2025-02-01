@@ -48,6 +48,8 @@ include("MutualInformation.jl")
 
 include("Normalization.jl")
 
+include("Numbe.jl")
+
 include("Palette.jl")
 
 include("Path.jl")

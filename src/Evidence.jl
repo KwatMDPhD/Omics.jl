@@ -199,7 +199,7 @@ function plot(
         he,
         wi,
         si,
-        "Prior = $(Omics.Strin.shorten(pr))",
+        "Prior = $(Omics.Numbe.shorten(pr))",
     )
 
     for ie in eachindex(nf_)

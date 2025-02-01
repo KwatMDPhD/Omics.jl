@@ -28,6 +28,7 @@ for mo in (
     "MatrixFactorization",
     "MutualInformation",
     "Normalization",
+    "Numbe",
     "Palette",
     "Path",
     "Plot",

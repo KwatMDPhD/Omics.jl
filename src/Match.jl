@@ -114,14 +114,14 @@ function _trace_target(ns, sa_, nt, vt_, st, ur)
             "y" => (nt,),
             "x" => sa_,
             "z" => (vt_,),
-            "zmin" => Omics.Strin.shorten(mi),
-            "zmax" => Omics.Strin.shorten(ma),
+            "zmin" => Omics.Numbe.shorten(mi),
+            "zmax" => Omics.Numbe.shorten(ma),
             "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(vt_)),
             "colorbar" => merge(
                 CO,
                 Dict(
                     "y" => -0.344,
-                    "tickvals" => map(Omics.Strin.shorten, Omics.Plot.tick(vt_)),
+                    "tickvals" => map(Omics.Numbe.shorten, Omics.Plot.tick(vt_)),
                 ),
             ),
         ),
@@ -141,7 +141,7 @@ end
 
 function _print(n1, n2)
 
-    "$(Omics.Strin.shorten(n1)) ($(Omics.Strin.shorten(n2)))"
+    "$(Omics.Numbe.shorten(n1)) ($(Omics.Numbe.shorten(n2)))"
 
 end
 
@@ -238,15 +238,15 @@ function _trace_feature(sa_, nf, fe_, vf, vr, st, iy, bo, wi)
         "y" => map(fe -> Omics.Strin.limit(fe, 40), fe_),
         "x" => sa_,
         "z" => collect(eachrow(vf)),
-        "zmin" => Omics.Strin.shorten(mi),
-        "zmax" => Omics.Strin.shorten(ma),
+        "zmin" => Omics.Numbe.shorten(mi),
+        "zmax" => Omics.Numbe.shorten(ma),
         "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(vf)),
         he ?
         "colorbar" => merge(
             CO,
             Dict(
                 "y" => -0.432,
-                "tickvals" => map(Omics.Strin.shorten, Omics.Plot.tick(vf)),
+                "tickvals" => map(Omics.Numbe.shorten, Omics.Plot.tick(vf)),
             ),
         ) : "showscale" => false,
     ),

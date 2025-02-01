@@ -175,7 +175,7 @@ end
 
 function _get_slash_slash_2(fe)
 
-    Omics.Strin.split_get(fe, " // ", 2)
+    Omics.Strin.ge(fe, 2, " // ")
 
 end
 
@@ -197,7 +197,7 @@ function ma(bl_th, pl)
 
         co = "Gene Symbol"
 
-        fu = fe -> Omics.Strin.split_get(fe, " /// ", 1)
+        fu = fe -> Omics.Strin.get_1(fe, " /// ")
 
     elseif id == 5175 || id == 6244 || id == 11532 || id == 17586
 
@@ -251,13 +251,13 @@ function ma(bl_th, pl)
 
         co = "GeneSymbol"
 
-        fu = fe -> Omics.Strin.split_get(fe, ' ', 1)
+        fu = fe -> Omics.Strin.get_1(fe)
 
     elseif id == 16209
 
         co = "gene_assignment"
 
-        fu = fe -> _get_slash_slash_2(Omics.Strin.split_get(fe, " /// ", 1))
+        fu = fe -> _get_slash_slash_2(Omics.Strin.get_1(fe, " /// "))
 
     elseif id == 17585 || id == 17586
 

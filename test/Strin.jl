@@ -1,10 +1,12 @@
+using Dates: Date
+
 using Test: @test
 
 using Omics
 
 # ---- #
 
-for ba in (
+for st in (
     "",
     "α",
     "π",
@@ -41,25 +43,35 @@ for ba in (
     "~",
 )
 
-    @test Omics.Strin.is_bad(ba)
+    @test Omics.Strin.is_bad(st)
 
-    @test Omics.Strin.is_bad(ba^2)
+    @test Omics.Strin.is_bad(st^2)
 
-    @test !Omics.Strin.is_bad("A$ba")
+    @test !Omics.Strin.is_bad("A$st")
 
-    @test !Omics.Strin.is_bad("$(ba)B")
+    @test !Omics.Strin.is_bad("$(st)B")
 
-    @test !Omics.Strin.is_bad("A$(ba)B")
+    @test !Omics.Strin.is_bad("A$(st)B")
 
 end
 
 # ---- #
 
-for (st, re) in (
-    (" less  is   more    ", "_less__is___more____"),
-    ("    DNA   RNA  protein ", "____dna___rna__protein_"),
-    ("i'm on the path", "i_m_on_the_path"),
-)
+for (st, re) in (("a/b", "a_b"),)
+
+    @test Omics.Strin.slash(st) === re
+
+end
+
+# ---- #
+
+const S1 = " less  is   more    "
+
+const S2 = "    DNA   RNA  protein "
+
+# ---- #
+
+for (st, re) in ((S1, "_less__is___more____"), (S2, "____dna___rna__protein_"))
 
     @test Omics.Strin.lower(st) === re
 
@@ -68,10 +80,10 @@ end
 # ---- #
 
 for (st, re) in (
-    (" less  is   more    ", "Less Is More"),
-    ("    DNA   RNA  protein ", "DNA RNA Protein"),
-    ("i'm on a path", "I'm on a Path"),
-    ("i'M ON A path", "I'M ON A Path"),
+    (S1, " Less  Is   More    "),
+    (S2, "    DNA   RNA  Protein "),
+    ("i'm on the path", "I'm on the Path"),
+    ("i'M ON THE path", "I'M ON THE Path"),
     ("1st", "1st"),
     ("1ST", "1ST"),
     ("2nd", "2nd"),
@@ -88,6 +100,14 @@ end
 
 # ---- #
 
+for (st, re) in ((" a  b   ", "a b"),)
+
+    @test Omics.Strin.stri(st) === re
+
+end
+
+# ---- #
+
 const LO = "1234567890"
 
 for (uc, re) in ((1, "1..."), (2, "12..."), (11, LO))
@@ -98,23 +118,46 @@ end
 
 # ---- #
 
-const ST = "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z"
-
-# 433.211 ns (3 allocations: 1.23 KiB)
-# 44.862 ns (2 allocations: 256 bytes)
-# 433.839 ns (3 allocations: 1.23 KiB)
-# 63.776 ns (2 allocations: 256 bytes)
-# 430.487 ns (3 allocations: 1.23 KiB)
-# 77.276 ns (2 allocations: 256 bytes)
-# 430.065 ns (3 allocations: 1.23 KiB)
-# 430.065 ns (3 allocations: 1.23 KiB)
 for (id, re) in ((1, "a"), (2, "b"), (3, "c"), (26, "z"))
 
-    @test Omics.Strin.split_get(ST, '.', id) == re
+    @test Omics.Strin.ge("a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z", id, '.') ==
+          re
 
-    #@btime split(ST, '.')[$id]
+end
 
-    #@btime Omics.Strin.split_get(ST, '.', $id)
+# ---- #
+
+const ST = "a b c"
+
+# ---- #
+
+for (st, re) in ((ST, "a"),)
+
+    @test Omics.Strin.get_1(st) == re
+
+end
+
+# ---- #
+
+for (st, re) in ((ST, "c"),)
+
+    @test Omics.Strin.get_end(st) == re
+
+end
+
+# ---- #
+
+for (st, re) in ((ST, "b c"),)
+
+    @test Omics.Strin.trim_1(st) == re
+
+end
+
+# ---- #
+
+for (st, re) in ((ST, "a b"),)
+
+    @test Omics.Strin.trim_end(st) == re
 
 end
 
@@ -138,12 +181,16 @@ end
 
 # ---- #
 
-@test Omics.Strin.chain(('A', "Bb", "Cc")) === "A · Bb · Cc"
+for (st_, re) in ((('A', "Bb", "Cc"), "A · Bb · Cc"),)
+
+    @test Omics.Strin.chain(st_) === re
+
+end
 
 # ---- #
 
-Omics.Strin.date("2024 10 28")
+for (st, re) in (("2024 10 28", Date("2024-10-28")),)
 
-# ---- #
+    @test Omics.Strin.date("2024 10 28") === re
 
-@test Omics.Strin.shorten(pi) === "3.1"
+end

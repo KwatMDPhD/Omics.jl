@@ -166,7 +166,7 @@ function report()
 
     end
 
-    @info "$(Omics.Strin.coun(length(NO_), "node")) ($(sum(!isempty, CL___)) classed, $ud decreasing, and $ui increasing)." NO_
+    @info "$(Omics.Strin.coun(length(NO_), "node")) ($(count(!isempty, CL___)) classed, $ud decreasing, and $ui increasing)." NO_
 
     @info "$(Omics.Strin.coun(length(ED_), "edge"))." ED_
 
@@ -179,7 +179,7 @@ function _elementize(no, cl_)
     Dict(
         "data" => Dict("id" => no, "weight" => 0),
         "classes" => if contains(no, de)
-            ("ho", Omics.Strin.split_get(no, de, 2), cl_...)
+            ("ho", Omics.Strin.get_end(no, de), cl_...)
         else
             ("no", cl_...)
         end,
