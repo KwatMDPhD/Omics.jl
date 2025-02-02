@@ -43,7 +43,7 @@ end
 
 # ---- #
 
-# 26.667 μs (478 allocations: 187.80 KiB)
+# 26.500 μs (478 allocations: 187.80 KiB)
 
 for ur in (100,)
 
@@ -72,10 +72,10 @@ end
 
 # ---- #
 
-# 792.117 ns (22 allocations: 2.02 KiB)
-# 776.291 ns (22 allocations: 1.97 KiB)
-# 776.442 ns (22 allocations: 1.95 KiB)
-# 735.680 ns (22 allocations: 1.92 KiB)
+# 711.029 ns (22 allocations: 2.02 KiB)
+# 703.199 ns (22 allocations: 1.97 KiB)
+# 712.475 ns (22 allocations: 1.95 KiB)
+# 680.099 ns (22 allocations: 1.92 KiB)
 
 for (fi, f1_, s1_, v1, f2_, s2_, v2, re) in (
     (
