@@ -12,6 +12,10 @@ const SO = Omics.GEO.make_soft("GSE122404")
 
 const DA = joinpath(pkgdir(Omics), "data", "GEO")
 
+# ---- #
+
+# 369.377 ms (10622 allocations: 54.01 MiB)
+
 const GZ = joinpath(DA, SO)
 
 const BL_TH = Omics.GEO.rea(GZ)
@@ -51,12 +55,24 @@ const PL = "GPL16686"
 
 @test length(BL_TH["SAMPLE"]["GSM3466115"]) === 37
 
-# 369.377 ms (10622 allocations: 54.01 MiB)
 #@btime Omics.GEO.rea(GZ);
 
 # ---- #
 
-@test Omics.GEO.get_sample(BL_TH) == [
+# 4.446 μs (6 allocations: 768 bytes)
+
+@test Omics.GEO.get_characteristic(BL_TH) == (
+    ["cell type"],
+    [
+        "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant"
+    ],
+)
+
+#@btime Omics.GEO.get_characteristic(BL_TH);
+
+# ---- #
+
+@test map(Omics.GEO._name_sample, values(BL_TH["SAMPLE"])) == [
     "GSM3466115 D458_Sensitive_DMSO_1"
     "GSM3466116 D458_Sensitive_DMSO_2"
     "GSM3466117 D458_Sensitive_DMSO_3"
@@ -79,42 +95,22 @@ const PL = "GPL16686"
     "GSM3466134 D458_Resistant_JQ1_5"
 ]
 
-# 903.463 ns (22 allocations: 1.23 KiB)
-#@btime Omics.GEO.get_sample(BL_TH);
-
 # ---- #
 
-@test Omics.GEO.get_characteristic(BL_TH) == (
-    ["cell type"],
-    [
-        "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant"
-    ],
-)
-
-# 9.875 μs (746 allocations: 18.09 KiB)
-#@btime Omics.GEO.get_characteristic(BL_TH);
-
-# ---- #
-
-@test Omics.GEO.get_platform(BL_TH) === PL
-
-# 36.924 ns (2 allocations: 64 bytes)
-#@btime Omics.GEO.get_platform(BL_TH);
-
-# ---- #
+# 211.504 ms (4829272 allocations: 456.40 MiB)
 
 @test size.(Omics.GEO.get_feature(BL_TH, PL)) === ((53617,), (20,), (53617, 20))
 
-# 223.606 ms (4829306 allocations: 463.28 MiB)
 #@btime Omics.GEO.get_feature(BL_TH, PL);
 
 # ---- #
+
+# 272.654 ms (2936036 allocations: 226.96 MiB)
 
 const FE_GE = Omics.GEO.ma(BL_TH, PL)
 
 @test length(FE_GE) === 17623
 
-# 266.525 ms (2936036 allocations: 226.96 MiB)
 #@btime Omics.GEO.ma(BL_TH, PL);
 
 # ---- #

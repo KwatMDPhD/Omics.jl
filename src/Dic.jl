@@ -6,13 +6,15 @@ using OrderedCollections: OrderedDict
 
 using TOML: parsefile as parsefil
 
+using ..Omics
+
 function set_with_suffix!(ke_va, ke, va)
 
     uk = 1
 
     while haskey(ke_va, ke)
 
-        ke = "$(isone(uk) ? ke : rsplit(ke, '.'; limit = 2)[1]).$(uk += 1)"
+        ke = "$(isone(uk) ? ke : Omics.Strin.trim_end(ke, '.')).$(uk += 1)"
 
     end
 
@@ -21,26 +23,6 @@ function set_with_suffix!(ke_va, ke, va)
 end
 
 function index(an_)
-
-    an_id = Dict{eltype(an_), Int}()
-
-    id = 0
-
-    for an in an_
-
-        if !haskey(an_id, an)
-
-            an_id[an] = id += 1
-
-        end
-
-    end
-
-    an_id
-
-end
-
-function inde(an_)
 
     an_id_ = Dict{eltype(an_), Vector{Int}}()
 
@@ -101,11 +83,11 @@ function rea(fi, dicttype = OrderedDict)
 
 end
 
-function writ(js, ke_va, id = 2)
+function writ(js, ke_va, us = 2)
 
     open(js, "w") do io
 
-        print(io, ke_va, id)
+        print(io, ke_va, us)
 
     end
 

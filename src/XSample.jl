@@ -142,7 +142,7 @@ end
 
 function collapse(fu, ty, f1_, v1)
 
-    f1_i1_ = Omics.Dic.inde(f1_)
+    f1_i1_ = Omics.Dic.index(f1_)
 
     f2_ = sort!(collect(keys(f1_i1_)))
 
@@ -220,7 +220,7 @@ function process(
 
 end
 
-function write_plot(pr, nf, fe_, ns, sa_, nv, vf)
+function writ(pr, nf, fe_, ns, sa_, nv, vf)
 
     Omics.Table.writ("$pr.tsv", Omics.Table.make(nf, fe_, sa_, vf))
 
@@ -250,7 +250,7 @@ function write_plot(pr, nf, fe_, ns, sa_, nv, vf)
 
 end
 
-function write_plot(di, ns, sa_, ch_, vc, nf, fe_, vf, nt, ps_, pf_)
+function writ(di, ns, sa_, ch_, vc, nf, fe_, vf, nt, ps_, pf_)
 
     ts = joinpath(di, "$ns.ch.tsv")
 
@@ -260,7 +260,7 @@ function write_plot(di, ns, sa_, ch_, vc, nf, fe_, vf, nt, ps_, pf_)
 
     pr = joinpath(di, "$ns.fe")
 
-    write_plot(pr, nf, fe_, ns, sa_, "Value", vf)
+    writ(pr, nf, fe_, ns, sa_, "Value", vf)
 
     Omics.Dic.writ(
         joinpath(di, "$ns.json"),
@@ -297,9 +297,9 @@ function joi(fi, f1_, s1_, v1, f2_, s2_, v2)
 
     v3 = fill(fi, lastindex(f3_), lastindex(s3_))
 
-    f3_id = Omics.Dic.index(f3_)
+    f3_id = Dict(fe => id for (id, fe) in enumerate(f3_))
 
-    s3_id = Omics.Dic.index(s3_)
+    s3_id = Dict(sa => id for (id, sa) in enumerate(s3_))
 
     for is in eachindex(s1_)
 

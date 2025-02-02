@@ -35,7 +35,7 @@ function rea(so)
 
         li = readline(io; keep = false)
 
-        if li[1] == '^'
+        if startswith(li, '^')
 
             bl, th = eachsplit(li[2:end], de; limit = 2)
 
@@ -73,18 +73,6 @@ function rea(so)
 
 end
 
-function _name_sample(ke_va)
-
-    "$(ke_va["!Sample_geo_accession"]) $(ke_va["!Sample_title"])"
-
-end
-
-function get_sample(bl_th)
-
-    map(_name_sample, values(bl_th["SAMPLE"]))
-
-end
-
 function get_characteristic(bl_th)
 
     ke_va__ = values(bl_th["SAMPLE"])
@@ -93,7 +81,7 @@ function get_characteristic(bl_th)
 
     for ke_va in ke_va__, ke in keys(ke_va)
 
-        if ke[1:2] == "ch"
+        if startswith(ke, "ch")
 
             push!(ch_, ke)
 
@@ -101,23 +89,21 @@ function get_characteristic(bl_th)
 
     end
 
-    unique!(ch_)
-
-    vc = [get(ke_va, ch, "") for ch in ch_, ke_va in ke_va__]
+    vc = [get(ke_va, ch, "") for ch in unique!(ch_), ke_va in ke_va__]
 
     map!(ch -> ch[3:end], ch_, ch_), vc
-
-end
-
-function get_platform(bl_th)
-
-    collect(keys(bl_th["PLATFORM"]))[]
 
 end
 
 function _each(bo)
 
     (split(li, '\t') for li in eachsplit(bo, '\n'; keepempty = false))
+
+end
+
+function _name_sample(ke_va)
+
+    "$(ke_va["!Sample_geo_accession"]) $(ke_va["!Sample_title"])"
 
 end
 
@@ -136,7 +122,7 @@ function get_feature(bl_th, pl)
 
     se_ = falses(uf)
 
-    fe_ie = Omics.Dic.index(fe_)
+    fe_ie = Dict(fe => ie for (ie, fe) in enumerate(fe_))
 
     for is in eachindex(ke_va__)
 
@@ -154,7 +140,6 @@ function get_feature(bl_th, pl)
 
             end
 
-            # TODO: Check if column 1 is always for features
             ie = fe_ie[sp_[1]]
 
             vf[ie, is] = parse(Float64, va)
@@ -302,7 +287,6 @@ function ma(bl_th, pl)
 
         if !Omics.Strin.is_bad(fe)
 
-            # TODO: Check if column 1 is always for features
             fe_ge[sp_[1]] = fu(fe)
 
         end
@@ -313,8 +297,16 @@ function ma(bl_th, pl)
 
 end
 
+function get_sample_character(so)
+
+    bl_th = rea(so)
+
+    bl_th, map(_name_sample, values(bl_th["SAMPLE"])), get_characteristic(bl_th)...
+
+end
+
 function read_process_write_plot(
-    pr,
+    di,
     so,
     pl = "";
     ns = "All",
@@ -324,15 +316,11 @@ function read_process_write_plot(
     pf_ = (),
 )
 
-    bl_th = rea(so)
-
-    sc_ = get_sample(bl_th)
-
-    ch_, vc = get_characteristic(bl_th)
+    bl_th, sc_, ch_, vc = get_sample_character(so)
 
     if isempty(pl)
 
-        pl = get_platform(bl_th)
+        pl = collect(keys(bl_th["PLATFORM"]))[]
 
     end
 
@@ -342,9 +330,69 @@ function read_process_write_plot(
 
     fe_, vf = Omics.XSample.process(fe_, vf; f1_f2 = ma(bl_th, pl), lo)
 
-    Omics.XSample.write_plot(pr, ns, sf_, ch_, vc, pl, fe_, vf, nt, ps_, pf_)
+    Omics.XSample.writ(di, ns, sf_, ch_, vc, pl, fe_, vf, nt, ps_, pf_)
 
     sf_, ch_, vc, pl, fe_, vf
+
+end
+
+function get_gpl_1_2(di, so, p1, p2; ke_ar...)
+
+    s1_, c1_, h1, _, f1_, e1 = read_process_write_plot(di, so, p1; ns = p1, ke_ar...)
+
+    s2_, c2_, h2, _, f2_, e2 = read_process_write_plot(di, so, p2; ns = p2, ke_ar...)
+
+    @assert c1_ == c2_
+
+    @assert h1 == h2
+
+    rm(joinpath(di, "$p1.json"))
+
+    rm(joinpath(di, "$p2.json"))
+
+    fu = sa -> trim_1(trim_end(sa))
+
+    sa_ = map(fu, s1_)
+
+    @assert sa_ == map(fu, s2_)
+
+    map(id -> "$(get_1(s1_[id]))$(get_1(s2_[id])) $(sa_[id])", eachindex(s1_)),
+    c1_,
+    h1,
+    "$p1$p2",
+    Omics.XSample.process(vcat(f1_, f2_), vcat(e1, e2))...
+
+end
+
+function read_raw(ra, cf, cv; ke_ar...)
+
+    f1_ = String[]
+
+    sa_ = String[]
+
+    vf___ = Vector{Float64}[]
+
+    for gz in readdir(ra)
+
+        push!(sa_, gz[1:(end - 7)])
+
+        ta = Omics.Table.rea(joinpath(ra, gz); ke_ar...)
+
+        f2_ = ta[!, cf]
+
+        if isempty(f1_)
+
+            f1_ = f2_
+
+        end
+
+        @assert f1_ == f2_
+
+        push!(vf___, ta[!, cv])
+
+    end
+
+    f1_, sa_, hcat(vf___...)
 
 end
 

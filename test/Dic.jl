@@ -6,6 +6,9 @@ using Omics
 
 # ---- #
 
+# 101.530 μs (4155 allocations: 234.26 KiB)
+# 101.331 μs (4146 allocations: 229.86 KiB)
+
 for (ke, va, re) in (
     (
         "Existing",
@@ -25,40 +28,16 @@ for (ke, va, re) in (
 
     @test ke_va == re
 
-    # 97.064 μs (4146 allocations: 233.79 KiB)
-    # 96.797 μs (4138 allocations: 229.40 KiB)
     #@btime Omics.Dic.set_with_suffix!($ke_va, $ke, $va) evals = 1000
 
 end
 
 # ---- #
 
-# 68.011 ns (4 allocations: 384 bytes)
-# 77.797 ns (4 allocations: 384 bytes)
-# 77.583 ns (4 allocations: 384 bytes)
-for (an_, re) in (
-    (['a', 'b', 'c', 'd'], Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4)),
-    (
-        ['a', 'a', 'b', 'b', 'c', 'c', 'd', 'd'],
-        Dict('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4),
-    ),
-    (
-        ['a', 'a', 'c', 'c', 'd', 'd', 'b', 'b'],
-        Dict('a' => 1, 'c' => 2, 'd' => 3, 'b' => 4),
-    ),
-)
+# 146.522 ns (10 allocations: 768 bytes)
+# 165.768 ns (10 allocations: 768 bytes)
+# 149.686 ns (10 allocations: 832 bytes)
 
-    @test Omics.Dic.index(an_) == re
-
-    #@btime Omics.Dic.index($an_)
-
-end
-
-# ---- #
-
-# 154.895 ns (10 allocations: 768 bytes)
-# 173.968 ns (10 allocations: 768 bytes)
-# 151.840 ns (10 allocations: 832 bytes)
 for (an_, re) in (
     (['a', 'b', 'b', 'c', 'c', 'c'], Dict('a' => [1], 'b' => [2, 3], 'c' => [4, 5, 6])),
     (
@@ -68,9 +47,9 @@ for (an_, re) in (
     ([1, 2, 3, 3, 2, 1], Dict(1 => [1, 6], 2 => [2, 5], 3 => [3, 4])),
 )
 
-    @test Omics.Dic.inde(an_) == re
+    @test Omics.Dic.index(an_) == re
 
-    #@btime Omics.Dic.inde($an_)
+    #@btime Omics.Dic.index($an_)
 
 end
 
@@ -87,12 +66,13 @@ end
 
 # ---- #
 
+# 798.041 ns (16 allocations: 1.50 KiB)
+# 799.126 ns (16 allocations: 1.50 KiB)
+
 const K1_V1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
 
 const K2_V2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
 
-# 1.008 μs (16 allocations: 1.50 KiB)
-# 1.008 μs (16 allocations: 1.50 KiB)
 for (k1_v1, k2_v2, re) in (
     (K1_V1, K2_V2, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))),
     (K2_V2, K1_V1, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))),
