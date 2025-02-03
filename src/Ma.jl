@@ -4,7 +4,7 @@ function make(ta, ck_, cv)
 
     ke_va = Dict{String, String}()
 
-    tk = Matrix(ta[!, ck_])
+    ke = Matrix(ta[!, ck_])
 
     va_ = ta[!, cv]
 
@@ -20,15 +20,15 @@ function make(ta, ck_, cv)
 
         for ik in eachindex(ck_)
 
-            ke = tk[iv, ik]
+            ky = ke[iv, ik]
 
-            if ismissing(ke)
+            if ismissing(ky)
 
                 continue
 
             end
 
-            for sp in eachsplit(ke, '|')
+            for sp in eachsplit(ky, '|')
 
                 ke_va[sp] = va
 
