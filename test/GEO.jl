@@ -4,13 +4,13 @@ using Omics
 
 # ---- #
 
-const SO = Omics.GEO.make_soft("GSE122404")
-
-@test SO === "GSE122404_family.soft.gz"
+const DA = joinpath(pkgdir(Omics), "data", "GEO")
 
 # ---- #
 
-const DA = joinpath(pkgdir(Omics), "data", "GEO")
+const SO = Omics.GEO.make_soft("GSE122404")
+
+@test SO === "GSE122404_family.soft.gz"
 
 # ---- #
 
@@ -20,7 +20,13 @@ const GZ = joinpath(DA, SO)
 
 const BL_TH = Omics.GEO.rea(GZ)
 
+#@btime Omics.GEO.rea(GZ);
+
+# ---- #
+
 const PL = "GPL16686"
+
+# ---- #
 
 @test collect(keys(BL_TH["PLATFORM"])) == [PL]
 
@@ -29,6 +35,12 @@ const PL = "GPL16686"
 @test parse(Int, BL_TH["PLATFORM"][PL]["!Platform_data_row_count"]) ===
       lastindex(collect(Omics.GEO._each(BL_TH["PLATFORM"][PL]["bo"]))) ===
       53981
+
+# ---- #
+
+# 903.526 ns (22 allocations: 1.23 KiB)
+
+@test length(BL_TH["SAMPLE"]["GSM3466115"]) === 37
 
 @test collect(keys(BL_TH["SAMPLE"])) == [
     "GSM3466115"
@@ -52,14 +64,6 @@ const PL = "GPL16686"
     "GSM3466133"
     "GSM3466134"
 ]
-
-@test length(BL_TH["SAMPLE"]["GSM3466115"]) === 37
-
-#@btime Omics.GEO.rea(GZ);
-
-# ---- #
-
-# 903.526 ns (22 allocations: 1.23 KiB)
 
 @test Omics.GEO.get_sample(BL_TH) == [
     "GSM3466115 D458_Sensitive_DMSO_1"
@@ -111,8 +115,6 @@ const PL = "GPL16686"
 
 # 264.113 ms (2744082 allocations: 224.43 MiB)
 
-const FE_GE = Omics.GEO.ma(BL_TH, PL)
-
-@test length(FE_GE) === 17623
+@test length(Omics.GEO.ma(BL_TH, PL)) === 17623
 
 #@btime Omics.GEO.ma(BL_TH, PL);

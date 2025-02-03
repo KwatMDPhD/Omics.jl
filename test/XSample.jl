@@ -1,74 +1,14 @@
-using Random: randstring, seed!
-
-using StatsBase: mean
-
 using Test: @test
 
 using Omics
 
 # ---- #
 
-# 15.708 μs (22 allocations: 2.03 KiB)
-
-for (vt_, vf, mi, re) in (([1, 2, 1, 2], rand(1000, 4), 1.0, trues(1000)),)
-
-    @test Omics.XSample.select_non_nan(vt_, vf, mi) == re
-
-    @btime Omics.XSample.select_non_nan($vt_, $vf, $mi)
-
-end
+Omics.XSample.rea
 
 # ---- #
 
-const V1 = [
-    1 2
-    10 20
-    100 200
-]
-
-for (f1_, re) in (
-    (["R1", "R1", "R2"], (
-        ["R1", "R2"],
-        [
-            5.5 11
-            100 200
-        ],
-    )),
-    (["R1", "R1", "R1"], (["R1"], [37.0 74])),
-)
-
-    @test Omics.XSample.collapse(mean, Float64, f1_, V1) == re
-
-end
-
-# ---- #
-
-# 26.500 μs (478 allocations: 187.80 KiB)
-
-for ur in (100,)
-
-    seed!(20230920)
-
-    @btime Omics.XSample.collapse(
-        mean,
-        Float64,
-        $([randstring('A':'G', 3) for _ in 1:ur]),
-        $(rand(ur, ur)),
-    )
-
-end
-
-# ---- #
-
-# 5.792 μs (0 allocations: 0 bytes)
-
-seed!(20250123)
-
-for vf in (rand(100, 10),)
-
-    @btime Omics.XSample.shift_log2!($vf)
-
-end
+Omics.XSample.align
 
 # ---- #
 
@@ -180,26 +120,6 @@ for (fi, f1_, s1_, v1, f2_, s2_, v2, re) in (
 
     @test Omics.XSample.joi(fi, f1_, s1_, v1, f2_, s2_, v2) == re
 
-    @btime Omics.XSample.joi($fi, $f1_, $s1_, $v1, $f2_, $s2_, $v2)
-
-end
-
-# ---- #
-
-for (gs, nt, rc, rf) in (
-    ("GSE13534", "", (0, 4), (14295, 4)),
-    ("GSE16059", "diagnonsis", (3, 88), (31773, 88)),
-    ("GSE67311", "diagnosis", (9, 142), (31403, 142)),
-)
-
-    sa_, ch_, vc, nf, fe_, vf = Omics.GEO.read_process_write_plot(
-        mkpath(joinpath(tempdir(), gs)),
-        joinpath(DA, Omics.GEO.make_soft(gs));
-        nt,
-    )
-
-    @test size(vc) === rc
-
-    @test size(vf) === rf
+    #@btime Omics.XSample.joi($fi, $f1_, $s1_, $v1, $f2_, $s2_, $v2)
 
 end

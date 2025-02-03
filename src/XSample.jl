@@ -1,238 +1,24 @@
 module XSample
 
-using OrderedCollections: OrderedDict
-
-using StatsBase: mean, std
-
-using ..Omics
-
-function coun(he::AbstractString, vc_)
-
-    bo = join(
-        "$uu $un.\n" for (uu, un) in sort(map(un -> (count(==(un), vc_), un), unique(vc_)))
-    )
-
-    @info "$he\n$bo"
-
-end
-
-function coun(ch_, vc___)
-
-    for id in sortperm(vc___; by = an_ -> lastindex(unique(an_)), rev = true)
-
-        coun("🔦 ($id) $(ch_[id])", vc___[id])
-
-    end
-
-end
-
-function shift!(va_)
-
-    mi = minimum(va_)
-
-    map!(nu -> nu - mi, va_, va_)
-
-end
-
-function shift_log2!(va_)
-
-    mi = minimum(va_)
-
-    map!(nu -> log2(nu - mi + 1), va_, va_)
-
-end
-
-function standardize_clamp!(va_, st)
-
-    if allequal(va_)
-
-        @warn "All values are $(va_[1])."
-
-        fill!(va_, 0.0)
-
-    else
-
-        Omics.Normalization.normalize_with_0!(va_)
-
-        clamp!(va_, -st, st)
-
-    end
-
-end
-
-function standardize_clamp!(::AbstractVector{<:Integer}, ::Any) end
-
-function rank_01!(va_)
-
-    Omics.Normalization.normalize_with_125254!(va_)
-
-    Omics.Normalization.normalize_with_01!(va_)
-
-end
-
-function index_feature(fe_, vf, id_)
-
-    fe_[id_], vf[id_, :]
-
-end
-
-function select_non_nan(vt_, vf, mi)
-
-    is___ = map(un -> findall(==(un), vt_), unique(vt_))
-
-    mi_ = map(is_ -> lastindex(is_) * mi, is___)
-
-    map(
-        vf_ -> all(iu -> mi_[iu] <= count(!isnan, view(vf_, is___[iu])), eachindex(is___)),
-        eachrow(vf),
-    )
-
-end
-
-function select(::Any, vf, us::Integer)
-
-    size(vf, 1) <= us ? axes(vf, 1) :
-    Omics.Extreme.ge(map(std, eachrow(vf)), us)[(us + 1):end]
-
-end
-
-function select(fe_, ::Any, se_)
-
-    indexin(intersect(fe_, se_), fe_)
-
-end
-
-function rea(ta, nf, sa_)
+function rea(ta, co, sa_)
 
     na_ = names(ta)
 
-    ta[!, nf], Matrix(ta[!, map(sa -> findall(contains(sa), na_)[], sa_)])
+    ta[!, co], Matrix(ta[!, map(sa -> findall(contains(sa), na_)[], sa_)])
 
 end
 
-function collapse(fu, ty, f1_, v1)
+function align(fu, s1_, v1, s2_, v2)
 
-    f1_i1_ = Omics.Dic.index(f1_)
+    s3_ = map(fu, s1_)
 
-    f2_ = sort!(collect(keys(f1_i1_)))
+    it_ = intersect(s3_, s2_)
 
-    v2 = Matrix{ty}(undef, lastindex(f2_), size(v1, 2))
+    @warn "" setdiff(union(s3_, s2_), it_)
 
-    for i2 in eachindex(f2_)
+    i1_ = indexin(it_, s3_)
 
-        i1_ = f1_i1_[f2_[i2]]
-
-        v2[i2, :] =
-            isone(lastindex(i1_)) ? v1[i1_[], :] : [fu(v1_) for v1_ in eachcol(v1[i1_, :])]
-
-    end
-
-    f2_, v2
-
-end
-
-function process(
-    fe_,
-    vf;
-    f1_f2 = Dict{String, String}(),
-    vt_ = trues(size(vf, 2)),
-    mi = 1.0,
-    lo = false,
-)
-
-    fe_ = copy(fe_)
-
-    vf = copy(vf)
-
-    @info "Processing $(lastindex(fe_))"
-
-    if any(isnan, vf)
-
-        fe_, vf = index_feature(fe_, vf, select_non_nan(vt_, vf, mi))
-
-        @info "Selected non-NaN $(lastindex(fe_))."
-
-    end
-
-    if !isempty(f1_f2)
-
-        map!(fe -> Omics.Ma.go(f1_f2, fe), fe_, fe_)
-
-        Omics.Ma.lo(fe_)
-
-    end
-
-    if !allunique(fe_)
-
-        fe_, vf = collapse(mean, Float64, fe_, vf)
-
-        @info "Collapsed into $(lastindex(fe_))."
-
-    end
-
-    vf___ = eachrow(vf)
-
-    if any(allequal, vf___)
-
-        fe_, vf = index_feature(fe_, vf, findall(!allequal, vf___))
-
-        @info "Kept nonconstant $(lastindex(fe_))."
-
-    end
-
-    if lo
-
-        shift_log2!(vf)
-
-        @info "Log2ed."
-
-    end
-
-    fe_, vf
-
-end
-
-function writ(pr, nf, fe_, ns, sa_, nv, vf)
-
-    Omics.Table.writ("$pr.tsv", Omics.Table.make(nf, fe_, sa_, vf))
-
-    Omics.Plot.plot_heat_map(
-        "$pr.html",
-        vf;
-        ro_ = fe_,
-        co_ = sa_,
-        la = Dict(
-            "title" => Dict("text" => nv),
-            "yaxis" => Dict("title" => "$nf ($(lastindex(fe_)))"),
-            "xaxis" => Dict("title" => "$ns ($(lastindex(sa_)))"),
-        ),
-    )
-
-    Omics.Plot.plot(
-        "$pr.histogram.html",
-        (
-            Dict(
-                "type" => "histogram",
-                "x" => vec(vf),
-                "marker" => Dict("color" => Omics.Color.RE),
-            ),
-        ),
-        Dict("yaxis" => Dict("title" => "Count"), "xaxis" => Dict("title" => nv)),
-    )
-
-end
-
-function align(s1_, v1, s2_, v2, sa_ = s1_)
-
-    it_ = intersect(s1_, s2_)
-
-    @info "TODO" setdiff(union(s1_, s2_), it_)
-
-    i1_ = indexin(it_, s1_)
-
-    i2_ = indexin(it_, s2_)
-
-    sa_[i1_], v1[:, i1_], v2[:, i2_]
+    s1_[i1_], v1[:, i1_], v2[:, indexin(it_, s2_)]
 
 end
 
@@ -244,17 +30,17 @@ function joi(fi, f1_, s1_, v1, f2_, s2_, v2)
 
     v3 = fill(fi, lastindex(f3_), lastindex(s3_))
 
-    f3_id = Dict(fe => id for (id, fe) in enumerate(f3_))
+    f3_i3 = Dict(f3 => i3 for (i3, f3) in enumerate(f3_))
 
-    s3_id = Dict(sa => id for (id, sa) in enumerate(s3_))
+    s3_i3 = Dict(s3 => i3 for (i3, s3) in enumerate(s3_))
 
     for is in eachindex(s1_)
 
-        i3 = s3_id[s1_[is]]
+        i3 = s3_i3[s1_[is]]
 
         for ie in eachindex(f1_)
 
-            v3[f3_id[f1_[ie]], i3] = v1[ie, is]
+            v3[f3_i3[f1_[ie]], i3] = v1[ie, is]
 
         end
 
@@ -262,11 +48,11 @@ function joi(fi, f1_, s1_, v1, f2_, s2_, v2)
 
     for is in eachindex(s2_)
 
-        i3 = s3_id[s2_[is]]
+        i3 = s3_i3[s2_[is]]
 
         for ie in eachindex(f2_)
 
-            v3[f3_id[f2_[ie]], i3] = v2[ie, is]
+            v3[f3_i3[f2_[ie]], i3] = v2[ie, is]
 
         end
 

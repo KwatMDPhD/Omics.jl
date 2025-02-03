@@ -1,3 +1,5 @@
+using Random: seed!
+
 using Test: @test
 
 using Omics
@@ -281,3 +283,31 @@ for nu_ in (
     end
 
 end
+
+# ---- #
+
+Omics.Normalization.shift!
+
+# ---- #
+
+# 5.792 μs (0 allocations: 0 bytes)
+
+seed!(20250123)
+
+for nu_ in (rand(100, 10),)
+
+    #@btime Omics.Normalization.shift_log2!($nu_)
+
+end
+
+# ---- #
+
+Omics.Normalization.standardize_clamp!
+
+# ---- #
+
+Omics.Normalization.standardize_clamp!
+
+# ---- #
+
+Omics.Normalization.rank_01!

@@ -94,7 +94,7 @@ const CO = Dict(
 
 function _trace_target(ns, sa_, nt, vt_, st, ur)
 
-    Omics.XSample.standardize_clamp!(vt_, st)
+    Omics.Normalization.standardize_clamp!(vt_, st)
 
     ty = eltype(vt_)
 
@@ -222,7 +222,7 @@ end
 
 function _trace_feature(sa_, nf, fe_, vf, vr, st, iy, bo, wi)
 
-    foreach(vf_ -> Omics.XSample.standardize_clamp!(vf_, st), eachrow(vf))
+    foreach(vf_ -> Omics.Normalization.standardize_clamp!(vf_, st), eachrow(vf))
 
     mi, ma = eltype(vf) <: AbstractFloat ? (-st, st) : extrema(vf)
 

@@ -80,4 +80,44 @@ function normalize_with_quantile!(nu_, fr_ = (0.0, 0.5, 1.0))
 
 end
 
+function shift!(nu_)
+
+    mi = minimum(nu_)
+
+    map!(nu -> nu - mi, nu_, nu_)
+
+end
+
+function shift_log2!(nu_)
+
+    mi = minimum(nu_)
+
+    map!(nu -> log2(nu - mi + 1), nu_, nu_)
+
+end
+
+function standardize_clamp!(nu_, st)
+
+    if allequal(nu_)
+
+        @warn "All values are $(nu_[1])."
+
+        fill!(nu_, 0.0)
+
+    else
+
+        clamp!(normalize_with_0!(nu_), -st, st)
+
+    end
+
+end
+
+function standardize_clamp!(::AbstractVector{<:Integer}, ::Any) end
+
+function rank_01!(nu_)
+
+    normalize_with_01!(normalize_with_125254!(nu_))
+
+end
+
 end

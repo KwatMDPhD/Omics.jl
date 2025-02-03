@@ -164,6 +164,8 @@ function get_feature(bl_th, pl)
 
 end
 
+# TODO: Check platform logics.
+
 function _get_slash_slash_2(ge)
 
     Omics.Strin.ge(ge, 2, " // ")

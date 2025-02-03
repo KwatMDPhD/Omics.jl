@@ -74,4 +74,10 @@ include("Target.jl")
 
 include("XSample.jl")
 
+include("XSampleCharacteristic.jl")
+
+include("XSampleFeature.jl")
+
+include("XSampleSelect.jl")
+
 end
