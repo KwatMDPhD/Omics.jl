@@ -14,7 +14,13 @@ function align(fu, s1_, v1, s2_, v2)
 
     it_ = intersect(s3_, s2_)
 
-    @warn "" setdiff(union(s3_, s2_), it_)
+    di_ = setdiff(union(s3_, s2_), it_)
+
+    if !isempty(di_)
+
+        @warn "Failed to align" setdiff(s3_, it_) setdiff(s2_, it_)
+
+    end
 
     i1_ = indexin(it_, s3_)
 

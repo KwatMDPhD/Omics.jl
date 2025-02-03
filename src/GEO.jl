@@ -107,6 +107,12 @@ function get_characteristic(bl_th)
 
 end
 
+function get_platform(bl_th)
+
+    collect(keys(bl_th["PLATFORM"]))[]
+
+end
+
 function _each(bo)
 
     (split(li, '\t') for li in eachsplit(bo, '\n'; keepempty = false))

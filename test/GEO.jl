@@ -105,6 +105,14 @@ const PL = "GPL16686"
 
 # ---- #
 
+# 36.924 ns (2 allocations: 64 bytes)
+
+@test Omics.GEO.get_platform(BL_TH) === PL
+
+#@btime Omics.GEO.get_platform(BL_TH);
+
+# ---- #
+
 # 211.504 ms (4829272 allocations: 456.40 MiB)
 
 @test size.(Omics.GEO.get_feature(BL_TH, PL)) === ((53617,), (20,), (53617, 20))

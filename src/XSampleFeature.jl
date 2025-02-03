@@ -50,7 +50,7 @@ function process(
 
     if !isempty(f1_f2)
 
-        map!(fe -> Omics.Ma.go(f1_f2, fe), fe_, fe_)
+        map!(fe -> Omics.Ma.ge(f1_f2, fe), fe_, fe_)
 
         Omics.Ma.lo(fe_)
 
@@ -58,7 +58,7 @@ function process(
 
     if !allunique(fe_)
 
-        fe_, nu = Omics.XSampleSelect.collapse(mean, Float64, fe_, nu)
+        fe_, nu = collapse(mean, Float64, fe_, nu)
 
         @info "Collapsed into $(lastindex(fe_))."
 
@@ -74,7 +74,7 @@ function process(
 
     if lo
 
-        Omics.XSampleTransform.shift_log2!(nu)
+        Omics.Normalization.shift_log2!(nu)
 
         @info "Shifted and logged."
 
