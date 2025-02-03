@@ -4,54 +4,54 @@ using Omics
 
 # ---- #
 
-const HT = Omics.Table.rea(Omics.Gene.HT)
+const TH = Omics.Table.rea(Omics.Gene.TH)
 
-@test size(HT) === (43840, 54)
-
-# ---- #
-
-const ET = Omics.Table.rea(Omics.Gene.ET)
-
-@test size(ET) === (591229, 10)
+@test size(TH) === (43840, 54)
 
 # ---- #
 
-const UT = Omics.Table.rea(Omics.Gene.UT)
+const TE = Omics.Table.rea(Omics.Gene.TE)
 
-@test size(UT) === (20398, 7)
+@test size(TE) === (591229, 10)
 
-@test allunique(UT[!, 2])
+# ---- #
+
+const TU = Omics.Table.rea(Omics.Gene.TU)
+
+@test size(TU) === (20398, 7)
+
+@test allunique(TU[!, 2])
 
 # ---- #
 
 # 237.210 ms (2243074 allocations: 188.60 MiB)
 
-const HK_ = ["hgnc_id"]
+const KE_ = ["hgnc_id"]
 
-const HK_HV = Omics.Gene.map_hgnc(HK_)
+const K1_V1 = Omics.Gene.map_hgnc(KE_)
 
-@test length(HK_HV) === 43840
+@test length(K1_V1) === 43840
 
 for (ke, re) in ()
 
-    @test HK_HV[ke] === re
+    @test K1_V1[ke] === re
 
 end
 
-#@btime Omics.Gene.map_hgnc(HK_);
+#@btime Omics.Gene.map_hgnc(KE_);
 
 # ---- #
 
-# 2.683 s (38724914 allocations: 2.54 GiB)
+# 2.648 s (38724914 allocations: 2.54 GiB)
 
-const EK_EV = Omics.Gene.map_ensembl()
+const K2_V2 = Omics.Gene.map_ensembl()
 
-@test length(EK_EV) === 788360
+@test length(K2_V2) === 788360
 
 for (ke, re) in
     (("GPI-214", "GPI"), ("ENST00000303227", "GLOD5"), ("ENST00000592956.1", "SYT5"))
 
-    @test EK_EV[ke] === re
+    @test K2_V2[ke] === re
 
 end
 
@@ -61,13 +61,13 @@ end
 
 # 119.177 ms (443387 allocations: 65.41 MiB)
 
-const UK_UV = Omics.Gene.map_uniprot()
+const K3_V3 = Omics.Gene.map_uniprot()
 
-@test length(UK_UV) === 20398
+@test length(K3_V3) === 20398
 
 for (pr, ke, re) in (("CD8A", "Gene Names", ["CD8A", "MAL"]),)
 
-    @test UK_UV[pr][ke] == re
+    @test K3_V3[pr][ke] == re
 
 end
 

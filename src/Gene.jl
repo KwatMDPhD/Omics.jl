@@ -4,22 +4,22 @@ using ..Omics
 
 const _DA = pkgdir(Omics, "data", "Gene")
 
-const HT = joinpath(_DA, "hgnc.tsv.gz")
+const TH = joinpath(_DA, "hgnc.tsv.gz")
 
-const ET = joinpath(_DA, "ensembl.tsv.gz")
+const TE = joinpath(_DA, "ensembl.tsv.gz")
 
-const UT = joinpath(_DA, "uniprot.tsv.gz")
+const TU = joinpath(_DA, "uniprot.tsv.gz")
 
-function map_hgnc(hk_)
+function map_hgnc(ke_)
 
-    Omics.Ma.make(Omics.Table.rea(HT), hk_, "symbol")
+    Omics.Ma.make(Omics.Table.rea(TH), ke_, "symbol")
 
 end
 
 function map_ensembl()
 
     Omics.Ma.make(
-        Omics.Table.rea(ET),
+        Omics.Table.rea(TE),
         [
             "Transcript stable ID version",
             "Transcript stable ID",
@@ -34,7 +34,7 @@ end
 
 function map_uniprot()
 
-    ta = Omics.Table.rea(UT)
+    ta = Omics.Table.rea(TU)
 
     pr_ke = Dict{String, Dict{String, Any}}()
 
