@@ -19,7 +19,9 @@ end
 
 function select(::AbstractVector{<:AbstractString}, nu, us::Integer)
 
-    Omics.Extreme.ge(map(std, eachrow(nu)), us)[(us + 1):end]
+    ur = size(nu, 1)
+
+    ur <= us ? (1:ur) : Omics.Extreme.ge(map(std, eachrow(nu)), us)[(us + 1):end]
 
 end
 
