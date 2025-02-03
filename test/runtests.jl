@@ -24,6 +24,7 @@ for mo in (
     "HTM",
     "Information",
     "Kumo",
+    "Ma",
     "Match",
     "MatrixFactorization",
     "MutualInformation",

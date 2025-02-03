@@ -40,6 +40,8 @@ include("Information.jl")
 
 include("Kumo.jl")
 
+include("Ma.jl")
+
 include("Match.jl")
 
 include("MatrixFactorization.jl")
