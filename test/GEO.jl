@@ -14,7 +14,7 @@ const DA = joinpath(pkgdir(Omics), "data", "GEO")
 
 # ---- #
 
-# 369.377 ms (10622 allocations: 54.01 MiB)
+# 369.247 ms (10622 allocations: 54.01 MiB)
 
 const GZ = joinpath(DA, SO)
 
@@ -59,20 +59,9 @@ const PL = "GPL16686"
 
 # ---- #
 
-# 4.446 μs (6 allocations: 768 bytes)
+# 903.526 ns (22 allocations: 1.23 KiB)
 
-@test Omics.GEO.get_characteristic(BL_TH) == (
-    ["cell type"],
-    [
-        "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant"
-    ],
-)
-
-#@btime Omics.GEO.get_characteristic(BL_TH);
-
-# ---- #
-
-@test map(Omics.GEO._name_sample, values(BL_TH["SAMPLE"])) == [
+@test Omics.GEO.get_sample(BL_TH) == [
     "GSM3466115 D458_Sensitive_DMSO_1"
     "GSM3466116 D458_Sensitive_DMSO_2"
     "GSM3466117 D458_Sensitive_DMSO_3"
@@ -95,6 +84,21 @@ const PL = "GPL16686"
     "GSM3466134 D458_Resistant_JQ1_5"
 ]
 
+#@btime Omics.GEO.get_sample(BL_TH);
+
+# ---- #
+
+# 4.446 μs (6 allocations: 768 bytes)
+
+@test Omics.GEO.get_characteristic(BL_TH) == (
+    ["cell type"],
+    [
+        "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 sensitive" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant" "D458 drug tolerant"
+    ],
+)
+
+#@btime Omics.GEO.get_characteristic(BL_TH);
+
 # ---- #
 
 # 211.504 ms (4829272 allocations: 456.40 MiB)
@@ -105,30 +109,10 @@ const PL = "GPL16686"
 
 # ---- #
 
-# 272.654 ms (2936036 allocations: 226.96 MiB)
+# 264.113 ms (2744082 allocations: 224.43 MiB)
 
 const FE_GE = Omics.GEO.ma(BL_TH, PL)
 
 @test length(FE_GE) === 17623
 
 #@btime Omics.GEO.ma(BL_TH, PL);
-
-# ---- #
-
-for (gs, nt, rc, rf) in (
-    ("GSE13534", "", (0, 4), (14295, 4)),
-    ("GSE16059", "diagnonsis", (3, 88), (31773, 88)),
-    ("GSE67311", "diagnosis", (9, 142), (31403, 142)),
-)
-
-    sa_, ch_, vc, nf, fe_, vf = Omics.GEO.read_process_write_plot(
-        mkpath(joinpath(tempdir(), gs)),
-        joinpath(DA, Omics.GEO.make_soft(gs));
-        nt,
-    )
-
-    @test size(vc) === rc
-
-    @test size(vf) === rf
-
-end

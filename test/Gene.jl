@@ -24,7 +24,7 @@ const UT = Omics.Table.rea(Omics.Gene.UT)
 
 # ---- #
 
-# 236.937 ms (2330237 allocations: 189.26 MiB)
+# 237.210 ms (2243074 allocations: 188.60 MiB)
 
 const HK_ = ["hgnc_id"]
 
@@ -42,7 +42,7 @@ end
 
 # ---- #
 
-# 2.709 s (44291549 allocations: 2.46 GiB)
+# 2.683 s (38724914 allocations: 2.54 GiB)
 
 const EK_EV = Omics.Gene.map_ensembl()
 

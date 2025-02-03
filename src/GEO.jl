@@ -73,6 +73,18 @@ function rea(so)
 
 end
 
+function _name_sample(ke_va)
+
+    "$(ke_va["!Sample_geo_accession"]) $(ke_va["!Sample_title"])"
+
+end
+
+function get_sample(bl_th)
+
+    map(_name_sample, values(bl_th["SAMPLE"]))
+
+end
+
 function get_characteristic(bl_th)
 
     ke_va__ = values(bl_th["SAMPLE"])
@@ -98,12 +110,6 @@ end
 function _each(bo)
 
     (split(li, '\t') for li in eachsplit(bo, '\n'; keepempty = false))
-
-end
-
-function _name_sample(ke_va)
-
-    "$(ke_va["!Sample_geo_accession"]) $(ke_va["!Sample_title"])"
 
 end
 
@@ -158,9 +164,9 @@ function get_feature(bl_th, pl)
 
 end
 
-function _get_slash_slash_2(fe)
+function _get_slash_slash_2(ge)
 
-    Omics.Strin.ge(fe, 2, " // ")
+    Omics.Strin.ge(ge, 2, " // ")
 
 end
 
@@ -182,7 +188,11 @@ function ma(bl_th, pl)
 
         co = "Gene Symbol"
 
-        fu = fe -> Omics.Strin.get_1(fe, " /// ")
+        fu = ge -> Omics.Strin.get_1(ge, " /// ")
+
+    elseif id == 1708 || id == 6480 || id == 10332 || id == 17077
+
+        co = "GENE_SYMBOL"
 
     elseif id == 5175 || id == 6244 || id == 11532 || id == 17586
 
@@ -204,9 +214,9 @@ function ma(bl_th, pl)
 
         co = "GB_ACC"
 
-        hg_ge = Omics.Gene.map_hgnc(["refseq_accession", "ena"])
+        g1_g2 = Omics.Gene.map_hgnc(["refseq_accession", "ena"])
 
-        fu = fe -> get(hg_ge, fe, fe)
+        fu = ge -> Omics.Ma.ge(g1_g2, ge)
 
     elseif id == 9741 || id == 9742
 
@@ -216,33 +226,30 @@ function ma(bl_th, pl)
 
         co = "ENTREZ_GENE_ID"
 
-        hg_ge = Omics.Gene.map_hgnc(["entrez_id"])
+        g1_g2 = Omics.Gene.map_hgnc(["entrez_id"])
 
-        fu = fe -> get(hg_ge, fe, fe)
+        fu = ge -> Omics.Ma.ge(g1_g2, ge)
 
-    elseif id == 32416
+    elseif id == 13669
 
-        co = "SPOT_ID"
+        co = "Description"
 
-        hg_ge = Omics.Gene.map_hgnc(["entrez_id"])
-
-        fu = fe -> get(hg_ge, fe, fe)
-
-    elseif id == 1708 || id == 6480 || id == 10332 || id == 17077
-
-        co = "GENE_SYMBOL"
+        fu =
+            ge ->
+                contains(ge, '(') ?
+                ge[(findlast(==('('), ge) + 1):(findlast(==(')'), ge) - 1)] : ge
 
     elseif id == 15048
 
         co = "GeneSymbol"
 
-        fu = fe -> Omics.Strin.get_1(fe)
+        fu = ge -> Omics.Strin.get_1(ge)
 
     elseif id == 16209
 
         co = "gene_assignment"
 
-        fu = fe -> _get_slash_slash_2(Omics.Strin.get_1(fe, " /// "))
+        fu = ge -> _get_slash_slash_2(Omics.Strin.get_1(ge, " /// "))
 
     elseif id == 17585 || id == 17586
 
@@ -252,24 +259,23 @@ function ma(bl_th, pl)
 
         co = "gene_assignment"
 
-        fu = fe -> contains(fe, "AceView") ? "" : _get_slash_slash_2(fe)
+        fu = ge -> contains(ge, "AceView") ? "_$ge" : _get_slash_slash_2(ge)
 
     elseif id == 25336
 
         co = "ORF"
 
+    elseif id == 32416
+
+        co = "SPOT_ID"
+
+        g1_g2 = Omics.Gene.map_hgnc(["entrez_id"])
+
+        fu = ge -> Omics.Ma.ge(g1_g2, ge)
+
     elseif id == 10999 || id == 16791
 
         error("$pl lacks gene mapping.")
-
-    elseif id == 13669
-
-        co = "Description"
-
-        fu =
-            fe ->
-                contains(fe, '(') ?
-                fe[(findlast(==('('), fe) + 1):(findlast(==(')'), fe) - 1)] : fe
 
     else
 
@@ -283,116 +289,17 @@ function ma(bl_th, pl)
 
     for sp_ in _each(bl_th["PLATFORM"][pl]["bo"])
 
-        fe = sp_[ic]
+        ge = sp_[ic]
 
-        if !Omics.Strin.is_bad(fe)
+        if !Omics.Strin.is_bad(ge)
 
-            fe_ge[sp_[1]] = fu(fe)
+            fe_ge[sp_[1]] = fu(ge)
 
         end
 
     end
 
     fe_ge
-
-end
-
-function get_sample_character(so)
-
-    bl_th = rea(so)
-
-    bl_th, map(_name_sample, values(bl_th["SAMPLE"])), get_characteristic(bl_th)...
-
-end
-
-function read_process_write_plot(
-    di,
-    so,
-    pl = "";
-    ns = "All",
-    lo = false,
-    nt = "",
-    ps_ = (),
-    pf_ = (),
-)
-
-    bl_th, sc_, ch_, vc = get_sample_character(so)
-
-    if isempty(pl)
-
-        pl = collect(keys(bl_th["PLATFORM"]))[]
-
-    end
-
-    fe_, sf_, vf = get_feature(bl_th, pl)
-
-    vc = vc[:, indexin(sf_, sc_)]
-
-    fe_, vf = Omics.XSample.process(fe_, vf; f1_f2 = ma(bl_th, pl), lo)
-
-    Omics.XSample.writ(di, ns, sf_, ch_, vc, pl, fe_, vf, nt, ps_, pf_)
-
-    sf_, ch_, vc, pl, fe_, vf
-
-end
-
-function get_gpl_1_2(di, so, p1, p2; ke_ar...)
-
-    s1_, c1_, h1, _, f1_, e1 = read_process_write_plot(di, so, p1; ns = p1, ke_ar...)
-
-    s2_, c2_, h2, _, f2_, e2 = read_process_write_plot(di, so, p2; ns = p2, ke_ar...)
-
-    @assert c1_ == c2_
-
-    @assert h1 == h2
-
-    rm(joinpath(di, "$p1.json"))
-
-    rm(joinpath(di, "$p2.json"))
-
-    fu = sa -> trim_1(trim_end(sa))
-
-    sa_ = map(fu, s1_)
-
-    @assert sa_ == map(fu, s2_)
-
-    map(id -> "$(get_1(s1_[id]))$(get_1(s2_[id])) $(sa_[id])", eachindex(s1_)),
-    c1_,
-    h1,
-    "$p1$p2",
-    Omics.XSample.process(vcat(f1_, f2_), vcat(e1, e2))...
-
-end
-
-function read_raw(ra, cf, cv; ke_ar...)
-
-    f1_ = String[]
-
-    sa_ = String[]
-
-    vf___ = Vector{Float64}[]
-
-    for gz in readdir(ra)
-
-        push!(sa_, gz[1:(end - 7)])
-
-        ta = Omics.Table.rea(joinpath(ra, gz); ke_ar...)
-
-        f2_ = ta[!, cf]
-
-        if isempty(f1_)
-
-            f1_ = f2_
-
-        end
-
-        @assert f1_ == f2_
-
-        push!(vf___, ta[!, cv])
-
-    end
-
-    f1_, sa_, hcat(vf___...)
 
 end
 

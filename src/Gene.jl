@@ -2,49 +2,6 @@ module Gene
 
 using ..Omics
 
-# TODO: Generalize.
-function ma(ta, ck_, cv)
-
-    ke_va = Dict{String, String}()
-
-    ke = ta[!, ck_]
-
-    va_ = ta[!, cv]
-
-    for iv in eachindex(va_)
-
-        va = va_[iv]
-
-        if ismissing(va)
-
-            continue
-
-        end
-
-        for ik in eachindex(ck_)
-
-            ky = ke[iv, ik]
-
-            if ismissing(ky)
-
-                continue
-
-            end
-
-            for sp in eachsplit(ky, '|')
-
-                ke_va[sp] = va
-
-            end
-
-        end
-
-    end
-
-    ke_va
-
-end
-
 const _DA = pkgdir(Omics, "data", "Gene")
 
 const HT = joinpath(_DA, "hgnc.tsv.gz")
@@ -55,13 +12,13 @@ const UT = joinpath(_DA, "uniprot.tsv.gz")
 
 function map_hgnc(hk_)
 
-    ma(Omics.Table.rea(HT), hk_, "symbol")
+    Omics.Ma.make(Omics.Table.rea(HT), hk_, "symbol")
 
 end
 
 function map_ensembl()
 
-    ma(
+    Omics.Ma.make(
         Omics.Table.rea(ET),
         [
             "Transcript stable ID version",

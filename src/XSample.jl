@@ -83,7 +83,7 @@ function select_non_nan(vt_, vf, mi)
     mi_ = map(is_ -> lastindex(is_) * mi, is___)
 
     map(
-        vf_ -> all(iu -> mi_[iu] <= sum(!isnan, view(vf_, is___[iu])), eachindex(is___)),
+        vf_ -> all(iu -> mi_[iu] <= count(!isnan, view(vf_, is___[iu])), eachindex(is___)),
         eachrow(vf),
     )
 
@@ -102,41 +102,11 @@ function select(fe_, ::Any, se_)
 
 end
 
-#
-
 function rea(ta, nf, sa_)
 
     na_ = names(ta)
 
     ta[!, nf], Matrix(ta[!, map(sa -> findall(contains(sa), na_)[], sa_)])
-
-end
-
-function rename!(f1_, f1_f2)
-
-    u2 = 0
-
-    for id in eachindex(f1_)
-
-        f1 = f1_[id]
-
-        f1_[id] = if haskey(f1_f2, f1)
-
-            u2 += 1
-
-            f1_f2[f1]
-
-        else
-
-            "_$f1"
-
-        end
-
-    end
-
-    u1 = lastindex(f1_)
-
-    @info "📛 Renamed $u2 / $u1 ($(u2 / u1 * 100)%)."
 
 end
 
@@ -186,7 +156,9 @@ function process(
 
     if !isempty(f1_f2)
 
-        rename!(fe_, f1_f2)
+        map!(fe -> Omics.Ma.go(f1_f2, fe), fe_, fe_)
+
+        Omics.Ma.lo(fe_)
 
     end
 
@@ -246,31 +218,6 @@ function writ(pr, nf, fe_, ns, sa_, nv, vf)
             ),
         ),
         Dict("yaxis" => Dict("title" => "Count"), "xaxis" => Dict("title" => nv)),
-    )
-
-end
-
-function writ(di, ns, sa_, ch_, vc, nf, fe_, vf, nt, ps_, pf_)
-
-    ts = joinpath(di, "$ns.ch.tsv")
-
-    Omics.Table.writ(ts, Omics.Table.make("Characteristic", ch_, sa_, vc))
-
-    coun(ch_, eachrow(vc))
-
-    pr = joinpath(di, "$ns.fe")
-
-    writ(pr, nf, fe_, ns, sa_, "Value", vf)
-
-    Omics.Dic.writ(
-        joinpath(di, "$ns.json"),
-        OrderedDict(
-            "Characteristic" => ts,
-            "Feature" => "$pr.tsv",
-            "Peek Sample" => ps_,
-            "Peek Feature" => pf_,
-            "Target" => nt,
-        ),
     )
 
 end
