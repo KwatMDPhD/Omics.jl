@@ -12,7 +12,8 @@ end
 
 function select(ro_::Vector{<:AbstractString}, ::Any, se_)
 
-    indexin(intersect(ro_, se_), ro_)
+    # TODO: Generalize with GSEA.
+    map(in(Set(se_)), ro_)
 
 end
 
