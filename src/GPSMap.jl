@@ -31,7 +31,7 @@ function plot(
     point_marker_color = Omics.Color.LI,
     point_marker_line_width = 1,
     point_marker_line_color = "#000000",
-    ta_ = nothing,
+    vt_ = nothing,
     ba = 1,
     size = 832,
     margin = 0.04,
@@ -124,11 +124,11 @@ function plot(
         ),
     )
 
-    if isnothing(ta_)
+    if isnothing(vt_)
 
         push!(data, point)
 
-    elseif ta_ isa AbstractVector{<:AbstractFloat}
+    elseif vt_ isa AbstractVector{<:AbstractFloat}
 
         push!(
             data,
@@ -136,20 +136,20 @@ function plot(
                 point,
                 Dict(
                     "marker" =>
-                        Dict("color" => Omics.Palette.color(ta_, Omics.Palette.bwr)),
+                        Dict("color" => Omics.Palette.color(vt_, Omics.Palette.bwr)),
                 ),
             ),
         )
 
     else
 
-        tu_ = unique(ta_)
+        tu_ = unique(vt_)
 
         gr_x_gr_x_id_x_de = Array{Float64, 3}(undef, ug, ug, lastindex(tu_))
 
         for id in eachindex(tu_)
 
-            ii_ = findall(==(tu_[id]), ta_)
+            ii_ = findall(==(tu_[id]), vt_)
 
             _xc_, _yc_, cc = _estimate((view(cp, 1, ii_), view(cp, 2, ii_)); ke_ar...)
 
@@ -203,7 +203,7 @@ function plot(
                 ),
             )
 
-            ii_ = findall(==(tu_[id]), ta_)
+            ii_ = findall(==(tu_[id]), vt_)
 
             push!(
                 data,

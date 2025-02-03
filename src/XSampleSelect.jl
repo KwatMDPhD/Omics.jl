@@ -10,20 +10,20 @@ function index(ro_, va, id_)
 
 end
 
-function select(ro_::Vector{<:AbstractString}, ::Any, se_)
+function select(ro_::AbstractVector{<:AbstractString}, ::Any, se_)
 
     # TODO: Generalize with GSEA.
     map(in(Set(se_)), ro_)
 
 end
 
-function select(::Any, nu, us::Integer)
+function select(::AbstractVector{<:AbstractString}, nu, us::Integer)
 
-    Omics.Extreme.ge(map(std, eachrow(nu)), min(us, size(nu, 1)))[(us + 1):end]
+    Omics.Extreme.ge(map(std, eachrow(nu)), us)[(us + 1):end]
 
 end
 
-function select(vt_::Vector{<:Integer}, nu, mi)
+function select(vt_::AbstractVector{<:Integer}, nu, mi)
 
     is___ = map(un -> findall(==(un), vt_), unique(vt_))
 

@@ -8,7 +8,7 @@ Omics.XSampleSelect.index
 
 # ---- #
 
-# 179.255 ns (6 allocations: 400 bytes)
+# 178.597 ns (6 allocations: 400 bytes)
 
 for (ro_, se_, re) in ((
     ["_1", "_2", "_3", "aa", "bb", "cc", "_7", "_8", "_9"],

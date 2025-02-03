@@ -85,7 +85,17 @@ function process(
 end
 
 # TODO: vt_.
-function writ(pr, nf, fe_, ns, sa_, nv, nu, vt_ = trues(size(nu, 2)))
+function writ(
+    pr,
+    nf,
+    fe_,
+    ns,
+    sa_,
+    nv,
+    nu,
+    vt_ = trues(size(nu, 2));
+    la = Dict{String, Any}(),
+)
 
     Omics.Table.writ("$pr.tsv", Omics.Table.make(nf, fe_, sa_, nu))
 
@@ -94,24 +104,27 @@ function writ(pr, nf, fe_, ns, sa_, nv, nu, vt_ = trues(size(nu, 2)))
         nu;
         ro_ = fe_,
         co_ = sa_,
-        la = Dict(
-            "title" => Dict("text" => nv),
-            "yaxis" => Dict("title" => "$nf ($(lastindex(fe_)))"),
-            "xaxis" => Dict("title" => "$ns ($(lastindex(sa_)))"),
+        la = Omics.Dic.merg(
+            Dict(
+                "title" => Dict("text" => nv),
+                "yaxis" => Dict("title" => "$nf ($(lastindex(fe_)))"),
+                "xaxis" => Dict("title" => "$ns ($(lastindex(sa_)))"),
+            ),
+            la,
         ),
     )
 
-    Omics.Plot.plot(
-        "$pr.histogram.html",
-        (
-            Dict(
-                "type" => "histogram",
-                "x" => vec(nu),
-                "marker" => Dict("color" => Omics.Color.RE),
-            ),
-        ),
-        Dict("yaxis" => Dict("title" => "Count"), "xaxis" => Dict("title" => nv)),
-    )
+    #Omics.Plot.plot(
+    #    "$pr.histogram.html",
+    #    (
+    #        Dict(
+    #            "type" => "histogram",
+    #            "x" => vec(nu),
+    #            "marker" => Dict("color" => Omics.Color.RE),
+    #        ),
+    #    ),
+    #    Dict("yaxis" => Dict("title" => "Count"), "xaxis" => Dict("title" => nv)),
+    #)
 
 end
 
