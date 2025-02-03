@@ -118,3 +118,17 @@ const PL = "GPL16686"
 @test length(Omics.GEO.ma(BL_TH, PL)) === 17623
 
 #@btime Omics.GEO.ma(BL_TH, PL);
+
+# ---- #
+
+for (gs, nt, r1, r2) in (
+    ("GSE13534", "", (0, 4), (14295, 4)),
+    ("GSE16059", "diagnonsis", (3, 88), (31773, 88)),
+    ("GSE67311", "diagnosis", (9, 142), (31403, 142)),
+)
+
+    #@test size(vc) === r1
+
+    #@test size(vf) === r2
+
+end
