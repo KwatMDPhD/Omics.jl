@@ -245,7 +245,7 @@ function _trace_feature(sa_, nf, fe_, vf, vr, st, iy, bo, wi)
         "colorbar" => merge(
             CO,
             Dict(
-                "y" => -0.432,
+                "y" => -0.456,
                 "tickvals" => map(Omics.Numbe.shorten, Omics.Plot.tick(vf)),
             ),
         ) : "showscale" => false,

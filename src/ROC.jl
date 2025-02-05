@@ -2,7 +2,7 @@ module ROC
 
 using ..Omics
 
-function line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
+function line(la_, pr_, th_ = Omics.Grid.make(pr_, 10); pl = true)
 
     ut = lastindex(th_)
 
@@ -24,18 +24,22 @@ function line(la_, pr_, th_ = Omics.Grid.make(pr_, 10))
 
         tn, fn, fp, tp, np, pp, ac = Omics.ErrorMatrix.summarize(er, to)
 
-        Omics.ErrorMatrix.plot(
-            "",
-            er,
-            tn,
-            fn,
-            fp,
-            tp,
-            np,
-            pp,
-            ac;
-            la = Dict("title" => Dict("text" => "◑ $(Omics.Numbe.shorten(th))")),
-        )
+        if pl
+
+            Omics.ErrorMatrix.plot(
+                "",
+                er,
+                tn,
+                fn,
+                fp,
+                tp,
+                np,
+                pp,
+                ac;
+                la = Dict("title" => Dict("text" => "◑ $(Omics.Numbe.shorten(th))")),
+            )
+
+        end
 
         fp_[it] = fp
 

@@ -228,7 +228,7 @@ function plot(
                 "xaxis" => Dict(
                     "side" => "top",
                     "title" => Dict(
-                        "text" => "Evidence for $nt",
+                        "text" => nt,
                         "font" => Dict("size" => Omics.Plot.S1),
                         "standoff" => 40,
                     ),
