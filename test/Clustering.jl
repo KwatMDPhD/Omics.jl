@@ -6,7 +6,7 @@ using Omics
 
 # ---- #
 
-const MA = [
+const NU = [
     0 1 2 3 10 20 30
     0 2 1 3 20 10 30
     0 1 2 3 10 20 30
@@ -15,19 +15,20 @@ const MA = [
 
 for (ea, re) in ((eachcol, [4, 1, 2, 3, 7, 5, 6]), (eachrow, [1, 3, 2, 4]))
 
-    @test Omics.Clustering.hierarchize(pairwise(Euclidean(), ea(MA))).order == re
+    @test Omics.Clustering.hierarchize(pairwise(Euclidean(), ea(NU))).order == re
 
 end
 
 # ---- #
 
-# 1.825 μs (128 allocations: 7.19 KiB)
-# 1.833 μs (128 allocations: 7.19 KiB)
-# 1.837 μs (128 allocations: 7.19 KiB)
-# 1.846 μs (128 allocations: 7.19 KiB)
-# 1.825 μs (128 allocations: 7.19 KiB)
-# 1.837 μs (128 allocations: 7.19 KiB)
-for (gr_, ma, re) in (
+# 1.696 μs (128 allocations: 7.19 KiB)
+# 1.721 μs (128 allocations: 7.19 KiB)
+# 1.725 μs (128 allocations: 7.19 KiB)
+# 1.721 μs (128 allocations: 7.19 KiB)
+# 1.683 μs (128 allocations: 7.19 KiB)
+# 1.717 μs (128 allocations: 7.19 KiB)
+
+for (gr_, nu, re) in (
     (
         [1, 1, 1, 1, 2, 2, 2, 2],
         [
@@ -78,7 +79,7 @@ for (gr_, ma, re) in (
     ),
 )
 
-    nu___ = eachcol(ma)
+    nu___ = eachcol(nu)
 
     @test Omics.Clustering.order(Euclidean(), gr_, nu___) == re
 

@@ -2,27 +2,9 @@ module Color
 
 using Colors: Colorant, coloralpha, hex
 
-const RE = "#ff1993"
-
-const GR = "#92ff93"
-
-const BL = "#1992ff"
-
-const YE = "#ffff93"
-
-const MA = "#ff23ff"
-
-const CY = "#92ffff"
-
 const HU = "#fbb92d"
 
-const AG = "#00936e"
-
-const AY = "#ffd96a"
-
 const LI = "#ebf6f7"
-
-const BR = "#4c221b"
 
 const DA = "#27221f"
 
@@ -38,17 +20,29 @@ const TU = "#20d9ba"
 
 const VI = "#9017e6"
 
-const OR = "#fc7f31"
+const RE = "#ff1993"
 
-const PU = "#561649"
+const GR = "#92ff93"
+
+const BL = "#1992ff"
+
+const YE = "#ffff93"
+
+const MA = "#ff23ff"
+
+const CY = "#92ffff"
+
+const AG = "#00936e"
+
+const AY = "#ffd96a"
 
 const SR = "#8c1515"
 
 const SG = "#175e54"
 
-function hexify(rg::Colorant)
+function hexify(co::Colorant)
 
-    "#$(hex(rg, :rrggbbaa))"
+    "#$(hex(co, :rrggbbaa))"
 
 end
 

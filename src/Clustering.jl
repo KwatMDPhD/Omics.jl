@@ -12,20 +12,20 @@ end
 
 function order(fu, gr_, an___)
 
-    io_ = Vector{Int}(undef, lastindex(gr_))
+    i1_ = Vector{Int}(undef, lastindex(gr_))
 
-    ie = 0
+    id = 0
 
-    for gr in sort!(unique(gr_))
+    for un in sort!(unique(gr_))
 
-        ig_ = findall(==(gr), gr_)
+        i2_ = findall(==(un), gr_)
 
-        io_[(ie + 1):(ie += lastindex(ig_))] =
-            ig_[hierarchize(pairwise(fu, an___[ig_])).order]
+        i1_[(id + 1):(id += lastindex(i2_))] =
+            i2_[hierarchize(pairwise(fu, an___[i2_])).order]
 
     end
 
-    io_
+    i1_
 
 end
 
