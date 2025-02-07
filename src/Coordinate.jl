@@ -18,7 +18,6 @@ end
 
 const P2 = 2.0 * pi
 
-# TODO: Remember.
 function _update!(di, an_, i1, an)
 
     for i2 in axes(di, 1)
@@ -29,8 +28,18 @@ function _update!(di, an_, i1, an)
 
 end
 
-# TODO: Check te.
-function get_polar!(d1; ui = 2000, st = P2 * 0.1, te = 2.0 / log(2.0), de = 0.01, co_=nothing, te_=nothing, go_=nothing)
+function get_polar!(
+    d1;
+    ui = 2000,
+    st = P2 * 0.1,
+    # TODO: Try # Min(P(Accepting the best case, -1 to 1)) = 0.5.
+    te = 2.0 / log(2.0), # Max(P(Accepting the worst case, 1 to -1)) = 0.5.
+    de = 0.01,
+    co_ = nothing,
+    te_ = nothing,
+    pr_ = nothing,
+    ac_ = nothing,
+)
 
     up = size(d1, 1)
 
@@ -50,7 +59,7 @@ function get_polar!(d1; ui = 2000, st = P2 * 0.1, te = 2.0 / log(2.0), de = 0.01
 
         te_[1] = te
 
-        go_[1] = true
+        ac_[1] = true
 
     end
 
@@ -78,10 +87,11 @@ function get_polar!(d1; ui = 2000, st = P2 * 0.1, te = 2.0 / log(2.0), de = 0.01
 
         te *= (1.0 - id / ui)^de
 
-        # TODO: Generalize with logit.
-        go = rand() < exp((c2 - c1) / te)
+        pr = exp((c2 - c1) / te)
 
-        if go
+        ac = rand() < pr
+
+        if ac
 
             an_[ir] = ra
 
@@ -101,7 +111,9 @@ function get_polar!(d1; ui = 2000, st = P2 * 0.1, te = 2.0 / log(2.0), de = 0.01
 
             te_[it] = te
 
-            go_[it] = go
+            pr_[it] = pr
+
+            ac_[it] = ac
 
         end
 
@@ -111,7 +123,7 @@ function get_polar!(d1; ui = 2000, st = P2 * 0.1, te = 2.0 / log(2.0), de = 0.01
 
 end
 
-function plot(ht)
+function plot(ht, co_, te_, pr_, ac_)
 
     ma, id = findmax(co_)
 
@@ -124,17 +136,23 @@ function plot(ht)
                 "marker" => Dict("color" => Omics.Color.RE),
             ),
             Dict(
-                "legendgroup" => "Score",
+                "name" => "Probability",
+                "y" => clamp!(pr_, 0, 1),
+                "mode" => "markers",
+                "marker" => Dict("size" => 2, "color" => Omics.Color.BL),
+            ),
+            Dict(
+                "legendgroup" => "Correlation",
                 "name" => "All",
                 "mode" => "markers",
                 "y" => co_,
                 "marker" => Dict(
-                    "size" => [go ? 8 : 4 for go in go_],
-                    "color" => [go ? Omics.Color.GR : "#000000" for go in go_],
+                    "size" => map(ac -> ac ? 8 : 4, ac_),
+                    "color" => map(ac -> ac ? Omics.Color.GR : "#000000", ac_),
                 ),
             ),
             Dict(
-                "legendgroup" => "Score",
+                "legendgroup" => "Correlation",
                 "name" => "Maximum",
                 "mode" => "markers+text",
                 "x" => (id - 1,),
@@ -145,83 +163,10 @@ function plot(ht)
         ),
         Dict(
             "title" => Dict("text" => "Simulated Annealing"),
-            "xaxis" => Dict("title" => Dict("text" => "Iteration")),
+            "yaxis" => Dict("tickvals" => (0, 0.5, 1)),
+            "xaxis" => Dict("title" => Dict("text" => "Time")),
         ),
     )
-
-end
-
-function make_unit(an_)
-
-    pa = Matrix{Float64}(undef, 2, lastindex(an_))
-
-    pa[1, :] = an_
-
-    pa[2, :] .= 1
-
-    return pa
-
-end
-
-function convert_cartesian_to_polar(xc, yc)
-
-    an = atan(yc / xc)
-
-    if xc < 0
-
-        an += pi
-
-    elseif yc < 0
-
-        an += 2 * pi
-
-    end
-
-    return an, sqrt(xc^2 + yc^2)
-
-end
-
-function convert_polar_to_cartesian(an, ra)
-
-    si, co = sincos(an)
-
-    return co * ra, si * ra
-
-end
-
-function convert_cartesian_to_polar(ca)
-
-    pa = similar(ca)
-
-    for id in axes(pa, 2)
-
-        an, ra = convert_cartesian_to_polar(ca[1, id], ca[2, id])
-
-        pa[1, id] = an
-
-        pa[2, id] = ra
-
-    end
-
-    return pa
-
-end
-
-function convert_polar_to_cartesian(pa)
-
-    ca = similar(pa)
-
-    for id in axes(ca, 2)
-
-        xc, yc = convert_polar_to_cartesian(pa[1, id], pa[2, id])
-
-        ca[1, id] = xc
-
-        ca[2, id] = yc
-
-    end
-
-    return ca
 
 end
 
