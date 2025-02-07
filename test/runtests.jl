@@ -43,8 +43,6 @@ for mo in (
     "XSample",
 )
 
-    @info "🎬 Running $mo"
-
     run(`julia --project $mo.jl`)
 
 end

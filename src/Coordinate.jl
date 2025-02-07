@@ -1,6 +1,6 @@
 module Coordinate
 
-using Distances: Metric, pairwise
+using Distances: pairwise
 
 using Distributions: Normal
 
@@ -10,59 +10,43 @@ using Statistics: cor
 
 using ..Omics
 
-function get_cartesian(aa)
+function get_cartesian(di)
 
-    return fit(MetricMDS, aa; distances = true, maxoutdim = 2, maxiter = 1000).X
-
-end
-
-struct PolarDistance <: Metric end
-
-function (::PolarDistance)(a1, a2)
-
-    di = abs(a1 - a2)
-
-    if pi < di
-
-        di = 2 * pi - di
-
-    end
-
-    return di
+    fit(MetricMDS, di; distances = true, maxoutdim = 2, maxiter = 1000).X
 
 end
 
-function _update!(cc, cu_, iu, up)
+const P2 = 2.0 * pi
 
-    for id in axes(cc, 2)
+# TODO: Remember.
+function _update!(di, an_, i1, an)
 
-        cc[iu, id] = cc[id, iu] = id == iu ? 0 : PolarDistance()(cu_[id], up)
+    for i2 in axes(di, 1)
+
+        di[i1, i2] = di[i2, i1] = i1 == i2 ? 0.0 : Omics.Distance.Polar()(an_[i2], an)
 
     end
 
 end
 
-function get_polar(aa; ma = 2000, st = 0.2 * pi, te = 2 / log(2), de = 0.01, pl = false)
+# TODO: Check te.
+function get_polar!(d1; ui = 2000, st = P2 * 0.1, te = 2.0 / log(2.0), de = 0.01, co_=nothing, te_=nothing, go_=nothing)
 
-    cu_ = collect(range(0; step = 2 * pi / size(aa, 2), length = size(aa, 2)))
+    up = size(d1, 1)
 
-    cc = pairwise(PolarDistance(), cu_)
+    an_ = collect(range(0.0; step = P2 / up, length = up))
 
-    aa_ = vec(aa)
+    d2 = pairwise(Omics.Distance.Polar(), an_)
 
-    cc_ = vec(cc)
+    d1_ = vec(d1)
 
-    sc = cor(aa_, cc_)
+    d2_ = vec(d2)
 
-    if pl
+    c1 = cor(d1_, d2_)
 
-        sc_ = Vector{Float64}(undef, 1 + ma)
+    if !isnothing(co_)
 
-        te_ = Vector{Float64}(undef, 1 + ma)
-
-        go_ = BitVector(undef, 1 + ma)
-
-        sc_[1] = sc
+        co_[1] = c1
 
         te_[1] = te
 
@@ -70,97 +54,100 @@ function get_polar(aa; ma = 2000, st = 0.2 * pi, te = 2 / log(2), de = 0.01, pl 
 
     end
 
-    for ui in 1:ma
+    for id in 1:ui
 
-        iu = rand(eachindex(cu_))
+        ir = rand(1:up)
 
-        up = rand(Normal(cu_[iu], st))
+        ra = rand(Normal(an_[ir], st))
 
-        if 2 * pi < abs(up)
+        if P2 < abs(ra)
 
-            up = rem(up, 2 * pi)
-
-        end
-
-        if up < 0
-
-            up += 2 * pi
+            ra = rem(ra, P2)
 
         end
 
-        _update!(cc, cu_, iu, up)
+        if ra < 0.0
 
-        ne = cor(aa_, cc_)
+            ra += P2
 
-        te *= (1 - ui / ma)^de
+        end
 
-        go = rand() < exp((ne - sc) / te)
+        _update!(d2, an_, ir, ra)
+
+        c2 = cor(d1_, d2_)
+
+        te *= (1.0 - id / ui)^de
+
+        # TODO: Generalize with logit.
+        go = rand() < exp((c2 - c1) / te)
 
         if go
 
-            cu_[iu] = up
+            an_[ir] = ra
 
-            sc = ne
+            c1 = c2
 
         else
 
-            _update!(cc, cu_, iu, cu_[iu])
+            _update!(d2, an_, ir, an_[ir])
 
         end
 
-        if pl
+        if !isnothing(co_)
 
-            sc_[1 + ui] = ne
+            it = 1 + id
 
-            te_[1 + ui] = te
+            co_[it] = c2
 
-            go_[1 + ui] = go
+            te_[it] = te
+
+            go_[it] = go
 
         end
 
     end
 
-    if pl
+    an_
 
-        ma, id = findmax(sc_)
+end
 
-        Omics.Plot.plot(
-            "",
-            (
-                Dict(
-                    "name" => "Temperature",
-                    "y" => te_,
-                    "marker" => Dict("color" => Omics.Color.RE),
-                ),
-                Dict(
-                    "legendgroup" => "Score",
-                    "name" => "All",
-                    "mode" => "markers",
-                    "y" => sc_,
-                    "marker" => Dict(
-                        "size" => [go ? 8 : 4 for go in go_],
-                        "color" => [go ? Omics.Color.GR : "#000000" for go in go_],
-                    ),
-                ),
-                Dict(
-                    "legendgroup" => "Score",
-                    "name" => "Maximum",
-                    "mode" => "markers+text",
-                    "x" => (id - 1,),
-                    "y" => (ma,),
-                    "text" => Omics.Numbe.shorten(ma),
-                    "marker" => Dict("size" => 16, "color" => Omics.Color.YE),
+function plot(ht)
+
+    ma, id = findmax(co_)
+
+    Omics.Plot.plot(
+        ht,
+        (
+            Dict(
+                "name" => "Temperature",
+                "y" => te_,
+                "marker" => Dict("color" => Omics.Color.RE),
+            ),
+            Dict(
+                "legendgroup" => "Score",
+                "name" => "All",
+                "mode" => "markers",
+                "y" => co_,
+                "marker" => Dict(
+                    "size" => [go ? 8 : 4 for go in go_],
+                    "color" => [go ? Omics.Color.GR : "#000000" for go in go_],
                 ),
             ),
             Dict(
-                "title" => Dict("text" => "Simulated Annealing"),
-                "xaxis" => Dict("title" => Dict("text" => "Iteration")),
+                "legendgroup" => "Score",
+                "name" => "Maximum",
+                "mode" => "markers+text",
+                "x" => (id - 1,),
+                "y" => (ma,),
+                "text" => Omics.Numbe.shorten(ma),
+                "marker" => Dict("size" => 16, "color" => Omics.Color.YE),
             ),
-        )
-
-    end
-
-    return cu_
+        ),
+        Dict(
+            "title" => Dict("text" => "Simulated Annealing"),
+            "xaxis" => Dict("title" => Dict("text" => "Iteration")),
+        ),
+    )
 
 end
 

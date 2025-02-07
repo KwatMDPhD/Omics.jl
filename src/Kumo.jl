@@ -30,7 +30,7 @@ function _add_node!(an, cl_ = ())
 
     if no in NO_
 
-        @warn "\"$no\" exists."
+        @warn no
 
     else
 
@@ -58,7 +58,7 @@ function _add_edge!(a1, a2)
 
     if ed in ED_
 
-        @warn "`$ed` exists."
+        @warn ed
 
     else
 
@@ -145,30 +145,6 @@ end
 function >>(a1, a2)
 
     _add_edge!(a1, "in", a2)
-
-end
-
-function report()
-
-    ud = ui = 0
-
-    for no in NO_
-
-        if endswith(no, ".de")
-
-            ud += 1
-
-        elseif endswith(no, ".in")
-
-            ui += 1
-
-        end
-
-    end
-
-    @info "$(Omics.Strin.coun(length(NO_), "node")) ($(count(!isempty, CL___)) classed, $ud decreasing, and $ui increasing)." NO_
-
-    @info "$(Omics.Strin.coun(length(ED_), "edge"))." ED_
 
 end
 

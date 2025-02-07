@@ -10,15 +10,15 @@ using StatsBase: mean, sqL2dist
 
 using ..Omics
 
-function _log_convergence(bo, ui, ob)
+function _lo(bo, ui, ob)
 
     if bo
 
-        @info "Converged with $ui iterations." ob
+        @info "Converged in $ui." ob
 
     else
 
-        @warn "Failed to converge with $ui iterations." ob
+        @warn "Failed to converge in $ui." ob
 
     end
 
@@ -28,7 +28,7 @@ function factorize(A, uf; ke_ar...)
 
     re = nnmf(A, uf; ke_ar...)
 
-    _log_convergence(re.converged, re.niters, re.objvalue / norm(A))
+    _lo(re.converged, re.niters, re.objvalue / norm(A))
 
     re.W, re.H
 
@@ -182,7 +182,7 @@ function factorize_wide(
 
     end
 
-    _log_convergence(bo, ui, ob_ ./ norm.(A_))
+    _lo(bo, ui, ob_ ./ norm.(A_))
 
     W, H_
 

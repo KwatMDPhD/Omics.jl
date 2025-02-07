@@ -100,7 +100,7 @@ function standardize_clamp!(nu_, st)
 
     if allequal(nu_)
 
-        @warn "All values are $(nu_[1])."
+        @warn "All $(nu_[1])."
 
         fill!(nu_, 0.0)
 

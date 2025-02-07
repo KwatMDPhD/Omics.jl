@@ -18,7 +18,7 @@ function align(fu, s1_, v1, s2_, v2)
 
     if !isempty(di_)
 
-        @warn "Failed to align" setdiff(s3_, it_) setdiff(s2_, it_)
+        @warn "" setdiff(s3_, it_) setdiff(s2_, it_)
 
     end
 

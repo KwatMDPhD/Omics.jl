@@ -1,6 +1,6 @@
 module XSampleCharacteristic
 
-function coun(he::AbstractString, va_)
+function lo(he::AbstractString, va_)
 
     bo = join(
         "$uu $un.\n" for
@@ -11,11 +11,11 @@ function coun(he::AbstractString, va_)
 
 end
 
-function coun(ch_, va___)
+function lo(ch_, va___)
 
     for id in sortperm(va___; by = an_ -> lastindex(unique(an_)))
 
-        coun("🔦 ($id) $(ch_[id])", va___[id])
+        lo("🔦 ($id) $(ch_[id])", va___[id])
 
     end
 

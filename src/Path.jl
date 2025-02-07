@@ -14,7 +14,7 @@ function ope(pa)
 
     catch
 
-        @warn "Could not open $pa."
+        @warn pa
 
     end
 
