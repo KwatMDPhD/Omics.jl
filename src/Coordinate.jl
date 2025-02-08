@@ -20,9 +20,11 @@ const P2 = 2.0 * pi
 
 function _update!(di, an_, i1, an)
 
+    fu = Omics.Distance.Polar()
+
     for i2 in axes(di, 1)
 
-        di[i1, i2] = di[i2, i1] = i1 == i2 ? 0.0 : Omics.Distance.Polar()(an_[i2], an)
+        di[i1, i2] = di[i2, i1] = i1 == i2 ? 0.0 : fu(an_[i2], an)
 
     end
 
@@ -32,8 +34,7 @@ function get_polar!(
     d1;
     ui = 2000,
     st = P2 * 0.1,
-    # TODO: Try # Min(P(Accepting the best case, -1 to 1)) = 0.5.
-    te = 2.0 / log(2.0), # Max(P(Accepting the worst case, 1 to -1)) = 0.5.
+    te = 2.0 / log(2.0), # Max(P(Accepting 1 to -1)) = 0.5. TODO: Try # Min(P(Accepting -1 to 1)) = 0.5.
     de = 0.01,
     co_ = nothing,
     te_ = nothing,
@@ -59,6 +60,8 @@ function get_polar!(
 
         te_[1] = te
 
+        pr_[1] = 1.0
+
         ac_[1] = true
 
     end
@@ -67,21 +70,23 @@ function get_polar!(
 
         ir = rand(1:up)
 
-        ra = rand(Normal(an_[ir], st))
+        a1 = an_[ir]
 
-        if P2 < abs(ra)
+        a2 = rand(Normal(a1, st))
 
-            ra = rem(ra, P2)
+        if P2 < abs(a2)
 
-        end
-
-        if ra < 0.0
-
-            ra += P2
+            a2 = rem(a2, P2)
 
         end
 
-        _update!(d2, an_, ir, ra)
+        if a2 < 0.0
+
+            a2 += P2
+
+        end
+
+        _update!(d2, an_, ir, a2)
 
         c2 = cor(d1_, d2_)
 
@@ -93,13 +98,13 @@ function get_polar!(
 
         if ac
 
-            an_[ir] = ra
+            an_[ir] = a2
 
             c1 = c2
 
         else
 
-            _update!(d2, an_, ir, an_[ir])
+            _update!(d2, an_, ir, a1)
 
         end
 
@@ -137,32 +142,29 @@ function plot(ht, co_, te_, pr_, ac_)
             ),
             Dict(
                 "name" => "Probability",
-                "y" => clamp!(pr_, 0, 1),
+                "y" => pr_,
                 "mode" => "markers",
                 "marker" => Dict("size" => 2, "color" => Omics.Color.BL),
             ),
             Dict(
-                "legendgroup" => "Correlation",
-                "name" => "All",
-                "mode" => "markers",
+                "name" => "Correlation",
                 "y" => co_,
+                "mode" => "markers",
                 "marker" => Dict(
                     "size" => map(ac -> ac ? 8 : 4, ac_),
                     "color" => map(ac -> ac ? Omics.Color.GR : "#000000", ac_),
                 ),
             ),
             Dict(
-                "legendgroup" => "Correlation",
                 "name" => "Maximum",
-                "mode" => "markers+text",
-                "x" => (id - 1,),
                 "y" => (ma,),
+                "x" => (id - 1,),
                 "text" => Omics.Numbe.shorten(ma),
+                "mode" => "markers+text",
                 "marker" => Dict("size" => 16, "color" => Omics.Color.YE),
             ),
         ),
         Dict(
-            "title" => Dict("text" => "Simulated Annealing"),
             "yaxis" => Dict("tickvals" => (0, 0.5, 1)),
             "xaxis" => Dict("title" => Dict("text" => "Time")),
         ),

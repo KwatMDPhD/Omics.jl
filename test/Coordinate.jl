@@ -74,11 +74,11 @@ for (di, re) in ((
 
     an_ = Omics.Coordinate.get_polar!(di; ui, co_, te_, pr_, ac_)
 
-    Omics.Coordinate.plot("", co_, te_, pr_, ac_)
-
     @test isapprox(an_, re)
 
     # 200.000 μs (6 allocations: 560 bytes)
     #@btime Omics.Coordinate.get_polar!($di)
+
+    Omics.Coordinate.plot("", co_, te_, clamp!(pr_, 0.0, 1.0), ac_)
 
 end
