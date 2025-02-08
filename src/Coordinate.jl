@@ -18,13 +18,11 @@ end
 
 const P2 = 2.0 * pi
 
-function _update!(di, an_, i1, an)
+function _update!(di, a1_, i2, a2)
 
-    fu = Omics.Distance.Polar()
+    for i1 in axes(di, 1)
 
-    for i2 in axes(di, 1)
-
-        di[i1, i2] = di[i2, i1] = i1 == i2 ? 0.0 : fu(an_[i2], an)
+        di[i1, i2] = di[i2, i1] = i1 == i2 ? 0.0 : Omics.Distance.Polar()(a1_[i1], a2)
 
     end
 
@@ -32,21 +30,21 @@ end
 
 function get_polar!(
     d1;
-    ui = 2000,
+    ui = 1000,
     st = P2 * 0.1,
-    te = 2.0 / log(2.0), # Max(P(Accepting 1 to -1)) = 0.5. TODO: Try # Min(P(Accepting -1 to 1)) = 0.5.
-    de = 0.01,
+    lo = 0.32,
+    sc = 32.0,
     co_ = nothing,
     te_ = nothing,
     pr_ = nothing,
     ac_ = nothing,
 )
 
-    up = size(d1, 1)
+    ua = size(d1, 1)
 
-    an_ = collect(range(0.0; step = P2 / up, length = up))
+    a1_ = collect(range(0.0; step = P2 / ua, length = ua))
 
-    d2 = pairwise(Omics.Distance.Polar(), an_)
+    d2 = pairwise(Omics.Distance.Polar(), a1_)
 
     d1_ = vec(d1)
 
@@ -58,19 +56,19 @@ function get_polar!(
 
         co_[1] = c1
 
-        te_[1] = te
+        te_[1] = NaN
 
-        pr_[1] = 1.0
+        pr_[1] = NaN
 
         ac_[1] = true
 
     end
 
-    for id in 1:ui
+    for ii in 1:ui
 
-        ir = rand(1:up)
+        ir = rand(1:ua)
 
-        a1 = an_[ir]
+        a1 = a1_[ir]
 
         a2 = rand(Normal(a1, st))
 
@@ -86,31 +84,41 @@ function get_polar!(
 
         end
 
-        _update!(d2, an_, ir, a2)
+        _update!(d2, a1_, ir, a2)
 
         c2 = cor(d1_, d2_)
 
-        te *= (1.0 - id / ui)^de
+        te = 1.0 / (1.0 + exp((ii - ui * lo) / ui * sc))
 
-        pr = exp((c2 - c1) / te)
+        if c1 <= c2
 
-        ac = rand() < pr
+            pr = 1.0
+
+            ac = true
+
+        else
+
+            pr = exp((c2 - c1) / te)
+
+            ac = rand() < pr
+
+        end
 
         if ac
 
-            an_[ir] = a2
+            a1_[ir] = a2
 
             c1 = c2
 
         else
 
-            _update!(d2, an_, ir, a1)
+            _update!(d2, a1_, ir, a1)
 
         end
 
         if !isnothing(co_)
 
-            it = 1 + id
+            it = 1 + ii
 
             co_[it] = c2
 
@@ -124,7 +132,7 @@ function get_polar!(
 
     end
 
-    an_
+    a1_
 
 end
 
@@ -152,7 +160,7 @@ function plot(ht, co_, te_, pr_, ac_)
                 "mode" => "markers",
                 "marker" => Dict(
                     "size" => map(ac -> ac ? 8 : 4, ac_),
-                    "color" => map(ac -> ac ? Omics.Color.GR : "#000000", ac_),
+                    "color" => map(ac -> ac ? Omics.Color.GR : Omics.Color.SG, ac_),
                 ),
             ),
             Dict(
@@ -161,11 +169,11 @@ function plot(ht, co_, te_, pr_, ac_)
                 "x" => (id - 1,),
                 "text" => Omics.Numbe.shorten(ma),
                 "mode" => "markers+text",
-                "marker" => Dict("size" => 16, "color" => Omics.Color.YE),
+                "marker" => Dict("size" => 24, "color" => Omics.Color.GR),
             ),
         ),
         Dict(
-            "yaxis" => Dict("tickvals" => (0, 0.5, 1)),
+            "yaxis" => Dict("zeroline" => false),
             "xaxis" => Dict("title" => Dict("text" => "Time")),
         ),
     )
