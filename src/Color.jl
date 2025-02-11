@@ -32,13 +32,13 @@ const MA = "#ff23ff"
 
 const CY = "#92ffff"
 
-const AG = "#00936e"
+const A1 = "#00936e"
 
-const AY = "#ffd96a"
+const A2 = "#ffd96a"
 
-const SR = "#8c1515"
+const S1 = "#8c1515"
 
-const SG = "#175e54"
+const S2 = "#175e54"
 
 function hexify(co::Colorant)
 
@@ -46,9 +46,15 @@ function hexify(co::Colorant)
 
 end
 
-function hexify(st, al = 1.0)
+function hexify(co)
 
-    hexify(coloralpha(parse(Colorant, st), al))
+    hexify(parse(Colorant, co))
+
+end
+
+function hexify(co, al)
+
+    hexify(coloralpha(parse(Colorant, co), al))
 
 end
 

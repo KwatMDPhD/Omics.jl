@@ -14,13 +14,13 @@ end
 
 # ---- #
 
-for st in ("red", "#f00", "#ff0000")
+for co in ("red", "#f00", "#ff0000")
 
-    @test Omics.Color.hexify(st) === "#ff0000ff"
+    @test Omics.Color.hexify(co) === "#ff0000ff"
 
     for (al, re) in ((0.0, "#ff000000"), (0.5, "#ff000080"))
 
-        @test Omics.Color.hexify(st, al) === re
+        @test Omics.Color.hexify(co, al) === re
 
     end
 
