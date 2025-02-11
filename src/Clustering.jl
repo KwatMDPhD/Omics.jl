@@ -10,7 +10,7 @@ function hierarchize(di)
 
 end
 
-function order(di, gr_, an___)
+function order(fu, gr_, an___)
 
     i1_ = Vector{Int}(undef, lastindex(gr_))
 
@@ -21,7 +21,7 @@ function order(di, gr_, an___)
         i3_ = findall(==(un), gr_)
 
         i1_[(i2 + 1):(i2 += lastindex(i3_))] =
-            i3_[hierarchize(pairwise(di, an___[i3_])).order]
+            i3_[hierarchize(pairwise(fu, an___[i3_])).order]
 
     end
 
