@@ -2,13 +2,13 @@ module CoordinateConversion
 
 function make_unit(an_)
 
-    pa = Matrix{Float64}(undef, 2, lastindex(an_))
+    po = Matrix{Float64}(undef, 2, lastindex(an_))
 
-    pa[1, :] = an_
+    po[1, :] = an_
 
-    pa[2, :] .= 1
+    po[2, :] .= 1.0
 
-    pa
+    po
 
 end
 
@@ -22,7 +22,7 @@ function convert_cartesian_to_polar(xc, yc)
 
     elseif yc < 0
 
-        an += 2 * pi
+        an += 2.0 * pi
 
     end
 
@@ -40,33 +40,25 @@ end
 
 function convert_cartesian_to_polar(ca)
 
-    pa = similar(ca)
+    po = similar(ca)
 
-    for id in axes(pa, 2)
+    for id in axes(po, 2)
 
-        an, ra = convert_cartesian_to_polar(ca[1, id], ca[2, id])
-
-        pa[1, id] = an
-
-        pa[2, id] = ra
+        po[1, id], po[2, id] = convert_cartesian_to_polar(ca[1, id], ca[2, id])
 
     end
 
-    pa
+    po
 
 end
 
-function convert_polar_to_cartesian(pa)
+function convert_polar_to_cartesian(po)
 
-    ca = similar(pa)
+    ca = similar(po)
 
     for id in axes(ca, 2)
 
-        xc, yc = convert_polar_to_cartesian(pa[1, id], pa[2, id])
-
-        ca[1, id] = xc
-
-        ca[2, id] = yc
+        ca[1, id], ca[2, id] = convert_polar_to_cartesian(po[1, id], po[2, id])
 
     end
 

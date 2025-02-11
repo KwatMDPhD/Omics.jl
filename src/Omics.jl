@@ -8,6 +8,8 @@ include("Color.jl")
 
 include("Coordinate.jl")
 
+include("CoordinateConversion.jl")
+
 include("Cytoscape.jl")
 
 include("Density.jl")

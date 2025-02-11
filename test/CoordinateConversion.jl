@@ -1,115 +1,123 @@
-using Random: seed!
-
 using Test: @test
 
 using Omics
 
 # ---- #
 
-const PA = Omics.Coordinate.make_unit(AN_)
+# 10.666 ns (0 allocations: 0 bytes)
+# 10.135 ns (0 allocations: 0 bytes)
+# 10.636 ns (0 allocations: 0 bytes)
+# 10.125 ns (0 allocations: 0 bytes)
+# 10.636 ns (0 allocations: 0 bytes)
+# 8.916 ns (0 allocations: 0 bytes)
+# 10.677 ns (0 allocations: 0 bytes)
+# 8.884 ns (0 allocations: 0 bytes)
 
-# ---- #
+for (x1, y1, re) in ((1, 1, 1 / 3), (-1, 1, 2 / 3), (-1, -1, 4 / 3), (1, -1, 5 / 3))
 
-@test PA[1, :] == AN_
+    y1 *= sqrt(3)
 
-# ---- #
-
-@test PA[2, :] == ones(lastindex(AN_))
-
-# 29.314 ns (1 allocation: 160 bytes)
-#@btime Omics.Coordinate.make_unit(AN_);
-
-# ---- #
-
-for (xc, yc, re) in ((1, 1, 1 / 3), (-1, 1, 2 / 3), (-1, -1, 4 / 3), (1, -1, 5 / 3))
-
-    yc *= sqrt(3)
-
-    an, ra = Omics.Coordinate.convert_cartesian_to_polar(xc, yc)
+    an, ra = Omics.CoordinateConversion.convert_cartesian_to_polar(x1, y1)
 
     @test isapprox(an, pi * re)
 
     @test isapprox(ra, 2)
 
-    x2, y2 = Omics.Coordinate.convert_polar_to_cartesian(an, ra)
+    @btime Omics.CoordinateConversion.convert_cartesian_to_polar($x1, $y1)
 
-    @test isapprox(x2, xc)
+    x2, y2 = Omics.CoordinateConversion.convert_polar_to_cartesian(an, ra)
 
-    @test isapprox(y2, yc)
+    @test isapprox(x1, x2)
 
-    # 10.427 ns (0 allocations: 0 bytes)
-    # 7.666 ns (0 allocations: 0 bytes)
-    # 10.427 ns (0 allocations: 0 bytes)
-    # 7.666 ns (0 allocations: 0 bytes)
-    # 10.426 ns (0 allocations: 0 bytes)
-    # 7.666 ns (0 allocations: 0 bytes)
-    # 10.427 ns (0 allocations: 0 bytes)
-    # 7.666 ns (0 allocations: 0 bytes)
+    @test isapprox(y1, y2)
 
-    #@btime Omics.Coordinate.convert_cartesian_to_polar($xc, $yc)
-
-    #@btime Omics.Coordinate.convert_polar_to_cartesian($an, $ra)
+    @btime Omics.CoordinateConversion.convert_polar_to_cartesian($an, $ra)
 
 end
 
 # ---- #
 
+const DI = [
+    0 1 2 3 4 5
+    1 0 3 4 5 6
+    2 3 0 5 6 7
+    3 4 5 0 7 8
+    4 5 6 7 0 9
+    5 6 7 8 9 0.0
+]
+
+const UP = size(DI, 1)
+
+# ---- #
+
+# 20.896 ns (2 allocations: 176 bytes)
+
+const AN_ = Omics.Coordinate.get_polar!(DI)
+
+const PO = Omics.CoordinateConversion.make_unit(AN_)
+
+@test PO[1, :] == AN_
+
+@test PO[2, :] == ones(UP)
+
+@btime Omics.CoordinateConversion.make_unit(AN_);
+
+# ---- #
+
+# 114.028 ns (4 allocations: 352 bytes)
+
 @test isapprox(
-    PA,
-    Omics.Coordinate.convert_cartesian_to_polar(
-        Omics.Coordinate.convert_polar_to_cartesian(PA),
+    PO,
+    Omics.CoordinateConversion.convert_cartesian_to_polar(
+        Omics.CoordinateConversion.convert_polar_to_cartesian(PO),
+    ),
+)
+
+@btime Omics.CoordinateConversion.convert_cartesian_to_polar(
+    Omics.CoordinateConversion.convert_polar_to_cartesian(PO),
+);
+
+# ---- #
+
+Omics.Plot.plot(
+    joinpath(tempdir(), "polar.html"),
+    (
+        Dict(
+            "type" => "scatterpolar",
+            "thetaunit" => "radians",
+            "theta" => PO[1, :],
+            "r" => PO[2, :],
+            "text" => 1:UP,
+            "mode" => "markers+text",
+            "marker" => Dict("size" => 40, "color" => Omics.Color.YE),
+        ),
     ),
 )
 
 # ---- #
 
-# 128.247 ns (2 allocations: 320 bytes)
-#@btime Omics.Coordinate.convert_cartesian_to_polar(
-#    Omics.Coordinate.convert_polar_to_cartesian(PA),
-#);
+const C1 = Omics.Coordinate.get_cartesian(DI)
 
-# ---- #
-
-const LA = Dict("height" => 833, "width" => 833)
-
-Omics.Plot.plot(
-    joinpath(tempdir(), "polar.html"),
-    [
-        Dict(
-            "type" => "scatterpolar",
-            "theta" => PA[1, :] / pi * 180,
-            "r" => PA[2, :],
-            "text" => axes(PA, 2),
-            "mode" => "markers+text",
-            "marker" => Dict("size" => 40, "color" => Omics.Color.YE),
-        ),
-    ],
-    LA,
-)
-
-# ---- #
-
-const OA = Omics.Coordinate.convert_polar_to_cartesian(PA)
+const C2 = Omics.CoordinateConversion.convert_polar_to_cartesian(PO)
 
 Omics.Plot.plot(
     joinpath(tempdir(), "cartesian.html"),
-    [
+    (
         Dict(
             "name" => "Cartesian",
-            "x" => CA[1, :],
-            "y" => CA[2, :],
-            "text" => axes(CA, 2),
+            "x" => C1[1, :],
+            "y" => C1[2, :],
+            "text" => 1:UP,
             "mode" => "markers+text",
             "marker" => Dict("size" => 40, "color" => Omics.Color.GR),
         ),
         Dict(
             "name" => "Polar Cartesian",
-            "x" => OA[1, :],
-            "y" => OA[2, :],
-            "text" => axes(OA, 2),
+            "x" => C2[1, :],
+            "y" => C2[2, :],
+            "text" => 1:UP,
             "mode" => "markers+text",
             "marker" => Dict("size" => 40, "color" => Omics.Color.YE),
         ),
-    ],
-    LA,
+    ),
 )
