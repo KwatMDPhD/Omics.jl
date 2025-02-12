@@ -1,8 +1,6 @@
 using Test: @test
 
-using Omics
-
-using Omics.Kumo: @st, <<, >>
+using Omics.Kumo: <<, >>, @st, Omics
 
 # ---- #
 

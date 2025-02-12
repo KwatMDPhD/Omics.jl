@@ -1,8 +1,6 @@
-using PGMs
-
-using PGMs.Nodes: @node
-
 using Test: @test
+
+using Omics
 
 # ---- #
 
