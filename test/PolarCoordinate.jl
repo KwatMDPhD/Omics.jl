@@ -45,12 +45,12 @@ for (di, re) in ((
 
     #@btime Omics.PolarCoordinate.ge!($di)
 
-    ht = joinpath(tempdir(), string(sum(di)))
+    seed!()
 
-    Omics.PolarCoordinate.plot("$ht.1.html", co_, te_, pr_, ac_)
+    Omics.PolarCoordinate.plot("", co_, te_, pr_, ac_)
 
     Omics.Plot.plot(
-        "$ht.2.html",
+        "",
         (
             Dict(
                 "type" => "scatterpolar",

@@ -46,15 +46,13 @@ const DI = [
     5 6 7 8 9 0.0
 ]
 
-const NP = size(DI, 1)
-
 const CA = Omics.CartesianCoordinate.ge(DI)
 
 const AN_ = Omics.PolarCoordinate.ge!(DI)
 
-const XY_ = map(Omics.Coordinate.convert_polar_to_cartesian, AN_, ones(NP))
+const CA___ = map(Omics.Coordinate.convert_polar_to_cartesian, AN_, ones(lastindex(AN_)))
 
-const TR = Dict("text" => 1:NP, "mode" => "text", "textfont" => Dict("size" => 24))
+const TR = Dict("text" => axes(DI, 1), "mode" => "text", "textfont" => Dict("size" => 24))
 
 Omics.Plot.plot(
     "",
@@ -71,8 +69,8 @@ Omics.Plot.plot(
         Omics.Dic.merg(
             Dict(
                 "name" => "Polar",
-                "y" => map(xy -> xy[2], XY_),
-                "x" => map(xy -> xy[1], XY_),
+                "y" => map(ca_ -> ca_[2], CA___),
+                "x" => map(ca_ -> ca_[1], CA___),
                 "textfont" => Dict("color" => Omics.Color.A2),
             ),
             TR,

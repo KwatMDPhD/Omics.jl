@@ -51,8 +51,10 @@ for (di, re) in (
 
     @test isapprox(co, re; atol = 1e-5)
 
+    seed!()
+
     Omics.Plot.plot(
-        joinpath(tempdir(), "$(sum(di)).html"),
+        "",
         (
             Dict(
                 "y" => co[2, :],

@@ -9,7 +9,7 @@ for mo in (
     "Clustering",
     "Color",
     "Coordinate",
-    #"Cytoscape",
+    "Cytoscape",
     #"Density",
     #"Dic",
     #"Distance",

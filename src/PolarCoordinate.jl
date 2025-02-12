@@ -114,12 +114,12 @@ function ge!(
 
 end
 
-function plot(ht, co_, te_, pr_, ac_)
+function plot(fi, co_, te_, pr_, ac_)
 
-    ma, id = findmax(co_)
+    co, id = findmax(co_)
 
     Omics.Plot.plot(
-        ht,
+        fi,
         (
             Dict(
                 "name" => "Temperature",
@@ -143,9 +143,9 @@ function plot(ht, co_, te_, pr_, ac_)
             ),
             Dict(
                 "name" => "Maximum",
-                "y" => (ma,),
+                "y" => (co,),
                 "x" => (id - 1,),
-                "text" => Omics.Numbe.shorten(ma),
+                "text" => Omics.Numbe.shorten(co),
                 "mode" => "markers+text",
                 "marker" => Dict("size" => 24, "color" => Omics.Color.GR),
             ),

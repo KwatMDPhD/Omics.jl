@@ -4,7 +4,7 @@ using Omics
 
 # ---- #
 
-const EL_ = Dict{String, Any}[
+const E1_ = Dict{String, Any}[
     Dict("data" => Dict("id" => "A"), "position" => Dict("y" => 0, "x" => 0)),
     Dict("data" => Dict("id" => "B"), "position" => Dict("y" => 20, "x" => 20)),
     Dict("data" => Dict("id" => "C"), "position" => Dict("y" => 40, "x" => 40)),
@@ -17,62 +17,37 @@ const EL_ = Dict{String, Any}[
     Dict("data" => Dict("id" => "J", "source" => "H", "target" => "I")),
 ]
 
-Omics.Cytoscape.plot("", EL_)
+# ---- #
+
+Omics.Cytoscape.plot("", E1_)
 
 # ---- #
 
 Omics.Path.ope(
     Omics.Cytoscape.plot(
-        joinpath(tempdir(), "1.html"),
-        EL_;
+        "",
+        E1_,
+        "png";
         st_ = map(
             id -> Dict(
-                "selector" => "#$(EL_[id]["data"]["id"])",
+                "selector" => "#$(Omics.Cytoscape._identify(E1_[id]))",
                 "style" => Dict("background-color" => Omics.Palette.HE_[id]),
             ),
-            eachindex('a':'i'),
+            eachindex(E1_),
         ),
         la = Dict("name" => "preset"),
-        ba = "#000000",
-        ex = "png",
+        co = "#000000",
         sc = 2,
     ),
 )
 
 # ---- #
 
-function test_element(e1_, e2_, ke_)
+const E2_ =
+    Omics.Cytoscape.rea(Omics.Cytoscape.plot("", E1_, "json"; la = Dict("name" => "cose")))
 
-    @test all(id -> all(ke -> e1_[id][ke] == e2_[id][ke], ke_), eachindex(e1_))
-
-end
-
-# ---- #
-
-const E2_ = Omics.Cytoscape.rea(
-    Omics.Cytoscape.plot(
-        joinpath(tempdir(), "2.html"),
-        EL_;
-        la = Dict("name" => "cose"),
-        ex = "json",
-    ),
-)
-
-test_element(EL_, E2_, ("data",))
-
-# ---- #
-
-Omics.Cytoscape.position!(EL_, E2_)
-
-test_element(EL_, E2_, ("data", "position"))
-
-# ---- #
+Omics.Cytoscape.position!(E1_, E2_)
 
 @test Omics.Cytoscape.rea(
-    Omics.Cytoscape.plot(
-        joinpath(tempdir(), "3.html"),
-        EL_;
-        la = Dict("name" => "preset"),
-        ex = "json",
-    ),
+    Omics.Cytoscape.plot("", E1_, "json"; la = Dict("name" => "preset")),
 ) == E2_

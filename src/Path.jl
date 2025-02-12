@@ -6,6 +6,20 @@ function shorten(pa, ro)
 
 end
 
+function wait(pa, ma = 4; sl = 1)
+
+    us = 0
+
+    while us < ma && !ispath(pa)
+
+        sleep(sl)
+
+        @info "Waiting for $pa ($(us += sl) / $ma)"
+
+    end
+
+end
+
 function ope(pa)
 
     try
