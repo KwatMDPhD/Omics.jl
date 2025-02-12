@@ -34,48 +34,46 @@ function plot(
 
         end
 
-        re = "cy.ready(function() {saveAs($bl, \"$ba\")});"
+        re = "cy.ready(function() {saveAs($bl, \"$ba\")})"
 
     end
 
     id = "cy"
 
-    Omics.Path.ope(
-        Omics.HTM.writ(
-            f1,
-            (
-                "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js",
-                "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js",
-                "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.29.2/cytoscape.min.js",
-            ),
-            id,
-            """
-            var cy = cytoscape({
-                container: document.getElementById("$id"),
-                elements: $(json(el_)),
-                style: $(json(st_)),
-                layout: $(json(merge(Dict("animate" => false), la))),
-            });
-
-            cy.on("mouseover", "node", function(ev) {
-                ev.target.addClass("nodehover");
-            });
-
-            cy.on("mouseout", "node", function(ev) {
-                ev.target.removeClass("nodehover");
-            });
-
-            cy.on("mouseover", "edge", function(ev) {
-                ev.target.addClass("edgehover");
-            });
-
-            cy.on("mouseout", "edge", function(ev) {
-                ev.target.removeClass("edgehover");
-            });
-
-            $re""",
-            co,
+    Omics.HTM.writ(
+        f1,
+        (
+            "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.29.2/cytoscape.min.js",
         ),
+        id,
+        """
+        var cy = cytoscape({
+            container: document.getElementById("$id"),
+            elements: $(json(el_)),
+            style: $(json(st_)),
+            layout: $(json(merge(Dict("animate" => false), la))),
+        })
+
+        cy.on("mouseover", "node", function(ev) {
+            ev.target.addClass("nodehover")
+        })
+
+        cy.on("mouseout", "node", function(ev) {
+            ev.target.removeClass("nodehover")
+        })
+
+        cy.on("mouseover", "edge", function(ev) {
+            ev.target.addClass("edgehover")
+        })
+
+        cy.on("mouseout", "edge", function(ev) {
+            ev.target.removeClass("edgehover")
+        })
+
+        $re""",
+        co,
     )
 
     if isempty(ex)

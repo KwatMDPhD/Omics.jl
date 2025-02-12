@@ -4,14 +4,15 @@ using Omics
 
 # ----------------------------------------------------------------------------------------------- #
 
-for mo in (
+for na in (
+    "Animation",
     "CartesianCoordinate",
     "Clustering",
     "Color",
     "Coordinate",
     "Cytoscape",
     #"Density",
-    #"Dic",
+    "Dic",
     #"Distance",
     #"Entropy",
     #"ErrorMatrix",
@@ -30,16 +31,16 @@ for mo in (
     #"MatrixFactorization",
     #"MutualInformation",
     #"Normalization",
-    #"Numbe",
-    #"Palette",
+    "Numbe",
+    "Palette",
     "Path",
-    #"Plot",
+    "Plot",
     "PolarCoordinate",
     #"Probability",
     #"ROC",
     #"Significance",
     #"Simulation",
-    #"Strin",
+    "Strin",
     #"Table",
     #"Target",
     #"XSample",
@@ -48,6 +49,8 @@ for mo in (
     #"XSampleSelect",
 )
 
-    run(`julia --project $mo.jl`)
+    @info "🎬 Testing $na"
+
+    run(`julia --project $na.jl`)
 
 end

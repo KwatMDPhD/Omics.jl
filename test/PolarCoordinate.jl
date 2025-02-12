@@ -27,9 +27,9 @@ for (di, re) in ((
     ],
 ),)
 
-    ni = 1000
+    nu = 1000
 
-    co_ = Vector{Float64}(undef, ni)
+    co_ = Vector{Float64}(undef, nu)
 
     te_ = similar(co_)
 
@@ -39,7 +39,7 @@ for (di, re) in ((
 
     seed!(20240423)
 
-    an_ = Omics.PolarCoordinate.ge!(di; ni, co_, te_, pr_, ac_)
+    an_ = Omics.PolarCoordinate.ge!(di; nu, co_, te_, pr_, ac_)
 
     @test isapprox(an_, re)
 

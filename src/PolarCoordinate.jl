@@ -22,7 +22,7 @@ end
 
 function ge!(
     d1;
-    ni = 1000,
+    nu = 1000,
     st = P2 * 0.1,
     lo = 0.32,
     sc = 32.0,
@@ -44,7 +44,7 @@ function ge!(
 
     c1 = cor(d1_, d2_)
 
-    for i1 in 1:ni
+    for i1 in 1:nu
 
         i2 = rand(1:na)
 
@@ -68,7 +68,7 @@ function ge!(
 
         c2 = cor(d1_, d2_)
 
-        te = 1.0 / (1.0 + exp((i1 - ni * lo) / ni * sc))
+        te = 1.0 / (1.0 + exp((i1 - nu * lo) / nu * sc))
 
         if c1 <= c2
 

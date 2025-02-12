@@ -6,8 +6,10 @@ using Omics
 
 # ---- #
 
-const FI = Omics.HTM.writ(
-    "",
+const FI = joinpath(tempdir(), "_.html")
+
+Omics.HTM.writ(
+    FI,
     ("SRC 1", "SRC 2"),
     "",
     """
@@ -15,11 +17,7 @@ const FI = Omics.HTM.writ(
     SCRIPT LINE 2""",
 )
 
-const HT = read(FI, String)
-
-@test count(==('\n'), HT) === 14
-
-Omics.Path.ope(FI)
+@test count(==('\n'), read(FI, String)) === 14
 
 # ---- #
 

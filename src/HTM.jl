@@ -2,6 +2,8 @@ module HTM
 
 using Random: randstring
 
+using ..Omics
+
 function writ(fi, sr_, id, sc, co = "#000000")
 
     if isempty(fi)
@@ -28,7 +30,7 @@ function writ(fi, sr_, id, sc, co = "#000000")
         </html>""",
     )
 
-    fi
+    Omics.Path.ope(fi)
 
 end
 
