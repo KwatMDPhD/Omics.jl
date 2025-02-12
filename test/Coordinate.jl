@@ -1,85 +1,82 @@
-using Random: seed!
-
 using Test: @test
 
 using Omics
 
 # ---- #
 
-for (di, re) in (
-    (
-        [
-            0 1 2
-            1 0 3
-            2 3 0
-        ],
-        [
-            -0.323051 -1.31159 1.63464
-            0.300953 -0.0234223 -0.277531
-        ],
-    ),
-    (
-        [
-            0 1 1
-            1 0 1
-            1 1 0
-        ],
-        [
-            0.0827895 -0.5356215 0.45283207
-            0.5728598 -0.219652 -0.3532078
-        ],
-    ),
-)
+# 10.666 ns (0 allocations: 0 bytes)
+# 10.135 ns (0 allocations: 0 bytes)
+# 10.636 ns (0 allocations: 0 bytes)
+# 10.125 ns (0 allocations: 0 bytes)
+# 10.636 ns (0 allocations: 0 bytes)
+# 8.916 ns (0 allocations: 0 bytes)
+# 10.677 ns (0 allocations: 0 bytes)
+# 8.884 ns (0 allocations: 0 bytes)
 
-    seed!(20231210)
+for (x1, y1, re) in ((1, 1, 1 / 3), (-1, 1, 2 / 3), (-1, -1, 4 / 3), (1, -1, 5 / 3))
 
-    @test isapprox(Omics.Coordinate.get_cartesian(di), re; atol = 1e-5)
+    y1 *= sqrt(3)
+
+    an, ra = Omics.Coordinate.convert_cartesian_to_polar(x1, y1)
+
+    @test isapprox(an, pi * re)
+
+    @test isapprox(ra, 2.0)
+
+    #@btime Omics.Coordinate.convert_cartesian_to_polar($x1, $y1)
+
+    x2, y2 = Omics.Coordinate.convert_polar_to_cartesian(an, ra)
+
+    @test isapprox(x1, x2)
+
+    @test isapprox(y1, y2)
+
+    #@btime Omics.Coordinate.convert_polar_to_cartesian($an, $ra)
 
 end
 
 # ---- #
 
-# 71.417 μs (6 allocations: 560 bytes)
+const DI = [
+    0 1 2 3 4 5
+    1 0 3 4 5 6
+    2 3 0 5 6 7
+    3 4 5 0 7 8
+    4 5 6 7 0 9
+    5 6 7 8 9 0.0
+]
 
-for (di, re) in ((
-    [
-        0 1 2 3 4 5
-        1 0 3 4 5 6
-        2 3 0 5 6 7
-        3 4 5 0 7 8
-        4 5 6 7 0 9
-        5 6 7 8 9 0.0
-    ],
-    [
-        5.869485802601142,
-        5.879259541653078,
-        6.189365973376273,
-        5.292574117369777,
-        4.243083607790291,
-        1.4567216544520305,
-    ],
-),)
+const NP = size(DI, 1)
 
-    ui = 1000
+const CA = Omics.CartesianCoordinate.ge(DI)
 
-    ut = 1 + ui
+const AN_ = Omics.PolarCoordinate.ge!(DI)
 
-    co_ = Vector{Float64}(undef, ut)
+const XY_ = map(Omics.Coordinate.convert_polar_to_cartesian, AN_, ones(NP))
 
-    te_ = Vector{Float64}(undef, ut)
+const TR = Dict("text" => 1:NP, "mode" => "text", "textfont" => Dict("size" => 24))
 
-    pr_ = Vector{Float64}(undef, ut)
-
-    ac_ = BitVector(undef, ut)
-
-    seed!(20240423)
-
-    an_ = Omics.Coordinate.get_polar!(di; ui, co_, te_, pr_, ac_)
-
-    @test isapprox(an_, re)
-
-    #@btime Omics.Coordinate.get_polar!($di)
-
-    Omics.Coordinate.plot("", co_, te_, clamp!(pr_, 0.0, 1.0), ac_)
-
-end
+Omics.Plot.plot(
+    "",
+    (
+        Omics.Dic.merg(
+            Dict(
+                "name" => "Cartesian",
+                "y" => CA[2, :],
+                "x" => CA[1, :],
+                "textfont" => Dict("color" => Omics.Color.A1),
+            ),
+            TR,
+        ),
+        Omics.Dic.merg(
+            Dict(
+                "name" => "Polar",
+                "y" => map(xy -> xy[2], XY_),
+                "x" => map(xy -> xy[1], XY_),
+                "textfont" => Dict("color" => Omics.Color.A2),
+            ),
+            TR,
+        ),
+    ),
+    Dict("height" => 800, "width" => 800),
+)

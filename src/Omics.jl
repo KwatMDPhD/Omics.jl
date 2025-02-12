@@ -2,13 +2,13 @@ module Omics
 
 # ----------------------------------------------------------------------------------------------- #
 
+include("CartesianCoordinate.jl")
+
 include("Clustering.jl")
 
 include("Color.jl")
 
 include("Coordinate.jl")
-
-include("CoordinateConversion.jl")
 
 include("Cytoscape.jl")
 
@@ -59,6 +59,8 @@ include("Palette.jl")
 include("Path.jl")
 
 include("Plot.jl")
+
+include("PolarCoordinate.jl")
 
 include("Probability.jl")
 
