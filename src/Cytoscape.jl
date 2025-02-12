@@ -2,8 +2,6 @@ module Cytoscape
 
 using JSON: json
 
-using Random: randstring
-
 using ..Omics
 
 function plot(
@@ -16,15 +14,11 @@ function plot(
     sc = 1,
 )
 
-    if isempty(f1)
-
-        f1 = joinpath(tempdir(), "$(randstring()).html")
-
-    end
-
     re = ""
 
     if !isempty(ex)
+
+        @assert !isempty(f1)
 
         ba = "$(splitext(basename(f1))[1]).$ex"
 

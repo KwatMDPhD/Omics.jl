@@ -1,20 +1,20 @@
 module Path
 
-function shorten(pa, ro)
+function shorten(pa, di)
 
-    pa[(lastindex(ro) + 2):end]
+    pa[(lastindex(di) + 2):end]
 
 end
 
-function wait(pa, ma = 4; sl = 1)
+function wait(pa, s1 = 4)
 
-    us = 0
+    s2 = 0
 
-    while us < ma && !ispath(pa)
+    while s2 < s1 && !ispath(pa)
 
-        sleep(sl)
+        sleep(1)
 
-        @info "Waiting for $pa ($(us += sl) / $ma)"
+        @info "Waiting for $pa ($(s2 += 1) / $s1)"
 
     end
 

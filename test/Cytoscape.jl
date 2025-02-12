@@ -25,7 +25,7 @@ Omics.Cytoscape.plot("", E1_)
 
 Omics.Path.ope(
     Omics.Cytoscape.plot(
-        "",
+        joinpath(tempdir(), "1.html"),
         E1_,
         "png";
         st_ = map(
@@ -43,11 +43,22 @@ Omics.Path.ope(
 
 # ---- #
 
-const E2_ =
-    Omics.Cytoscape.rea(Omics.Cytoscape.plot("", E1_, "json"; la = Dict("name" => "cose")))
+const E2_ = Omics.Cytoscape.rea(
+    Omics.Cytoscape.plot(
+        joinpath(tempdir(), "2.html"),
+        E1_,
+        "json";
+        la = Dict("name" => "cose"),
+    ),
+)
 
 Omics.Cytoscape.position!(E1_, E2_)
 
 @test Omics.Cytoscape.rea(
-    Omics.Cytoscape.plot("", E1_, "json"; la = Dict("name" => "preset")),
+    Omics.Cytoscape.plot(
+        joinpath(tempdir(), "3.html"),
+        E1_,
+        "json";
+        la = Dict("name" => "preset"),
+    ),
 ) == E2_

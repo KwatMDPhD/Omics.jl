@@ -2,8 +2,6 @@ module Plot
 
 using JSON: json
 
-using Random: randstring
-
 using ..Omics
 
 const SS = 832
@@ -39,12 +37,6 @@ function tick(fl_)
 end
 
 function plot(ht, da_, la = Dict{String, Any}(), co = Dict{String, Any}())
-
-    if isempty(ht)
-
-        ht = joinpath(tempdir(), "$(randstring()).html")
-
-    end
 
     la = Omics.Dic.merg(
         Dict(

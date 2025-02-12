@@ -1,9 +1,17 @@
 module HTM
 
-function writ(ht, sr_, id, sc, ba = "#000000")
+using Random: randstring
+
+function writ(fi, sr_, id, sc, co = "#000000")
+
+    if isempty(fi)
+
+        fi = joinpath(tempdir(), "$(randstring()).html")
+
+    end
 
     write(
-        ht,
+        fi,
         """
         <!doctype html>
         <html>
@@ -11,7 +19,7 @@ function writ(ht, sr_, id, sc, ba = "#000000")
             <meta charset="utf-8" />
           </head>
         $(join(("<script src=\"$sr\"></script>" for sr in sr_), '\n'))
-          <body style="margin: 0; background: $ba">
+          <body style="margin: 0; background: $co">
             <div id="$id" style="min-height: 100vh; min-width: fit-content; display: flex; justify-content: center; align-items: center"></div>
           </body>
           <script>
@@ -20,7 +28,7 @@ function writ(ht, sr_, id, sc, ba = "#000000")
         </html>""",
     )
 
-    ht
+    fi
 
 end
 
