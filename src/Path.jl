@@ -6,7 +6,7 @@ function shorten(pa, di)
 
 end
 
-function wait(pa, s1 = 4)
+function wai(pa, s1 = 4)
 
     s2 = 0
 

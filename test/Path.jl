@@ -4,15 +4,19 @@ using Omics
 
 # ---- #
 
-const WO = pwd()
+const D1 = pwd()
 
-const PA = pkgdir(Omics)
+const D2 = pkgdir(Omics)
 
-for (ro, re) in ((dirname(PA), "Omics.jl/test"), (PA, "test"), (WO, ""))
+for (di, re) in ((dirname(D2), "Omics.jl/test"), (D2, "test"), (D1, ""))
 
-    @test Omics.Path.shorten(WO, ro) == re
+    @test Omics.Path.shorten(D1, di) == re
 
 end
+
+# ---- #
+
+Omics.Path.wai("nonexistent.file")
 
 # ---- #
 

@@ -84,7 +84,7 @@ function plot(
 
     end
 
-    Omics.Path.wait(f2, 32)
+    Omics.Path.wai(f2, 32)
 
     mv(f2, joinpath(dirname(f1), ba); force = true)
 
