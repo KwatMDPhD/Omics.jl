@@ -8,6 +8,7 @@ using Omics
 
 for st in (
     "",
+    " ",
     "α",
     "π",
     " ",
@@ -47,11 +48,11 @@ for st in (
 
     @test Omics.Strin.is_bad(st^2)
 
-    @test !Omics.Strin.is_bad("A$st")
+    @test !Omics.Strin.is_bad("a$st")
 
-    @test !Omics.Strin.is_bad("$(st)B")
+    @test !Omics.Strin.is_bad("$(st)b")
 
-    @test !Omics.Strin.is_bad("A$(st)B")
+    @test !Omics.Strin.is_bad("a$(st)b")
 
 end
 
@@ -80,18 +81,17 @@ end
 # ---- #
 
 for (st, re) in (
+    ("i'M", "I'm"),
+    ("you'RE", "You're"),
+    ("it'S", "It's"),
+    ("we'VE", "We've"),
+    ("i'D", "I'd"),
+    ("1ST", "1st"),
+    ("2ND", "2nd"),
+    ("3RD", "3rd"),
+    ("4TH", "4th"),
     (S1, " Less  Is   More    "),
     (S2, "    DNA   RNA  Protein "),
-    ("i'm on the path", "I'm on the Path"),
-    ("i'M ON THE path", "I'M ON THE Path"),
-    ("1st", "1st"),
-    ("1ST", "1ST"),
-    ("2nd", "2nd"),
-    ("2Nd", "2Nd"),
-    ("3rd", "3rd"),
-    ("3rD", "3rD"),
-    ("4th", "4th"),
-    ("5TH", "5TH"),
 )
 
     @test Omics.Strin.title(st) === re
@@ -108,30 +108,44 @@ end
 
 # ---- #
 
-const LO = "1234567890"
+const S3 = "1234567890"
 
-for (uc, re) in ((1, "1..."), (2, "12..."), (11, LO))
+for (nu, re) in ((1, "1..."), (2, "12..."), (11, S3))
 
-    @test Omics.Strin.limit(LO, uc) === re
+    @test Omics.Strin.limit(S3, nu) === re
 
 end
 
 # ---- #
+
+# 45.328 ns (2 allocations: 256 bytes)
+# 429.226 ns (3 allocations: 1.23 KiB)
+# 63.776 ns (2 allocations: 256 bytes)
+# 428.603 ns (3 allocations: 1.23 KiB)
+# 77.418 ns (2 allocations: 256 bytes)
+# 429.226 ns (3 allocations: 1.23 KiB)
+# 429.020 ns (3 allocations: 1.23 KiB)
+# 429.231 ns (3 allocations: 1.23 KiB)
+
+const S4 = "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z"
 
 for (id, re) in ((1, "a"), (2, "b"), (3, "c"), (26, "z"))
 
-    @test Omics.Strin.ge("a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z", id, '.') ==
-          re
+    @test Omics.Strin.ge(S4, id, '.') == re
+
+    #@btime Omics.Strin.ge(S4, $id, '.')
+
+    #@btime split(S4, '.')[$id]
 
 end
 
 # ---- #
 
-const ST = "a b c"
+const S5 = "a b c"
 
 # ---- #
 
-for (st, re) in ((ST, "a"),)
+for (st, re) in ((S5, "a"),)
 
     @test Omics.Strin.get_1(st) == re
 
@@ -139,7 +153,7 @@ end
 
 # ---- #
 
-for (st, re) in ((ST, "c"),)
+for (st, re) in ((S5, "c"),)
 
     @test Omics.Strin.get_end(st) == re
 
@@ -147,7 +161,7 @@ end
 
 # ---- #
 
-for (st, re) in ((ST, "b c"),)
+for (st, re) in ((S5, "b c"),)
 
     @test Omics.Strin.trim_1(st) == re
 
@@ -155,7 +169,7 @@ end
 
 # ---- #
 
-for (st, re) in ((ST, "a b"),)
+for (st, re) in ((S5, "a b"),)
 
     @test Omics.Strin.trim_end(st) == re
 
@@ -163,19 +177,33 @@ end
 
 # ---- #
 
+# 119.223 ns (6 allocations: 200 bytes)
+# 123.934 ns (6 allocations: 200 bytes)
+# 117.495 ns (6 allocations: 208 bytes)
+# 134.666 ns (7 allocations: 240 bytes)
+# 130.471 ns (7 allocations: 232 bytes)
+# 139.032 ns (7 allocations: 232 bytes)
+# 139.857 ns (7 allocations: 240 bytes)
+# 126.902 ns (6 allocations: 200 bytes)
+
 for (si, pl) in (
+    ("sex", "sexes"),
+    ("bus", "buses"),
+    ("hero", "heroes"),
+    ("country", "countries"),
+    ("city", "cities"),
+    ("index", "indices"),
     ("vertex", "vertices"),
     ("edge", "edges"),
-    ("sex", "sexes"),
-    ("country", "countries"),
-    ("hero", "heroes"),
 )
 
-    for us in (-2, -1, 0, 1, 2)
+    for nu in (-2, -1, 0, 1, 2)
 
-        @test Omics.Strin.coun(us, si) === "$us $(1 < abs(us) ? pl : si)"
+        @test Omics.Strin.coun(nu, si) === "$nu $(1 < abs(nu) ? pl : si)"
 
     end
+
+    #@btime Omics.Strin.coun(2, $si)
 
 end
 

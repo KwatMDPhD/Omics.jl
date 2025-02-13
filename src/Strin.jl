@@ -22,47 +22,42 @@ end
 
 function title(st)
 
-    join(
-        isuppercase(c1) ? c1 : c2 for (c1, c2) in zip(
-            st,
-            replace(
-                titlecase(st),
-                '_' => ' ',
-                r"'M" => "'m",
-                r"'Re" => "'re",
-                r"'S" => "'s",
-                r"'Ve" => "'ve",
-                r"'D" => "'d",
-                r"1St" => "1st",
-                r"2Nd" => "2nd",
-                r"3Rd" => "3rd",
-                r"(?<=\d)Th" => "th",
-                r"(?<= )a(?= )"i => 'a',
-                r"(?<= )an(?= )"i => "an",
-                r"(?<= )and(?= )"i => "and",
-                r"(?<= )as(?= )"i => "as",
-                r"(?<= )at(?= )"i => "at",
-                r"(?<= )but(?= )"i => "but",
-                r"(?<= )by(?= )"i => "by",
-                r"(?<= )for(?= )"i => "for",
-                r"(?<= )from(?= )"i => "from",
-                r"(?<= )in(?= )"i => "in",
-                r"(?<= )into(?= )"i => "into",
-                r"(?<= )nor(?= )"i => "nor",
-                r"(?<= )of(?= )"i => "of",
-                r"(?<= )off(?= )"i => "off",
-                r"(?<= )on(?= )"i => "on",
-                r"(?<= )onto(?= )"i => "onto",
-                r"(?<= )or(?= )"i => "or",
-                r"(?<= )out(?= )"i => "out",
-                r"(?<= )over(?= )"i => "over",
-                r"(?<= )the(?= )"i => "the",
-                r"(?<= )to(?= )"i => "to",
-                r"(?<= )up(?= )"i => "up",
-                r"(?<= )vs(?= )"i => "vs",
-                r"(?<= )with(?= )"i => "with",
-            ),
-        )
+    replace(
+        titlecase(st; strict = false),
+        '_' => ' ',
+        r"'m"i => "'m",
+        r"'re"i => "'re",
+        r"'s"i => "'s",
+        r"'ve"i => "'ve",
+        r"'d"i => "'d",
+        r"1st"i => "1st",
+        r"2nd"i => "2nd",
+        r"3rd"i => "3rd",
+        r"(?<=\d)th"i => "th",
+        r"(?<= )a(?= )"i => 'a',
+        r"(?<= )an(?= )"i => "an",
+        r"(?<= )and(?= )"i => "and",
+        r"(?<= )as(?= )"i => "as",
+        r"(?<= )at(?= )"i => "at",
+        r"(?<= )but(?= )"i => "but",
+        r"(?<= )by(?= )"i => "by",
+        r"(?<= )for(?= )"i => "for",
+        r"(?<= )from(?= )"i => "from",
+        r"(?<= )in(?= )"i => "in",
+        r"(?<= )into(?= )"i => "into",
+        r"(?<= )nor(?= )"i => "nor",
+        r"(?<= )of(?= )"i => "of",
+        r"(?<= )off(?= )"i => "off",
+        r"(?<= )on(?= )"i => "on",
+        r"(?<= )onto(?= )"i => "onto",
+        r"(?<= )or(?= )"i => "or",
+        r"(?<= )out(?= )"i => "out",
+        r"(?<= )over(?= )"i => "over",
+        r"(?<= )the(?= )"i => "the",
+        r"(?<= )to(?= )"i => "to",
+        r"(?<= )up(?= )"i => "up",
+        r"(?<= )vs(?= )"i => "vs",
+        r"(?<= )with(?= )"i => "with",
     )
 
 end
@@ -73,9 +68,9 @@ function stri(st)
 
 end
 
-function limit(st, uc)
+function limit(st, nu)
 
-    lastindex(st) <= uc ? st : "$(st[1:uc])..."
+    lastindex(st) <= nu ? st : "$(st[1:nu])..."
 
 end
 
@@ -109,35 +104,34 @@ function trim_end(st, de = ' ')
 
 end
 
-function coun(us, st)
+function coun(nu, st)
 
-    if 1 < abs(us)
+    if 1 < abs(nu)
 
-        st = if lastindex(st) == 3 && endswith(st, "ex")
+        st =
+            if lastindex(st) == 3 && endswith(st, "ex") ||
+               endswith(st, "us") ||
+               endswith(st, 'o')
 
-            "$(st)es"
+                "$(st)es"
 
-        elseif endswith(st, "ex")
+            elseif endswith(st, 'y')
 
-            "$(st[1:(end - 2)])ices"
+                "$(st[1:(end - 1)])ies"
 
-        elseif endswith(st, "ry")
+            elseif endswith(st, "ex")
 
-            "$(st[1:(end - 2)])ries"
+                "$(st[1:(end - 2)])ices"
 
-        elseif endswith(st, 'o')
+            else
 
-            "$(st[1:(end - 1)])oes"
+                "$(st)s"
 
-        else
-
-            "$(st)s"
-
-        end
+            end
 
     end
 
-    "$us $st"
+    "$nu $st"
 
 end
 

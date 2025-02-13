@@ -40,8 +40,8 @@ for na in (
     #"ROC", # 32
     #"Significance", # 12
     #"Simulation",
-    "Strin", # 3
-    "Table", # 4
+    "Strin",
+    "Table",
     #"Target", # 14
     #"XSample", # 102
     #"XSampleCharacteristic", # 103
