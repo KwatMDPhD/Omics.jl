@@ -1,4 +1,4 @@
-module ROC
+module ReceiverOperatingCharacteristic
 
 using ..Omics
 

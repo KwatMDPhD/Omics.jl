@@ -35,7 +35,7 @@ for na in (
     "Plot",
     "PolarCoordinate",
     "Probability",
-    "ROC",
+    "ReceiverOperatingCharacteristic",
     "Significance",
     "Simulation",
     "Strin",
