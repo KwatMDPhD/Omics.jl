@@ -21,7 +21,7 @@ for na in (
     #"Extreme", # 11
     #"GEO", # 101
     #"GPSMap", # 42
-    "Gene", # 5
+    "Gene",
     #"GeneralizedLinearModel",
     #"Grid",
     "HTM",

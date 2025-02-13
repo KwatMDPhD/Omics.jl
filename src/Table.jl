@@ -16,35 +16,31 @@ function make(na, ro_, co_, an)
 
 end
 
-function rea(fi; ke_ar...)
+function rea(fi; ke_...)
 
-    if !isfile(fi)
-
-        error()
-
-    end
+    @assert isfile(fi)
 
     it_ = mmap(fi)
 
-    if endswith(fi, ".gz")
+    if endswith(fi, "gz")
 
         it_ = transcode(GzipDecompressor, it_)
 
     end
 
-    read(it_, DataFrame; ke_ar...)
+    read(it_, DataFrame; ke_...)
 
 end
 
-function rea(xl, sh; ke_ar...)
+function rea(fi, sh; ke_...)
 
-    DataFrame(readtable(xl, sh; ke_ar...))
+    DataFrame(readtable(fi, sh; infer_eltypes = true, ke_...))
 
 end
 
-function writ(ts, an)
+function writ(fi, an)
 
-    write(ts, an; delim = '\t')
+    write(fi, an; delim = '\t')
 
 end
 

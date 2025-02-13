@@ -18,25 +18,25 @@ using Omics
 
 # ---- #
 
-const DA = pkgdir(Omics, "data", "Table")
+const DI = pkgdir(Omics, "data", "Table")
 
-const WR = joinpath(tempdir(), "writ.tsv")
-
-# ---- #
-
-const TI = Omics.Table.rea(joinpath(DA, "titanic.tsv"))
-
-@test all(map(isequal, eachcol(TI), eachcol(Omics.Table.rea(Omics.Table.writ(WR, TI)))))
+const FI = joinpath(tempdir(), "_.tsv")
 
 # ---- #
 
-const EN = Omics.Table.rea(joinpath(DA, "enst_gene.tsv.gz"))
+const A1 = Omics.Table.rea(joinpath(DI, "titanic.tsv"))
 
-@test EN == Omics.Table.rea(Omics.Table.writ(WR, EN))
+@test all(map(isequal, eachcol(A1), eachcol(Omics.Table.rea(Omics.Table.writ(FI, A1)))))
 
 # ---- #
 
-const XL =
-    Omics.Table.rea(joinpath(DA, "12859_2019_2886_MOESM2_ESM.xlsx"), "HumanSpecific Genes")
+const A2 = Omics.Table.rea(joinpath(DI, "enst_gene.tsv.gz"))
 
-Omics.Table.rea(Omics.Table.writ(WR, XL))
+@test A2 == Omics.Table.rea(Omics.Table.writ(FI, A2))
+
+# ---- #
+
+const A3 =
+    Omics.Table.rea(joinpath(DI, "12859_2019_2886_MOESM2_ESM.xlsx"), "HumanSpecific Genes")
+
+Omics.Table.rea(Omics.Table.writ(FI, A3))
