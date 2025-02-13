@@ -10,25 +10,25 @@ using StatsBase: mean, sqL2dist
 
 using ..Omics
 
-function _lo(bo, ui, ob)
+function _lo(co, nu, ob)
 
-    if bo
+    if co
 
-        @info "Converged in $ui." ob
+        @info "Converged in $nu." ob
 
     else
 
-        @warn "Failed to converge in $ui." ob
+        @warn "Failed to converge in $nu." ob
 
     end
 
 end
 
-function factorize(A, uf; ke_ar...)
+function factorize(A, nu; ke_ar...)
 
-    re = nnmf(A, uf; ke_ar...)
+    re = nnmf(A, nu; ke_ar...)
 
-    _lo(re.converged, re.niters, re.objvalue / norm(A))
+    _lo(re.converged, re.niters, re.objvalue / lastindex(A))
 
     re.W, re.H
 
@@ -36,15 +36,17 @@ end
 
 function _get_coefficient(A_)
 
-    co_ = Vector{Float64}(undef, lastindex(A_))
+    nu = lastindex(A_)
 
-    n1 = norm(A_[1])
+    co_ = Vector{Float64}(undef, nu)
 
-    co_[1] = 1
+    no = norm(A_[1])
 
-    for id in 2:lastindex(A_)
+    co_[1] = 1.0
 
-        co_[id] = n1 / norm(A_[id])
+    for id in 2:nu
+
+        co_[id] = no / norm(A_[id])
 
     end
 
@@ -52,27 +54,27 @@ function _get_coefficient(A_)
 
 end
 
-function _initialize(A, uf::Integer)
+function _initialize(A, nu::Integer)
 
-    W = rand(size(A, 1), uf)
+    W = rand(size(A, 1), nu)
 
     foreach(Omics.Normalization.normalize_with_sum!, eachcol(W))
 
-    W .*= sqrt(mean(A) / uf)
+    fa = sqrt(mean(A) / nu)
 
-    W
+    map!(nu -> nu * fa, W, W)
 
 end
 
-function _initialize(uf::Integer, A)
+function _initialize(nu::Integer, A)
 
-    H = rand(uf, size(A, 2))
+    H = rand(nu, size(A, 2))
 
     foreach(Omics.Normalization.normalize_with_sum!, eachrow(H))
 
-    H .*= sqrt(mean(A) / uf)
+    fa = sqrt(mean(A) / nu)
 
-    H
+    map!(nu -> nu * fa, H, H)
 
 end
 
@@ -182,7 +184,7 @@ function factorize_wide(
 
     end
 
-    _lo(bo, ui, ob_ ./ norm.(A_))
+    _lo(bo, ui, ob_ ./ lastindex.(A_))
 
     W, H_
 

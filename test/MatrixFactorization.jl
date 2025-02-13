@@ -16,8 +16,6 @@ const A3 = randn(20, 10)
 
 const A4 = randn(20, 20)
 
-# ---- #
-
 A1 .-= minimum(A1)
 
 A2 .-= minimum(A2)
@@ -28,17 +26,17 @@ A4 .-= minimum(A4)
 
 # ---- #
 
-# 115.251 ns (1 allocation: 64 bytes)
-# 219.285 ns (1 allocation: 80 bytes)
-# 316.911 ns (1 allocation: 80 bytes)
-# 219.368 ns (1 allocation: 80 bytes)
+# 110.931 ns (2 allocations: 64 bytes)
+# 211.652 ns (2 allocations: 80 bytes)
+# 308.845 ns (2 allocations: 80 bytes)
+# 211.650 ns (2 allocations: 80 bytes)
 
 for (A_, re) in
     (((A1,), [1]), ((A1, A1), [1, 1]), ((A1, A1, A1), [1, 1, 1]), ((A1, A1 .* 2), [1, 0.5]))
 
     @test Omics.MatrixFactorization._get_coefficient(A_) == re
 
-    #@btime Omics.MatrixFactorization._get_coefficient($A_)
+    @btime Omics.MatrixFactorization._get_coefficient($A_)
 
 end
 
@@ -62,22 +60,22 @@ const UF = 3
 
 # ---- #
 
-#┌ Info: Converged with 914 iterations.
-#└   ob = 0.6741529947808842
-#  1.871 μs (20 allocations: 3.14 KiB)
-#  4.979 μs (91 allocations: 10.14 KiB)
-#┌ Info: Converged with 738 iterations.
-#└   ob = 1.4374956847624631
-#  2.597 μs (20 allocations: 4.73 KiB)
-#  9.834 μs (181 allocations: 20.22 KiB)
-#┌ Info: Converged with 934 iterations.
-#└   ob = 1.3383717598237397
-#  2.352 μs (20 allocations: 4.73 KiB)
-#  6.375 μs (91 allocations: 14.05 KiB)
-#┌ Info: Converged with 1746 iterations.
-#└   ob = 1.7146732148845611
-#  3.474 μs (20 allocations: 7.05 KiB)
-#  12.625 μs (181 allocations: 28.03 KiB)
+#┌ Info: Converged in 407.
+#└   ob = 0.20339394658990206
+#  1.254 μs (15 allocations: 2.86 KiB)
+#  4.089 μs (152 allocations: 10.31 KiB)
+#┌ Info: Converged in 375.
+#└   ob = 0.314316132822924
+#  1.871 μs (15 allocations: 4.38 KiB)
+#  8.083 μs (302 allocations: 20.58 KiB)
+#┌ Info: Converged in 223.
+#└   ob = 0.22517583992451562
+#  1.604 μs (15 allocations: 4.38 KiB)
+#  5.528 μs (152 allocations: 14.53 KiB)
+#┌ Info: Converged in 781.
+#└   ob = 0.2992436074427608
+#  2.481 μs (16 allocations: 6.73 KiB)
+#  10.875 μs (302 allocations: 29.02 KiB)
 
 for (id, A) in enumerate((A1, A2, A3, A4))
 
@@ -112,49 +110,49 @@ for (id, A) in enumerate((A1, A2, A3, A4))
 
     @test isapprox(H, AWi; rtol = 1e-2)
 
-    #disable_logging(Warn)
-    #@btime Omics.MatrixFactorization.factorize(
-    #    $A,
-    #    UF;
-    #    init = :custom,
-    #    W0 = $W0,
-    #    H0 = $H0,
-    #    alg = :multmse,
-    #    tol = to,
-    #    maxiter = ma,
-    #)
-    #disable_logging(Debug)
+    disable_logging(Warn)
+    @btime Omics.MatrixFactorization.factorize(
+        $A,
+        UF;
+        init = :custom,
+        W0 = $W0,
+        H0 = $H0,
+        alg = :multmse,
+        tol = to,
+        maxiter = ma,
+    )
+    disable_logging(Debug)
 
-    #@btime Omics.MatrixFactorization.solve_h($W, $A)
+    @btime Omics.MatrixFactorization.solve_h($W, $A)
 
 end
 
 # ---- #
 
-#┌ Info: Converged with 402 iterations.
+#┌ Info: Converged in 402.
 #│   ob =
 #│    2-element Vector{Float64}:
-#│     0.6743289169372342
-#└     0.6743289169372342
-#  1.775 μs (16 allocations: 3.22 KiB)
-#┌ Info: Converged with 459 iterations.
+#│     0.20339105382690983
+#└     0.20339105382690983
+#  1.617 μs (32 allocations: 3.36 KiB)
+#┌ Info: Converged in 459.
 #│   ob =
 #│    2-element Vector{Float64}:
-#│     1.4377058427756195
-#└     1.4377058427756195
-#  2.731 μs (16 allocations: 4.81 KiB)
-#┌ Info: Converged with 234 iterations.
+#│     0.3143278250697895
+#└     0.3143278250697895
+#  2.458 μs (32 allocations: 4.88 KiB)
+#┌ Info: Converged in 234.
 #│   ob =
 #│    2-element Vector{Float64}:
-#│     1.3385646237237367
-#└     1.3385646237237367
-#  2.444 μs (16 allocations: 4.81 KiB)
-#┌ Info: Converged with 637 iterations.
+#│     0.22517603717590295
+#└     0.22517603717590295
+#  2.167 μs (32 allocations: 4.88 KiB)
+#┌ Info: Converged in 637.
 #│   ob =
 #│    2-element Vector{Float64}:
-#│     1.7150104467124012
-#└     1.7150104467124012
-#  3.970 μs (16 allocations: 7.12 KiB)
+#│     0.29924253061077155
+#└     0.29924253061077155
+#  3.464 μs (33 allocations: 7.23 KiB)
 
 for (id, A) in enumerate((A1, A2, A3, A4))
 
@@ -182,16 +180,16 @@ for (id, A) in enumerate((A1, A2, A3, A4))
 
     end
 
-    #disable_logging(Warn)
-    #@btime Omics.MatrixFactorization.factorize_wide(
-    #    $(A,),
-    #    UF;
-    #    W = $W0,
-    #    H_ = $(H0_[1],),
-    #    to,
-    #    ma,
-    #)
-    #disable_logging(Debug)
+    disable_logging(Warn)
+    @btime Omics.MatrixFactorization.factorize_wide(
+        $(A,),
+        UF;
+        W = $W0,
+        H_ = $(H0_[1],),
+        to,
+        ma,
+    )
+    disable_logging(Debug)
 
 end
 
