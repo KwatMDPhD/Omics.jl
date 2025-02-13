@@ -8,19 +8,19 @@ using Omics
 
 seed!(20240422)
 
-const A1 = map(nu -> nu + 4, randn(10, 10))
+const A1 = map(nu -> nu + 4.0, randn(10, 10))
 
-const A2 = map(nu -> nu + 4, randn(10, 20))
+const A2 = map(nu -> nu + 4.0, randn(10, 20))
 
-const A3 = map(nu -> nu + 4, randn(20, 10))
+const A3 = map(nu -> nu + 4.0, randn(20, 10))
 
-const A4 = map(nu -> nu + 4, randn(20, 20))
+const A4 = map(nu -> nu + 4.0, randn(20, 20))
 
 # ---- #
 
-# 112.027 ns (2 allocations: 64 bytes)
-# 213.285 ns (2 allocations: 80 bytes)
-# 213.318 ns (2 allocations: 80 bytes)
+# 111.622 ns (2 allocations: 64 bytes)
+# 213.287 ns (2 allocations: 80 bytes)
+# 213.287 ns (2 allocations: 80 bytes)
 
 for (A_, re) in (((A1,), [1.0]), ((A1, A1), [1.0, 1.0]), ((A1, A1 * 2), [1, 0.5]))
 
@@ -56,72 +56,72 @@ end
 
 const to = 1e-4
 
-const ma = 10^4
+const NU = 3
 
-const UF = 3
+const n2 = 1000
 
 # ---- #
 
-#┌ Info: Converged in 407.
-#└   ob = 0.20339394658990206
-#  1.254 μs (15 allocations: 2.86 KiB)
-#  4.089 μs (152 allocations: 10.31 KiB)
-#┌ Info: Converged in 375.
-#└   ob = 0.314316132822924
-#  1.871 μs (15 allocations: 4.38 KiB)
-#  8.083 μs (302 allocations: 20.58 KiB)
-#┌ Info: Converged in 223.
-#└   ob = 0.22517583992451562
-#  1.604 μs (15 allocations: 4.38 KiB)
-#  5.528 μs (152 allocations: 14.53 KiB)
-#┌ Info: Converged in 781.
-#└   ob = 0.2992436074427608
-#  2.481 μs (16 allocations: 6.73 KiB)
-#  10.875 μs (302 allocations: 29.02 KiB)
+#┌ Info: Converged in 481.
+#└   ob = 0.20499998731688607
+#  1.196 μs (15 allocations: 2.86 KiB)
+#  3.672 μs (152 allocations: 10.31 KiB)
+#┌ Info: Converged in 425.
+#└   ob = 0.3142612867299134
+#  1.817 μs (15 allocations: 4.38 KiB)
+#  7.281 μs (302 allocations: 20.58 KiB)
+#┌ Info: Converged in 281.
+#└   ob = 0.22492657317328926
+#  1.542 μs (15 allocations: 4.38 KiB)
+#  5.132 μs (152 allocations: 14.53 KiB)
+#┌ Info: Converged in 804.
+#└   ob = 0.29934276449451963
+#  2.435 μs (16 allocations: 6.73 KiB)
+#  10.083 μs (302 allocations: 29.02 KiB)
 
 for (id, A) in enumerate((A1, A2, A3, A4))
 
-    W0 = initialize(A, UF)
+    W0 = initialize(A, NU)
 
-    H0 = initialize(UF, A)
+    H0 = initialize(NU, A)
 
     W, H = Omics.MatrixFactorization.factorize(
         A,
-        UF;
+        NU;
         init = :custom,
         W0,
         H0,
         alg = :multmse,
         tol = to,
-        maxiter = ma,
+        maxiter = n2,
     )
 
-    Omics.Plot.plot_heat_map(joinpath(tempdir(), "$(id)_w.html"), W)
+    Omics.Plot.plot_heat_map(joinpath(tempdir(), "$id.w.html"), W)
 
-    Omics.Plot.plot_heat_map(joinpath(tempdir(), "$(id)_h.html"), H)
+    Omics.Plot.plot_heat_map(joinpath(tempdir(), "$id.h.html"), H)
 
-    @test all(>=(0), W)
+    @test all(>=(0.0), W)
 
-    @test all(>=(0), H)
+    @test all(>=(0.0), H)
 
     AWi = Omics.MatrixFactorization.solve_h(W, A)
 
-    Omics.Plot.plot_heat_map(joinpath(tempdir(), "$(id)_awi.html"), AWi)
+    Omics.Plot.plot_heat_map(joinpath(tempdir(), "$id.awi.html"), AWi)
 
-    @test all(>=(0), AWi)
+    @test all(>=(0.0), AWi)
 
     @test isapprox(H, AWi; rtol = 1e-2)
 
     disable_logging(Warn)
     @btime Omics.MatrixFactorization.factorize(
         $A,
-        UF;
+        NU;
         init = :custom,
         W0 = $W0,
         H0 = $H0,
         alg = :multmse,
         tol = to,
-        maxiter = ma,
+        maxiter = n2,
     )
     disable_logging(Debug)
 
@@ -131,65 +131,63 @@ end
 
 # ---- #
 
-#┌ Info: Converged in 402.
+#┌ Info: Converged in 471.
 #│   ob =
 #│    2-element Vector{Float64}:
-#│     0.20339105382690983
-#└     0.20339105382690983
-#  1.617 μs (32 allocations: 3.36 KiB)
-#┌ Info: Converged in 459.
+#│     0.2050057657196614
+#└     0.2050057657196614
+#  1.708 μs (32 allocations: 3.36 KiB)
+#┌ Info: Converged in 502.
 #│   ob =
 #│    2-element Vector{Float64}:
-#│     0.3143278250697895
-#└     0.3143278250697895
-#  2.458 μs (32 allocations: 4.88 KiB)
-#┌ Info: Converged in 234.
+#│     0.3142841434306548
+#└     0.3142841434306548
+#  2.546 μs (32 allocations: 4.88 KiB)
+#┌ Info: Converged in 348.
 #│   ob =
 #│    2-element Vector{Float64}:
-#│     0.22517603717590295
-#└     0.22517603717590295
-#  2.167 μs (32 allocations: 4.88 KiB)
-#┌ Info: Converged in 637.
+#│     0.2249289266965805
+#└     0.2249289266965805
+#  2.306 μs (32 allocations: 4.88 KiB)
+#┌ Info: Converged in 648.
 #│   ob =
 #│    2-element Vector{Float64}:
-#│     0.29924253061077155
-#└     0.29924253061077155
-#  3.464 μs (33 allocations: 7.23 KiB)
+#│     0.2993410572495553
+#└     0.2993410572495553
+#  3.620 μs (33 allocations: 7.23 KiB)
 
-for (id, A) in enumerate((A1, A2, A3, A4))
+for (i1, A) in enumerate((A1, A2, A3, A4))
 
-    A_ = (A, A)
+    A_ = [A, A]
 
-    W0 = initialize(A, UF)
+    W0 = initialize(A, NU)
 
-    H0_ = [initialize(UF, A) for _ in eachindex(A_)]
+    H0_ = map(A -> initialize(NU, A), A_)
 
-    W, H_ = Omics.MatrixFactorization.factorize_wide(A_, UF; W = W0, H_ = H0_, to, ma)
+    W, H_ = Omics.MatrixFactorization.factorize_wide(A_, NU; W = W0, H_ = H0_, n2, to)
 
-    Omics.Plot.plot_heat_map(joinpath(tempdir(), "si_$(id)_w.html"), W)
+    @test all(>=(0.0), W)
 
-    for ia in eachindex(A_)
+    Omics.Plot.plot_heat_map(joinpath(tempdir(), "wide.$i1.w.html"), W)
 
-        Omics.Plot.plot_heat_map(joinpath(tempdir(), "si_$(id)_h$ia.html"), H_[ia])
+    for i2 in eachindex(A_)
 
-    end
+        H = H_[i2]
 
-    @test all(>=(0), W)
+        @test all(>=(0.0), H)
 
-    for ia in eachindex(A_)
-
-        @test all(>=(0), H_[ia])
+        Omics.Plot.plot_heat_map(joinpath(tempdir(), "wide.$i1.h.$i2.html"), H)
 
     end
 
     disable_logging(Warn)
     @btime Omics.MatrixFactorization.factorize_wide(
-        $(A,),
-        UF;
+        $[A],
+        NU;
         W = $W0,
-        H_ = $(H0_[1],),
+        H_ = $[H0_[1]],
+        n2,
         to,
-        ma,
     )
     disable_logging(Debug)
 

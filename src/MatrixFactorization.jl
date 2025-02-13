@@ -87,11 +87,11 @@ end
 function factorize_wide(
     A_,
     u1;
-    to = 0.01,
-    u2 = 100,
     W = _initialize(A_[1], u1),
     H_ = [_initialize(u1, A) for A in A_],
     co_ = _get_coefficient(A_),
+    n2 = 100,
+    to = 0.01,
 )
 
     WH_ = map(H -> W * H, H_)
@@ -114,11 +114,11 @@ function factorize_wide(
 
     ep = sqrt(eps())
 
-    u3 = 0
+    n3 = 0
 
-    while !bo && u3 < u2
+    while !bo && n3 < n2
 
-        u3 += 1
+        n3 += 1
 
         copyto!(Wp, W)
 
@@ -184,7 +184,7 @@ function factorize_wide(
 
     end
 
-    _lo(bo, u3, ob_ ./ lastindex.(A_))
+    _lo(bo, n3, ob_ ./ lastindex.(A_))
 
     W, H_
 
