@@ -60,7 +60,7 @@ function _initialize(A, nu::Integer)
 
     foreach(Omics.Normalization.normalize_with_sum!, eachcol(W))
 
-    fa = sqrt(mean(A) / nu)
+    fa = sqrt(mean(A) / nu * lastindex(A))
 
     map!(nu -> nu * fa, W, W)
 
@@ -72,7 +72,7 @@ function _initialize(nu::Integer, A)
 
     foreach(Omics.Normalization.normalize_with_sum!, eachrow(H))
 
-    fa = sqrt(mean(A) / nu)
+    fa = sqrt(mean(A) / nu * lastindex(A))
 
     map!(nu -> nu * fa, H, H)
 
@@ -86,39 +86,39 @@ end
 
 function factorize_wide(
     A_,
-    uf;
+    u1;
     to = 0.01,
-    ma = 100,
-    W = _initialize(A_[1], uf),
-    H_ = [_initialize(uf, A) for A in A_],
+    u2 = 100,
+    W = _initialize(A_[1], u1),
+    H_ = [_initialize(u1, A) for A in A_],
     co_ = _get_coefficient(A_),
 )
 
-    ui = 0
+    WH_ = map(H -> W * H, H_)
 
-    WH_ = [W * H for H in H_]
-
-    ob_ = _get_objective.(A_, WH_)
+    ob_ = map(_get_objective, A_, WH_)
 
     Wp = Matrix{Float64}(undef, size(W))
 
     Hp_ = [Matrix{Float64}(undef, size(H)) for H in H_]
 
-    AHt_ = [Matrix{Float64}(undef, size(A_[1], 1), uf) for _ in A_]
+    AHt_ = [Matrix{Float64}(undef, size(A_[1], 1), u1) for _ in A_]
 
-    WHHt_ = [Matrix{Float64}(undef, size(A_[1], 1), uf) for _ in A_]
+    WHHt_ = [Matrix{Float64}(undef, size(A_[1], 1), u1) for _ in A_]
 
-    WtA_ = [Matrix{Float64}(undef, uf, size(A, 2)) for A in A_]
+    WtA_ = [Matrix{Float64}(undef, u1, size(A, 2)) for A in A_]
 
-    WtWH_ = [Matrix{Float64}(undef, uf, size(A, 2)) for A in A_]
+    WtWH_ = [Matrix{Float64}(undef, u1, size(A, 2)) for A in A_]
 
     bo = false
 
     ep = sqrt(eps())
 
-    while !bo && ui < ma
+    u3 = 0
 
-        ui += 1
+    while !bo && u3 < u2
+
+        u3 += 1
 
         copyto!(Wp, W)
 
@@ -184,7 +184,7 @@ function factorize_wide(
 
     end
 
-    _lo(bo, ui, ob_ ./ lastindex.(A_))
+    _lo(bo, u3, ob_ ./ lastindex.(A_))
 
     W, H_
 

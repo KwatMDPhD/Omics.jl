@@ -8,31 +8,21 @@ using Omics
 
 seed!(20240422)
 
-const A1 = randn(10, 10)
+const A1 = map(nu -> nu + 4, randn(10, 10))
 
-const A2 = randn(10, 20)
+const A2 = map(nu -> nu + 4, randn(10, 20))
 
-const A3 = randn(20, 10)
+const A3 = map(nu -> nu + 4, randn(20, 10))
 
-const A4 = randn(20, 20)
-
-A1 .-= minimum(A1)
-
-A2 .-= minimum(A2)
-
-A3 .-= minimum(A3)
-
-A4 .-= minimum(A4)
+const A4 = map(nu -> nu + 4, randn(20, 20))
 
 # ---- #
 
-# 110.931 ns (2 allocations: 64 bytes)
-# 211.652 ns (2 allocations: 80 bytes)
-# 308.845 ns (2 allocations: 80 bytes)
-# 211.650 ns (2 allocations: 80 bytes)
+# 112.027 ns (2 allocations: 64 bytes)
+# 213.285 ns (2 allocations: 80 bytes)
+# 213.318 ns (2 allocations: 80 bytes)
 
-for (A_, re) in
-    (((A1,), [1]), ((A1, A1), [1, 1]), ((A1, A1, A1), [1, 1, 1]), ((A1, A1 .* 2), [1, 0.5]))
+for (A_, re) in (((A1,), [1.0]), ((A1, A1), [1.0, 1.0]), ((A1, A1 * 2), [1, 0.5]))
 
     @test Omics.MatrixFactorization._get_coefficient(A_) == re
 
@@ -47,6 +37,18 @@ function initialize(ar_...)
     seed!(20240427)
 
     Omics.MatrixFactorization._initialize(ar_...)
+
+end
+
+# ---- #
+
+for A in (A1, A2, A3, A4), fa in (1, 2, 4), nu in (2, 4, 8)
+
+    WH = initialize(A, nu) * initialize(nu, A)
+
+    @test isapprox(mean(A), mean(WH))
+
+    @info "$nu $(Omics.MatrixFactorization._get_objective(A, WH))"
 
 end
 
