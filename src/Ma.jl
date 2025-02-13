@@ -1,16 +1,16 @@
 module Ma
 
-function make(ta, ck_, cv)
+function make(an, c1_, c2)
 
-    ke_va = Dict{String, String}()
+    di = Dict{String, String}()
 
-    ke = Matrix(ta[!, ck_])
+    ke = Matrix(an[!, c1_])
 
-    va_ = ta[!, cv]
+    va_ = an[!, c2]
 
-    for iv in eachindex(va_)
+    for i1 in eachindex(va_)
 
-        va = va_[iv]
+        va = va_[i1]
 
         if ismissing(va)
 
@@ -18,19 +18,20 @@ function make(ta, ck_, cv)
 
         end
 
-        for ik in eachindex(ck_)
+        for i2 in eachindex(c1_)
 
-            ky = ke[iv, ik]
+            ey = ke[i1, i2]
 
-            if ismissing(ky)
+            if ismissing(ey)
 
                 continue
 
             end
 
-            for sp in eachsplit(ky, '|')
+            # TODO: Generalize.
+            for st in eachsplit(ey, '|')
 
-                ke_va[sp] = va
+                di[st] = va
 
             end
 
@@ -38,23 +39,23 @@ function make(ta, ck_, cv)
 
     end
 
-    ke_va
+    di
 
 end
 
-function ge(ke_va, ke)
+function ge(di, ke)
 
-    haskey(ke_va, ke) ? ke_va[ke] : "_$ke"
+    haskey(di, ke) ? di[ke] : "_$ke"
 
 end
 
 function lo(va_)
 
-    u1 = lastindex(va_)
+    n1 = lastindex(va_)
 
-    u2 = count(!startswith('_'), va_)
+    n2 = count(!startswith('_'), va_)
 
-    @info "📛 $u2 / $u1 ($(u2 / u1 * 100)%)."
+    @info "📛 $n2 / $n1 ($(n2 / n1 * 100)%)."
 
 end
 

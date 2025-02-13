@@ -49,7 +49,7 @@ function plot(fi, tr_, la = Dict{String, Any}(), co = Dict{String, Any}())
 
 end
 
-const _CO = Omics.Palette.fractionate(Omics.Palette.bwr)
+const _CO = Omics.Coloring.fractionate(("#0000ff", "#ffffff", "#ff0000"))
 
 const LA = Dict("yaxis" => Dict("autorange" => "reversed"))
 
@@ -123,7 +123,7 @@ function plot_radar(
     an___,
     ra___;
     na_ = eachindex(an___),
-    co_ = Omics.Palette.HE_,
+    co_ = Omics.Coloring.ID_,
     il_ = fill("toself", lastindex(an___)),
     la = Dict{String, Any}(),
 )

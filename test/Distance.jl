@@ -8,53 +8,64 @@ using Omics
 
 # ---- #
 
-const EU = Euclidean()
-
-const CO = CorrDist()
-
-const IR = Omics.Distance.Information()
-
-# ---- #
-
 for (n1_, n2_, re) in (
     ([1, 2], [1, 2], 0.0),
     ([1, 2], [2, 1], 2.0),
     ([1, 2, 3], [1, 2, 3], 0.0),
     ([1, 2, 3], [3, 2, 1], 2.0),
-    ([1, 2, 3, 4], [1, 2, 3, 4], 0.0),
-    ([1, 2, 3, 4], [4, 3, 2, 1], 2.0),
 )
 
-    @test IR(n1_, n2_) === re
+    @test Omics.Distance.Information()(n1_, n2_) === re
 
 end
 
 # ---- #
 
 # 4.250 ns (0 allocations: 0 bytes)
-# 44.949 ns (4 allocations: 288 bytes)
-# 29.375 μs (54 allocations: 43.98 KiB)
-# 16.825 ns (0 allocations: 0 bytes)
-# 104.300 ns (4 allocations: 1.81 KiB)
-# 33.584 μs (54 allocations: 45.52 KiB)
-# 149.075 ns (0 allocations: 0 bytes)
-# 726.636 ns (6 allocations: 15.88 KiB)
-# 81.125 μs (57 allocations: 59.59 KiB)
-# 1.921 μs (0 allocations: 0 bytes)
-# 6.236 μs (6 allocations: 156.38 KiB)
-# 1.038 ms (57 allocations: 200.09 KiB)
-for ur in (10, 100, 1000, 10000)
+# 41.792 ns (4 allocations: 288 bytes)
+# 28.166 μs (54 allocations: 43.98 KiB)
+# 16.491 ns (0 allocations: 0 bytes)
+# 103.522 ns (4 allocations: 1.81 KiB)
+# 32.458 μs (54 allocations: 45.52 KiB)
+# 149.038 ns (0 allocations: 0 bytes)
+# 733.598 ns (6 allocations: 15.88 KiB)
+# 79.916 μs (57 allocations: 59.59 KiB)
+# 1.913 μs (0 allocations: 0 bytes)
+# 6.139 μs (6 allocations: 156.38 KiB)
+# 1.031 ms (57 allocations: 200.09 KiB)
+
+for nu in (10, 100, 1000, 10000)
 
     seed!(20241015)
 
-    n1_ = randn(ur)
+    n1_ = randn(nu)
 
-    n2_ = randn(ur)
+    n2_ = randn(nu)
 
-    #@btime EU($n1_, $n2_)
+    #@btime Euclidean()($n1_, $n2_)
 
-    #@btime CO($n1_, $n2_)
+    #@btime CorrDist()($n1_, $n2_)
 
-    #@btime IR($n1_, $n2_)
+    #@btime Omics.Distance.Information()($n1_, $n2_)
+
+end
+
+# ---- #
+
+# 2.416 ns (0 allocations: 0 bytes)
+# 2.416 ns (0 allocations: 0 bytes)
+# 2.375 ns (0 allocations: 0 bytes)
+# 2.375 ns (0 allocations: 0 bytes)
+
+const AN = pi * 0.1
+
+for (a1, a2, re) in
+    ((0.0, AN, AN), (0.0, pi, float(pi)), (0.0, pi + AN, pi - AN), (0.0, 2.0 * pi, 0.0))
+
+    fu = Omics.Distance.Polar()
+
+    @test fu(a1, a2) === fu(a2, a1) === re
+
+    #@btime $fu($a1, $a2)
 
 end

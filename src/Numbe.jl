@@ -8,9 +8,9 @@ function shorten(nu)
 
 end
 
-function categorize(nu, ma_, ca_)
+function categorize(nu, ma_, gr_)
 
-    ca_[findfirst(>=(nu), ma_)]
+    gr_[findfirst(>=(nu), ma_)]
 
 end
 

@@ -6,11 +6,11 @@ using Omics
 
 # ---- #
 
-Omics.Ma.make
+@test length(Omics.Ma.make(Omics.Table.rea(Omics.Gene.TH), ["hgnc_id"], "symbol")) === 43840
 
 # ---- #
 
-const KE_VA = Dict(ch^2 => uppercase(ch^2) for ch in 'a':'z')
+const DI = Dict(ch^2 => uppercase(ch^2) for ch in 'a':'z')
 
 # ---- #
 
@@ -20,12 +20,12 @@ const KE_VA = Dict(ch^2 => uppercase(ch^2) for ch in 'a':'z')
 
 for (ke, re) in (("aa", "AA"), ("zz", "ZZ"), ("??", "_??"))
 
-    @test Omics.Ma.ge(KE_VA, ke) === re
+    @test Omics.Ma.ge(DI, ke) === re
 
-    #@btime Omics.Ma.ge(KE_VA, $ke)
+    #@btime Omics.Ma.ge(DI, $ke)
 
 end
 
 # ---- #
 
-Omics.Ma.lo(map(ke -> Omics.Ma.ge(KE_VA, ke), map(_ -> randstring('a':'b', 2), 1:1000)))
+Omics.Ma.lo(map(ke -> Omics.Ma.ge(DI, ke), map(_ -> randstring('a':'b', 2), 1:1000)))
