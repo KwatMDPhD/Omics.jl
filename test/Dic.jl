@@ -6,40 +6,34 @@ using Omics
 
 # ---- #
 
-# 101.530 μs (4155 allocations: 234.26 KiB)
-# 101.331 μs (4146 allocations: 229.86 KiB)
+# 9.663 μs (425 allocations: 24.43 KiB)
+# 9.355 μs (417 allocations: 23.56 KiB)
 
 for (ke, va, re) in (
-    (
-        "Existing",
-        2,
-        Dict("Existing" => 1, "Existing.2" => 2, "Existing.3" => 2, "Existing.4" => 2),
-    ),
-    ("New", 2, Dict("Existing" => 1, "New" => 2, "New.2" => 2, "New.3" => 2)),
+    ("Existing", 2, Dict("Existing" => 1, "Existing.2" => 2, "Existing.3" => 2)),
+    ("New", 2, Dict("Existing" => 1, "New" => 2, "New.2" => 2)),
 )
 
-    ke_va = Dict("Existing" => 1)
+    di = Dict("Existing" => 1)
 
-    for _ in 1:3
+    for _ in 1:2
 
-        Omics.Dic.set_with_suffix!(ke_va, ke, va)
+        Omics.Dic.set_with_suffix!(di, ke, va)
 
     end
 
-    @test ke_va == re
+    @test di == re
 
-    #@btime Omics.Dic.set_with_suffix!($ke_va, $ke, $va) evals = 1000
+    #@btime Omics.Dic.set_with_suffix!($di, $ke, $va) evals = 100
 
 end
 
 # ---- #
 
-# 146.522 ns (10 allocations: 768 bytes)
-# 165.768 ns (10 allocations: 768 bytes)
-# 149.686 ns (10 allocations: 832 bytes)
+# 165.803 ns (10 allocations: 768 bytes)
+# 146.004 ns (10 allocations: 832 bytes)
 
 for (an_, re) in (
-    (['a', 'b', 'b', 'c', 'c', 'c'], Dict('a' => [1], 'b' => [2, 3], 'c' => [4, 5, 6])),
     (
         ['c', 'b', 'a', 'a', 'a', 'b', 'b', 'c', 'c'],
         Dict('c' => [1, 8, 9], 'b' => [2, 6, 7], 'a' => [3, 4, 5]),
@@ -55,49 +49,49 @@ end
 
 # ---- #
 
-for (k1_v1, k2_v2, re) in (
+for (d1, d2, re) in (
     (Dict(1 => 'a'), Dict(2 => 'b'), Dict{Int, Char}),
-    (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Union{Int, Float64}, Union{Char, String}}),
+    (Dict(1.0 => 'a'), Dict(2 => "Bb"), Dict{Union{Float64, Int}, Union{Char, String}}),
 )
 
-    @test typeof(Omics.Dic.merg(k1_v1, k2_v2)) === re
+    @test typeof(Omics.Dic.merg(d1, d2)) === re
 
 end
 
 # ---- #
 
-# 798.041 ns (16 allocations: 1.50 KiB)
-# 799.126 ns (16 allocations: 1.50 KiB)
+# 1.600 μs (24 allocations: 1.62 KiB)
+# 1.617 μs (24 allocations: 1.62 KiB)
 
-const K1_V1 = Dict("1A" => 1, "B" => Dict("C" => 1, "1D" => 1))
+const D1 = Dict("1A" => 1, 'B' => Dict('C' => 1, "1D" => 1))
 
-const K2_V2 = Dict("2A" => 2, "B" => Dict("C" => 2, "2D" => 2))
+const D2 = Dict("2A" => 2, 'B' => Dict('C' => 2, "2D" => 2))
 
-for (k1_v1, k2_v2, re) in (
-    (K1_V1, K2_V2, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 2, "1D" => 1, "2D" => 2))),
-    (K2_V2, K1_V1, Dict("1A" => 1, "2A" => 2, "B" => Dict("C" => 1, "1D" => 1, "2D" => 2))),
+for (d1, d2, re) in (
+    (D1, D2, Dict("1A" => 1, "2A" => 2, 'B' => Dict('C' => 2, "1D" => 1, "2D" => 2))),
+    (D2, D1, Dict("1A" => 1, "2A" => 2, 'B' => Dict('C' => 1, "1D" => 1, "2D" => 2))),
 )
 
-    @test Omics.Dic.merg(k1_v1, k2_v2) == re
+    @test Omics.Dic.merg(d1, d2) == re
 
-    #@btime Omics.Dic.merg($k1_v1, $k2_v2)
+    #@btime Omics.Dic.merg($d1, $d2)
 
 end
 
 # ---- #
 
-const RE = pkgdir(Omics, "data", "Dic", "example.json")
+const FI = pkgdir(Omics, "data", "Dic", "example.json")
 
 # ---- #
 
-@test typeof(Omics.Dic.rea(RE, OrderedDict{String, Union{Int, String}})) ===
+@test typeof(Omics.Dic.rea(FI, OrderedDict{String, Union{Int, String}})) ===
       OrderedDict{String, Union{Int, String}}
 
 # ---- #
 
 for (fi, re) in (
     (
-        RE,
+        FI,
         OrderedDict{String, Any}(
             "1" => "1",
             "3" => "3",
@@ -110,7 +104,7 @@ for (fi, re) in (
         ),
     ),
     (
-        replace(RE, "json" => "toml"),
+        replace(FI, "json" => "toml"),
         Dict{String, Any}(
             "clients" =>
                 Dict("hosts" => ["alpha", "omega"], "data" => [["gamma", "delta"], [1, 2]]),
@@ -130,20 +124,17 @@ for (fi, re) in (
     ),
 )
 
-    ke_va = Omics.Dic.rea(fi)
+    di = Omics.Dic.rea(fi)
 
-    @test ke_va == re
+    @test di == re
 
-    @test typeof(ke_va) === typeof(re)
+    @test typeof(di) === typeof(re)
 
-    @test ke_va isa OrderedDict ? collect(ke_va) == collect(re) :
-          collect(ke_va) != collect(re)
+    @test di isa OrderedDict ? collect(di) == collect(re) : collect(di) != collect(re)
 
 end
 
 # ---- #
-
-const WR = joinpath(tempdir(), "write.json")
 
 for ty in (OrderedDict, Dict)
 
@@ -158,12 +149,16 @@ for ty in (OrderedDict, Dict)
         "8" => 8,
     )
 
-    ke_va = Omics.Dic.rea(Omics.Dic.writ(WR, re))
+    fi = joinpath(tempdir(), "$ty.json")
 
-    @test ke_va == re
+    Omics.Dic.writ(fi, re)
 
-    @test typeof(ke_va) === OrderedDict{String, Any}
+    di = Omics.Dic.rea(fi)
 
-    @test collect(ke_va) == collect(re)
+    @test di == re
+
+    @test typeof(di) === OrderedDict{String, Any}
+
+    @test collect(di) == collect(re)
 
 end

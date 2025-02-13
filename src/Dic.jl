@@ -8,72 +8,72 @@ using TOML: parsefile as parsefil
 
 using ..Omics
 
-function set_with_suffix!(ke_va, ke, va)
+function set_with_suffix!(di, ke, va)
 
-    uk = 1
+    id = 1
 
-    while haskey(ke_va, ke)
+    while haskey(di, ke)
 
-        ke = "$(isone(uk) ? ke : Omics.Strin.trim_end(ke, '.')).$(uk += 1)"
+        ke = "$(isone(id) ? ke : Omics.Strin.trim_end(ke, '.')).$(id += 1)"
 
     end
 
-    ke_va[ke] = va
+    di[ke] = va
 
 end
 
 function index(an_)
 
-    an_id_ = Dict{eltype(an_), Vector{Int}}()
+    di = Dict{eltype(an_), Vector{Int}}()
 
     for id in eachindex(an_)
 
         an = an_[id]
 
-        if !haskey(an_id_, an)
+        if !haskey(di, an)
 
-            an_id_[an] = Int[]
+            di[an] = Int[]
 
         end
 
-        push!(an_id_[an], id)
+        push!(di[an], id)
 
     end
 
-    an_id_
+    di
 
 end
 
-function merg(k1_v1, k2_v2)
+function merg(d1, d2)
 
-    ke_va = Dict{
-        Union{eltype(keys(k1_v1)), eltype(keys(k2_v2))},
-        Union{eltype(values(k1_v1)), eltype(values(k2_v2))},
+    d3 = Dict{
+        Union{eltype(keys(d1)), eltype(keys(d2))},
+        Union{eltype(values(d1)), eltype(values(d2))},
     }()
 
-    for ke in union(keys(k1_v1), keys(k2_v2))
+    for ke in union(keys(d1), keys(d2))
 
-        ke_va[ke] = if haskey(k1_v1, ke) && haskey(k2_v2, ke)
+        d3[ke] = if haskey(d1, ke) && haskey(d2, ke)
 
-            v1 = k1_v1[ke]
+            v1 = d1[ke]
 
-            v2 = k2_v2[ke]
+            v2 = d2[ke]
 
             v1 isa AbstractDict && v2 isa AbstractDict ? merg(v1, v2) : v2
 
-        elseif haskey(k1_v1, ke)
+        elseif haskey(d1, ke)
 
-            k1_v1[ke]
+            d1[ke]
 
         else
 
-            k2_v2[ke]
+            d2[ke]
 
         end
 
     end
 
-    ke_va
+    d3
 
 end
 
@@ -83,15 +83,13 @@ function rea(fi, dicttype = OrderedDict)
 
 end
 
-function writ(js, ke_va, us = 2)
+function writ(fi, di, id = 2)
 
-    open(js, "w") do io
+    open(fi, "w") do io
 
-        print(io, ke_va, us)
+        print(io, di, id)
 
     end
-
-    js
 
 end
 
