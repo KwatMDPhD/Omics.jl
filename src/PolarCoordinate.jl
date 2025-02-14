@@ -68,7 +68,7 @@ function ge!(
 
         c2 = cor(d1_, d2_)
 
-        te = 1.0 / (1.0 + exp((i1 - nu * lo) / nu * sc))
+        te = 1.0 - Omics.Probability.get_logistic((i1 - nu * lo) / nu * sc)
 
         if c1 <= c2
 

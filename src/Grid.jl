@@ -1,26 +1,18 @@
 module Grid
 
-function make(nu_, ug)
+function make(nu_, um)
 
     mi, ma = extrema(nu_)
 
-    range(mi, ma, ug)
+    range(mi, ma, um)
 
 end
 
 function find(gr_, nu)
 
-    for id in eachindex(gr_)
+    id = findfirst(>=(nu), gr_)
 
-        if nu <= gr_[id]
-
-            return id
-
-        end
-
-    end
-
-    lastindex(gr_)
+    isnothing(id) ? lastindex(gr_) : id
 
 end
 

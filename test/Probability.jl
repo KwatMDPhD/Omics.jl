@@ -4,23 +4,6 @@ using Omics
 
 # ---- #
 
-# 2.083 ns (0 allocations: 0 bytes)
-# 2.083 ns (0 allocations: 0 bytes)
-# 2.083 ns (0 allocations: 0 bytes)
-# 2.125 ns (0 allocations: 0 bytes)
-# 2.083 ns (0 allocations: 0 bytes)
-# 2.125 ns (0 allocations: 0 bytes)
-# 2.083 ns (0 allocations: 0 bytes)
-# 2.125 ns (0 allocations: 0 bytes)
-# 2.125 ns (0 allocations: 0 bytes)
-# 2.125 ns (0 allocations: 0 bytes)
-# 2.125 ns (0 allocations: 0 bytes)
-# 2.125 ns (0 allocations: 0 bytes)
-# 2.125 ns (0 allocations: 0 bytes)
-# 2.084 ns (0 allocations: 0 bytes)
-# 2.083 ns (0 allocations: 0 bytes)
-# 2.083 ns (0 allocations: 0 bytes)
-# 2.125 ns (0 allocations: 0 bytes)
 for (pr, od) in (
     (0.0, 0.0),
     (0.01, 0.010101010101010102),
@@ -35,13 +18,9 @@ for (pr, od) in (
 
     @test Omics.Probability.get_odd(pr) === od
 
-    #@btime Omics.Probability.get_odd($pr)
-
     if isfinite(od)
 
         @test Omics.Probability.ge(od) === pr
-
-        #@btime Omics.Probability.ge($od)
 
     end
 
@@ -66,12 +45,9 @@ Omics.Plot.plot(
 
 # ---- #
 
-# 4.875 ns (0 allocations: 0 bytes)
-for (nu, re) in ((0, 0.5),)
+for (nu, re) in ((-32, 1.2664165549094015e-14), (0, 0.5), (32, 0.9999999999999873))
 
     @test Omics.Probability.get_logistic(nu) === re
-
-    #@btime Omics.Probability.get_logistic($nu)
 
 end
 
@@ -88,5 +64,5 @@ Omics.Plot.plot(
         ),
         (-10:10, -1.0:0.1:1.0, PR_),
     ),
-    Dict("yaxis" => Dict("title" => Dict("text" => "Logistic Probability"))),
+    Dict("yaxis" => Dict("title" => Dict("text" => "Probability"))),
 )

@@ -4,13 +4,14 @@ using Omics
 
 # ---- #
 
-# 2.416 ns (0 allocations: 0 bytes)
+# 3.625 ns (0 allocations: 0 bytes)
 # 6.458 ns (0 allocations: 0 bytes)
 # 6.458 ns (0 allocations: 0 bytes)
+# 6.458 ns (0 allocations: 0 bytes)
+# 6.417 ns (0 allocations: 0 bytes)
 # 6.416 ns (0 allocations: 0 bytes)
-# 6.458 ns (0 allocations: 0 bytes)
-# 6.458 ns (0 allocations: 0 bytes)
-# 5.208 ns (0 allocations: 0 bytes)
+# 5.541 ns (0 allocations: 0 bytes)
+
 for (pr, re) in (
     (0.0, 0.0),
     (0.03125, 0.15625),
@@ -43,9 +44,9 @@ for (pr_, re) in (
     ([0.25, 0.25, 0.25, 0.25], 2.0),
     ([0.2, 0.2, 0.2, 0.2, 0.2], 2.321928094887362),
     # 10
-    ([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], 3.321928094887362),
-    ([0.05, 0.15, 0.05, 0.15, 0.05, 0.15, 0.05, 0.15, 0.05, 0.15], 3.133206219346495),
     ([0.01, 0.19, 0.02, 0.18, 0.03, 0.17, 0.04, 0.16, 0.05, 0.15], 2.901615909840989),
+    ([0.05, 0.15, 0.05, 0.15, 0.05, 0.15, 0.05, 0.15, 0.05, 0.15], 3.133206219346495),
+    ([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], 3.321928094887362),
 )
 
     @test sum(Omics.Entropy.ge, pr_) === re
@@ -54,19 +55,20 @@ end
 
 # ---- #
 
-const JO = [
+# 38.012 ns (0 allocations: 0 bytes)
+# 33.451 ns (0 allocations: 0 bytes)
+
+const PR = [
     0 0.0416667 0.0833333 0.125
     0.125 0 0.0416667 0.0833333
     0.0833333 0.125 0 0.0416667
     0.0416667 0.0833333 0.125 0
 ]
 
-# 37.760 ns (0 allocations: 0 bytes)
-# 33.442 ns (0 allocations: 0 bytes)
-for ea in (eachrow, eachcol)
+for fu in (eachrow, eachcol)
 
-    @test Omics.Entropy.ge(ea, JO) === 2.0
+    @test Omics.Entropy.ge(fu, PR) === 2.0
 
-    #@btime Omics.Entropy.ge($ea, JO)
+    #@btime Omics.Entropy.ge($fu, PR)
 
 end

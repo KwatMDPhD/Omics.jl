@@ -12,41 +12,41 @@ for na in (
     "Coloring",
     "Coordinate",
     "Cytoscape",
-    "Density", # 2
+    "Density",
     "Dic",
     "Distance",
-    "Entropy", # 3
-    #"ErrorMatrix",
-    #"Evidence",
-    "Extreme", # 10
-    #"GEO",
-    #"GPSMap",
+    "Entropy",
+    #"ErrorMatrix", # 8
+    #"Evidence", # 1
+    #"Extreme", # 6
+    #"GEO", # 101
+    #"GPSMap", # 201
     "Gene",
-    #"GeneralizedLinearModel",
-    "Grid", # 1
+    #"GeneralizedLinearModel", # 9
+    "Grid",
     "HTM",
-    "Information", # 5
-    #"Kumo",
+    "Information",
+    #"Kumo", # 301
     "Ma",
-    "Match", # 11
+    #"Match", # 7
     "MatrixFactorization",
-    "MutualInformation", # 6
-    "Normalization", # 7
+    #"MutualInformation", # 2
+    #"Normalization", # 3
     "Numbe",
     "Path",
     "Plot",
     "PolarCoordinate",
-    "Probability", # 4
-    #"ReceiverOperatingCharacteristic",
-    "Significance", # 9
-    #"Simulation",
+    "Probability",
+    #"ReceiverOperatingCharacteristic", # 10
+    #"Significance", # 5
+    #"Simulation", # ?
     "Strin",
     "Table",
-    "Target", # 8
-    #"XSample",
-    #"XSampleCharacteristic",
-    #"XSampleFeature",
-    #"XSampleSelect",
+    #"Target", # 4
+    #"XSample", # 102
+    #"XSampleCharacteristic", # 103
+    #"XSampleFeature", # 104
+    #"XSampleSelect", # 105
 )
 
     @info "🎬 Testing $na"

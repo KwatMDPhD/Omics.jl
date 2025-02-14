@@ -2,11 +2,11 @@ module Density
 
 using ..Omics
 
-function coun(nu_, ug)
+function coun(nu_, um)
 
-    gr_ = Omics.Grid.make(nu_, ug)
+    gr_ = Omics.Grid.make(nu_, um)
 
-    co_ = zeros(Int, ug)
+    co_ = zeros(Int, um)
 
     for nu in nu_
 

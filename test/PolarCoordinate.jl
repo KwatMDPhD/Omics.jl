@@ -6,7 +6,7 @@ using Omics
 
 # ---- #
 
-# 71.542 μs (6 allocations: 560 bytes)
+# 71.500 μs (6 allocations: 560 bytes)
 
 for (di, re) in ((
     [

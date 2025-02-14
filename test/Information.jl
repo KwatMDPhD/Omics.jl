@@ -8,11 +8,11 @@ using Omics
 
 # ---- #
 
-function plot(yc_, na_, fu)
+function plot(na_, yc_, fu)
 
     Omics.Plot.plot(
         "",
-        map(id -> Dict("name" => na_[id], "y" => yc_[id]), eachindex(yc_)),
+        map((na, yc) -> Dict("name" => na, "y" => yc), na_, yc_),
         Dict("title" => Dict("text" => string(fu))),
     )
 
@@ -31,7 +31,7 @@ for (n1_, n2_) in (([1, 2, 3], [2, 3, 4]), (kde(randn(10)).density, kde(randn(10
         Omics.Information.get_jensen_shannon_divergence,
     )
 
-        plot((n1_, n2_, map(fu, n1_, n2_)), (1, 2, "Result"), fu)
+        plot((1, 2, "Result"), (n1_, n2_, map(fu, n1_, n2_)), fu)
 
     end
 
@@ -42,7 +42,7 @@ for (n1_, n2_) in (([1, 2, 3], [2, 3, 4]), (kde(randn(10)).density, kde(randn(10
 
         n3_ = (n1_ + n2_) * 0.5
 
-        plot((n1_, n2_, n3_, map(fu, n1_, n2_, n3_)), (1, 2, 3, "Result"), fu)
+        plot((1, 2, 3, "Result"), (n1_, n2_, n3_, map(fu, n1_, n2_, n3_)), fu)
 
     end
 
