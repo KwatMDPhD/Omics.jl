@@ -17,7 +17,7 @@ for na in (
     "Distance",
     "Entropy",
     #"ErrorMatrix", # 8
-    #"Evidence", # 1
+    "Evidence",
     #"Extreme", # 6
     #"GEO", # 101
     #"GPSMap", # 201
@@ -30,7 +30,7 @@ for na in (
     "Ma",
     #"Match", # 7
     "MatrixFactorization",
-    #"MutualInformation", # 2
+    "MutualInformation",
     #"Normalization", # 3
     "Numbe",
     "Path",

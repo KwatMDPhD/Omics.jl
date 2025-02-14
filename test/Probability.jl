@@ -28,6 +28,14 @@ end
 
 # ---- #
 
+for (nu, re) in ((-32, 1.2664165549094015e-14), (0, 0.5), (32, 0.9999999999999873))
+
+    @test Omics.Probability.get_logistic(nu) === re
+
+end
+
+# ---- #
+
 const PR_ = 0.0:0.1:1.0
 
 # ---- #
@@ -38,18 +46,10 @@ Omics.Plot.plot(
     "",
     (
         Dict("name" => "Odd", "y" => OD_, "x" => PR_),
-        Dict("name" => "Log2(Odd)", "y" => map(log2, OD_), "x" => PR_),
+        Dict("name" => "Log2(Odd) (Evidence)", "y" => map(log2, OD_), "x" => PR_),
     ),
     Dict("xaxis" => Dict("title" => Dict("text" => "Probability"))),
 )
-
-# ---- #
-
-for (nu, re) in ((-32, 1.2664165549094015e-14), (0, 0.5), (32, 0.9999999999999873))
-
-    @test Omics.Probability.get_logistic(nu) === re
-
-end
 
 # ---- #
 

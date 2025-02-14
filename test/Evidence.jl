@@ -4,7 +4,37 @@ using Omics
 
 # ---- #
 
+pr = 0.5
+
+p1 = 0.75
+
+p2 = 0.25
+
+# Center around 1.
+
+p1 / pr
+
+p2 / pr
+
+# Is not symmetric.
+
+log2(p1 / pr)
+
+log2(p2 / pr)
+
+# Is symmetric around 0.
+
+log2(Omics.Probability.get_odd(pr))
+
+log2(Omics.Probability.get_odd(p1) / Omics.Probability.get_odd(pr))
+
+log2(Omics.Probability.get_odd(p2) / Omics.Probability.get_odd(pr))
+
+# ---- #
+
 const PR_ = PO_ = vcat(0.01, 0.1:0.1:0.9, 0.99)
+
+const CO = Omics.Coloring.make(["#0000ff", "#ffffff", "#ff0000"])
 
 Omics.Plot.plot(
     "",
@@ -14,16 +44,9 @@ Omics.Plot.plot(
                 "name" => "Prior = $pr",
                 "y" => map(po -> Omics.Evidence.ge(pr, po), PO_),
                 "x" => PO_,
-                "line" => Dict("color" => Omics.Palette.color(pr, Omics.Palette.bwr)),
+                "line" => Dict("color" => Omics.Color.hexify(CO[pr])),
             ),
             PR_,
-        ),
-        Dict(
-            "name" => "Prior = 1 - Posterior",
-            "y" => map(po -> Omics.Evidence.ge(1.0 - po, po), PO_),
-            "x" => PO_,
-            "mode" => "markers",
-            "marker" => Dict("size" => 16, "color" => Omics.Color.GR),
         ),
     ),
     Dict(
@@ -60,8 +83,9 @@ end
 
 # ---- #
 
-# 7.173 ns (0 allocations: 0 bytes)
+# 7.125 ns (0 allocations: 0 bytes)
 # 14.028 ns (0 allocations: 0 bytes)
+
 for po_ in ([0.5], [0.4, 0.6])
 
     @test isapprox(Omics.Evidence.ge(0.5, po_), 0.0; atol = 1e-15)
@@ -74,24 +98,18 @@ end
 
 Omics.Evidence.plot(
     "",
-    "Target",
     0.6,
-    (
-        "Feature 1 = 0.5",
-        "Feature 2 = 0.6 = Prior",
-        "Feature 3 = 0.7",
-        "Feature 4 = ?",
-        "Feature 5 = ?",
-    ),
+    ("Feature 1", "Feature 2", "Feature 3", "Feature 4", "Feature 5"),
     (0.5, 0.6, 0.7, nothing, nothing);
-    pl_ = (0.59, 0.5, 0.4, 0.21, 0.01),
-    pu_ = (0.61, 0.7, 0.8, 0.99, 0.99),
+    p2_ = (0.4, 0.3, 0.2, 0.1, 0.01),
+    p3_ = (0.6, 0.7, 0.8, 0.9, 0.99),
+    la = Dict("title" => Dict("text" => "Target")),
 )
 
 # ---- #
 
-for uf in 1:8
+for nu in 0:8
 
-    Omics.Evidence.plot("", "Target", 0.5, ["Feature $id = 1.234" for id in 1:uf], rand(uf))
+    Omics.Evidence.plot("", 0.48, map(id -> "Feature $id", 1:nu), rand(nu))
 
 end
