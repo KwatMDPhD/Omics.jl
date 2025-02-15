@@ -8,39 +8,43 @@ using StatsBase: counts
 
 using ..Omics
 
-function _get_density(i1_::AbstractVector{<:Integer}, i2_::AbstractVector{<:Integer}, ::Any)
+function _get_density(
+    n1_::AbstractVector{<:Integer},
+    n2_::AbstractVector{<:Integer},
+    ::AbstractFloat,
+)
 
-    convert(Matrix{Float64}, counts(i1_, i2_))
+    convert(Matrix{Float64}, counts(n1_, n2_))
 
 end
 
-function _get_density(f1_, f2_, co; ug = 32, ma = 0.75)
+function _get_density(n1_, n2_, co; um = 32, fr = 0.75)
 
-    fa = ma - ma * abs(co)
+    fr *= 1.0 - abs(co)
 
     kde(
-        (f1_, f2_);
-        npoints = (ug, ug),
-        bandwidth = (default_bandwidth(f1_) * fa, default_bandwidth(f2_) * fa),
+        (n1_, n2_);
+        npoints = (um, um),
+        bandwidth = (default_bandwidth(n1_) * fr, default_bandwidth(n2_) * fr),
     ).density
 
 end
 
-function get_mutual_information(jo)
+function get_mutual_information(pr)
 
-    p1_ = map(sum, eachrow(jo))
+    p1_ = map(sum, eachrow(pr))
 
-    p2_ = map(sum, eachcol(jo))
+    p2_ = map(sum, eachcol(pr))
 
     mu = 0.0
 
     for i2 in eachindex(p2_), i1 in eachindex(p1_)
 
-        pr = jo[i1, i2]
+        on = pr[i1, i2]
 
-        if !iszero(pr)
+        if !iszero(on)
 
-            mu += Omics.Information.get_kullback_leibler_divergence(pr, p1_[i1] * p2_[i2])
+            mu += Omics.Information.get_kullback_leibler_divergence(on, p1_[i1] * p2_[i2])
 
         end
 
@@ -50,13 +54,13 @@ function get_mutual_information(jo)
 
 end
 
-function get_mutual_information(jo, no)
+function get_mutual_information(pr, no)
 
-    e1 = Omics.Entropy.ge(eachrow, jo)
+    e1 = Omics.Entropy.ge(eachrow, pr)
 
-    e2 = Omics.Entropy.ge(eachcol, jo)
+    e2 = Omics.Entropy.ge(eachcol, pr)
 
-    mu = e1 + e2 - sum(Omics.Entropy.ge, jo)
+    mu = e1 + e2 - sum(Omics.Entropy.ge, pr)
 
     no ? 2.0 * mu / (e1 + e2) : mu
 
@@ -77,7 +81,7 @@ function get_information_coefficient(n1_, n2_)
         false,
     )
 
-    # TODO: Confirm e
+    # TODO: Confirm e.
     sign(co) * sqrt(1.0 - exp(-2.0 * mu))
 
 end
