@@ -2,11 +2,11 @@ module Animation
 
 using ..Omics
 
-function writ(f1, f2_)
+function writ(gi, pn_)
 
-    run(`magick -delay 32 $f2_ $f1`)
+    run(`magick -delay 32 $pn_ $gi`)
 
-    Omics.Path.ope(f1)
+    Omics.Path.ope(gi)
 
 end
 
