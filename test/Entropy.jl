@@ -65,10 +65,10 @@ const PR = [
     0.0416667 0.0833333 0.125 0
 ]
 
-for fu in (eachrow, eachcol)
+for ea in (eachrow, eachcol)
 
-    @test Omics.Entropy.ge(fu, PR) === 2.0
+    @test Omics.Entropy.ge(ea, PR) === 2.0
 
-    #@btime Omics.Entropy.ge($fu, PR)
+    #@btime Omics.Entropy.ge($ea, PR)
 
 end

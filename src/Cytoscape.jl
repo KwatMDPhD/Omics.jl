@@ -5,7 +5,7 @@ using JSON: json
 using ..Omics
 
 function plot(
-    f1,
+    ht,
     el_,
     ex = "";
     st_ = Dict{String, Any}[],
@@ -14,17 +14,17 @@ function plot(
     sc = 1,
 )
 
-    re = ""
+    j1 = ""
 
     if !isempty(ex)
 
-        @assert !isempty(f1)
+        @assert !isempty(ht)
 
-        ba = "$(splitext(basename(f1))[1]).$ex"
+        ba = "$(splitext(basename(ht))[1]).$ex"
 
-        f2 = joinpath(homedir(), "Downloads", ba)
+        fi = joinpath(homedir(), "Downloads", ba)
 
-        bl = if ex == "json"
+        j2 = if ex == "json"
 
             "new Blob([JSON.stringify(cy.json(), null, 2)], {type: \"application/json\"})"
 
@@ -34,14 +34,14 @@ function plot(
 
         end
 
-        re = "cy.ready(function() {saveAs($bl, \"$ba\")})"
+        j1 = "cy.ready(function() {saveAs($j2, \"$ba\")})"
 
     end
 
     id = "cy"
 
     Omics.HTM.writ(
-        f1,
+        ht,
         (
             "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js",
             "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js",
@@ -72,7 +72,7 @@ function plot(
             ev.target.removeClass("edgehover")
         })
 
-        $re""",
+        $j1""",
         co,
     )
 
@@ -82,17 +82,17 @@ function plot(
 
     end
 
-    Omics.Path.wai(f2, 32)
+    Omics.Path.wai(fi, 32)
 
-    mv(f2, joinpath(dirname(f1), ba); force = true)
+    mv(fi, joinpath(dirname(ht), ba); force = true)
 
 end
 
-function rea(fi)
+function rea(js)
 
-    ty = Omics.Dic.rea(fi)["elements"]
+    di = Omics.Dic.rea(js)["elements"]
 
-    vcat(ty["nodes"], ty["edges"])
+    vcat(di["nodes"], di["edges"])
 
 end
 
@@ -104,11 +104,11 @@ end
 
 function position!(e1_, e2_)
 
-    id = Dict(_identify(el) => el for el in e2_)
+    di = Dict(_identify(el) => el for el in e2_)
 
     for el in e1_
 
-        el["position"] = id[_identify(el)]["position"]
+        el["position"] = di[_identify(el)]["position"]
 
     end
 

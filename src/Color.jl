@@ -52,9 +52,9 @@ function hexify(co)
 
 end
 
-function hexify(co, al)
+function hexify(co, fr)
 
-    hexify(coloralpha(parse(Colorant, co), al))
+    hexify(coloralpha(parse(Colorant, co), fr))
 
 end
 

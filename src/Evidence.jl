@@ -137,20 +137,20 @@ function _add(pr, po, su)
 
 end
 
-function _translate(pr, ev)
+function _translate(pr, xc)
 
-    ev = ev^2
+    ev = xc^2
 
     "$ev ➡ $(@sprintf "%g" get_posterior_probability(pr, ev))"
 
 end
 
 function plot(
-    fi,
+    ht,
     pr,
     na_,
     p1_,
-    co_ = Omics.Coloring.ID_;
+    co_ = Omics.Coloring.I2_;
     p2_ = fill(nothing, lastindex(na_)),
     p3_ = fill(nothing, lastindex(na_)),
     x1 = floor(Int, _root(ge(pr, 1e-6))),
@@ -158,7 +158,7 @@ function plot(
     la = Dict{String, Any}(),
 )
 
-    nu = lastindex(na_) + 2
+    um = lastindex(na_) + 2
 
     wi = 4
 
@@ -168,7 +168,7 @@ function plot(
 
     y1 = 0
 
-    y2 = nu + 1
+    y2 = um + 1
 
     tr_ = [
         Dict(
@@ -231,7 +231,7 @@ function plot(
     _trace_annotate!(
         tr_,
         an_,
-        nu,
+        um,
         s1,
         s2,
         s3,
@@ -242,7 +242,7 @@ function plot(
     )
 
     Omics.Plot.plot(
-        fi,
+        ht,
         tr_,
         Omics.Dic.merg(
             Dict(
@@ -254,7 +254,7 @@ function plot(
                     "side" => "top",
                     "range" => (x1, x2),
                     "tickvals" => x1:x2,
-                    "ticktext" => map(ev -> _translate(pr, ev), x1:x2),
+                    "ticktext" => map(xc -> _translate(pr, xc), x1:x2),
                     "tickangle" => -90,
                 ),
                 "annotations" => an_,

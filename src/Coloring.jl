@@ -5,7 +5,7 @@ using ColorSchemes: ColorScheme
 using Colors: Colorant
 
 # Plotly.js
-const PJ_ = (
+const P1_ = (
     "#1f77b4",
     "#ff7f0e",
     "#2ca02c",
@@ -19,7 +19,7 @@ const PJ_ = (
 )
 
 # Plotly.py
-const PP_ = (
+const P2_ = (
     "#636efa",
     "#ef553b",
     "#00cc96",
@@ -33,7 +33,7 @@ const PP_ = (
 )
 
 # IBM Light
-const IL_ = (
+const I1_ = (
     "#6929c5",
     "#1192e8",
     "#005d5d",
@@ -51,7 +51,7 @@ const IL_ = (
 )
 
 # IBM Dark
-const ID_ = (
+const I2_ = (
     "#8a3ffc",
     "#33b1ff",
     "#007d79",
@@ -122,9 +122,9 @@ const RE_ = (
 
 function fractionate(co_)
 
-    nu = lastindex(co_)
+    um = lastindex(co_)
 
-    if isone(nu)
+    if isone(um)
 
         co = co_[1]
 
@@ -132,7 +132,7 @@ function fractionate(co_)
 
     else
 
-        Tuple(zip(range(0, 1, nu), co_))
+        Tuple(zip(range(0, 1, um), co_))
 
     end
 

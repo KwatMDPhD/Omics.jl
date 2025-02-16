@@ -6,9 +6,9 @@ function ge(pr)
 
 end
 
-function ge(fu, pr)
+function ge(ea, pr)
 
-    sum(pr_ -> ge(sum(pr_)), fu(pr))
+    sum(pr_ -> ge(sum(pr_)), ea(pr))
 
 end
 

@@ -16,11 +16,9 @@ for (ke, va, re) in (
 
     di = Dict("Existing" => 1)
 
-    for _ in 1:2
+    Omics.Dic.set_with_suffix!(di, ke, va)
 
-        Omics.Dic.set_with_suffix!(di, ke, va)
-
-    end
+    Omics.Dic.set_with_suffix!(di, ke, va)
 
     @test di == re
 
@@ -80,18 +78,18 @@ end
 
 # ---- #
 
-const FI = pkgdir(Omics, "data", "Dic", "example.json")
+const JS = pkgdir(Omics, "data", "Dic", "example.json")
 
 # ---- #
 
-@test typeof(Omics.Dic.rea(FI, OrderedDict{String, Union{Int, String}})) ===
+@test typeof(Omics.Dic.rea(JS, OrderedDict{String, Union{Int, String}})) ===
       OrderedDict{String, Union{Int, String}}
 
 # ---- #
 
-for (fi, re) in (
+for (js, re) in (
     (
-        FI,
+        JS,
         OrderedDict{String, Any}(
             "1" => "1",
             "3" => "3",
@@ -104,7 +102,7 @@ for (fi, re) in (
         ),
     ),
     (
-        replace(FI, "json" => "toml"),
+        replace(JS, "json" => "toml"),
         Dict{String, Any}(
             "clients" =>
                 Dict("hosts" => ["alpha", "omega"], "data" => [["gamma", "delta"], [1, 2]]),
@@ -124,7 +122,7 @@ for (fi, re) in (
     ),
 )
 
-    di = Omics.Dic.rea(fi)
+    di = Omics.Dic.rea(js)
 
     @test di == re
 
@@ -149,11 +147,11 @@ for ty in (OrderedDict, Dict)
         "8" => 8,
     )
 
-    fi = joinpath(tempdir(), "$ty.json")
+    js = joinpath(tempdir(), "$ty.json")
 
-    Omics.Dic.writ(fi, re)
+    Omics.Dic.writ(js, re)
 
-    di = Omics.Dic.rea(fi)
+    di = Omics.Dic.rea(js)
 
     @test di == re
 

@@ -77,15 +77,15 @@ function merg(d1, d2)
 
 end
 
-function rea(fi, dicttype = OrderedDict)
+function rea(js, dicttype = OrderedDict)
 
-    endswith(fi, ".toml") ? parsefil(fi) : parsefile(fi; dicttype)
+    endswith(js, ".toml") ? parsefil(js) : parsefile(js; dicttype)
 
 end
 
-function writ(fi, di, id = 2)
+function writ(js, di, id = 2)
 
-    open(fi, "w") do io
+    open(js, "w") do io
 
         print(io, di, id)
 

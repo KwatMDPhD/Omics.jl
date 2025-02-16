@@ -31,13 +31,13 @@ Omics.Path.ope(
         st_ = map(
             id -> Dict(
                 "selector" => "#$(Omics.Cytoscape._identify(E1_[id]))",
-                "style" => Dict("background-color" => Omics.Coloring.ID_[id]),
+                "style" => Dict("background-color" => Omics.Coloring.I2_[id]),
             ),
             eachindex(E1_),
         ),
         la = Dict("name" => "preset"),
         co = "#000000",
-        sc = 2,
+        sc = 2.0,
     ),
 )
 

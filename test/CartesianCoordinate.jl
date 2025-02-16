@@ -47,9 +47,9 @@ for (di, re) in (
 
     seed!(20231210)
 
-    co = Omics.CartesianCoordinate.ge(di)
+    xy = Omics.CartesianCoordinate.ge(di)
 
-    @test isapprox(co, re; atol = 1e-5)
+    @test isapprox(xy, re; atol = 1e-5)
 
     seed!()
 
@@ -57,9 +57,9 @@ for (di, re) in (
         "",
         (
             Dict(
-                "y" => co[2, :],
-                "x" => co[1, :],
-                "text" => axes(co, 2),
+                "y" => xy[2, :],
+                "x" => xy[1, :],
+                "text" => axes(xy, 2),
                 "mode" => "text",
                 "textfont" => Dict("size" => 24),
             ),

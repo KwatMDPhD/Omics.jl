@@ -4,31 +4,31 @@ using Omics
 
 # ---- #
 
-pr = 0.5
+const PR = 0.5
 
-p1 = 0.75
+const P1 = 0.75
 
-p2 = 0.25
+const P2 = 0.25
 
 # Center around 1.
 
-p1 / pr
+P1 / PR
 
-p2 / pr
+P2 / PR
 
 # Is not symmetric.
 
-log2(p1 / pr)
+log2(P1 / PR)
 
-log2(p2 / pr)
+log2(P2 / PR)
 
 # Is symmetric around 0.
 
-log2(Omics.Probability.get_odd(pr))
+log2(Omics.Probability.get_odd(PR))
 
-log2(Omics.Probability.get_odd(p1) / Omics.Probability.get_odd(pr))
+log2(Omics.Probability.get_odd(P1) / Omics.Probability.get_odd(PR))
 
-log2(Omics.Probability.get_odd(p2) / Omics.Probability.get_odd(pr))
+log2(Omics.Probability.get_odd(P2) / Omics.Probability.get_odd(PR))
 
 # ---- #
 
@@ -108,8 +108,8 @@ Omics.Evidence.plot(
 
 # ---- #
 
-for nu in 0:8
+for um in 0:8
 
-    Omics.Evidence.plot("", 0.48, map(id -> "Feature $id", 1:nu), rand(nu))
+    Omics.Evidence.plot("", 0.48, map(id -> "Feature $id", 1:um), rand(um))
 
 end

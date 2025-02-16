@@ -34,13 +34,13 @@ end
 # 6.139 μs (6 allocations: 156.38 KiB)
 # 1.031 ms (57 allocations: 200.09 KiB)
 
-for nu in (10, 100, 1000, 10000)
+for um in (10, 100, 1000, 10000)
 
     seed!(20241015)
 
-    n1_ = randn(nu)
+    n1_ = randn(um)
 
-    n2_ = randn(nu)
+    n2_ = randn(um)
 
     #@btime Euclidean()($n1_, $n2_)
 
@@ -57,15 +57,15 @@ end
 # 2.375 ns (0 allocations: 0 bytes)
 # 2.375 ns (0 allocations: 0 bytes)
 
-const AN = pi * 0.1
+const P1 = pi * 0.1
 
 for (a1, a2, re) in
-    ((0.0, AN, AN), (0.0, pi, float(pi)), (0.0, pi + AN, pi - AN), (0.0, 2.0 * pi, 0.0))
+    ((0.0, P1, P1), (0.0, pi, float(pi)), (0.0, pi + P1, pi - P1), (0.0, 2.0 * pi, 0.0))
 
-    fu = Omics.Distance.Polar()
+    po = Omics.Distance.Polar()
 
-    @test fu(a1, a2) === fu(a2, a1) === re
+    @test po(a1, a2) === po(a2, a1) === re
 
-    #@btime $fu($a1, $a2)
+    #@btime $po($a1, $a2)
 
 end

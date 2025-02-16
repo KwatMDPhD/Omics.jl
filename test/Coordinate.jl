@@ -13,13 +13,15 @@ using Omics
 # 10.677 ns (0 allocations: 0 bytes)
 # 8.884 ns (0 allocations: 0 bytes)
 
-for (x1, y1, re) in ((1, 1, 1 / 3), (-1, 1, 2 / 3), (-1, -1, 4 / 3), (1, -1, 5 / 3))
+const S3 = sqrt(3)
 
-    y1 *= sqrt(3)
+const P3 = pi / 3
+
+for (x1, y1, re) in ((1, S3, P3), (-1, S3, 2 * P3), (-1, -S3, 4 * P3), (1, -S3, 5 * P3))
 
     an, ra = Omics.Coordinate.convert_cartesian_to_polar(x1, y1)
 
-    @test isapprox(an, pi * re)
+    @test isapprox(an, re)
 
     @test isapprox(ra, 2.0)
 
@@ -46,11 +48,11 @@ const DI = [
     5 6 7 8 9 0.0
 ]
 
-const CA = Omics.CartesianCoordinate.ge(DI)
+const XY = Omics.CartesianCoordinate.ge(DI)
 
 const AN_ = Omics.PolarCoordinate.ge!(DI)
 
-const CA___ = map(Omics.Coordinate.convert_polar_to_cartesian, AN_, ones(lastindex(AN_)))
+const XY___ = map(Omics.Coordinate.convert_polar_to_cartesian, AN_, ones(lastindex(AN_)))
 
 const TR = Dict("text" => axes(DI, 1), "mode" => "text", "textfont" => Dict("size" => 24))
 
@@ -60,8 +62,8 @@ Omics.Plot.plot(
         Omics.Dic.merg(
             Dict(
                 "name" => "Cartesian",
-                "y" => CA[2, :],
-                "x" => CA[1, :],
+                "y" => XY[2, :],
+                "x" => XY[1, :],
                 "textfont" => Dict("color" => Omics.Color.A1),
             ),
             TR,
@@ -69,8 +71,8 @@ Omics.Plot.plot(
         Omics.Dic.merg(
             Dict(
                 "name" => "Polar",
-                "y" => map(ca_ -> ca_[2], CA___),
-                "x" => map(ca_ -> ca_[1], CA___),
+                "y" => map(ca_ -> ca_[2], XY___),
+                "x" => map(ca_ -> ca_[1], XY___),
                 "textfont" => Dict("color" => Omics.Color.A2),
             ),
             TR,

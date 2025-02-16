@@ -8,25 +8,23 @@ using Omics
 
 # ---- #
 
-const NU = 16
+const UM = 16
 
 # ---- #
 
 for nu_ in ([1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 9],)
 
-    gr_, co_ = Omics.Density.coun(nu_, NU)
+    gr_, um_ = Omics.Density.coun(nu_, UM)
 
-    kd = kde(nu_; boundary = extrema(nu_), npoints = NU)
+    kd = kde(nu_; boundary = extrema(nu_), npoints = UM)
 
     @test gr_ === kd.x
 
-    xc_ = gr_
+    tr = Dict("type" => "bar", "x" => gr_)
 
-    tr = Dict("type" => "bar", "x" => xc_)
+    la = Dict("xaxis" => Dict("tickvals" => gr_))
 
-    la = Dict("xaxis" => Dict("tickvals" => xc_))
-
-    Omics.Plot.plot("", (merge(tr, Dict("y" => co_)),), la)
+    Omics.Plot.plot("", (merge(tr, Dict("y" => um_)),), la)
 
     Omics.Plot.plot("", (merge(tr, Dict("y" => kd.density)),), la)
 
@@ -47,9 +45,9 @@ for um in (10, 100, 1000)
 
     nu_ = randn(um)
 
-    #@btime Omics.Density.coun($nu_, NU)
+    #@btime Omics.Density.coun($nu_, UM)
 
-    #@btime kde($nu_; boundary = $(extrema(nu_)), npoints = NU)
+    #@btime kde($nu_; boundary = $(extrema(nu_)), npoints = UM)
 
 end
 
@@ -57,9 +55,9 @@ end
 
 for (n1_, n2_) in (([1, 2, 3, 4, 6], [2, 4, 8, 16, 64]),)
 
-    g1_, g2_, co = Omics.Density.coun(n1_, n2_, NU, NU)
+    g1_, g2_, um = Omics.Density.coun(n1_, n2_, UM, UM)
 
-    kd = kde((n1_, n2_); boundary = (extrema(n1_), extrema(n2_)), npoints = (NU, NU))
+    kd = kde((n1_, n2_); boundary = (extrema(n1_), extrema(n2_)), npoints = (UM, UM))
 
     @test g1_ === kd.x
 
@@ -69,7 +67,7 @@ for (n1_, n2_) in (([1, 2, 3, 4, 6], [2, 4, 8, 16, 64]),)
 
     xc_ = g2_
 
-    Omics.Plot.plot_heat_map("", co; yc_, xc_)
+    Omics.Plot.plot_heat_map("", um; yc_, xc_)
 
     Omics.Plot.plot_heat_map("", kd.density; yc_, xc_)
 
@@ -92,12 +90,12 @@ for um in (10, 100, 1000)
 
     n2_ = randn(um)
 
-    #@btime Omics.Density.coun($n1_, $n2_, NU, NU)
+    #@btime Omics.Density.coun($n1_, $n2_, UM, UM)
 
     #@btime kde(
     #    ($n1_, $n2_);
     #    boundary = ($(extrema(n1_)), $(extrema(n2_))),
-    #    npoints = (NU, NU),
+    #    npoints = (UM, UM),
     #)
 
 end

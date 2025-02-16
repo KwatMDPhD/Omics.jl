@@ -123,7 +123,7 @@ function plot_radar(
     an___,
     ra___;
     na_ = eachindex(an___),
-    co_ = Omics.Coloring.ID_,
+    co_ = Omics.Coloring.I2_,
     il_ = fill("toself", lastindex(an___)),
     la = Dict{String, Any}(),
 )

@@ -15,9 +15,9 @@ const AN = [
     0.3 2 1 3.3 20 10 30.3 40.3
 ]
 
-for (fu, re) in ((eachcol, [1, 3, 2, 4, 6, 5, 7, 8]), (eachrow, [1, 3, 2, 4, 5, 6]))
+for (ea, re) in ((eachcol, [1, 3, 2, 4, 6, 5, 7, 8]), (eachrow, [1, 3, 2, 4, 5, 6]))
 
-    @test Omics.Clustering.hierarchize(pairwise(Euclidean(), fu(AN))).order == re
+    @test Omics.Clustering.hierarchize(pairwise(Euclidean(), ea(AN))).order == re
 
 end
 
