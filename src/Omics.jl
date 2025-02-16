@@ -36,6 +36,8 @@ for na in (
     "PolarCoordinate",
     "Probability",
     "Protein",
+    "RangeNormalization",
+    "RankNormalization",
     "ReceiverOperatingCharacteristic",
     "Significance",
     "Simulation",

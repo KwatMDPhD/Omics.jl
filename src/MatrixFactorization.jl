@@ -58,7 +58,7 @@ function _initialize(A, nu::Integer)
 
     W = rand(size(A, 1), nu)
 
-    foreach(Omics.Normalization.normalize_with_sum!, eachcol(W))
+    foreach(Omics.RangeNormalization.do_sum!, eachcol(W))
 
     fa = sqrt(mean(A) / nu * lastindex(A))
 
@@ -70,7 +70,7 @@ function _initialize(nu::Integer, A)
 
     H = rand(nu, size(A, 2))
 
-    foreach(Omics.Normalization.normalize_with_sum!, eachrow(H))
+    foreach(Omics.RangeNormalization.do_sum!, eachrow(H))
 
     fa = sqrt(mean(A) / nu * lastindex(A))
 

@@ -77,7 +77,7 @@ function get_information_coefficient(n1_, n2_)
     end
 
     mu = get_mutual_information(
-        Omics.Normalization.normalize_with_sum!(_get_density(n1_, n2_, co)),
+        Omics.RangeNormalization.do_sum!(_get_density(n1_, n2_, co)),
         false,
     )
 

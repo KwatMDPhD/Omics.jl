@@ -31,13 +31,15 @@ for na in (
     #"Match", # 5
     "MatrixFactorization",
     "MutualInformation",
-    #"Normalization", # 1
+    "Normalization",
     "Numbe",
     "Path",
     "Plot",
     "PolarCoordinate",
     "Probability",
     "Protein",
+    "RangeNormalization",
+    "RankNormalization",
     #"ReceiverOperatingCharacteristic", # 13
     #"Significance", # 3
     #"Simulation", # 6

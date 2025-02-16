@@ -6,7 +6,8 @@ using Omics
 
 # ---- #
 
-@test length(Omics.Ma.make(Omics.Table.rea(Omics.Gene.TH), ["hgnc_id"], "symbol")) === 43840
+@test length(Omics.Ma.make(Omics.Table.rea(Omics.Gene._HG), ["hgnc_id"], "symbol")) ===
+      43840
 
 # ---- #
 
