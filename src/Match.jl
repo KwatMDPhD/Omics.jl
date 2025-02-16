@@ -83,7 +83,7 @@ function ge(fu, vt_, vf; um = 10, uv = 10)
 
 end
 
-const CO = Dict(
+const _CO = Dict(
     "x" => 0.5,
     "orientation" => "h",
     "len" => 0.56,
@@ -118,7 +118,7 @@ function _trace_target(ns, sa_, nt, vt_, st, ur)
             "zmax" => Omics.Numbe.shorten(ma),
             "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(vt_)),
             "colorbar" => merge(
-                CO,
+                _CO,
                 Dict(
                     "y" => -0.344,
                     "tickvals" => map(Omics.Numbe.shorten, Omics.Plot.tick(vt_)),
@@ -243,7 +243,7 @@ function _trace_feature(sa_, nf, fe_, vf, vr, st, iy, bo, wi)
         "colorscale" => Omics.Palette.fractionate(Omics.Palette.pick(vf)),
         he ?
         "colorbar" => merge(
-            CO,
+            _CO,
             Dict(
                 "y" => -0.456,
                 "tickvals" => map(Omics.Numbe.shorten, Omics.Plot.tick(vf)),
