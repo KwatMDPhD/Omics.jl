@@ -16,37 +16,38 @@ for na in (
     "Dic",
     "Distance",
     "Entropy",
-    #"ErrorMatrix", # 8
+    #"ErrorMatrix", # 12
     "Evidence",
-    #"Extreme", # 6
-    #"GEO", # 101
-    #"GPSMap", # 201
+    #"Extreme", # 4
+    #"GEO", # 201
+    #"GPSMap", # 101
     "Gene",
-    #"GeneralizedLinearModel", # 9
+    #"GeneralizedLinearModel", # 11
     "Grid",
     "HTM",
     "Information",
-    #"Kumo", # 301
+    #"Kumo", # 102
     "Ma",
-    #"Match", # 7
+    #"Match", # 5
     "MatrixFactorization",
     "MutualInformation",
-    #"Normalization", # 3
+    #"Normalization", # 1
     "Numbe",
     "Path",
     "Plot",
     "PolarCoordinate",
     "Probability",
-    #"ReceiverOperatingCharacteristic", # 10
-    #"Significance", # 5
-    #"Simulation", # ?
+    "Protein",
+    #"ReceiverOperatingCharacteristic", # 13
+    #"Significance", # 3
+    #"Simulation", # 6
     "Strin",
     "Table",
-    #"Target", # 4
-    #"XSample", # 102
-    #"XSampleCharacteristic", # 103
-    #"XSampleFeature", # 104
-    #"XSampleSelect", # 105
+    #"Target", # 2
+    #"XSample", # 202
+    #"XSampleCharacteristic", # 203
+    #"XSampleFeature", # 204
+    #"XSampleSelect", # 205
 )
 
     @info "🎬 Testing $na"
