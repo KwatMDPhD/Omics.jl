@@ -10,9 +10,9 @@ using Mmap: mmap
 
 using XLSX: readtable
 
-function make(na, ro_, co_, an)
+function make(n2, n1_, n2_, an)
 
-    insertcols!(DataFrame(an, co_), 1, na => ro_)
+    insertcols!(DataFrame(an, n2_), 1, n2 => n1_)
 
 end
 
@@ -32,15 +32,15 @@ function rea(fi; ke_...)
 
 end
 
-function rea(fi, sh; ke_...)
+function rea(xl, sh; ke_...)
 
-    DataFrame(readtable(fi, sh; infer_eltypes = true, ke_...))
+    DataFrame(readtable(xl, sh; infer_eltypes = true, ke_...))
 
 end
 
-function writ(fi, an)
+function writ(ts, an)
 
-    write(fi, an; delim = '\t')
+    write(ts, an; delim = '\t')
 
 end
 

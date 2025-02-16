@@ -54,7 +54,7 @@ function get_mutual_information(pr)
 
 end
 
-function get_mutual_information(pr, no)
+function get_mutual_information(pr, bo)
 
     e1 = Omics.Entropy.ge(eachrow, pr)
 
@@ -62,7 +62,7 @@ function get_mutual_information(pr, no)
 
     mu = e1 + e2 - sum(Omics.Entropy.ge, pr)
 
-    no ? 2.0 * mu / (e1 + e2) : mu
+    bo ? 2.0 * mu / (e1 + e2) : mu
 
 end
 

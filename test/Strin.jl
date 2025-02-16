@@ -110,9 +110,9 @@ end
 
 const S3 = "1234567890"
 
-for (nu, re) in ((1, "1..."), (2, "12..."), (11, S3))
+for (um, re) in ((1, "1..."), (2, "12..."), (11, S3))
 
-    @test Omics.Strin.limit(S3, nu) === re
+    @test Omics.Strin.limit(S3, um) === re
 
 end
 
@@ -186,7 +186,7 @@ end
 # 139.857 ns (7 allocations: 240 bytes)
 # 126.902 ns (6 allocations: 200 bytes)
 
-for (si, pl) in (
+for (s1, s2) in (
     ("sex", "sexes"),
     ("bus", "buses"),
     ("hero", "heroes"),
@@ -197,13 +197,13 @@ for (si, pl) in (
     ("edge", "edges"),
 )
 
-    for nu in (-2, -1, 0, 1, 2)
+    for um in (-2, -1, 0, 1, 2)
 
-        @test Omics.Strin.coun(nu, si) === "$nu $(1 < abs(nu) ? pl : si)"
+        @test Omics.Strin.coun(um, s1) === "$um $(1 < abs(um) ? s2 : s1)"
 
     end
 
-    #@btime Omics.Strin.coun(2, $si)
+    #@btime Omics.Strin.coun(2, $s1)
 
 end
 

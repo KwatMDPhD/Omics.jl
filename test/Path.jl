@@ -4,13 +4,14 @@ using Omics
 
 # ---- #
 
-const D1 = pwd()
+const PA = joinpath(pwd(), "Path.jl")
 
-const D2 = pkgdir(Omics)
+const DI = pkgdir(Omics)
 
-for (di, re) in ((dirname(D2), "Omics.jl/test"), (D2, "test"), (D1, ""))
+for (di, re) in
+    ((dirname(DI), "Omics.jl/test/Path.jl"), (DI, "test/Path.jl"), (pwd(), "Path.jl"))
 
-    @test Omics.Path.shorten(D1, di) == re
+    @test Omics.Path.shorten(PA, di) == re
 
 end
 

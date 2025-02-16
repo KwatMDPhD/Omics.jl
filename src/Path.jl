@@ -6,15 +6,15 @@ function shorten(pa, di)
 
 end
 
-function wai(pa, s1 = 4)
+function wai(pa, u1 = 4)
 
-    s2 = 0
+    u2 = 0
 
-    while s2 < s1 && !ispath(pa)
+    while u2 < u1 && !ispath(pa)
 
         sleep(1)
 
-        @info "Waiting for $pa ($(s2 += 1) / $s1)"
+        @info "Waiting for $pa ($(u2 += 1) / $u1)"
 
     end
 

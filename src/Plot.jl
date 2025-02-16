@@ -4,7 +4,7 @@ using JSON: json
 
 using ..Omics
 
-function plot(fi, tr_, la = Dict{String, Any}(), co = Dict{String, Any}())
+function plot(ht, tr_, la = Dict{String, Any}(), co = Dict{String, Any}())
 
     he = 832
 
@@ -40,7 +40,7 @@ function plot(fi, tr_, la = Dict{String, Any}(), co = Dict{String, Any}())
     id = "pl"
 
     Omics.HTM.writ(
-        fi,
+        ht,
         ("https://cdn.plot.ly/plotly-2.35.2.min.js",),
         id,
         """
@@ -49,28 +49,28 @@ function plot(fi, tr_, la = Dict{String, Any}(), co = Dict{String, Any}())
 
 end
 
+function tick(nu_::AbstractArray{<:Integer})
+
+    extrema(nu_)
+
+end
+
+function tick(nu_)
+
+    mi, ma = extrema(nu_)
+
+    mi, sum(nu_) / lastindex(nu_), ma
+
+end
+
 const _CO = Omics.Coloring.fractionate(("#0000ff", "#ffffff", "#ff0000"))
 
-const LA = Dict("yaxis" => Dict("autorange" => "reversed"))
+const _LA = Dict("yaxis" => Dict("autorange" => "reversed"))
 
-function tick(it_::AbstractArray{<:Integer})
-
-    extrema(it_)
-
-end
-
-function tick(fl_)
-
-    mi, ma = extrema(fl_)
-
-    mi, sum(fl_) / lastindex(fl_), ma
-
-end
-
-function plot_heat_map(fi, nu; yc_ = (), xc_ = (), co = _CO, la = Dict{String, Any}())
+function plot_heat_map(ht, nu; yc_ = (), xc_ = (), co = _CO, la = Dict{String, Any}())
 
     plot(
-        fi,
+        ht,
         (
             Dict(
                 "type" => "heatmap",
@@ -86,13 +86,13 @@ function plot_heat_map(fi, nu; yc_ = (), xc_ = (), co = _CO, la = Dict{String, A
                 ),
             ),
         ),
-        Omics.Dic.merg(LA, la),
+        Omics.Dic.merg(_LA, la),
     )
 
 end
 
 function plot_bubble_map(
-    fi,
+    ht,
     n1,
     n2;
     yc_ = map(id -> "$id ●", axes(n1, 1)),
@@ -104,7 +104,7 @@ function plot_bubble_map(
     id_ = vec(CartesianIndices(n1))
 
     plot(
-        fi,
+        ht,
         (
             Dict(
                 "y" => map(id -> yc_[id[1]], id_),
@@ -113,31 +113,31 @@ function plot_bubble_map(
                 "marker" => Dict("size" => vec(n1), "color" => vec(n2), "colorscale" => co),
             ),
         ),
-        Omics.Dic.merg(LA, la),
+        Omics.Dic.merg(_LA, la),
     )
 
 end
 
 function plot_radar(
-    fi,
+    ht,
     an___,
     ra___;
     na_ = eachindex(an___),
-    co_ = Omics.Coloring.I2_,
-    il_ = fill("toself", lastindex(an___)),
+    c1_ = Omics.Coloring.I2_,
+    fi_ = fill("toself", lastindex(an___)),
     la = Dict{String, Any}(),
 )
 
     wi = 2
 
-    hd = "#000000"
+    c2 = "#000000"
 
-    hf = Omics.Color.LI
+    c3 = Omics.Color.LI
 
     plot(
-        fi,
-        [
-            Dict(
+        ht,
+        map(
+            id -> Dict(
                 "type" => "scatterpolar",
                 "name" => na_[id],
                 "theta" => vcat(an___[id], an___[id][1]),
@@ -147,12 +147,13 @@ function plot_radar(
                     "shape" => "spline",
                     "smoothing" => 0,
                     "width" => 4,
-                    "color" => co_[id],
+                    "color" => c1_[id],
                 ),
-                "fill" => il_[id],
-                "fillcolor" => co_[id],
-            ) for id in eachindex(an___)
-        ],
+                "fill" => fi_[id],
+                "fillcolor" => c1_[id],
+            ),
+            eachindex(an___),
+        ),
         Omics.Dic.merg(
             Dict(
                 "title" => Dict("x" => 0.008, "font" => Dict("size" => 32)),
@@ -160,23 +161,23 @@ function plot_radar(
                     "angularaxis" => Dict(
                         "direction" => "clockwise",
                         "linewidth" => wi,
-                        "linecolor" => hd,
+                        "linecolor" => c2,
                         "ticklen" => 16,
                         "tickwidth" => wi,
-                        "tickcolor" => hd,
+                        "tickcolor" => c2,
                         "tickfont" => Dict("size" => 24),
                         "gridwidth" => wi,
-                        "gridcolor" => hf,
+                        "gridcolor" => c3,
                     ),
                     "radialaxis" => Dict(
                         "linewidth" => wi,
-                        "linecolor" => hd,
+                        "linecolor" => c2,
                         "ticklen" => 8,
                         "tickwidth" => wi,
-                        "tickcolor" => hd,
+                        "tickcolor" => c2,
                         "tickfont" => Dict("size" => 16),
                         "gridwidth" => wi,
-                        "gridcolor" => hf,
+                        "gridcolor" => c3,
                     ),
                 ),
             ),

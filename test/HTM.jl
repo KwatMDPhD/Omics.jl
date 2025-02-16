@@ -1,15 +1,13 @@
-using JSON: json
-
 using Test: @test
 
 using Omics
 
 # ---- #
 
-const FI = joinpath(tempdir(), "_.html")
+const HT = joinpath(tempdir(), "_.html")
 
 Omics.HTM.writ(
-    FI,
+    HT,
     ("SRC 1", "SRC 2"),
     "",
     """
@@ -17,7 +15,7 @@ Omics.HTM.writ(
     SCRIPT LINE 2""",
 )
 
-@test count(==('\n'), read(FI, String)) === 14
+@test count(==('\n'), read(HT, String)) === 14
 
 # ---- #
 

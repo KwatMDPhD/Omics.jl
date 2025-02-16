@@ -68,9 +68,9 @@ function stri(st)
 
 end
 
-function limit(st, nu)
+function limit(st, um)
 
-    lastindex(st) <= nu ? st : "$(st[1:nu])..."
+    lastindex(st) <= um ? st : "$(st[1:um])..."
 
 end
 
@@ -104,9 +104,9 @@ function trim_end(st, de = ' ')
 
 end
 
-function coun(nu, st)
+function coun(um, st)
 
-    if 1 < abs(nu)
+    if 1 < abs(um)
 
         st =
             if lastindex(st) == 3 && endswith(st, "ex") ||
@@ -131,7 +131,7 @@ function coun(nu, st)
 
     end
 
-    "$nu $st"
+    "$um $st"
 
 end
 

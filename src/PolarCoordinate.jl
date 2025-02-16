@@ -8,7 +8,7 @@ using Statistics: cor
 
 using ..Omics
 
-const P2 = 2.0 * pi
+const _P2 = 2.0 * pi
 
 function _update!(di, a1_, i2, a2)
 
@@ -22,8 +22,8 @@ end
 
 function ge!(
     d1;
-    nu = 1000,
-    st = P2 * 0.1,
+    u1 = 1000,
+    st = _P2 * 0.1,
     lo = 0.32,
     sc = 32.0,
     co_ = nothing,
@@ -32,9 +32,9 @@ function ge!(
     ac_ = nothing,
 )
 
-    na = size(d1, 1)
+    u2 = size(d1, 1)
 
-    a1_ = collect(range(0.0; step = P2 / na, length = na))
+    a1_ = collect(range(0.0; step = _P2 / u2, length = u2))
 
     d2 = pairwise(Omics.Distance.Polar(), a1_)
 
@@ -44,23 +44,23 @@ function ge!(
 
     c1 = cor(d1_, d2_)
 
-    for i1 in 1:nu
+    for i1 in 1:u1
 
-        i2 = rand(1:na)
+        i2 = rand(1:u2)
 
         a1 = a1_[i2]
 
         a2 = rand(Normal(a1, st))
 
-        if P2 < abs(a2)
+        if _P2 < abs(a2)
 
-            a2 = rem(a2, P2)
+            a2 = rem(a2, _P2)
 
         end
 
         if a2 < 0.0
 
-            a2 += P2
+            a2 += _P2
 
         end
 
@@ -68,7 +68,7 @@ function ge!(
 
         c2 = cor(d1_, d2_)
 
-        te = 1.0 - Omics.Probability.get_logistic((i1 - nu * lo) / nu * sc)
+        te = 1.0 - Omics.Probability.get_logistic((i1 - u1 * lo) / u1 * sc)
 
         if c1 <= c2
 
@@ -114,12 +114,12 @@ function ge!(
 
 end
 
-function plot(fi, co_, te_, pr_, ac_)
+function plot(ht, co_, te_, pr_, ac_)
 
-    co, id = findmax(co_)
+    ma, id = findmax(co_)
 
     Omics.Plot.plot(
-        fi,
+        ht,
         (
             Dict(
                 "name" => "Temperature",
@@ -143,9 +143,9 @@ function plot(fi, co_, te_, pr_, ac_)
             ),
             Dict(
                 "name" => "Maximum",
-                "y" => (co,),
+                "y" => (ma,),
                 "x" => (id - 1,),
-                "text" => Omics.Numbe.shorten(co),
+                "text" => Omics.Numbe.shorten(ma),
                 "mode" => "markers+text",
                 "marker" => Dict("size" => 24, "color" => Omics.Color.GR),
             ),

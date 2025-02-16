@@ -4,16 +4,16 @@ using Random: randstring
 
 using ..Omics
 
-function writ(fi, sr_, id, sc, co = "#000000")
+function writ(ht, sr_, id, js, co = "#000000")
 
-    if isempty(fi)
+    if isempty(ht)
 
-        fi = joinpath(tempdir(), "$(randstring()).html")
+        ht = joinpath(tempdir(), "$(randstring()).html")
 
     end
 
     write(
-        fi,
+        ht,
         """
         <!doctype html>
         <html>
@@ -25,12 +25,12 @@ function writ(fi, sr_, id, sc, co = "#000000")
             <div id="$id" style="min-height: 100vh; min-width: fit-content; display: flex; justify-content: center; align-items: center"></div>
           </body>
           <script>
-        $sc
+        $js
           </script>
         </html>""",
     )
 
-    Omics.Path.ope(fi)
+    Omics.Path.ope(ht)
 
 end
 

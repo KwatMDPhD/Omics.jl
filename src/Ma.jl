@@ -20,16 +20,16 @@ function make(an, c1_, c2)
 
         for i2 in eachindex(c1_)
 
-            ey = ke[i1, i2]
+            on = ke[i1, i2]
 
-            if ismissing(ey)
+            if ismissing(on)
 
                 continue
 
             end
 
             # TODO: Generalize.
-            for st in eachsplit(ey, '|')
+            for st in eachsplit(on, '|')
 
                 di[st] = va
 
@@ -51,11 +51,11 @@ end
 
 function lo(va_)
 
-    n1 = lastindex(va_)
+    u1 = lastindex(va_)
 
-    n2 = count(!startswith('_'), va_)
+    u2 = count(!startswith('_'), va_)
 
-    @info "📛 $n2 / $n1 ($(n2 / n1 * 100)%)."
+    @info "📛 $u2 / $u1 ($(u2 / u1 * 100)%)."
 
 end
 
