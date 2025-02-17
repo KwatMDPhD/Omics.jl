@@ -44,7 +44,6 @@ for na in (
     "RankNormalization",
     #"ReceiverOperatingCharacteristic", # 13
     "Significance",
-    #"Simulation", # 6
     "Strin",
     "Table",
     "Target",
