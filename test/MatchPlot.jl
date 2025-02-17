@@ -18,6 +18,14 @@ const NU_ = rand(8)
 
 const N1 = randn(U3 * 2, 8)
 
+const N2_ = [1, 2, 1, 2]
+
+const U4 = lastindex(N2_)
+
+const N3_ = [1, 2, 3, 1, 2, 3]
+
+const U5 = lastindex(N3_)
+
 for (id, (nu_, N2, u1, u2, u3, st)) in enumerate((
     #
     (randn(4), randn(4, 4), U1, U2, 1, ST),
@@ -36,6 +44,14 @@ for (id, (nu_, N2, u1, u2, u3, st)) in enumerate((
     (NU_, N1, U1, U2, U3, 2.0),
     (NU_, N1, U1, U2, U3, ST),
     (NU_, N1, U1, U2, U3, 4.0),
+    #
+    (N2_, rand(1:2, 1, U4), U1, U2, U3, ST),
+    (N2_, rand(1:3, 1, U4), U1, U2, U3, ST),
+    (N2_, randn(1, U4), U1, U2, U3, ST),
+    #
+    (N3_, rand(1:2, 1, U5), U1, U2, U3, ST),
+    (N3_, rand(1:3, 1, U5), U1, U2, U3, ST),
+    (N3_, randn(1, U5), U1, U2, U3, ST),
     #
     (
         [1.4, 1.3, 0.2, 0.1],
@@ -62,7 +78,7 @@ for (id, (nu_, N2, u1, u2, u3, st)) in enumerate((
 
     id_ = sortperm(R[:, 1])
 
-    Omics.MatchPlot.writ(
+    Omics.MatchPlot.go(
         mkpath(joinpath(homedir(), "Downloads", string(id))),
         "Sample",
         a2_,

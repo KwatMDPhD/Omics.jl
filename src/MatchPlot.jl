@@ -15,60 +15,70 @@ const OL = Dict(
     "title" => Dict("side" => "top"),
 )
 
-function trace_target(ns, sa_, nt, vt_, st, ur)
+function trace_target(a1, a2_, a3, nu_, st, um)
 
-    Omics.Normalization.do_0_clamp!(vt_, st)
+    Omics.Normalization.do_0_clamp!(nu_, st)
 
-    ty = eltype(vt_)
+    mi, ma = eltype(nu_) <: AbstractFloat ? (-st, st) : extrema(nu_)
 
-    if ty == Bool
-
-        vt_ = convert(Vector{Int}, vt_)
-
-    end
-
-    mi, ma = ty <: AbstractFloat ? (-st, st) : extrema(vt_)
-
-    bo = 1.0 - inv(ur)
+    fr = 1.0 - inv(um)
 
     [
         Dict(
             "type" => "heatmap",
-            "y" => (nt,),
-            "x" => sa_,
-            "z" => (vt_,),
+            "y" => (a3,),
+            "x" => a2_,
+            "z" => (nu_,),
             "zmin" => Omics.Numbe.shorten(mi),
             "zmax" => Omics.Numbe.shorten(ma),
             "colorscale" => CO,
             "colorbar" => merge(
                 OL,
                 Dict(
-                    "y" => -0.344,
-                    "tickvals" => map(Omics.Numbe.shorten, Omics.Plot.tick(vt_)),
+                    "y" => -0.32,
+                    "tickvals" =>
+                        map(Omics.Numbe.shorten, (Omics.Plot.tick(nu_)..., -st, st)),
                 ),
             ),
         ),
     ],
     Dict(
-        "height" => max(640, ur * 40),
+        "height" => max(832, um * 40),
         "width" => 1280,
         "margin" => Dict("r" => 232),
-        "yaxis" => Dict("domain" => (bo, 1.0), "tickfont" => Dict("size" => 16)),
+        "yaxis" => Dict("domain" => (fr, 1), "tickfont" => Dict("size" => 16)),
         "xaxis" =>
-            Dict("side" => "top", "title" => Dict("text" => "$ns ($(lastindex(sa_)))")),
+            Dict("side" => "top", "title" => Dict("text" => "$a1 ($(lastindex(a2_)))")),
         "annotations" => Dict{String, Any}[],
     ),
-    bo
+    fr
 
 end
 
-function print(n1, n2)
+function prin(n1, n2)
 
     "$(Omics.Numbe.shorten(n1)) ($(Omics.Numbe.shorten(n2)))"
 
 end
 
-function annotate(to, wi, nf, he, vr)
+function pus!(an_, an, yc, id, te)
+
+    push!(
+        an_,
+        merge(
+            an,
+            Dict(
+                "y" => yc,
+                "x" => isone(id) ? 1.016 : 1.128,
+                "xanchor" => "left",
+                "text" => te,
+            ),
+        ),
+    )
+
+end
+
+function annotate(f1, f2, te, bo, R)
 
     an = Dict(
         "yref" => "paper",
@@ -77,56 +87,28 @@ function annotate(to, wi, nf, he, vr)
         "showarrow" => false,
     )
 
-    yc = to + wi * 0.392
+    yc = f1 + f2 * 0.392
 
     an_ =
-        [merge(an, Dict("y" => yc, "x" => 0.5, "text" => nf, "font" => Dict("size" => 16)))]
+        [merge(an, Dict("y" => yc, "x" => 0.5, "text" => te, "font" => Dict("size" => 16)))]
 
-    x1 = 1.016
+    if bo
 
-    x2 = 1.128
+        pus!(an_, an, yc, 1, "Score (⧱)")
 
-    if he
-
-        push!(
-            an_,
-            merge(
-                an,
-                Dict("y" => yc, "x" => x1, "xanchor" => "left", "text" => "Score (⧱)"),
-            ),
-        )
-
-        push!(
-            an_,
-            merge(
-                an,
-                Dict("y" => yc, "x" => x2, "xanchor" => "left", "text" => "P Value (𝐪)"),
-            ),
-        )
+        pus!(an_, an, yc, 2, "P Value (𝐪)")
 
     end
 
-    yc = to - wi * 0.5
+    yc = f1 - f2 * 0.5
 
-    for (sc, ma, pv, qv) in eachrow(vr)
+    for (re, ma, pv, qv) in eachrow(R)
 
-        push!(
-            an_,
-            merge(
-                an,
-                Dict("y" => yc, "x" => x1, "xanchor" => "left", "text" => print(sc, ma)),
-            ),
-        )
+        pus!(an_, an, yc, 1, prin(re, ma))
 
-        push!(
-            an_,
-            merge(
-                an,
-                Dict("y" => yc, "x" => x2, "xanchor" => "left", "text" => print(pv, qv)),
-            ),
-        )
+        pus!(an_, an, yc, 2, prin(pv, qv))
 
-        yc -= wi
+        yc -= f2
 
     end
 
@@ -160,7 +142,8 @@ function trace_feature(sa_, nf, fe_, vf, vr, st, iy, bo, wi)
             OL,
             Dict(
                 "y" => -0.456,
-                "tickvals" => map(Omics.Numbe.shorten, Omics.Plot.tick(vf)),
+                "tickvals" =>
+                    map(Omics.Numbe.shorten, (Omics.Plot.tick(vf)..., -st, st)),
             ),
         ) : "showscale" => false,
     ),
@@ -182,7 +165,7 @@ function order(vt_::AbstractVector{<:AbstractFloat}, ::Any)
 
 end
 
-function writ(
+function go(
     di,
     ns,
     sa_,
@@ -239,7 +222,7 @@ function writ(
 
 end
 
-function summarize(ht, ns, sa_, nt, vt_, na___, nf___; st = 3.0, la = Dict{String, Any}())
+function go(ht, ns, sa_, nt, vt_, na___, nf___; st = 3.0, la = Dict{String, Any}())
 
     io_ = sortperm(vt_)
 
