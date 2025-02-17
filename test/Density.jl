@@ -32,14 +32,10 @@ end
 
 # ---- #
 
-# 412.710 ns (2 allocations: 192 bytes)
-# 3.807 μs (36 allocations: 1.89 KiB)
-# 1.896 μs (2 allocations: 192 bytes)
-# 5.660 μs (36 allocations: 2.66 KiB)
 # 21.250 μs (2 allocations: 192 bytes)
 # 25.166 μs (38 allocations: 9.70 KiB)
 
-for um in (10, 100, 1000)
+for um in (1000, 10000)
 
     seed!(20241023)
 
@@ -75,14 +71,10 @@ end
 
 # ---- #
 
-# 883.510 ns (3 allocations: 2.08 KiB)
-# 14.167 μs (54 allocations: 13.23 KiB)
-# 3.922 μs (3 allocations: 2.08 KiB)
-# 17.833 μs (54 allocations: 14.77 KiB)
 # 40.750 μs (3 allocations: 2.08 KiB)
 # 56.167 μs (57 allocations: 28.84 KiB)
 
-for um in (10, 100, 1000)
+for um in (1000, 10000)
 
     seed!(20241023)
 

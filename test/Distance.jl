@@ -21,12 +21,6 @@ end
 
 # ---- #
 
-# 4.250 ns (0 allocations: 0 bytes)
-# 41.792 ns (4 allocations: 288 bytes)
-# 28.166 μs (54 allocations: 43.98 KiB)
-# 16.491 ns (0 allocations: 0 bytes)
-# 103.522 ns (4 allocations: 1.81 KiB)
-# 32.458 μs (54 allocations: 45.52 KiB)
 # 149.038 ns (0 allocations: 0 bytes)
 # 733.598 ns (6 allocations: 15.88 KiB)
 # 79.916 μs (57 allocations: 59.59 KiB)
@@ -34,7 +28,7 @@ end
 # 6.139 μs (6 allocations: 156.38 KiB)
 # 1.031 ms (57 allocations: 200.09 KiB)
 
-for um in (10, 100, 1000, 10000)
+for um in (1000, 10000)
 
     seed!(20241015)
 

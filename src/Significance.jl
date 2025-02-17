@@ -6,91 +6,53 @@ using MultipleTesting: BenjaminiHochberg, adjust
 
 using StatsBase: std
 
-function _separate(nu_)
+function get_margin_of_error(nu_, fr = 0.95)
 
-    ty = eltype(nu_)
-
-    nn_ = ty[]
-
-    np_ = ty[]
-
-    for nu in nu_
-
-        push!(nu < 0 ? nn_ : np_, nu)
-
-    end
-
-    nn_, np_
+    quantile(Normal(), 0.5 + fr * 0.5) * std(nu_) / sqrt(lastindex(nu_))
 
 end
 
-function get_margin_of_error(sa_, co = 0.95)
+function ge(u1, u2)
 
-    std(sa_) / sqrt(lastindex(sa_)) * quantile(Normal(), 0.5 + co * 0.5)
-
-end
-
-function ge(ur::Integer, us)
-
-    if iszero(ur)
-
-        return 1.0
-
-    end
-
-    if iszero(us)
-
-        us = 1
-
-    end
-
-    us / ur
+    (iszero(u2) ? 1 : u2) / u1
 
 end
 
-function ge(eq, ra_, nu_)
+function ge(eq, n1_, n2_)
 
-    ur = lastindex(ra_)
-
-    pv_ = map(nu -> ge(ur, sum(eq(nu), ra_; init = 0)), nu_)
+    pv_ = map(nu -> ge(lastindex(n1_), count(eq(nu), n1_)), n2_)
 
     pv_, adjust(pv_, BenjaminiHochberg())
 
 end
 
-function ge(ra_, nu_)
+function ge(n1_, p1_, n2_, p2_)
 
-    ty = eltype(ra_)
+    if isempty(n2_)
 
-    rn_, rp_ = _separate(ra_)
+        v1_ = Float64[]
 
-    nn_, np_ = _separate(nu_)
-
-    if isempty(nn_)
-
-        pn_ = Float64[]
-
-        qn_ = Float64[]
+        q1_ = Float64[]
 
     else
 
-        pn_, qn_ = ge(<=, rn_, nn_)
+        v1_, q1_ = ge(<=, n1_, n2_)
 
     end
 
-    if isempty(np_)
+    if isempty(p2_)
 
-        pp_ = Float64[]
+        v2_ = Float64[]
 
-        qp_ = Float64[]
+        q2_ = Float64[]
 
     else
 
-        pp_, qp_ = ge(>=, rp_, np_)
+        v2_, q2_ = ge(>=, p1_, p2_)
 
     end
 
-    pn_, qn_, pp_, qp_
+    v1_, q1_, v2_, q2_
 
 end
 

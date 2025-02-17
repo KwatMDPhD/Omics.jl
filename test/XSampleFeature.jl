@@ -33,7 +33,7 @@ end
 
 # 26.500 μs (478 allocations: 187.80 KiB)
 
-for ur in (100,)
+for ur in (1000, 10000)
 
     seed!(20230920)
 

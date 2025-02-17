@@ -115,8 +115,12 @@ for fu in (
     Omics.RankNormalization.do_quantile!,
 )
 
-    seed!(20250216)
+    for um in (1000, 10000)
 
-    #@btime $fu($(rand(10000)))
+        seed!(20250216)
+
+        #@btime $fu($(rand(um)))
+
+    end
 
 end

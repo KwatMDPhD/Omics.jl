@@ -14,11 +14,12 @@ for na in (
     "Cytoscape",
     "Density",
     "Dic",
+    "Difference",
     "Distance",
     "Entropy",
     #"ErrorMatrix", # 12
     "Evidence",
-    #"Extreme", # 4
+    "Extreme",
     #"GEO", # 201
     #"GPSMap", # 101
     "Gene",
@@ -28,7 +29,8 @@ for na in (
     "Information",
     #"Kumo", # 102
     "Ma",
-    #"Match", # 5
+    "Match",
+    "MatchPlot",
     "MatrixFactorization",
     "MutualInformation",
     "Normalization",
@@ -41,11 +43,11 @@ for na in (
     "RangeNormalization",
     "RankNormalization",
     #"ReceiverOperatingCharacteristic", # 13
-    #"Significance", # 3
+    "Significance",
     #"Simulation", # 6
     "Strin",
     "Table",
-    #"Target", # 2
+    "Target",
     #"XSample", # 202
     #"XSampleCharacteristic", # 203
     #"XSampleFeature", # 204
