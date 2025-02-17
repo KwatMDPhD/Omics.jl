@@ -6,7 +6,7 @@ using StatsBase: sample
 
 using ..Omics
 
-function ge(fu, n1_, N; u1 = 10, u2 = 10)
+function go(fu, n1_, N; u1 = 10, u2 = 10)
 
     u3, u4 = size(N)
 
@@ -22,6 +22,7 @@ function ge(fu, n1_, N; u1 = 10, u2 = 10)
 
         ra_ = Vector{Float64}(undef, u1)
 
+        # TODO: Check.
         u5 = round(Int, u4 * 0.632)
 
         for i1 in 1:u3

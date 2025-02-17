@@ -182,7 +182,7 @@ function order(vt_::AbstractVector{<:AbstractFloat}, ::Any)
 
 end
 
-function write_plot(
+function writ(
     di,
     ns,
     sa_,
@@ -192,7 +192,7 @@ function write_plot(
     fe_,
     vf,
     vr;
-    ue = 8,
+    u1 = 8,
     st = 3.0,
     la = Dict{String, Any}(),
 )
@@ -213,7 +213,7 @@ function write_plot(
 
     ig_ = findall(!isnan, sc_)
 
-    ix_ = ig_[reverse!(Omics.Extreme.ge(sc_[ig_], ue))]
+    ix_ = ig_[reverse!(Omics.Extreme.ge(sc_[ig_], u1))]
 
     fe_ = fe_[ix_]
 
