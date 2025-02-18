@@ -4,64 +4,7 @@ using Distances: CorrDist, Euclidean
 
 using ..Omics
 
-const CO = Omics.Coloring.fractionate(("#0000ff", "#ffffff", "#ff0000"))
-
-const OL = Dict(
-    "x" => 0.5,
-    "orientation" => "h",
-    "len" => 0.56,
-    "thickness" => 16,
-    "outlinewidth" => 0,
-    "title" => Dict("side" => "top"),
-)
-
-function trace_target(a1, a2_, a3, nu_, st, um)
-
-    Omics.Normalization.do_0_clamp!(nu_, st)
-
-    mi, ma = eltype(nu_) <: AbstractFloat ? (-st, st) : extrema(nu_)
-
-    fr = 1.0 - inv(um)
-
-    [
-        Dict(
-            "type" => "heatmap",
-            "y" => (a3,),
-            "x" => a2_,
-            "z" => (nu_,),
-            "zmin" => Omics.Numbe.shorten(mi),
-            "zmax" => Omics.Numbe.shorten(ma),
-            "colorscale" => CO,
-            "colorbar" => merge(
-                OL,
-                Dict(
-                    "y" => -0.32,
-                    "tickvals" =>
-                        map(Omics.Numbe.shorten, (Omics.Plot.tick(nu_)..., -st, st)),
-                ),
-            ),
-        ),
-    ],
-    Dict(
-        "height" => max(832, um * 40),
-        "width" => 1280,
-        "margin" => Dict("r" => 232),
-        "yaxis" => Dict("domain" => (fr, 1), "tickfont" => Dict("size" => 16)),
-        "xaxis" =>
-            Dict("side" => "top", "title" => Dict("text" => "$a1 ($(lastindex(a2_)))")),
-        "annotations" => Dict{String, Any}[],
-    ),
-    fr
-
-end
-
-function prin(n1, n2)
-
-    "$(Omics.Numbe.shorten(n1)) ($(Omics.Numbe.shorten(n2)))"
-
-end
-
-function pus!(an_, an, yc, id, te)
+function annotate!(an_, an, yc, id, te)
 
     push!(
         an_,
@@ -78,7 +21,13 @@ function pus!(an_, an, yc, id, te)
 
 end
 
-function annotate(f1, f2, te, bo, R)
+function prin(n1, n2)
+
+    "$(Omics.Numbe.shorten(n1)) ($(Omics.Numbe.shorten(n2)))"
+
+end
+
+function annotate(om, he, te, bo, R)
 
     an = Dict(
         "yref" => "paper",
@@ -87,28 +36,28 @@ function annotate(f1, f2, te, bo, R)
         "showarrow" => false,
     )
 
-    yc = f1 + f2 * 0.392
+    yc = om + he * 0.392
 
     an_ =
         [merge(an, Dict("y" => yc, "x" => 0.5, "text" => te, "font" => Dict("size" => 16)))]
 
     if bo
 
-        pus!(an_, an, yc, 1, "Score (⧱)")
+        annotate!(an_, an, yc, 1, "Score (⧱)")
 
-        pus!(an_, an, yc, 2, "P Value (𝐪)")
+        annotate!(an_, an, yc, 2, "P Value (𝐪)")
 
     end
 
-    yc = f1 - f2 * 0.5
+    yc = om - he * 0.5
 
     for (re, ma, pv, qv) in eachrow(R)
 
-        pus!(an_, an, yc, 1, prin(re, ma))
+        annotate!(an_, an, yc, 1, prin(re, ma))
 
-        pus!(an_, an, yc, 2, prin(pv, qv))
+        annotate!(an_, an, yc, 2, prin(pv, qv))
 
-        yc -= f2
+        yc -= he
 
     end
 
@@ -116,40 +65,77 @@ function annotate(f1, f2, te, bo, R)
 
 end
 
-function trace_feature(sa_, nf, fe_, vf, vr, st, iy, bo, wi)
+const CO = Omics.Coloring.fractionate(("#0000ff", "#ffffff", "#ff0000"))
 
-    foreach(vf_ -> Omics.Normalization.do_0_clamp!(vf_, st), eachrow(vf))
+const OL = Dict(
+    "x" => 0.5,
+    "orientation" => "h",
+    "len" => 0.56,
+    "thickness" => 16,
+    "outlinewidth" => 0,
+    "title" => Dict("side" => "top"),
+)
 
-    mi, ma = eltype(vf) <: AbstractFloat ? (-st, st) : extrema(vf)
+function trace(yc, te, xc_, nu_, st, um)
 
-    he = iy == 2
+    Omics.Normalization.do_0_clamp!(nu_, st)
 
-    to = bo - wi
+    mi, ma = eltype(nu_) <: AbstractFloat ? (-st, st) : extrema(nu_)
 
-    bo = to - wi * lastindex(fe_)
+    om = 1.0 - inv(um)
+
+    [
+        Dict(
+            "type" => "heatmap",
+            "y" => (yc,),
+            "x" => xc_,
+            "z" => (nu_,),
+            "zmin" => mi,
+            "zmax" => ma,
+            "colorscale" => CO,
+            "colorbar" => merge(OL, Dict("y" => -0.32, "tickvals" => (mi, ma))),
+        ),
+    ],
+    Dict(
+        "height" => max(832, um * 40),
+        "width" => 1280,
+        "margin" => Dict("r" => 232),
+        "yaxis" => Dict("domain" => (om, 1), "tickfont" => Dict("size" => 16)),
+        "xaxis" =>
+            Dict("side" => "top", "title" => Dict("text" => "$te ($(lastindex(xc_)))")),
+        "annotations" => Dict{String, Any}[],
+    ),
+    om
+
+end
+
+function trace(te, yc_, xc_, N, st, R, id, o1, he)
+
+    foreach(nu_ -> Omics.Normalization.do_0_clamp!(nu_, st), eachrow(N))
+
+    mi, ma = eltype(N) <: AbstractFloat ? (-st, st) : extrema(N)
+
+    bo = id == 2
+
+    o2 = o1 - he
+
+    o1 = o2 - he * lastindex(yc_)
 
     Dict(
-        "yaxis" => "y$iy",
+        "yaxis" => "y$id",
         "type" => "heatmap",
-        "y" => map(fe -> Omics.Strin.limit(fe, 40), fe_),
-        "x" => sa_,
-        "z" => collect(eachrow(vf)),
-        "zmin" => Omics.Numbe.shorten(mi),
-        "zmax" => Omics.Numbe.shorten(ma),
+        "y" => map(yc -> Omics.Strin.limit(yc, 40), yc_),
+        "x" => xc_,
+        "z" => collect(eachrow(N)),
+        "zmin" => mi,
+        "zmax" => ma,
         "colorscale" => CO,
-        he ?
-        "colorbar" => merge(
-            OL,
-            Dict(
-                "y" => -0.456,
-                "tickvals" =>
-                    map(Omics.Numbe.shorten, (Omics.Plot.tick(vf)..., -st, st)),
-            ),
-        ) : "showscale" => false,
+        bo ? "colorbar" => merge(OL, Dict("y" => -0.456, "tickvals" => (mi, ma))) :
+        "showscale" => false,
     ),
-    Dict("yaxis$iy" => Dict("domain" => (bo, to), "autorange" => "reversed")),
-    annotate(to, wi, nf, he, vr),
-    bo
+    Dict("yaxis$id" => Dict("domain" => (o1, o2), "autorange" => "reversed")),
+    annotate(o2, he, te, bo, R),
+    o1
 
 end
 
@@ -208,9 +194,9 @@ function go(
 
     ur = 2 + lastindex(fe_)
 
-    tr_, la, bo = trace_target(ns, sa_[io_], nt, vt_[io_], st, ur)
+    tr_, la, bo = trace(nt, ns, sa_[io_], vt_[io_], st, ur)
 
-    tr, ya, an_, _ = trace_feature(sa_, nf, fe_, vf[:, io_], vr, st, 2, bo, inv(ur))
+    tr, ya, an_, _ = trace(nf, fe_, sa_, vf[:, io_], st, vr, 2, bo, inv(ur))
 
     push!(tr_, tr)
 
@@ -228,7 +214,7 @@ function go(ht, ns, sa_, nt, vt_, na___, nf___; st = 3.0, la = Dict{String, Any}
 
     ur = 1 + sum(nf_ -> 1 + lastindex(nf_[2]), nf___)
 
-    tr_, la, bo = trace_target(ns, sa_[io_], nt, vt_[io_], st, ur)
+    tr_, la, bo = trace(nt, ns, sa_[io_], vt_[io_], st, ur)
 
     for ih in eachindex(nf___)
 
@@ -238,17 +224,8 @@ function go(ht, ns, sa_, nt, vt_, na___, nf___; st = 3.0, la = Dict{String, Any}
 
         ie_ = indexin(fe_, na_[2])
 
-        tr, ya, an_, bo = trace_feature(
-            sa_,
-            nf,
-            fe_,
-            na_[3][ie_, io_],
-            na_[4][ie_, :],
-            st,
-            1 + ih,
-            bo,
-            inv(ur),
-        )
+        tr, ya, an_, bo =
+            trace(nf, fe_, sa_, na_[3][ie_, io_], st, na_[4][ie_, :], 1 + ih, bo, inv(ur))
 
         push!(tr_, tr)
 
