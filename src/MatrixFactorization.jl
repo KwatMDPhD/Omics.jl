@@ -10,30 +10,31 @@ using StatsBase: mean, sqL2dist
 
 using ..Omics
 
-function _lo(co, nu, ob)
+function lo(bo, um, ob)
 
-    if co
+    if bo
 
-        @info "Converged in $nu." ob
+        @info "Converged in $um." ob
 
     else
 
-        @warn "Failed to converge in $nu." ob
+        @warn "Failed to converge in $um." ob
 
     end
 
 end
 
-function factorize(A, nu; ke_ar...)
+function factorize(A, um; ke_ar...)
 
-    re = nnmf(A, nu; ke_ar...)
+    re = nnmf(A, um; ke_ar...)
 
-    _lo(re.converged, re.niters, re.objvalue / lastindex(A))
+    lo(re.converged, re.niters, re.objvalue / lastindex(A))
 
     re.W, re.H
 
 end
 
+# TODO: Pick up here.
 function _get_coefficient(A_)
 
     nu = lastindex(A_)
@@ -184,7 +185,7 @@ function factorize_wide(
 
     end
 
-    _lo(bo, n3, ob_ ./ lastindex.(A_))
+    lo(bo, n3, ob_ ./ lastindex.(A_))
 
     W, H_
 

@@ -63,11 +63,11 @@ function tick(nu_)
 
 end
 
-const _CO = Omics.Coloring.fractionate(("#0000ff", "#ffffff", "#ff0000"))
+const CO = Omics.Coloring.fractionate(("#0000ff", "#ffffff", "#ff0000"))
 
-const _LA = Dict("yaxis" => Dict("autorange" => "reversed"))
+const LA = Dict("yaxis" => Dict("autorange" => "reversed"))
 
-function plot_heat_map(ht, nu; yc_ = (), xc_ = (), co = _CO, la = Dict{String, Any}())
+function plot_heat_map(ht, nu; yc_ = (), xc_ = (), co = CO, la = Dict{String, Any}())
 
     plot(
         ht,
@@ -86,7 +86,7 @@ function plot_heat_map(ht, nu; yc_ = (), xc_ = (), co = _CO, la = Dict{String, A
                 ),
             ),
         ),
-        Omics.Dic.merg(_LA, la),
+        Omics.Dic.merg(LA, la),
     )
 
 end
@@ -97,7 +97,7 @@ function plot_bubble_map(
     n2;
     yc_ = map(id -> "$id ●", axes(n1, 1)),
     xc_ = map(id -> "● $id", axes(n1, 2)),
-    co = _CO,
+    co = CO,
     la = Dict{String, Any}(),
 )
 
@@ -113,7 +113,7 @@ function plot_bubble_map(
                 "marker" => Dict("size" => vec(n1), "color" => vec(n2), "colorscale" => co),
             ),
         ),
-        Omics.Dic.merg(_LA, la),
+        Omics.Dic.merg(LA, la),
     )
 
 end
